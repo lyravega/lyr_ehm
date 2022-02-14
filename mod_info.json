@@ -1,0 +1,10 @@
+{
+	"id":"lyr_ehm",
+	"name":"Experimental Hull Modifications",
+	"author":"lyravega",
+	"version":"0.1",
+	"description":"Adds experimental hull modifications",
+	"jars":["jars/lyr_ehm.jar"],
+    #"modPlugin": "data.scripts.plugins.fleetTrackerPlugin",
+	"gameVersion":"0.95.1a-RC6"
+}
