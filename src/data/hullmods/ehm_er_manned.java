@@ -10,7 +10,7 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.loading.specs.g;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 
-public class ehm_er_manned extends _ehm_base_master {
+public class ehm_er_manned extends _ehm_base {
 	private static final String automated = "automated";
 
 	// TODO: Finish this

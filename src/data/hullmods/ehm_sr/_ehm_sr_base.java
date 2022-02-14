@@ -7,7 +7,7 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.loading.specs.g;
 
-import data.hullmods._ehm_base_master;
+import data.hullmods._ehm_base;
 import data.hullmods.ehm_ar._ehm_ar_base;
 import data.hullmods.ehm_wr._ehm_wr_base;
 
@@ -22,7 +22,7 @@ import data.hullmods.ehm_wr._ehm_wr_base;
  * @version 0.5
  * @since 0.3
  */
-public class _ehm_sr_base extends _ehm_base_master {
+public class _ehm_sr_base extends _ehm_base {
 	/**
 	 * Alters the system on a hullSpec, and returns it.
 	 * The returned hullSpec needs to be installed on the variant.

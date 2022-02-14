@@ -13,7 +13,7 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 
 import org.apache.log4j.Logger;
 
-import data.hullmods._ehm_base_master.ehm;
+import data.hullmods._ehm_base.ehm;
 import data.hullmods.ehm_sr._ehm_sr_base;
 import data.hullmods.ehm_wr._ehm_wr_base;
 

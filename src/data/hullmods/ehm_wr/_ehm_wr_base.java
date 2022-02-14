@@ -11,7 +11,7 @@ import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.loading.specs.g;
 import com.fs.starfarer.loading.specs.oOoo;
 
-import data.hullmods._ehm_base_master;
+import data.hullmods._ehm_base;
 import data.hullmods.ehm_ar._ehm_ar_base;
 import data.hullmods.ehm_sr._ehm_sr_base;
 
@@ -26,7 +26,7 @@ import data.hullmods.ehm_sr._ehm_sr_base;
  * @version 0.5
  * @since 0.3
  */
-public class _ehm_wr_base extends _ehm_base_master {
+public class _ehm_wr_base extends _ehm_base {
 	/**
 	 * Alters the weapon slots on the passed hullSpec, and returns it.
 	 * The returned hullSpec needs to be installed on the variant.

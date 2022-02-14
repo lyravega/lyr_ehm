@@ -18,8 +18,8 @@ import com.fs.starfarer.loading.specs.oOoo;
 
 import org.lwjgl.util.vector.Vector2f;
 
-import data.hullmods._ehm_base_master;
-import data.hullmods._ehm_base_util;
+import data.hullmods._ehm_base;
+import data.hullmods._ehm_util;
 import data.hullmods.ehm_sr._ehm_sr_base;
 import data.hullmods.ehm_wr._ehm_wr_base;
 
@@ -35,7 +35,7 @@ import data.hullmods.ehm_wr._ehm_wr_base;
  * @version 0.5
  * @since 0.3
  */
-public class _ehm_ar_base extends _ehm_base_master {
+public class _ehm_ar_base extends _ehm_base {
 	/** 
 	 * Spawns additional weapon slots, if the slots have adapters on them.
 	 * The returned hullSpec needs to be installed on the variant.
@@ -111,7 +111,7 @@ public class _ehm_ar_base extends _ehm_base_master {
 			for (String position: offsets.keySet()) {
 				oOoo childSlot = parentSlot.clone();
 				String childSlotId = ehm.affix.adaptedSlot + parentSlotId + position; // also used as nodeId because nodeId isn't visible
-				classsuper childSlotNode = new classsuper(childSlotId, _ehm_base_util.generateChildLocation(parentSlotLocation, parentSlotAngle, offsets.get(position)));
+				classsuper childSlotNode = new classsuper(childSlotId, _ehm_util.generateChildLocation(parentSlotLocation, parentSlotAngle, offsets.get(position)));
 				WeaponSize childSlotSize = parentSlotSize.equals(WeaponSize.LARGE) ? WeaponSize.MEDIUM : WeaponSize.SMALL;
 
 				childSlot.setId(childSlotId);

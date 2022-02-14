@@ -20,7 +20,7 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
  * Triggers a script to keep track of the installed, new and removed hullMods, implementing 
  * jury-rigged 'onAdd()' and 'onRemove()' functions in essence, which are used to refresh the 
  * refit screen in order to show the changes correctly. For further details, check the ship 
- * script {@link shipTrackerScript}, and the TRACKERS part of {@link _ehm_base_master}. 
+ * script {@link shipTrackerScript}, and the TRACKERS part of {@link _ehm_base}. 
  * 
  * If the hullSpec is restored through {@link #ehm_getStockHullSpec(ShipVariantAPI, boolean)},
  * the persistence of this base hullMod will ensure that it will run through the same cloning
@@ -30,7 +30,7 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
  * @version 0.5
  * @since 0.4
  */
-public class ehm_base extends _ehm_base_master {
+public class ehm_base extends _ehm_base {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant(); 
