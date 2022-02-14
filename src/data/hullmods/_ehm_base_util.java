@@ -33,7 +33,7 @@ public class _ehm_base_util {
     }
     
     // why the fuck are ships 'sideways'?
-	protected static Vector2f generateChildLocation(Vector2f parentLocation, float parentAngle, Vector2f childOffset) {
+	public static Vector2f generateChildLocation(Vector2f parentLocation, float parentAngle, Vector2f childOffset) {
         Vector2f childLocation = new Vector2f(0.0f, 0.0f);
 
         final double parentAngleInRadians = parentAngle / 180.0d * PI; 

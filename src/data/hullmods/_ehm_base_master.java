@@ -20,6 +20,9 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.loading.specs.g;
 
+import data.hullmods.ehm_ar._ehm_ar_base;
+import data.hullmods.ehm_sr._ehm_sr_base;
+import data.hullmods.ehm_wr._ehm_wr_base;
 import data.scripts.fleetTrackerScript;
 import data.scripts.refreshRefitScript;
 import data.scripts.shipTrackerScript;
