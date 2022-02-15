@@ -1,8 +1,8 @@
 package data.hullmods.ehm_sr;
 
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
-import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
+import com.fs.starfarer.loading.specs.HullVariantSpec;
 
 /**@category System Retrofit 
  * @author lyravega
@@ -14,10 +14,10 @@ public class ehm_sr_emp extends _ehm_sr_base {
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		ShipVariantAPI variant = stats.getVariant();
+		HullVariantSpec variant = HullVariantSpec.class.cast(stats.getVariant()); 
 
 		if(variant.getHullSpec().getShipSystemId().equals(systemId)) return;
 
-		variant.setHullSpecAPI(ehm_systemRetrofit(stats.getVariant(), systemId));
+		variant.setHullSpecAPI(ehm_systemRetrofit(variant, systemId));
 	}
 }

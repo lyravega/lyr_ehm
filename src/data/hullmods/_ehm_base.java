@@ -13,11 +13,13 @@ import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.HullModEffect;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
+import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.loading.specs.HullVariantSpec;
 import com.fs.starfarer.loading.specs.g;
 
 import data.hullmods.ehm_ar._ehm_ar_base;
@@ -114,7 +116,7 @@ public class _ehm_base implements HullModEffect {
 	@Override public String getUnapplicableReason(ShipAPI ship) {	return unapplicableReason(ship); }
 
 	/**
-	 * Combined {@link #isApplicableToShip(ShipAPI)} and {@link #getUnapplicableReason(ShipAPI)}.
+	 * Combined {@link #isApplicableToShip()} and {@link #getUnapplicableReason()}.
 	 * @return a string or null, which is also used for the if-check. 
 	 */
 	protected String unapplicableReason(ShipAPI ship) {	return null; } 
@@ -124,7 +126,7 @@ public class _ehm_base implements HullModEffect {
 	@Override public String getCanNotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) { return cannotBeInstalledNowReason(ship, marketOrNull, mode); }
 
 	/**
-	 * Combined {@link #canBeAddedOrRemovedNow(ShipAPI, MarketAPI, CoreUITradeMode)} and {@link #getCanNotBeInstalledNowReason(ShipAPI, MarketAPI, CoreUITradeMode)}.
+	 * Combined {@link #canBeAddedOrRemovedNow()} and {@link #getCanNotBeInstalledNowReason()}.
 	 * @return a string or null, which is also used for the if-check.  
 	 */
 	protected String cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) { return null; } 
@@ -144,9 +146,9 @@ public class _ehm_base implements HullModEffect {
 	 * @param variant of the ship to track
 	 * @param memberId of the ship to track
 	 * @return a {@link shipTrackerScript} script
-	 * @see Overloads: {@link #shipTrackerScript(ShipAPI)} and {@link #shipTrackerScript(MutableShipStatsAPI)} 
+	 * @see Overloads: {@link #shipTrackerScript()} and {@link #shipTrackerScript()} 
 	 */
-	private shipTrackerScript shipTrackerScript(ShipVariantAPI variant, String memberId) {
+	private shipTrackerScript shipTrackerScript(HullVariantSpec variant, String memberId) {
 		for(EveryFrameScript script : Global.getSector().getScripts()) {
 			if(script instanceof shipTrackerScript) {
 				shipTrackerScript temp = (shipTrackerScript) script; 
@@ -175,12 +177,12 @@ public class _ehm_base implements HullModEffect {
 	 * the memory.
 	 * @param stats of the ship to track
 	 * @return a {@link shipTrackerScript} script
-	 * @see Overload: {@link #shipTrackerScript(ShipAPI)} 
+	 * @see Overload: {@link #shipTrackerScript()} 
 	 */
 	protected shipTrackerScript shipTrackerScript(MutableShipStatsAPI stats) {
 		if (stats == null) return null; shipTracker = null; 
 
-		ShipVariantAPI variant = stats.getVariant();
+		HullVariantSpec variant = HullVariantSpec.class.cast(stats.getVariant()); 
 		String memberId = (stats.getFleetMember() != null) ? stats.getFleetMember().getId() : null; // this can be null
 		
 		return (memberId != null) ? shipTrackerScript(variant, memberId) : null;
@@ -193,12 +195,12 @@ public class _ehm_base implements HullModEffect {
 	 * the memory.
 	 * @param ship to track
 	 * @return a {@link shipTrackerScript} script
-	 * @see Overload: {@link #shipTrackerScript(MutableShipStatsAPI)} 
+	 * @see Overload: {@link #shipTrackerScript()} 
 	 */
 	protected shipTrackerScript shipTrackerScript(ShipAPI ship) {
 		if (ship == null) return null; shipTracker = null; 
 
-		ShipVariantAPI variant = ship.getVariant();
+		HullVariantSpec variant = HullVariantSpec.class.cast(ship.getVariant());
 		String memberId = ship.getFleetMemberId(); // fleet member can be null, but this never is
 		
 		return shipTrackerScript(variant, memberId);
@@ -212,7 +214,7 @@ public class _ehm_base implements HullModEffect {
 	 * to output useless info logs on the terminal, and does nothing else. The reference MUST be
 	 * dropped otherwise it will keep living on in the memory.
 	 * @return a {@link fleetTrackerScript} script
-	 * @see Callers: {@link #shipTrackerScript(ShipAPI)} and {@link #shipTrackerScript(MutableShipStatsAPI)} 
+	 * @see Callers: {@link #shipTrackerScript(ShipAPI)} and {@link #shipTrackerScript()} 
 	 */
 	private fleetTrackerScript fleetTrackerScript() {
 		fleetTracker = null;
@@ -237,11 +239,15 @@ public class _ehm_base implements HullModEffect {
 	 * Must be used with EXTREME CAUTION as if this is called from somewhere that is NOT
 	 * going to be executed once per frame, will cause the screen to flicker.
 	 * 
-	 * The other similar scripts run continuosly, and will trigger a refresh on certain
+	 * The other similar scripts run continuously, and will trigger a refresh on certain
 	 * conditions; in contrast, this one is designed to be called externally, and from
 	 * a piece of code that will execute ONCE. Examples are, a hullmod removing itself, 
 	 * hullmod becoming a built-in one, etc... which should already have proper checks 
 	 * that prevents further executions. 
+	 * 
+	 * @see Trigger: {@link ehm_base} (through {@link #ehm_hullSpecClone()})
+	 * @see Trigger: {@link data.hullmods.ehm_ar.ehm_ar_adapterremoval} (through {@link #ehm_hullSpecClone()})
+	 * @see Trigger: {@link data.hullmods.ehm_ar.ehm_ar_stepdownadapter} (everytime adapter functions)
 	 */
 	protected static void refreshRefit() {
 		refreshRefitScript = null;
@@ -291,6 +297,7 @@ public class _ehm_base implements HullModEffect {
 			public static final String adaptedSlot = "AS_"; 
 			public static final String allRetrofit = "ehm_"; // must match hullmod id in .csv
 			public static final String systemRetrofit = "ehm_sr_"; // must match hullmod id in .csv
+			public static final String weaponRetrofit = "ehm_wr_"; // must match hullmod id in .csv
 		}
 		public static enum excuses { ;
 			public static final String hasAnyRetrofit = "An experimental hull modification is installed. This cannot be removed as long as they are present on the hull";
@@ -330,7 +337,7 @@ public class _ehm_base implements HullModEffect {
 	 * Checks the ship if it has retrofit base installed ({@link ehm_base}) installed
 	 * @param ship to check 
 	 * @return true if ship has it, false otherwise (duh)
-	 * @see Overload: {@link #ehm_hasRetrofitBaseBuiltIn(ShipVariantAPI)}
+	 * @see Overload: {@link #ehm_hasRetrofitBaseBuiltIn()}
 	 */
 	protected static final boolean ehm_hasRetrofitBaseBuiltIn(ShipAPI ship) {
 		return ship.getVariant().getHullSpec().isBuiltInMod(ehm.id.baseRetrofit);
@@ -340,7 +347,7 @@ public class _ehm_base implements HullModEffect {
 	 * Checks the ship if it has retrofit base ({@link ehm_base}) installed
 	 * @param variant to check 
 	 * @return true if ship has it, false otherwise (duh)
-	 * @see Overload: {@link #ehm_hasRetrofitBaseBuiltIn(ShipAPI)}
+	 * @see Overload: {@link #ehm_hasRetrofitBaseBuiltIn()}
 	 */
 	protected static final boolean ehm_hasRetrofitBaseBuiltIn(ShipVariantAPI variant) {
 		return variant.getHullSpec().isBuiltInMod(ehm.id.baseRetrofit);
@@ -353,75 +360,34 @@ public class _ehm_base implements HullModEffect {
 	 * returns the same hullSpec. 
 	 * @param variant to be used as a template
 	 * @return the same or a new hullSpec
-	 * @see Overload: {@link #ehm_hullSpecClone(g)} 
-	 * @see Stock: {@link #ehm_getStockHullSpec(ShipVariantAPI, boolean)} 
 	 */
-	protected static final g ehm_hullSpecClone(ShipVariantAPI variant) {
-		g hullSpec = (g) variant.getHullSpec(); 
+	protected static final g ehm_hullSpecClone(HullVariantSpec variant, boolean getFresh) {
+		if (!getFresh && ehm_hasRetrofitBaseBuiltIn(variant)) return g.class.cast(variant.getHullSpec());
 
-		if (!ehm_hasRetrofitBaseBuiltIn(variant)) {
-			refreshRefit(); 
-			hullSpec = hullSpec.clone();
-			hullSpec.addBuiltInMod(ehm.id.baseRetrofit);
-			hullSpec.setManufacturer("Experimental"); // for color, must match .json TODO: make flavour optional
-			hullSpec.setDescriptionPrefix("This design utilizes experimental hull modifications created by a spacer who has been living in a junkyard for most of his life. His 'treasure hoard' is full of franken-ships that somehow fly by using cannibalized parts from other ships that would be deemed incompatible. Benefits of such modifications are unclear as they do not provide a certain advantage over the stock designs. However the level of customization and flexibility they offer is certainly unparalleled.");
-		}
+		g hullSpec = getFresh // TL;DR: if 'getFresh' is true, grab a stock variant hullSpec, otherwise grab current hullSpec
+		? g.class.cast(Global.getSettings().getHullSpec(variant.getHullSpec().getHullId())).clone()
+		: variant.getHullSpec().clone();
 
-		return hullSpec;
-	}
-
-	/**
-	 * Variant-less version of {@link #ehm_getStockHullSpec(ShipVariantAPI, boolean)}
-	 * that do not have any checks, grabs a hullSpec and clones it directly, while
-	 * adding the same stuff as its counterpart.
-	 * @param variant to be used as a template
-	 * @return the same or a new hullSpec
-	 * @see Overload: {@link #ehm_hullSpecClone(ShipVariantAPI)} 
-	 * @see Stock: {@link #ehm_getStockHullSpec(ShipVariantAPI, boolean)} 
-	 */
-	protected static final g ehm_hullSpecClone(g hullSpec) {
-		refreshRefit(); 
-		hullSpec = hullSpec.clone();
 		hullSpec.addBuiltInMod(ehm.id.baseRetrofit);
 		hullSpec.setManufacturer("Experimental"); // for color, must match .json TODO: make flavour optional
 		hullSpec.setDescriptionPrefix("This design utilizes experimental hull modifications created by a spacer who has been living in a junkyard for most of his life. His 'treasure hoard' is full of franken-ships that somehow fly by using cannibalized parts from other ships that would be deemed incompatible. Benefits of such modifications are unclear as they do not provide a certain advantage over the stock designs. However the level of customization and flexibility they offer is certainly unparalleled.");
 
+		if (!getFresh) refreshRefit();
 		return hullSpec;
 	}
+	@Deprecated // without obfuscated stuff
+	protected static final ShipHullSpecAPI ehm_hullSpecClone(ShipVariantAPI variantAPI, boolean getFresh) {
+		if (!getFresh && ehm_hasRetrofitBaseBuiltIn(variantAPI)) return variantAPI.getHullSpec();
 
-	/**
-	 * Does the opposite of 'ehm_hullSpecClone'; gets the stock
-	 * hullSpec of a passed variant, and returns the stock hullSpec.
-	 * Restores the hullSpec to factory settings, in other words; a 
-	 * convenient way to mass undo all of the hullSpec changes. 
-	 * @param variant to be used as a template
-	 * @param forReference to determine if the hullSpec will be used as reference
-	 * @return a stock hullSpec
-	 * @see Clone: {@link _ehm_base#ehm_hullSpecClone} 
-	 */
-	protected static final g ehm_getStockHullSpec(ShipVariantAPI variant, boolean forReference) {
-		//g stockHullSpec = oO0OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO.o00000(variant.getHullSpec().getHullId());
-		g stockHullSpec = (g) Global.getSettings().getHullSpec(variant.getHullSpec().getHullId());
+		HullVariantSpec tempVariant = getFresh // TL;DR: if 'getFresh' is true, grab a stock variant hullSpec, otherwise grab current hullSpec
+		? new HullVariantSpec("ehm_tempVariant", HullVariantSpec.class.cast(Global.getSettings().getVariant(variantAPI.getHullVariantId())).getHullSpec().clone())
+		: new HullVariantSpec("ehm_tempVariant", HullVariantSpec.class.cast(variantAPI).getHullSpec().clone());
 
-		if (!forReference) stockHullSpec = stockHullSpec.clone();
-		return stockHullSpec;
-	}
+		tempVariant.getHullSpec().addBuiltInMod(ehm.id.baseRetrofit);
+		tempVariant.getHullSpec().setManufacturer("Experimental"); // for color, must match .json TODO: make flavour optional
+		tempVariant.getHullSpec().setDescriptionPrefix("This design utilizes experimental hull modifications created by a spacer who has been living in a junkyard for most of his life. His 'treasure hoard' is full of franken-ships that somehow fly by using cannibalized parts from other ships that would be deemed incompatible. Benefits of such modifications are unclear as they do not provide a certain advantage over the stock designs. However the level of customization and flexibility they offer is certainly unparalleled.");
 
-	/**
-	 * Checks if a hullSpec is created on runtime; cloned & is transient.
-	 * Not used as that check is done through a tag that is attached to
-	 * to transient hullSpec. This remains here for reference.
-	 * @param variant to compare
-	 * @return false if this is a transient hullSpec, true otherwise
-	 * @see {@link com.fs.starfarer.loading.specs.g} 
-	 * @see {@link com.fs.starfarer.loading.specs.publicsuper} 
-	 */
-	@Deprecated
-	protected static final boolean ehm_hullSpecCompare(ShipVariantAPI variant) {
-		g hullSpec = (g) variant.getHullSpec();
-		//g stockHullSpec = oO0OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO.o00000(variant.getHullSpec().getHullId());
-		g stockHullSpec = (g) Global.getSettings().getHullSpec(variant.getHullSpec().getHullId());
-		
-		return hullSpec.equals(stockHullSpec);
+		if (!getFresh) refreshRefit();
+		return tempVariant.getHullSpec();
 	}
 }

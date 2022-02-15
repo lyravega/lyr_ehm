@@ -3,15 +3,16 @@ package data.hullmods.ehm_ar;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
+import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
+import com.fs.starfarer.loading.specs.HullVariantSpec;
 import com.fs.starfarer.loading.specs.classsuper;
 import com.fs.starfarer.loading.specs.g;
 import com.fs.starfarer.loading.specs.oOoo;
@@ -43,8 +44,8 @@ public class _ehm_ar_base extends _ehm_base {
 	 * @return a hullSpec to be installed on the variant
 	 */
 	// TODO: Clean this up
-	protected static final g ehm_stepDownAdapter(ShipVariantAPI variant) {
-		g hullSpec = (g) variant.getHullSpec(); 
+	protected static final g ehm_stepDownAdapter(HullVariantSpec variant) {
+		g hullSpec = variant.getHullSpec(); 
 		boolean refreshRefit = false;
 
 		// getFittedWeaponSlots() vs getNonBuiltInWeaponSlots()
@@ -131,16 +132,18 @@ public class _ehm_ar_base extends _ehm_base {
 	}
 
 	/** 
-	 * Just an extra call to {@link #ehm_getStockHullSpec(ShipVariantAPI, boolean)}.
+	 * Just an extra call to {@link #ehm_getStockHullSpec()}.
 	 * Used to do all kinds of stuff, now just retrieves a stock hull. Due to
 	 * the persistence of 
 	 * @param variant that will have alterations on slots with an adapter
 	 * @return a hullSpec to be installed on the variant
 	 */
-	protected static final g ehm_adapterRemoval(ShipVariantAPI variant) {
-		g newHullSpec = (g) Global.getSettings().getHullSpec(variant.getHullSpec().getHullId());
-
-		return ehm_hullSpecClone(newHullSpec);
+	protected static final g ehm_adapterRemoval(HullVariantSpec variant) {
+		return ehm_hullSpecClone(variant, true);
+	}
+	@Deprecated // without obfuscated stuff
+	protected static final ShipHullSpecAPI ehm_adapterRemoval(ShipVariantAPI variant) {
+		return ehm_hullSpecClone(variant, true);
 	}
 
 	//#region INSTALLATION CHECKS
@@ -156,7 +159,7 @@ public class _ehm_ar_base extends _ehm_base {
 
 	@Override
 	protected String cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
-		ShipVariantAPI variant = ship.getVariant();
+		HullVariantSpec variant = HullVariantSpec.class.cast(ship.getVariant());
 		
 		if (variant.hasHullMod(hullModSpec.getId())) for (WeaponSlotAPI slot: variant.getHullSpec().getAllWeaponSlotsCopy()) 
 		if (slot.getId().contains(ehm.affix.adaptedSlot)) return ehm.excuses.adapterActivated;

@@ -4,7 +4,9 @@ import java.util.Set;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.ShipAPI;
+import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.loading.specs.HullVariantSpec;
 import com.fs.starfarer.loading.specs.g;
 
 import data.hullmods._ehm_base;
@@ -30,16 +32,28 @@ public class _ehm_sr_base extends _ehm_base {
 	 * @param systemId of the system to be installed on the passed variant
 	 * @return a new hullSpec to be installed on the variant
 	 */
-	protected static final g ehm_systemRetrofit(ShipVariantAPI variant, String systemId) { 
-		g hullSpec = (g) variant.getHullSpec();
+	protected static final g ehm_systemRetrofit(HullVariantSpec variant, String systemId) { 
+		g hullSpec = variant.getHullSpec();
 		hullSpec.setShipSystemId(systemId);
 		return hullSpec; 
 	}
-
-	public static final g ehm_systemRestore(ShipVariantAPI variant) {
-		g hullSpec = (g) variant.getHullSpec();
+	@Deprecated // without obfuscated stuff
+	protected static final ShipHullSpecAPI ehm_systemRetrofit(ShipVariantAPI variantAPI, String systemId) { 
+		HullVariantSpec tempVariant = new HullVariantSpec("ehm_tempVariant", HullVariantSpec.class.cast(variantAPI).getHullSpec());
+		tempVariant.getHullSpec().setShipSystemId(systemId);
+		return tempVariant.getHullSpec(); 
+	}
+	
+	public static final g ehm_systemRestore(HullVariantSpec variant) {
+		g hullSpec = variant.getHullSpec();
 		hullSpec.setShipSystemId(Global.getSettings().getHullSpec(variant.getHullSpec().getHullId()).getShipSystemId());
 		return hullSpec; 
+	}
+	@Deprecated // without obfuscated stuff
+	public static final ShipHullSpecAPI ehm_systemRestore(ShipVariantAPI variantAPI) { 
+		HullVariantSpec tempVariant = new HullVariantSpec("ehm_tempVariant", HullVariantSpec.class.cast(variantAPI).getHullSpec());
+		tempVariant.getHullSpec().setShipSystemId(Global.getSettings().getHullSpec(variantAPI.getHullSpec().getHullId()).getShipSystemId());
+		return tempVariant.getHullSpec(); 
 	}
 
 	//#region INSTALLATION CHECKS

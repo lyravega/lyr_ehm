@@ -1,13 +1,18 @@
 package data.hullmods.ehm_wr;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
+import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
+import com.fs.starfarer.api.loading.WeaponSlotAPI;
+import com.fs.starfarer.loading.specs.HullVariantSpec;
 import com.fs.starfarer.loading.specs.g;
 import com.fs.starfarer.loading.specs.oOoo;
 
@@ -34,8 +39,8 @@ public class _ehm_wr_base extends _ehm_base {
 	 * @param conversions is a map that pairs slot types
 	 * @return a hullSpec to be installed on the variant
 	 */
-	protected static final g ehm_weaponSlotRetrofit(ShipVariantAPI variant, Map<WeaponType, WeaponType> conversions) {
-		g hullSpec = (g) variant.getHullSpec(); 
+	protected static final g ehm_weaponSlotRetrofit(HullVariantSpec variant, Map<WeaponType, WeaponType> conversions) {
+		g hullSpec = variant.getHullSpec();
 
 		for (oOoo slot: hullSpec.getAllWeaponSlots()) {
 			WeaponType convertFrom = slot.getWeaponType();
@@ -48,18 +53,33 @@ public class _ehm_wr_base extends _ehm_base {
 
 		return hullSpec;
 	}
+	@Deprecated // without obfuscated stuff
+	protected static final ShipHullSpecAPI ehm_weaponSlotRetrofit(ShipVariantAPI variantAPI, Map<WeaponType, WeaponType> conversions) {
+		HullVariantSpec tempVariant = new HullVariantSpec("ehm_tempVariant", HullVariantSpec.class.cast(variantAPI).getHullSpec());
 
-	public static final g ehm_weaponSlotRestore(ShipVariantAPI variant) {
-		g hullSpec = (g) variant.getHullSpec(); 
-		g stockHullSpec = ehm_getStockHullSpec(variant, true);
+		for (WeaponSlotAPI slotAPI: variantAPI.getHullSpec().getAllWeaponSlotsCopy()) {
+			String slotId = slotAPI.getId();
+			WeaponType convertFrom = slotAPI.getWeaponType();
+			
+			if (conversions.containsKey(convertFrom)) {
+				WeaponType convertTo = (WeaponType) conversions.get(convertFrom); // Why is the typecast necessary here? Doesn't '.get()' return a 'WeaponType'?!?
+				tempVariant.getHullSpec().getWeaponSlot(slotId).setWeaponType(convertTo);
+			}
+		}
+
+		return tempVariant.getHullSpec();
+	}
+
+	public static final g ehm_weaponSlotRestore(HullVariantSpec variant) {
+		g stockHullSpec = ehm_hullSpecClone(variant, true);
+		g hullSpec = variant.getHullSpec();
 
 		for (oOoo stockSlot: stockHullSpec.getAllWeaponSlots()) {
 			if (!stockSlot.isWeaponSlot()) continue;
-			oOoo slot = hullSpec.getWeaponSlot(stockSlot.getId());
-			String slotId = slot.getId();
+			String slotId = stockSlot.getId();
 			WeaponType stockSlotWeaponType = stockSlot.getWeaponType();
 
-			if (slot.isDecorative()) {
+			if (hullSpec.getWeaponSlot(slotId).isDecorative()) {
 				hullSpec.getWeaponSlot(ehm.affix.adaptedSlot+slotId+"L").setWeaponType(stockSlotWeaponType);
 				hullSpec.getWeaponSlot(ehm.affix.adaptedSlot+slotId+"R").setWeaponType(stockSlotWeaponType);
 			} else {
@@ -68,6 +88,39 @@ public class _ehm_wr_base extends _ehm_base {
 		}
 
 		return hullSpec;
+	}
+	@Deprecated // without obfuscated stuff
+	public static final ShipHullSpecAPI ehm_weaponSlotRestore(ShipVariantAPI variantAPI) {
+		ShipHullSpecAPI stockHullSpecAPI = ehm_hullSpecClone(variantAPI, true);
+		HullVariantSpec tempVariant = new HullVariantSpec("ehm_tempVariant", HullVariantSpec.class.cast(variantAPI).getHullSpec());
+		// ShipHullSpecAPI hullSpecAPI = tempVariant.getHullSpec();
+
+		for (WeaponSlotAPI stockSlotAPI: stockHullSpecAPI.getAllWeaponSlotsCopy()) {
+			String slotId = stockSlotAPI.getId();
+
+			if (!weaponTypes.contains(stockSlotAPI.getWeaponType())) continue;
+			WeaponType stockSlotWeaponType = stockSlotAPI.getWeaponType();
+
+			if (tempVariant.getHullSpec().getWeaponSlot(slotId).isDecorative()) {
+				tempVariant.getHullSpec().getWeaponSlot(ehm.affix.adaptedSlot+slotId+"L").setWeaponType(stockSlotWeaponType);
+				tempVariant.getHullSpec().getWeaponSlot(ehm.affix.adaptedSlot+slotId+"R").setWeaponType(stockSlotWeaponType);
+			} else {
+				tempVariant.getHullSpec().getWeaponSlot(slotId).setWeaponType(stockSlotWeaponType);
+			}
+		}
+
+		return tempVariant.getHullSpec();
+	}
+
+	private static final Set<WeaponType> weaponTypes = new HashSet<WeaponType>();
+	static {
+		weaponTypes.add(WeaponType.BALLISTIC); 
+		weaponTypes.add(WeaponType.ENERGY);
+		weaponTypes.add(WeaponType.MISSILE);
+		weaponTypes.add(WeaponType.HYBRID);
+		weaponTypes.add(WeaponType.COMPOSITE);
+		weaponTypes.add(WeaponType.SYNERGY);
+		weaponTypes.add(WeaponType.UNIVERSAL);
 	}
 
 	//#region INSTALLATION CHECKS
@@ -83,7 +136,7 @@ public class _ehm_wr_base extends _ehm_base {
 
 	@Override
 	protected String cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
-		ShipVariantAPI variant = ship.getVariant();
+		HullVariantSpec variant = HullVariantSpec.class.cast(ship.getVariant());
 		Collection<String> fittedWeapons = variant.getFittedWeaponSlots();
 		fittedWeapons.retainAll(variant.getNonBuiltInWeaponSlots());
 

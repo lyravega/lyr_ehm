@@ -7,7 +7,7 @@ import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
-import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.loading.specs.HullVariantSpec;
 
 // TODO: move this to its base, and clean it up
 
@@ -23,14 +23,9 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 public class ehm_ar_adapterremoval extends _ehm_ar_base {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		ShipVariantAPI variant = stats.getVariant();
+		HullVariantSpec variant = HullVariantSpec.class.cast(stats.getVariant()); 
 
 		variant.setHullSpecAPI(ehm_adapterRemoval(variant)); 
-		
-		// the screen will refresh without the one below, from the base hullmod,
-		// however, this is necessary for a 2nd 'hidden' refresh, to retain the
-		// to properly set the refit screen to the correct variant
-		refreshRefit(); 
 	}
 
 	//#region INSTALLATION CHECKS
@@ -47,7 +42,7 @@ public class ehm_ar_adapterremoval extends _ehm_ar_base {
 
 	@Override
 	protected String cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) { 
-		ShipVariantAPI variant = ship.getVariant();
+		HullVariantSpec variant = HullVariantSpec.class.cast(ship.getVariant());
 		Collection<String> fittedWeapons = variant.getFittedWeaponSlots();
 		fittedWeapons.retainAll(variant.getNonBuiltInWeaponSlots());
 

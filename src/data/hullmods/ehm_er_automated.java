@@ -1,16 +1,13 @@
 package data.hullmods;
 
-import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
-import com.fs.starfarer.loading.SpecStore;
 import com.fs.starfarer.loading.specs.D;
-import com.fs.starfarer.loading.specs.D.Oo;
+import com.fs.starfarer.loading.specs.HullVariantSpec;
 import com.fs.starfarer.loading.specs.g;
-import com.fs.starfarer.api.combat.ShipVariantAPI;
 
 public class ehm_er_automated extends _ehm_base {
 	private static final String automated = "automated";
@@ -18,7 +15,7 @@ public class ehm_er_automated extends _ehm_base {
 	// TODO: Finish this
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		ShipVariantAPI variant = stats.getVariant();
+		HullVariantSpec variant = HullVariantSpec.class.cast(stats.getVariant()); 
 		g hullSpec = (g) variant.getHullSpec();
 
 		for (D engineSlot : hullSpec.getEngineSlots()) {
@@ -44,7 +41,7 @@ public class ehm_er_automated extends _ehm_base {
 
 	@Override
 	protected String cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
-		ShipVariantAPI variant = ship.getVariant();
+		HullVariantSpec variant = HullVariantSpec.class.cast(ship.getVariant());
 		
 		// if (variant.getSuppressedMods().contains(automated)) return "Automated gone";
 

@@ -9,6 +9,7 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.loading.specs.HullVariantSpec;
 
 /**
  * Serves as a requirement for all experimental hull modifications. Clones the hullSpec, adds
@@ -22,7 +23,7 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
  * refit screen in order to show the changes correctly. For further details, check the ship 
  * script {@link shipTrackerScript}, and the TRACKERS part of {@link _ehm_base}. 
  * 
- * If the hullSpec is restored through {@link #ehm_getStockHullSpec(ShipVariantAPI, boolean)},
+ * If the hullSpec is restored through {@link #ehm_getStockHullSpec()},
  * the persistence of this base hullMod will ensure that it will run through the same cloning
  * process again.
  * @category Base Hull Modification 
@@ -33,8 +34,9 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 public class ehm_base extends _ehm_base {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		ShipVariantAPI variant = stats.getVariant(); 
-		variant.setHullSpecAPI(ehm_hullSpecClone(variant)); 
+		HullVariantSpec variant = HullVariantSpec.class.cast(stats.getVariant()); 
+
+		variant.setHullSpecAPI(ehm_hullSpecClone(variant, false)); 
 	}
 
 	@Override
@@ -44,7 +46,7 @@ public class ehm_base extends _ehm_base {
         CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
         if (tab == null || !tab.equals(CoreUITabId.REFIT)) return;
 
-		shipTrackerScript(ship).setVariant(ship.getVariant()); // setVariant() is necessary to reflect the changes on the "refit ship"
+		shipTrackerScript(ship).setVariant(HullVariantSpec.class.cast(ship.getVariant())); // setVariant() is necessary to reflect the changes on the "refit ship"
 	}
 
 	@Override

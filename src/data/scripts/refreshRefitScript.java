@@ -40,7 +40,7 @@ public class refreshRefitScript implements EveryFrameScriptWithCleanup {
                 robot.keyPress(KeyEvent.VK_R);
                 robot.keyRelease(KeyEvent.VK_R);
                 robot.keyRelease(KeyEvent.VK_ENTER);
-				Logger logger = Logger.getLogger("FT");
+				Logger logger = Logger.getLogger("lyr");
 				logger.info("RR: Refreshed refit tab");
 				isDone = true;
 				return;

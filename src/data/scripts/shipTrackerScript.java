@@ -9,7 +9,7 @@ import java.util.Set;
 import com.fs.starfarer.api.EveryFrameScriptWithCleanup;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CoreUITabId;
-import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.loading.specs.HullVariantSpec;
 
 import org.apache.log4j.Logger;
 
@@ -19,7 +19,7 @@ import data.hullmods.ehm_wr._ehm_wr_base;
 
 public class shipTrackerScript implements EveryFrameScriptWithCleanup {
 	// private fleetTrackerScript fleetTracker = null;
-	private ShipVariantAPI variant = null;
+	private HullVariantSpec variant = null;
 	// private g hullSpec = null;
 	private String memberId = null;
 	private Set<String> hullMods = new HashSet<String>();
@@ -30,12 +30,12 @@ public class shipTrackerScript implements EveryFrameScriptWithCleanup {
 	private Logger logger = null;
 	
 	//#region INITIALIZATION & SETTERS & GETTERS
-	public void setVariant(ShipVariantAPI variant) { // this can be moved to initialize
+	public void setVariant(HullVariantSpec variant) { // this can be moved to initialize
 		this.variant = variant;
 		// this.hullSpec = (g) variant.getHullSpec();
 	}
 	
-	public void initialize(ShipVariantAPI variant, String memberId, fleetTrackerScript fleetTracker) {
+	public void initialize(HullVariantSpec variant, String memberId, fleetTrackerScript fleetTracker) {
 		this.variant = variant;
 		// this.hullSpec = variant.getHullSpec();
 		this.memberId = memberId;
@@ -93,16 +93,22 @@ public class shipTrackerScript implements EveryFrameScriptWithCleanup {
 		
 		for (Iterator<String> i = newHullMods.iterator(); i.hasNext();) { 
 			String hullModId = i.next(); 
-
-			if (hullModId.startsWith(ehm.tag.systemRetrofit)) refresh = true;
-			else if (hullModId.startsWith(ehm.tag.weaponRetrofit)) refresh = true;
+			String hullModType = hullModId.substring(0, 7); // all affixes (not tags) are fixed to 0-7
+			switch (hullModType) {
+				case ehm.affix.systemRetrofit: refresh = true; break;
+				case ehm.affix.weaponRetrofit: refresh = true; break;
+				default: break;
+			}
 		} newHullMods.clear();
 		
 		for (Iterator<String> i = removedHullMods.iterator(); i.hasNext();) { 
 			String hullModId = i.next(); 
-
-			if (hullModId.startsWith(ehm.tag.systemRetrofit)) { refresh = true; _ehm_sr_base.ehm_systemRestore(variant); }
-			else if (hullModId.startsWith(ehm.tag.weaponRetrofit)) { refresh = true; _ehm_wr_base.ehm_weaponSlotRestore(variant); }
+			String hullModType = hullModId.substring(0, 7); 
+			switch (hullModType) {
+				case ehm.affix.systemRetrofit: refresh = true; _ehm_sr_base.ehm_systemRestore(variant); break;
+				case ehm.affix.weaponRetrofit: refresh = true; _ehm_wr_base.ehm_weaponSlotRestore(variant); break;
+				default: break;
+			}
 		} removedHullMods.clear();
 
 		if (refresh) { runTime++;

@@ -5,8 +5,8 @@ import java.util.Map;
 
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
-import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
+import com.fs.starfarer.loading.specs.HullVariantSpec;
 
 /**@category Weapon Retrofit 
  * @author lyravega
@@ -23,8 +23,8 @@ public class ehm_wr_energyslotretrofit extends _ehm_wr_base {
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		ShipVariantAPI variant = stats.getVariant();
+		HullVariantSpec variant = HullVariantSpec.class.cast(stats.getVariant()); 
 
-		variant.setHullSpecAPI(ehm_weaponSlotRetrofit(stats.getVariant(), conversion));
+		variant.setHullSpecAPI(ehm_weaponSlotRetrofit(variant, conversion));
 	}
 }
