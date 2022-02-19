@@ -9,13 +9,13 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.loading.specs.HullVariantSpec;
 
-// TODO: move this to its base, and clean it up
-
 /**
- * To simply put, grabs a stock hullSpec, and applies it to the variant. As the
- * base retrofit is still there, it will reclone the 
- */
-/**@category Adapter Removal 
+ * To simply put, grabs a stock hullSpec, and applies it to the variant. The 
+ * removal of mods is caused by hullMod incompatibility. Both belong to the
+ * same group, and as such, when this is installed alongside another adapter,
+ * game will remove both mods at the same time, but not before applying the 
+ * effects of the adapter hullmod.
+ * @category Adapter Removal 
  * @author lyravega
  * @version 0.5
  * @since 0.3

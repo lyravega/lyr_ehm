@@ -21,9 +21,10 @@ import data.hullmods.ehm_ar._ehm_ar_base;
 import data.hullmods.ehm_sr._ehm_sr_base;
 
 /**
- * This class is used by weapon retrofit hullmods. They 
- * are pretty straightforward in their operation; change
- * all of the weapon slots on a ship to a different type.
+ * This class is used by weapon retrofit hullmods. They are pretty 
+ * straightforward in their operation; change all of the weapon slots 
+ * on a ship to a different type. 
+ * </p>
  * Reason to split this as another base was primarily maintenance.
  * @see {@link _ehm_ar_base} for slot adapter base
  * @see {@link _ehm_sr_base} for system retrofit base
@@ -33,11 +34,12 @@ import data.hullmods.ehm_sr._ehm_sr_base;
  */
 public class _ehm_wr_base extends _ehm_base {
 	/**
-	 * Alters the weapon slots on the passed hullSpec, and returns it.
-	 * The returned hullSpec needs to be installed on the variant.
+	 * Alters the weapon slots on the passed hullSpec, and returns it. The returned 
+	 * hullSpec needs to be installed on the variant.
 	 * @param variant that will have its weapon slots altered
 	 * @param conversions is a map that pairs slot types
 	 * @return a hullSpec to be installed on the variant
+	 * @see {@link #ehm_weaponSlotRestore()} reverses this process one slot at a time
 	 */
 	protected static final g ehm_weaponSlotRetrofit(HullVariantSpec variant, Map<WeaponType, WeaponType> conversions) {
 		g hullSpec = variant.getHullSpec();
@@ -70,6 +72,15 @@ public class _ehm_wr_base extends _ehm_base {
 		return tempVariant.getHullSpec();
 	}
 
+	/**
+	 * Compares the weapon slots of a stock hullSpec to the variant's hullspec. Restores 
+	 * altered slots to the originals, ignoring the decorative slots that an adapter 
+	 * might have altered. As there might be other things that alter these slots, 
+	 * restoring only the necessary ones is preferable.
+	 * @param variant with the altered weapon slots
+	 * @return the restored hullSpec in near-mint condition
+	 * @see {@link data.scripts.shipTrackerScript} only called externally by this script
+	 */
 	public static final g ehm_weaponSlotRestore(HullVariantSpec variant) {
 		g stockHullSpec = ehm_hullSpecClone(variant, true);
 		g hullSpec = variant.getHullSpec();

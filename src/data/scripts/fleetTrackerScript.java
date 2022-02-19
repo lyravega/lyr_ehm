@@ -21,9 +21,9 @@ public class fleetTrackerScript implements EveryFrameScript {
 	private Set<FleetMember> members = new HashSet<FleetMember>();
 	private CampaignFleet playerFleet = (CampaignFleet) Global.getSector().getPlayerFleet();
 	private boolean isDone = false;
+	private float runTime = 0f;
 	protected Robot robot = null;
 	public Logger logger = null;
-	// long last_time = System.nanoTime();
 	
 	//#region SETTERS & GETTERS
 	public void initialize() {
@@ -51,11 +51,10 @@ public class fleetTrackerScript implements EveryFrameScript {
 		CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
 		if (tab == null || !tab.equals(CoreUITabId.REFIT)) { logger.info("FT: Stopping fleet tracking"); isDone = true; return; }
 
-		/*
-		long time = System.nanoTime();
-		int delta_time = (int) ((time - last_time) / 1000);
-		last_time = time;
-		*/
+		if (runTime > 10f) {
+			runTime = 0f;
+			logger.info("FT: Tracking "+shipTrackers.size()+" ships");
+		} runTime += amount;
 
 		Set<FleetMember> newMembers = new HashSet<FleetMember>();
 		Set<FleetMember> oldMembers = new HashSet<FleetMember>();

@@ -7,25 +7,22 @@ import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
-import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.loading.specs.HullVariantSpec;
+
+import data.scripts.shipTrackerScript;
 
 /**
  * Serves as a requirement for all experimental hull modifications. Clones the hullSpec, adds
  * flavour text and manufacturer, and adds a hull tag to avoid re-cloning.
- * 
+ * </p>
  * With a cloned hullSpec, all changes will apply to only one ship, and will not be shared with 
  * other ships using the same hull. This base hullMod ensures that, but also does even more.  
- * 
+ * </p>
  * Triggers a script to keep track of the installed, new and removed hullMods, implementing 
  * jury-rigged 'onAdd()' and 'onRemove()' functions in essence, which are used to refresh the 
  * refit screen in order to show the changes correctly. For further details, check the ship 
  * script {@link shipTrackerScript}, and the TRACKERS part of {@link _ehm_base}. 
- * 
- * If the hullSpec is restored through {@link #ehm_getStockHullSpec()},
- * the persistence of this base hullMod will ensure that it will run through the same cloning
- * process again.
  * @category Base Hull Modification 
  * @author lyravega
  * @version 0.5

@@ -25,10 +25,10 @@ import data.hullmods.ehm_sr._ehm_sr_base;
 import data.hullmods.ehm_wr._ehm_wr_base;
 
 /**
- * This class is used by slot adapter hullmods. Slot adapters 
- * are designed to search the ship for specific weapons, and
- * perform operations on the hullSpec to yield interesting
- * results, such as creating a new weapon slot. 
+ * This class is used by slot adapter hullmods. Slot adapters are designed 
+ * to search the ship for specific weapons, and perform operations on the 
+ * hullSpec to yield interesting results, such as creating a new weapon slot. 
+ * </p>
  * Reason to split this as another base was primarily maintenance.
  * @see {@link _ehm_sr_base} for system retrofit base
  * @see {@link _ehm_wr_base} for weapon retrofit base
@@ -38,35 +38,17 @@ import data.hullmods.ehm_wr._ehm_wr_base;
  */
 public class _ehm_ar_base extends _ehm_base {
 	/** 
-	 * Spawns additional weapon slots, if the slots have adapters on them.
-	 * The returned hullSpec needs to be installed on the variant.
+	 * Spawns additional weapon slots, if the slots have adapters on them. The returned 
+	 * hullSpec needs to be installed on the variant.
 	 * @param variant that will have alterations on slots with an adapter
 	 * @return a hullSpec to be installed on the variant
 	 */
-	// TODO: Clean this up
 	protected static final g ehm_stepDownAdapter(HullVariantSpec variant) {
 		g hullSpec = variant.getHullSpec(); 
 		boolean refreshRefit = false;
 
-		// getFittedWeaponSlots() vs getNonBuiltInWeaponSlots()
-		// both gets slots with weapons in them
-		// getFittedWeaponSlots() doesn't get WeaponType.DECORATIVE, but gets WeaponType.BUILTIN
-		// getNonBuiltInWeaponSlots() doesn't get WeaponType.BUILTIN, but gets WeaponType.DECORATIVE
-		// WeaponType.DECORATIVE is used for the adapter slots, because it blocks UI interaction except strip
-		// as such, getFittedWeaponSlots() is preferable to reduce the checks in the logic below
-
-		// when an adapter is first added to the ship, its slot is still a proper weapon slot
-		// it will create two new slots, and its type will be changed to WeaponType.DECORATIVE
-		// as its slot type is changed, getFittedWeaponSlots() will ignore it
-		// as such, the function will be short-circuited; it will not create further slots
-		// the new slots have an affix in their slot tags that is also used to short-circuit the function
-
-		// DECORATIVE vs BUILTIN vs SYSTEM as a slot choice
-		// built-in shows up as a weapon, is interactable in the UI, is excluded in getNonBuiltInWeaponSlots()
-		// system shows up as a weapon, is not interactable in the UI
-		// decorative does not show up anywhere, is excluded in getFittedWeaponSlots() - best choice
 		for (String slotId: variant.getFittedWeaponSlots()) {
-			if (slotId.contains(ehm.affix.adaptedSlot)) continue; // short-circuit to avoid weapons in adapted slots causing an error on load, must be first
+			if (slotId.startsWith(ehm.affix.adaptedSlot)) continue; // short-circuit to avoid weapons in adapted slots causing an error on load, must be first
 			
 			//WeaponType slotType = variant.getSlot(slotId).getWeaponType();
 			//WeaponSize slotSize = variant.getSlot(slotId).getSlotSize();
@@ -130,20 +112,89 @@ public class _ehm_ar_base extends _ehm_base {
 		if (refreshRefit) { refreshRefit(); refreshRefit = false; }
 		return hullSpec;
 	}
+	@Deprecated // without obfuscated stuff - incomplete
+	protected static final ShipHullSpecAPI ehm_stepDownAdapter(ShipVariantAPI variantAPI) {
+		HullVariantSpec tempVariant = new HullVariantSpec("ehm_tempVariant", HullVariantSpec.class.cast(variantAPI).getHullSpec());
+		boolean refreshRefit = false;
+
+		for (String slotId: variantAPI.getFittedWeaponSlots()) {
+			if (slotId.startsWith(ehm.affix.adaptedSlot)) continue; // short-circuit to avoid weapons in adapted slots causing an error on load, must be first
+			
+			//WeaponType slotType = variant.getSlot(slotId).getWeaponType();
+			//WeaponSize slotSize = variant.getSlot(slotId).getSlotSize();
+			WeaponSpecAPI weaponSpec = variantAPI.getWeaponSpec(slotId);
+			//WeaponType weaponType = weaponSpec.getType();
+			WeaponSize weaponSize = weaponSpec.getSize();
+			String weaponId = weaponSpec.getWeaponId();
+
+			if (!weaponSize.equals(variantAPI.getSlot(slotId).getSlotSize())) continue; // to avoid plugging medium universal to large universal
+			if (!ehm.id.weapons.containsKey(weaponId)) continue; // to short-circuit the function if it isn't an adapter
+			
+			// these are separated in a switch case for now, for future expansions if there will be any
+			String childFormation = ehm.id.weapons.get(weaponId);
+			Map<String, Vector2f> offsets = new HashMap<String, Vector2f>();
+			switch (weaponSize) {
+				case LARGE: { 
+					if (childFormation.equals("line")) {
+						offsets.put("L", new Vector2f(0.0f, 12.0f)); // left
+						offsets.put("R", new Vector2f(0.0f, -12.0f)); // right
+					}
+				}
+				break;
+				case MEDIUM: { 
+					if (childFormation.equals("line")) {
+						offsets.put("L", new Vector2f(0.0f, 6.0f)); // left
+						offsets.put("R", new Vector2f(0.0f, -6.0f)); // right
+					}
+				}
+				break;
+				case SMALL: { 
+					// there is no small adapter
+				}
+				break;
+			}
+			
+			// child size is hardcoded in the loop, could be moved above with more formations in time, right now unimportant
+			WeaponSlotAPI parentSlot = variantAPI.getSlot(slotId); 
+			Vector2f parentSlotLocation = parentSlot.getLocation();
+			float parentSlotAngle = parentSlot.getAngle();
+			String parentSlotId = parentSlot.getId();
+			WeaponSize parentSlotSize = parentSlot.getSlotSize();
+
+			for (String position: offsets.keySet()) {
+				String childSlotId = ehm.affix.adaptedSlot + parentSlotId + position; // also used as nodeId because nodeId isn't visible
+				//lyr_node childSlotNode = new lyr_node(childSlotId, _ehm_util.generateChildLocation(parentSlotLocation, parentSlotAngle, offsets.get(position)));
+				WeaponSize childSlotSize = parentSlotSize.equals(WeaponSize.LARGE) ? WeaponSize.MEDIUM : WeaponSize.SMALL;
+								
+				WeaponSlotAPI childSlot = tempVariant.getHullSpec().getWeaponSlot(slotId).clone();
+				tempVariant.getHullSpec().getWeaponSlot(slotId).getClass().cast(childSlot).setId(childSlotId);
+				tempVariant.getHullSpec().addWeaponSlot(tempVariant.getHullSpec().getWeaponSlot(slotId).getClass().cast(childSlot));
+				//tempVariant.getHullSpec().getWeaponSlot(childSlotId).setNode(tempVariant.getHullSpec().getWeaponSlot(slotId).getNode().getClass().cast(childSlotNode));
+				tempVariant.getHullSpec().getWeaponSlot(childSlotId).setSlotSize(childSlotSize);
+			}
+			
+			tempVariant.getHullSpec().getWeaponSlot(slotId).getClass().cast(parentSlot).setWeaponType(WeaponType.DECORATIVE);
+			tempVariant.getHullSpec().addBuiltInWeapon(parentSlotId, weaponId);
+			refreshRefit = true; 
+		}
+		
+		if (refreshRefit) { refreshRefit(); refreshRefit = false; }
+		return tempVariant.getHullSpec();
+	}
 
 	/** 
-	 * Just an extra call to {@link #ehm_getStockHullSpec()}.
-	 * Used to do all kinds of stuff, now just retrieves a stock hull. Due to
-	 * the persistence of 
-	 * @param variant that will have alterations on slots with an adapter
-	 * @return a hullSpec to be installed on the variant
+	 * Grabs a stock hullSpec and clones it. As this one removes the dangerous 
+	 * changes to the hull, grabbing a stock one and passing it as a new one 
+	 * is considered 'safe'.
+	 * @param variant that have adapter-altered weapon slots
+	 * @return a stock hullSpec to be installed on the variant
 	 */
 	protected static final g ehm_adapterRemoval(HullVariantSpec variant) {
 		return ehm_hullSpecClone(variant, true);
 	}
 	@Deprecated // without obfuscated stuff
-	protected static final ShipHullSpecAPI ehm_adapterRemoval(ShipVariantAPI variant) {
-		return ehm_hullSpecClone(variant, true);
+	protected static final ShipHullSpecAPI ehm_adapterRemoval(ShipVariantAPI variantAPI) {
+		return ehm_hullSpecClone(variantAPI, true);
 	}
 
 	//#region INSTALLATION CHECKS

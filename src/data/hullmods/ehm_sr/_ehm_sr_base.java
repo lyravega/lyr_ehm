@@ -14,9 +14,9 @@ import data.hullmods.ehm_ar._ehm_ar_base;
 import data.hullmods.ehm_wr._ehm_wr_base;
 
 /**
- * This class is used by system retrofit hullmods. They 
- * are pretty straightforward in their operation; change
- * the system of a hullSpec.
+ * This class is used by system retrofit hullmods. They are pretty 
+ * straightforward in their operation; change the system of a hullSpec.
+ * </p>
  * Reason to split this as another base was primarily maintenance.
  * @see {@link _ehm_ar_base} for slot adapter base
  * @see {@link _ehm_wr_base} for weapon retrofit base
@@ -26,11 +26,12 @@ import data.hullmods.ehm_wr._ehm_wr_base;
  */
 public class _ehm_sr_base extends _ehm_base {
 	/**
-	 * Alters the system on a hullSpec, and returns it.
-	 * The returned hullSpec needs to be installed on the variant.
+	 * Alters the system on a hullSpec, and returns it. The returned hullSpec needs 
+	 * to be installed on the variant.
 	 * @param variant of the ship that will have its system replaced
 	 * @param systemId of the system to be installed on the passed variant
 	 * @return a new hullSpec to be installed on the variant
+	 * @see {@link #ehm_systemRestore()} reverses this process
 	 */
 	protected static final g ehm_systemRetrofit(HullVariantSpec variant, String systemId) { 
 		g hullSpec = variant.getHullSpec();
@@ -44,6 +45,13 @@ public class _ehm_sr_base extends _ehm_base {
 		return tempVariant.getHullSpec(); 
 	}
 	
+	/**
+	 * Restores a system of a hullSpec to its stock one, and returns it. Returned hullSpec 
+	 * needs to be installed on the variant.
+	 * @param variant that will have its system reset to factory defaults
+	 * @return a hullspec to be installed on the variant
+	 * @see {@link data.scripts.shipTrackerScript} only called externally by this script
+	 */
 	public static final g ehm_systemRestore(HullVariantSpec variant) {
 		g hullSpec = variant.getHullSpec();
 		hullSpec.setShipSystemId(Global.getSettings().getHullSpec(variant.getHullSpec().getHullId()).getShipSystemId());

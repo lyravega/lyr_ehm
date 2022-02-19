@@ -262,7 +262,7 @@ public class _ehm_base implements HullModEffect {
 
 		if (refreshRefitScript == null) { 
 			refreshRefitScript = new refreshRefitScript();
-			Global.getSector().addScript(refreshRefitScript);
+			Global.getSector().addTransientScript(refreshRefitScript);
 		}
 	}
 
@@ -362,7 +362,7 @@ public class _ehm_base implements HullModEffect {
 	 * @return the same or a new hullSpec
 	 */
 	protected static final g ehm_hullSpecClone(HullVariantSpec variant, boolean getFresh) {
-		if (!getFresh && ehm_hasRetrofitBaseBuiltIn(variant)) return g.class.cast(variant.getHullSpec());
+		if (!getFresh && ehm_hasRetrofitBaseBuiltIn(variant)) return variant.getHullSpec();
 
 		g hullSpec = getFresh // TL;DR: if 'getFresh' is true, grab a stock variant hullSpec, otherwise grab current hullSpec
 		? g.class.cast(Global.getSettings().getHullSpec(variant.getHullSpec().getHullId())).clone()

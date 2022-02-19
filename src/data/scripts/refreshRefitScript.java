@@ -17,16 +17,6 @@ public class refreshRefitScript implements EveryFrameScriptWithCleanup {
 	public Logger logger = null;
 	
 	@Override
-	public boolean runWhilePaused() {
-		return true;
-	}
-
-	@Override
-	public boolean isDone() {
-		return isDone;
-	}
-	
-	@Override
 	public void advance(float amount) {
         CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
         if (tab == null || !tab.equals(CoreUITabId.REFIT)) { isDone = true; return; }
@@ -49,6 +39,16 @@ public class refreshRefitScript implements EveryFrameScriptWithCleanup {
 		catch (AWTException ex) {
 			return;
 		}
+	}
+
+	@Override
+	public boolean runWhilePaused() {
+		return true;
+	}
+
+	@Override
+	public boolean isDone() {
+		return isDone;
 	}
 
 	@Override
