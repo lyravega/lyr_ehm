@@ -12,6 +12,7 @@ import com.fs.starfarer.loading.specs.g;
 import data.hullmods._ehm_base;
 import data.hullmods.ehm_ar._ehm_ar_base;
 import data.hullmods.ehm_wr._ehm_wr_base;
+import lyr.lyr_hullSpec;
 
 /**
  * This class is used by system retrofit hullmods. They are pretty 
@@ -33,16 +34,10 @@ public class _ehm_sr_base extends _ehm_base {
 	 * @return a new hullSpec to be installed on the variant
 	 * @see {@link #ehm_systemRestore()} reverses this process
 	 */
-	protected static final g ehm_systemRetrofit(HullVariantSpec variant, String systemId) { 
-		g hullSpec = variant.getHullSpec();
-		hullSpec.setShipSystemId(systemId);
-		return hullSpec; 
-	}
-	@Deprecated // without obfuscated stuff
-	protected static final ShipHullSpecAPI ehm_systemRetrofit(ShipVariantAPI variantAPI, String systemId) { 
-		HullVariantSpec tempVariant = new HullVariantSpec("ehm_tempVariant", HullVariantSpec.class.cast(variantAPI).getHullSpec());
-		tempVariant.getHullSpec().setShipSystemId(systemId);
-		return tempVariant.getHullSpec(); 
+	protected static final ShipHullSpecAPI ehm_systemRetrofit(ShipVariantAPI variant, String systemId) { 
+		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false); 
+		hullSpec.setShipSystemId(systemId); 
+		return hullSpec.retrieve(); 
 	}
 	
 	/**
@@ -52,16 +47,10 @@ public class _ehm_sr_base extends _ehm_base {
 	 * @return a hullspec to be installed on the variant
 	 * @see {@link data.scripts.shipTrackerScript} only called externally by this script
 	 */
-	public static final g ehm_systemRestore(HullVariantSpec variant) {
-		g hullSpec = variant.getHullSpec();
+	public static final ShipHullSpecAPI ehm_systemRestore(ShipVariantAPI variant) { 
+		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 		hullSpec.setShipSystemId(Global.getSettings().getHullSpec(variant.getHullSpec().getHullId()).getShipSystemId());
-		return hullSpec; 
-	}
-	@Deprecated // without obfuscated stuff
-	public static final ShipHullSpecAPI ehm_systemRestore(ShipVariantAPI variantAPI) { 
-		HullVariantSpec tempVariant = new HullVariantSpec("ehm_tempVariant", HullVariantSpec.class.cast(variantAPI).getHullSpec());
-		tempVariant.getHullSpec().setShipSystemId(Global.getSettings().getHullSpec(variantAPI.getHullSpec().getHullId()).getShipSystemId());
-		return tempVariant.getHullSpec(); 
+		return hullSpec.retrieve(); 
 	}
 
 	//#region INSTALLATION CHECKS

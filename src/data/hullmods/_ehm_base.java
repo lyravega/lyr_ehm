@@ -20,7 +20,6 @@ import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.loading.specs.HullVariantSpec;
-import com.fs.starfarer.loading.specs.g;
 
 import data.hullmods.ehm_ar._ehm_ar_base;
 import data.hullmods.ehm_sr._ehm_sr_base;
@@ -28,6 +27,7 @@ import data.hullmods.ehm_wr._ehm_wr_base;
 import data.scripts.fleetTrackerScript;
 import data.scripts.refreshRefitScript;
 import data.scripts.shipTrackerScript;
+import lyr.lyr_hullSpec;
 
 /**
  * This is the master base class for all experimental hullmods. 
@@ -148,7 +148,7 @@ public class _ehm_base implements HullModEffect {
 	 * @return a {@link shipTrackerScript} script
 	 * @see Overloads: {@link #shipTrackerScript()} and {@link #shipTrackerScript()} 
 	 */
-	private shipTrackerScript shipTrackerScript(HullVariantSpec variant, String memberId) {
+	private shipTrackerScript shipTrackerScript(ShipVariantAPI variant, String memberId) {
 		for(EveryFrameScript script : Global.getSector().getScripts()) {
 			if(script instanceof shipTrackerScript) {
 				shipTrackerScript temp = (shipTrackerScript) script; 
@@ -160,14 +160,7 @@ public class _ehm_base implements HullModEffect {
 
 		fleetTracker = fleetTrackerScript();
 
-		if (shipTracker == null) { // if there is no script for the ship, create a new one
-			shipTracker = new shipTrackerScript();
-			Global.getSector().addScript(shipTracker); 
-			fleetTracker.addshipTracker(memberId, shipTracker); // add the ship tracker to fleet tracker
-			shipTracker.initialize(variant, memberId, fleetTracker); // set the member id 
-		}
-
-		return shipTracker;
+		return (shipTracker == null) ? new shipTrackerScript(variant, memberId, fleetTracker) : shipTracker;
 	}
 
 	/**
@@ -182,7 +175,7 @@ public class _ehm_base implements HullModEffect {
 	protected shipTrackerScript shipTrackerScript(MutableShipStatsAPI stats) {
 		if (stats == null) return null; shipTracker = null; 
 
-		HullVariantSpec variant = HullVariantSpec.class.cast(stats.getVariant()); 
+		ShipVariantAPI variant = HullVariantSpec.class.cast(stats.getVariant()); 
 		String memberId = (stats.getFleetMember() != null) ? stats.getFleetMember().getId() : null; // this can be null
 		
 		return (memberId != null) ? shipTrackerScript(variant, memberId) : null;
@@ -200,7 +193,7 @@ public class _ehm_base implements HullModEffect {
 	protected shipTrackerScript shipTrackerScript(ShipAPI ship) {
 		if (ship == null) return null; shipTracker = null; 
 
-		HullVariantSpec variant = HullVariantSpec.class.cast(ship.getVariant());
+		ShipVariantAPI variant = HullVariantSpec.class.cast(ship.getVariant());
 		String memberId = ship.getFleetMemberId(); // fleet member can be null, but this never is
 		
 		return shipTrackerScript(variant, memberId);
@@ -225,13 +218,7 @@ public class _ehm_base implements HullModEffect {
 			}
 		}
 
-		if (fleetTracker == null) { // if there is no fleet script, create a new one
-			fleetTracker = new fleetTrackerScript();
-			Global.getSector().addScript(fleetTracker);
-			fleetTracker.initialize(); // custom method; just some logger shit
-		}
-
-		return fleetTracker;
+		return (fleetTracker == null) ? new fleetTrackerScript() : fleetTracker;
 	}
 	
 	/**
@@ -252,20 +239,18 @@ public class _ehm_base implements HullModEffect {
 	protected static void refreshRefit() {
 		refreshRefitScript = null;
 
-		Set<refreshRefitScript> test = new HashSet<refreshRefitScript>();
+		Set<refreshRefitScript> test = new HashSet<refreshRefitScript>(); // TODO: remove test
 		
-		for(EveryFrameScript script : Global.getSector().getScripts()) {
+		for(EveryFrameScript script : Global.getSector().getTransientScripts()) {
 			if(script instanceof refreshRefitScript) {
-				refreshRefitScript = (refreshRefitScript) script; test.add(refreshRefitScript); 
+				refreshRefitScript = (refreshRefitScript) script; test.add(refreshRefitScript); // TODO: remove test
 			}
 		}
 
 		if (refreshRefitScript == null) { 
 			refreshRefitScript = new refreshRefitScript();
-			Global.getSector().addTransientScript(refreshRefitScript);
 		}
 	}
-
 	//#endregion
 	// END OF TRACKERS
 	
@@ -361,33 +346,18 @@ public class _ehm_base implements HullModEffect {
 	 * @param variant to be used as a template
 	 * @return the same or a new hullSpec
 	 */
-	protected static final g ehm_hullSpecClone(HullVariantSpec variant, boolean getFresh) {
+	protected static final ShipHullSpecAPI ehm_hullSpecClone(ShipVariantAPI variant, boolean getFresh) {
 		if (!getFresh && ehm_hasRetrofitBaseBuiltIn(variant)) return variant.getHullSpec();
 
-		g hullSpec = getFresh // TL;DR: if 'getFresh' is true, grab a stock variant hullSpec, otherwise grab current hullSpec
-		? g.class.cast(Global.getSettings().getHullSpec(variant.getHullSpec().getHullId())).clone()
-		: variant.getHullSpec().clone();
+		lyr_hullSpec hullSpec = getFresh // TL;DR: if 'getFresh' is true, grab a stock variant hullSpec, otherwise grab current hullSpec
+		? new lyr_hullSpec(Global.getSettings().getVariant(variant.getHullVariantId()).getHullSpec(), true)
+		: new lyr_hullSpec(variant.getHullSpec(), true);
 
 		hullSpec.addBuiltInMod(ehm.id.baseRetrofit);
 		hullSpec.setManufacturer("Experimental"); // for color, must match .json TODO: make flavour optional
 		hullSpec.setDescriptionPrefix("This design utilizes experimental hull modifications created by a spacer who has been living in a junkyard for most of his life. His 'treasure hoard' is full of franken-ships that somehow fly by using cannibalized parts from other ships that would be deemed incompatible. Benefits of such modifications are unclear as they do not provide a certain advantage over the stock designs. However the level of customization and flexibility they offer is certainly unparalleled.");
 
 		if (!getFresh) refreshRefit();
-		return hullSpec;
-	}
-	@Deprecated // without obfuscated stuff
-	protected static final ShipHullSpecAPI ehm_hullSpecClone(ShipVariantAPI variantAPI, boolean getFresh) {
-		if (!getFresh && ehm_hasRetrofitBaseBuiltIn(variantAPI)) return variantAPI.getHullSpec();
-
-		HullVariantSpec tempVariant = getFresh // TL;DR: if 'getFresh' is true, grab a stock variant hullSpec, otherwise grab current hullSpec
-		? new HullVariantSpec("ehm_tempVariant", HullVariantSpec.class.cast(Global.getSettings().getVariant(variantAPI.getHullVariantId())).getHullSpec().clone())
-		: new HullVariantSpec("ehm_tempVariant", HullVariantSpec.class.cast(variantAPI).getHullSpec().clone());
-
-		tempVariant.getHullSpec().addBuiltInMod(ehm.id.baseRetrofit);
-		tempVariant.getHullSpec().setManufacturer("Experimental"); // for color, must match .json TODO: make flavour optional
-		tempVariant.getHullSpec().setDescriptionPrefix("This design utilizes experimental hull modifications created by a spacer who has been living in a junkyard for most of his life. His 'treasure hoard' is full of franken-ships that somehow fly by using cannibalized parts from other ships that would be deemed incompatible. Benefits of such modifications are unclear as they do not provide a certain advantage over the stock designs. However the level of customization and flexibility they offer is certainly unparalleled.");
-
-		if (!getFresh) refreshRefit();
-		return tempVariant.getHullSpec();
+		return hullSpec.retrieve();
 	}
 }

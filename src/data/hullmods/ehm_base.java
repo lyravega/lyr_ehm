@@ -6,6 +6,7 @@ import com.fs.starfarer.api.campaign.CoreUITabId;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
+import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.loading.specs.HullVariantSpec;
@@ -31,7 +32,7 @@ import data.scripts.shipTrackerScript;
 public class ehm_base extends _ehm_base {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		HullVariantSpec variant = HullVariantSpec.class.cast(stats.getVariant()); 
+		ShipVariantAPI variant = stats.getVariant(); 
 
 		variant.setHullSpecAPI(ehm_hullSpecClone(variant, false)); 
 	}

@@ -15,6 +15,10 @@ public class refreshRefitScript implements EveryFrameScriptWithCleanup {
 	private float runTime = 0f;
 	private Robot robot = null;
 	public Logger logger = null;
+
+	public refreshRefitScript() {
+		Global.getSector().addTransientScript(this);
+	}
 	
 	@Override
 	public void advance(float amount) {

@@ -9,7 +9,7 @@ import java.util.Set;
 import com.fs.starfarer.api.EveryFrameScriptWithCleanup;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CoreUITabId;
-import com.fs.starfarer.loading.specs.HullVariantSpec;
+import com.fs.starfarer.api.combat.ShipVariantAPI;
 
 import org.apache.log4j.Logger;
 
@@ -19,7 +19,7 @@ import data.hullmods.ehm_wr._ehm_wr_base;
 
 public class shipTrackerScript implements EveryFrameScriptWithCleanup {
 	// private fleetTrackerScript fleetTracker = null;
-	private HullVariantSpec variant = null;
+	private ShipVariantAPI variant = null;
 	// private g hullSpec = null;
 	private String memberId = null;
 	private Set<String> hullMods = new HashSet<String>();
@@ -29,13 +29,13 @@ public class shipTrackerScript implements EveryFrameScriptWithCleanup {
 	private Robot robot = null;
 	private Logger logger = null;
 	
-	//#region INITIALIZATION & SETTERS & GETTERS
-	public void setVariant(HullVariantSpec variant) { // this can be moved to initialize
+	//#region CONSTRUCTORS & ACCESSORS
+	public void setVariant(ShipVariantAPI variant) { // this can be moved to initialize
 		this.variant = variant;
 		// this.hullSpec = (g) variant.getHullSpec();
 	}
 	
-	public void initialize(HullVariantSpec variant, String memberId, fleetTrackerScript fleetTracker) {
+	public shipTrackerScript(ShipVariantAPI variant, String memberId, fleetTrackerScript fleetTracker) {
 		this.variant = variant;
 		// this.hullSpec = variant.getHullSpec();
 		this.memberId = memberId;
@@ -43,12 +43,15 @@ public class shipTrackerScript implements EveryFrameScriptWithCleanup {
 		// this.fleetTracker = fleetTracker;
 		this.robot = fleetTracker.robot;
 		this.logger = fleetTracker.logger;
+		fleetTracker.addshipTracker(memberId, this);
 
 		for (String hullModId : variant.getHullMods()) { if (!hullModId.startsWith(ehm.affix.allRetrofit)) continue; 
 			if (hullMods.contains(hullModId)) continue;
 
 			hullMods.add(hullModId);
 		}
+		
+		Global.getSector().addScript(this); 
 
 		logger.info("ST-"+memberId+": Initial hull modifications '"+hullMods.toString()+"'");
 	}
@@ -65,7 +68,7 @@ public class shipTrackerScript implements EveryFrameScriptWithCleanup {
 		this.isDone = true;
 	}
 	//#endregion
-	// END OF INITIALIZATION & SETTERS & GETTERS
+	// END OF CONSTRUCTORS & ACCESSORS
 	
 	@Override
 	public void advance(float amount) {

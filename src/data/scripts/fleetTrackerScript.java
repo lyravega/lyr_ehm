@@ -25,8 +25,8 @@ public class fleetTrackerScript implements EveryFrameScript {
 	protected Robot robot = null;
 	public Logger logger = null;
 	
-	//#region SETTERS & GETTERS
-	public void initialize() {
+	//#region CONSTRUCTORS & ACCESSORS
+	public fleetTrackerScript() {
 		logger = Logger.getLogger("lyr");
 		logger.setLevel(Level.INFO);
 		logger.info("FT: Initialized fleet tracking");
@@ -37,6 +37,8 @@ public class fleetTrackerScript implements EveryFrameScript {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		Global.getSector().addScript(this);
 	}
 
 	public void addshipTracker(String memberId, shipTrackerScript shipTracker) {
@@ -44,7 +46,7 @@ public class fleetTrackerScript implements EveryFrameScript {
 		logger.info("FT: Keeping track of ST-"+memberId);
 	}
 	//#endregion
-	// END OF SETTERS & GETTERS
+	// END OF CONSTRUCTORS & ACCESSORS
 	
 	@Override
 	public void advance(float amount) {	
