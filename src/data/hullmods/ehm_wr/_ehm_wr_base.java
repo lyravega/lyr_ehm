@@ -12,13 +12,11 @@ import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
-import com.fs.starfarer.loading.specs.HullVariantSpec;
-import com.fs.starfarer.loading.specs.g;
-import com.fs.starfarer.loading.specs.oOoo;
 
 import data.hullmods._ehm_base;
 import data.hullmods.ehm_ar._ehm_ar_base;
 import data.hullmods.ehm_sr._ehm_sr_base;
+import lyr.lyr_hullSpec;
 
 /**
  * This class is used by weapon retrofit hullmods. They are pretty 
@@ -41,35 +39,20 @@ public class _ehm_wr_base extends _ehm_base {
 	 * @return a hullSpec to be installed on the variant
 	 * @see {@link #ehm_weaponSlotRestore()} reverses this process one slot at a time
 	 */
-	protected static final g ehm_weaponSlotRetrofit(HullVariantSpec variant, Map<WeaponType, WeaponType> conversions) {
-		g hullSpec = variant.getHullSpec();
+	protected static final ShipHullSpecAPI ehm_weaponSlotRetrofit(ShipVariantAPI variant, Map<WeaponType, WeaponType> conversions) {	
+		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 
-		for (oOoo slot: hullSpec.getAllWeaponSlots()) {
+		for (WeaponSlotAPI slot: hullSpec.retrieve().getAllWeaponSlotsCopy()) {
+			String slotId = slot.getId();
 			WeaponType convertFrom = slot.getWeaponType();
 			
 			if (conversions.containsKey(convertFrom)) {
 				WeaponType convertTo = (WeaponType) conversions.get(convertFrom); // Why is the typecast necessary here? Doesn't '.get()' return a 'WeaponType'?!?
-				slot.setWeaponType(convertTo);
-			}
+				hullSpec.getWeaponSlot(slotId).setWeaponType(convertTo);
+			} 
 		}
-
-		return hullSpec;
-	}
-	@Deprecated // without obfuscated stuff
-	protected static final ShipHullSpecAPI ehm_weaponSlotRetrofit(ShipVariantAPI variantAPI, Map<WeaponType, WeaponType> conversions) {
-		HullVariantSpec tempVariant = new HullVariantSpec("ehm_tempVariant", HullVariantSpec.class.cast(variantAPI).getHullSpec());
-
-		for (WeaponSlotAPI slotAPI: variantAPI.getHullSpec().getAllWeaponSlotsCopy()) {
-			String slotId = slotAPI.getId();
-			WeaponType convertFrom = slotAPI.getWeaponType();
-			
-			if (conversions.containsKey(convertFrom)) {
-				WeaponType convertTo = (WeaponType) conversions.get(convertFrom); // Why is the typecast necessary here? Doesn't '.get()' return a 'WeaponType'?!?
-				tempVariant.getHullSpec().getWeaponSlot(slotId).setWeaponType(convertTo);
-			}
-		}
-
-		return tempVariant.getHullSpec();
+		
+		return hullSpec.retrieve();
 	}
 
 	/**
@@ -81,16 +64,17 @@ public class _ehm_wr_base extends _ehm_base {
 	 * @return the restored hullSpec in near-mint condition
 	 * @see {@link data.scripts.shipTrackerScript} only called externally by this script
 	 */
-	public static final g ehm_weaponSlotRestore(HullVariantSpec variant) {
-		g stockHullSpec = ehm_hullSpecClone(variant, true);
-		g hullSpec = variant.getHullSpec();
+	public static final ShipHullSpecAPI ehm_weaponSlotRestore(ShipVariantAPI variant) {
+		ShipHullSpecAPI stockHullSpec = ehm_hullSpecClone(variant, true);
+		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 
-		for (oOoo stockSlot: stockHullSpec.getAllWeaponSlots()) {
-			if (!stockSlot.isWeaponSlot()) continue;
+		for (WeaponSlotAPI stockSlot: stockHullSpec.getAllWeaponSlotsCopy()) {
 			String slotId = stockSlot.getId();
+
+			if (!weaponTypes.contains(stockSlot.getWeaponType())) continue;
 			WeaponType stockSlotWeaponType = stockSlot.getWeaponType();
 
-			if (hullSpec.getWeaponSlot(slotId).isDecorative()) {
+			if (hullSpec.getWeaponSlot(slotId).retrieve().isDecorative()) {
 				hullSpec.getWeaponSlot(ehm.affix.adaptedSlot+slotId+"L").setWeaponType(stockSlotWeaponType);
 				hullSpec.getWeaponSlot(ehm.affix.adaptedSlot+slotId+"R").setWeaponType(stockSlotWeaponType);
 			} else {
@@ -98,29 +82,7 @@ public class _ehm_wr_base extends _ehm_base {
 			}
 		}
 
-		return hullSpec;
-	}
-	@Deprecated // without obfuscated stuff
-	public static final ShipHullSpecAPI ehm_weaponSlotRestore(ShipVariantAPI variantAPI) {
-		ShipHullSpecAPI stockHullSpecAPI = ehm_hullSpecClone(variantAPI, true);
-		HullVariantSpec tempVariant = new HullVariantSpec("ehm_tempVariant", HullVariantSpec.class.cast(variantAPI).getHullSpec());
-		// ShipHullSpecAPI hullSpecAPI = tempVariant.getHullSpec();
-
-		for (WeaponSlotAPI stockSlotAPI: stockHullSpecAPI.getAllWeaponSlotsCopy()) {
-			String slotId = stockSlotAPI.getId();
-
-			if (!weaponTypes.contains(stockSlotAPI.getWeaponType())) continue;
-			WeaponType stockSlotWeaponType = stockSlotAPI.getWeaponType();
-
-			if (tempVariant.getHullSpec().getWeaponSlot(slotId).isDecorative()) {
-				tempVariant.getHullSpec().getWeaponSlot(ehm.affix.adaptedSlot+slotId+"L").setWeaponType(stockSlotWeaponType);
-				tempVariant.getHullSpec().getWeaponSlot(ehm.affix.adaptedSlot+slotId+"R").setWeaponType(stockSlotWeaponType);
-			} else {
-				tempVariant.getHullSpec().getWeaponSlot(slotId).setWeaponType(stockSlotWeaponType);
-			}
-		}
-
-		return tempVariant.getHullSpec();
+		return hullSpec.retrieve();
 	}
 
 	private static final Set<WeaponType> weaponTypes = new HashSet<WeaponType>();
@@ -147,7 +109,8 @@ public class _ehm_wr_base extends _ehm_base {
 
 	@Override
 	protected String cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
-		HullVariantSpec variant = HullVariantSpec.class.cast(ship.getVariant());
+		ShipVariantAPI variant = ship.getVariant();
+		
 		Collection<String> fittedWeapons = variant.getFittedWeaponSlots();
 		fittedWeapons.retainAll(variant.getNonBuiltInWeaponSlots());
 
