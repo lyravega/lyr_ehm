@@ -344,6 +344,7 @@ public class _ehm_base implements HullModEffect {
 	 * retrofit base in the hull, and refreshes the screen. Otherwise, just 
 	 * returns the same hullSpec. 
 	 * @param variant to be used as a template
+	 * @param getFresh to grab a stock one if true; use existing one otherwise
 	 * @return the same or a new hullSpec
 	 */
 	protected static final ShipHullSpecAPI ehm_hullSpecClone(ShipVariantAPI variant, boolean getFresh) {

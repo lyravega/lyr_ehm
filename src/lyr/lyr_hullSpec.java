@@ -5,6 +5,7 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
+import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.loading.specs.g;
 
 /**
@@ -12,13 +13,18 @@ import com.fs.starfarer.loading.specs.g;
  * methods without referring to them. Also has overloads for the methods 
  * that do not require a proxy to be executed; that are visible, and 
  * non-obfuscated. 
- * <p> Use {@code retrieve()} to grab the stored hullSpec.
+ * <p> Some of the methods in the proxy may have API variants, but they're 
+ * also implemented here simply to get suggestions. In addition, such 
+ * methods avoid using the API variants even when their arguments and/or
+ * return types aren't from an obfuscated class.
+ * <p> Use {@link #retrieve()} to grab the stored {@link ShipHullSpecAPI}.
  * @author lyravega
  * @version 0.6
  * @since 0.6
  */
 public class lyr_hullSpec {
     private ShipHullSpecAPI hullSpec;
+    private lyr_weaponSlot weaponSlot = null;
     private g test; // TODO: delete this
 
     /**
@@ -42,16 +48,28 @@ public class lyr_hullSpec {
     }
     
     /**
-     * Used to retrieve the cloned {@link ShipHullSpecAPI} stored in the 
-     * class. Don't try to cast or whatever, just retrieve.
-     * @return a cloned {@link ShipHullSpecAPI} to be applied on a variant
+     * Used to retrieve the stored {@link ShipHullSpecAPI} in the proxy to
+     * access the API methods through the proxy itself, or to use it if
+     * it needs to be applied on something.
+     * @return the stored {@link ShipHullSpecAPI}
      */
     public ShipHullSpecAPI retrieve() {
         return hullSpec;
     }
+    
+    /**
+     * Used to exchange the {@link ShipHullSpecAPI} stored in the proxy
+     * class in order to re-use this proxy instead of creating new ones.
+     * @param hullSpec to exchange with the stored one
+     * @return the proxy itself for chaining purposes
+     */
+    public lyr_hullSpec recycle(ShipHullSpecAPI hullSpec) {
+        this.hullSpec = hullSpec;
+        return this;
+    }
 
     /**
-     * Overrides the default {@code clone()} method; instead of cloning the
+     * Overrides the default {@link #clone()} method; instead of cloning the
      * instance of the class, clones the stored {@link ShipHullSpecAPI}, 
      * and returns it. If clone fails, returns the original. 
      * @return a cloned {@link ShipHullSpecAPI}
@@ -69,9 +87,10 @@ public class lyr_hullSpec {
     
     /**
      * Adds a hullModSpec as a built-in one on the stored {@link ShipHullSpecAPI}
+     * <p> Use {@link #retrieve()} to use the API version through the proxy.
      * @param hullModSpecId the id of the hullModSpec
      * @category Proxied methods
-     * @see Non-Obfuscated: {@link #addBuiltInMod(String, boolean)}
+     * @see Non-Obfuscated: {@link com.fs.starfarer.api.combat.ShipHullSpecAPI#addBuiltInMod(String)}
      */
     public void addBuiltInMod(String hullModSpecId) { 
         try {
@@ -81,24 +100,14 @@ public class lyr_hullSpec {
             t.printStackTrace();
         }
     }
-
-    /**
-     * Adds a hullModSpec as a built-in one on the stored {@link ShipHullSpecAPI}
-     * @param hullModSpecId the id of the hullModSpec
-     * @param useNonObfuscated trash overload parameter
-     * @category Non-Obfuscated methods
-     * @see Proxied: {@link #addBuiltInMod(String)}
-     */
-    public void addBuiltInMod(String hullModSpecId, boolean useNonObfuscated) { 
-        hullSpec.addBuiltInMod(hullModSpecId);
-    }
     
     /**
      * Sets the manufacturer of the stored {@link ShipHullSpecAPI} to the passed 
      * value.
+     * <p> Use {@link #retrieve()} to use the API version through the proxy.
      * @param manufacturer to set
      * @category Proxied methods
-     * @see Non-Obfuscated: {@link #setManufacturer(String, boolean)}
+     * @see Non-Obfuscated: {@link com.fs.starfarer.api.combat.ShipHullSpecAPI#setManufacturer(String)}
      */
     public void setManufacturer(String manufacturer) {
         try {
@@ -107,18 +116,6 @@ public class lyr_hullSpec {
         } catch (Throwable t) {
             t.printStackTrace();
         }
-    }
-
-    /**
-     * Sets the manufacturer of the stored {@link ShipHullSpecAPI} to the passed 
-     * value.
-     * @param manufacturer to set
-     * @param useNonObfuscated trash overload parameter
-     * @category Non-Obfuscated methods
-     * @see Proxied: {@link #setManufacturer(String)}
-     */
-    public void setManufacturer(String manufacturer, boolean useNonObfuscated) {
-        hullSpec.setManufacturer(manufacturer);
     }
 
     /**
@@ -139,10 +136,11 @@ public class lyr_hullSpec {
 
     /**
      * Sets the system id of the stored {@link ShipHullSpecAPI} to the passed 
-     * value.
+     * value. 
+     * <p> Use {@link #retrieve()} to use the API version through the proxy.
      * @param shipSystemId to set
      * @category Proxied methods
-     * @see Non-Obfuscated: {@link #setShipSystemId(String, boolean)}
+     * @see Non-Obfuscated: {@link com.fs.starfarer.api.combat.ShipHullSpecAPI#setShipSystemId(String)}
      */
     public void setShipSystemId(String shipSystemId) {
         try {
@@ -152,16 +150,22 @@ public class lyr_hullSpec {
             t.printStackTrace();
         }
     }
-
+    
     /**
-     * Sets the system id of the stored {@link ShipHullSpecAPI} to the passed 
-     * value.
-     * @param shipSystemId to set
-     * @param useNonObfuscated trash overload parameter
-     * @category Non-Obfuscated methods
-     * @see Proxied: {@link #setShipSystemId(String)}
+     * Gets the weapon slot with the matching id, and creates a  {@link lyr_weaponSlot} 
+     * proxy for it. The created proxy is returned, which is necessary to access the 
+     * obfuscated methods for it. 
+     * <p> Use {@link #retrieve()} to use the API version through the proxy.
+     * <p> The created proxy is recycled through {@link lyr_weaponSlot#recycle(WeaponSlotAPI)}
+     * @param weaponSlotId to get
+     * @category Proxy spawner
+     * @see Non-Obfuscated: {@link com.fs.starfarer.api.combat.ShipHullSpecAPI#getWeaponSlotAPI(String)}
      */
-    public void setShipSystemId(String shipSystemId, boolean useNonObfuscated) {
-        hullSpec.setShipSystemId(shipSystemId);
+    public lyr_weaponSlot getWeaponSlot(String weaponSlotId) {
+        WeaponSlotAPI weaponSlot = hullSpec.getWeaponSlotAPI(weaponSlotId);
+
+        this.weaponSlot = (this.weaponSlot == null) ? new lyr_weaponSlot(weaponSlot, false) : this.weaponSlot.recycle(weaponSlot);
+        
+        return this.weaponSlot;
     }
 }

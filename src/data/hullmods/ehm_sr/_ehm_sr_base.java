@@ -6,8 +6,6 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
-import com.fs.starfarer.loading.specs.HullVariantSpec;
-import com.fs.starfarer.loading.specs.g;
 
 import data.hullmods._ehm_base;
 import data.hullmods.ehm_ar._ehm_ar_base;

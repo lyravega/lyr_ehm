@@ -124,6 +124,7 @@ public class shipTrackerScript implements EveryFrameScriptWithCleanup {
 				refresh = false;
 				runTime = 0f;
 				logger.info("ST-"+memberId+": Refreshed refit tab");
+				Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f);
 			}
 		}
 	}

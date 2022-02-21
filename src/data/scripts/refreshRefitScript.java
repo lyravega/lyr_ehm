@@ -36,6 +36,7 @@ public class refreshRefitScript implements EveryFrameScriptWithCleanup {
                 robot.keyRelease(KeyEvent.VK_ENTER);
 				Logger logger = Logger.getLogger("lyr");
 				logger.info("RR: Refreshed refit tab");
+				Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f);
 				isDone = true;
 				return;
             }
