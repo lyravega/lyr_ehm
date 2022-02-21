@@ -1,9 +1,7 @@
 package data.hullmods.ehm_wr;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
@@ -17,6 +15,7 @@ import data.hullmods._ehm_base;
 import data.hullmods.ehm_ar._ehm_ar_base;
 import data.hullmods.ehm_sr._ehm_sr_base;
 import lyr.lyr_hullSpec;
+import lyr.lyr_weaponSlot;
 
 /**
  * This class is used by weapon retrofit hullmods. They are pretty 
@@ -70,30 +69,20 @@ public class _ehm_wr_base extends _ehm_base {
 
 		for (WeaponSlotAPI stockSlot: stockHullSpec.getAllWeaponSlotsCopy()) {
 			String slotId = stockSlot.getId();
+			lyr_weaponSlot slot = hullSpec.getWeaponSlot(slotId);
 
-			if (!weaponTypes.contains(stockSlot.getWeaponType())) continue;
+			if (!slot.isWeaponSlot()) continue;
 			WeaponType stockSlotWeaponType = stockSlot.getWeaponType();
 
-			if (hullSpec.getWeaponSlot(slotId).retrieve().isDecorative()) {
+			if (slot.retrieve().isDecorative()) {
 				hullSpec.getWeaponSlot(ehm.affix.adaptedSlot+slotId+"L").setWeaponType(stockSlotWeaponType);
 				hullSpec.getWeaponSlot(ehm.affix.adaptedSlot+slotId+"R").setWeaponType(stockSlotWeaponType);
 			} else {
-				hullSpec.getWeaponSlot(slotId).setWeaponType(stockSlotWeaponType);
+				slot.setWeaponType(stockSlotWeaponType);
 			}
 		}
 
 		return hullSpec.retrieve();
-	}
-
-	private static final Set<WeaponType> weaponTypes = new HashSet<WeaponType>();
-	static {
-		weaponTypes.add(WeaponType.BALLISTIC); 
-		weaponTypes.add(WeaponType.ENERGY);
-		weaponTypes.add(WeaponType.MISSILE);
-		weaponTypes.add(WeaponType.HYBRID);
-		weaponTypes.add(WeaponType.COMPOSITE);
-		weaponTypes.add(WeaponType.SYNERGY);
-		weaponTypes.add(WeaponType.UNIVERSAL);
 	}
 
 	//#region INSTALLATION CHECKS

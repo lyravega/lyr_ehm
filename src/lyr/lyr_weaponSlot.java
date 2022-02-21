@@ -87,4 +87,19 @@ public class lyr_weaponSlot {
             t.printStackTrace();
         }
     }
+
+    public boolean isWeaponSlot() {
+        try {
+            MethodHandle isWeaponSlot = MethodHandles.lookup().findVirtual(weaponSlot.getClass(), "isWeaponSlot", MethodType.methodType(boolean.class));
+            return (boolean) isWeaponSlot.invoke(weaponSlot);
+        } catch (Throwable t) {
+            t.printStackTrace();
+        } return false; // java, pls...
+    }
+
+    /*
+    childSlot.setId(childSlotId);
+    childSlot.setNode(childSlotNode);
+    childSlot.setSlotSize(childSlotSize);
+    */
 }
