@@ -6,7 +6,6 @@ import java.lang.invoke.MethodType;
 
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
-import com.fs.starfarer.loading.specs.g;
 
 /**
  * A proxy-like class for {@link ShipHullSpecAPI} that utilizes obfuscated 
@@ -25,7 +24,6 @@ import com.fs.starfarer.loading.specs.g;
 public class lyr_hullSpec {
     private ShipHullSpecAPI hullSpec;
     private lyr_weaponSlot weaponSlot = null;
-    private g test; // TODO: delete this
 
     /**
      * Creates a new instance for the passed hullSpec, and clones it if

@@ -6,7 +6,6 @@ import java.lang.invoke.MethodType;
 
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
-import com.fs.starfarer.loading.specs.oOoo;
 
 /**
  * A proxy-like class for {@link WeaponSlotAPI} that utilizes obfuscated 
@@ -24,7 +23,6 @@ import com.fs.starfarer.loading.specs.oOoo;
  */
 public class lyr_weaponSlot {
     private WeaponSlotAPI weaponSlot;
-    private oOoo test; // TODO: delete this
 
     /**
      * Creates a new instance for the passed weaponSlot, and clones it if
