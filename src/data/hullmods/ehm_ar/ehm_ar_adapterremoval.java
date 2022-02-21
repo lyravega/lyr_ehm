@@ -7,7 +7,7 @@ import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
-import com.fs.starfarer.loading.specs.HullVariantSpec;
+import com.fs.starfarer.api.combat.ShipVariantAPI;
 
 /**
  * To simply put, grabs a stock hullSpec, and applies it to the variant. The 
@@ -23,7 +23,7 @@ import com.fs.starfarer.loading.specs.HullVariantSpec;
 public class ehm_ar_adapterremoval extends _ehm_ar_base {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		HullVariantSpec variant = HullVariantSpec.class.cast(stats.getVariant()); 
+		ShipVariantAPI variant = stats.getVariant(); 
 
 		variant.setHullSpecAPI(ehm_adapterRemoval(variant)); 
 	}
@@ -42,7 +42,8 @@ public class ehm_ar_adapterremoval extends _ehm_ar_base {
 
 	@Override
 	protected String cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) { 
-		HullVariantSpec variant = HullVariantSpec.class.cast(ship.getVariant());
+		ShipVariantAPI variant = ship.getVariant();
+		
 		Collection<String> fittedWeapons = variant.getFittedWeaponSlots();
 		fittedWeapons.retainAll(variant.getNonBuiltInWeaponSlots());
 

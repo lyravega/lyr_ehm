@@ -6,10 +6,9 @@ import com.fs.starfarer.api.campaign.CoreUITabId;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
-import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
+import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
-import com.fs.starfarer.loading.specs.HullVariantSpec;
 
 import data.scripts.shipTrackerScript;
 
@@ -44,7 +43,7 @@ public class ehm_base extends _ehm_base {
         CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
         if (tab == null || !tab.equals(CoreUITabId.REFIT)) return;
 
-		shipTrackerScript(ship).setVariant(HullVariantSpec.class.cast(ship.getVariant())); // setVariant() is necessary to reflect the changes on the "refit ship"
+		shipTrackerScript(ship).setVariant(ship.getVariant()); // setVariant() is necessary to reflect the changes on the "refit ship"
 	}
 
 	@Override

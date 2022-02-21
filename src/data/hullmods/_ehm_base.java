@@ -19,7 +19,6 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
-import com.fs.starfarer.loading.specs.HullVariantSpec;
 
 import data.hullmods.ehm_ar._ehm_ar_base;
 import data.hullmods.ehm_sr._ehm_sr_base;
@@ -175,7 +174,7 @@ public class _ehm_base implements HullModEffect {
 	protected shipTrackerScript shipTrackerScript(MutableShipStatsAPI stats) {
 		if (stats == null) return null; shipTracker = null; 
 
-		ShipVariantAPI variant = HullVariantSpec.class.cast(stats.getVariant()); 
+		ShipVariantAPI variant = stats.getVariant(); 
 		String memberId = (stats.getFleetMember() != null) ? stats.getFleetMember().getId() : null; // this can be null
 		
 		return (memberId != null) ? shipTrackerScript(variant, memberId) : null;
@@ -193,7 +192,7 @@ public class _ehm_base implements HullModEffect {
 	protected shipTrackerScript shipTrackerScript(ShipAPI ship) {
 		if (ship == null) return null; shipTracker = null; 
 
-		ShipVariantAPI variant = HullVariantSpec.class.cast(ship.getVariant());
+		ShipVariantAPI variant = ship.getVariant();
 		String memberId = ship.getFleetMemberId(); // fleet member can be null, but this never is
 		
 		return shipTrackerScript(variant, memberId);
