@@ -2,9 +2,6 @@ package data.hullmods.ehm_sc;
 
 import java.awt.Color;
 
-import javax.swing.colorchooser.ColorSelectionModel;
-import javax.swing.plaf.ColorChooserUI;
-
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
