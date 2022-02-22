@@ -20,24 +20,21 @@ import data.hullmods.ehm_wr._ehm_wr_base;
 public class shipTrackerScript implements EveryFrameScriptWithCleanup {
 	// private fleetTrackerScript fleetTracker = null;
 	private ShipVariantAPI variant = null;
-	// private g hullSpec = null;
 	private String memberId = null;
 	private Set<String> hullMods = new HashSet<String>();
 	private boolean isDone = false;
 	private boolean refresh = false;
-	private float runTime = 0f;
+	private float frameCount = 0f;
 	private Robot robot = null;
 	private Logger logger = null;
 	
 	//#region CONSTRUCTORS & ACCESSORS
 	public void setVariant(ShipVariantAPI variant) { // this can be moved to initialize
 		this.variant = variant;
-		// this.hullSpec = (g) variant.getHullSpec();
 	}
 	
 	public shipTrackerScript(ShipVariantAPI variant, String memberId, fleetTrackerScript fleetTracker) {
 		this.variant = variant;
-		// this.hullSpec = variant.getHullSpec();
 		this.memberId = memberId;
 
 		// this.fleetTracker = fleetTracker;
@@ -84,7 +81,7 @@ public class shipTrackerScript implements EveryFrameScriptWithCleanup {
 			logger.info("ST-"+memberId+": New hull modification '"+hullModId+"'");
 
 			newHullMods.add(hullModId);
-		} hullMods.addAll(newHullMods);
+		} 
 
 		for (Iterator<String> i = hullMods.iterator(); i.hasNext();) { String hullModId = i.next(); 
 			if (variant.hasHullMod(hullModId)) continue;
@@ -92,37 +89,41 @@ public class shipTrackerScript implements EveryFrameScriptWithCleanup {
 			logger.info("ST-"+memberId+": Removed hull modification '"+hullModId+"'");
 
 			removedHullMods.add(hullModId);
-		} hullMods.removeAll(removedHullMods);
+		} 
 		
-		for (Iterator<String> i = newHullMods.iterator(); i.hasNext();) { 
-			String hullModId = i.next(); 
-			String hullModType = hullModId.substring(0, 7); // all affixes (not tags) are fixed to 0-7
-			switch (hullModType) {
-				case ehm.affix.systemRetrofit: refresh = true; break;
-				case ehm.affix.weaponRetrofit: refresh = true; break;
-				default: break;
-			}
-		} newHullMods.clear();
+		if (!newHullMods.isEmpty()) {
+			for (Iterator<String> i = newHullMods.iterator(); i.hasNext();) { 
+				String hullModId = i.next(); 
+				String hullModType = hullModId.substring(0, 7); // all affixes (not tags) are fixed to 0-7
+				switch (hullModType) {
+					case ehm.affix.systemRetrofit: refresh = true; break;
+					case ehm.affix.weaponRetrofit: refresh = true; break;
+					default: break;
+				}
+			} hullMods.addAll(newHullMods); newHullMods.clear();
+		}
 		
-		for (Iterator<String> i = removedHullMods.iterator(); i.hasNext();) { 
-			String hullModId = i.next(); 
-			String hullModType = hullModId.substring(0, 7); 
-			switch (hullModType) {
-				case ehm.affix.systemRetrofit: refresh = true; _ehm_sr_base.ehm_systemRestore(variant); break;
-				case ehm.affix.weaponRetrofit: refresh = true; _ehm_wr_base.ehm_weaponSlotRestore(variant); break;
-				default: break;
-			}
-		} removedHullMods.clear();
+		if (!removedHullMods.isEmpty()) {
+			for (Iterator<String> i = removedHullMods.iterator(); i.hasNext();) { 
+				String hullModId = i.next(); 
+				String hullModType = hullModId.substring(0, 7); 
+				switch (hullModType) {
+					case ehm.affix.systemRetrofit: refresh = true; _ehm_sr_base.ehm_systemRestore(variant); break;
+					case ehm.affix.weaponRetrofit: refresh = true; _ehm_wr_base.ehm_weaponSlotRestore(variant); break;
+					default: break;
+				}
+			} hullMods.removeAll(removedHullMods); removedHullMods.clear();
+		}
 
-		if (refresh) { runTime++;
-			if (runTime < 5) {
+		if (refresh) { frameCount++;
+			if (frameCount < 5) {
 				robot.keyPress(KeyEvent.VK_ENTER);
 			} else {
 				robot.keyPress(KeyEvent.VK_R);
 				robot.keyRelease(KeyEvent.VK_R);
 				robot.keyRelease(KeyEvent.VK_ENTER);
 				refresh = false;
-				runTime = 0f;
+				frameCount = 0f;
 				logger.info("ST-"+memberId+": Refreshed refit tab");
 				Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f);
 			}

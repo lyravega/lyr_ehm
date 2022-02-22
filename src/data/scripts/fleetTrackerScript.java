@@ -3,23 +3,19 @@ package data.scripts;
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
-import com.fs.starfarer.api.EveryFrameScript;
+import com.fs.starfarer.api.EveryFrameScriptWithCleanup;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CoreUITabId;
-import com.fs.starfarer.campaign.fleet.CampaignFleet;
-import com.fs.starfarer.campaign.fleet.FleetMember;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-public class fleetTrackerScript implements EveryFrameScript {
+public class fleetTrackerScript implements EveryFrameScriptWithCleanup {
 	private Map<String, shipTrackerScript> shipTrackers = new HashMap<String, shipTrackerScript>();
-	private Set<FleetMember> members = new HashSet<FleetMember>();
-	private CampaignFleet playerFleet = (CampaignFleet) Global.getSector().getPlayerFleet();
+	// private Set<FleetMember> members = new HashSet<FleetMember>();
+	// private CampaignFleet playerFleet = (CampaignFleet) Global.getSector().getPlayerFleet();
 	private boolean isDone = false;
 	private float runTime = 0f;
 	protected Robot robot = null;
@@ -58,20 +54,20 @@ public class fleetTrackerScript implements EveryFrameScript {
 			logger.info("FT: Tracking "+shipTrackers.size()+" ships");
 		} runTime += amount;
 
-		Set<FleetMember> newMembers = new HashSet<FleetMember>();
-		Set<FleetMember> oldMembers = new HashSet<FleetMember>();
+		// Set<FleetMember> newMembers = new HashSet<FleetMember>();
+		// Set<FleetMember> oldMembers = new HashSet<FleetMember>();
 
-		for (FleetMember member : playerFleet.getMembers()) {
-			if (members.contains(member)) continue;
+		// for (FleetMember member : playerFleet.getMembers()) {
+		// 	if (members.contains(member)) continue;
 			
-			newMembers.add(member);	
-		} members.addAll(newMembers); 
+		// 	newMembers.add(member);	
+		// } members.addAll(newMembers); 
 
-		for (FleetMember member : members) {
-			if (playerFleet.getMembers().contains(member)) continue;
+		// for (FleetMember member : members) {
+		// 	if (playerFleet.getMembers().contains(member)) continue;
 
-			oldMembers.add(member);	
-		} members.removeAll(oldMembers); 
+		// 	oldMembers.add(member);	
+		// } members.removeAll(oldMembers); 
 		
 		// for (FleetMember member : newMembers) {
 		// 	spawnshipTracker(member);
@@ -81,7 +77,7 @@ public class fleetTrackerScript implements EveryFrameScript {
 		// 	killshipTracker(member.getId());
 		// } oldMembers.clear();
 
-		if (shipTrackers.isEmpty()) { logger.info("FT: Stopping fleet tracking, no ship trackers remaining"); isDone = true; return; }
+		// if (shipTrackers.isEmpty()) { logger.info("FT: Stopping fleet tracking, no ship trackers remaining"); isDone = true; return; }
 	}
 
 	@Override
@@ -92,5 +88,10 @@ public class fleetTrackerScript implements EveryFrameScript {
 	@Override
 	public boolean isDone() {
 		return isDone;
+	}
+
+	@Override
+	public void cleanup() {
+		shipTrackers.clear();
 	}
 }

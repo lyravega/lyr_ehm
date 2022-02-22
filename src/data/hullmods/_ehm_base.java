@@ -2,9 +2,7 @@ package data.hullmods;
 
 import java.awt.Color;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
@@ -13,8 +11,8 @@ import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.HullModEffect;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
-import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
+import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
@@ -138,10 +136,10 @@ public class _ehm_base implements HullModEffect {
 	private static refreshRefitScript refreshRefitScript;
 
 	/**
-	 * Creates and assigns {@link #shipTracker} and {@link #fleetTracker}, then returns
-	 * the {@link shipTrackerScript} that is unique to the ship. The overloads should be used for proper
-	 * access. Scripts remain alive as long as the current tab is refit. The reference to the script 
-	 * MUST be dropped otherwise it will keep living on in the memory.
+	 * Creates and assigns {@link #shipTracker} and {@link #fleetTracker}, then returns the 
+	 * {@link shipTrackerScript} that is unique to the ship. The overloads should be used 
+	 * for proper access. Scripts remain alive as long as the current tab is refit. The 
+	 * reference to the script MUST be dropped otherwise it will keep living on in the memory.
 	 * @param variant of the ship to track
 	 * @param memberId of the ship to track
 	 * @return a {@link shipTrackerScript} script
@@ -153,7 +151,7 @@ public class _ehm_base implements HullModEffect {
 				shipTrackerScript temp = (shipTrackerScript) script; 
 				if (!temp.getMemberId().equals(memberId)) continue;
 					
-				shipTracker = (shipTrackerScript) script; break; // find the correct ship script
+				shipTracker = (shipTrackerScript) script; break;
 			}
 		}
 
@@ -163,10 +161,10 @@ public class _ehm_base implements HullModEffect {
 	}
 
 	/**
-	 * Creates and assigns {@link #shipTracker} and {@link #fleetTracker}, then returns
-	 * the {@link shipTrackerScript} that is unique to the ship. Scripts remain alive as long as the current
-	 * tab is refit. The reference to the script MUST be dropped otherwise it will keep living on in 
-	 * the memory.
+	 * Creates and assigns {@link #shipTracker} and {@link #fleetTracker}, then returns the 
+	 * {@link shipTrackerScript} that is unique to the ship. Scripts remain alive as long as 
+	 * the current tab is refit. The reference to the script MUST be dropped otherwise it 
+	 * will keep living on in the memory.
 	 * @param stats of the ship to track
 	 * @return a {@link shipTrackerScript} script
 	 * @see Overload: {@link #shipTrackerScript()} 
@@ -181,10 +179,10 @@ public class _ehm_base implements HullModEffect {
 	}
 
 	/**
-	 * Creates and assigns {@link #shipTracker} and {@link #fleetTracker}, then returns
-	 * the {@link shipTrackerScript} that is unique to the ship. Scripts remain alive as long as the current
-	 * tab is refit. The reference to the script MUST be dropped otherwise it will keep living on in 
-	 * the memory.
+	 * Creates and assigns {@link #shipTracker} and {@link #fleetTracker}, then returns the 
+	 * {@link shipTrackerScript} that is unique to the ship. Scripts remain alive as long as 
+	 * the current tab is refit. The reference to the script MUST be dropped otherwise it 
+	 * will keep living on in the memory.
 	 * @param ship to track
 	 * @return a {@link shipTrackerScript} script
 	 * @see Overload: {@link #shipTrackerScript()} 
@@ -199,12 +197,12 @@ public class _ehm_base implements HullModEffect {
 	}
 
 	/**
-	 * Creates and assigns {@link #fleetTracker}. Initially developed to keep track of 
-	 * unique {@link shipTrackerScript} scripts, and kill them if the ships are no longer present on the 
-	 * fleet, however after a few iterations, the scripts terminate theirselves as soon as the tab 
-	 * is changed from refit to something else. In short, currently completely redundant, and used
-	 * to output useless info logs on the terminal, and does nothing else. The reference MUST be
-	 * dropped otherwise it will keep living on in the memory.
+	 * Creates and assigns {@link #fleetTracker}. Initially developed to keep track of unique
+	 * {@link shipTrackerScript} scripts, and kill them if the ships are no longer present on 
+	 * the fleet, however after a few iterations, the scripts terminate theirselves as soon 
+	 * as the tab is changed from refit to something else. In short, currently completely 
+	 * redundant, and used to output useless info logs on the terminal, and does nothing else. 
+	 * The reference MUST be dropped otherwise it will keep living on in the memory.
 	 * @return a {@link fleetTrackerScript} script
 	 * @see Callers: {@link #shipTrackerScript(ShipAPI)} and {@link #shipTrackerScript()} 
 	 */
@@ -224,7 +222,7 @@ public class _ehm_base implements HullModEffect {
 	 * Creates and runs a script that refreshes the refit tab by simulating key presses. 
 	 * Must be used with EXTREME CAUTION as if this is called from somewhere that is NOT
 	 * going to be executed once per frame, will cause the screen to flicker.
-	 * 
+	 * <p>
 	 * The other similar scripts run continuously, and will trigger a refresh on certain
 	 * conditions; in contrast, this one is designed to be called externally, and from
 	 * a piece of code that will execute ONCE. Examples are, a hullmod removing itself, 
@@ -237,12 +235,10 @@ public class _ehm_base implements HullModEffect {
 	 */
 	protected static void refreshRefit() {
 		refreshRefitScript = null;
-
-		Set<refreshRefitScript> test = new HashSet<refreshRefitScript>(); // TODO: remove test
 		
 		for(EveryFrameScript script : Global.getSector().getTransientScripts()) {
 			if(script instanceof refreshRefitScript) {
-				refreshRefitScript = (refreshRefitScript) script; test.add(refreshRefitScript); // TODO: remove test
+				refreshRefitScript = (refreshRefitScript) script; 
 			}
 		}
 
@@ -338,10 +334,10 @@ public class _ehm_base implements HullModEffect {
 	}
 
 	/**
-	 * Called from the retrofit base ({@link ehm_base}). If the hull does not
-	 * have the mod built-in, clones the hullSpec, adds flavour, builds the 
-	 * retrofit base in the hull, and refreshes the screen. Otherwise, just 
-	 * returns the same hullSpec. 
+	 * Called from the retrofit base ({@link ehm_base}) mainly. If the hull does not
+	 * have the mod built-in, clones the hullSpec, adds flavour, builds the retrofit 
+	 * base in the hull, and refreshes the screen. Otherwise, just returns the same 
+	 * hullSpec.  
 	 * @param variant to be used as a template
 	 * @param getFresh to grab a stock one if true; use existing one otherwise
 	 * @return the same or a new hullSpec
