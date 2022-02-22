@@ -1,5 +1,5 @@
 name,id,tier,rarity,tech/manufacturer,tags,uiTags,base value,unlocked,hidden,hiddenEverywhere,cost_frigate,cost_dest,cost_cruiser,cost_capital,script,desc,short,sprite
-Experimental Hull Modifications,ehm_base,1,,Experimental,"special, ehm_base","Systems, Retrofits",25000,,,,0,0,0,0,data.hullmods.ehm_base,,,graphics/icons/skills/reliability_engineering.png
+Experimental Hull Modifications,ehm_base,1,,Experimental,"special, ehm_base","Systems, Retrofits, Cosmetics",25000,,,,0,0,0,0,data.hullmods.ehm_base,,,graphics/icons/skills/reliability_engineering.png
 Quantum Disruptor,ehm_sr_acausaldisruptor,1,,Experimental,"special, ehm, ehm_sr",Systems,25000,,,,3,6,9,15,data.hullmods.ehm_sr.ehm_sr_acausaldisruptor,"Briefly overloads a nearby enemy ship.
 
 Exploits weakly acausal principles poorly understood even before the Collapse. In the present day, the effects may as well be magic.",Briefly overloads a nearby enemy ship.,graphics/icons/hullsys/quantum_disruptor.png
@@ -72,3 +72,10 @@ Mass Energy Retrofit,ehm_wr_energyslotretrofit,1,,Experimental,"special, ehm, eh
 Mass Ballistic Retrofit,ehm_wr_ballisticslotretrofit,1,,Experimental,"special, ehm, ehm_wr",Retrofits,25000,,,,3,6,9,15,data.hullmods.ehm_wr.ehm_wr_ballisticslotretrofit,"Converts all Energy slots to Ballistic slots, and all Missile slots to Composite slots.","Converts all Energy slots to Ballistic slots, and all Missile slots to Composite slots.",
 Adapter Removal,ehm_ar_adapterremoval,1,,Experimental,"special, ehm, ehm_ar",Retrofits,25000,,,,0,0,0,0,data.hullmods.ehm_ar.ehm_ar_adapterremoval,Removes adapter modifications from the hull and weapon slots.,Removes adapter modifications from the hull and weapon slots.,
 Step Down Adapter,ehm_ar_stepdownadapter,1,,Experimental,"special, ehm, ehm_ar",Retrofits,25000,,,,3,6,9,15,data.hullmods.ehm_ar.ehm_ar_stepdownadapter,"Any weapon slot with an adapter installed in it will power two smaller slots instead. ",Any weapon slot with an adapter installed in it will power two smaller slots instead.,
+Blue Shields,ehm_sc_blueShields,1,,Experimental,"special, ehm, ehm_sc, ehm_sr_require_shields",Cosmetics,25000,,,,0,0,0,0,data.hullmods.ehm_sc.ehm_sc_blueShields,,,
+Cyan Shields,ehm_sc_cyanShields,1,,Experimental,"special, ehm, ehm_sc, ehm_sr_require_shields",Cosmetics,25000,,,,0,0,0,0,data.hullmods.ehm_sc.ehm_sc_cyanShields,,,
+Green Shields,ehm_sc_greenShields,1,,Experimental,"special, ehm, ehm_sc, ehm_sr_require_shields",Cosmetics,25000,,,,0,0,0,0,data.hullmods.ehm_sc.ehm_sc_greenShields,,,
+Magenta Shields,ehm_sc_magentaShields,1,,Experimental,"special, ehm, ehm_sc, ehm_sr_require_shields",Cosmetics,25000,,,,0,0,0,0,data.hullmods.ehm_sc.ehm_sc_magentaShields,,,
+Purple Shields,ehm_sc_purpleShields,1,,Experimental,"special, ehm, ehm_sc, ehm_sr_require_shields",Cosmetics,25000,,,,0,0,0,0,data.hullmods.ehm_sc.ehm_sc_purpleShields,,,
+Red Shields,ehm_sc_redShields,1,,Experimental,"special, ehm, ehm_sc, ehm_sr_require_shields",Cosmetics,25000,,,,0,0,0,0,data.hullmods.ehm_sc.ehm_sc_redShields,,,
+Yellow Shields,ehm_sc_yellowShields,1,,Experimental,"special, ehm, ehm_sc, ehm_sr_require_shields",Cosmetics,25000,,,,0,0,0,0,data.hullmods.ehm_sc.ehm_sc_yellowShields,,,

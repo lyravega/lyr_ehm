@@ -29,8 +29,8 @@ import org.lwjgl.util.vector.Vector2f;
  */
 public class lyr_weaponSlot {
 	private WeaponSlotAPI weaponSlot;
-	private static Class<?> obfuscatedWeaponSlotClass = null;
-	private static Class<?> obfuscatedNodeClass = null;
+	private static Class<?> obfuscatedWeaponSlotClass;
+	private static Class<?> obfuscatedNodeClass;
 
 	static {
 		SettingsAPI settings = Global.getSettings();
@@ -74,15 +74,14 @@ public class lyr_weaponSlot {
 	}
 
 	/**
-	 * Creates a new instance for the passed weaponSlot, and clones it if
-	 * necessary. Alterations should be done on a clone if it is going to
-	 * be a new slot.
+	 * Creates a new instance for the passed {@link WeaponSlotAPI}, and 
+	 * clones it if necessary. Alterations should be done on a clone if 
+	 * it is going to be a new slot.
 	 * @param weaponSlot to be proxied
 	 * @param clone if the weaponSlot needs to be cloned
 	 */
 	public lyr_weaponSlot(WeaponSlotAPI weaponSlot, boolean clone) {
-		this.weaponSlot = weaponSlot;
-		this.weaponSlot = (clone) ? this.clone() : weaponSlot;
+		this.weaponSlot = (clone) ? this.duplicate(weaponSlot) : weaponSlot;
 	}
 	
 	/**
@@ -107,20 +106,24 @@ public class lyr_weaponSlot {
 	}
 
 	/**
-	 * Overrides the default {@link #clone()} method; instead of cloning the
-	 * instance of the class, clones the stored {@link WeaponSlotAPI}, 
-	 * and returns it. If clone fails, returns the original. 
+	 * Clones the stored {@link WeaponSlotAPI}, and returns it. For 
+	 * internal use if necessary. {@link #retrieve()} should be used
+	 * if access to the API is needed.
 	 * @return a cloned {@link WeaponSlotAPI}
-	 * @category Proxied methods
 	 */
-	@Override
-	public WeaponSlotAPI clone() {
+	protected WeaponSlotAPI duplicate(WeaponSlotAPI weaponSlot) {
 		try {
 			MethodHandle clone = MethodHandles.lookup().findVirtual(obfuscatedWeaponSlotClass, "clone", MethodType.methodType(obfuscatedWeaponSlotClass));
 			return (WeaponSlotAPI) clone.invoke(weaponSlot);
 		} catch (Throwable t) {
 			t.printStackTrace(); 
 		} return weaponSlot; // java, pls...
+	}
+	
+	//#region API-like methods
+	@Override
+	public lyr_weaponSlot clone() {
+		return new lyr_weaponSlot(weaponSlot, true);
 	}
 
 	/**
@@ -137,6 +140,12 @@ public class lyr_weaponSlot {
 		}
 	}
 
+	/**
+	 * The API lacks this check. It can easily be implemented, it is
+	 * proxied here however.
+	 * @return is it a weapon slot?
+	 * @category Proxied methods
+	 */
 	public boolean isWeaponSlot() {
 		try {
 			MethodHandle isWeaponSlot = MethodHandles.lookup().findVirtual(obfuscatedWeaponSlotClass, "isWeaponSlot", MethodType.methodType(boolean.class));
@@ -146,6 +155,13 @@ public class lyr_weaponSlot {
 		} return false; // java, pls...
 	}
 
+	/**
+	 * Sets the id of the stored {@link WeaponSlotAPI} to the given one.
+	 * Must be unique, otherwise the game will get confused, and only 
+	 * one of the slots that share the same id will function.
+	 * @param weaponSlotId a unique id to assign
+	 * @category Proxied methods
+	 */
 	public void setId(String weaponSlotId) {
 		try {
 			MethodHandle setId = MethodHandles.lookup().findVirtual(obfuscatedWeaponSlotClass, "setId", MethodType.methodType(void.class, String.class));
@@ -155,6 +171,12 @@ public class lyr_weaponSlot {
 		}
 	}
 
+	/**
+	 * Sets the {@link WeaponSize} of the stored {@link WeaponSlotAPI} 
+	 * to the given one.
+	 * @param weaponSize a different size
+	 * @category Proxied methods
+	 */
 	public void setSlotSize(WeaponSize weaponSize) {
 		try {
 			MethodHandle setSlotSize = MethodHandles.lookup().findVirtual(obfuscatedWeaponSlotClass, "setSlotSize", MethodType.methodType(void.class, WeaponSize.class));
@@ -164,6 +186,21 @@ public class lyr_weaponSlot {
 		}
 	}
 
+	/**
+	 * Constructs a new node with the passed parameters, and sets it
+	 * as the node of the {@link WeaponSlotAPI}.
+	 * <p> A node holds an id, and a vector point that is relative to 
+	 * the ship. Game knows where the weapon slots are through the node
+	 * data. 
+	 * <p> If a slot was created or cloned, it will require its own,
+	 * unique node. Otherwise, node manipulations through a  method such 
+	 * as {@code setLocation()} will affect both, as it is shared.
+	 * @param nodeId an id to assign to the node (using slotId is fine)
+	 * @param location a ship-relative vector to create the node at
+	 * @category Proxied methods
+	 * @see {@link data.hullmods._ehm_util#generateChildLocation} for
+	 * an example to a location calculation
+	 */
 	public void setNode(String nodeId, Vector2f location) {
 		try {
 			Lookup lookup = MethodHandles.lookup();

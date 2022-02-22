@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 
 public class refreshRefitScript implements EveryFrameScriptWithCleanup {
 	private boolean isDone = false;
-	private float runTime = 0f;
+	private float frameCount = 0f;
 	private Robot robot = null;
 	public Logger logger = null;
 
@@ -25,10 +25,9 @@ public class refreshRefitScript implements EveryFrameScriptWithCleanup {
 		CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
 		if (tab == null || !tab.equals(CoreUITabId.REFIT)) { isDone = true; return; }
 
-		runTime++;
-		try {
+		try { frameCount++;
 			robot = new Robot();
-			if (runTime < 5) {
+			if (frameCount < 5) {
 				robot.keyPress(KeyEvent.VK_ENTER);
 			} else {
 				robot.keyPress(KeyEvent.VK_R);

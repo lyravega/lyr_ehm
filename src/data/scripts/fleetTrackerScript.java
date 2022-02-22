@@ -30,7 +30,6 @@ public class fleetTrackerScript implements EveryFrameScriptWithCleanup {
 		try {
 			robot = new Robot();
 		} catch (AWTException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

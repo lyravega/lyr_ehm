@@ -103,7 +103,7 @@ public class _ehm_wr_base extends _ehm_base {
 		Collection<String> fittedWeapons = variant.getFittedWeaponSlots();
 		fittedWeapons.retainAll(variant.getNonBuiltInWeaponSlots());
 
-		//if (!fittedWeapons.isEmpty()) return ehm.excuses.hasWeapons;
+		if (!fittedWeapons.isEmpty()) return ehm.excuses.hasWeapons;
 
 		return null;
 	}

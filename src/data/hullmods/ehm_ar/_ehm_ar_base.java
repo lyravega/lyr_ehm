@@ -90,8 +90,7 @@ public class _ehm_ar_base extends _ehm_base {
 			WeaponSize parentSlotSize = parentSlot.retrieve().getSlotSize();
 
 			for (String position: offsets.keySet()) {
-				//lyr_weaponSlot childSlot = new lyr_weaponSlot(parentSlot.clone(), false); 
-				lyr_weaponSlot childSlot = new lyr_weaponSlot(parentSlot.retrieve(), true);
+				lyr_weaponSlot childSlot = parentSlot.clone();
 
 				String childSlotId = ehm.affix.adaptedSlot + parentSlotId + position; // also used as nodeId because nodeId isn't visible
 				Vector2f childSlotLocation = _ehm_util.generateChildLocation(parentSlotLocation, parentSlotAngle, offsets.get(position));

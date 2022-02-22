@@ -14,6 +14,7 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import org.apache.log4j.Logger;
 
 import data.hullmods._ehm_base.ehm;
+import data.hullmods.ehm_sc._ehm_sc_base;
 import data.hullmods.ehm_sr._ehm_sr_base;
 import data.hullmods.ehm_wr._ehm_wr_base;
 
@@ -24,6 +25,7 @@ public class shipTrackerScript implements EveryFrameScriptWithCleanup {
 	private Set<String> hullMods = new HashSet<String>();
 	private boolean isDone = false;
 	private boolean refresh = false;
+	private boolean playSound = false;
 	private float frameCount = 0f;
 	private Robot robot = null;
 	private Logger logger = null;
@@ -98,6 +100,7 @@ public class shipTrackerScript implements EveryFrameScriptWithCleanup {
 				switch (hullModType) {
 					case ehm.affix.systemRetrofit: refresh = true; break;
 					case ehm.affix.weaponRetrofit: refresh = true; break;
+					case ehm.affix.shieldCosmetic: playSound = true; break;
 					default: break;
 				}
 			} hullMods.addAll(newHullMods); newHullMods.clear();
@@ -110,6 +113,7 @@ public class shipTrackerScript implements EveryFrameScriptWithCleanup {
 				switch (hullModType) {
 					case ehm.affix.systemRetrofit: refresh = true; _ehm_sr_base.ehm_systemRestore(variant); break;
 					case ehm.affix.weaponRetrofit: refresh = true; _ehm_wr_base.ehm_weaponSlotRestore(variant); break;
+					case ehm.affix.shieldCosmetic: playSound = true; _ehm_sc_base.ehm_restoreShield(variant); break;
 					default: break;
 				}
 			} hullMods.removeAll(removedHullMods); removedHullMods.clear();
@@ -123,10 +127,15 @@ public class shipTrackerScript implements EveryFrameScriptWithCleanup {
 				robot.keyRelease(KeyEvent.VK_R);
 				robot.keyRelease(KeyEvent.VK_ENTER);
 				refresh = false;
+				playSound = true;
 				frameCount = 0f;
 				logger.info("ST-"+memberId+": Refreshed refit tab");
-				Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f);
 			}
+		}
+
+		if (playSound) {
+			Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f);
+			playSound = false;
 		}
 	}
 

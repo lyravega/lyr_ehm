@@ -268,6 +268,7 @@ public class _ehm_base implements HullModEffect {
 			public static final String systemRetrofit = "ehm_sr"; // must match hullmod tag in .csv
 			public static final String weaponRetrofit = "ehm_wr"; // must match hullmod tag in .csv
 			public static final String adapterRetrofit = "ehm_ar"; // must match hullmod tag in .csv
+			public static final String shieldCosmetic = "ehm_sc"; // must match hullmod tag in .csv
 			public static final String adapterWeapon = "ehm_adapter"; // must match weapon tag in .csv
 			public static final String reqShields = "ehm_sr_require_shields"; // must match hullmod tag in .csv
 			public static final String reqNoPhase = "ehm_sr_require_no_phase"; // must match hullmod tag in .csv
@@ -278,19 +279,21 @@ public class _ehm_base implements HullModEffect {
 			public static final String allRetrofit = "ehm_"; // must match hullmod id in .csv
 			public static final String systemRetrofit = "ehm_sr_"; // must match hullmod id in .csv
 			public static final String weaponRetrofit = "ehm_wr_"; // must match hullmod id in .csv
+			public static final String shieldCosmetic = "ehm_sc_"; // must match hullmod id in .csv
 		}
 		public static enum excuses { ;
-			public static final String hasAnyRetrofit = "An experimental hull modification is installed. This cannot be removed as long as they are present on the hull";
+			public static final String hasAnyRetrofit = "An experimental hull modification is installed. This cannot be removed as long as they are present on the hull"; // never shown as it becomes built-in
 			public static final String noShip = "Ship does not exist";
-			public static final String lacksBase = "Requires base hull modification to allow retrofits";
+			public static final String lacksBase = "Requires experimental hull modifications base to be installed first";
 			public static final String hasSystemRetrofit = "Another system retrofit is already installed";
 			public static final String hasWeaponRetrofit = "Another weapon retrofit is already installed";
 			public static final String hasAdapterRetrofit = "Another slot adapter is already installed";
+			public static final String hasShieldCosmetic = "Another shield cosmetic modification is already installed";
 			public static final String noShields = "Cannot function without shields";
 			public static final String hasPhase = "Cannot function with a phase cloak";
 			public static final String noWings = "Cannot function without wings";
-			public static final String adapterActivated = "Adapter has been activated. Can be removed with the adapter removal hull mod. If this has just been activated, refit panel must be refreshed (R) to see the changes";
-			public static final String noAdapterRetrofit = "There are no adapters to remove. If one has just been removed, refit panel must be refreshed (R) to see the changes";
+			public static final String adapterActivated = "An adapter has been activated. Can only be removed with the adapter removal hull mod";
+			public static final String noAdapterRetrofit = "There are no adapters to remove";
 			public static final String hasWeapons = "Cannot be installed or uninstalled as long as there are weapons present on the ship";
 			
 		}
