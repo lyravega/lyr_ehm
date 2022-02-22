@@ -3,15 +3,17 @@ package lyr;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
+import java.util.Iterator;
 
+import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.SettingsAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
+import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
 /**
  * A proxy-like class for {@link ShipHullSpecAPI} that utilizes obfuscated 
- * methods without referring to them. Also has overloads for the methods 
- * that do not require a proxy to be executed; that are visible, and 
- * non-obfuscated. 
+ * methods without referring to them. 
  * <p> Some of the methods in the proxy may have API variants, but they're 
  * also implemented here simply to get suggestions. In addition, such 
  * methods avoid using the API variants even when their arguments and/or
@@ -24,6 +26,21 @@ import com.fs.starfarer.api.loading.WeaponSlotAPI;
 public class lyr_hullSpec {
     private ShipHullSpecAPI hullSpec;
     private lyr_weaponSlot weaponSlot = null;
+    private static Class<?> obfuscatedHullSpecClass;
+    private static Class<?> obfuscatedWeaponSlotClass;
+
+	static {
+		SettingsAPI settings = Global.getSettings();
+		for (String variantId : settings.getAllVariantIds()) { // get all the variant ids
+			ShipVariantAPI variant = settings.getVariant(variantId); // start with a variant
+			Iterator<String> i = variant.getNonBuiltInWeaponSlots().iterator(); // assign an iterator for weapon slots
+			
+			if (!i.hasNext()) continue; // check if there is a weapon slot
+
+            obfuscatedHullSpecClass = variant.getHullSpec().getClass(); // retrieve the class of the hull spec here too, why not
+			obfuscatedWeaponSlotClass = variant.getSlot(i.next()).getClass(); break; // retrieve the class of the weapon slot
+		} 
+	}
 
     /**
      * Creates a new instance for the passed hullSpec, and clones it if
@@ -76,7 +93,7 @@ public class lyr_hullSpec {
     @Override
     public ShipHullSpecAPI clone() {
         try {
-            MethodHandle clone = MethodHandles.lookup().findVirtual(hullSpec.getClass(), "clone", MethodType.methodType(hullSpec.getClass()));
+            MethodHandle clone = MethodHandles.lookup().findVirtual(obfuscatedHullSpecClass, "clone", MethodType.methodType(obfuscatedHullSpecClass));
             return (ShipHullSpecAPI) clone.invoke(hullSpec);
         } catch (Throwable t) {
             t.printStackTrace();
@@ -92,7 +109,7 @@ public class lyr_hullSpec {
      */
     public void addBuiltInMod(String hullModSpecId) { 
         try {
-            MethodHandle addBuiltInMod = MethodHandles.lookup().findVirtual(hullSpec.getClass(), "addBuiltInMod", MethodType.methodType(void.class, String.class));
+            MethodHandle addBuiltInMod = MethodHandles.lookup().findVirtual(obfuscatedHullSpecClass, "addBuiltInMod", MethodType.methodType(void.class, String.class));
             addBuiltInMod.invoke(hullSpec, hullModSpecId);
         } catch (Throwable t) {
             t.printStackTrace();
@@ -109,7 +126,7 @@ public class lyr_hullSpec {
      */
     public void setManufacturer(String manufacturer) {
         try {
-            MethodHandle setManufacturer = MethodHandles.lookup().findVirtual(hullSpec.getClass(), "setManufacturer", MethodType.methodType(void.class, String.class));
+            MethodHandle setManufacturer = MethodHandles.lookup().findVirtual(obfuscatedHullSpecClass, "setManufacturer", MethodType.methodType(void.class, String.class));
             setManufacturer.invoke(hullSpec, manufacturer);
         } catch (Throwable t) {
             t.printStackTrace();
@@ -125,7 +142,7 @@ public class lyr_hullSpec {
      */
     public void setDescriptionPrefix(String destriptionPrefix) {
         try {
-            MethodHandle setDescriptionPrefix = MethodHandles.lookup().findVirtual(hullSpec.getClass(), "setDescriptionPrefix", MethodType.methodType(void.class, String.class));
+            MethodHandle setDescriptionPrefix = MethodHandles.lookup().findVirtual(obfuscatedHullSpecClass, "setDescriptionPrefix", MethodType.methodType(void.class, String.class));
             setDescriptionPrefix.invoke(hullSpec, destriptionPrefix);
         } catch (Throwable t) {
             t.printStackTrace();
@@ -142,7 +159,7 @@ public class lyr_hullSpec {
      */
     public void setShipSystemId(String shipSystemId) {
         try {
-            MethodHandle setShipSystemId = MethodHandles.lookup().findVirtual(hullSpec.getClass(), "setShipSystemId", MethodType.methodType(void.class, String.class));
+            MethodHandle setShipSystemId = MethodHandles.lookup().findVirtual(obfuscatedHullSpecClass, "setShipSystemId", MethodType.methodType(void.class, String.class));
             setShipSystemId.invoke(hullSpec, shipSystemId);
         } catch (Throwable t) {
             t.printStackTrace();
@@ -165,5 +182,23 @@ public class lyr_hullSpec {
         this.weaponSlot = (this.weaponSlot == null) ? new lyr_weaponSlot(weaponSlot, false) : this.weaponSlot.recycle(weaponSlot);
         
         return this.weaponSlot;
+    }
+
+    public void addWeaponSlot(WeaponSlotAPI weaponSlot) {
+        try {
+            MethodHandle addWeaponSlot = MethodHandles.lookup().findVirtual(obfuscatedHullSpecClass, "addWeaponSlot", MethodType.methodType(void.class, obfuscatedWeaponSlotClass));
+            addWeaponSlot.invoke(hullSpec, obfuscatedWeaponSlotClass.cast(weaponSlot));
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+    }
+
+    public void addBuiltInWeapon(String slotId, String weaponSpecId) {
+        try {
+            MethodHandle addBuiltInWeapon = MethodHandles.lookup().findVirtual(obfuscatedHullSpecClass, "addBuiltInWeapon", MethodType.methodType(void.class, String.class, String.class));
+            addBuiltInWeapon.invoke(hullSpec, slotId, weaponSpecId);
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
     }
 }

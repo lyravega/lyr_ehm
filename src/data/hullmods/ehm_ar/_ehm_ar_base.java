@@ -23,6 +23,8 @@ import data.hullmods._ehm_base;
 import data.hullmods._ehm_util;
 import data.hullmods.ehm_sr._ehm_sr_base;
 import data.hullmods.ehm_wr._ehm_wr_base;
+import lyr.lyr_hullSpec;
+import lyr.lyr_weaponSlot;
 
 /**
  * This class is used by slot adapter hullmods. Slot adapters are designed 
@@ -113,21 +115,21 @@ public class _ehm_ar_base extends _ehm_base {
 		return hullSpec;
 	}
 	@Deprecated // without obfuscated stuff - incomplete
-	protected static final ShipHullSpecAPI ehm_stepDownAdapter(ShipVariantAPI variantAPI) {
-		HullVariantSpec tempVariant = new HullVariantSpec("ehm_tempVariant", HullVariantSpec.class.cast(variantAPI).getHullSpec());
+	protected static final ShipHullSpecAPI ehm_stepDownAdapter(ShipVariantAPI variant) {
+		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 		boolean refreshRefit = false;
 
-		for (String slotId: variantAPI.getFittedWeaponSlots()) {
+		for (String slotId: variant.getFittedWeaponSlots()) {
 			if (slotId.startsWith(ehm.affix.adaptedSlot)) continue; // short-circuit to avoid weapons in adapted slots causing an error on load, must be first
 			
 			//WeaponType slotType = variant.getSlot(slotId).getWeaponType();
 			//WeaponSize slotSize = variant.getSlot(slotId).getSlotSize();
-			WeaponSpecAPI weaponSpec = variantAPI.getWeaponSpec(slotId);
+			WeaponSpecAPI weaponSpec = variant.getWeaponSpec(slotId);
 			//WeaponType weaponType = weaponSpec.getType();
 			WeaponSize weaponSize = weaponSpec.getSize();
 			String weaponId = weaponSpec.getWeaponId();
 
-			if (!weaponSize.equals(variantAPI.getSlot(slotId).getSlotSize())) continue; // to avoid plugging medium universal to large universal
+			if (!weaponSize.equals(variant.getSlot(slotId).getSlotSize())) continue; // to avoid plugging medium universal to large universal
 			if (!ehm.id.weapons.containsKey(weaponId)) continue; // to short-circuit the function if it isn't an adapter
 			
 			// these are separated in a switch case for now, for future expansions if there will be any
@@ -155,31 +157,34 @@ public class _ehm_ar_base extends _ehm_base {
 			}
 			
 			// child size is hardcoded in the loop, could be moved above with more formations in time, right now unimportant
-			WeaponSlotAPI parentSlot = variantAPI.getSlot(slotId); 
-			Vector2f parentSlotLocation = parentSlot.getLocation();
-			float parentSlotAngle = parentSlot.getAngle();
-			String parentSlotId = parentSlot.getId();
-			WeaponSize parentSlotSize = parentSlot.getSlotSize();
+			lyr_weaponSlot parentSlot = hullSpec.getWeaponSlot(slotId); 
+			Vector2f parentSlotLocation = parentSlot.retrieve().getLocation();
+			float parentSlotAngle = parentSlot.retrieve().getAngle();
+			String parentSlotId = parentSlot.retrieve().getId();
+			WeaponSize parentSlotSize = parentSlot.retrieve().getSlotSize();
 
 			for (String position: offsets.keySet()) {
+				//lyr_weaponSlot childSlot = new lyr_weaponSlot(parentSlot.clone(), false); 
+				lyr_weaponSlot childSlot = new lyr_weaponSlot(parentSlot.retrieve(), true);
+
 				String childSlotId = ehm.affix.adaptedSlot + parentSlotId + position; // also used as nodeId because nodeId isn't visible
-				//lyr_node childSlotNode = new lyr_node(childSlotId, _ehm_util.generateChildLocation(parentSlotLocation, parentSlotAngle, offsets.get(position)));
+				Vector2f childSlotLocation = _ehm_util.generateChildLocation(parentSlotLocation, parentSlotAngle, offsets.get(position));
 				WeaponSize childSlotSize = parentSlotSize.equals(WeaponSize.LARGE) ? WeaponSize.MEDIUM : WeaponSize.SMALL;
-								
-				WeaponSlotAPI childSlot = tempVariant.getHullSpec().getWeaponSlot(slotId).clone();
-				tempVariant.getHullSpec().getWeaponSlot(slotId).getClass().cast(childSlot).setId(childSlotId);
-				tempVariant.getHullSpec().addWeaponSlot(tempVariant.getHullSpec().getWeaponSlot(slotId).getClass().cast(childSlot));
-				//tempVariant.getHullSpec().getWeaponSlot(childSlotId).setNode(tempVariant.getHullSpec().getWeaponSlot(slotId).getNode().getClass().cast(childSlotNode));
-				tempVariant.getHullSpec().getWeaponSlot(childSlotId).setSlotSize(childSlotSize);
+
+				childSlot.setId(childSlotId);
+				childSlot.setNode(childSlotId, childSlotLocation);
+				childSlot.setSlotSize(childSlotSize);
+
+			 	hullSpec.addWeaponSlot(childSlot.retrieve());
 			}
 			
-			tempVariant.getHullSpec().getWeaponSlot(slotId).getClass().cast(parentSlot).setWeaponType(WeaponType.DECORATIVE);
-			tempVariant.getHullSpec().addBuiltInWeapon(parentSlotId, weaponId);
+			parentSlot.setWeaponType(WeaponType.DECORATIVE);
+			hullSpec.addBuiltInWeapon(parentSlotId, weaponId);
 			refreshRefit = true; 
 		}
 		
 		if (refreshRefit) { refreshRefit(); refreshRefit = false; }
-		return tempVariant.getHullSpec();
+		return hullSpec.retrieve();
 	}
 
 	/** 
@@ -189,12 +194,8 @@ public class _ehm_ar_base extends _ehm_base {
 	 * @param variant that have adapter-altered weapon slots
 	 * @return a stock hullSpec to be installed on the variant
 	 */
-	protected static final g ehm_adapterRemoval(HullVariantSpec variant) {
+	protected static final ShipHullSpecAPI ehm_adapterRemoval(ShipVariantAPI variant) {
 		return ehm_hullSpecClone(variant, true);
-	}
-	@Deprecated // without obfuscated stuff
-	protected static final ShipHullSpecAPI ehm_adapterRemoval(ShipVariantAPI variantAPI) {
-		return ehm_hullSpecClone(variantAPI, true);
 	}
 
 	//#region INSTALLATION CHECKS
@@ -210,7 +211,7 @@ public class _ehm_ar_base extends _ehm_base {
 
 	@Override
 	protected String cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
-		HullVariantSpec variant = HullVariantSpec.class.cast(ship.getVariant());
+		ShipVariantAPI variant = ship.getVariant();
 		
 		if (variant.hasHullMod(hullModSpec.getId())) for (WeaponSlotAPI slot: variant.getHullSpec().getAllWeaponSlotsCopy()) 
 		if (slot.getId().contains(ehm.affix.adaptedSlot)) return ehm.excuses.adapterActivated;
