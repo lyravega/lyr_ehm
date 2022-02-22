@@ -3,7 +3,6 @@ package lyr;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
-import java.lang.reflect.Method;
 import java.lang.invoke.MethodType;
 import java.util.Iterator;
 
@@ -13,7 +12,6 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
-import com.fs.starfarer.loading.specs.HullVariantSpec;
 
 import org.lwjgl.util.vector.Vector2f;
 

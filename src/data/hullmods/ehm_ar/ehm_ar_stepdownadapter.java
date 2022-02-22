@@ -2,7 +2,7 @@ package data.hullmods.ehm_ar;
 
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
-import com.fs.starfarer.loading.specs.HullVariantSpec; // TODO: GET RID OF THIS
+import com.fs.starfarer.api.combat.ShipVariantAPI;
 
 /**@category Adapter Retrofit 
  * @author lyravega
@@ -12,8 +12,8 @@ import com.fs.starfarer.loading.specs.HullVariantSpec; // TODO: GET RID OF THIS
 public class ehm_ar_stepdownadapter extends _ehm_ar_base {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		HullVariantSpec variant = HullVariantSpec.class.cast(stats.getVariant()); 
+		ShipVariantAPI variant = stats.getVariant(); 
 		
-		variant.setHullSpecAPI(ehm_stepDownAdapter(stats.getVariant())); 
+		variant.setHullSpecAPI(ehm_stepDownAdapter(variant)); 
 	}
 }
