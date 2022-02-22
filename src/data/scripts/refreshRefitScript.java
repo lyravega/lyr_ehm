@@ -22,24 +22,24 @@ public class refreshRefitScript implements EveryFrameScriptWithCleanup {
 	
 	@Override
 	public void advance(float amount) {
-        CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
-        if (tab == null || !tab.equals(CoreUITabId.REFIT)) { isDone = true; return; }
+		CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
+		if (tab == null || !tab.equals(CoreUITabId.REFIT)) { isDone = true; return; }
 
 		runTime++;
 		try {
 			robot = new Robot();
 			if (runTime < 5) {
-                robot.keyPress(KeyEvent.VK_ENTER);
-            } else {
-                robot.keyPress(KeyEvent.VK_R);
-                robot.keyRelease(KeyEvent.VK_R);
-                robot.keyRelease(KeyEvent.VK_ENTER);
+				robot.keyPress(KeyEvent.VK_ENTER);
+			} else {
+				robot.keyPress(KeyEvent.VK_R);
+				robot.keyRelease(KeyEvent.VK_R);
+				robot.keyRelease(KeyEvent.VK_ENTER);
 				Logger logger = Logger.getLogger("lyr");
 				logger.info("RR: Refreshed refit tab");
 				Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f);
 				isDone = true;
 				return;
-            }
+			}
 		}
 		catch (AWTException ex) {
 			return;

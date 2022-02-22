@@ -1,6 +1,6 @@
 {
-    "drill":
-    [
-        {"file":"data/sounds/drill.ogg","pitch":1.0,"volume":0.5},
-    ],
+	"drill":
+	[
+		{"file":"data/sounds/drill.ogg","pitch":1.0,"volume":0.5},
+	],
 }

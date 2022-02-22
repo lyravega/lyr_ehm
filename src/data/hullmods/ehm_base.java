@@ -40,8 +40,8 @@ public class ehm_base extends _ehm_base {
 	public void applyEffectsAfterShipCreation(ShipAPI ship, String id) {
 		if (ship == null) return;
 
-        CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
-        if (tab == null || !tab.equals(CoreUITabId.REFIT)) return;
+		CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
+		if (tab == null || !tab.equals(CoreUITabId.REFIT)) return;
 
 		shipTrackerScript(ship).setVariant(ship.getVariant()); // setVariant() is necessary to reflect the changes on the "refit ship"
 	}
