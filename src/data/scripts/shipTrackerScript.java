@@ -98,8 +98,8 @@ public class shipTrackerScript implements EveryFrameScriptWithCleanup {
 				String hullModId = i.next(); 
 				String hullModType = hullModId.substring(0, 7); // all affixes (not tags) are fixed to 0-7
 				switch (hullModType) {
-					case ehm.affix.systemRetrofit: refresh = true; break;
-					case ehm.affix.weaponRetrofit: refresh = true; break;
+					case ehm.affix.systemRetrofit: playSound = true; refresh = true; break;
+					case ehm.affix.weaponRetrofit: playSound = true; refresh = true; break;
 					case ehm.affix.shieldCosmetic: playSound = true; break;
 					default: break;
 				}
@@ -111,8 +111,8 @@ public class shipTrackerScript implements EveryFrameScriptWithCleanup {
 				String hullModId = i.next(); 
 				String hullModType = hullModId.substring(0, 7); 
 				switch (hullModType) {
-					case ehm.affix.systemRetrofit: refresh = true; _ehm_sr_base.ehm_systemRestore(variant); break;
-					case ehm.affix.weaponRetrofit: refresh = true; _ehm_wr_base.ehm_weaponSlotRestore(variant); break;
+					case ehm.affix.systemRetrofit: playSound = true; refresh = true; _ehm_sr_base.ehm_systemRestore(variant); break;
+					case ehm.affix.weaponRetrofit: playSound = true; refresh = true; _ehm_wr_base.ehm_weaponSlotRestore(variant); break;
 					case ehm.affix.shieldCosmetic: playSound = true; _ehm_sc_base.ehm_restoreShield(variant); break;
 					default: break;
 				}
@@ -127,7 +127,6 @@ public class shipTrackerScript implements EveryFrameScriptWithCleanup {
 				robot.keyRelease(KeyEvent.VK_R);
 				robot.keyRelease(KeyEvent.VK_ENTER);
 				refresh = false;
-				playSound = true;
 				frameCount = 0f;
 				logger.info("ST-"+memberId+": Refreshed refit tab");
 			}
@@ -135,6 +134,7 @@ public class shipTrackerScript implements EveryFrameScriptWithCleanup {
 
 		if (playSound) {
 			Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f);
+			
 			playSound = false;
 		}
 	}
