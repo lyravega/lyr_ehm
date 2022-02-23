@@ -10,7 +10,7 @@ import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 
 /**@category Weapon Retrofit 
  * @author lyravega
- * @version 0.5
+ * @version 0.7
  * @since 0.2
  */
 public class ehm_wr_energyslotretrofit extends _ehm_wr_base {

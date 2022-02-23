@@ -25,7 +25,7 @@ import data.scripts.shipTrackerScript;
  * script {@link shipTrackerScript}, and the TRACKERS part of {@link _ehm_base}. 
  * @category Base Hull Modification 
  * @author lyravega
- * @version 0.5
+ * @version 0.7
  * @since 0.4
  */
 public class ehm_base extends _ehm_base {

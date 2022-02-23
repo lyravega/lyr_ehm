@@ -6,7 +6,7 @@ import org.lwjgl.util.vector.Vector2f;
  * Provides some vector utility functions to the base, only used to
  * calculate the new locations of child slots.
  * @author lyravega
- * @version 0.5
+ * @version 0.7
  * @since 0.3
  */
 public class _ehm_util {

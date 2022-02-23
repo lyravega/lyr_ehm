@@ -37,7 +37,7 @@ import lyr.lyr_hullSpec;
  * @see {@link _ehm_sr_base} for system retrofit base
  * @see {@link _ehm_wr_base} for weapon retrofit base
  * @author lyravega
- * @version 0.5
+ * @version 0.7
  * @since 0.3
  */
 public class _ehm_base implements HullModEffect {

@@ -24,7 +24,7 @@ import lyr.lyr_shieldSpec;
  * @see {@link _ehm_ar_base} for slot adapter base
  * @see {@link _ehm_sr_base} for system retrofit base
  * @author lyravega
- * @version 0.5
+ * @version 0.7
  * @since 0.3
  */
 public class _ehm_sc_base extends _ehm_base {

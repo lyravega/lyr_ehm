@@ -20,7 +20,7 @@ import lyr.lyr_hullSpec;
  * @see {@link _ehm_ar_base} for slot adapter base
  * @see {@link _ehm_wr_base} for weapon retrofit base
  * @author lyravega
- * @version 0.5
+ * @version 0.7
  * @since 0.3
  */
 public class _ehm_sr_base extends _ehm_base {

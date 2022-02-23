@@ -6,7 +6,7 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 
 /**@category Adapter Retrofit 
  * @author lyravega
- * @version 0.5
+ * @version 0.7
  * @since 0.3
  */
 public class ehm_ar_stepdownadapter extends _ehm_ar_base {

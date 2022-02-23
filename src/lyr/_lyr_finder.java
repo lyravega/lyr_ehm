@@ -18,7 +18,7 @@ public class _lyr_finder {
 	protected static Class<?> obfuscatedHullSpecClass = null;
 	protected static Class<?> obfuscatedShieldSpecClass = null;
 	protected static Class<?> obfuscatedWeaponSlotClass = null;
-	protected static Class<?> obfuscatedEngineStylerClass = null;
+	protected static Class<?> obfuscatedEngineBuilderClass = null;
 	protected static Class<?> obfuscatedEngineStyleEnum = null;
 	protected static String obfuscatedEngineStyleSetterName = null;
 	protected static Class<?> obfuscatedNodeClass = null;
@@ -53,23 +53,23 @@ public class _lyr_finder {
 					obfuscatedShieldSpecClass = hullSpec.getShieldSpec().getClass(); found++; // get the obfuscated shieldSpec class
 				}
 
-				if (obfuscatedEngineStylerClass == null && hullSpec != null) {
+				if (obfuscatedEngineBuilderClass == null && hullSpec != null) {
 					List<?> engineSlots = new ArrayList<>();
 
 					MethodHandle getEngineSlots = MethodHandles.lookup().findVirtual(hullSpec.getClass(), "getEngineSlots", MethodType.methodType(List.class));
 					engineSlots = (List<?>) getEngineSlots.invoke(hullSpec);
 
 					if (engineSlots.get(0) != null) {
-						obfuscatedEngineStylerClass = engineSlots.get(0).getClass(); found++; // yoink
+						obfuscatedEngineBuilderClass = engineSlots.get(0).getClass(); found++; // yoink
 
-						for (Class<?> clazz : obfuscatedEngineStylerClass.getDeclaredClasses()) { // this is somewhat hacky but should be reliable. usage will be pretty hardcoded though
+						for (Class<?> clazz : obfuscatedEngineBuilderClass.getDeclaredClasses()) { // this is somewhat hacky but should be reliable. usage will be pretty hardcoded though
 							if (clazz.isEnum()) {
 								obfuscatedEngineStyleEnum = clazz; found++; break; // there are 2 declared classes, one of them isEnum and the one we seek
 							}
 						}
 
 						String enumName = "("+obfuscatedEngineStyleEnum.getName()+")"; // this may look extremely hacky, but should be safe; working with full class name
-						for (Object method : obfuscatedEngineStylerClass.getMethods()) {
+						for (Object method : obfuscatedEngineBuilderClass.getMethods()) {
 							String stringToButcher = method.toString(); 
 							
 							if (!stringToButcher.contains(enumName)) continue;

@@ -6,7 +6,7 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 
 /**@category System Retrofit 
  * @author lyravega
- * @version 0.5
+ * @version 0.7
  * @since 0.1
  */
 public class ehm_sr_mote_control extends _ehm_sr_base {

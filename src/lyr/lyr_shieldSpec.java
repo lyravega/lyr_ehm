@@ -7,6 +7,18 @@ import java.lang.invoke.MethodType;
 
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
 
+/**
+ * A proxy-like class for {@link ShieldSpecAPI} that utilizes obfuscated 
+ * methods without referring to them. 
+ * <p> Some of the methods in the proxy may have API variants, but they're 
+ * also implemented here simply to get suggestions. In addition, such 
+ * methods avoid using the API variants even when their arguments and/or
+ * return types aren't from an obfuscated class.
+ * <p> Use {@link #retrieve()} to grab the stored {@link ShieldSpecAPI}.
+ * @author lyravega
+ * @version 0.7
+ * @since 0.7
+ */
 public class lyr_shieldSpec {
 	private ShieldSpecAPI shieldSpec;
 	private static final Class<?> obfuscatedShieldSpecClass = _lyr_finder.obfuscatedShieldSpecClass;

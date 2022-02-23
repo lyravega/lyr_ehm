@@ -6,9 +6,36 @@ import java.lang.invoke.MethodType;
 
 import com.fs.starfarer.api.combat.EngineSlotAPI;
 
+/**
+ * A proxy-like class for... engine builder? I have no idea what 
+ * this is. As far as I can tell, there is no API equalivent to
+ * whatever {@code getEngineSlots()} retrieves.
+ * <p> The retrieved objects have EngineSlot data in them, but
+ * there is a method that formats all of those slots, hence my 
+ * reason calling this a 'builder', which probably formats the 
+ * engines according to their 'style' enum,and sets them on the 
+ * ship.
+ * <p> Accessing the EngineSlot data directly, and trying to 
+ * alter anything has no visible results as far as I can tell. 
+ * There also is an EngineSlotAPI, and I was expecting a relation
+ * between the core code and the API similar to hullSpec, 
+ * shieldSpec, weaponSlot, etc... but that doesn't seem to be 
+ * the case.
+ * <p> And as there isn't an API equalivent, whatever the method
+ * {@code getEngineSlots()} grabs are bound to objects instead.
+ * And due to the obfuscation, I had to access the methods / 
+ * classes in a way that I do NOT like.
+ * <p> As I don't know what this class does what, and exactly 
+ * how, the best I can provide is finding the 'style enum' and
+ * generate a few hardcoded templates, but nothing more can be
+ * added till EngineSlotAPI<->EngineSlot link is found.
+ * @author lyravega
+ * @version 0.7
+ * @since 0.7
+ */
 public class lyr_engineSlot {
 	private Object engineSlot;
-	private static final Class<?> obfuscatedEngineStylerClass = _lyr_finder.obfuscatedEngineStylerClass;
+	private static final Class<?> obfuscatedEngineBuilderClass = _lyr_finder.obfuscatedEngineBuilderClass;
 	private static final Class<?> obfuscatedEngineStyleEnum = _lyr_finder.obfuscatedEngineStyleEnum;
 	private static final String obfuscatedEngineStyleSetterName = _lyr_finder.obfuscatedEngineStyleSetterName;
 	
@@ -52,7 +79,7 @@ public class lyr_engineSlot {
 	 */
 	protected Object duplicate(Object engineSlot) {
 		try {
-			MethodHandle clone = MethodHandles.lookup().findVirtual(obfuscatedEngineStylerClass, "clone", MethodType.methodType(obfuscatedEngineStylerClass));
+			MethodHandle clone = MethodHandles.lookup().findVirtual(obfuscatedEngineBuilderClass, "clone", MethodType.methodType(obfuscatedEngineBuilderClass));
 			return (Object) clone.invoke(engineSlot);
 		} catch (Throwable t) {
 			t.printStackTrace(); 
@@ -67,8 +94,8 @@ public class lyr_engineSlot {
 	
 	public void setEngineStyle(int enumNumber) {
 		try {
-			MethodHandle setEngineStyle = MethodHandles.lookup().findVirtual(obfuscatedEngineStylerClass, obfuscatedEngineStyleSetterName, MethodType.methodType(void.class, obfuscatedEngineStyleEnum));
-			setEngineStyle.invoke(obfuscatedEngineStylerClass.cast(engineSlot), obfuscatedEngineStyleEnum.getEnumConstants()[enumNumber]);
+			MethodHandle setEngineStyle = MethodHandles.lookup().findVirtual(obfuscatedEngineBuilderClass, obfuscatedEngineStyleSetterName, MethodType.methodType(void.class, obfuscatedEngineStyleEnum));
+			setEngineStyle.invoke(obfuscatedEngineBuilderClass.cast(engineSlot), obfuscatedEngineStyleEnum.getEnumConstants()[enumNumber]);
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
