@@ -26,8 +26,6 @@ import lyr.lyr_weaponSlot;
  * This class is used by slot adapter hullmods. Slot adapters are designed 
  * to search the ship for specific weapons, and perform operations on the 
  * hullSpec to yield interesting results, such as creating a new weapon slot. 
- * </p>
- * Reason to split this as another base was primarily maintenance.
  * @see {@link _ehm_sr_base} for system retrofit base
  * @see {@link _ehm_wr_base} for weapon retrofit base
  * @author lyravega
@@ -120,7 +118,7 @@ public class _ehm_ar_base extends _ehm_base {
 	 * @return a stock hullSpec to be installed on the variant
 	 */
 	protected static final ShipHullSpecAPI ehm_adapterRemoval(ShipVariantAPI variant) {
-		return ehm_hullSpecClone(variant, true);
+		return ehm_hullSpecRestore(variant);
 	}
 
 	//#region INSTALLATION CHECKS

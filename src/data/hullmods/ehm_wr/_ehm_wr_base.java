@@ -21,8 +21,6 @@ import lyr.lyr_weaponSlot;
  * This class is used by weapon retrofit hullmods. They are pretty 
  * straightforward in their operation; change all of the weapon slots 
  * on a ship to a different type. 
- * </p>
- * Reason to split this as another base was primarily maintenance.
  * @see {@link _ehm_ar_base} for slot adapter base
  * @see {@link _ehm_sr_base} for system retrofit base
  * @author lyravega
@@ -64,7 +62,7 @@ public class _ehm_wr_base extends _ehm_base {
 	 * @see {@link data.scripts.shipTrackerScript} only called externally by this script
 	 */
 	public static final ShipHullSpecAPI ehm_weaponSlotRestore(ShipVariantAPI variant) {
-		ShipHullSpecAPI stockHullSpec = ehm_hullSpecClone(variant, true);
+		ShipHullSpecAPI stockHullSpec = ehm_hullSpecRestore(variant);
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 
 		for (WeaponSlotAPI stockSlot: stockHullSpec.getAllWeaponSlotsCopy()) {
