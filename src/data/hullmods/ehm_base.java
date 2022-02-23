@@ -33,7 +33,7 @@ public class ehm_base extends _ehm_base {
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant(); 
 
-		variant.setHullSpecAPI(ehm_hullSpecClone(variant, false)); 
+		variant.setHullSpecAPI(ehm_hullSpecClone(variant)); 
 	}
 
 	@Override

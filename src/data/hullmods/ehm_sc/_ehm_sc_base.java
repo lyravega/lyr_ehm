@@ -16,16 +16,13 @@ import lyr.lyr_hullSpec;
 import lyr.lyr_shieldSpec;
 
 /**
- * This class is used by weapon retrofit hullmods. They are pretty 
- * straightforward in their operation; change all of the weapon slots 
- * on a ship to a different type. 
- * </p>
- * Reason to split this as another base was primarily maintenance.
+ * This class is used by shield cosmetic hullmods. 
+ * </p> Reason to split this as another base was primarily maintenance.
  * @see {@link _ehm_ar_base} for slot adapter base
  * @see {@link _ehm_sr_base} for system retrofit base
  * @author lyravega
  * @version 0.7
- * @since 0.3
+ * @since 0.7
  */
 public class _ehm_sc_base extends _ehm_base {
 	protected static final ShipHullSpecAPI ehm_pimpMyShield(ShipVariantAPI variant, Color inner, Color ring) {

@@ -15,8 +15,6 @@ import lyr.lyr_hullSpec;
 /**
  * This class is used by system retrofit hullmods. They are pretty 
  * straightforward in their operation; change the system of a hullSpec.
- * </p>
- * Reason to split this as another base was primarily maintenance.
  * @see {@link _ehm_ar_base} for slot adapter base
  * @see {@link _ehm_wr_base} for weapon retrofit base
  * @author lyravega
