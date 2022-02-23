@@ -14,6 +14,7 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import org.apache.log4j.Logger;
 
 import data.hullmods._ehm_base.ehm;
+import data.hullmods.ehm_ec._ehm_ec_base;
 import data.hullmods.ehm_sc._ehm_sc_base;
 import data.hullmods.ehm_sr._ehm_sr_base;
 import data.hullmods.ehm_wr._ehm_wr_base;
@@ -101,6 +102,7 @@ public class shipTrackerScript implements EveryFrameScriptWithCleanup {
 					case ehm.affix.systemRetrofit: playSound = true; refresh = true; break;
 					case ehm.affix.weaponRetrofit: playSound = true; refresh = true; break;
 					case ehm.affix.shieldCosmetic: playSound = true; break;
+					case ehm.affix.engineCosmetic: playSound = true; break;
 					default: break;
 				}
 			} hullMods.addAll(newHullMods); newHullMods.clear();
@@ -114,6 +116,7 @@ public class shipTrackerScript implements EveryFrameScriptWithCleanup {
 					case ehm.affix.systemRetrofit: playSound = true; refresh = true; _ehm_sr_base.ehm_systemRestore(variant); break;
 					case ehm.affix.weaponRetrofit: playSound = true; refresh = true; _ehm_wr_base.ehm_weaponSlotRestore(variant); break;
 					case ehm.affix.shieldCosmetic: playSound = true; _ehm_sc_base.ehm_restoreShield(variant); break;
+					case ehm.affix.engineCosmetic: playSound = true; _ehm_ec_base.ehm_restoreEngineSlots(variant); break;
 					default: break;
 				}
 			} hullMods.removeAll(removedHullMods); removedHullMods.clear();

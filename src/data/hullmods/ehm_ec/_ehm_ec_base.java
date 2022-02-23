@@ -1,7 +1,5 @@
 package data.hullmods.ehm_ec;
 
-import java.util.Set;
-
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
@@ -44,10 +42,7 @@ public class _ehm_ec_base extends _ehm_base {
 		if (ship == null) return ehm.excuses.noShip; 
 
 		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return ehm.excuses.lacksBase; 
-		if (ehm_hasRetrofitTag(ship, ehm.tag.shieldCosmetic, hullModSpecId)) return ehm.excuses.hasShieldCosmetic;
-
-		Set<String> hullModSpecTags = hullModSpec.getTags();
-		if (hullModSpecTags.contains(ehm.tag.reqShields) && ship.getShield() == null) return ehm.excuses.noShields;
+		if (ehm_hasRetrofitTag(ship, ehm.tag.engineCosmetic, hullModSpecId)) return ehm.excuses.hasEngineCosmetic;
 
 		return null; 
 	}

@@ -79,3 +79,7 @@ Magenta Shields,ehm_sc_magentaShields,1,,Experimental,"special, ehm, ehm_sc, ehm
 Purple Shields,ehm_sc_purpleShields,1,,Experimental,"special, ehm, ehm_sc, ehm_sr_require_shields",Cosmetics,25000,,,,0,0,0,0,data.hullmods.ehm_sc.ehm_sc_purpleShields,,,
 Red Shields,ehm_sc_redShields,1,,Experimental,"special, ehm, ehm_sc, ehm_sr_require_shields",Cosmetics,25000,,,,0,0,0,0,data.hullmods.ehm_sc.ehm_sc_redShields,,,
 Yellow Shields,ehm_sc_yellowShields,1,,Experimental,"special, ehm, ehm_sc, ehm_sr_require_shields",Cosmetics,25000,,,,0,0,0,0,data.hullmods.ehm_sc.ehm_sc_yellowShields,,,
+High-Tech Engines,ehm_ec_highTechEngines,1,,Experimental,"special, ehm, ehm_ec",Cosmetics,25000,,,,0,0,0,0,data.hullmods.ehm_ec.ehm_ec_highTechEngines,,,
+Low-Tech Engines,ehm_ec_lowTechEngines,1,,Experimental,"special, ehm, ehm_ec",Cosmetics,25000,,,,0,0,0,0,data.hullmods.ehm_ec.ehm_ec_lowTechEngines,,,
+Midline Engines,ehm_ec_midlineEngines,1,,Experimental,"special, ehm, ehm_ec",Cosmetics,25000,,,,0,0,0,0,data.hullmods.ehm_ec.ehm_ec_midlineEngines,,,
+Torpedo Engines,ehm_ec_torpedoEngines,1,,Experimental,"special, ehm, ehm_ec",Cosmetics,25000,,,,0,0,0,0,data.hullmods.ehm_ec.ehm_ec_torpedoEngines,,,

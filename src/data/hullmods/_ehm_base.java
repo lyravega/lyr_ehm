@@ -269,6 +269,7 @@ public class _ehm_base implements HullModEffect {
 			public static final String weaponRetrofit = "ehm_wr"; // must match hullmod tag in .csv
 			public static final String adapterRetrofit = "ehm_ar"; // must match hullmod tag in .csv
 			public static final String shieldCosmetic = "ehm_sc"; // must match hullmod tag in .csv
+			public static final String engineCosmetic = "ehm_ec"; // must match hullmod tag in .csv
 			public static final String adapterWeapon = "ehm_adapter"; // must match weapon tag in .csv
 			public static final String reqShields = "ehm_sr_require_shields"; // must match hullmod tag in .csv
 			public static final String reqNoPhase = "ehm_sr_require_no_phase"; // must match hullmod tag in .csv
@@ -280,6 +281,7 @@ public class _ehm_base implements HullModEffect {
 			public static final String systemRetrofit = "ehm_sr_"; // must match hullmod id in .csv
 			public static final String weaponRetrofit = "ehm_wr_"; // must match hullmod id in .csv
 			public static final String shieldCosmetic = "ehm_sc_"; // must match hullmod id in .csv
+			public static final String engineCosmetic = "ehm_ec_"; // must match hullmod id in .csv
 		}
 		public static enum excuses { ;
 			public static final String hasAnyRetrofit = "An experimental hull modification is installed. This cannot be removed as long as they are present on the hull"; // never shown as it becomes built-in
@@ -289,6 +291,7 @@ public class _ehm_base implements HullModEffect {
 			public static final String hasWeaponRetrofit = "Another weapon retrofit is already installed";
 			public static final String hasAdapterRetrofit = "Another slot adapter is already installed";
 			public static final String hasShieldCosmetic = "Another shield cosmetic modification is already installed";
+			public static final String hasEngineCosmetic = "Another engine cosmetic modification is already installed";
 			public static final String noShields = "Cannot function without shields";
 			public static final String hasPhase = "Cannot function with a phase cloak";
 			public static final String noWings = "Cannot function without wings";
