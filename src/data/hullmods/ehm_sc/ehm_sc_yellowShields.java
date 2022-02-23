@@ -7,8 +7,8 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 
 public class ehm_sc_yellowShields extends _ehm_sc_base {
-	private static final Color inner = new Color(192, 192, 0, 192);
-	private static final Color ring = new Color(192, 192, 0, 192);
+	private static final Color inner = new Color(192, 192, 0, 128);
+	private static final Color ring = new Color(192, 192, 0, 128);
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
