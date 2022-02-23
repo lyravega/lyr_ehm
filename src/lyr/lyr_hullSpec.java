@@ -3,13 +3,10 @@ package lyr;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
-import java.util.Iterator;
+import java.util.List;
 
-import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.SettingsAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
-import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
 /**
@@ -28,24 +25,10 @@ public class lyr_hullSpec {
 	private ShipHullSpecAPI hullSpec;
 	private lyr_weaponSlot weaponSlot = null;
 	private lyr_shieldSpec shieldSpec = null;
-	private static Class<?> obfuscatedHullSpecClass;
-	private static Class<?> obfuscatedWeaponSlotClass;
-	private static Class<?> obfuscatedShieldSpecClass;
-
-	static {
-		SettingsAPI settings = Global.getSettings();
-		for (String variantId : settings.getAllVariantIds()) { // get all the variant ids
-			ShipVariantAPI variant = settings.getVariant(variantId); // start with a variant
-			ShipHullSpecAPI hullSpec = variant.getHullSpec();
-
-			Iterator<String> i = variant.getNonBuiltInWeaponSlots().iterator(); // assign an iterator for weapon slots
-			if (!i.hasNext()) continue; // check if there is a weapon slot
-
-			obfuscatedHullSpecClass = hullSpec.getClass(); // retrieve the class of the hull spec here too, why not
-			obfuscatedShieldSpecClass = hullSpec.getShieldSpec().getClass(); 
-			obfuscatedWeaponSlotClass = variant.getSlot(i.next()).getClass(); break; // retrieve the class of the weapon slot
-		} 
-	}
+	private List<Object> engineSlots = null;
+	private static final Class<?> obfuscatedHullSpecClass = _lyr_finder.obfuscatedHullSpecClass;
+	private static final Class<?> obfuscatedShieldSpecClass = _lyr_finder.obfuscatedShieldSpecClass;
+	private static final Class<?> obfuscatedWeaponSlotClass = _lyr_finder.obfuscatedWeaponSlotClass;
 
 	/**
 	 * Creates a new instance for the passed {@link ShipHullSpecAPI}, and 
@@ -120,28 +103,35 @@ public class lyr_hullSpec {
 	 * @see Non-Obfuscated: {@link com.fs.starfarer.api.combat.ShipHullSpecAPI#getWeaponSlotAPI(String)}
 	 */
 	public lyr_weaponSlot getWeaponSlot(String weaponSlotId) {
-		WeaponSlotAPI weaponSlot = hullSpec.getWeaponSlotAPI(weaponSlotId);
-
-		this.weaponSlot = (this.weaponSlot == null) ? new lyr_weaponSlot(weaponSlot, false) : this.weaponSlot.recycle(weaponSlot);
+		this.weaponSlot = (this.weaponSlot == null) ? new lyr_weaponSlot(hullSpec.getWeaponSlotAPI(weaponSlotId), false) : this.weaponSlot.recycle(hullSpec.getWeaponSlotAPI(weaponSlotId));
 		
 		return this.weaponSlot;
 	}
 
 	public lyr_shieldSpec getShieldSpec() {
-		ShieldSpecAPI shieldSpec = hullSpec.getShieldSpec();
-
-		this.shieldSpec = (this.shieldSpec == null) ? new lyr_shieldSpec(shieldSpec, false) : this.shieldSpec;
+		this.shieldSpec = (this.shieldSpec == null) ? new lyr_shieldSpec(hullSpec.getShieldSpec(), false) : this.shieldSpec;
 		
 		return this.shieldSpec;
 	}
 
-	@Deprecated // this shouldn't be used as cloning the hullSpec also clones the shieldSpec
+	@Deprecated // this shouldn't be used as cloning the hullSpec also clones the shieldSpec (and engineSpec)
 	public lyr_shieldSpec getShieldSpec(boolean clone) {
-		ShieldSpecAPI shieldSpec = hullSpec.getShieldSpec();
-
-		this.shieldSpec = (this.shieldSpec == null) ? new lyr_shieldSpec(shieldSpec, true) : this.shieldSpec.recycle(this.shieldSpec.duplicate(shieldSpec));
+		this.shieldSpec = (this.shieldSpec == null) ? new lyr_shieldSpec(hullSpec.getShieldSpec(), true) : this.shieldSpec.recycle(this.shieldSpec.duplicate(hullSpec.getShieldSpec()));
 		
 		return this.shieldSpec;
+	}
+
+	public List<?> getEngineSlots() {
+		if (engineSlots != null) return this.engineSlots; 
+
+		try {
+			MethodHandle getEngineSlots = MethodHandles.lookup().findVirtual(obfuscatedHullSpecClass, "getEngineSlots", MethodType.methodType(List.class));
+			this.engineSlots = (List<Object>) getEngineSlots.invoke(hullSpec);
+		} catch (Throwable t) {
+			t.printStackTrace();
+		} 
+
+		return this.engineSlots; 
 	}
 
 	public void setShieldSpec(ShieldSpecAPI shieldSpec) {

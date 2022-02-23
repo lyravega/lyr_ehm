@@ -5,41 +5,27 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 
-import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.SettingsAPI;
-import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
 
 public class lyr_shieldSpec {
-    private ShieldSpecAPI shieldSpec;
-	private static Class<?> obfuscatedShieldSpecClass;
-
-	static {
-		SettingsAPI settings = Global.getSettings();
-		for (String variantId : settings.getAllVariantIds()) { // get all the variant ids
-			ShipHullSpecAPI hullSpec = settings.getVariant(variantId).getHullSpec(); // start with a hullSpec
-			
-            if (hullSpec.getShieldSpec() == null) continue; // this is never null, but lets make sure
-
-			obfuscatedShieldSpecClass = hullSpec.getShieldSpec().getClass(); break; // retrieve the class of the shield spec
-		} 
-	}
+	private ShieldSpecAPI shieldSpec;
+	private static final Class<?> obfuscatedShieldSpecClass = _lyr_finder.obfuscatedShieldSpecClass;
 
 	/**
 	 * Creates a new instance for the passed {@link ShieldSpecAPI}, and 
-     * clones it if necessary. 
+	 * clones it if necessary. 
 	 * <p> The clone argument MUST be set to true if the shieldSpec is not 
-     * unique; not cloned prior to the creation of this instance of the 
-     * proxy-class. Otherwise changes WILL apply to ALL ships with the same 
-     * shieldSpec.
-     * <p> If this is a shieldSpec of an  already cloned hullSpec, then the 
-     * shieldSpec is already cloned. No need to clone it for yet another
-     * time in that case.
+	 * unique; not cloned prior to the creation of this instance of the 
+	 * proxy-class. Otherwise changes WILL apply to ALL ships with the same 
+	 * shieldSpec.
+	 * <p> If this is a shieldSpec of an  already cloned hullSpec, then the 
+	 * shieldSpec is already cloned. No need to clone it for yet another
+	 * time in that case.
 	 * @param shieldSpec to be proxied
 	 * @param clone if the shieldSpec needs to be cloned
 	 */
 	public lyr_shieldSpec(ShieldSpecAPI shieldSpec, boolean clone) {
-        this.shieldSpec = (clone) ? this.duplicate(shieldSpec) : shieldSpec;
+		this.shieldSpec = (clone) ? this.duplicate(shieldSpec) : shieldSpec;
 	}
 	
 	/**
@@ -93,7 +79,7 @@ public class lyr_shieldSpec {
 			t.printStackTrace();
 		}
 	}
-    
+	
 	public void setInnerColor(Color colour) {
 		try {
 			MethodHandle setInnerColor = MethodHandles.lookup().findVirtual(obfuscatedShieldSpecClass, "setInnerColor", MethodType.methodType(void.class, Color.class));

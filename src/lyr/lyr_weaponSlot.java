@@ -4,11 +4,7 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.invoke.MethodType;
-import java.util.Iterator;
 
-import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.SettingsAPI;
-import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
@@ -29,49 +25,8 @@ import org.lwjgl.util.vector.Vector2f;
  */
 public class lyr_weaponSlot {
 	private WeaponSlotAPI weaponSlot;
-	private static Class<?> obfuscatedWeaponSlotClass;
-	private static Class<?> obfuscatedNodeClass;
-
-	static {
-		SettingsAPI settings = Global.getSettings();
-		for (String variantId : settings.getAllVariantIds()) { // get all the variant ids
-			ShipVariantAPI variant = settings.getVariant(variantId); // start with a variant
-			Iterator<String> i = variant.getNonBuiltInWeaponSlots().iterator(); // assign an iterator for weapon slots
-			
-			if (!i.hasNext()) continue; // check if there is a weapon slot
-
-			obfuscatedWeaponSlotClass = variant.getSlot(i.next()).getClass(); break; // retrieve the class of the weapon slot
-		}
-
-		try { String searchMethod = "method";
-			switch (searchMethod) {
-				// case "hacky": { // avoid, as the whole reason we're doing this is staying within API
-				// 	ShipVariantAPI hackVariant = Global.getSettings().createEmptyVariant("lyr_hack", Global.getSettings().getHullSpec("omen"));
-				// 	obfuscatedNodeClass = HullVariantSpec.class.cast(hackVariant).getHullSpec().getWeaponSlot("WS 001").getNode().getClass();
-				// } break;
-				case "field": { // could be unsafe, as changes in the field might mess up with the string filter or give the wrong result
-					for (Object field : obfuscatedWeaponSlotClass.getDeclaredFields()) { // you can get fields, but you cannot use any Field methods
-						String stringToButcher = field.toString().split(" ")[1]; // so we butcher field.toString() instead
-		
-						if (!stringToButcher.startsWith("starfarer") || !stringToButcher.contains("specs") || stringToButcher.contains("$")) continue;
-						
-						obfuscatedNodeClass = Class.forName(stringToButcher); break;
-					}
-				} break;
-				case "method": { // much safer, but relies on method name staying the same but it should stay the same unless refactored
-					for (Object method : obfuscatedWeaponSlotClass.getDeclaredMethods()) { // you can get methods, but you cannot use any Method methods
-						String stringToButcher = method.toString(); // so we butcher method.toString() instead
-	
-						if (!stringToButcher.contains("getNode()")) continue;
-						
-						obfuscatedNodeClass = Class.forName(stringToButcher.split(" ")[1]); break;
-					}
-				} break;
-			}
-		} catch (Throwable t) {
-			t.printStackTrace(); 
-		}
-	}
+	private static final Class<?> obfuscatedWeaponSlotClass = _lyr_finder.obfuscatedWeaponSlotClass;
+	private static final Class<?> obfuscatedNodeClass = _lyr_finder.obfuscatedNodeClass;
 
 	/**
 	 * Creates a new instance for the passed {@link WeaponSlotAPI}, and 
