@@ -20,6 +20,8 @@ public class _lyr_finder {
 	protected static String obfuscatedEngineStyleSetterName;
 	protected static Class<?> obfuscatedNodeClass;
 
+	private static final List<ShipHullSpecAPI> allHullSpecs = Global.getSettings().getAllShipHullSpecs();
+
 	static {
 		try {
 			if (!findHullSpecClass()) { throw new ClassNotFoundException("hullSpec class not found"); }
@@ -30,11 +32,9 @@ public class _lyr_finder {
 			if (!findEngineStyleEnum()) { throw new ClassNotFoundException("engineStyle enum not found"); }
 			if (!findEngineStyleSetterName()) { throw new ClassNotFoundException("styleSetter method name not found"); }
 		} catch (Throwable t) {
-			Global.getLogger(_lyr_finder.class).info(t.getMessage());
+			Global.getLogger(_lyr_finder.class).info(t.getCause());
 		}
 	}
-
-	private static final List<ShipHullSpecAPI> allHullSpecs = Global.getSettings().getAllShipHullSpecs();
 
 	private static boolean findHullSpecClass() {
 		for (ShipHullSpecAPI hullSpec : allHullSpecs) {
@@ -83,11 +83,11 @@ public class _lyr_finder {
 			MethodHandle getEngineSlots = MethodHandles.lookup().findVirtual(hullSpec.getClass(), "getEngineSlots", MethodType.methodType(List.class));
 			engineSlots = (List<?>) getEngineSlots.invoke(hullSpec);
 	
-			if (engineSlots.get(0) != null) {
-				obfuscatedEngineBuilderClass = engineSlots.get(0).getClass(); 
+			if (engineSlots.size() == 0) continue;
+
+			obfuscatedEngineBuilderClass = engineSlots.get(0).getClass(); 
 				
-				return true;
-			}
+			return true;
 		} return false;
 	}
 
