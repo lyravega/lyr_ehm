@@ -373,11 +373,11 @@ public class _ehm_base implements HullModEffect {
 	protected static final ShipHullSpecAPI ehm_hullSpecRestore(ShipVariantAPI variant) {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(Global.getSettings().getVariant(variant.getHullVariantId()).getHullSpec(), true);
 
-		for (String hullModSpecId : variant.getHullSpec().getBuiltInMods()) {
+		for (String hullModSpecId : variant.getHullSpec().getBuiltInMods()) { // this is a list, there can be duplicates so check first
 			if (!hullSpec.retrieve().getBuiltInMods().contains(hullModSpecId))
 			hullSpec.retrieve().addBuiltInMod(hullModSpecId);
 		}
-		for (String hullSpecTag : variant.getHullSpec().getTags()) {
+		for (String hullSpecTag : variant.getHullSpec().getTags()) { // this is a set, so there cannot be any duplicates, but still
 			if (!hullSpec.retrieve().getTags().contains(hullSpecTag))
 			hullSpec.retrieve().addTag(hullSpecTag);
 		}
