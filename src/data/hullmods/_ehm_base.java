@@ -364,9 +364,9 @@ public class _ehm_base implements HullModEffect {
 	 * Similar to clone in how it does things internally. Used to grab a stock hullSpec 
 	 * from the game for comparison and restoration purposes. 
 	 * <p> The returned hullSpec can be applied on the variants. The returned hullSpec
-	 * will have any built-in mods the current hullSpec has. However, it should be an 
-	 * empty list as no other mod does it that way however, but just in case, it is 
-	 * done.  
+	 * will have any built-in mods and tags that the current hullSpec has. However, 
+	 * they should be an empty list as no other mod does it that way however, but just 
+	 * in case, it is done.  
 	 * @param variant to be used as a template
 	 * @return a fresh hullSpec from the SpecStore
 	 */
@@ -374,7 +374,12 @@ public class _ehm_base implements HullModEffect {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(Global.getSettings().getVariant(variant.getHullVariantId()).getHullSpec(), true);
 
 		for (String hullModSpecId : variant.getHullSpec().getBuiltInMods()) {
-			hullSpec.addBuiltInMod(hullModSpecId);
+			if (!hullSpec.retrieve().getBuiltInMods().contains(hullModSpecId))
+			hullSpec.retrieve().addBuiltInMod(hullModSpecId);
+		}
+		for (String hullSpecTag : variant.getHullSpec().getTags()) {
+			if (!hullSpec.retrieve().getTags().contains(hullSpecTag))
+			hullSpec.retrieve().addTag(hullSpecTag);
 		}
 		// hullSpec.addBuiltInMod(ehm.id.baseRetrofit);
 		hullSpec.setManufacturer("Experimental"); 
