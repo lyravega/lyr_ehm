@@ -34,7 +34,7 @@ import java.lang.invoke.MethodType;
  * @since 0.7
  */
 public class lyr_engineBuilder {
-	private Object engineSlot;
+	private Object engineBuilder;
 	private static final Class<?> obfuscatedEngineBuilderClass = _lyr_finder.obfuscatedEngineBuilderClass;
 	private static final Class<?> obfuscatedEngineStyleEnum = _lyr_finder.obfuscatedEngineStyleEnum;
 	private static final String obfuscatedEngineStyleSetterName = _lyr_finder.obfuscatedEngineStyleSetterName;
@@ -59,11 +59,11 @@ public class lyr_engineBuilder {
 	 * Creates a new instance for the passed {@link Object}, and 
 	 * clones it if necessary. Alterations should be done on a clone if 
 	 * it is going to be a new slot.
-	 * @param engineSlot to be proxied
-	 * @param clone if the engineSlot needs to be cloned
+	 * @param enginebuilder to be proxied
+	 * @param clone if the enginebuilder needs to be cloned
 	 */
-	public lyr_engineBuilder(Object engineSlot, boolean clone) {
-		this.engineSlot = (clone) ? this.duplicate(engineSlot) : engineSlot;
+	public lyr_engineBuilder(Object enginebuilder, boolean clone) {
+		this.engineBuilder = (clone) ? this.duplicate(enginebuilder) : enginebuilder;
 	}
 	
 	/**
@@ -73,17 +73,17 @@ public class lyr_engineBuilder {
 	 * @return the stored {@link Object}
 	 */
 	public Object retrieve() {
-		return engineSlot;
+		return engineBuilder;
 	}
 	
 	/**
 	 * Used to exchange the {@link Object} stored in the proxy
 	 * class in order to re-use this proxy instead of creating new ones.
-	 * @param engineSlot to exchange with the stored one
+	 * @param enginebuilder to exchange with the stored one
 	 * @return the proxy itself for chaining purposes
 	 */
-	public lyr_engineBuilder recycle(Object engineSlot) {
-		this.engineSlot = engineSlot;
+	public lyr_engineBuilder recycle(Object enginebuilder) {
+		this.engineBuilder = enginebuilder;
 		return this;
 	}
 
@@ -93,25 +93,25 @@ public class lyr_engineBuilder {
 	 * if access to the API is needed.
 	 * @return a cloned {@link Object}
 	 */
-	protected Object duplicate(Object engineSlot) {
+	protected Object duplicate(Object enginebuilder) {
 		try {
 			MethodHandle clone = MethodHandles.lookup().findVirtual(obfuscatedEngineBuilderClass, "clone", MethodType.methodType(obfuscatedEngineBuilderClass));
-			return (Object) clone.invoke(engineSlot);
+			return (Object) clone.invoke(enginebuilder);
 		} catch (Throwable t) {
 			t.printStackTrace(); 
-		} return engineSlot; // java, pls...
+		} return enginebuilder; // java, pls...
 	}
 	
 	//#region API-like methods
 	@Override
 	public lyr_engineBuilder clone() {
-		return new lyr_engineBuilder(engineSlot, true);
+		return new lyr_engineBuilder(engineBuilder, true);
 	}
 	
 	public void setEngineStyle(int enumNumber) {
 		try {
 			MethodHandle setEngineStyle = MethodHandles.lookup().findVirtual(obfuscatedEngineBuilderClass, obfuscatedEngineStyleSetterName, MethodType.methodType(void.class, obfuscatedEngineStyleEnum));
-			setEngineStyle.invoke(obfuscatedEngineBuilderClass.cast(engineSlot), obfuscatedEngineStyleEnum.getEnumConstants()[enumNumber]);
+			setEngineStyle.invoke(obfuscatedEngineBuilderClass.cast(engineBuilder), obfuscatedEngineStyleEnum.getEnumConstants()[enumNumber]);
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
