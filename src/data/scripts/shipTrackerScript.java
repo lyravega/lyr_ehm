@@ -14,6 +14,7 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import org.apache.log4j.Logger;
 
 import data.hullmods._ehm_base.ehm;
+import data.hullmods.ehm_ar._ehm_ar_base;
 import data.hullmods.ehm_ec._ehm_ec_base;
 import data.hullmods.ehm_sc._ehm_sc_base;
 import data.hullmods.ehm_sr._ehm_sr_base;
@@ -98,8 +99,9 @@ public class shipTrackerScript implements EveryFrameScriptWithCleanup {
 			for (Iterator<String> i = newHullMods.iterator(); i.hasNext();) { 
 				String hullModId = i.next(); 
 				String hullModType = hullModId.substring(0, 7); // all affixes (not tags) are fixed to 0-7
-				switch (hullModType) {
-					case ehm.affix.systemRetrofit: playSound = true; refresh = true; break;
+				switch (hullModType) { // any weaponSlot changes require refresh
+					case ehm.affix.adapterRetrofit: break; // refresh and playSound are handled through 'refreshRefit()' 
+					case ehm.affix.systemRetrofit: playSound = true; break;
 					case ehm.affix.weaponRetrofit: playSound = true; refresh = true; break;
 					case ehm.affix.shieldCosmetic: playSound = true; break;
 					case ehm.affix.engineCosmetic: playSound = true; break;
@@ -112,11 +114,12 @@ public class shipTrackerScript implements EveryFrameScriptWithCleanup {
 			for (Iterator<String> i = removedHullMods.iterator(); i.hasNext();) { 
 				String hullModId = i.next(); 
 				String hullModType = hullModId.substring(0, 7); 
-				switch (hullModType) {
-					case ehm.affix.systemRetrofit: playSound = true; refresh = true; _ehm_sr_base.ehm_systemRestore(variant); break;
-					case ehm.affix.weaponRetrofit: playSound = true; refresh = true; _ehm_wr_base.ehm_weaponSlotRestore(variant); break;
-					case ehm.affix.shieldCosmetic: playSound = true; _ehm_sc_base.ehm_restoreShield(variant); break;
-					case ehm.affix.engineCosmetic: playSound = true; _ehm_ec_base.ehm_restoreEngineSlots(variant); break;
+				switch (hullModType) { // any weaponSlot changes and cheap removal methods require refresh
+					case ehm.affix.adapterRetrofit: _ehm_ar_base.ehm_adapterRemoval(variant); playSound = true; refresh = true; break;
+					case ehm.affix.systemRetrofit: _ehm_sr_base.ehm_systemRestore(variant); playSound = true; break;
+					case ehm.affix.weaponRetrofit: _ehm_wr_base.ehm_weaponSlotRestore(variant); playSound = true; refresh = true; break;
+					case ehm.affix.shieldCosmetic: _ehm_sc_base.ehm_restoreShield(variant); playSound = true; break;
+					case ehm.affix.engineCosmetic: _ehm_ec_base.ehm_restoreEngineSlots(variant); playSound = true;  refresh = true; break;
 					default: break;
 				}
 			} hullMods.removeAll(removedHullMods); removedHullMods.clear();

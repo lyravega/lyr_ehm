@@ -117,8 +117,12 @@ public class _ehm_ar_base extends _ehm_base {
 	 * @param variant that have adapter-altered weapon slots
 	 * @return a stock hullSpec to be installed on the variant
 	 */
-	protected static final ShipHullSpecAPI ehm_adapterRemoval(ShipVariantAPI variant) {
-		return ehm_hullSpecRestore(variant);
+	public static final ShipHullSpecAPI ehm_adapterRemoval(ShipVariantAPI variant) {
+		ShipHullSpecAPI hullSpec = ehm_hullSpecRestore(variant);
+
+		variant.setHullSpecAPI(hullSpec);
+
+		return hullSpec;
 	}
 
 	//#region INSTALLATION CHECKS
@@ -135,9 +139,8 @@ public class _ehm_ar_base extends _ehm_base {
 	@Override
 	protected String cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
 		ShipVariantAPI variant = ship.getVariant();
-		
-		if (variant.hasHullMod(hullModSpec.getId())) for (WeaponSlotAPI slot: variant.getHullSpec().getAllWeaponSlotsCopy()) 
-		if (slot.getId().contains(ehm.affix.adaptedSlot)) return ehm.excuses.adapterActivated;
+
+		if (ehm_hasWeapons(variant)) return ehm.excuses.hasWeapons;
 
 		return null;
 	}

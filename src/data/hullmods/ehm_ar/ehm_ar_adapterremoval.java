@@ -1,7 +1,5 @@
 package data.hullmods.ehm_ar;
 
-import java.util.Collection;
-
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
@@ -20,6 +18,7 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
  * @version 0.7
  * @since 0.3
  */
+@Deprecated // obsolete after the implementation of shipTracker scripts, script calls the 'onRemove()'
 public class ehm_ar_adapterremoval extends _ehm_ar_base {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
@@ -43,11 +42,8 @@ public class ehm_ar_adapterremoval extends _ehm_ar_base {
 	@Override
 	protected String cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) { 
 		ShipVariantAPI variant = ship.getVariant();
-		
-		Collection<String> fittedWeapons = variant.getFittedWeaponSlots();
-		fittedWeapons.retainAll(variant.getNonBuiltInWeaponSlots());
 
-		if (!fittedWeapons.isEmpty()) return ehm.excuses.hasWeapons;
+		if (ehm_hasWeapons(variant)) return ehm.excuses.hasWeapons;
 
 		return null;
 	}
