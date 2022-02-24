@@ -361,30 +361,44 @@ public class _ehm_base implements HullModEffect {
 	}
 
 	/**
-	 * Similar to clone in how it does things internally. Used to grab a stock hullSpec 
-	 * from the game for comparison and restoration purposes. 
-	 * <p> The returned hullSpec can be applied on the variants. The returned hullSpec
-	 * will have any built-in mods and tags that the current hullSpec has. However, 
-	 * they should be an empty list as no other mod does it that way however, but just 
-	 * in case, it is done.  
+	 * Similar to clone in how it does things internally. Grabs a stock hullSpec from
+	 * the SpecStore, which is used for comparison / restoration purposes.
+	 * <p> The returned hullSpec will have any tags and built-in stuff that the current 
+	 * hullSpec has, however they should be standard. The reason for trying to retain
+	 * such additions is, in some restoration cases, the returned hullSpec is simply
+	 * applied to the variant, whereas a step-by-step restoration should be preferred.
+	 * <p> As no other mods does things this way as far as I know, at the very least 
+	 * the aforementioned things will be preserved. But to be honest, I should expand 
+	 * the restoration methods instead of simply applying the returned hullSpec.
+	 * <p> TODO expand restoration methods to avoid applying the hullSpec
 	 * @param variant to be used as a template
-	 * @return a fresh hullSpec from the SpecStore
+	 * @return a 'fresh' hullSpec from the SpecStore
 	 */
 	protected static final ShipHullSpecAPI ehm_hullSpecRestore(ShipVariantAPI variant) {
-		lyr_hullSpec hullSpec = new lyr_hullSpec(Global.getSettings().getVariant(variant.getHullVariantId()).getHullSpec(), true);
+		lyr_hullSpec stockHullSpec = new lyr_hullSpec(Global.getSettings().getVariant(variant.getHullVariantId()).getHullSpec(), true);
+		ShipHullSpecAPI hullSpec = variant.getHullSpec();
+		ShipHullSpecAPI stockHullSpecAPI = stockHullSpec.retrieve();
 
-		for (String hullModSpecId : variant.getHullSpec().getBuiltInMods()) { // this is a list, there can be duplicates so check first
-			if (!hullSpec.retrieve().getBuiltInMods().contains(hullModSpecId))
-			hullSpec.retrieve().addBuiltInMod(hullModSpecId);
-		}
-		for (String hullSpecTag : variant.getHullSpec().getTags()) { // this is a set, so there cannot be any duplicates, but still
-			if (!hullSpec.retrieve().getTags().contains(hullSpecTag))
-			hullSpec.retrieve().addTag(hullSpecTag);
-		}
+		for (String hullSpecTag : hullSpec.getTags()) // this is a set, so there cannot be any duplicates, but still
+		if (!stockHullSpecAPI.getTags().contains(hullSpecTag))
+		stockHullSpecAPI.addTag(hullSpecTag);
+		
+		for (String builtInHullModSpecId : hullSpec.getBuiltInMods()) // this is a list, there can be duplicates so check first
+		if (!stockHullSpecAPI.getBuiltInMods().contains(builtInHullModSpecId))
+		stockHullSpecAPI.addBuiltInMod(builtInHullModSpecId);
+		
+		for (String builtInWeaponSlot : hullSpec.getBuiltInWeapons().keySet()) // this is a map; slotId, weaponSpecId
+		if (!stockHullSpecAPI.getBuiltInWeapons().keySet().contains(builtInWeaponSlot))
+		stockHullSpecAPI.addBuiltInWeapon(builtInWeaponSlot, hullSpec.getBuiltInWeapons().get(builtInWeaponSlot));
+		
+		for (String builtInWing : hullSpec.getBuiltInWings()) // this is a list, there can be duplicates so check first
+		if (!stockHullSpecAPI.getBuiltInWings().contains(builtInWing))
+		stockHullSpec.addBuiltInWing(builtInWing);
+		
 		// hullSpec.addBuiltInMod(ehm.id.baseRetrofit);
-		hullSpec.setManufacturer("Experimental"); 
-		hullSpec.setDescriptionPrefix("This design utilizes experimental hull modifications created by a spacer who has been living in a junkyard for most of his life. His 'treasure hoard' is full of franken-ships that somehow fly by using cannibalized parts from other ships that would be deemed incompatible. Benefits of such modifications are unclear as they do not provide a certain advantage over the stock designs. However the level of customization and flexibility they offer is certainly unparalleled.");
+		stockHullSpec.setManufacturer("Experimental"); 
+		stockHullSpec.setDescriptionPrefix("This design utilizes experimental hull modifications created by a spacer who has been living in a junkyard for most of his life. His 'treasure hoard' is full of franken-ships that somehow fly by using cannibalized parts from other ships that would be deemed incompatible. Benefits of such modifications are unclear as they do not provide a certain advantage over the stock designs. However the level of customization and flexibility they offer is certainly unparalleled.");
 
-		return hullSpec.retrieve();
+		return stockHullSpec.retrieve();
 	}
 }

@@ -243,4 +243,13 @@ public class lyr_hullSpec {
 			t.printStackTrace();
 		}
 	}
+
+	public void addBuiltInWing(String wingId) {
+		try { 
+			MethodHandle addBuiltInWing = MethodHandles.lookup().findVirtual(obfuscatedHullSpecClass, "addBuiltInWing", MethodType.methodType(void.class, String.class));
+			addBuiltInWing.invoke(hullSpec, wingId);
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+	}
 }
