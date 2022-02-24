@@ -1,6 +1,7 @@
 package data.hullmods;
 
 import java.awt.Color;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -280,6 +281,7 @@ public class _ehm_base implements HullModEffect {
 			public static final String allRetrofit = "ehm_"; // must match hullmod id in .csv
 			public static final String systemRetrofit = "ehm_sr_"; // must match hullmod id in .csv
 			public static final String weaponRetrofit = "ehm_wr_"; // must match hullmod id in .csv
+			public static final String adapterRetrofit = "ehm_ar_"; // must match hullmod id in .csv
 			public static final String shieldCosmetic = "ehm_sc_"; // must match hullmod id in .csv
 			public static final String engineCosmetic = "ehm_ec_"; // must match hullmod id in .csv
 		}
@@ -320,7 +322,7 @@ public class _ehm_base implements HullModEffect {
 	}
 
 	/**
-	 * Checks the ship if it has retrofit base installed ({@link ehm_base}) installed
+	 * Checks the ship if it has retrofit base ({@link ehm_base}) installed
 	 * @param ship to check 
 	 * @return true if ship has it, false otherwise (duh)
 	 * @see Overload: {@link #ehm_hasRetrofitBaseBuiltIn()}
@@ -337,6 +339,20 @@ public class _ehm_base implements HullModEffect {
 	 */
 	protected static final boolean ehm_hasRetrofitBaseBuiltIn(ShipVariantAPI variant) {
 		return variant.getHullSpec().isBuiltInMod(ehm.id.baseRetrofit);
+	}
+
+	/**
+	 * Checks the ship if it has any weapons installed. Ignores the adapters
+	 * as {@code getNonBuiltInWeaponSlots()} ignore decorative slots, and 
+	 * slots become decorative ones after an adapter activation.
+	 * @param variant to check 
+	 * @return true if ship has weapons, false otherwise
+	 */
+	protected static final boolean ehm_hasWeapons(ShipVariantAPI variant) {
+		Collection<String> fittedWeapons = variant.getFittedWeaponSlots();
+		fittedWeapons.retainAll(variant.getNonBuiltInWeaponSlots());
+
+		return !fittedWeapons.isEmpty();
 	}
 
 	/**

@@ -33,7 +33,11 @@ public class _ehm_ec_base extends _ehm_base {
 	}
 
 	public static final ShipHullSpecAPI ehm_restoreEngineSlots(ShipVariantAPI variant) {
-		return ehm_hullSpecRestore(variant);
+		ShipHullSpecAPI hullSpec = ehm_hullSpecRestore(variant);
+
+		variant.setHullSpecAPI(hullSpec);
+
+		return hullSpec;
 	}
 
 	//#region INSTALLATION CHECKS
