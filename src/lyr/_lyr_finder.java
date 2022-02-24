@@ -23,7 +23,7 @@ public class _lyr_finder {
 	private static final List<ShipHullSpecAPI> allHullSpecs = Global.getSettings().getAllShipHullSpecs();
 
 	static {
-		try {
+		try { // ORDER SENSITIVE
 			if (!findHullSpecClass()) { throw new ClassNotFoundException("hullSpec class not found"); }
 			if (!findShieldSpecClass()) { throw new ClassNotFoundException("shieldSpec class not found"); }
 			if (!findWeaponSlotClass()) { throw new ClassNotFoundException("weaponSlot class not found"); }
@@ -32,7 +32,7 @@ public class _lyr_finder {
 			if (!findEngineStyleEnum()) { throw new ClassNotFoundException("engineStyle enum not found"); }
 			if (!findEngineStyleSetterName()) { throw new ClassNotFoundException("styleSetter method name not found"); }
 		} catch (Throwable t) {
-			Global.getLogger(_lyr_finder.class).info(t.getCause());
+			t.printStackTrace();
 		}
 	}
 
