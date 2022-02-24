@@ -1,6 +1,5 @@
 package data.hullmods.ehm_wr;
 
-import java.util.Collection;
 import java.util.Map;
 
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
@@ -68,8 +67,6 @@ public class _ehm_wr_base extends _ehm_base {
 		for (WeaponSlotAPI stockSlot: stockHullSpec.getAllWeaponSlotsCopy()) {
 			String slotId = stockSlot.getId();
 			lyr_weaponSlot slot = hullSpec.getWeaponSlot(slotId);
-
-			if (!slot.isWeaponSlot()) continue;
 			WeaponType stockSlotWeaponType = stockSlot.getWeaponType();
 
 			if (slot.retrieve().isDecorative()) {
@@ -97,11 +94,8 @@ public class _ehm_wr_base extends _ehm_base {
 	@Override
 	protected String cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
 		ShipVariantAPI variant = ship.getVariant();
-		
-		Collection<String> fittedWeapons = variant.getFittedWeaponSlots();
-		fittedWeapons.retainAll(variant.getNonBuiltInWeaponSlots());
 
-		if (!fittedWeapons.isEmpty()) return ehm.excuses.hasWeapons;
+		if (ehm_hasWeapons(variant)) return ehm.excuses.hasWeapons;
 
 		return null;
 	}
