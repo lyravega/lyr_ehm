@@ -3,7 +3,6 @@ package data.hullmods.ehm_sc;
 import java.awt.Color;
 import java.util.Set;
 
-import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
@@ -37,7 +36,7 @@ public class _ehm_sc_base extends _ehm_base {
 
 	public static final ShipHullSpecAPI ehm_restoreShield(ShipVariantAPI variant) {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
-		ShieldSpecAPI stockShieldSpec = Global.getSettings().getHullSpec(variant.getHullSpec().getHullId()).getShieldSpec();
+		ShieldSpecAPI stockShieldSpec = ehm_hullSpecReference(variant).getShieldSpec();
 
 		hullSpec.setShieldSpec(stockShieldSpec);
 		

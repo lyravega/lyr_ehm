@@ -149,12 +149,12 @@ public class lyr_weaponSlot {
 	 * data. 
 	 * <p> If a slot was created or cloned, it will require its own,
 	 * unique node. Otherwise, node manipulations through a  method such 
-	 * as {@code setLocation()} will affect both, as it is shared.
+	 * as {@code setLocation()} will affect all slots with a shared node.
 	 * @param nodeId an id to assign to the node (using slotId is fine)
 	 * @param location a ship-relative vector to create the node at
 	 * @category Proxied methods
-	 * @see {@link data.hullmods._ehm_util#generateChildLocation} for
-	 * an example to a location calculation
+	 * @see {@link data.hullmods._ehm_util#generateChildLocation} that
+	 * calculates new node positions through passed offsets
 	 */
 	public void setNode(String nodeId, Vector2f location) {
 		try {

@@ -2,7 +2,6 @@ package data.hullmods.ehm_sr;
 
 import java.util.Set;
 
-import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
@@ -45,7 +44,7 @@ public class _ehm_sr_base extends _ehm_base {
 	 */
 	public static final ShipHullSpecAPI ehm_systemRestore(ShipVariantAPI variant) { 
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
-		hullSpec.setShipSystemId(Global.getSettings().getHullSpec(variant.getHullSpec().getHullId()).getShipSystemId());
+		hullSpec.setShipSystemId(ehm_hullSpecReference(variant).getShipSystemId());
 		return hullSpec.retrieve(); 
 	}
 

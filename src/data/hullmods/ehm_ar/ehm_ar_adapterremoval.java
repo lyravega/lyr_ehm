@@ -18,7 +18,6 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
  * @version 0.7
  * @since 0.3
  */
-@Deprecated // obsolete after the implementation of shipTracker scripts, script calls the 'onRemove()'
 public class ehm_ar_adapterremoval extends _ehm_ar_base {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {

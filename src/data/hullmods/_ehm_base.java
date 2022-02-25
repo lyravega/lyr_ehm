@@ -390,31 +390,43 @@ public class _ehm_base implements HullModEffect {
 	 * @param variant to be used as a template
 	 * @return a 'fresh' hullSpec from the SpecStore
 	 */
-	protected static final ShipHullSpecAPI ehm_hullSpecRestore(ShipVariantAPI variant) {
+	protected static final ShipHullSpecAPI ehm_hullSpecRefresh(ShipVariantAPI variant) {
 		lyr_hullSpec stockHullSpec = new lyr_hullSpec(Global.getSettings().getVariant(variant.getHullVariantId()).getHullSpec(), true);
+
 		ShipHullSpecAPI hullSpec = variant.getHullSpec();
 		ShipHullSpecAPI stockHullSpecAPI = stockHullSpec.retrieve();
 
 		for (String hullSpecTag : hullSpec.getTags()) // this is a set, so there cannot be any duplicates, but still
 		if (!stockHullSpecAPI.getTags().contains(hullSpecTag))
 		stockHullSpecAPI.addTag(hullSpecTag);
-		
+
 		for (String builtInHullModSpecId : hullSpec.getBuiltInMods()) // this is a list, there can be duplicates so check first
 		if (!stockHullSpecAPI.getBuiltInMods().contains(builtInHullModSpecId))
 		stockHullSpecAPI.addBuiltInMod(builtInHullModSpecId);
-		
-		for (String builtInWeaponSlot : hullSpec.getBuiltInWeapons().keySet()) // this is a map; slotId, weaponSpecId
-		if (!stockHullSpecAPI.getBuiltInWeapons().keySet().contains(builtInWeaponSlot))
-		stockHullSpecAPI.addBuiltInWeapon(builtInWeaponSlot, hullSpec.getBuiltInWeapons().get(builtInWeaponSlot));
-		
-		for (String builtInWing : hullSpec.getBuiltInWings()) // this is a list, there can be duplicates so check first
-		if (!stockHullSpecAPI.getBuiltInWings().contains(builtInWing))
-		stockHullSpec.addBuiltInWing(builtInWing);
-		
+
+		// for (String builtInWeaponSlot : hullSpec.getBuiltInWeapons().keySet()) // this is a map; slotId, weaponSpecId
+		// if (!stockHullSpecAPI.getBuiltInWeapons().keySet().contains(builtInWeaponSlot))
+		// stockHullSpecAPI.addBuiltInWeapon(builtInWeaponSlot, hullSpec.getBuiltInWeapons().get(builtInWeaponSlot));
+
+		// for (String builtInWing : hullSpec.getBuiltInWings()) // this is a list, there can be duplicates so check first
+		// if (!stockHullSpecAPI.getBuiltInWings().contains(builtInWing))
+		// stockHullSpec.addBuiltInWing(builtInWing);
+
 		// hullSpec.addBuiltInMod(ehm.id.baseRetrofit);
 		stockHullSpec.setManufacturer("Experimental"); 
 		stockHullSpec.setDescriptionPrefix("This design utilizes experimental hull modifications created by a spacer who has been living in a junkyard for most of his life. His 'treasure hoard' is full of franken-ships that somehow fly by using cannibalized parts from other ships that would be deemed incompatible. Benefits of such modifications are unclear as they do not provide a certain advantage over the stock designs. However the level of customization and flexibility they offer is certainly unparalleled.");
-
+		
 		return stockHullSpec.retrieve();
+	}
+
+	/**
+	 * Simply returns a stock hullSpec, with no changes or whatsoever. Should ONLY
+	 * be used as a reference.
+	 * @param variant to be used as a template
+	 * @return a stock hullSpec from the SpecStore
+	 */
+	protected static final ShipHullSpecAPI ehm_hullSpecReference(ShipVariantAPI variant) {
+		// return Global.getSettings().getHullSpec(variant.getHullSpec().getHullId());
+		return Global.getSettings().getVariant(variant.getHullVariantId()).getHullSpec();
 	}
 }

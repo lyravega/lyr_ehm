@@ -61,8 +61,8 @@ public class _ehm_wr_base extends _ehm_base {
 	 * @see {@link data.scripts.shipTrackerScript} only called externally by this script
 	 */
 	public static final ShipHullSpecAPI ehm_weaponSlotRestore(ShipVariantAPI variant) {
-		ShipHullSpecAPI stockHullSpec = ehm_hullSpecRestore(variant);
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
+		ShipHullSpecAPI stockHullSpec = ehm_hullSpecReference(variant);
 
 		for (WeaponSlotAPI stockSlot: stockHullSpec.getAllWeaponSlotsCopy()) {
 			String slotId = stockSlot.getId();
