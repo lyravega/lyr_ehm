@@ -1,4 +1,4 @@
-Experimental Hull Modifications v
+Experimental Hull Modifications
 
 Just some hull modifications. By some, I mean 60 something. Most are mutually exclusive, so the list is rather short actually. Experimental on the name is not just for posterity, as all mods butcher the hullSpecs. Currently offers these categories:
 
