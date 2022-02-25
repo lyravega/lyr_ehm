@@ -11,4 +11,4 @@ Retrofits that alters the weapon slots. Basic ones do a ship-wide slot conversio
 • Cosmetics: Shield & Engine Cosmetics - 
 Cosmetic hullmods that change the shield and engine colours. 
 
-Also features some scripts to track added/removed hullmods on ships, which can be used to trigger jury-rigged 'onAdded()' / 'onRemoved()' methods remotely, to track the fleet, and to refresh the refit screen on demand.
+Also features some scripts to track the fleet, to refresh the refit screen on demand and to track added/removed hullmods on ships, which can be used to trigger jury-rigged 'onAdded()' / 'onRemoved()' methods remotely.
