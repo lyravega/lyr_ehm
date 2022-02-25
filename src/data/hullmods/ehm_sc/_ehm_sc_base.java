@@ -9,16 +9,16 @@ import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 
 import data.hullmods._ehm_base;
-import data.hullmods.ehm_ar._ehm_ar_base;
-import data.hullmods.ehm_sr._ehm_sr_base;
 import lyr.lyr_hullSpec;
 import lyr.lyr_shieldSpec;
 
 /**
  * This class is used by shield cosmetic hullmods. 
  * </p> Reason to split this as another base was primarily maintenance.
- * @see {@link _ehm_ar_base} for slot adapter base
- * @see {@link _ehm_sr_base} for system retrofit base
+ * @see {@link data.hullmods.ehm_ar._ehm_ar_base} for slot adapter base
+ * @see {@link data.hullmods.ehm_sr._ehm_sr_base} for system retrofit base
+ * @see {@link data.hullmods.ehm_wr._ehm_wr_base} for weapon retrofit base
+ * @see {@link data.hullmods.ehm_ec._ehm_ec_base} for engine cosmetic base
  * @author lyravega
  * @version 0.7
  * @since 0.7

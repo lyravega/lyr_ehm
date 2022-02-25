@@ -17,17 +17,18 @@ import org.lwjgl.util.vector.Vector2f;
 
 import data.hullmods._ehm_base;
 import data.hullmods._ehm_util;
-import data.hullmods.ehm_sr._ehm_sr_base;
-import data.hullmods.ehm_wr._ehm_wr_base;
 import lyr.lyr_hullSpec;
 import lyr.lyr_weaponSlot;
+
 
 /**
  * This class is used by slot adapter hullmods. Slot adapters are designed 
  * to search the ship for specific weapons, and perform operations on the 
  * hullSpec to yield interesting results, such as creating a new weapon slot. 
- * @see {@link _ehm_sr_base} for system retrofit base
- * @see {@link _ehm_wr_base} for weapon retrofit base
+ * @see {@link data.hullmods.ehm_sr._ehm_sr_base} for system retrofit base
+ * @see {@link data.hullmods.ehm_wr._ehm_wr_base} for weapon retrofit base
+ * @see {@link data.hullmods.ehm_ec._ehm_ec_base} for engine cosmetic base
+ * @see {@link data.hullmods.ehm_sc._ehm_sc_base} for shield cosmetic base
  * @author lyravega
  * @version 0.7
  * @since 0.3

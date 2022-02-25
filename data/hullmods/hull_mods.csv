@@ -1,6 +1,6 @@
 name,id,tier,rarity,tech/manufacturer,tags,uiTags,base value,unlocked,hidden,hiddenEverywhere,cost_frigate,cost_dest,cost_cruiser,cost_capital,script,desc,short,sprite
 Experimental Hull Modifications,ehm_base,1,,Experimental,"special, ehm_base","Systems, Retrofits, Cosmetics",25000,,,,0,0,0,0,data.hullmods.ehm_base,,,graphics/icons/skills/reliability_engineering.png
-EHM Test,ehm_test,1,,Experimental,"special, ehm","Systems, Retrofits, Cosmetics",25000,,,,0,0,0,0,data.hullmods._ehm_test,,,
+EHM Test,ehm_test,1,,Experimental,"special, ehm_restricted","Systems, Retrofits, Cosmetics",25000,,TRUE,,0,0,0,0,data.hullmods._ehm_test,,,
 Quantum Disruptor,ehm_sr_acausaldisruptor,1,,Experimental,"special, ehm, ehm_sr",Systems,25000,,,,3,6,9,15,data.hullmods.ehm_sr.ehm_sr_acausaldisruptor,"Briefly overloads a nearby enemy ship.
 
 Exploits weakly acausal principles poorly understood even before the Collapse. In the present day, the effects may as well be magic.",Briefly overloads a nearby enemy ship.,graphics/icons/hullsys/quantum_disruptor.png

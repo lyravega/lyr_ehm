@@ -11,8 +11,6 @@ import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
 import data.hullmods._ehm_base;
-import data.hullmods.ehm_ar._ehm_ar_base;
-import data.hullmods.ehm_sr._ehm_sr_base;
 import lyr.lyr_hullSpec;
 import lyr.lyr_weaponSlot;
 
@@ -20,8 +18,10 @@ import lyr.lyr_weaponSlot;
  * This class is used by weapon retrofit hullmods. They are pretty 
  * straightforward in their operation; change all of the weapon slots 
  * on a ship to a different type. 
- * @see {@link _ehm_ar_base} for slot adapter base
- * @see {@link _ehm_sr_base} for system retrofit base
+ * @see {@link data.hullmods.ehm_ar._ehm_ar_base} for slot adapter base
+ * @see {@link data.hullmods.ehm_sr._ehm_sr_base} for system retrofit base
+ * @see {@link data.hullmods.ehm_ec._ehm_ec_base} for engine cosmetic base
+ * @see {@link data.hullmods.ehm_sc._ehm_sc_base} for shield cosmetic base
  * @author lyravega
  * @version 0.7
  * @since 0.3

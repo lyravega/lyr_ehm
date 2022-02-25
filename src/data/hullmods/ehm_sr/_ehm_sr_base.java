@@ -7,15 +7,15 @@ import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 
 import data.hullmods._ehm_base;
-import data.hullmods.ehm_ar._ehm_ar_base;
-import data.hullmods.ehm_wr._ehm_wr_base;
 import lyr.lyr_hullSpec;
 
 /**
  * This class is used by system retrofit hullmods. They are pretty 
  * straightforward in their operation; change the system of a hullSpec.
- * @see {@link _ehm_ar_base} for slot adapter base
- * @see {@link _ehm_wr_base} for weapon retrofit base
+ * @see {@link data.hullmods.ehm_ar._ehm_ar_base} for slot adapter base
+ * @see {@link data.hullmods.ehm_wr._ehm_wr_base} for weapon retrofit base
+ * @see {@link data.hullmods.ehm_ec._ehm_ec_base} for engine cosmetic base
+ * @see {@link data.hullmods.ehm_sc._ehm_sc_base} for shield cosmetic base
  * @author lyravega
  * @version 0.7
  * @since 0.3
