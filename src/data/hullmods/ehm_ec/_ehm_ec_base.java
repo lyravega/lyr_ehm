@@ -22,10 +22,11 @@ import lyr.lyr_hullSpec;
  */
 public class _ehm_ec_base extends _ehm_base {
 	/**
-	 * Alters the engine visuals of the ship.
-	 * @param variant of the hullSpec
+	 * Alters the engine visuals of the ship. Uses the vanilla engine styles
+	 * (as I haven't found a way to alter engine colours directly)
+	 * @param variant whose hullSpec will be altered
 	 * @param styleEnum somewhat hardcoded {@link lyr.lyr_engineBuilder.engineStyle engineStyle}
-	 * @return hullSpec with the altered engine visuals
+	 * @return a hullSpec with the altered engine visuals
 	 */
 	protected static final ShipHullSpecAPI ehm_pimpMyEngineSlots(ShipVariantAPI variant, int styleEnum) {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
@@ -39,10 +40,11 @@ public class _ehm_ec_base extends _ehm_base {
 	}
 
 	/**
-	 * Restores the engine visuals of the ship through 
-	 * @param variant of the hullSpec
+	 * Restores the engine visuals of the ship by applying a stock hullSpec
+	 * on the variant.
+	 * @param variant whose hullSpec will be altered
 	 * @param styleEnum somewhat hardcoded {@link lyr.lyr_engineBuilder.engineStyle engineStyle}
-	 * @return hullSpec with the altered engine visuals
+	 * @return a hullSpec with restored engine visuals
 	 * @see {@link data.scripts.shipTrackerScript shipTrackerScript} only called externally by this script
 	 */
 	public static final ShipHullSpecAPI ehm_restoreEngineSlots(ShipVariantAPI variant) {
@@ -55,7 +57,7 @@ public class _ehm_ec_base extends _ehm_base {
 
 	//#region INSTALLATION CHECKS
 	@Override
-	protected String unapplicableReason(ShipAPI ship) {
+	protected String ehm_unapplicableReason(ShipAPI ship) {
 		if (ship == null) return ehm.excuses.noShip; 
 
 		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return ehm.excuses.lacksBase; 

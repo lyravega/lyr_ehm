@@ -69,12 +69,13 @@ public class lyr_hullSpec {
 		return this;
 	}
 
+	//#region API-LIKE & PROXIED METHODS
 	/**
 	 * Clones the stored {@link ShipHullSpecAPI}, and returns it. For 
 	 * internal use if necessary. {@link #retrieve()} should be used
 	 * if access to the API is needed.
 	 * @return a cloned {@link ShipHullSpecAPI}
-	 * @category Proxied methods
+	 * @category Proxied method
 	 */
 	private ShipHullSpecAPI duplicate(ShipHullSpecAPI hullSpec) {
 		try {
@@ -85,7 +86,11 @@ public class lyr_hullSpec {
 		} return hullSpec; // java, pls...
 	}
 	
-	//#region API-like methods
+	/**
+	 * A cheap clone that creates and returns a new instance of this
+	 * object with a duplicate of its stored object. 
+	 * @return a cloned {@link lyr_hullSpec}
+	 */
 	@Override
 	public lyr_hullSpec clone() {
 		return new lyr_hullSpec(hullSpec, true);
@@ -95,12 +100,12 @@ public class lyr_hullSpec {
 	 * Gets the weapon slot with the matching id, and creates a {@link lyr_weaponSlot} 
 	 * proxy for it. The created proxy is returned, which is necessary to access the 
 	 * obfuscated methods for it. 
-	 * <p> The created proxy is recycled through {@link lyr_weaponSlot#recycle(WeaponSlotAPI)}.
+	 * <p> The created proxy is recycled through {@link lyr_weaponSlot#recycle(WeaponSlotAPI) recycle(WeaponSlotAPI)}.
 	 * <p> Use {@link #retrieve()} to use the API version through the proxy.
 	 * @param weaponSlotId to get
 	 * @return {@link lyr_weaponSlot} proxy
 	 * @category Proxy spawner
-	 * @see Non-Obfuscated: {@link com.fs.starfarer.api.combat.ShipHullSpecAPI#getWeaponSlotAPI(String)}
+	 * @see Non-Obfuscated: {@link com.fs.starfarer.api.combat.ShipHullSpecAPI#getWeaponSlotAPI(String) getWeaponSlotAPI(String)}
 	 */
 	public lyr_weaponSlot getWeaponSlot(String weaponSlotId) {
 		this.weaponSlot = (this.weaponSlot == null) ? new lyr_weaponSlot(hullSpec.getWeaponSlotAPI(weaponSlotId), false) : this.weaponSlot.recycle(hullSpec.getWeaponSlotAPI(weaponSlotId));
@@ -108,9 +113,18 @@ public class lyr_hullSpec {
 		return this.weaponSlot;
 	}
 
+	/**
+	 * Gets the shieldSpec of the hullSpec, and creates a {@link lyr_shieldSpec} 
+	 * proxy for it. The created proxy is returned, which is necessary to access the 
+	 * obfuscated methods for it. 
+	 * <p> Use {@link #retrieve()} to use the API version through the proxy.
+	 * @return {@link lyr_weaponSlot} proxy
+	 * @category Proxy spawner
+	 * @see Non-Obfuscated: {@link com.fs.starfarer.api.combat.ShipHullSpecAPI#getShieldSpec() getShieldSpec()}
+	 */
 	public lyr_shieldSpec getShieldSpec() {
 		this.shieldSpec = (this.shieldSpec == null) ? new lyr_shieldSpec(hullSpec.getShieldSpec(), false) : this.shieldSpec;
-		
+
 		return this.shieldSpec;
 	}
 
@@ -121,6 +135,16 @@ public class lyr_hullSpec {
 		return this.shieldSpec;
 	}
 
+
+	/**
+	 * Invokes a getter on the obfuscated hullSpec and returns the result 
+	 * as an object list. The returned objects aren't actually engineSlots 
+	 * as expected, but rather engineBuilders I believe. The engineBuilders
+	 * seem to use an engineStyle to create a new engine, and place it on 
+	 * an engineSlot. Check the long-winded javadoc for the 
+	 * {@link lyr_engineBuilder} for more information.
+	 * @return an object list with engineBuilders (?) in it
+	 */
 	public List<?> getEngineSlots() {
 		if (engineSlots != null) return this.engineSlots; 
 
@@ -134,6 +158,10 @@ public class lyr_hullSpec {
 		return this.engineSlots; 
 	}
 
+	/**
+	 * Sets the shieldSpec of the hullSpec to the passed one. 
+	 * @category Proxied method
+	 */
 	public void setShieldSpec(ShieldSpecAPI shieldSpec) {
 		try {
 			MethodHandle setShieldSpec = MethodHandles.lookup().findVirtual(obfuscatedHullSpecClass, "setShieldSpec", MethodType.methodType(void.class, obfuscatedShieldSpecClass));
@@ -147,8 +175,8 @@ public class lyr_hullSpec {
 	 * Adds a hullModSpec as a built-in one on the stored {@link ShipHullSpecAPI}
 	 * <p> Use {@link #retrieve()} to use the API version through the proxy.
 	 * @param hullModSpecId the id of the hullModSpec
-	 * @category Proxied methods
-	 * @see Non-Obfuscated: {@link com.fs.starfarer.api.combat.ShipHullSpecAPI#addBuiltInMod(String)}
+	 * @category Proxied method
+	 * @see Non-Obfuscated: {@link com.fs.starfarer.api.combat.ShipHullSpecAPI#addBuiltInMod(String) addBuiltInMod(String)}
 	 */
 	public void addBuiltInMod(String hullModSpecId) { 
 		try {
@@ -164,7 +192,7 @@ public class lyr_hullSpec {
 	 * value.
 	 * <p> Use {@link #retrieve()} to use the API version through the proxy.
 	 * @param manufacturer to set
-	 * @category Proxied methods
+	 * @category Proxied method
 	 * @see Non-Obfuscated: {@link com.fs.starfarer.api.combat.ShipHullSpecAPI#setManufacturer(String)}
 	 */
 	public void setManufacturer(String manufacturer) {
@@ -181,7 +209,7 @@ public class lyr_hullSpec {
 	 * passed value. Might overwrite or get overwritten; no checks for that (for
 	 * now) 
 	 * @param destriptionPrefix to set
-	 * @category Proxied methods
+	 * @category Proxied method
 	 */
 	public void setDescriptionPrefix(String destriptionPrefix) {
 		try {
@@ -197,8 +225,8 @@ public class lyr_hullSpec {
 	 * value. 
 	 * <p> Use {@link #retrieve()} to use the API version through the proxy.
 	 * @param shipSystemId to set
-	 * @category Proxied methods
-	 * @see Non-Obfuscated: {@link com.fs.starfarer.api.combat.ShipHullSpecAPI#setShipSystemId(String)}
+	 * @category Proxied method
+	 * @see Non-Obfuscated: {@link com.fs.starfarer.api.combat.ShipHullSpecAPI#setShipSystemId(String) setShipSystemId(String)}
 	 */
 	public void setShipSystemId(String shipSystemId) {
 		try {
@@ -215,7 +243,7 @@ public class lyr_hullSpec {
 	 * hullSpec and go from there. The slot needs to have its own node
 	 * and its own id, but the rest can just be cloned.
 	 * @param weaponSlot to be added
-	 * @category Proxied methods
+	 * @category Proxied method
 	 */
 	public void addWeaponSlot(WeaponSlotAPI weaponSlot) {
 		try {
@@ -232,8 +260,8 @@ public class lyr_hullSpec {
 	 * <p> Use {@link #retrieve()} to use the API version through the proxy.
 	 * @param slotId of the slot that will have the weapon installed as built-in
 	 * @param weaponSpecId of the weapon that will be installed on the slot
-	 * @category Proxied methods
-	 * @see Non-Obfuscated: {@link com.fs.starfarer.api.combat.ShipHullSpecAPI#addBuiltInWeapon(String, String)}
+	 * @category Proxied method
+	 * @see Non-Obfuscated: {@link com.fs.starfarer.api.combat.ShipHullSpecAPI#addBuiltInWeapon(String, String) addBuiltInWeapon(String, String)}
 	 */
 	public void addBuiltInWeapon(String slotId, String weaponSpecId) {
 		try { 
@@ -244,6 +272,13 @@ public class lyr_hullSpec {
 		}
 	}
 
+	/**
+	 * Adds a wing as a built-in one on the stored {@link ShipHullSpecAPI}. 
+	 * There is no API version of this, however adding the wingId to the 
+	 * {@code getBuiltInWings()} might work. In any case, here it is proxied.
+	 * @param wingId of the wing that will be added as built-in
+	 * @category Proxied method
+	 */
 	public void addBuiltInWing(String wingId) {
 		try { 
 			MethodHandle addBuiltInWing = MethodHandles.lookup().findVirtual(obfuscatedHullSpecClass, "addBuiltInWing", MethodType.methodType(void.class, String.class));
@@ -252,4 +287,6 @@ public class lyr_hullSpec {
 			t.printStackTrace();
 		}
 	}
+	//#endregion 
+	// END OF API-LIKE & PROXIED METHODS
 }

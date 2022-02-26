@@ -35,10 +35,9 @@ import lyr.lyr_weaponSlot;
  */
 public class _ehm_ar_base extends _ehm_base {
 	/** 
-	 * Spawns additional weapon slots, if the slots have adapters on them. The returned 
-	 * hullSpec needs to be installed on the variant.
-	 * @param variant that will have alterations on slots with an adapter
-	 * @return a hullSpec to be installed on the variant
+	 * Spawns additional weapon slots, if the slots have adapters on them.
+	 * @param variant whose hullSpec will be altered
+	 * @return an altered hullSpec
 	 */
 	protected static final ShipHullSpecAPI ehm_stepDownAdapter(ShipVariantAPI variant) {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
@@ -112,10 +111,9 @@ public class _ehm_ar_base extends _ehm_base {
 	}
 
 	/** 
-	 * Grabs a stock hullSpec and clones it. As this one removes the dangerous 
-	 * changes to the hull, grabbing a stock one and passing it as a new one 
-	 * is considered 'safe'.
-	 * @param variant to restore
+	 * Refreshes the hullSpec and returns it.
+	 * @param variant whose hullSpec will be restored
+	 * @return a restored hullSpec
 	 */
 	protected static final ShipHullSpecAPI ehm_adapterRemoval(ShipVariantAPI variant) {
 		ShipHullSpecAPI hullSpec = ehm_hullSpecRefresh(variant);
@@ -127,7 +125,7 @@ public class _ehm_ar_base extends _ehm_base {
 
 	//#region INSTALLATION CHECKS
 	@Override
-	protected String unapplicableReason(ShipAPI ship) {
+	protected String ehm_unapplicableReason(ShipAPI ship) {
 		if (ship == null) return ehm.excuses.noShip; 
 
 		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return ehm.excuses.lacksBase; 
@@ -137,7 +135,7 @@ public class _ehm_ar_base extends _ehm_base {
 	}
 
 	@Override
-	protected String cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
+	protected String ehm_cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
 		ShipVariantAPI variant = ship.getVariant();
 				
 		for (WeaponSlotAPI slot: variant.getHullSpec().getAllWeaponSlotsCopy()) 

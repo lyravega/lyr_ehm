@@ -25,11 +25,20 @@ import data.scripts.shipTrackerScript;
 import lyr.lyr_hullSpec;
 
 /**
- * This is the master base class for all experimental hullmods. Stores common 
- * methods and most strings. Other bases inherit from this one, and implement 
- * their own, more specific methods. Purpose is to minimize mistakes, and 
- * further organize the different hullmod types. Do not alter the string 
- * values, and avoid using this directly if possible. 
+ * This is the master base class for all experimental hullmods. Stores the most 
+ * common methods and strings for global access to some degree, which are used by
+ * other bases, and hullMods. 
+ * <p> The other bases implement their own, more specific methods for the hullMods 
+ * that use them as their parent, and it usually is the place where the hullSpec
+ * changes occur.
+ * <p> The usable hullMods themselves only contain extremely specific things like 
+ * the values to be passed, and custom {@code ehm_cannotBeInstalledNowReason(...)} 
+ * and/or {@code ehm_unapplicableReason(...))} if necessary. It is here that the 
+ * variants swap their hullSpecs.
+ * <p> Primary reason for doing it this way is to provide better maintenance for 
+ * different categories at the cost of a few extra calls to get to where the 
+ * action is.
+ * <p> Do NOT alter the string values, and avoid using this directly if possible. 
  * @see {@link data.hullmods.ehm_ar._ehm_ar_base _ehm_ar_base} for slot adapter base
  * @see {@link data.hullmods.ehm_sr._ehm_sr_base _ehm_sr_base} for system retrofit base
  * @see {@link data.hullmods.ehm_wr._ehm_wr_base _ehm_wr_base} for weapon retrofit base
@@ -103,31 +112,31 @@ public class _ehm_base implements HullModEffect {
 
 	@Override 
 	public int getDisplayCategoryIndex() { return -1; }
-	//#endregion
-	// END OF IMPLEMENTATION
 
 	//#region INSTALLATION CHECKS
-	@Override public boolean isApplicableToShip(ShipAPI ship) { return unapplicableReason(ship) == null; }
+	@Override public boolean isApplicableToShip(ShipAPI ship) { return ehm_unapplicableReason(ship) == null; }
 	
-	@Override public String getUnapplicableReason(ShipAPI ship) {	return unapplicableReason(ship); }
+	@Override public String getUnapplicableReason(ShipAPI ship) {	return ehm_unapplicableReason(ship); }
 
 	/**
 	 * Combined {@link #isApplicableToShip()} and {@link #getUnapplicableReason()}.
 	 * @return a string or null, which is also used for the if-check. 
 	 */
-	protected String unapplicableReason(ShipAPI ship) {	return null; } 
+	protected String ehm_unapplicableReason(ShipAPI ship) {	return null; } 
 	
-	@Override public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) { return cannotBeInstalledNowReason(ship, marketOrNull, mode) == null; }
+	@Override public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) { return ehm_cannotBeInstalledNowReason(ship, marketOrNull, mode) == null; }
 
-	@Override public String getCanNotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) { return cannotBeInstalledNowReason(ship, marketOrNull, mode); }
+	@Override public String getCanNotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) { return ehm_cannotBeInstalledNowReason(ship, marketOrNull, mode); }
 
 	/**
 	 * Combined {@link #canBeAddedOrRemovedNow()} and {@link #getCanNotBeInstalledNowReason()}.
 	 * @return a string or null, which is also used for the if-check.  
 	 */
-	protected String cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) { return null; } 
+	protected String ehm_cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) { return null; } 
 	//#endregion
 	// END OF INSTALLATION CHECKS
+	//#endregion
+	// END OF IMPLEMENTATION
 
 	//#region TRACKERS
 	protected shipTrackerScript shipTracker;
@@ -198,8 +207,9 @@ public class _ehm_base implements HullModEffect {
 	 * Creates and assigns {@link #fleetTracker}. Initially developed to keep track of unique
 	 * {@link shipTrackerScript} scripts, and kill them if the ships are no longer present on 
 	 * the fleet, however after a few iterations, the scripts terminate theirselves as soon 
-	 * as the tab is changed from refit to something else. In short, currently completely 
-	 * redundant, and used to output useless info logs on the terminal, and does nothing else. 
+	 * as the tab is changed from refit to something else. Now serves as a resource pool for
+	 * the shipTrackers, providing a common robot and logger for them to use. Also prints
+	 * purty info messages from time to time. In other words, redundant. 
 	 * The reference MUST be dropped otherwise it will keep living on in the memory.
 	 * @return a {@link fleetTrackerScript} script
 	 * @see Callers: {@link #shipTrackerScript(ShipVariantAPI, String)} 
@@ -274,7 +284,7 @@ public class _ehm_base implements HullModEffect {
 			public static final String reqWings = "ehm_sr_require_wings"; // must match hullmod tag in .csv
 		}
 		public static enum affix { ;
-			public static final String adaptedSlot = "AS_"; 
+			public static final String adaptedSlot = "AS_"; // should NOT be altered in any update
 			public static final String allRetrofit = "ehm_"; // must match hullmod id in .csv
 			public static final String systemRetrofit = "ehm_sr_"; // must match hullmod id in .csv
 			public static final String weaponRetrofit = "ehm_wr_"; // must match hullmod id in .csv
@@ -390,7 +400,7 @@ public class _ehm_base implements HullModEffect {
 
 	/**
 	 * Called from the {@link ehm_base retrofit base} only. If the hull does not
-	 * have the mod built-in, clones the hullSpec, adds flavour, builds the retrofit 
+	 * have the base built-in, clones the hullSpec, adds flavour, builds the retrofit 
 	 * base in the hull, and refreshes the screen. Otherwise, just returns the same 
 	 * hullSpec.  
 	 * @param variant to be used as a template

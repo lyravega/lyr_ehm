@@ -87,11 +87,13 @@ public class lyr_engineBuilder {
 		return this;
 	}
 
+	//#region API-LIKE / PROXIED METHODS
 	/**
 	 * Clones the stored {@link Object}, and returns it. For 
 	 * internal use if necessary. {@link #retrieve()} should be used
 	 * if access to the API is needed.
 	 * @return a cloned {@link Object}
+	 * @category Proxied method
 	 */
 	protected Object duplicate(Object enginebuilder) {
 		try {
@@ -102,12 +104,23 @@ public class lyr_engineBuilder {
 		} return enginebuilder; // java, pls...
 	}
 	
-	//#region API-like methods
+	/**
+	 * A cheap clone that creates and returns a new instance of this
+	 * object with a duplicate of its stored object. 
+	 * @return a cloned {@link lyr_engineBuilder}
+	 */
 	@Override
 	public lyr_engineBuilder clone() {
 		return new lyr_engineBuilder(engineBuilder, true);
 	}
 	
+	/**
+	 * Uses the passed enumNumber to grab an engine style from the
+	 * obfuscated code, and invoke the obfuscated engineBuilder 
+	 * method with it. 
+	 * @param enumNumber
+	 * @category Proxied method
+	 */
 	public void setEngineStyle(int enumNumber) {
 		try {
 			MethodHandle setEngineStyle = MethodHandles.lookup().findVirtual(obfuscatedEngineBuilderClass, obfuscatedEngineStyleSetterName, MethodType.methodType(void.class, obfuscatedEngineStyleEnum));
@@ -116,4 +129,6 @@ public class lyr_engineBuilder {
 			t.printStackTrace();
 		}
 	}
+	//#endregion 
+	// END OF API-LIKE & PROXIED METHODS
 }

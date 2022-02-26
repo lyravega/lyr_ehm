@@ -61,12 +61,13 @@ public class lyr_shieldSpec {
 		return this;
 	}
 
+	//#region API-LIKE & PROXIED METHODS
 	/**
 	 * Clones the stored {@link ShieldSpecAPI}, and returns it. For 
 	 * internal use if necessary. {@link #retrieve()} should be used
 	 * if access to the API is needed.
 	 * @return a cloned {@link ShieldSpecAPI}
-	 * @category Proxied methods
+	 * @category Proxied method
 	 */
 	protected ShieldSpecAPI duplicate(ShieldSpecAPI shieldSpec) {
 		try {
@@ -77,12 +78,22 @@ public class lyr_shieldSpec {
 		} return shieldSpec; // java, pls...
 	}
 	
-	//#region API-like methods
+	/**
+	 * A cheap clone that creates and returns a new instance of this
+	 * object with a duplicate of its stored object. 
+	 * @return a cloned {@link lyr_shieldSpec}
+	 */
 	@Override
 	public lyr_shieldSpec clone() {
 		return new lyr_shieldSpec(shieldSpec, true);
 	}
 
+	/**
+	 * Sets the ring colour of the stored {@link ShieldSpecAPI} to
+	 * the passed one. 
+	 * @param colour object to apply
+	 * @category Proxied method
+	 */
 	public void setRingColor(Color colour) {
 		try {
 			MethodHandle setRingColor = MethodHandles.lookup().findVirtual(obfuscatedShieldSpecClass, "setRingColor", MethodType.methodType(void.class, Color.class));
@@ -91,7 +102,13 @@ public class lyr_shieldSpec {
 			t.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * Sets the inner colour of the stored {@link ShieldSpecAPI} to
+	 * the passed one. 
+	 * @param colour object to apply
+	 * @category Proxied method
+	 */
 	public void setInnerColor(Color colour) {
 		try {
 			MethodHandle setInnerColor = MethodHandles.lookup().findVirtual(obfuscatedShieldSpecClass, "setInnerColor", MethodType.methodType(void.class, Color.class));
@@ -100,4 +117,6 @@ public class lyr_shieldSpec {
 			t.printStackTrace();
 		}
 	}
+	//#endregion 
+	// END OF API-LIKE & PROXIED METHODS
 }

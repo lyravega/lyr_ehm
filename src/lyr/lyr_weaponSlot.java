@@ -60,11 +60,13 @@ public class lyr_weaponSlot {
 		return this;
 	}
 
+	//#region API-LIKE & PROXIED METHODS
 	/**
 	 * Clones the stored {@link WeaponSlotAPI}, and returns it. For 
 	 * internal use if necessary. {@link #retrieve()} should be used
 	 * if access to the API is needed.
 	 * @return a cloned {@link WeaponSlotAPI}
+	 * @category Proxied method
 	 */
 	protected WeaponSlotAPI duplicate(WeaponSlotAPI weaponSlot) {
 		try {
@@ -75,7 +77,11 @@ public class lyr_weaponSlot {
 		} return weaponSlot; // java, pls...
 	}
 	
-	//#region API-like methods
+	/**
+	 * A cheap clone that creates and returns a new instance of this
+	 * object with a duplicate of its stored object. 
+	 * @return a cloned {@link lyr_weaponSlot}
+	 */
 	@Override
 	public lyr_weaponSlot clone() {
 		return new lyr_weaponSlot(weaponSlot, true);
@@ -84,7 +90,7 @@ public class lyr_weaponSlot {
 	/**
 	 * Sets the weapon type of the slot to the passed weaponType. 
 	 * @param weaponType to be set on the slot
-	 * @category Proxied methods
+	 * @category Proxied method
 	 */
 	public void setWeaponType(WeaponType weaponType) {
 		try {
@@ -99,7 +105,7 @@ public class lyr_weaponSlot {
 	 * The API lacks this check. It can easily be implemented, it is
 	 * proxied here however.
 	 * @return is it a weapon slot?
-	 * @category Proxied methods
+	 * @category Proxied method
 	 */
 	public boolean isWeaponSlot() {
 		try {
@@ -115,7 +121,7 @@ public class lyr_weaponSlot {
 	 * Must be unique, otherwise the game will get confused, and only 
 	 * one of the slots that share the same id will function.
 	 * @param weaponSlotId a unique id to assign
-	 * @category Proxied methods
+	 * @category Proxied method
 	 */
 	public void setId(String weaponSlotId) {
 		try {
@@ -130,7 +136,7 @@ public class lyr_weaponSlot {
 	 * Sets the {@link WeaponSize} of the stored {@link WeaponSlotAPI} 
 	 * to the given one.
 	 * @param weaponSize a different size
-	 * @category Proxied methods
+	 * @category Proxied method
 	 */
 	public void setSlotSize(WeaponSize weaponSize) {
 		try {
@@ -152,7 +158,7 @@ public class lyr_weaponSlot {
 	 * as {@code setLocation()} will affect all slots with a shared node.
 	 * @param nodeId an id to assign to the node (using slotId is fine)
 	 * @param location a ship-relative vector to create the node at
-	 * @category Proxied methods
+	 * @category Proxied method
 	 * @see {@link data.hullmods._ehm_util#generateChildLocation} that
 	 * calculates new node positions through passed offsets
 	 */
@@ -167,4 +173,6 @@ public class lyr_weaponSlot {
 			t.printStackTrace();
 		}
 	}
+	//#endregion 
+	// END OF API-LIKE & PROXIED METHODS
 }

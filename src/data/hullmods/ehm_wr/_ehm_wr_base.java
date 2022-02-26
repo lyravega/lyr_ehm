@@ -28,11 +28,10 @@ import lyr.lyr_weaponSlot;
  */
 public class _ehm_wr_base extends _ehm_base {
 	/**
-	 * Alters the weapon slots on the passed hullSpec, and returns it. The returned 
-	 * hullSpec needs to be installed on the variant.
-	 * @param variant that will have its weapon slots altered
+	 * Alters the weapon slots on the passed variant's hullSpec, and returns it.
+	 * @param variant whose hullSpec will be altered
 	 * @param conversions is a map that pairs slot types
-	 * @return a hullSpec to be installed on the variant
+	 * @return an altered hullSpec with different weaponSlots
 	 * @see {@link #ehm_weaponSlotRestore()} reverses this process one slot at a time
 	 */
 	protected static final ShipHullSpecAPI ehm_weaponSlotRetrofit(ShipVariantAPI variant, Map<WeaponType, WeaponType> conversions) {	
@@ -52,19 +51,17 @@ public class _ehm_wr_base extends _ehm_base {
 	}
 
 	/**
-	 * Compares the weapon slots of a stock hullSpec to the variant's hullspec. Restores 
-	 * altered slots to the originals, ignoring the decorative slots that an adapter 
-	 * might have altered. As there might be other things that alter these slots, 
-	 * restoring only the necessary ones is preferable.
-	 * @param variant with the altered weapon slots
-	 * @return the restored hullSpec in near-mint condition
+	 * Refers to a stock hullSpec, and restores the slots on the passed variant's
+	 * hullSpec one by one. Ignores activated adapters, and affects adapted slots.
+	 * @param variant whose hullSpec will have its weaponSlots restored
+	 * @return an altered hullSpec with restored weaponSlots
 	 * @see {@link data.scripts.shipTrackerScript shipTrackerScript} only called externally by this script
 	 */
 	public static final ShipHullSpecAPI ehm_weaponSlotRestore(ShipVariantAPI variant) {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
-		ShipHullSpecAPI stockHullSpec = ehm_hullSpecReference(variant);
+		ShipHullSpecAPI hullSpecReference = ehm_hullSpecReference(variant);
 
-		for (WeaponSlotAPI stockSlot: stockHullSpec.getAllWeaponSlotsCopy()) {
+		for (WeaponSlotAPI stockSlot: hullSpecReference.getAllWeaponSlotsCopy()) {
 			String slotId = stockSlot.getId();
 			lyr_weaponSlot slot = hullSpec.getWeaponSlot(slotId);
 			WeaponType stockSlotWeaponType = stockSlot.getWeaponType();
@@ -82,7 +79,7 @@ public class _ehm_wr_base extends _ehm_base {
 
 	//#region INSTALLATION CHECKS
 	@Override
-	protected String unapplicableReason(ShipAPI ship) {
+	protected String ehm_unapplicableReason(ShipAPI ship) {
 		if (ship == null) return ehm.excuses.noShip; 
 
 		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return ehm.excuses.lacksBase; 
@@ -92,7 +89,7 @@ public class _ehm_wr_base extends _ehm_base {
 	}
 
 	@Override
-	protected String cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
+	protected String ehm_cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
 		ShipVariantAPI variant = ship.getVariant();
 
 		if (ehm_hasWeapons(variant, ehm.id.adapters.keySet())) return ehm.excuses.hasWeapons;

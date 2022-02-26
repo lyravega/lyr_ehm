@@ -24,6 +24,12 @@ import lyr.lyr_shieldSpec;
  * @since 0.7
  */
 public class _ehm_sc_base extends _ehm_base {
+	/**
+	 * Alters the shield colours of the ship. Inner and ring colours
+	 * can be different. 
+	 * @param variant whose shieldSpec will be altered
+	 * @return an altered hullSpec with altered shieldSpec colours
+	 */
 	protected static final ShipHullSpecAPI ehm_pimpMyShield(ShipVariantAPI variant, Color inner, Color ring) {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 		lyr_shieldSpec shieldSpec = hullSpec.getShieldSpec();
@@ -34,6 +40,12 @@ public class _ehm_sc_base extends _ehm_base {
 		return hullSpec.retrieve();
 	}
 
+	/**
+	 * Restores the shieldSpec of the passed variant's hullSpec by
+	 * referring to a stock one.
+	 * @param variant whose shieldSpec will be restored
+	 * @return an altered hullSpec with its shieldSpec is restored
+	 */
 	public static final ShipHullSpecAPI ehm_restoreShield(ShipVariantAPI variant) {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 		ShieldSpecAPI stockShieldSpec = ehm_hullSpecReference(variant).getShieldSpec();
@@ -45,7 +57,7 @@ public class _ehm_sc_base extends _ehm_base {
 
 	//#region INSTALLATION CHECKS
 	@Override
-	protected String unapplicableReason(ShipAPI ship) {
+	protected String ehm_unapplicableReason(ShipAPI ship) {
 		if (ship == null) return ehm.excuses.noShip; 
 
 		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return ehm.excuses.lacksBase; 
