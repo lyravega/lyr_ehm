@@ -29,7 +29,7 @@ public class ehm_ar_adapterremoval extends _ehm_ar_base {
 	//#region INSTALLATION CHECKS
 	// all checks are reversed for this one, as it is a removal tool
 	@Override
-	protected String unapplicableReason(ShipAPI ship) {
+	protected String ehm_unapplicableReason(ShipAPI ship) {
 		if (ship == null) return ehm.excuses.noShip; 
 
 		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return ehm.excuses.lacksBase; 
@@ -39,7 +39,7 @@ public class ehm_ar_adapterremoval extends _ehm_ar_base {
 	}
 
 	@Override
-	protected String cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) { 
+	protected String ehm_cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) { 
 		ShipVariantAPI variant = ship.getVariant();
 
 		if (ehm_hasWeapons(variant, ehm.affix.adaptedSlot)) return ehm.excuses.hasWeaponsOnAdaptedSlots;

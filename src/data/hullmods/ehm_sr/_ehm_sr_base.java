@@ -50,7 +50,7 @@ public class _ehm_sr_base extends _ehm_base {
 
 	//#region INSTALLATION CHECKS
 	@Override
-	protected String unapplicableReason(ShipAPI ship) {
+	protected String ehm_unapplicableReason(ShipAPI ship) {
 		if (ship == null) return ehm.excuses.noShip; 
 
 		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return ehm.excuses.lacksBase; 

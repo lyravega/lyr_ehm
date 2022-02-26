@@ -26,7 +26,7 @@ public class ehm_er_manned extends _ehm_base {
 	}
 	
 	@Override
-	protected String unapplicableReason(ShipAPI ship) {
+	protected String ehm_unapplicableReason(ShipAPI ship) {
 		if (ship == null) return "Ship does not exist"; 
 		
 		if (ship.getVariant().getSuppressedMods().contains(automated)) return null;
@@ -37,7 +37,7 @@ public class ehm_er_manned extends _ehm_base {
 	}
 
 	@Override
-	protected String cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
+	protected String ehm_cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
 		HullVariantSpec variant = HullVariantSpec.class.cast(ship.getVariant());
 
 		if (variant.getSuppressedMods().contains(automated)) return "Cannot remove, suppressing automated";
