@@ -15,10 +15,10 @@ import lyr.lyr_shieldSpec;
 /**
  * This class is used by shield cosmetic hullmods. 
  * </p> Reason to split this as another base was primarily maintenance.
- * @see {@link data.hullmods.ehm_ar._ehm_ar_base} for slot adapter base
- * @see {@link data.hullmods.ehm_sr._ehm_sr_base} for system retrofit base
- * @see {@link data.hullmods.ehm_wr._ehm_wr_base} for weapon retrofit base
- * @see {@link data.hullmods.ehm_ec._ehm_ec_base} for engine cosmetic base
+ * @see {@link data.hullmods.ehm_ar._ehm_ar_base _ehm_ar_base} for slot adapter base
+ * @see {@link data.hullmods.ehm_sr._ehm_sr_base _ehm_sr_base} for system retrofit base
+ * @see {@link data.hullmods.ehm_wr._ehm_wr_base _ehm_wr_base} for weapon retrofit base
+ * @see {@link data.hullmods.ehm_ec._ehm_ec_base _ehm_ec_base} for engine cosmetic base
  * @author lyravega
  * @version 0.7
  * @since 0.7

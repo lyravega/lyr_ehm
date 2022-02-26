@@ -12,10 +12,10 @@ import lyr.lyr_hullSpec;
 /**
  * This class is used by system retrofit hullmods. They are pretty 
  * straightforward in their operation; change the system of a hullSpec.
- * @see {@link data.hullmods.ehm_ar._ehm_ar_base} for slot adapter base
- * @see {@link data.hullmods.ehm_wr._ehm_wr_base} for weapon retrofit base
- * @see {@link data.hullmods.ehm_ec._ehm_ec_base} for engine cosmetic base
- * @see {@link data.hullmods.ehm_sc._ehm_sc_base} for shield cosmetic base
+ * @see {@link data.hullmods.ehm_ar._ehm_ar_base _ehm_ar_base} for slot adapter base
+ * @see {@link data.hullmods.ehm_wr._ehm_wr_base _ehm_wr_base} for weapon retrofit base
+ * @see {@link data.hullmods.ehm_ec._ehm_ec_base _ehm_ec_base} for engine cosmetic base
+ * @see {@link data.hullmods.ehm_sc._ehm_sc_base _ehm_sc_base} for shield cosmetic base
  * @author lyravega
  * @version 0.7
  * @since 0.3
@@ -40,7 +40,7 @@ public class _ehm_sr_base extends _ehm_base {
 	 * needs to be installed on the variant.
 	 * @param variant that will have its system reset to factory defaults
 	 * @return a hullspec to be installed on the variant
-	 * @see {@link data.scripts.shipTrackerScript} only called externally by this script
+	 * @see {@link data.scripts.shipTrackerScript shipTrackerScript} only called externally by this script
 	 */
 	public static final ShipHullSpecAPI ehm_systemRestore(ShipVariantAPI variant) { 
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);

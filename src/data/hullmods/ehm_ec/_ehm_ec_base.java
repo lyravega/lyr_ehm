@@ -12,15 +12,21 @@ import lyr.lyr_hullSpec;
  * This class is used by weapon retrofit hullmods. They are pretty 
  * straightforward in their operation; change all of the weapon slots 
  * on a ship to a different type. 
- * @see {@link data.hullmods.ehm_ar._ehm_ar_base} for slot adapter base
- * @see {@link data.hullmods.ehm_sr._ehm_sr_base} for system retrofit base
- * @see {@link data.hullmods.ehm_wr._ehm_wr_base} for weapon retrofit base
- * @see {@link data.hullmods.ehm_sc._ehm_sc_base} for shield cosmetic base
+ * @see {@link data.hullmods.ehm_ar._ehm_ar_base _ehm_ar_base} for slot adapter base
+ * @see {@link data.hullmods.ehm_sr._ehm_sr_base _ehm_sr_base} for system retrofit base
+ * @see {@link data.hullmods.ehm_wr._ehm_wr_base _ehm_wr_base} for weapon retrofit base
+ * @see {@link data.hullmods.ehm_sc._ehm_sc_base _ehm_sc_base} for shield cosmetic base
  * @author lyravega
  * @version 0.7
  * @since 0.3
  */
 public class _ehm_ec_base extends _ehm_base {
+	/**
+	 * Alters the engine visuals of the ship.
+	 * @param variant of the hullSpec
+	 * @param styleEnum somewhat hardcoded {@link lyr.lyr_engineBuilder.engineStyle engineStyle}
+	 * @return hullSpec with the altered engine visuals
+	 */
 	protected static final ShipHullSpecAPI ehm_pimpMyEngineSlots(ShipVariantAPI variant, int styleEnum) {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 		lyr_engineBuilder engineSlot = new lyr_engineBuilder(null, false);
@@ -32,6 +38,13 @@ public class _ehm_ec_base extends _ehm_base {
 		return hullSpec.retrieve();
 	}
 
+	/**
+	 * Restores the engine visuals of the ship through 
+	 * @param variant of the hullSpec
+	 * @param styleEnum somewhat hardcoded {@link lyr.lyr_engineBuilder.engineStyle engineStyle}
+	 * @return hullSpec with the altered engine visuals
+	 * @see {@link data.scripts.shipTrackerScript shipTrackerScript} only called externally by this script
+	 */
 	public static final ShipHullSpecAPI ehm_restoreEngineSlots(ShipVariantAPI variant) {
 		ShipHullSpecAPI hullSpec = ehm_hullSpecRefresh(variant);
 

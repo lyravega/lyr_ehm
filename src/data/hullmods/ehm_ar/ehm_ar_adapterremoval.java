@@ -42,7 +42,7 @@ public class ehm_ar_adapterremoval extends _ehm_ar_base {
 	protected String cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) { 
 		ShipVariantAPI variant = ship.getVariant();
 
-		if (ehm_hasWeapons(variant)) return ehm.excuses.hasWeapons;
+		if (ehm_hasWeapons(variant, ehm.affix.adaptedSlot)) return ehm.excuses.hasWeaponsOnAdaptedSlots;
 
 		return null;
 	}

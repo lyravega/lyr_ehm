@@ -1,9 +1,9 @@
 package data.hullmods;
 
 import java.awt.Color;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
@@ -19,24 +19,22 @@ import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
-import data.hullmods.ehm_ar._ehm_ar_base;
-import data.hullmods.ehm_sr._ehm_sr_base;
-import data.hullmods.ehm_wr._ehm_wr_base;
 import data.scripts.fleetTrackerScript;
 import data.scripts.refreshRefitScript;
 import data.scripts.shipTrackerScript;
 import lyr.lyr_hullSpec;
 
 /**
- * This is the master base class for all experimental hullmods. 
- * Stores common methods and most tag related strings. Other 
- * bases inherit from this one, and implement their own, more 
- * specific methods. Purpose is to minimize mistakes, and 
- * further organize the different hullmod types. Do not alter 
- * the string values, and avoid using this directly if possible. 
- * @see {@link _ehm_ar_base} for slot adapter base
- * @see {@link _ehm_sr_base} for system retrofit base
- * @see {@link _ehm_wr_base} for weapon retrofit base
+ * This is the master base class for all experimental hullmods. Stores common 
+ * methods and most strings. Other bases inherit from this one, and implement 
+ * their own, more specific methods. Purpose is to minimize mistakes, and 
+ * further organize the different hullmod types. Do not alter the string 
+ * values, and avoid using this directly if possible. 
+ * @see {@link data.hullmods.ehm_ar._ehm_ar_base _ehm_ar_base} for slot adapter base
+ * @see {@link data.hullmods.ehm_sr._ehm_sr_base _ehm_sr_base} for system retrofit base
+ * @see {@link data.hullmods.ehm_wr._ehm_wr_base _ehm_wr_base} for weapon retrofit base
+ * @see {@link data.hullmods.ehm_ec._ehm_ec_base _ehm_ec_base} for engine cosmetic base
+ * @see {@link data.hullmods.ehm_sc._ehm_sc_base _ehm_sc_base} for shield cosmetic base
  * @author lyravega
  * @version 0.7
  * @since 0.3
@@ -143,8 +141,7 @@ public class _ehm_base implements HullModEffect {
 	 * reference to the script MUST be dropped otherwise it will keep living on in the memory.
 	 * @param variant of the ship to track
 	 * @param memberId of the ship to track
-	 * @return a {@link shipTrackerScript} script
-	 * @see Overloads: {@link #shipTrackerScript()} and {@link #shipTrackerScript()} 
+	 * @return a {@link shipTrackerScript}
 	 */
 	private shipTrackerScript shipTrackerScript(ShipVariantAPI variant, String memberId) {
 		for(EveryFrameScript script : Global.getSector().getScripts()) {
@@ -167,8 +164,8 @@ public class _ehm_base implements HullModEffect {
 	 * the current tab is refit. The reference to the script MUST be dropped otherwise it 
 	 * will keep living on in the memory.
 	 * @param stats of the ship to track
-	 * @return a {@link shipTrackerScript} script
-	 * @see Overload: {@link #shipTrackerScript()} 
+	 * @return a {@link shipTrackerScript}
+	 * @see Overload: {@link #shipTrackerScript(ShipAPI)} 
 	 */
 	protected shipTrackerScript shipTrackerScript(MutableShipStatsAPI stats) {
 		if (stats == null) return null; shipTracker = null; 
@@ -185,8 +182,8 @@ public class _ehm_base implements HullModEffect {
 	 * the current tab is refit. The reference to the script MUST be dropped otherwise it 
 	 * will keep living on in the memory.
 	 * @param ship to track
-	 * @return a {@link shipTrackerScript} script
-	 * @see Overload: {@link #shipTrackerScript()} 
+	 * @return a {@link shipTrackerScript}
+	 * @see Overload: {@link #shipTrackerScript(MutableShipStatsAPI)} 
 	 */
 	protected shipTrackerScript shipTrackerScript(ShipAPI ship) {
 		if (ship == null) return null; shipTracker = null; 
@@ -205,7 +202,7 @@ public class _ehm_base implements HullModEffect {
 	 * redundant, and used to output useless info logs on the terminal, and does nothing else. 
 	 * The reference MUST be dropped otherwise it will keep living on in the memory.
 	 * @return a {@link fleetTrackerScript} script
-	 * @see Callers: {@link #shipTrackerScript(ShipAPI)} and {@link #shipTrackerScript()} 
+	 * @see Callers: {@link #shipTrackerScript(ShipVariantAPI, String)} 
 	 */
 	private fleetTrackerScript fleetTrackerScript() {
 		fleetTracker = null;
@@ -231,8 +228,8 @@ public class _ehm_base implements HullModEffect {
 	 * that prevents further executions. 
 	 * 
 	 * @see Trigger: {@link ehm_base} (through {@link #ehm_hullSpecClone()})
-	 * @see Trigger: {@link data.hullmods.ehm_ar.ehm_ar_adapterremoval} (through {@link #ehm_hullSpecClone()})
-	 * @see Trigger: {@link data.hullmods.ehm_ar.ehm_ar_stepdownadapter} (everytime adapter functions)
+	 * @see Trigger: {@link data.hullmods.ehm_ar.ehm_ar_adapterremoval Adapter Removal} (through {@link #ehm_hullSpecRefresh()})
+	 * @see Trigger: {@link data.hullmods.ehm_ar.ehm_ar_stepdownadapter Step-Down Adapter} (everytime adapter functions)
 	 */
 	protected static void refreshRefit() {
 		refreshRefitScript = null;
@@ -256,10 +253,10 @@ public class _ehm_base implements HullModEffect {
 		public static enum id { ;
 			public static final String baseRetrofit = "ehm_base"; // must match hullmod id in .csv
 			public static final String adapterRemoveTool = "ehm_ar_adapterremoval"; // must match hullmod id in .csv
-			public static final Map<String, String> weapons = new HashMap<String, String>();
+			public static final Map<String, String> adapters = new HashMap<String, String>();
 			static {
-				weapons.put("ehm_ar_adaptermedium", "line"); // must match weapon id in .csv and .wpn
-				weapons.put("ehm_ar_adapterlarge", "line"); // must match weapon id in .csv and .wpn
+				adapters.put("ehm_ar_adaptermedium", "line"); // must match weapon id in .csv and .wpn
+				adapters.put("ehm_ar_adapterlarge", "line"); // must match weapon id in .csv and .wpn
 			}
 		}
 		public static enum tag { ;
@@ -300,12 +297,14 @@ public class _ehm_base implements HullModEffect {
 			public static final String adapterActivated = "An adapter has been activated. Can only be removed with the adapter removal hull mod";
 			public static final String noAdapterRetrofit = "There are no adapters to remove";
 			public static final String hasWeapons = "Cannot be installed or uninstalled as long as there are weapons present on the ship";
+			public static final String hasWeaponsOnAdaptedSlots = "Cannot be used as long as adapted slots have weapons on them";
 			
 		}
 	}
 	//#endregion
 	// END OF DICTIONARY
 	
+	//#region CHECK HELPERS
 	/**
 	 * Checks the ship if it has another hull modification using the passed tag
 	 * @param ship to check the installed hullmods
@@ -342,21 +341,55 @@ public class _ehm_base implements HullModEffect {
 	}
 
 	/**
-	 * Checks the ship if it has any weapons installed. Ignores the adapters
-	 * as {@code getNonBuiltInWeaponSlots()} ignore decorative slots, and 
-	 * slots become decorative ones after an adapter activation.
-	 * @param variant to check 
-	 * @return true if ship has weapons, false otherwise
+	 * Checks if the ship has any weapons installed. Decorative slots are ignored 
+	 * through {@code getNonBuiltInWeaponSlots()}, and as such the activated adapters
+	 * are ignored as the adapters turn the slots into decorative ones after 
+	 * activation. Evolved into its overloads for more specific checks.
+	 * @param variant to check
+	 * @return true if the ship has weapons on weapon slots
 	 */
 	protected static final boolean ehm_hasWeapons(ShipVariantAPI variant) {
-		Collection<String> fittedWeapons = variant.getFittedWeaponSlots();
-		fittedWeapons.retainAll(variant.getNonBuiltInWeaponSlots());
-
-		return !fittedWeapons.isEmpty();
+		return !variant.getNonBuiltInWeaponSlots().isEmpty();
 	}
 
 	/**
-	 * Called from the retrofit base ({@link ehm_base}) mainly. If the hull does not
+	 * Checks if the ship has any weapons installed on slots with specific slot ids
+	 * that start with the passed slotAffix.
+	 * <p> Example: If the slotAffix is "AS", then only the slots with the slot ids
+	 * starting with "AS" are considered, and the rest are ignored.
+	 * @param variant to check
+	 * @param slotAffix for checking the slotId
+	 * @return true if the ship has weapons on specific slots
+	 */
+	protected static final boolean ehm_hasWeapons(ShipVariantAPI variant, String slotAffix) {
+		for (String slotId : variant.getNonBuiltInWeaponSlots()) {
+			if (slotId.startsWith(slotAffix)) return true; break;
+		}
+		
+		return false;
+	}
+
+	/**
+	 * Checks if the ship has any weapons with ids that do not match the weapon ids
+	 * contained in the passed ignore set.
+	 * <p> Example: If the passed set contains a weapon id like "adapter", then
+	 * any slot having this weapon installed on them are ignored.
+	 * @param variant to check
+	 * @param weaponIdsToIgnore while checking the weapon slots
+	 * @return true if the ship has weapons with non-matching weapon ids
+	 */
+	protected static final boolean ehm_hasWeapons(ShipVariantAPI variant, Set<String> weaponIdsToIgnore) {
+		for (String slotId : variant.getNonBuiltInWeaponSlots()) {
+			if (weaponIdsToIgnore.contains(variant.getWeaponId(slotId))) continue; return true;
+		}
+		
+		return false;
+	}
+	//#endregion
+	// END OF CHECK HELPERS
+
+	/**
+	 * Called from the {@link ehm_base retrofit base} only. If the hull does not
 	 * have the mod built-in, clones the hullSpec, adds flavour, builds the retrofit 
 	 * base in the hull, and refreshes the screen. Otherwise, just returns the same 
 	 * hullSpec.  
@@ -386,10 +419,10 @@ public class _ehm_base implements HullModEffect {
 	 * <p> As no other mods does things this way as far as I know, at the very least 
 	 * the aforementioned things will be preserved. But to be honest, I should expand 
 	 * the restoration methods instead of simply applying the returned hullSpec.
-	 * <p> TODO expand restoration methods to avoid applying the hullSpec
 	 * @param variant to be used as a template
 	 * @return a 'fresh' hullSpec from the SpecStore
 	 */
+	// TODO expand restoration methods to avoid applying the hullSpec
 	protected static final ShipHullSpecAPI ehm_hullSpecRefresh(ShipVariantAPI variant) {
 		lyr_hullSpec stockHullSpec = new lyr_hullSpec(Global.getSettings().getVariant(variant.getHullVariantId()).getHullSpec(), true);
 

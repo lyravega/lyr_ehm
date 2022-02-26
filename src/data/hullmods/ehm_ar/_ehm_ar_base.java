@@ -25,10 +25,10 @@ import lyr.lyr_weaponSlot;
  * This class is used by slot adapter hullmods. Slot adapters are designed 
  * to search the ship for specific weapons, and perform operations on the 
  * hullSpec to yield interesting results, such as creating a new weapon slot. 
- * @see {@link data.hullmods.ehm_sr._ehm_sr_base} for system retrofit base
- * @see {@link data.hullmods.ehm_wr._ehm_wr_base} for weapon retrofit base
- * @see {@link data.hullmods.ehm_ec._ehm_ec_base} for engine cosmetic base
- * @see {@link data.hullmods.ehm_sc._ehm_sc_base} for shield cosmetic base
+ * @see {@link data.hullmods.ehm_sr._ehm_sr_base _ehm_sr_base} for system retrofit base
+ * @see {@link data.hullmods.ehm_wr._ehm_wr_base _ehm_wr_base} for weapon retrofit base
+ * @see {@link data.hullmods.ehm_ec._ehm_ec_base _ehm_ec_base} for engine cosmetic base
+ * @see {@link data.hullmods.ehm_sc._ehm_sc_base _ehm_sc_base} for shield cosmetic base
  * @author lyravega
  * @version 0.7
  * @since 0.3
@@ -55,10 +55,10 @@ public class _ehm_ar_base extends _ehm_base {
 			String weaponId = weaponSpec.getWeaponId();
 
 			if (!weaponSize.equals(variant.getSlot(slotId).getSlotSize())) continue; // to avoid plugging medium universal to large universal
-			if (!ehm.id.weapons.containsKey(weaponId)) continue; // to short-circuit the function if it isn't an adapter
+			if (!ehm.id.adapters.containsKey(weaponId)) continue; // to short-circuit the function if it isn't an adapter
 			
 			// these are separated in a switch case for now, for future expansions if there will be any
-			String childFormation = ehm.id.weapons.get(weaponId);
+			String childFormation = ehm.id.adapters.get(weaponId);
 			Map<String, Vector2f> offsets = new HashMap<String, Vector2f>();
 			switch (weaponSize) {
 				case LARGE: { 
@@ -115,13 +115,12 @@ public class _ehm_ar_base extends _ehm_base {
 	 * Grabs a stock hullSpec and clones it. As this one removes the dangerous 
 	 * changes to the hull, grabbing a stock one and passing it as a new one 
 	 * is considered 'safe'.
-	 * @param variant that have adapter-altered weapon slots
-	 * @return a stock hullSpec to be installed on the variant
+	 * @param variant to restore
 	 */
 	protected static final ShipHullSpecAPI ehm_adapterRemoval(ShipVariantAPI variant) {
 		ShipHullSpecAPI hullSpec = ehm_hullSpecRefresh(variant);
 
-		variant.setHullSpecAPI(hullSpec);
+		// variant.setHullSpecAPI(hullSpec);
 
 		return hullSpec;
 	}

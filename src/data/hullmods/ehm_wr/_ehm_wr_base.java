@@ -18,10 +18,10 @@ import lyr.lyr_weaponSlot;
  * This class is used by weapon retrofit hullmods. They are pretty 
  * straightforward in their operation; change all of the weapon slots 
  * on a ship to a different type. 
- * @see {@link data.hullmods.ehm_ar._ehm_ar_base} for slot adapter base
- * @see {@link data.hullmods.ehm_sr._ehm_sr_base} for system retrofit base
- * @see {@link data.hullmods.ehm_ec._ehm_ec_base} for engine cosmetic base
- * @see {@link data.hullmods.ehm_sc._ehm_sc_base} for shield cosmetic base
+ * @see {@link data.hullmods.ehm_ar._ehm_ar_base _ehm_ar_base} for slot adapter base
+ * @see {@link data.hullmods.ehm_sr._ehm_sr_base _ehm_sr_base} for system retrofit base
+ * @see {@link data.hullmods.ehm_ec._ehm_ec_base _ehm_ec_base} for engine cosmetic base
+ * @see {@link data.hullmods.ehm_sc._ehm_sc_base _ehm_sc_base} for shield cosmetic base
  * @author lyravega
  * @version 0.7
  * @since 0.3
@@ -58,7 +58,7 @@ public class _ehm_wr_base extends _ehm_base {
 	 * restoring only the necessary ones is preferable.
 	 * @param variant with the altered weapon slots
 	 * @return the restored hullSpec in near-mint condition
-	 * @see {@link data.scripts.shipTrackerScript} only called externally by this script
+	 * @see {@link data.scripts.shipTrackerScript shipTrackerScript} only called externally by this script
 	 */
 	public static final ShipHullSpecAPI ehm_weaponSlotRestore(ShipVariantAPI variant) {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
@@ -95,7 +95,7 @@ public class _ehm_wr_base extends _ehm_base {
 	protected String cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
 		ShipVariantAPI variant = ship.getVariant();
 
-		if (ehm_hasWeapons(variant)) return ehm.excuses.hasWeapons;
+		if (ehm_hasWeapons(variant, ehm.id.adapters.keySet())) return ehm.excuses.hasWeapons;
 
 		return null;
 	}
