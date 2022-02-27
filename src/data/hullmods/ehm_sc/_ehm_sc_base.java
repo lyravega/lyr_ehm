@@ -20,8 +20,6 @@ import lyr.lyr_shieldSpec;
  * @see {@link data.hullmods.ehm_wr._ehm_wr_base _ehm_wr_base} for weapon retrofit base
  * @see {@link data.hullmods.ehm_ec._ehm_ec_base _ehm_ec_base} for engine cosmetic base
  * @author lyravega
- * @version 0.7
- * @since 0.7
  */
 public class _ehm_sc_base extends _ehm_base {
 	/**

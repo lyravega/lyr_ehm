@@ -45,8 +45,6 @@ import lyr.lyr_hullSpec;
  * @see {@link data.hullmods.ehm_ec._ehm_ec_base _ehm_ec_base} for engine cosmetic base
  * @see {@link data.hullmods.ehm_sc._ehm_sc_base _ehm_sc_base} for shield cosmetic base
  * @author lyravega
- * @version 0.7
- * @since 0.3
  */
 public class _ehm_base implements HullModEffect {
 	//#region IMPLEMENTATION

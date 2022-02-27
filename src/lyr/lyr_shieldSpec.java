@@ -16,8 +16,6 @@ import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
  * return types aren't from an obfuscated class.
  * <p> Use {@link #retrieve()} to grab the stored {@link ShieldSpecAPI}.
  * @author lyravega
- * @version 0.7
- * @since 0.7
  */
 public class lyr_shieldSpec {
 	private ShieldSpecAPI shieldSpec;

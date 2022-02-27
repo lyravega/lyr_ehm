@@ -30,8 +30,6 @@ import java.lang.invoke.MethodType;
  * generate a few hardcoded templates, but nothing more can be
  * added till EngineSlotAPI<->EngineSlot link is found.
  * @author lyravega
- * @version 0.7
- * @since 0.7
  */
 public class lyr_engineBuilder {
 	private Object engineBuilder;

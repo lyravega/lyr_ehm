@@ -6,8 +6,6 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 
 /**@category System Retrofit 
  * @author lyravega
- * @version 0.7
- * @since 0.1
  */
 public class ehm_sr_microburn extends _ehm_sr_base {
 	private static final String systemId = "microburn";

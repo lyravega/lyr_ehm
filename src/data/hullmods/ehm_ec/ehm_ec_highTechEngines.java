@@ -8,8 +8,6 @@ import lyr.lyr_engineBuilder.engineStyle;
 
 /**@category Engine Cosmetic 
  * @author lyravega
- * @version 0.7
- * @since 0.6
  */
 public class ehm_ec_highTechEngines extends _ehm_ec_base {
 	private static final int style = engineStyle.highTech;

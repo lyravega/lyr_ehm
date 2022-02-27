@@ -22,6 +22,7 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.loading.HullModSpecAPI;
 
 import org.apache.log4j.Logger;
 
@@ -31,19 +32,14 @@ import data.hullmods.ehm_sr._ehm_sr_base;
 import data.hullmods.ehm_wr._ehm_wr_base;
 
 /**
- * Serves as a requirement for all experimental hull modifications. Clones the hullSpec, adds
- * flavour text and manufacturer, and adds a hull tag to avoid re-cloning.
- * </p>
- * With a cloned hullSpec, all changes will apply to only one ship, and will not be shared with 
- * other ships using the same hull. This base hullMod ensures that, but also does even more.  
- * </p>
- * Depending on the {@link #trackOnSync} boolean, will either initialize hullMod tracking 
- * through {@link data.scripts.shipTrackerScript shipTrackers} or by utilizing the 
- * {@link #onFleetSync()} method. Both have their downsides, but both also do the same.
+ * Serves as a requirement for all experimental hull modifications, and provides hullMod
+ * tracking to the ship. The hullSpec is cloned, so the changes will apply to only one
+ * ship.
+ * </p> Depending on the {@link #trackOnSync} boolean, will either initialize hullMod 
+ * tracking through {@link data.scripts.shipTrackerScript shipTrackers} or by utilizing 
+ * the {@link #onFleetSync()} method. Both have their downsides, but both also do the same.
  * @category Base Hull Modification 
  * @author lyravega
- * @version 0.7
- * @since 0.4
  */
 public class ehm_base extends _ehm_base implements HullModFleetEffect {	
 	private static final boolean trackOnSync = true; // if false, scripts initialized from the parent will be used for tracking
@@ -66,6 +62,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 	//#endregion
 	// END OF IMPLEMENTATION (HullModFleetEffect)
 
+	//#region TRACKING
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant(); 
@@ -73,7 +70,6 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 		variant.setHullSpecAPI(ehm_hullSpecClone(variant)); 
 	}
 
-	//#region TRACKING
 	@Override 
 	public void applyEffectsAfterShipCreation(ShipAPI ship, String id) {
 		if (ship == null) return;
@@ -100,71 +96,6 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 		if (sheep != null) updateHullMods(sheep);
 	}
 
-	private static class refreshRefitScript implements EveryFrameScript {
-		private boolean isDone = false;
-		private boolean playSound = false;
-		private float frameCount = 0f;
-		private static Robot robot;
-
-		static {
-			try {
-				robot = new Robot();
-			} catch (AWTException e) {
-				e.printStackTrace();
-			}
-		}
-	
-		public refreshRefitScript(boolean playSound) {
-			this.playSound = playSound;
-			Global.getSector().addTransientScript(this);
-		}
-		
-		@Override
-		public void advance(float amount) {
-			CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
-			if (tab == null || !tab.equals(CoreUITabId.REFIT)) { isDone = true; return; }
-	
-			frameCount++;
-			if (frameCount < 5) {
-				robot.keyPress(KeyEvent.VK_ENTER);
-			} else {
-				robot.keyPress(KeyEvent.VK_R);
-				robot.keyRelease(KeyEvent.VK_R);
-				robot.keyRelease(KeyEvent.VK_ENTER);
-				if (log) logger.info("RR: Refreshed refit tab");
-				if (playSound) Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f);
-				isDone = true;
-				return;
-			}
-		}
-	
-		@Override
-		public boolean runWhilePaused() {
-			return true;
-		}
-	
-		@Override
-		public boolean isDone() {
-			return isDone;
-		}
-	}
-
-	private static refreshRefitScript refreshRefitScript;
-	
-	protected static void refreshRefit(boolean playSound) {
-		refreshRefitScript = null;
-		
-		for(EveryFrameScript script : Global.getSector().getTransientScripts()) {
-			if(script instanceof refreshRefitScript) {
-				refreshRefitScript = (refreshRefitScript) script; 
-			}
-		}
-
-		if (refreshRefitScript == null) { 
-			refreshRefitScript = new refreshRefitScript(playSound);
-		}
-	}
-
 	private static Map<String, Set<String>> hullModMap;
 	private static Map<String, FleetMemberAPI> fleetMemberMap;
 
@@ -185,6 +116,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 		String memberId;
 
 		for (FleetMemberAPI member : fleetMemberMap.values()) {
+
 			if (fleetMembers.contains(member)) continue;
 
 			memberId = member.getId();
@@ -272,6 +204,74 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 	}
 	//#endregion
 	// END OF TRACKING
+
+	//#region SCRIPTS
+	private static class refreshRefitScript implements EveryFrameScript {
+		private boolean isDone = false;
+		private boolean playSound = false;
+		private float frameCount = 0f;
+		private static Robot robot;
+
+		static {
+			try {
+				robot = new Robot();
+			} catch (AWTException e) {
+				e.printStackTrace();
+			}
+		}
+	
+		public refreshRefitScript(boolean playSound) {
+			this.playSound = playSound;
+			Global.getSector().addTransientScript(this);
+		}
+		
+		@Override
+		public void advance(float amount) {
+			CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
+			if (tab == null || !tab.equals(CoreUITabId.REFIT)) { isDone = true; return; }
+	
+			frameCount++;
+			if (frameCount < 5) {
+				robot.keyPress(KeyEvent.VK_ENTER);
+			} else {
+				robot.keyPress(KeyEvent.VK_R);
+				robot.keyRelease(KeyEvent.VK_R);
+				robot.keyRelease(KeyEvent.VK_ENTER);
+				if (log) logger.info("RR: Refreshed refit tab");
+				if (playSound) Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f);
+				isDone = true;
+				return;
+			}
+		}
+	
+		@Override
+		public boolean runWhilePaused() {
+			return true;
+		}
+	
+		@Override
+		public boolean isDone() {
+			return isDone;
+		}
+	}
+
+	private static refreshRefitScript refreshRefitScript;
+	
+	protected static void refreshRefit(boolean playSound) {
+		refreshRefitScript = null;
+		
+		for(EveryFrameScript script : Global.getSector().getTransientScripts()) {
+			if(script instanceof refreshRefitScript) {
+				refreshRefitScript = (refreshRefitScript) script; 
+			}
+		}
+
+		if (refreshRefitScript == null) { 
+			refreshRefitScript = new refreshRefitScript(playSound);
+		}
+	}
+	//#endregion
+	// END OF SCRIPTS
 
 	@Override
 	protected String ehm_unapplicableReason(ShipAPI ship) {

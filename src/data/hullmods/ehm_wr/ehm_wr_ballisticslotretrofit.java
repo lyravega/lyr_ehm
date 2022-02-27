@@ -10,8 +10,6 @@ import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 
 /**@category Weapon Retrofit 
  * @author lyravega
- * @version 0.7
- * @since 0.3
  */
 public class ehm_wr_ballisticslotretrofit extends _ehm_wr_base {
 	private static final Map<WeaponType,WeaponType> conversion = new HashMap<WeaponType,WeaponType>();

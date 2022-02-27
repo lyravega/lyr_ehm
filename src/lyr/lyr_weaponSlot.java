@@ -20,8 +20,6 @@ import org.lwjgl.util.vector.Vector2f;
  * return types aren't from an obfuscated class.
  * <p> Use {@link #retrieve()} to grab the stored {@link WeaponSlotAPI}.
  * @author lyravega
- * @version 0.7
- * @since 0.6
  */
 public class lyr_weaponSlot {
 	private WeaponSlotAPI weaponSlot;

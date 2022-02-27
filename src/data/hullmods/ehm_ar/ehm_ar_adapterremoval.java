@@ -15,8 +15,6 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
  * effects of the adapter hullmod.
  * @category Adapter Removal 
  * @author lyravega
- * @version 0.7
- * @since 0.3
  */
 public class ehm_ar_adapterremoval extends _ehm_ar_base {
 	@Override

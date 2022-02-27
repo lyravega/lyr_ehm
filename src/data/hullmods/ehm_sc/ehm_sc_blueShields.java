@@ -8,8 +8,6 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 
 /**@category Shield Cosmetic 
  * @author lyravega
- * @version 0.7
- * @since 0.6
  */
 public class ehm_sc_blueShields extends _ehm_sc_base {
 	private static final Color inner = new Color(0, 0, 192, 128);

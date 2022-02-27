@@ -18,8 +18,6 @@ import com.fs.starfarer.api.loading.WeaponSlotAPI;
  * return types aren't from an obfuscated class.
  * <p> Use {@link #retrieve()} to grab the stored {@link ShipHullSpecAPI}.
  * @author lyravega
- * @version 0.7
- * @since 0.6
  */
 public class lyr_hullSpec {
 	private ShipHullSpecAPI hullSpec;
