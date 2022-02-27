@@ -106,7 +106,7 @@ public class _ehm_ar_base extends _ehm_base {
 			refreshRefit = true; 
 		}
 		
-		if (refreshRefit) { refreshRefit(); refreshRefit = false; }
+		if (refreshRefit) { refreshRefit(true); refreshRefit = false; }
 		return hullSpec.retrieve();
 	}
 
