@@ -235,7 +235,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 			case ehm.affix.weaponRetrofit: playSound = true; refresh = true; break;
 			case ehm.affix.shieldCosmetic: playSound = true; break;
 			case ehm.affix.engineCosmetic: playSound = true; break;
-			default: playSound = true; break;
+			default: break;
 		}
 		
 		if (log) logger.info("ST-"+ship.getFleetMemberId()+": New hull modification '"+newHullModId+"'");
@@ -256,7 +256,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 			case ehm.affix.weaponRetrofit: _ehm_wr_base.ehm_weaponSlotRestore(refitVariant); playSound = true; refresh = true; break;
 			case ehm.affix.shieldCosmetic: _ehm_sc_base.ehm_restoreShield(refitVariant); playSound = true; break;
 			case ehm.affix.engineCosmetic: _ehm_ec_base.ehm_restoreEngineSlots(refitVariant); playSound = true; refresh = true; break;
-			default: playSound = true; break;
+			default: break;
 		}
 
 		if (log) logger.info("ST-"+ship.getFleetMemberId()+": Removed hull modification '"+removedHullModId+"'");
