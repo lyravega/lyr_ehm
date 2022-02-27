@@ -195,6 +195,8 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 			fleetMemberMap.put(memberId, member);
 			if (log) logger.info("FT: Registering ST-"+memberId);
 		}
+
+		if (!fleetMemberMap.containsKey(sheep.getFleetMemberId())) sheep = null;
 	}
 
 	private static void updateHullMods(ShipAPI ship) {
