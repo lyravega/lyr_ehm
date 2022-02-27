@@ -434,7 +434,8 @@ public class _ehm_base implements HullModEffect {
 	 */
 	// TODO expand restoration methods to avoid applying the hullSpec
 	protected static final ShipHullSpecAPI ehm_hullSpecRefresh(ShipVariantAPI variant) {
-		lyr_hullSpec stockHullSpec = new lyr_hullSpec(Global.getSettings().getVariant(variant.getHullVariantId()).getHullSpec(), true);
+		lyr_hullSpec stockHullSpec = new lyr_hullSpec(Global.getSettings().getHullSpec(variant.getHullSpec().getHullId()), true);
+		// lyr_hullSpec stockHullSpec = new lyr_hullSpec(Global.getSettings().getVariant(variant.getHullVariantId()).getHullSpec(), true);
 
 		ShipHullSpecAPI hullSpec = variant.getHullSpec();
 		ShipHullSpecAPI stockHullSpecAPI = stockHullSpec.retrieve();
