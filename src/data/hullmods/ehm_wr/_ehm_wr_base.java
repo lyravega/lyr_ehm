@@ -66,7 +66,7 @@ public class _ehm_wr_base extends _ehm_base {
 			lyr_weaponSlot slot = hullSpec.getWeaponSlot(slotId);
 			WeaponType stockSlotWeaponType = stockSlot.getWeaponType();
 
-			if (slot.retrieve().isDecorative()) {
+			if (slot.retrieve().isDecorative() && ehm.id.adapters.containsKey(variant.getWeaponId(slotId))) {
 				hullSpec.getWeaponSlot(ehm.affix.adaptedSlot+slotId+"L").setWeaponType(stockSlotWeaponType);
 				hullSpec.getWeaponSlot(ehm.affix.adaptedSlot+slotId+"R").setWeaponType(stockSlotWeaponType);
 			} else {
