@@ -46,9 +46,9 @@ import data.hullmods.ehm_wr._ehm_wr_base;
  * @since 0.4
  */
 public class ehm_base extends _ehm_base implements HullModFleetEffect {	
-	private static boolean trackOnSync = true; 
-	private static Logger logger = Logger.getLogger("lyr");
-	private static boolean log = true;
+	private static final boolean trackOnSync = true; // if false, scripts initialized from the parent will be used for tracking
+	private static final boolean log = true;
+	private static final Logger logger = Logger.getLogger("lyr");
 	private static ShipAPI sheep = null;
 
 	//#region IMPLEMENTATION (HullModFleetEffect)
@@ -104,15 +104,18 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 		private boolean isDone = false;
 		private boolean playSound = false;
 		private float frameCount = 0f;
-		private Robot robot = null;
-	
-		public refreshRefitScript(boolean playSound) {
-			this.playSound = playSound;
+		private static Robot robot;
+
+		static {
 			try {
 				robot = new Robot();
 			} catch (AWTException e) {
-				return;
+				e.printStackTrace();
 			}
+		}
+	
+		public refreshRefitScript(boolean playSound) {
+			this.playSound = playSound;
 			Global.getSector().addTransientScript(this);
 		}
 		
@@ -165,7 +168,9 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 	private static Map<String, Set<String>> hullModMap;
 	private static Map<String, FleetMemberAPI> fleetMemberMap;
 
-	public static void buildHullModMap() {	
+	public static void buildFleetMaps() {
+		if (!trackOnSync) return;
+
 		hullModMap = new HashMap<String, Set<String>>(); 
 		fleetMemberMap = new HashMap<String, FleetMemberAPI>();
 
