@@ -469,7 +469,7 @@ public class _ehm_base implements HullModEffect {
 	 * @return a stock hullSpec from the SpecStore
 	 */
 	protected static final ShipHullSpecAPI ehm_hullSpecReference(ShipVariantAPI variant) {
-		// return Global.getSettings().getHullSpec(variant.getHullSpec().getHullId());
-		return Global.getSettings().getVariant(variant.getHullVariantId()).getHullSpec();
+		return Global.getSettings().getHullSpec(variant.getHullSpec().getHullId());
+		// return Global.getSettings().getVariant(variant.getHullVariantId()).getHullSpec();
 	}
 }
