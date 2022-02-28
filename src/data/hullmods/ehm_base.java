@@ -22,7 +22,6 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
-import com.fs.starfarer.api.loading.HullModSpecAPI;
 
 import org.apache.log4j.Logger;
 
@@ -33,8 +32,7 @@ import data.hullmods.ehm_wr._ehm_wr_base;
 
 /**
  * Serves as a requirement for all experimental hull modifications, and provides hullMod
- * tracking to the ship. The hullSpec is cloned, so the changes will apply to only one
- * ship.
+ * tracking to the ship. 
  * </p> Depending on the {@link #trackOnSync} boolean, will either initialize hullMod 
  * tracking through {@link data.scripts.shipTrackerScript shipTrackers} or by utilizing 
  * the {@link #onFleetSync()} method. Both have their downsides, but both also do the same.
@@ -42,7 +40,7 @@ import data.hullmods.ehm_wr._ehm_wr_base;
  * @author lyravega
  */
 public class ehm_base extends _ehm_base implements HullModFleetEffect {	
-	private static final boolean trackOnSync = true; // if false, scripts initialized from the parent will be used for tracking
+	private static final boolean trackOnSync = true; // if false, scripts inherited from the parent will be used for tracking
 	private static final boolean log = true;
 	private static final Logger logger = Logger.getLogger("lyr");
 	private static ShipAPI sheep = null;
@@ -92,7 +90,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 		CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
 		if (tab == null || !tab.equals(CoreUITabId.REFIT)) return;
 
-		updateFleetMaps();
+		updateFleetMaps(fleet);
 		if (sheep != null) updateHullMods(sheep);
 	}
 
@@ -111,12 +109,11 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 		}
 	}
 
-	private static void updateFleetMaps() {
-		List<FleetMemberAPI> fleetMembers = Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy();
+	private static void updateFleetMaps(CampaignFleetAPI fleet) {
+		List<FleetMemberAPI> fleetMembers = fleet.getFleetData().getMembersListCopy();
 		String memberId;
 
 		for (FleetMemberAPI member : fleetMemberMap.values()) {
-
 			if (fleetMembers.contains(member)) continue;
 
 			memberId = member.getId();
