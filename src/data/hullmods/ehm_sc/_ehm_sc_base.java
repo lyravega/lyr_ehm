@@ -13,7 +13,8 @@ import lyr.lyr_hullSpec;
 import lyr.lyr_shieldSpec;
 
 /**
- * This class is used by shield cosmetic hullmods. 
+ * This class is used by shield cosmetic hullmods. The changes are 
+ * permanent, and does not use {@code advanceInCombat()}.
  * </p> Reason to split this as another base was primarily maintenance.
  * @see {@link data.hullmods.ehm_ar._ehm_ar_base _ehm_ar_base} for slot adapter base
  * @see {@link data.hullmods.ehm_sr._ehm_sr_base _ehm_sr_base} for system retrofit base

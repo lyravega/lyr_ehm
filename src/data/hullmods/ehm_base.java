@@ -6,7 +6,6 @@ import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -110,21 +109,25 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 	}
 
 	private static void updateFleetMaps(CampaignFleetAPI fleet) {
-		List<FleetMemberAPI> fleetMembers = fleet.getFleetData().getMembersListCopy();
+		Set<FleetMemberAPI> fleetMembers = new HashSet<FleetMemberAPI>(fleet.getFleetData().getMembersListCopy());
+		Set<FleetMemberAPI> savedFleetMembers = new HashSet<FleetMemberAPI>(fleetMemberMap.values());
+
+		if (fleetMembers.equals(savedFleetMembers)) return;
 		String memberId;
 
-		for (FleetMemberAPI member : fleetMemberMap.values()) {
-			if (fleetMembers.contains(member)) continue;
-
+		savedFleetMembers.removeAll(fleetMembers);
+		for (FleetMemberAPI member : savedFleetMembers) {
 			memberId = member.getId();
+
 			hullModMap.remove(memberId);
+			fleetMemberMap.remove(memberId);
 			if (log) logger.info("FT: Unregistering ST-"+memberId);
-		} fleetMemberMap.keySet().retainAll(hullModMap.keySet());
+		}
 
-		for (FleetMemberAPI member : fleetMembers) { 
-			if (fleetMemberMap.values().contains(member)) continue;
-
+		fleetMembers.removeAll(fleetMemberMap.values());
+		for (FleetMemberAPI member : fleetMembers) {
 			memberId = member.getId();
+
 			hullModMap.put(memberId, new HashSet<String>(member.getVariant().getHullMods()));
 			fleetMemberMap.put(memberId, member);
 			if (log) logger.info("FT: Registering ST-"+memberId);
