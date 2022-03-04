@@ -170,46 +170,43 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 		// ShipVariantAPI refitVariant = ship.getVariant();
 		// ShipVariantAPI realVariant = fleetMemberMap.get(ship.getFleetMemberId()).getVariant();
 		boolean playSound = false;
-		boolean refresh = false;
+		boolean refreshShip = false;
+		boolean undoClear = false; // same shit as refreshShip, used for special purposes. different variable for visibility
 
 		String hullModType = newHullModId.substring(0, 7); // all affixes (not tags) are fixed to 0-7
 		switch (hullModType) { // any weaponSlot changes require refresh
-			case ehm.affix.adapterRetrofit: break; // handled through hullMod methods
-			case ehm.affix.systemRetrofit: playSound = true; break;
-			case ehm.affix.weaponRetrofit: playSound = true; refresh = true; break;
-			case ehm.affix.shieldCosmetic: playSound = true; break;
-			case ehm.affix.engineCosmetic: playSound = true; break;
+			case ehm.affix.adapterRetrofit: playSound = true; undoClear = true; break; // refresh handled through hullMod, however undo needs to be cleared as variant is not set yet when the refresh is called through hullMod method
+			case ehm.affix.systemRetrofit: playSound = true; break; // refresh not needed
+			case ehm.affix.weaponRetrofit: playSound = true; refreshShip = true; break; // refresh needed due to slots
+			case ehm.affix.shieldCosmetic: playSound = true; break; // refresh not needed
+			case ehm.affix.engineCosmetic: playSound = true; undoClear = true; break; // refresh not needed, but undo needs to be cleared as 'onRemove()' refreshes and reinstalling these then undoing something will crash
 			default: switch (newHullModId) {
-				case ehm.tag.baseRetrofit: playSound = true; refresh = true; break;
+				case ehm.tag.baseRetrofit: playSound = true; refreshShip = true; break; // refresh needed, moved from its own method to here
 			} break;
 		}
 
-		if (refresh) _lyr_ui.refreshRefitShip();
+		if (refreshShip || undoClear) _lyr_ui.refreshRefitShip();
 		if (playSound) Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f);
-		// if (refresh) refreshRefit(playSound);
-		// else if (playSound) Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f);
 	}
 
 	private static void onRemoved(String removedHullModId, ShipAPI ship) {
 		ShipVariantAPI refitVariant = ship.getVariant();
 		// ShipVariantAPI realVariant = fleetMemberMap.get(ship.getFleetMemberId()).getVariant();
 		boolean playSound = false;
-		boolean refresh = false;
+		boolean refreshShip = false;
 
 		String hullModType = removedHullModId.substring(0, 7); 
 		switch (hullModType) { // any weaponSlot changes and cheap removal methods require refresh
-			case ehm.affix.adapterRetrofit: _ehm_ar_base.ehm_adapterRemoval(refitVariant); break; // handled through hullMod methods
-			case ehm.affix.systemRetrofit: _ehm_sr_base.ehm_systemRestore(refitVariant); playSound = true; break;
-			case ehm.affix.weaponRetrofit: _ehm_wr_base.ehm_weaponSlotRestore(refitVariant); playSound = true; refresh = true; break;
-			case ehm.affix.shieldCosmetic: _ehm_sc_base.ehm_restoreShield(refitVariant); playSound = true; break;
-			case ehm.affix.engineCosmetic: _ehm_ec_base.ehm_restoreEngineSlots(refitVariant); playSound = true; refresh = true; break;
+			case ehm.affix.adapterRetrofit: _ehm_ar_base.ehm_adapterRemoval(refitVariant); playSound = true; refreshShip = true; break; // refresh needed due to cheap restore
+			case ehm.affix.systemRetrofit: _ehm_sr_base.ehm_systemRestore(refitVariant); playSound = true; break; // refresh not needed due to proper restore
+			case ehm.affix.weaponRetrofit: _ehm_wr_base.ehm_weaponSlotRestore(refitVariant); playSound = true; refreshShip = true; break; // refresh needed to update slots
+			case ehm.affix.shieldCosmetic: _ehm_sc_base.ehm_restoreShield(refitVariant); playSound = true; break; // refresh not needed due to proper restore
+			case ehm.affix.engineCosmetic: _ehm_ec_base.ehm_restoreEngineSlots(refitVariant); playSound = true; refreshShip = true; break; // refresh needed due to cheap restore
 			default: break;
 		}
 
-		if (refresh) _lyr_ui.refreshRefitShip();
+		if (refreshShip) _lyr_ui.refreshRefitShip();
 		if (playSound) Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f);
-		// if (refresh) refreshRefit(playSound);
-		// else if (playSound) Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f);
 	}
 	//#endregion
 	// END OF TRACKING
