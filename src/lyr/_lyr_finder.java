@@ -29,6 +29,7 @@ public class _lyr_finder {
 
 	private static final Logger logger = Logger.getLogger("lyr");
 	private static final Lookup lookup = MethodHandles.lookup();
+	private static Class<?> fieldClass;
 	private static Class<?> methodClass;
 	private static MethodHandle getName;
 	private static MethodHandle getParameterTypes;
@@ -36,6 +37,7 @@ public class _lyr_finder {
 
 	static {
 		try {
+			fieldClass = Class.forName("java.lang.reflect.Field", false, Class.class.getClassLoader());
 			methodClass = Class.forName("java.lang.reflect.Method", false, Class.class.getClassLoader());
 			getName = lookup.findVirtual(methodClass, "getName", MethodType.methodType(String.class));
 			getParameterTypes = lookup.findVirtual(methodClass, "getParameterTypes", MethodType.methodType(Class[].class));
