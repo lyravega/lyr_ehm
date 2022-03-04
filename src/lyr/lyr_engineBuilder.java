@@ -33,9 +33,9 @@ import java.lang.invoke.MethodType;
  */
 public class lyr_engineBuilder {
 	private Object engineBuilder;
-	private static final Class<?> obfuscatedEngineBuilderClass = _lyr_finder.obfuscatedEngineBuilderClass;
-	private static final Class<?> obfuscatedEngineStyleEnum = _lyr_finder.obfuscatedEngineStyleEnum;
-	private static final String obfuscatedEngineStyleSetterName = _lyr_finder.obfuscatedEngineStyleSetterName;
+	private static final Class<?> engineBuilderClass = _lyr_finder.engineBuilderClass;
+	private static final Class<?> engineStyleEnum = _lyr_finder.engineStyleEnum;
+	private static final String engineStyleSetterName = _lyr_finder.engineStyleSetterName;
 
 	public static enum engineStyle { ;
 		public static final int lowTech = 0;
@@ -95,7 +95,7 @@ public class lyr_engineBuilder {
 	 */
 	protected Object duplicate(Object enginebuilder) {
 		try {
-			MethodHandle clone = MethodHandles.lookup().findVirtual(obfuscatedEngineBuilderClass, "clone", MethodType.methodType(obfuscatedEngineBuilderClass));
+			MethodHandle clone = MethodHandles.lookup().findVirtual(engineBuilderClass, "clone", MethodType.methodType(engineBuilderClass));
 			return (Object) clone.invoke(enginebuilder);
 		} catch (Throwable t) {
 			t.printStackTrace(); 
@@ -121,8 +121,8 @@ public class lyr_engineBuilder {
 	 */
 	public void setEngineStyle(int enumNumber) {
 		try {
-			MethodHandle setEngineStyle = MethodHandles.lookup().findVirtual(obfuscatedEngineBuilderClass, obfuscatedEngineStyleSetterName, MethodType.methodType(void.class, obfuscatedEngineStyleEnum));
-			setEngineStyle.invoke(obfuscatedEngineBuilderClass.cast(engineBuilder), obfuscatedEngineStyleEnum.getEnumConstants()[enumNumber]);
+			MethodHandle setEngineStyle = MethodHandles.lookup().findVirtual(engineBuilderClass, engineStyleSetterName, MethodType.methodType(void.class, engineStyleEnum));
+			setEngineStyle.invoke(engineBuilderClass.cast(engineBuilder), engineStyleEnum.getEnumConstants()[enumNumber]);
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}

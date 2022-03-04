@@ -23,8 +23,8 @@ import org.lwjgl.util.vector.Vector2f;
  */
 public class lyr_weaponSlot {
 	private WeaponSlotAPI weaponSlot;
-	private static final Class<?> obfuscatedWeaponSlotClass = _lyr_finder.obfuscatedWeaponSlotClass;
-	private static final Class<?> obfuscatedNodeClass = _lyr_finder.obfuscatedNodeClass;
+	private static final Class<?> weaponSlotClass = _lyr_finder.weaponSlotClass;
+	private static final Class<?> nodeClass = _lyr_finder.nodeClass;
 
 	/**
 	 * Creates a new instance for the passed {@link WeaponSlotAPI}, and 
@@ -68,7 +68,7 @@ public class lyr_weaponSlot {
 	 */
 	protected WeaponSlotAPI duplicate(WeaponSlotAPI weaponSlot) {
 		try {
-			MethodHandle clone = MethodHandles.lookup().findVirtual(obfuscatedWeaponSlotClass, "clone", MethodType.methodType(obfuscatedWeaponSlotClass));
+			MethodHandle clone = MethodHandles.lookup().findVirtual(weaponSlotClass, "clone", MethodType.methodType(weaponSlotClass));
 			return (WeaponSlotAPI) clone.invoke(weaponSlot);
 		} catch (Throwable t) {
 			t.printStackTrace(); 
@@ -92,7 +92,7 @@ public class lyr_weaponSlot {
 	 */
 	public void setWeaponType(WeaponType weaponType) {
 		try {
-			MethodHandle setWeaponType = MethodHandles.lookup().findVirtual(obfuscatedWeaponSlotClass, "setWeaponType", MethodType.methodType(void.class, WeaponType.class));
+			MethodHandle setWeaponType = MethodHandles.lookup().findVirtual(weaponSlotClass, "setWeaponType", MethodType.methodType(void.class, WeaponType.class));
 			setWeaponType.invoke(weaponSlot, weaponType);
 		} catch (Throwable t) {
 			t.printStackTrace();
@@ -107,7 +107,7 @@ public class lyr_weaponSlot {
 	 */
 	public boolean isWeaponSlot() {
 		try {
-			MethodHandle isWeaponSlot = MethodHandles.lookup().findVirtual(obfuscatedWeaponSlotClass, "isWeaponSlot", MethodType.methodType(boolean.class));
+			MethodHandle isWeaponSlot = MethodHandles.lookup().findVirtual(weaponSlotClass, "isWeaponSlot", MethodType.methodType(boolean.class));
 			return (boolean) isWeaponSlot.invoke(weaponSlot);
 		} catch (Throwable t) {
 			t.printStackTrace();
@@ -123,7 +123,7 @@ public class lyr_weaponSlot {
 	 */
 	public void setId(String weaponSlotId) {
 		try {
-			MethodHandle setId = MethodHandles.lookup().findVirtual(obfuscatedWeaponSlotClass, "setId", MethodType.methodType(void.class, String.class));
+			MethodHandle setId = MethodHandles.lookup().findVirtual(weaponSlotClass, "setId", MethodType.methodType(void.class, String.class));
 			setId.invoke(weaponSlot, weaponSlotId);
 		} catch (Throwable t) {
 			t.printStackTrace();
@@ -138,7 +138,7 @@ public class lyr_weaponSlot {
 	 */
 	public void setSlotSize(WeaponSize weaponSize) {
 		try {
-			MethodHandle setSlotSize = MethodHandles.lookup().findVirtual(obfuscatedWeaponSlotClass, "setSlotSize", MethodType.methodType(void.class, WeaponSize.class));
+			MethodHandle setSlotSize = MethodHandles.lookup().findVirtual(weaponSlotClass, "setSlotSize", MethodType.methodType(void.class, WeaponSize.class));
 			setSlotSize.invoke(weaponSlot, weaponSize);
 		} catch (Throwable t) {
 			t.printStackTrace();
@@ -164,9 +164,9 @@ public class lyr_weaponSlot {
 		try {
 			Lookup lookup = MethodHandles.lookup();
 
-			MethodHandle newNode = lookup.findConstructor(obfuscatedNodeClass, MethodType.methodType(void.class, String.class, Vector2f.class));
-			MethodHandle setNode = lookup.findVirtual(obfuscatedWeaponSlotClass, "setNode", MethodType.methodType(void.class, obfuscatedNodeClass));
-			setNode.invoke(weaponSlot, obfuscatedNodeClass.cast(newNode.invoke(nodeId, location)));
+			MethodHandle newNode = lookup.findConstructor(nodeClass, MethodType.methodType(void.class, String.class, Vector2f.class));
+			MethodHandle setNode = lookup.findVirtual(weaponSlotClass, "setNode", MethodType.methodType(void.class, nodeClass));
+			setNode.invoke(weaponSlot, nodeClass.cast(newNode.invoke(nodeId, location)));
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}

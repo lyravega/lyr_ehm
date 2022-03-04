@@ -24,9 +24,9 @@ public class lyr_hullSpec {
 	private lyr_weaponSlot weaponSlot = null;
 	private lyr_shieldSpec shieldSpec = null;
 	private List<Object> engineSlots = null;
-	private static final Class<?> obfuscatedHullSpecClass = _lyr_finder.obfuscatedHullSpecClass;
-	private static final Class<?> obfuscatedShieldSpecClass = _lyr_finder.obfuscatedShieldSpecClass;
-	private static final Class<?> obfuscatedWeaponSlotClass = _lyr_finder.obfuscatedWeaponSlotClass;
+	private static final Class<?> hullSpecClass = _lyr_finder.hullSpecClass;
+	private static final Class<?> shieldSpecClass = _lyr_finder.shieldSpecClass;
+	private static final Class<?> weaponSlotClass = _lyr_finder.weaponSlotClass;
 
 	/**
 	 * Creates a new instance for the passed {@link ShipHullSpecAPI}, and 
@@ -77,7 +77,7 @@ public class lyr_hullSpec {
 	 */
 	private ShipHullSpecAPI duplicate(ShipHullSpecAPI hullSpec) {
 		try {
-			MethodHandle clone = MethodHandles.lookup().findVirtual(obfuscatedHullSpecClass, "clone", MethodType.methodType(obfuscatedHullSpecClass));
+			MethodHandle clone = MethodHandles.lookup().findVirtual(hullSpecClass, "clone", MethodType.methodType(hullSpecClass));
 			return (ShipHullSpecAPI) clone.invoke(hullSpec);
 		} catch (Throwable t) {
 			t.printStackTrace();
@@ -147,7 +147,7 @@ public class lyr_hullSpec {
 		if (engineSlots != null) return this.engineSlots; 
 
 		try {
-			MethodHandle getEngineSlots = MethodHandles.lookup().findVirtual(obfuscatedHullSpecClass, "getEngineSlots", MethodType.methodType(List.class));
+			MethodHandle getEngineSlots = MethodHandles.lookup().findVirtual(hullSpecClass, "getEngineSlots", MethodType.methodType(List.class));
 			this.engineSlots = (List<Object>) getEngineSlots.invoke(hullSpec);
 		} catch (Throwable t) {
 			t.printStackTrace();
@@ -162,7 +162,7 @@ public class lyr_hullSpec {
 	 */
 	public void setShieldSpec(ShieldSpecAPI shieldSpec) {
 		try {
-			MethodHandle setShieldSpec = MethodHandles.lookup().findVirtual(obfuscatedHullSpecClass, "setShieldSpec", MethodType.methodType(void.class, obfuscatedShieldSpecClass));
+			MethodHandle setShieldSpec = MethodHandles.lookup().findVirtual(hullSpecClass, "setShieldSpec", MethodType.methodType(void.class, shieldSpecClass));
 			setShieldSpec.invoke(hullSpec, shieldSpec);
 		} catch (Throwable t) {
 			t.printStackTrace();
@@ -178,7 +178,7 @@ public class lyr_hullSpec {
 	 */
 	public void addBuiltInMod(String hullModSpecId) { 
 		try {
-			MethodHandle addBuiltInMod = MethodHandles.lookup().findVirtual(obfuscatedHullSpecClass, "addBuiltInMod", MethodType.methodType(void.class, String.class));
+			MethodHandle addBuiltInMod = MethodHandles.lookup().findVirtual(hullSpecClass, "addBuiltInMod", MethodType.methodType(void.class, String.class));
 			addBuiltInMod.invoke(hullSpec, hullModSpecId);
 		} catch (Throwable t) {
 			t.printStackTrace();
@@ -195,7 +195,7 @@ public class lyr_hullSpec {
 	 */
 	public void setManufacturer(String manufacturer) {
 		try {
-			MethodHandle setManufacturer = MethodHandles.lookup().findVirtual(obfuscatedHullSpecClass, "setManufacturer", MethodType.methodType(void.class, String.class));
+			MethodHandle setManufacturer = MethodHandles.lookup().findVirtual(hullSpecClass, "setManufacturer", MethodType.methodType(void.class, String.class));
 			setManufacturer.invoke(hullSpec, manufacturer);
 		} catch (Throwable t) {
 			t.printStackTrace();
@@ -211,7 +211,7 @@ public class lyr_hullSpec {
 	 */
 	public void setDescriptionPrefix(String destriptionPrefix) {
 		try {
-			MethodHandle setDescriptionPrefix = MethodHandles.lookup().findVirtual(obfuscatedHullSpecClass, "setDescriptionPrefix", MethodType.methodType(void.class, String.class));
+			MethodHandle setDescriptionPrefix = MethodHandles.lookup().findVirtual(hullSpecClass, "setDescriptionPrefix", MethodType.methodType(void.class, String.class));
 			setDescriptionPrefix.invoke(hullSpec, destriptionPrefix);
 		} catch (Throwable t) {
 			t.printStackTrace();
@@ -228,7 +228,7 @@ public class lyr_hullSpec {
 	 */
 	public void setShipSystemId(String shipSystemId) {
 		try {
-			MethodHandle setShipSystemId = MethodHandles.lookup().findVirtual(obfuscatedHullSpecClass, "setShipSystemId", MethodType.methodType(void.class, String.class));
+			MethodHandle setShipSystemId = MethodHandles.lookup().findVirtual(hullSpecClass, "setShipSystemId", MethodType.methodType(void.class, String.class));
 			setShipSystemId.invoke(hullSpec, shipSystemId);
 		} catch (Throwable t) {
 			t.printStackTrace();
@@ -245,8 +245,8 @@ public class lyr_hullSpec {
 	 */
 	public void addWeaponSlot(WeaponSlotAPI weaponSlot) {
 		try {
-			MethodHandle addWeaponSlot = MethodHandles.lookup().findVirtual(obfuscatedHullSpecClass, "addWeaponSlot", MethodType.methodType(void.class, obfuscatedWeaponSlotClass));
-			addWeaponSlot.invoke(hullSpec, obfuscatedWeaponSlotClass.cast(weaponSlot));
+			MethodHandle addWeaponSlot = MethodHandles.lookup().findVirtual(hullSpecClass, "addWeaponSlot", MethodType.methodType(void.class, weaponSlotClass));
+			addWeaponSlot.invoke(hullSpec, weaponSlotClass.cast(weaponSlot));
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
@@ -263,7 +263,7 @@ public class lyr_hullSpec {
 	 */
 	public void addBuiltInWeapon(String slotId, String weaponSpecId) {
 		try { 
-			MethodHandle addBuiltInWeapon = MethodHandles.lookup().findVirtual(obfuscatedHullSpecClass, "addBuiltInWeapon", MethodType.methodType(void.class, String.class, String.class));
+			MethodHandle addBuiltInWeapon = MethodHandles.lookup().findVirtual(hullSpecClass, "addBuiltInWeapon", MethodType.methodType(void.class, String.class, String.class));
 			addBuiltInWeapon.invoke(hullSpec, slotId, weaponSpecId);
 		} catch (Throwable t) {
 			t.printStackTrace();
@@ -279,7 +279,7 @@ public class lyr_hullSpec {
 	 */
 	public void addBuiltInWing(String wingId) {
 		try { 
-			MethodHandle addBuiltInWing = MethodHandles.lookup().findVirtual(obfuscatedHullSpecClass, "addBuiltInWing", MethodType.methodType(void.class, String.class));
+			MethodHandle addBuiltInWing = MethodHandles.lookup().findVirtual(hullSpecClass, "addBuiltInWing", MethodType.methodType(void.class, String.class));
 			addBuiltInWing.invoke(hullSpec, wingId);
 		} catch (Throwable t) {
 			t.printStackTrace();
