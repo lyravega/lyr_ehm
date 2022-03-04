@@ -44,6 +44,7 @@ public class _ehm_sc_base extends _ehm_base {
 	 * referring to a stock one.
 	 * @param variant whose shieldSpec will be restored
 	 * @return an altered hullSpec with its shieldSpec is restored
+	 * @see {@link data.hullmods.ehm_base#onRemoved() onRemoved()} called externally by this method
 	 */
 	public static final ShipHullSpecAPI ehm_restoreShield(ShipVariantAPI variant) {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);

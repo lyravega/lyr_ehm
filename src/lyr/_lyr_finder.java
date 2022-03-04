@@ -138,6 +138,16 @@ public class _lyr_finder {
 		} return false;
 	}
 
+	/**
+	 * Pass a class, and a methodName as a string to get the returnType and
+	 * parameterTypes returned, alonside a MethodType and a ready-to-use 
+	 * MethodHandle to use the said method. Useful in places where reflect
+	 * package isn't accessible due to the script classLoader.  
+	 * @param clazz to search the methodName on
+	 * @param methodName in String, no "()"
+	 * @return a map with "returnType", "parameterTypes", "methodType" and "methodHandle" keys
+	 * @throws Throwable
+	 */
 	public static Map<String, Object> findTypesForMethod(Class<?> clazz, String methodName) throws Throwable {
 		Class<?> returnType = null;
 		Class<?>[] parameterTypes = null;

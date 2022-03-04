@@ -38,7 +38,7 @@ public class _ehm_sr_base extends _ehm_base {
 	 * needs to be installed on the variant.
 	 * @param variant that will have its system reset to factory defaults
 	 * @return a hullspec to be installed on the variant
-	 * @see {@link data.scripts.shipTrackerScript shipTrackerScript} only called externally by this script
+	 * @see {@link data.hullmods.ehm_base#onRemoved() onRemoved()} called externally by this method
 	 */
 	public static final ShipHullSpecAPI ehm_systemRestore(ShipVariantAPI variant) { 
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);

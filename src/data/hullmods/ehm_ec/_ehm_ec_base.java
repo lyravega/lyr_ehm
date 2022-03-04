@@ -42,7 +42,7 @@ public class _ehm_ec_base extends _ehm_base {
 	 * @param variant whose hullSpec will be altered
 	 * @param styleEnum somewhat hardcoded {@link lyr.lyr_engineBuilder.engineStyle engineStyle}
 	 * @return a hullSpec with restored engine visuals
-	 * @see {@link data.scripts.shipTrackerScript shipTrackerScript} only called externally by this script
+	 * @see {@link data.hullmods.ehm_base#onRemoved() onRemoved()} called externally by this method
 	 */
 	public static final ShipHullSpecAPI ehm_restoreEngineSlots(ShipVariantAPI variant) {
 		ShipHullSpecAPI hullSpec = ehm_hullSpecRefresh(variant);
