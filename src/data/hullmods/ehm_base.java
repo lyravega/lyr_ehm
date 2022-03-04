@@ -24,10 +24,12 @@ import com.fs.starfarer.api.fleet.FleetMemberAPI;
 
 import org.apache.log4j.Logger;
 
+import data.hullmods.ehm_ar._ehm_ar_base;
 import data.hullmods.ehm_ec._ehm_ec_base;
 import data.hullmods.ehm_sc._ehm_sc_base;
 import data.hullmods.ehm_sr._ehm_sr_base;
 import data.hullmods.ehm_wr._ehm_wr_base;
+import lyr._lyr_ui;
 
 /**
  * Serves as a requirement for all experimental hull modifications, and provides hullMod
@@ -142,6 +144,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 
 		if (savedHullMods.size() == currentHullMods.size()) return;
 		
+		String memberId = ship.getFleetMemberId();
 		Set<String> _savedHullMods = new HashSet<String>(savedHullMods);
 
 		if (savedHullMods.size() < currentHullMods.size()) {
@@ -150,6 +153,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 
 				onInstalled(newHullModId, ship);
 				savedHullMods.add(newHullModId);
+				if (log) logger.info("ST-"+memberId+": New hull modification '"+newHullModId+"'");
 			}
 		} else /*if (savedHullMods.size() > currentHullMods.size())*/ {
 			for (String removedHullModId : _savedHullMods) {
@@ -157,6 +161,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 
 				onRemoved(removedHullModId, ship);
 				savedHullMods.remove(removedHullModId);
+				if (log) logger.info("ST-"+memberId+": Removed hull modification '"+removedHullModId+"'");
 			}
 		}
 	}
@@ -174,12 +179,15 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 			case ehm.affix.weaponRetrofit: playSound = true; refresh = true; break;
 			case ehm.affix.shieldCosmetic: playSound = true; break;
 			case ehm.affix.engineCosmetic: playSound = true; break;
-			default: break;
+			default: switch (newHullModId) {
+				case ehm.tag.baseRetrofit: playSound = true; refresh = true; break;
+			} break;
 		}
-		
-		if (log) logger.info("ST-"+ship.getFleetMemberId()+": New hull modification '"+newHullModId+"'");
-		if (refresh) refreshRefit(playSound);
-		else if (playSound) Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f);
+
+		if (refresh) _lyr_ui.refreshRefitShip();
+		if (playSound) Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f);
+		// if (refresh) refreshRefit(playSound);
+		// else if (playSound) Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f);
 	}
 
 	private static void onRemoved(String removedHullModId, ShipAPI ship) {
@@ -190,7 +198,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 
 		String hullModType = removedHullModId.substring(0, 7); 
 		switch (hullModType) { // any weaponSlot changes and cheap removal methods require refresh
-			case ehm.affix.adapterRetrofit: break; // handled through hullMod methods
+			case ehm.affix.adapterRetrofit: _ehm_ar_base.ehm_adapterRemoval(refitVariant); break; // handled through hullMod methods
 			case ehm.affix.systemRetrofit: _ehm_sr_base.ehm_systemRestore(refitVariant); playSound = true; break;
 			case ehm.affix.weaponRetrofit: _ehm_wr_base.ehm_weaponSlotRestore(refitVariant); playSound = true; refresh = true; break;
 			case ehm.affix.shieldCosmetic: _ehm_sc_base.ehm_restoreShield(refitVariant); playSound = true; break;
@@ -198,9 +206,10 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 			default: break;
 		}
 
-		if (log) logger.info("ST-"+ship.getFleetMemberId()+": Removed hull modification '"+removedHullModId+"'");
-		if (refresh) refreshRefit(playSound);
-		else if (playSound) Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f);
+		if (refresh) _lyr_ui.refreshRefitShip();
+		if (playSound) Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f);
+		// if (refresh) refreshRefit(playSound);
+		// else if (playSound) Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f);
 	}
 	//#endregion
 	// END OF TRACKING
