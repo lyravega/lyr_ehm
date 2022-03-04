@@ -24,9 +24,9 @@ public class lyr_hullSpec {
 	private lyr_weaponSlot weaponSlot = null;
 	private lyr_shieldSpec shieldSpec = null;
 	private List<Object> engineSlots = null;
-	private static final Class<?> hullSpecClass = _lyr_finder.hullSpecClass;
-	private static final Class<?> shieldSpecClass = _lyr_finder.shieldSpecClass;
-	private static final Class<?> weaponSlotClass = _lyr_finder.weaponSlotClass;
+	private static final Class<?> hullSpecClass = _lyr_classFinder.hullSpecClass;
+	private static final Class<?> shieldSpecClass = _lyr_classFinder.shieldSpecClass;
+	private static final Class<?> weaponSlotClass = _lyr_classFinder.weaponSlotClass;
 
 	/**
 	 * Creates a new instance for the passed {@link ShipHullSpecAPI}, and 

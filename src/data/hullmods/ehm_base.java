@@ -29,7 +29,7 @@ import data.hullmods.ehm_ec._ehm_ec_base;
 import data.hullmods.ehm_sc._ehm_sc_base;
 import data.hullmods.ehm_sr._ehm_sr_base;
 import data.hullmods.ehm_wr._ehm_wr_base;
-import lyr._lyr_ui;
+import lyr._lyr_uiTools;
 
 /**
  * Serves as a requirement for all experimental hull modifications, and provides hullMod
@@ -185,7 +185,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 			} break;
 		}
 
-		if (refreshShip || undoClear) _lyr_ui.refreshRefitShip();
+		if (refreshShip || undoClear) _lyr_uiTools.refreshRefitShip();
 		if (playSound) Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f);
 	}
 
@@ -205,7 +205,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 			default: break;
 		}
 
-		if (refreshShip) _lyr_ui.refreshRefitShip();
+		if (refreshShip) _lyr_uiTools.refreshRefitShip();
 		if (playSound) Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f);
 	}
 	//#endregion

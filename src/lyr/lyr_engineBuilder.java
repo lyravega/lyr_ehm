@@ -33,9 +33,9 @@ import java.lang.invoke.MethodType;
  */
 public class lyr_engineBuilder {
 	private Object engineBuilder;
-	private static final Class<?> engineBuilderClass = _lyr_finder.engineBuilderClass;
-	private static final Class<?> engineStyleEnum = _lyr_finder.engineStyleEnum;
-	private static final String engineStyleSetterName = _lyr_finder.engineStyleSetterName;
+	private static final Class<?> engineBuilderClass = _lyr_classFinder.engineBuilderClass;
+	private static final Class<?> engineStyleEnum = _lyr_classFinder.engineStyleEnum;
+	private static final String engineStyleSetterName = _lyr_classFinder.engineStyleSetterName;
 
 	public static enum engineStyle { ;
 		public static final int lowTech = 0;

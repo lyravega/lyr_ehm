@@ -3,8 +3,6 @@ package data.hullmods.ehm_ar;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
-import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
@@ -16,7 +14,7 @@ import org.lwjgl.util.vector.Vector2f;
 
 import data.hullmods._ehm_base;
 import data.hullmods._ehm_util;
-import lyr._lyr_ui;
+import lyr._lyr_uiTools;
 import lyr.lyr_hullSpec;
 import lyr.lyr_weaponSlot;
 
@@ -104,7 +102,7 @@ public class _ehm_ar_base extends _ehm_base {
 			refreshRefit = true; 
 		}
 		
-		if (refreshRefit) { _lyr_ui.refreshRefitShip(); refreshRefit = false; }
+		if (refreshRefit) { _lyr_uiTools.refreshRefitShip(); refreshRefit = false; }
 		return hullSpec.retrieve();
 	}
 
@@ -131,16 +129,6 @@ public class _ehm_ar_base extends _ehm_base {
 		if (ehm_hasRetrofitTag(ship, ehm.tag.adapterRetrofit, hullModSpecId)) return ehm.excuses.hasAdapterRetrofit; 
 		
 		return null; 
-	}
-
-	@Override
-	protected String ehm_cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
-		ShipVariantAPI variant = ship.getVariant();
-				
-		// for (WeaponSlotAPI slot: variant.getHullSpec().getAllWeaponSlotsCopy()) 
-			// if (slot.getId().contains(ehm.affix.adaptedSlot)) return ehm.excuses.adapterActivated;
-
-		return null;
 	}
 	//#endregion
 }

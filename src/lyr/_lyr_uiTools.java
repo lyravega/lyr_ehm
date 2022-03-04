@@ -12,7 +12,7 @@ import com.fs.starfarer.api.Global;
 
 import data.hullmods.ehm_base;
 
-public class _lyr_ui {
+public class _lyr_uiTools extends _lyr_reflectionTools {
 	private static Class<?> coreClass = null;
 	private static Class<?> refitPanelClass = null;
 	private static Object core = null;
@@ -20,7 +20,7 @@ public class _lyr_ui {
 
 	private static Lookup lookup = MethodHandles.lookup();
 
-	public static void findRefitPanelClass() throws ClassNotFoundException {
+	public static void findRefitPanelClass() throws ClassNotFoundException { // TODO: use methodhandles to get that shit
 		String refitPanelClassName = null;
 		for (Object method : Global.getSector().getCampaignUI().getClass().getDeclaredMethods()) {
 			if (!method.toString().contains("notifyFleetMemberChanged")) continue;
@@ -31,7 +31,7 @@ public class _lyr_ui {
 		refitPanelClass = Class.forName(refitPanelClassName, false, ehm_base.class.getClassLoader());
 	}
 
-	public static void findCoreClass() throws ClassNotFoundException {
+	public static void findCoreClass() throws ClassNotFoundException { // TODO: fuck core, not used. delete after sleep
 		String coreClassName = null;
 		for (Object method : Global.getSector().getCampaignUI().getClass().getDeclaredMethods()) {
 			if (!method.toString().contains("getCore")) continue;
@@ -41,7 +41,7 @@ public class _lyr_ui {
 		coreClass = Class.forName(coreClassName, false, ehm_base.class.getClassLoader());
 	}
 
-	private static Object recursiveChildrenSearch(Object object, Class<?> targetClass) {
+	private static Object recursiveSearch_findObjectWithClass(Object object, Class<?> targetClass) { // TODO: mimic the other overload
 		Object targetObject = null;
 
 		try {
@@ -53,7 +53,7 @@ public class _lyr_ui {
 			}
 	
 			for (Object child : children) {
-				targetObject = recursiveChildrenSearch(child, targetClass);
+				targetObject = recursiveSearch_findObjectWithClass(child, targetClass);
 				if (targetObject != null) return targetObject; 
 			}
 		} catch (Throwable t) {
@@ -63,9 +63,7 @@ public class _lyr_ui {
 		return targetObject;
 	}
 
-	private static List<Object> objectPath = new LinkedList<Object>();
-
-	private static Object recursiveChildrenSearch(Object object, String methodName) {
+	private static Object recursiveSearch_findObjectWithMethod(Object object, String methodName) {
 		try { // search the current object for the methodName
 			Class<?> methodClass = Class.forName("java.lang.reflect.Method", false, Class.class.getClassLoader());
 			MethodHandle getDeclaredMethod = MethodHandles.lookup().findVirtual(Class.class, "getDeclaredMethod", MethodType.methodType(methodClass, String.class, Class[].class));
@@ -79,7 +77,7 @@ public class _lyr_ui {
 			List<?> children = List.class.cast(getChildrenCopy.invoke(object));
 
 			for (Object child : children) 
-				if (recursiveChildrenSearch(child, methodName) != null) return child; 
+				if (recursiveSearch_findObjectWithMethod(child, methodName) != null) return child; 
 		} catch (Throwable t) {
 			// no catch, fuck you twice
 		}
@@ -92,17 +90,17 @@ public class _lyr_ui {
 			findCoreClass();
 			findRefitPanelClass();
 
-			Map<String, Object> getDialogParentMap = _lyr_finder.findTypesForMethod(Global.getSector().getCampaignUI().getClass(), "getDialogParent");
+			Map<String, Object> getDialogParentMap = _lyr_reflectionTools.findTypesForMethod(Global.getSector().getCampaignUI().getClass(), "getDialogParent");
 			Object screenPanel = MethodHandle.class.cast(getDialogParentMap.get("methodHandle")).invoke(Global.getSector().getCampaignUI());
 
-			Object refitPanel = recursiveChildrenSearch(screenPanel, refitPanelClass); // TODO: find proper path
+			Object refitPanel = recursiveSearch_findObjectWithClass(screenPanel, refitPanelClass); // TODO: find proper path
 
 			MethodHandle saveCurrentVariant = MethodHandles.lookup().findVirtual(refitPanelClass, "saveCurrentVariant", MethodType.methodType(void.class, boolean.class));
 			saveCurrentVariant.invoke(refitPanel, false);
 
-			Object button = recursiveChildrenSearch(refitPanel, "undo"); // TODO: find proper path
+			Object button = recursiveSearch_findObjectWithMethod(refitPanel, "undo"); // TODO: find proper path
 
-			Map<String, Object> undoMap = _lyr_finder.findTypesForMethod(button.getClass(), "undo");
+			Map<String, Object> undoMap = _lyr_reflectionTools.findTypesForMethod(button.getClass(), "undo");
 			MethodHandle.class.cast(undoMap.get("methodHandle")).invoke(button);
 		} catch (Throwable t) {
 

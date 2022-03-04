@@ -19,7 +19,7 @@ import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
  */
 public class lyr_shieldSpec {
 	private ShieldSpecAPI shieldSpec;
-	private static final Class<?> shieldSpecClass = _lyr_finder.shieldSpecClass;
+	private static final Class<?> shieldSpecClass = _lyr_classFinder.shieldSpecClass;
 
 	/**
 	 * Creates a new instance for the passed {@link ShieldSpecAPI}, and 
