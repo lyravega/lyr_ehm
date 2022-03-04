@@ -5,7 +5,6 @@ import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
-import com.fs.starfarer.loading.specs.HullVariantSpec;
 
 public class ehm_er_automated extends _ehm_base {
 	private static final String automated = "automated";
@@ -28,7 +27,7 @@ public class ehm_er_automated extends _ehm_base {
 
 	@Override
 	protected String ehm_cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
-		HullVariantSpec variant = HullVariantSpec.class.cast(ship.getVariant());
+		// HullVariantSpec variant = HullVariantSpec.class.cast(ship.getVariant());
 		
 		// if (variant.getSuppressedMods().contains(automated)) return "Automated gone";
 

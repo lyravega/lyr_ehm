@@ -9,9 +9,8 @@ import lyr.lyr_engineBuilder;
 import lyr.lyr_hullSpec;
 
 /**
- * This class is used by weapon retrofit hullmods. They are pretty 
- * straightforward in their operation; change all of the weapon slots 
- * on a ship to a different type. 
+ * This class is used by engine cosmetic hullmods. The changes are 
+ * permanent, and does not use {@code advanceInCombat()}.
  * @see {@link data.hullmods.ehm_ar._ehm_ar_base _ehm_ar_base} for slot adapter base
  * @see {@link data.hullmods.ehm_sr._ehm_sr_base _ehm_sr_base} for system retrofit base
  * @see {@link data.hullmods.ehm_wr._ehm_wr_base _ehm_wr_base} for weapon retrofit base

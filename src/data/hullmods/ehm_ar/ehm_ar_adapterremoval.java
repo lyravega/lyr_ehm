@@ -16,6 +16,7 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
  * @category Adapter Removal 
  * @author lyravega
  */
+@Deprecated // deprecated yet again, due to how the refresh script is now being a UI hack
 public class ehm_ar_adapterremoval extends _ehm_ar_base {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {

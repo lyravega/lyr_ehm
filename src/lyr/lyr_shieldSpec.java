@@ -19,7 +19,7 @@ import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
  */
 public class lyr_shieldSpec {
 	private ShieldSpecAPI shieldSpec;
-	private static final Class<?> obfuscatedShieldSpecClass = _lyr_finder.obfuscatedShieldSpecClass;
+	private static final Class<?> shieldSpecClass = _lyr_finder.shieldSpecClass;
 
 	/**
 	 * Creates a new instance for the passed {@link ShieldSpecAPI}, and 
@@ -69,7 +69,7 @@ public class lyr_shieldSpec {
 	 */
 	protected ShieldSpecAPI duplicate(ShieldSpecAPI shieldSpec) {
 		try {
-			MethodHandle clone = MethodHandles.lookup().findVirtual(obfuscatedShieldSpecClass, "clone", MethodType.methodType(obfuscatedShieldSpecClass));
+			MethodHandle clone = MethodHandles.lookup().findVirtual(shieldSpecClass, "clone", MethodType.methodType(shieldSpecClass));
 			return (ShieldSpecAPI) clone.invoke(shieldSpec);
 		} catch (Throwable t) {
 			t.printStackTrace();
@@ -94,7 +94,7 @@ public class lyr_shieldSpec {
 	 */
 	public void setRingColor(Color colour) {
 		try {
-			MethodHandle setRingColor = MethodHandles.lookup().findVirtual(obfuscatedShieldSpecClass, "setRingColor", MethodType.methodType(void.class, Color.class));
+			MethodHandle setRingColor = MethodHandles.lookup().findVirtual(shieldSpecClass, "setRingColor", MethodType.methodType(void.class, Color.class));
 			setRingColor.invoke(shieldSpec, colour);
 		} catch (Throwable t) {
 			t.printStackTrace();
@@ -109,7 +109,7 @@ public class lyr_shieldSpec {
 	 */
 	public void setInnerColor(Color colour) {
 		try {
-			MethodHandle setInnerColor = MethodHandles.lookup().findVirtual(obfuscatedShieldSpecClass, "setInnerColor", MethodType.methodType(void.class, Color.class));
+			MethodHandle setInnerColor = MethodHandles.lookup().findVirtual(shieldSpecClass, "setInnerColor", MethodType.methodType(void.class, Color.class));
 			setInnerColor.invoke(shieldSpec, colour);
 		} catch (Throwable t) {
 			t.printStackTrace();

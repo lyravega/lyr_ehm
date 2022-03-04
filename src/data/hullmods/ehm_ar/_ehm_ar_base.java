@@ -10,13 +10,13 @@ import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
-import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 
 import org.lwjgl.util.vector.Vector2f;
 
 import data.hullmods._ehm_base;
 import data.hullmods._ehm_util;
+import lyr._lyr_ui;
 import lyr.lyr_hullSpec;
 import lyr.lyr_weaponSlot;
 
@@ -104,7 +104,7 @@ public class _ehm_ar_base extends _ehm_base {
 			refreshRefit = true; 
 		}
 		
-		if (refreshRefit) { refreshRefit(true); refreshRefit = false; }
+		if (refreshRefit) { _lyr_ui.refreshRefitShip(); refreshRefit = false; }
 		return hullSpec.retrieve();
 	}
 
@@ -113,10 +113,10 @@ public class _ehm_ar_base extends _ehm_base {
 	 * @param variant whose hullSpec will be restored
 	 * @return a restored hullSpec
 	 */
-	protected static final ShipHullSpecAPI ehm_adapterRemoval(ShipVariantAPI variant) {
+	public static final ShipHullSpecAPI ehm_adapterRemoval(ShipVariantAPI variant) {
 		ShipHullSpecAPI hullSpec = ehm_hullSpecRefresh(variant);
 
-		// variant.setHullSpecAPI(hullSpec);
+		variant.setHullSpecAPI(hullSpec);
 
 		return hullSpec;
 	}
@@ -136,8 +136,8 @@ public class _ehm_ar_base extends _ehm_base {
 	protected String ehm_cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
 		ShipVariantAPI variant = ship.getVariant();
 				
-		for (WeaponSlotAPI slot: variant.getHullSpec().getAllWeaponSlotsCopy()) 
-			if (slot.getId().contains(ehm.affix.adaptedSlot)) return ehm.excuses.adapterActivated;
+		// for (WeaponSlotAPI slot: variant.getHullSpec().getAllWeaponSlotsCopy()) 
+			// if (slot.getId().contains(ehm.affix.adaptedSlot)) return ehm.excuses.adapterActivated;
 
 		return null;
 	}
