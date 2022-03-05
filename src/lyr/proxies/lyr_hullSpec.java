@@ -1,4 +1,4 @@
-package lyr;
+package lyr.proxies;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;

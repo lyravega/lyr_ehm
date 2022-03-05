@@ -5,8 +5,8 @@ import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 
 import data.hullmods._ehm_base;
-import lyr.lyr_engineBuilder;
-import lyr.lyr_hullSpec;
+import lyr.proxies.lyr_engineBuilder;
+import lyr.proxies.lyr_hullSpec;
 
 /**
  * This class is used by engine cosmetic hullmods. The changes are 
@@ -22,7 +22,7 @@ public class _ehm_ec_base extends _ehm_base {
 	 * Alters the engine visuals of the ship. Uses the vanilla engine styles
 	 * (as I haven't found a way to alter engine colours directly)
 	 * @param variant whose hullSpec will be altered
-	 * @param styleEnum somewhat hardcoded {@link lyr.lyr_engineBuilder.engineStyle engineStyle}
+	 * @param styleEnum somewhat hardcoded {@link lyr.proxies.lyr_engineBuilder.engineStyle engineStyle}
 	 * @return a hullSpec with the altered engine visuals
 	 */
 	protected static final ShipHullSpecAPI ehm_pimpMyEngineSlots(ShipVariantAPI variant, int styleEnum) {
@@ -40,7 +40,7 @@ public class _ehm_ec_base extends _ehm_base {
 	 * Restores the engine visuals of the ship by applying a stock hullSpec
 	 * on the variant.
 	 * @param variant whose hullSpec will be altered
-	 * @param styleEnum somewhat hardcoded {@link lyr.lyr_engineBuilder.engineStyle engineStyle}
+	 * @param styleEnum somewhat hardcoded {@link lyr.proxies.lyr_engineBuilder.engineStyle engineStyle}
 	 * @return a hullSpec with restored engine visuals
 	 * @see {@link data.hullmods.ehm_base#onRemoved() onRemoved()} called externally by this method
 	 */

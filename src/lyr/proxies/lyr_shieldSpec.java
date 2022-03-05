@@ -1,4 +1,4 @@
-package lyr;
+package lyr.proxies;
 
 import java.awt.Color;
 import java.lang.invoke.MethodHandle;

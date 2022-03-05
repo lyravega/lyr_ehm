@@ -14,9 +14,9 @@ import org.lwjgl.util.vector.Vector2f;
 
 import data.hullmods._ehm_base;
 import data.hullmods._ehm_util;
-import lyr._lyr_uiTools;
-import lyr.lyr_hullSpec;
-import lyr.lyr_weaponSlot;
+import lyr.proxies.lyr_hullSpec;
+import lyr.proxies.lyr_weaponSlot;
+import lyr.tools._lyr_uiTools;
 
 
 /**

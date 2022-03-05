@@ -2,9 +2,10 @@ package data.hullmods.ehm_ec;
 
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
-import com.fs.starfarer.api.combat.ShipVariantAPI;
 
-import lyr.lyr_engineBuilder.engineStyle;
+import lyr.proxies.lyr_engineBuilder.engineStyle;
+
+import com.fs.starfarer.api.combat.ShipVariantAPI;
 
 /**@category Engine Cosmetic 
  * @author lyravega

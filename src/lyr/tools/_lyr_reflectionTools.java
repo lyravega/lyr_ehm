@@ -1,4 +1,4 @@
-package lyr;
+package lyr.tools;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -9,6 +9,16 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+
+/**
+ * Provides MethodHandles and a few methods that will be useful
+ * where reflection package access is restricted. MethodHandles
+ * are used to go around the restriction.
+ * <p> These can be used anywhere, however if there's no such
+ * restriction on the reflection package, then there is no 
+ * point in using this. 
+ * @author lyravega
+ */
 public class _lyr_reflectionTools {
 	protected static final Logger logger = Logger.getLogger("lyr");
 	protected static final Lookup lookup = MethodHandles.lookup();
@@ -35,8 +45,7 @@ public class _lyr_reflectionTools {
 	/**
 	 * Pass a class, and a methodName as a string to get the returnType and
 	 * parameterTypes returned, alonside a MethodType and a ready-to-use 
-	 * MethodHandle to use the said method. Useful in places where reflect
-	 * package isn't accessible due to the script classLoader.  
+	 * MethodHandle to use the said method.  
 	 * @param clazz to search the methodName on
 	 * @param methodName in String, no "()"
 	 * @return a map with "returnType", "parameterTypes", "methodType" and "methodHandle" keys

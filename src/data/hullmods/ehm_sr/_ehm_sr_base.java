@@ -7,7 +7,7 @@ import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 
 import data.hullmods._ehm_base;
-import lyr.lyr_hullSpec;
+import lyr.proxies.lyr_hullSpec;
 
 /**
  * This class is used by system retrofit hullmods. They are pretty 

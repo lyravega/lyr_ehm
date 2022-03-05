@@ -1,4 +1,4 @@
-package lyr;
+package lyr.proxies;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -13,6 +13,11 @@ import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
 import org.apache.log4j.Logger;
 
+/**
+ * Provides methods to search for the obfuscated classes so that they 
+ * can be utilized through proxy-like classes.
+ * @author lyravega
+ */
 public class _lyr_classFinder {
 	protected static Class<?> hullSpecClass;
 	protected static Class<?> shieldSpecClass;

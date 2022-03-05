@@ -9,8 +9,8 @@ import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 
 import data.hullmods._ehm_base;
-import lyr.lyr_hullSpec;
-import lyr.lyr_shieldSpec;
+import lyr.proxies.lyr_hullSpec;
+import lyr.proxies.lyr_shieldSpec;
 
 /**
  * This class is used by shield cosmetic hullmods. The changes are 

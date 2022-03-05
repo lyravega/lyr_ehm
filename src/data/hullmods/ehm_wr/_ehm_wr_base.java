@@ -11,8 +11,8 @@ import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
 import data.hullmods._ehm_base;
-import lyr.lyr_hullSpec;
-import lyr.lyr_weaponSlot;
+import lyr.proxies.lyr_hullSpec;
+import lyr.proxies.lyr_weaponSlot;
 
 /**
  * This class is used by weapon retrofit hullmods. They are pretty 

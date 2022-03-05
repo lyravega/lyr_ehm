@@ -22,7 +22,7 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import data.scripts.fleetTrackerScript;
 import data.scripts.refreshRefitScript;
 import data.scripts.shipTrackerScript;
-import lyr.lyr_hullSpec;
+import lyr.proxies.lyr_hullSpec;
 
 /**
  * This is the master base class for all experimental hullmods. Stores the most 

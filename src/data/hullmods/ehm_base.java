@@ -29,7 +29,7 @@ import data.hullmods.ehm_ec._ehm_ec_base;
 import data.hullmods.ehm_sc._ehm_sc_base;
 import data.hullmods.ehm_sr._ehm_sr_base;
 import data.hullmods.ehm_wr._ehm_wr_base;
-import lyr._lyr_uiTools;
+import lyr.tools._lyr_uiTools;
 
 /**
  * Serves as a requirement for all experimental hull modifications, and provides hullMod
