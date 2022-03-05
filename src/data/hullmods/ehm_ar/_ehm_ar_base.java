@@ -110,7 +110,7 @@ public class _ehm_ar_base extends _ehm_base {
 	 * Refreshes the hullSpec and returns it.
 	 * @param variant whose hullSpec will be restored
 	 * @return a restored hullSpec
-	 * @see {@link data.hullmods.ehm_base#onRemoved() onRemoved()} called externally by this method
+	 * @see {@link data.hullmods.ehm_base#onRemoved(String, ShipAPI) onRemoved()} called externally by this method
 	 */
 	public static final ShipHullSpecAPI ehm_adapterRemoval(ShipVariantAPI variant) {
 		ShipHullSpecAPI hullSpec = ehm_hullSpecRefresh(variant);

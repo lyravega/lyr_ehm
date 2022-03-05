@@ -53,7 +53,7 @@ public class _ehm_wr_base extends _ehm_base {
 	 * hullSpec one by one. Ignores activated adapters, and affects adapted slots.
 	 * @param variant whose hullSpec will have its weaponSlots restored
 	 * @return an altered hullSpec with restored weaponSlots
-	 * @see {@link data.hullmods.ehm_base#onRemoved() onRemoved()} called externally by this method
+	 * @see {@link data.hullmods.ehm_base#onRemoved(String, ShipAPI) onRemoved()} called externally by this method
 	 */
 	public static final ShipHullSpecAPI ehm_weaponSlotRestore(ShipVariantAPI variant) {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
