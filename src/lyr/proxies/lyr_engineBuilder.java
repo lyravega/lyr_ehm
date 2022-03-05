@@ -8,27 +8,17 @@ import java.lang.invoke.MethodType;
  * A proxy-like class for... engine builder? I have no idea what 
  * this is. As far as I can tell, there is no API equalivent to
  * whatever {@code getEngineSlots()} retrieves.
- * <p> The retrieved objects have EngineSlot data in them, but
- * there is a method that formats all of those slots, hence my 
- * reason calling this a 'builder'. There is a method with 
- * several 'style enums' that keeps all the data, with the last
- * enum being 'CUSTOM' and grabs stuff from the SpecStore. 
- * Accessing them is... meh, I won't even try, to be honest. 
- * Future you (me), just don't. 
- * <p> Accessing the EngineSlot data directly, and trying to 
- * alter anything has no visible results as far as I can tell. 
- * There also is an EngineSlotAPI, and I was expecting a relation
- * between the core code and the API similar to hullSpec, 
- * shieldSpec, weaponSlot, etc... but that doesn't seem to be 
- * the case.
- * <p> And as there isn't an API equalivent, whatever the method
- * {@code getEngineSlots()} grabs are bound to objects instead.
- * And due to the obfuscation, I had to access the methods / 
- * classes in a way that I do NOT like.
- * <p> As I don't know what this class does what, and exactly 
- * how, the best I can provide is finding the 'style enum' and
- * generate a few hardcoded templates, but nothing more can be
- * added till EngineSlotAPI<->EngineSlot link is found.
+ * <p> I believe these objects are responsible of creating the
+ * engines that go on top of the engineSlots, but for some reason
+ * you can only access these, not the engines. If you can feed
+ * the correct data to these builders, you'll most probably get
+ * the results you want, but it's way too obfuscated for my 
+ * tastes to do so, and as such I decided to go for pre-set
+ * engines.
+ * <p> Unlike the other proxies, whose obfuscated classes has a
+ * base on the API, these do not, so they are treated as objects.
+ * {@code retrieve()} is still there, but as they are objects,
+ * there are no API functions that can be taken advantage of.
  * @author lyravega
  */
 public class lyr_engineBuilder {
