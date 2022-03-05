@@ -1,14 +1,13 @@
 package lyr.tools;
 
 import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.util.List;
-import java.util.Map;
 
+import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
-
-import data.hullmods.ehm_base;
+import com.fs.starfarer.api.campaign.CampaignUIAPI;
+import com.fs.starfarer.api.campaign.CoreUITabId;
 
 /**
  * Provides specialized MethodHandles and a few methods that 
@@ -17,41 +16,90 @@ import data.hullmods.ehm_base;
  * @author lyravega
  */
 public class _lyr_uiTools extends _lyr_reflectionTools {
-	private static Class<?> coreClass = null;
-	private static Class<?> refitPanelClass = null;
-	private static Object core = null;
-	private static Object refitPanel = null;
+	private static Class<?> campaignUIClass;
+	private static Class<?> coreClass;
+	private static Class<?> screenPanelClass;
+	private static Class<?> refitPanelClass;
+	private static Class<?> refitTabClass;
+	private static Class<?> designDisplayClass;
+	private static methodMap campaignUI_getCore;
+	// private static methodMap campaignUI_notifyFleetMemberChanged;
+	private static methodMap campaignUI_getScreenPanel;
+	private static methodMap refitPanel_getRefitTab;
+	private static methodMap refitTab_getRefitPanel;
+	private static methodMap refitPanel_getDesignDisplay;
+	private static methodMap refitPanel_saveCurrentVariant;
+	private static methodMap designDisplay_undo;
 
-	private static void findRefitPanelClass() throws ClassNotFoundException { // TODO: use methodhandles to get that shit
-		String refitPanelClassName = null;
-		for (Object method : Global.getSector().getCampaignUI().getClass().getDeclaredMethods()) {
-			if (!method.toString().contains("notifyFleetMemberChanged")) continue;
-			
-			refitPanelClassName = method.toString().split(" ")[2]; break;
-		}
-		refitPanelClassName = refitPanelClassName.substring(refitPanelClassName.indexOf("(")+1, refitPanelClassName.length()-1).split(",")[0];
-		refitPanelClass = Class.forName(refitPanelClassName, false, ehm_base.class.getClassLoader());
-	}
+	public static class _lyr_delayedFinder implements EveryFrameScript {
+		private boolean isDone = false;
 
-	private static void findCoreClass() throws ClassNotFoundException { // TODO: fuck core, not used. delete after sleep
-		String coreClassName = null;
-		for (Object method : Global.getSector().getCampaignUI().getClass().getDeclaredMethods()) {
-			if (!method.toString().contains("getCore")) continue;
-			
-			coreClassName = method.toString().split(" ")[1]; break;
+		public _lyr_delayedFinder() {
+			logger.info("Waiting to find the UI classes");
 		}
-		coreClass = Class.forName(coreClassName, false, ehm_base.class.getClassLoader());
+
+		@Override
+		public void advance(float amount) {
+			try {
+				CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
+				if (tab == null || !tab.equals(CoreUITabId.REFIT)) return; 
+
+				campaignUIClass = Global.getSector().getCampaignUI().getClass();
+
+				campaignUI_getCore = _lyr_reflectionTools.findTypesForMethod(campaignUIClass, "getCore");
+				coreClass = campaignUI_getCore.getReturnType();
+
+				methodMap campaignUI_notifyFleetMemberChanged = _lyr_reflectionTools.findTypesForMethod(campaignUIClass, "notifyFleetMemberChanged");
+				refitPanelClass = campaignUI_notifyFleetMemberChanged.getParameterTypes()[0]; 
+
+				campaignUI_getScreenPanel = _lyr_reflectionTools.findTypesForMethod(campaignUIClass, "getScreenPanel");
+				screenPanelClass = campaignUI_getScreenPanel.getReturnType();
+
+				refitPanel_getRefitTab = _lyr_reflectionTools.findTypesForMethod(refitPanelClass, "getRefitTab");
+				refitTabClass = refitPanel_getRefitTab.getReturnType();
+
+				refitTab_getRefitPanel = _lyr_reflectionTools.findTypesForMethod(refitTabClass, "getRefitPanel");
+				// refitPanelClass = refitTab_getRefitPanel.getReturnType();
+
+				refitPanel_getDesignDisplay = _lyr_reflectionTools.findTypesForMethod(refitPanelClass, "getDesignDisplay");
+				designDisplayClass = refitPanel_getDesignDisplay.getReturnType();
+
+				refitPanel_saveCurrentVariant = _lyr_reflectionTools.findTypesForMethod(refitPanelClass, "saveCurrentVariant"); // there is an overload for this, beware
+				designDisplay_undo = _lyr_reflectionTools.findTypesForMethod(designDisplayClass, "undo");
+
+				isDone = true; return;					
+			} catch (Throwable t) {
+
+			}
+
+			isDone = true;
+		}
+	
+		@Override
+		public boolean runWhilePaused() {
+			return true;
+		}
+	
+		@Override
+		public boolean isDone() {
+			return isDone;
+		}
 	}
 
 	private static Object recursiveSearch_findObjectWithClass(Object object, Class<?> targetClass) { // TODO: mimic the other overload
 		if (object.getClass().equals(targetClass)) return object;
 
+		Object targetObject; 
+
 		try {
-			MethodHandle getChildrenCopy = lookup.findVirtual(object.getClass(), "getChildrenCopy", MethodType.methodType(List.class));
+			MethodHandle getChildrenCopy = lookup.findVirtual(object.getClass(), "getChildrenNonCopy", MethodType.methodType(List.class));
 			List<?> children = List.class.cast(getChildrenCopy.invoke(object));
 
-			for (Object child : children) 
-				if (recursiveSearch_findObjectWithClass(child, targetClass) != null) return child; 
+			for (Object child : children) {
+				targetObject = recursiveSearch_findObjectWithClass(child, targetClass); 
+				
+				if (targetObject != null) return targetObject; 
+			}
 		} catch (Throwable t) {
 			// no catch on purpose
 		}
@@ -59,7 +107,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 		return null;
 	}
 
-	private static Object recursiveSearch_findObjectWithMethod(Object object, String methodName) {
+	private static Object recursiveSearch_findObjectWithMethod(Object object, String methodName) { // doesn't handle methods with arguments
 		try { // search the current object for the methodName
 			if (getDeclaredMethod.invoke(object.getClass(), methodName) != null) return object;
 		} catch (Throwable t) {
@@ -67,7 +115,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 		}
 
 		try { // if not found, search children of the object recursively
-			MethodHandle getChildrenCopy = lookup.findVirtual(object.getClass(), "getChildrenCopy", MethodType.methodType(List.class));
+			MethodHandle getChildrenCopy = lookup.findVirtual(object.getClass(), "getChildrenNonCopy", MethodType.methodType(List.class));
 			List<?> children = List.class.cast(getChildrenCopy.invoke(object));
 
 			for (Object child : children) 
@@ -79,25 +127,57 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 		return null;
 	}
 
-	public static void refreshRefitShip() {
+	private static Object iterativeSearch_findChildWithClass(Object parent, Class<?> targetClass) {
 		try {
-			findCoreClass();
-			findRefitPanelClass();
+			MethodHandle getChildrenCopy = lookup.findVirtual(parent.getClass(), "getChildrenNonCopy", MethodType.methodType(List.class));
+			List<?> children = List.class.cast(getChildrenCopy.invoke(parent));
 
-			Map<String, Object> getDialogParentMap = _lyr_reflectionTools.findTypesForMethod(Global.getSector().getCampaignUI().getClass(), "getDialogParent");
-			Object screenPanel = MethodHandle.class.cast(getDialogParentMap.get("methodHandle")).invoke(Global.getSector().getCampaignUI());
-
-			Object refitPanel = recursiveSearch_findObjectWithClass(screenPanel, refitPanelClass); // TODO: find proper path
-
-			MethodHandle saveCurrentVariant = lookup.findVirtual(refitPanelClass, "saveCurrentVariant", MethodType.methodType(void.class, boolean.class));
-			saveCurrentVariant.invoke(refitPanel, false);
-
-			Object button = recursiveSearch_findObjectWithMethod(refitPanel, "undo"); // TODO: find proper path
-
-			Map<String, Object> undoMap = _lyr_reflectionTools.findTypesForMethod(button.getClass(), "undo");
-			MethodHandle.class.cast(undoMap.get("methodHandle")).invoke(button);
+			for (Object child : children) {
+				if (child.getClass().equals(targetClass)) return child;
+			}
 		} catch (Throwable t) {
+			// no catch on purpose
+		}
 
+		return null;
+	}
+
+	/*
+	// in freeroam, core houses refit stuff. in markets, marketCore does.
+
+	com.fs.starfarer.coreui.refit.oOOo // designDisplay
+	com.fs.starfarer.coreui.refit.V // refitPanel
+	com.fs.starfarer.coreui.refit.F // refitTab
+	com.fs.starfarer.ui.newui.o0OO // ???
+	com.fs.starfarer.ui.newui.o0Oo // marketCore
+	com.fs.starfarer.ui.newui.OO0O // core
+	com.fs.starfarer.ui.v // screenPanel
+	*/
+	
+	public static void refreshRefitShip() {		
+		CampaignUIAPI campaignUI = Global.getSector().getCampaignUI();
+		Object screenPanel = null;
+		// Object core = null;
+		Object refitTab = null;
+		Object refitPanel = null;
+		Object designDisplay = null;
+		try {
+			screenPanel = campaignUI_getScreenPanel.getMethodHandle().invoke(campaignUI);
+			refitTab = recursiveSearch_findObjectWithClass(screenPanel, refitTabClass); // wider search but successful in market too
+			// core = campaignUI_getCore.getMethodHandle().invoke(campaignUI);
+			// refitTab = recursiveSearch_findObjectWithClass(core, refitTabClass); // fails in market, market ui has its own core and refit lives there
+			refitPanel = refitTab_getRefitPanel.getMethodHandle().invoke(refitTab);
+			designDisplay = refitPanel_getDesignDisplay.getMethodHandle().invoke(refitPanel);
+		} catch (Throwable t) { // fallback to do a brute search on ALL the UI
+			refitPanel = recursiveSearch_findObjectWithClass(screenPanel, refitPanelClass);
+			designDisplay = recursiveSearch_findObjectWithMethod(refitPanel, "undo");
+		} finally {
+			try {
+				refitPanel_saveCurrentVariant.getMethodHandle().invoke(refitPanel);
+				designDisplay_undo.getMethodHandle().invoke(designDisplay);
+			} catch (Throwable e) {
+				logger.error("HERP");
+			}
 		}
 	}
 }
