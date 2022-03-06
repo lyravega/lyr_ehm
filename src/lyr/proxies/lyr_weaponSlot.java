@@ -23,8 +23,8 @@ import org.lwjgl.util.vector.Vector2f;
  */
 public class lyr_weaponSlot {
 	private WeaponSlotAPI weaponSlot;
-	private static final Class<?> weaponSlotClass = _lyr_classFinder.weaponSlotClass;
-	private static final Class<?> nodeClass = _lyr_classFinder.nodeClass;
+	private static final Class<?> weaponSlotClass = _lyr_proxyTools.weaponSlotClass;
+	private static final Class<?> nodeClass = _lyr_proxyTools.nodeClass;
 
 	/**
 	 * Creates a new instance for the passed {@link WeaponSlotAPI}, and 
