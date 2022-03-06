@@ -89,7 +89,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 				logger.info("Found the classes"); 
 				isDone = true; return;
 			} catch (Throwable t) {
-				logger.error("Failed to find the classes"); t.printStackTrace(); 
+				logger.fatal("Failed to find the classes"); t.printStackTrace(); 
 				isDone = true; return;
 			}
 		}
@@ -233,7 +233,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 				refitPanel_saveCurrentVariant.getMethodHandle().invoke(refitPanel);
 				designDisplay_undo.getMethodHandle().invoke(designDisplay);
 			} catch (Throwable t) {
-				logger.error("Total failure in 'refreshRefitShip()'"); t.printStackTrace();
+				logger.fatal("Total failure in 'refreshRefitShip()'"); t.printStackTrace();
 			}
 		}
 	}
