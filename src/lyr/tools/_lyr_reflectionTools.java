@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
  * @author lyravega
  */
 public class _lyr_reflectionTools {
-	protected static final Logger logger = Logger.getLogger("lyr");
+	protected static final Logger logger = Logger.getLogger("lyr_reflectionTools");
 	protected static final Lookup lookup = MethodHandles.lookup();
 	protected static Class<?> fieldClass;
 	protected static Class<?> methodClass;
@@ -75,12 +75,12 @@ public class _lyr_reflectionTools {
 	public static methodMap findTypesForMethod(Class<?> clazz, String methodName) throws Throwable {
 		return findTypesForMethod(clazz, methodName, true);
 	}
-	public static methodMap findTypesForMethod(Class<?> clazz, String methodName, boolean useDeclared) throws Throwable {
+	public static methodMap findTypesForMethod(Class<?> clazz, String methodName, boolean checkDeclared) throws Throwable {
 		Object method = null;
 		try { // works for methods with no arguments; if there's a way to capture it through a MethodHandle, I'm not aware of it
-			method = (useDeclared) ? getDeclaredMethod.invoke(clazz, methodName) : getMethod.invoke(clazz, methodName);
+			method = (checkDeclared) ? getDeclaredMethod.invoke(clazz, methodName) : getMethod.invoke(clazz, methodName);
 		} catch (Throwable t) { // fallback for the problem above, searches all the methods with the passed name, and uses the FIRST found one
-			for (Object currMethod : (useDeclared) ? clazz.getDeclaredMethods() : clazz.getMethods()) {
+			for (Object currMethod : (checkDeclared) ? clazz.getDeclaredMethods() : clazz.getMethods()) {
 				if (!String.class.cast(getName.invoke(currMethod)).equals(methodName)) continue;
 
 				method = currMethod; break;
