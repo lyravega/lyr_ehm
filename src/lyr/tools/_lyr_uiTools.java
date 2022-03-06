@@ -9,9 +9,12 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CoreUITabId;
 
 /**
- * Provides specialized MethodHandles and a few methods that 
- * are designed to be used on the Starsector UI, which is 
- * why these are splitted from the parent class.
+ * Provides specialized MethodHandles and a few methods that are 
+ * designed to be used on the Starsector UI, which is why these 
+ * are splitted from the parent class. 
+ * <p> And yes, all this is to get the refit screen to refresh 
+ * the design. However may serve as a point to do other stuff
+ * too, as the relevant classes are known here. 
  * @author lyravega
  */
 @SuppressWarnings("unused")
@@ -32,21 +35,23 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 	private static methodMap refitTab_getRefitPanel;
 	private static methodMap refitPanel_getDesignDisplay;
 	
-	private static methodMap designDisplay_undo;
 	private static methodMap refitPanel_saveCurrentVariant;
+	private static methodMap designDisplay_undo;
 
 	public static class _lyr_delayedFinder implements EveryFrameScript {
 		private boolean isDone = false;
 
 		public _lyr_delayedFinder() {
+			Global.getSector().addTransientScript(this);
 			logger.info("Waiting to find the UI classes");
 		}
 
 		@Override
 		public void advance(float amount) {
 			try {
+				// due to 'wrapperClass' not being extractable, need to wait for the refit tab
 				CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
-				if (tab == null || !tab.equals(CoreUITabId.REFIT)) return; 
+				if (tab == null || !tab.equals(CoreUITabId.REFIT)) return;
 
 				campaignUIClass = Global.getSector().getCampaignUI().getClass();
 				screenPanelClass = _lyr_reflectionTools.findTypesForMethod(campaignUIClass, "getScreenPanel").getReturnType();
@@ -56,24 +61,24 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 				refitTabClass = _lyr_reflectionTools.findTypesForMethod(refitPanelClass, "getRefitTab").getReturnType();
 				designDisplayClass = _lyr_reflectionTools.findTypesForMethod(refitPanelClass, "getDesignDisplay").getReturnType();
 
-				// same shit used above, defined here separately to keep them tidy because 'MUH GAEMUR OCD'
+				// some similar, some same shit that is used above, defined here separately to keep them tidy because 'MUH GAEMUR OCD'
 				campaignUI_getScreenPanel = _lyr_reflectionTools.findTypesForMethod(campaignUIClass, "getScreenPanel");
 				campaignUI_getEncounterDialog = _lyr_reflectionTools.findTypesForMethod(campaignUIClass, "getEncounterDialog");
 				campaignUI_getCore = _lyr_reflectionTools.findTypesForMethod(campaignUIClass, "getCore");
 				encounterDialog_getCoreUI = _lyr_reflectionTools.findTypesForMethod(encounterDialogueClass, "getCoreUI");
 				refitTab_getRefitPanel = _lyr_reflectionTools.findTypesForMethod(refitTabClass, "getRefitPanel");
 				refitPanel_getDesignDisplay = _lyr_reflectionTools.findTypesForMethod(refitPanelClass, "getDesignDisplay");
-				
-				designDisplay_undo = _lyr_reflectionTools.findTypesForMethod(designDisplayClass, "undo");
+
 				refitPanel_saveCurrentVariant = _lyr_reflectionTools.findTypesForMethod(refitPanelClass, "saveCurrentVariant"); // there is an overload for this, beware
-				
+				designDisplay_undo = _lyr_reflectionTools.findTypesForMethod(designDisplayClass, "undo");
+
 				// redoing stuff just to find the wrapper, or whatever the fuck it is
 				Object campaignUI = Global.getSector().getCampaignUI();
 				Object screenPanel = campaignUI_getScreenPanel.getMethodHandle().invoke(campaignUI);
 				Object encounterDialogue = campaignUI_getEncounterDialog.getMethodHandle().invoke(campaignUI);
 				Object core = (encounterDialogue != null) ? encounterDialog_getCoreUI.getMethodHandle().invoke(encounterDialogue) : campaignUI_getCore.getMethodHandle().invoke(campaignUI);
-				Object wrapper = adaptiveSearch_findObjectWithChildClass(core, refitTabClass, false, 1);
-				Object refitTab = adaptiveSearch_findObjectWithChildClass(wrapper, refitPanelClass, false, 1);
+				Object wrapper = adaptiveSearch_findObjectWithChildClass(core, refitTabClass, false, 1); // as the 'wrapperClass' is unknown here, search for a grandChild's class and get parent object
+				Object refitTab = adaptiveSearch_findObjectWithChildClass(wrapper, refitTabClass, true, 0); // as the 'refitTabClass' is known, search for a child's class and get the child object
 				Object refitPanel = refitTab_getRefitPanel.getMethodHandle().invoke(refitTab);
 				Object designDisplay = refitPanel_getDesignDisplay.getMethodHandle().invoke(refitPanel);
 				
@@ -218,8 +223,8 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 		Object designDisplay = null;
 		try {
 			Object campaignUI = Global.getSector().getCampaignUI();
-			// Object screenPanel = campaignUI_getScreenPanel.getMethodHandle().invoke(campaignUI); 
-			Object encounterDialogue = campaignUI_getEncounterDialog.getMethodHandle().invoke(campaignUI); 
+			// Object screenPanel = campaignUI_getScreenPanel.getMethodHandle().invoke(campaignUI);
+			Object encounterDialogue = campaignUI_getEncounterDialog.getMethodHandle().invoke(campaignUI); // same as 'Global.getSector().getCampaignUI().getCurrentInteractionDialog();'
 			Object core = (encounterDialogue != null) ? encounterDialog_getCoreUI.getMethodHandle().invoke(encounterDialogue) : campaignUI_getCore.getMethodHandle().invoke(campaignUI);
 			Object wrapper = adaptiveSearch_findObjectWithChildClass(core, wrapperClass, true, 0);
 			Object refitTab = adaptiveSearch_findObjectWithChildClass(wrapper, refitTabClass, true, 0);
@@ -227,7 +232,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 			designDisplay = refitPanel_getDesignDisplay.getMethodHandle().invoke(refitPanel);
 		} catch (Throwable t) { // hardcoded fallback to do a brute search on ALL the UI
 			logger.warn("Fallback used in 'refreshRefitShip()'");
-			// TODO: set up a proper fallback
+			// TODO: set up a proper fallback (like using 'refreshRefitScript'), move finally to above try
 		} finally {
 			try {
 				refitPanel_saveCurrentVariant.getMethodHandle().invoke(refitPanel);

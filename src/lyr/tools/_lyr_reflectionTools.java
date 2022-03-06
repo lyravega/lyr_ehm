@@ -69,6 +69,7 @@ public class _lyr_reflectionTools {
 	 * MethodHandle to use the said method.  
 	 * @param clazz to search the methodName on
 	 * @param methodName in String, no "()"
+	 * @param checkDeclared overload parameter, pass false to search inherited methods as well
 	 * @return a map with "returnType", "parameterTypes", "methodType" and "methodHandle" keys
 	 * @throws Throwable 
 	 */
