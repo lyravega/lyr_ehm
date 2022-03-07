@@ -58,6 +58,7 @@ public class _lyr_reflectionTools {
 		public methodMap(Class<?> returnType, Class<?>[] parameterTypes, String methodName, MethodType methodType, MethodHandle methodHandle) {
 			this.returnType = returnType;
 			this.parameterTypes = parameterTypes;
+			this.methodName = methodName;
 			this.methodType = methodType;
 			this.methodHandle = methodHandle;
 		}
