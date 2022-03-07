@@ -198,11 +198,11 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 
 		String hullModType = removedHullModId.substring(0, 7); 
 		switch (hullModType) { // any weaponSlot changes and cheap removal methods require refresh
-			case ehm.affix.adapterRetrofit: ehm_adapterRemoval(refitVariant); playSound = true; refreshShip = true; break; // refresh needed due to cheap restore
-			case ehm.affix.systemRetrofit: ehm_systemRestore(refitVariant); playSound = true; break; // refresh not needed due to proper restore
-			case ehm.affix.weaponRetrofit: ehm_weaponSlotRestore(refitVariant); playSound = true; refreshShip = true; break; // refresh needed to update slots
-			case ehm.affix.shieldCosmetic: ehm_restoreShield(refitVariant); playSound = true; break; // refresh not needed due to proper restore
-			case ehm.affix.engineCosmetic: ehm_restoreEngineSlots(refitVariant); playSound = true; refreshShip = true; break; // refresh needed due to cheap restore
+			case ehm.affix.adapterRetrofit: refitVariant.setHullSpecAPI(ehm_adapterRemoval(refitVariant)); playSound = true; refreshShip = true; break; // refresh needed due to cheap restore
+			case ehm.affix.systemRetrofit: refitVariant.setHullSpecAPI(ehm_systemRestore(refitVariant)); playSound = true; break; // refresh not needed due to proper restore
+			case ehm.affix.weaponRetrofit: refitVariant.setHullSpecAPI(ehm_weaponSlotRestore(refitVariant)); playSound = true; refreshShip = true; break; // refresh needed to update slots
+			case ehm.affix.shieldCosmetic: refitVariant.setHullSpecAPI(ehm_restoreShield(refitVariant)); playSound = true; break; // refresh not needed due to proper restore
+			case ehm.affix.engineCosmetic: refitVariant.setHullSpecAPI(ehm_restoreEngineSlots(refitVariant)); playSound = true; refreshShip = true; break; // refresh needed due to cheap restore
 			default: break;
 		}
 

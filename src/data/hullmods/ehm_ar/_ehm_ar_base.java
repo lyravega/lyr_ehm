@@ -117,8 +117,6 @@ public class _ehm_ar_base extends _ehm_base {
 	public static final ShipHullSpecAPI ehm_adapterRemoval(ShipVariantAPI variant) {
 		ShipHullSpecAPI hullSpec = ehm_hullSpecRefresh(variant);
 
-		variant.setHullSpecAPI(hullSpec);
-
 		return hullSpec;
 	}
 
