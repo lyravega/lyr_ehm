@@ -305,7 +305,7 @@ public class _ehm_base implements HullModEffect {
 			public static final String adapterActivated = "An adapter has been activated. Can only be removed with the adapter removal hull mod";
 			public static final String noAdapterRetrofit = "There are no adapters to remove";
 			public static final String hasWeapons = "Cannot be installed or uninstalled as long as there are weapons present on the ship";
-			public static final String hasWeaponsOnAdaptedSlots = "Cannot be used as long as adapted slots have weapons on them";
+			public static final String hasWeaponsOnAdaptedSlots = "Cannot be uninstalled as long as adapted slots have weapons on them";
 			
 		}
 	}
