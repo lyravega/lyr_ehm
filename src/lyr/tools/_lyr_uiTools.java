@@ -261,9 +261,16 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 	}
 
 	/**
-	 * This method will make the 'undo' button inactive. It is necessary for any 
-	 * refreshes that were done remotely; not from the {@code onRemove()} and 
+	 * Sets the 'undo' button as inactive. It is necessary for any commits
+	 * that were done remotely and not from the {@code onRemove()} and 
 	 * {@code onInstalled()} methods.
+	 * <p> Ideally, the external commit call should also set the 'undo' 
+	 * button as inactive, however if the hullSpecs of the variants are
+	 * set after the commit call is being made, then the 'undo' button 
+	 * will not be set as inactive. 
+	 * <p> In essence, this method serves as a supplement for that issue, 
+	 * to be used from {@code onRemove()} and {@code onInstalled()} methods 
+	 * if {@code commitChanges()} is not called from those two.
 	 */
 	public static void clearUndo() {
 		CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
