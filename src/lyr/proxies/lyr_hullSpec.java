@@ -1,8 +1,6 @@
 package lyr.proxies;
 
 import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
 import java.util.List;
 
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
@@ -26,9 +24,33 @@ public final class lyr_hullSpec extends _lyr_proxyTools { // TODO: move methodHa
 	private lyr_weaponSlot weaponSlot = null;
 	private lyr_shieldSpec shieldSpec = null;
 	private List<Object> engineSlots = null;
-	// private static final Class<?> hullSpecClass = _lyr_proxyTools.hullSpecClass;
-	// private static final Class<?> shieldSpecClass = _lyr_proxyTools.shieldSpecClass;
-	// private static final Class<?> weaponSlotClass = _lyr_proxyTools.weaponSlotClass;
+	private static MethodHandle clone = null;
+	private static MethodHandle getEngineSlots = null;
+	private static MethodHandle setShieldSpec = null;
+	private static MethodHandle addBuiltInMod = null;
+	private static MethodHandle setManufacturer = null;
+	private static MethodHandle setDescriptionPrefix = null;
+	private static MethodHandle setShipSystemId = null;
+	private static MethodHandle addWeaponSlot = null;
+	private static MethodHandle addBuiltInWeapon = null;
+	private static MethodHandle addBuiltInWing = null;
+
+	static {
+		try {
+			clone = inspectMethod(hullSpecClass, "clone").getMethodHandle();
+			getEngineSlots = inspectMethod(hullSpecClass, "getEngineSlots").getMethodHandle();
+			setShieldSpec = inspectMethod(hullSpecClass, "setShieldSpec").getMethodHandle();
+			addBuiltInMod = inspectMethod(hullSpecClass, "addBuiltInMod").getMethodHandle();
+			setManufacturer = inspectMethod(hullSpecClass, "setManufacturer").getMethodHandle();
+			setDescriptionPrefix = inspectMethod(hullSpecClass, "setDescriptionPrefix").getMethodHandle();
+			setShipSystemId = inspectMethod(hullSpecClass, "setShipSystemId").getMethodHandle();
+			addWeaponSlot = inspectMethod(hullSpecClass, "addWeaponSlot").getMethodHandle();
+			addBuiltInWeapon = inspectMethod(hullSpecClass, "addBuiltInWeapon").getMethodHandle();
+			addBuiltInWing = inspectMethod(hullSpecClass, "addBuiltInWing").getMethodHandle();
+		} catch (Throwable t) {
+			logger.fatal("Failed to find a method in 'lyr_hullSpec'", t);
+		}
+	}
 
 	/**
 	 * Creates a new instance for the passed {@link ShipHullSpecAPI}, and 
@@ -79,10 +101,9 @@ public final class lyr_hullSpec extends _lyr_proxyTools { // TODO: move methodHa
 	 */
 	private ShipHullSpecAPI duplicate(ShipHullSpecAPI hullSpec) {
 		try {
-			MethodHandle clone = MethodHandles.lookup().findVirtual(hullSpecClass, "clone", MethodType.methodType(hullSpecClass));
 			return (ShipHullSpecAPI) clone.invoke(hullSpec);
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error("Failed to use 'duplicate()' in 'lyr_hullSpec'", t);
 		} return hullSpec; // java, pls...
 	}
 	
@@ -149,10 +170,9 @@ public final class lyr_hullSpec extends _lyr_proxyTools { // TODO: move methodHa
 		if (engineSlots != null) return this.engineSlots; 
 
 		try {
-			MethodHandle getEngineSlots = MethodHandles.lookup().findVirtual(hullSpecClass, "getEngineSlots", MethodType.methodType(List.class));
 			this.engineSlots = (List<Object>) getEngineSlots.invoke(hullSpec);
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error("Failed to use 'getEngineSlots()' in 'lyr_hullSpec'", t);
 		} 
 
 		return this.engineSlots; 
@@ -164,10 +184,9 @@ public final class lyr_hullSpec extends _lyr_proxyTools { // TODO: move methodHa
 	 */
 	public void setShieldSpec(ShieldSpecAPI shieldSpec) {
 		try {
-			MethodHandle setShieldSpec = MethodHandles.lookup().findVirtual(hullSpecClass, "setShieldSpec", MethodType.methodType(void.class, shieldSpecClass));
 			setShieldSpec.invoke(hullSpec, shieldSpec);
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error("Failed to use 'setShieldSpec()' in 'lyr_hullSpec'", t);
 		}
 	}
 	
@@ -180,10 +199,9 @@ public final class lyr_hullSpec extends _lyr_proxyTools { // TODO: move methodHa
 	 */
 	public void addBuiltInMod(String hullModSpecId) { 
 		try {
-			MethodHandle addBuiltInMod = MethodHandles.lookup().findVirtual(hullSpecClass, "addBuiltInMod", MethodType.methodType(void.class, String.class));
 			addBuiltInMod.invoke(hullSpec, hullModSpecId);
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error("Failed to use 'addBuiltInMod()' in 'lyr_hullSpec'", t);
 		}
 	}
 	
@@ -197,10 +215,9 @@ public final class lyr_hullSpec extends _lyr_proxyTools { // TODO: move methodHa
 	 */
 	public void setManufacturer(String manufacturer) {
 		try {
-			MethodHandle setManufacturer = MethodHandles.lookup().findVirtual(hullSpecClass, "setManufacturer", MethodType.methodType(void.class, String.class));
 			setManufacturer.invoke(hullSpec, manufacturer);
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error("Failed to use 'setManufacturer()' in 'lyr_hullSpec'", t);
 		}
 	}
 
@@ -213,10 +230,9 @@ public final class lyr_hullSpec extends _lyr_proxyTools { // TODO: move methodHa
 	 */
 	public void setDescriptionPrefix(String destriptionPrefix) {
 		try {
-			MethodHandle setDescriptionPrefix = MethodHandles.lookup().findVirtual(hullSpecClass, "setDescriptionPrefix", MethodType.methodType(void.class, String.class));
 			setDescriptionPrefix.invoke(hullSpec, destriptionPrefix);
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error("Failed to use 'setDescriptionPrefix()' in 'lyr_hullSpec'", t);
 		}
 	}
 
@@ -230,10 +246,9 @@ public final class lyr_hullSpec extends _lyr_proxyTools { // TODO: move methodHa
 	 */
 	public void setShipSystemId(String shipSystemId) {
 		try {
-			MethodHandle setShipSystemId = MethodHandles.lookup().findVirtual(hullSpecClass, "setShipSystemId", MethodType.methodType(void.class, String.class));
 			setShipSystemId.invoke(hullSpec, shipSystemId);
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error("Failed to use 'setShipSystemId()' in 'lyr_hullSpec'", t);
 		}
 	}
 
@@ -247,10 +262,9 @@ public final class lyr_hullSpec extends _lyr_proxyTools { // TODO: move methodHa
 	 */
 	public void addWeaponSlot(WeaponSlotAPI weaponSlot) {
 		try {
-			MethodHandle addWeaponSlot = MethodHandles.lookup().findVirtual(hullSpecClass, "addWeaponSlot", MethodType.methodType(void.class, weaponSlotClass));
 			addWeaponSlot.invoke(hullSpec, weaponSlotClass.cast(weaponSlot));
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error("Failed to use 'addWeaponSlot()' in 'lyr_hullSpec'", t);
 		}
 	}
 
@@ -265,10 +279,9 @@ public final class lyr_hullSpec extends _lyr_proxyTools { // TODO: move methodHa
 	 */
 	public void addBuiltInWeapon(String slotId, String weaponSpecId) {
 		try { 
-			MethodHandle addBuiltInWeapon = MethodHandles.lookup().findVirtual(hullSpecClass, "addBuiltInWeapon", MethodType.methodType(void.class, String.class, String.class));
 			addBuiltInWeapon.invoke(hullSpec, slotId, weaponSpecId);
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error("Failed to use 'addBuiltInWeapon()' in 'lyr_hullSpec'", t);
 		}
 	}
 
@@ -281,10 +294,9 @@ public final class lyr_hullSpec extends _lyr_proxyTools { // TODO: move methodHa
 	 */
 	public void addBuiltInWing(String wingId) {
 		try { 
-			MethodHandle addBuiltInWing = MethodHandles.lookup().findVirtual(hullSpecClass, "addBuiltInWing", MethodType.methodType(void.class, String.class));
 			addBuiltInWing.invoke(hullSpec, wingId);
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error("Failed to use 'addBuiltInWing()' in 'lyr_hullSpec'", t);
 		}
 	}
 	//#endregion 

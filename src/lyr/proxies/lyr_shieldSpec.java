@@ -2,8 +2,6 @@ package lyr.proxies;
 
 import java.awt.Color;
 import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
 
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
 
@@ -21,7 +19,19 @@ import lyr.tools._lyr_proxyTools;
  */
 public final class lyr_shieldSpec extends _lyr_proxyTools { // TODO: move methodHandles to a static block, use reflectionTools for assistance if necessary
 	private ShieldSpecAPI shieldSpec;
-	// private static final Class<?> shieldSpecClass = _lyr_proxyTools.shieldSpecClass;
+	private static MethodHandle clone = null;
+	private static MethodHandle setRingColor = null;
+	private static MethodHandle setInnerColor = null;
+	
+	static {
+		try {
+			clone = inspectMethod(shieldSpecClass, "clone").getMethodHandle();
+			setRingColor = inspectMethod(shieldSpecClass, "setRingColor").getMethodHandle();
+			setInnerColor = inspectMethod(shieldSpecClass, "setInnerColor").getMethodHandle();
+		} catch (Throwable t) {
+			logger.fatal("Failed to find a method in 'lyr_shieldSpec'", t);
+		}
+	}
 
 	/**
 	 * Creates a new instance for the passed {@link ShieldSpecAPI}, and 
@@ -49,7 +59,7 @@ public final class lyr_shieldSpec extends _lyr_proxyTools { // TODO: move method
 	public ShieldSpecAPI retrieve() {
 		return shieldSpec;
 	}
-	
+
 	/**
 	 * Used to exchange the {@link ShieldSpecAPI} stored in the proxy
 	 * class in order to re-use this proxy instead of creating new ones.
@@ -71,10 +81,9 @@ public final class lyr_shieldSpec extends _lyr_proxyTools { // TODO: move method
 	 */
 	protected ShieldSpecAPI duplicate(ShieldSpecAPI shieldSpec) {
 		try {
-			MethodHandle clone = MethodHandles.lookup().findVirtual(shieldSpecClass, "clone", MethodType.methodType(shieldSpecClass));
 			return (ShieldSpecAPI) clone.invoke(shieldSpec);
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error("Failed to use 'duplicate()' in 'lyr_shieldSpec'", t);
 		} return shieldSpec; // java, pls...
 	}
 	
@@ -96,10 +105,9 @@ public final class lyr_shieldSpec extends _lyr_proxyTools { // TODO: move method
 	 */
 	public void setRingColor(Color colour) {
 		try {
-			MethodHandle setRingColor = MethodHandles.lookup().findVirtual(shieldSpecClass, "setRingColor", MethodType.methodType(void.class, Color.class));
 			setRingColor.invoke(shieldSpec, colour);
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error("Failed to use 'setRingColor()' in 'lyr_shieldSpec'", t);
 		}
 	}
 
@@ -111,10 +119,9 @@ public final class lyr_shieldSpec extends _lyr_proxyTools { // TODO: move method
 	 */
 	public void setInnerColor(Color colour) {
 		try {
-			MethodHandle setInnerColor = MethodHandles.lookup().findVirtual(shieldSpecClass, "setInnerColor", MethodType.methodType(void.class, Color.class));
 			setInnerColor.invoke(shieldSpec, colour);
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error("Failed to use 'setInnerColor()' in 'lyr_shieldSpec'", t);
 		}
 	}
 	//#endregion 

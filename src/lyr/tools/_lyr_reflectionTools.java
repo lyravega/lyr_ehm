@@ -40,7 +40,7 @@ public class _lyr_reflectionTools {
 			getDeclaredMethod = lookup.findVirtual(Class.class, "getDeclaredMethod", MethodType.methodType(methodClass, String.class, Class[].class));
 			getMethod = lookup.findVirtual(Class.class, "getMethod", MethodType.methodType(methodClass, String.class, Class[].class));
 		} catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException e) {
-			e.printStackTrace();
+			logger.fatal("Failed to initialize reflection tools", e);
 		}
 	}
 
@@ -48,40 +48,47 @@ public class _lyr_reflectionTools {
 	 * Provides a structure with proper accessors to store and 
 	 * access to the return values for the {@code inspectMethod()}.
 	 */
-	protected static class methodMap {
+	public static final class methodMap {
 		private Class<?> returnType;
 		private Class<?>[] parameterTypes;
+		private String methodName;
 		private MethodType methodType;
 		private MethodHandle methodHandle;
 
-		protected methodMap(Class<?> returnType, Class<?>[] parameterTypes, MethodType methodType, MethodHandle methodHandle) {
+		public methodMap(Class<?> returnType, Class<?>[] parameterTypes, String methodName, MethodType methodType, MethodHandle methodHandle) {
 			this.returnType = returnType;
 			this.parameterTypes = parameterTypes;
 			this.methodType = methodType;
 			this.methodHandle = methodHandle;
 		}
 
-		protected Class<?> getReturnType() { return this.returnType; }
-		protected Class<?>[] getParameterTypes() { return this.parameterTypes; }
-		protected MethodType getMethodType() { return this.methodType; }
-		protected MethodHandle getMethodHandle() { return this.methodHandle; }
+		public Class<?> getReturnType() { return this.returnType; }
+		public Class<?>[] getParameterTypes() { return this.parameterTypes; }
+		public String getName() { return this.methodName; }
+		public MethodType getMethodType() { return this.methodType; }
+		public MethodHandle getMethodHandle() { return this.methodHandle; }
 	}
 
 	/**
-	 * Pass a class, and a methodName as a string to get a methodMap object
-	 * that contains the returnType and parameterTypes of the method, 
-	 * alonside a MethodType and a ready-to-use MethodHandle to invoke the 
-	 * said method.   
+	 * Search for a method in a class with the given methodName as a string, and 
+	 * get a methodMap object that contains the returnType and parameterTypes of
+	 * the found method, alonside a MethodType and a ready-to-use MethodHandle 
+	 * to invoke it.
+	 * <p> If the method has any overloads, the first found one will be used for
+	 * methodMap construction. 
+	 * <p> Also handles any methods with parameters through its fallback. Finding
+	 * methods with parameters through methodHandles is a bit tricky, so all of
+	 * the methods will be searched to find it.
 	 * @param clazz to search the methodName on
 	 * @param methodName in String, no "()"
 	 * @param checkDeclared overload parameter, pass false to search inherited methods as well
 	 * @return a methodMap
 	 * @throws Throwable 
 	 */
-	public static methodMap inspectMethod(Class<?> clazz, String methodName) throws Throwable {
+	public static final methodMap inspectMethod(Class<?> clazz, String methodName) throws Throwable {
 		return inspectMethod(clazz, methodName, true);
 	}
-	public static methodMap inspectMethod(Class<?> clazz, String methodName, boolean checkDeclared) throws Throwable {
+	public static final methodMap inspectMethod(Class<?> clazz, String methodName, boolean checkDeclared) throws Throwable {
 		Object method = null;
 		try { // works for methods with no arguments; if there's a way to capture it through a MethodHandle, I'm not aware of it
 			method = (checkDeclared) ? getDeclaredMethod.invoke(clazz, methodName) : getMethod.invoke(clazz, methodName);
@@ -97,10 +104,29 @@ public class _lyr_reflectionTools {
 
 		Class<?> returnType = (Class<?>) getReturnType.invoke(method);
 		Class<?>[] parameterTypes = (Class<?>[]) getParameterTypes.invoke(method);
-
+		// String methodName = (String) getName.invoke(method);
 		MethodType methodType = MethodType.methodType(returnType, parameterTypes);
 		MethodHandle methodHandle = MethodHandles.lookup().findVirtual(clazz, methodName, MethodType.methodType(returnType, parameterTypes));
 
-		return new methodMap(returnType, parameterTypes, methodType, methodHandle);
+		return new methodMap(returnType, parameterTypes, methodName, methodType, methodHandle);
+	}
+
+	/**
+	 * For cases where the method objects are available and a methodMap
+	 * is needed, this alternative overload can be used to store and gain
+	 * access to everything that a methodMap offers.
+	 * @param clazz that has the method on
+	 * @param method object
+	 * @return a methodMap
+	 * @throws Throwable 
+	 */
+	public static final methodMap inspectMethod(Class<?> clazz, Object method) throws Throwable {
+		Class<?> returnType = (Class<?>) getReturnType.invoke(method);
+		Class<?>[] parameterTypes = (Class<?>[]) getParameterTypes.invoke(method);
+		String methodName = (String) getName.invoke(method);
+		MethodType methodType = MethodType.methodType(returnType, parameterTypes);
+		MethodHandle methodHandle = MethodHandles.lookup().findVirtual(clazz, methodName, MethodType.methodType(returnType, parameterTypes));
+
+		return new methodMap(returnType, parameterTypes, methodName, methodType, methodHandle);
 	}
 }

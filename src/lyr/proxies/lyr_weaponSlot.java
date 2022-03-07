@@ -1,8 +1,6 @@
 package lyr.proxies;
 
 import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.invoke.MethodType;
 
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
@@ -25,8 +23,27 @@ import lyr.tools._lyr_proxyTools;
  */
 public final class lyr_weaponSlot extends _lyr_proxyTools { // TODO: move methodHandles to a static block, use reflectionTools for assistance if necessary
 	private WeaponSlotAPI weaponSlot;
-	// private static final Class<?> weaponSlotClass = _lyr_proxyTools.weaponSlotClass;
-	// private static final Class<?> nodeClass = _lyr_proxyTools.nodeClass;
+	private static MethodHandle clone = null;
+	private static MethodHandle setWeaponType = null; 
+	private static MethodHandle isWeaponSlot = null;
+	private static MethodHandle setId = null;
+	private static MethodHandle setSlotSize = null;
+	private static MethodHandle newNode = null;
+	private static MethodHandle setNode = null;
+
+	static {
+		try {
+			clone = inspectMethod(weaponSlotClass, "clone").getMethodHandle();
+			setWeaponType = inspectMethod(weaponSlotClass, "setWeaponType").getMethodHandle();
+			isWeaponSlot = inspectMethod(weaponSlotClass, "isWeaponSlot").getMethodHandle();
+			setId = inspectMethod(weaponSlotClass, "setId").getMethodHandle();
+			setSlotSize = inspectMethod(weaponSlotClass, "setSlotSize").getMethodHandle();
+			newNode = lookup.findConstructor(nodeClass, MethodType.methodType(void.class, String.class, Vector2f.class));
+			setNode = inspectMethod(weaponSlotClass, "setNode").getMethodHandle();
+		} catch (Throwable t) {
+			logger.fatal("Failed to find a method in 'lyr_weaponSlot'", t);
+		}
+	}
 
 	/**
 	 * Creates a new instance for the passed {@link WeaponSlotAPI}, and 
@@ -70,10 +87,9 @@ public final class lyr_weaponSlot extends _lyr_proxyTools { // TODO: move method
 	 */
 	protected WeaponSlotAPI duplicate(WeaponSlotAPI weaponSlot) {
 		try {
-			MethodHandle clone = MethodHandles.lookup().findVirtual(weaponSlotClass, "clone", MethodType.methodType(weaponSlotClass));
 			return (WeaponSlotAPI) clone.invoke(weaponSlot);
 		} catch (Throwable t) {
-			t.printStackTrace(); 
+			logger.error("Failed to use 'duplicate()' in 'lyr_weaponSlot'", t);
 		} return weaponSlot; // java, pls...
 	}
 	
@@ -94,10 +110,9 @@ public final class lyr_weaponSlot extends _lyr_proxyTools { // TODO: move method
 	 */
 	public void setWeaponType(WeaponType weaponType) {
 		try {
-			MethodHandle setWeaponType = MethodHandles.lookup().findVirtual(weaponSlotClass, "setWeaponType", MethodType.methodType(void.class, WeaponType.class));
 			setWeaponType.invoke(weaponSlot, weaponType);
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error("Failed to use 'setWeaponType()' in 'lyr_weaponSlot'", t);
 		}
 	}
 
@@ -109,10 +124,9 @@ public final class lyr_weaponSlot extends _lyr_proxyTools { // TODO: move method
 	 */
 	public boolean isWeaponSlot() {
 		try {
-			MethodHandle isWeaponSlot = MethodHandles.lookup().findVirtual(weaponSlotClass, "isWeaponSlot", MethodType.methodType(boolean.class));
 			return (boolean) isWeaponSlot.invoke(weaponSlot);
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error("Failed to use 'isWeaponSlot()' in 'lyr_weaponSlot'", t);
 		} return false; // java, pls...
 	}
 
@@ -125,10 +139,9 @@ public final class lyr_weaponSlot extends _lyr_proxyTools { // TODO: move method
 	 */
 	public void setId(String weaponSlotId) {
 		try {
-			MethodHandle setId = MethodHandles.lookup().findVirtual(weaponSlotClass, "setId", MethodType.methodType(void.class, String.class));
 			setId.invoke(weaponSlot, weaponSlotId);
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error("Failed to use 'setId()' in 'lyr_weaponSlot'", t);
 		}
 	}
 
@@ -140,10 +153,9 @@ public final class lyr_weaponSlot extends _lyr_proxyTools { // TODO: move method
 	 */
 	public void setSlotSize(WeaponSize weaponSize) {
 		try {
-			MethodHandle setSlotSize = MethodHandles.lookup().findVirtual(weaponSlotClass, "setSlotSize", MethodType.methodType(void.class, WeaponSize.class));
 			setSlotSize.invoke(weaponSlot, weaponSize);
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error("Failed to use 'setSlotSize()' in 'lyr_weaponSlot'", t);
 		}
 	}
 
@@ -164,13 +176,9 @@ public final class lyr_weaponSlot extends _lyr_proxyTools { // TODO: move method
 	 */
 	public void setNode(String nodeId, Vector2f location) {
 		try {
-			Lookup lookup = MethodHandles.lookup();
-
-			MethodHandle newNode = lookup.findConstructor(nodeClass, MethodType.methodType(void.class, String.class, Vector2f.class));
-			MethodHandle setNode = lookup.findVirtual(weaponSlotClass, "setNode", MethodType.methodType(void.class, nodeClass));
 			setNode.invoke(weaponSlot, nodeClass.cast(newNode.invoke(nodeId, location)));
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error("Failed to use 'setNode()' in 'lyr_weaponSlot'", t);
 		}
 	}
 	//#endregion 

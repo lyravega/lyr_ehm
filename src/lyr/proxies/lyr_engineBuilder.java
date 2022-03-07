@@ -1,8 +1,6 @@
 package lyr.proxies;
 
 import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
 
 import lyr.tools._lyr_proxyTools;
 
@@ -25,9 +23,8 @@ import lyr.tools._lyr_proxyTools;
  */
 public final class lyr_engineBuilder extends _lyr_proxyTools { // TODO: move methodHandles to a static block, use reflectionTools for assistance if necessary
 	private Object engineBuilder;
-	// private static final Class<?> engineBuilderClass = _lyr_proxyTools.engineBuilderClass;
-	// private static final Class<?> engineStyleEnum = _lyr_proxyTools.engineStyleEnum;
-	// private static final String engineStyleSetterName = _lyr_proxyTools.engineStyleSetterName;
+	private static MethodHandle clone = null;
+	private static MethodHandle setEngineStyle = null;
 
 	public static enum engineStyle { ;
 		public static final int lowTech = 0;
@@ -43,6 +40,15 @@ public final class lyr_engineBuilder extends _lyr_proxyTools { // TODO: move met
 		// public static final int lowTechRocket = 10; // weird cut-off
 		// public static final int doritos = 11; // nothing
 		public static final int custom = 12;
+	}
+
+	static {
+		try {
+			clone = inspectMethod(engineBuilderClass, "clone").getMethodHandle();
+			setEngineStyle = inspectMethod(engineBuilderClass, engineStyleSetter).getMethodHandle();
+		} catch (Throwable t) {
+			logger.fatal("Failed to find a method in 'lyr_engineBuilder'", t);
+		}
 	}
 	
 	/**
@@ -87,11 +93,10 @@ public final class lyr_engineBuilder extends _lyr_proxyTools { // TODO: move met
 	 */
 	protected Object duplicate(Object enginebuilder) {
 		try {
-			MethodHandle clone = MethodHandles.lookup().findVirtual(engineBuilderClass, "clone", MethodType.methodType(engineBuilderClass));
 			return (Object) clone.invoke(enginebuilder);
 		} catch (Throwable t) {
-			t.printStackTrace(); 
-		} return enginebuilder; // java, pls...
+			logger.error("Failed to use 'duplicate()' in 'lyr_engineBuilder'", t); return engineBuilder;
+		}
 	}
 	
 	/**
@@ -111,12 +116,12 @@ public final class lyr_engineBuilder extends _lyr_proxyTools { // TODO: move met
 	 * @param enumNumber
 	 * @category Proxied method
 	 */
+
 	public void setEngineStyle(int enumNumber) {
 		try {
-			MethodHandle setEngineStyle = MethodHandles.lookup().findVirtual(engineBuilderClass, engineStyleSetterName, MethodType.methodType(void.class, engineStyleEnum));
 			setEngineStyle.invoke(engineBuilderClass.cast(engineBuilder), engineStyleEnum.getEnumConstants()[enumNumber]);
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error("Failed to use 'setEngineStyle()' in 'lyr_engineBuilder'", t);
 		}
 	}
 	//#endregion 
