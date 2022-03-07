@@ -1,5 +1,7 @@
 package data.hullmods.ehm_ar;
 
+import static data.hullmods._ehm_util.generateChildLocation;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +17,6 @@ import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import org.lwjgl.util.vector.Vector2f;
 
 import data.hullmods._ehm_base;
-import data.hullmods._ehm_util;
 import lyr.proxies.lyr_hullSpec;
 import lyr.proxies.lyr_weaponSlot;
 import lyr.tools._lyr_uiTools;
@@ -89,7 +90,7 @@ public class _ehm_ar_base extends _ehm_base {
 				lyr_weaponSlot childSlot = parentSlot.clone();
 
 				String childSlotId = ehm.affix.adaptedSlot + parentSlotId + position; // also used as nodeId because nodeId isn't visible
-				Vector2f childSlotLocation = _ehm_util.generateChildLocation(parentSlotLocation, parentSlotAngle, offsets.get(position));
+				Vector2f childSlotLocation = generateChildLocation(parentSlotLocation, parentSlotAngle, offsets.get(position));
 				WeaponSize childSlotSize = parentSlotSize.equals(WeaponSize.LARGE) ? WeaponSize.MEDIUM : WeaponSize.SMALL;
 
 				childSlot.setId(childSlotId);
@@ -101,7 +102,7 @@ public class _ehm_ar_base extends _ehm_base {
 			
 			parentSlot.setWeaponType(WeaponType.DECORATIVE);
 			hullSpec.addBuiltInWeapon(parentSlotId, weaponId);
-			refreshRefit = true; 
+			refreshRefit = true;
 		}
 		
 		if (refreshRefit) { _lyr_uiTools.commitChanges(); refreshRefit = false; }
