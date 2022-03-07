@@ -38,6 +38,9 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 	private static methodMap refitPanel_saveCurrentVariant;
 	private static methodMap designDisplay_undo;
 
+	private static methodMap refitPanel_setEditedSinceLoad;
+	private static methodMap refitPanel_setEditedSinceSave;
+
 	/**
 	 * An everyFrameScript to delay the process of finding the obfuscated
 	 * classes and providing methodHandles for them. Normally, it is not
@@ -81,6 +84,9 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 
 				refitPanel_saveCurrentVariant = _lyr_reflectionTools.inspectMethod(refitPanelClass, "saveCurrentVariant"); // there is an overload for this, beware
 				designDisplay_undo = _lyr_reflectionTools.inspectMethod(designDisplayClass, "undo");
+
+				refitPanel_setEditedSinceLoad = inspectMethod(refitPanelClass, "setEditedSinceLoad");
+				refitPanel_setEditedSinceSave = inspectMethod(refitPanelClass, "setEditedSinceSave");
 
 				// redoing stuff just to find the wrapper, or whatever the fuck it is
 				Object campaignUI = Global.getSector().getCampaignUI();
@@ -207,6 +213,8 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 	}
 	
 	public static void refreshRefitShip() {
+		CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
+		if (tab == null || !tab.equals(CoreUITabId.REFIT)) return; // necessary for calls that are not from 'onInstalled()' or 'onRemoved()'; that originate due to 'onGameLoad()'
 		// Object campaignUI = null;
 		// Object screenPanel = null;
 		// Object encounterDialogue = null;
@@ -234,6 +242,38 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 				designDisplay_undo.getMethodHandle().invoke(designDisplay);
 			} catch (Throwable t) {
 				logger.fatal("Total failure in 'refreshRefitShip()'"); t.printStackTrace();
+			}
+		}
+	}
+
+	public static void clearUndo() {
+		CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
+		if (tab == null || !tab.equals(CoreUITabId.REFIT)) return; // just in case
+		// Object campaignUI = null;
+		// Object screenPanel = null;
+		// Object encounterDialogue = null;
+		// Object core = null;
+		// Object wrapper = null;
+		// Object refitTab = null;
+		Object refitPanel = null;
+		try {
+			Object campaignUI = Global.getSector().getCampaignUI();
+			// Object screenPanel = campaignUI_getScreenPanel.getMethodHandle().invoke(campaignUI);
+			Object encounterDialogue = campaignUI_getEncounterDialog.getMethodHandle().invoke(campaignUI); // same as 'Global.getSector().getCampaignUI().getCurrentInteractionDialog();'
+			Object core = (encounterDialogue != null) ? encounterDialog_getCoreUI.getMethodHandle().invoke(encounterDialogue) : campaignUI_getCore.getMethodHandle().invoke(campaignUI);
+			Object wrapper = adaptiveSearch_findObjectWithChildClass(core, wrapperClass, true, 0);
+			Object refitTab = adaptiveSearch_findObjectWithChildClass(wrapper, refitTabClass, true, 0);
+			// Object refitTab = adaptiveSearch_findObjectWithChildClass(core, refitTabClass, true, 1); // to find refitTab without knowing/getting wrapper
+			refitPanel = refitTab_getRefitPanel.getMethodHandle().invoke(refitTab);
+		} catch (Throwable t) { // hardcoded fallback to do a brute search on ALL the UI
+			logger.warn("Fallback used in 'clearUndo()'");
+			// TODO: clean this shit up
+		} finally {
+			try {
+				refitPanel_setEditedSinceLoad.getMethodHandle().invoke(refitPanel, false);
+				refitPanel_setEditedSinceSave.getMethodHandle().invoke(refitPanel, false);
+			} catch (Throwable t) {
+				logger.fatal("Total failure in 'clearUndo()'"); t.printStackTrace();
 			}
 		}
 	}
