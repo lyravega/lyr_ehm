@@ -3,6 +3,8 @@ package data.hullmods.ehm_ar;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
+import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
@@ -129,6 +131,15 @@ public class _ehm_ar_base extends _ehm_base {
 		if (ehm_hasRetrofitTag(ship, ehm.tag.adapterRetrofit, hullModSpecId)) return ehm.excuses.hasAdapterRetrofit; 
 		
 		return null; 
+	}
+
+	@Override
+	protected String ehm_cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
+		ShipVariantAPI variant = ship.getVariant();
+
+		if (ehm_hasWeapons(variant, ehm.affix.adaptedSlot)) return ehm.excuses.hasWeaponsOnAdaptedSlots;
+
+		return null;
 	}
 	//#endregion
 }
