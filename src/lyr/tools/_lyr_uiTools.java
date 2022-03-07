@@ -212,7 +212,21 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 		return null;
 	}
 	
-	public static void refreshRefitShip() {
+	/**
+	 * This method will immediately save the refit variant and refresh the 
+	 * UI by utilizing the available UI methods. Used to be called as 
+	 * {@code refreshRefit()}, however the new name suits it more.
+	 * <p> Refresh is achieved by executing the 'undo' method as it calls 
+	 * all the necessary methods, effectively serving as a shortcut.
+	 * <p> By committing changes immediately and using 'undo' up and thus 
+	 * disabling it, some odd unwanted behaviour and problems are dealt 
+	 * with as a side effect. 
+	 * <p> This may look like a cheap way to deal with those issues, and 
+	 * in a way it is, however trying to deal with those issues one by one
+	 * will bloat this method. This is the cheapest fool-proof way that is
+	 * also effective in dealing with those potential issues indirectly.
+	 */
+	public static void commitChanges() {
 		CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
 		if (tab == null || !tab.equals(CoreUITabId.REFIT)) return; // necessary for calls that are not from 'onInstalled()' or 'onRemoved()'; that originate due to 'onGameLoad()'
 		// Object campaignUI = null;
@@ -246,6 +260,11 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 		}
 	}
 
+	/**
+	 * This method will make the 'undo' button inactive. It is necessary for any 
+	 * refreshes that were done remotely; not from the {@code onRemove()} and 
+	 * {@code onInstalled()} methods.
+	 */
 	public static void clearUndo() {
 		CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
 		if (tab == null || !tab.equals(CoreUITabId.REFIT)) return; // just in case

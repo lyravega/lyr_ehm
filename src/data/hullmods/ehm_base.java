@@ -6,7 +6,7 @@ import static data.hullmods.ehm_sc._ehm_sc_base.ehm_restoreShield;
 import static data.hullmods.ehm_sr._ehm_sr_base.ehm_systemRestore;
 import static data.hullmods.ehm_wr._ehm_wr_base.ehm_weaponSlotRestore;
 import static lyr.tools._lyr_uiTools.clearUndo;
-import static lyr.tools._lyr_uiTools.refreshRefitShip;
+import static lyr.tools._lyr_uiTools.commitChanges;
 
 import java.awt.AWTException;
 import java.awt.Robot;
@@ -172,23 +172,23 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 		ShipVariantAPI refitVariant = ship.getVariant();
 		ShipVariantAPI realVariant = fleetMemberMap.get(ship.getFleetMemberId()).getVariant();
 		boolean playSound = false;
-		boolean refreshShip = false; // due to the changes under the hood, refresh is necessary for pretty much everything to avoid weird issues
-		boolean undoClear = false; // either this, or 'refreshShip' should be used. 'refreshShip' has precedence if both are set to 'true'
+		boolean commitChanges = false; // due to the changes under the hood, refresh is necessary for pretty much everything to avoid weird issues
+		boolean clearUndo = false; // either this, or 'refreshShip' should be used. 'refreshShip' has precedence if both are set to 'true'
 
 		String hullModType = newHullModId.substring(0, 7); // all affixes (not tags) are fixed to 0-7
 		switch (hullModType) {
-			case ehm.affix.adapterRetrofit: playSound = true; undoClear = true; break;
-			case ehm.affix.systemRetrofit: playSound = true; refreshShip = true; break;
-			case ehm.affix.weaponRetrofit: playSound = true; refreshShip = true; break;
-			case ehm.affix.shieldCosmetic: playSound = true; refreshShip = true; break;
-			case ehm.affix.engineCosmetic: playSound = true; refreshShip = true; break;
+			case ehm.affix.adapterRetrofit: playSound = true; clearUndo = true; break;
+			case ehm.affix.systemRetrofit: playSound = true; commitChanges = true; break;
+			case ehm.affix.weaponRetrofit: playSound = true; commitChanges = true; break;
+			case ehm.affix.shieldCosmetic: playSound = true; commitChanges = true; break;
+			case ehm.affix.engineCosmetic: playSound = true; commitChanges = true; break;
 			default: switch (newHullModId) {
-				case ehm.tag.baseRetrofit: playSound = true; refreshShip = true; break;
+				case ehm.tag.baseRetrofit: playSound = true; commitChanges = true; break;
 			} break;
 		}
 
-		if (refreshShip) refreshRefitShip();
-		else if (undoClear) clearUndo();
+		if (commitChanges) commitChanges();
+		else if (clearUndo) clearUndo();
 		if (playSound) Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f);
 	}
 
@@ -197,21 +197,21 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 		ShipVariantAPI refitVariant = ship.getVariant();
 		ShipVariantAPI realVariant = fleetMemberMap.get(ship.getFleetMemberId()).getVariant();
 		boolean playSound = false;
-		boolean refreshShip = false;
-		boolean undoClear = false;
+		boolean commitChanges = false;
+		boolean clearUndo = false;
 
 		String hullModType = removedHullModId.substring(0, 7); 
 		switch (hullModType) {
-			case ehm.affix.adapterRetrofit: refitVariant.setHullSpecAPI(ehm_adapterRemoval(refitVariant)); playSound = true; refreshShip = true; break;
-			case ehm.affix.systemRetrofit: refitVariant.setHullSpecAPI(ehm_systemRestore(refitVariant)); playSound = true; refreshShip = true; break;
-			case ehm.affix.weaponRetrofit: refitVariant.setHullSpecAPI(ehm_weaponSlotRestore(refitVariant)); playSound = true; refreshShip = true; break;
-			case ehm.affix.shieldCosmetic: refitVariant.setHullSpecAPI(ehm_restoreShield(refitVariant)); playSound = true; refreshShip = true; break;
-			case ehm.affix.engineCosmetic: refitVariant.setHullSpecAPI(ehm_restoreEngineSlots(refitVariant)); playSound = true; refreshShip = true; break;
+			case ehm.affix.adapterRetrofit: refitVariant.setHullSpecAPI(ehm_adapterRemoval(refitVariant)); playSound = true; commitChanges = true; break;
+			case ehm.affix.systemRetrofit: refitVariant.setHullSpecAPI(ehm_systemRestore(refitVariant)); playSound = true; commitChanges = true; break;
+			case ehm.affix.weaponRetrofit: refitVariant.setHullSpecAPI(ehm_weaponSlotRestore(refitVariant)); playSound = true; commitChanges = true; break;
+			case ehm.affix.shieldCosmetic: refitVariant.setHullSpecAPI(ehm_restoreShield(refitVariant)); playSound = true; commitChanges = true; break;
+			case ehm.affix.engineCosmetic: refitVariant.setHullSpecAPI(ehm_restoreEngineSlots(refitVariant)); playSound = true; commitChanges = true; break;
 			default: break;
 		}
 
-		if (refreshShip) refreshRefitShip();
-		else if (undoClear) clearUndo();
+		if (commitChanges) commitChanges();
+		else if (clearUndo) clearUndo();
 		if (playSound) Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f);
 	}
 	//#endregion
