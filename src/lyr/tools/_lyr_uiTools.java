@@ -67,23 +67,23 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 				if (tab == null || !tab.equals(CoreUITabId.REFIT)) return;
 
 				campaignUIClass = Global.getSector().getCampaignUI().getClass();
-				screenPanelClass = _lyr_reflectionTools.inspectMethod(campaignUIClass, "getScreenPanel").getReturnType();
-				encounterDialogueClass = _lyr_reflectionTools.inspectMethod(campaignUIClass, "getEncounterDialog").getReturnType();
-				coreClass = _lyr_reflectionTools.inspectMethod(campaignUIClass, "getCore").getReturnType();
-				refitPanelClass = _lyr_reflectionTools.inspectMethod(campaignUIClass, "notifyFleetMemberChanged").getParameterTypes()[0]; 
-				refitTabClass = _lyr_reflectionTools.inspectMethod(refitPanelClass, "getRefitTab").getReturnType();
-				designDisplayClass = _lyr_reflectionTools.inspectMethod(refitPanelClass, "getDesignDisplay").getReturnType();
+				screenPanelClass = inspectMethod(campaignUIClass, "getScreenPanel").getReturnType();
+				encounterDialogueClass = inspectMethod(campaignUIClass, "getEncounterDialog").getReturnType();
+				coreClass = inspectMethod(campaignUIClass, "getCore").getReturnType();
+				refitPanelClass = inspectMethod(campaignUIClass, "notifyFleetMemberChanged").getParameterTypes()[0]; 
+				refitTabClass = inspectMethod(refitPanelClass, "getRefitTab").getReturnType();
+				designDisplayClass = inspectMethod(refitPanelClass, "getDesignDisplay").getReturnType();
 
 				// some similar, some same shit that is used above, defined here separately to keep them tidy because 'MUH GAEMUR OCD'
-				campaignUI_getScreenPanel = _lyr_reflectionTools.inspectMethod(campaignUIClass, "getScreenPanel");
-				campaignUI_getEncounterDialog = _lyr_reflectionTools.inspectMethod(campaignUIClass, "getEncounterDialog");
-				campaignUI_getCore = _lyr_reflectionTools.inspectMethod(campaignUIClass, "getCore");
-				encounterDialog_getCoreUI = _lyr_reflectionTools.inspectMethod(encounterDialogueClass, "getCoreUI");
-				refitTab_getRefitPanel = _lyr_reflectionTools.inspectMethod(refitTabClass, "getRefitPanel");
-				refitPanel_getDesignDisplay = _lyr_reflectionTools.inspectMethod(refitPanelClass, "getDesignDisplay");
+				campaignUI_getScreenPanel = inspectMethod(campaignUIClass, "getScreenPanel");
+				campaignUI_getEncounterDialog = inspectMethod(campaignUIClass, "getEncounterDialog");
+				campaignUI_getCore = inspectMethod(campaignUIClass, "getCore");
+				encounterDialog_getCoreUI = inspectMethod(encounterDialogueClass, "getCoreUI");
+				refitTab_getRefitPanel = inspectMethod(refitTabClass, "getRefitPanel");
+				refitPanel_getDesignDisplay = inspectMethod(refitPanelClass, "getDesignDisplay");
 
-				refitPanel_saveCurrentVariant = _lyr_reflectionTools.inspectMethod(refitPanelClass, "saveCurrentVariant"); // there is an overload for this, beware
-				designDisplay_undo = _lyr_reflectionTools.inspectMethod(designDisplayClass, "undo");
+				refitPanel_saveCurrentVariant = inspectMethod(refitPanelClass, "saveCurrentVariant"); // there is an overload for this, beware
+				designDisplay_undo = inspectMethod(designDisplayClass, "undo");
 
 				refitPanel_setEditedSinceLoad = inspectMethod(refitPanelClass, "setEditedSinceLoad");
 				refitPanel_setEditedSinceSave = inspectMethod(refitPanelClass, "setEditedSinceSave");
