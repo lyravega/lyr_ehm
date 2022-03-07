@@ -5,6 +5,8 @@ import static data.hullmods.ehm_ec._ehm_ec_base.ehm_restoreEngineSlots;
 import static data.hullmods.ehm_sc._ehm_sc_base.ehm_restoreShield;
 import static data.hullmods.ehm_sr._ehm_sr_base.ehm_systemRestore;
 import static data.hullmods.ehm_wr._ehm_wr_base.ehm_weaponSlotRestore;
+import static lyr.tools._lyr_uiTools.clearUndo;
+import static lyr.tools._lyr_uiTools.refreshRefitShip;
 
 import java.awt.AWTException;
 import java.awt.Robot;
@@ -29,8 +31,6 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 
 import org.apache.log4j.Logger;
-
-import lyr.tools._lyr_uiTools;
 
 /**
  * Serves as a requirement for all experimental hull modifications, and provides hullMod
@@ -167,46 +167,51 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private static void onInstalled(String newHullModId, ShipAPI ship) {
-		// ShipVariantAPI refitVariant = ship.getVariant();
-		// ShipVariantAPI realVariant = fleetMemberMap.get(ship.getFleetMemberId()).getVariant();
+		ShipVariantAPI refitVariant = ship.getVariant();
+		ShipVariantAPI realVariant = fleetMemberMap.get(ship.getFleetMemberId()).getVariant();
 		boolean playSound = false;
-		boolean refreshShip = false;
-		boolean undoClear = false; // same shit as refreshShip, used for special purposes. different variable for visibility
+		boolean refreshShip = false; // due to the changes under the hood, refresh is necessary for pretty much everything to avoid weird issues
+		boolean undoClear = false; // either this, or 'refreshShip' should be used. 'refreshShip' has precedence if both are set to 'true'
 
 		String hullModType = newHullModId.substring(0, 7); // all affixes (not tags) are fixed to 0-7
-		switch (hullModType) { // any weaponSlot changes require refresh
-			case ehm.affix.adapterRetrofit: playSound = true; undoClear = true; break; // refresh handled through hullMod, however undo needs to be cleared as variant is not set yet when the refresh is called through hullMod method
-			case ehm.affix.systemRetrofit: playSound = true; break; // refresh not needed
-			case ehm.affix.weaponRetrofit: playSound = true; refreshShip = true; break; // refresh needed due to slots
-			case ehm.affix.shieldCosmetic: playSound = true; break; // refresh not needed
-			case ehm.affix.engineCosmetic: playSound = true; undoClear = true; break; // refresh not needed, but undo needs to be cleared as 'onRemove()' refreshes and reinstalling these then undoing something will crash
+		switch (hullModType) {
+			case ehm.affix.adapterRetrofit: playSound = true; undoClear = true; break;
+			case ehm.affix.systemRetrofit: playSound = true; refreshShip = true; break;
+			case ehm.affix.weaponRetrofit: playSound = true; refreshShip = true; break;
+			case ehm.affix.shieldCosmetic: playSound = true; refreshShip = true; break;
+			case ehm.affix.engineCosmetic: playSound = true; refreshShip = true; break;
 			default: switch (newHullModId) {
-				case ehm.tag.baseRetrofit: playSound = true; refreshShip = true; break; // refresh needed, moved from its own method to here
+				case ehm.tag.baseRetrofit: playSound = true; refreshShip = true; break;
 			} break;
 		}
 
-		if (refreshShip || undoClear) _lyr_uiTools.refreshRefitShip();
+		if (refreshShip) refreshRefitShip();
+		else if (undoClear) clearUndo();
 		if (playSound) Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f);
 	}
 
+	@SuppressWarnings("unused")
 	private static void onRemoved(String removedHullModId, ShipAPI ship) {
 		ShipVariantAPI refitVariant = ship.getVariant();
-		// ShipVariantAPI realVariant = fleetMemberMap.get(ship.getFleetMemberId()).getVariant();
+		ShipVariantAPI realVariant = fleetMemberMap.get(ship.getFleetMemberId()).getVariant();
 		boolean playSound = false;
 		boolean refreshShip = false;
+		boolean undoClear = false;
 
 		String hullModType = removedHullModId.substring(0, 7); 
-		switch (hullModType) { // any weaponSlot changes and cheap removal methods require refresh
-			case ehm.affix.adapterRetrofit: refitVariant.setHullSpecAPI(ehm_adapterRemoval(refitVariant)); playSound = true; refreshShip = true; break; // refresh needed due to cheap restore
-			case ehm.affix.systemRetrofit: refitVariant.setHullSpecAPI(ehm_systemRestore(refitVariant)); playSound = true; break; // refresh not needed due to proper restore
-			case ehm.affix.weaponRetrofit: refitVariant.setHullSpecAPI(ehm_weaponSlotRestore(refitVariant)); playSound = true; refreshShip = true; break; // refresh needed to update slots
-			case ehm.affix.shieldCosmetic: refitVariant.setHullSpecAPI(ehm_restoreShield(refitVariant)); playSound = true; break; // refresh not needed due to proper restore
-			case ehm.affix.engineCosmetic: refitVariant.setHullSpecAPI(ehm_restoreEngineSlots(refitVariant)); playSound = true; refreshShip = true; break; // refresh needed due to cheap restore
+		switch (hullModType) {
+			case ehm.affix.adapterRetrofit: refitVariant.setHullSpecAPI(ehm_adapterRemoval(refitVariant)); playSound = true; refreshShip = true; break;
+			case ehm.affix.systemRetrofit: refitVariant.setHullSpecAPI(ehm_systemRestore(refitVariant)); playSound = true; refreshShip = true; break;
+			case ehm.affix.weaponRetrofit: refitVariant.setHullSpecAPI(ehm_weaponSlotRestore(refitVariant)); playSound = true; refreshShip = true; break;
+			case ehm.affix.shieldCosmetic: refitVariant.setHullSpecAPI(ehm_restoreShield(refitVariant)); playSound = true; refreshShip = true; break;
+			case ehm.affix.engineCosmetic: refitVariant.setHullSpecAPI(ehm_restoreEngineSlots(refitVariant)); playSound = true; refreshShip = true; break;
 			default: break;
 		}
 
-		if (refreshShip) _lyr_uiTools.refreshRefitShip();
+		if (refreshShip) refreshRefitShip();
+		else if (undoClear) clearUndo();
 		if (playSound) Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f);
 	}
 	//#endregion
