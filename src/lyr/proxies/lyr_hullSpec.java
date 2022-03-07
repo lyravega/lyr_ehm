@@ -191,7 +191,7 @@ public class lyr_hullSpec { // TODO: move methodHandles to a static block, use r
 	 * <p> Use {@link #retrieve()} to use the API version through the proxy.
 	 * @param manufacturer to set
 	 * @category Proxied method
-	 * @see Non-Obfuscated: {@link com.fs.starfarer.api.combat.ShipHullSpecAPI#setManufacturer(String)}
+	 * @see Non-Obfuscated: {@link com.fs.starfarer.api.combat.ShipHullSpecAPI#setManufacturer(String) setManufacturer(String)}
 	 */
 	public void setManufacturer(String manufacturer) {
 		try {
@@ -204,8 +204,8 @@ public class lyr_hullSpec { // TODO: move methodHandles to a static block, use r
 
 	/**
 	 * Sets the description prefix of the stored {@link ShipHullSpecAPI} to the 
-	 * passed value. Might overwrite or get overwritten; no checks for that (for
-	 * now) 
+	 * passed value. Might overwrite or get overwritten; doesn't care about the
+	 * existing value, so to speak.
 	 * @param destriptionPrefix to set
 	 * @category Proxied method
 	 */

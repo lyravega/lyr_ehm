@@ -129,6 +129,10 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 	 * children for the given parent will be searched, as if this is an iterative
 	 * method. For values above 0, recursive searching till the given maxDepth 
 	 * will be performed. 
+	 * <p> Does NOT handle methods with parameters, only suitable for methods with
+	 * no arguments. And will stop at the first found. For methods with overloads,
+	 * or parameters, not suitable. 
+	 * TODO: make it suit those too somehow, butcher strings maybe.
 	 * @param parent the root ui object whose children will be searched
 	 * @param methodName to search for, methods with arguments are not handled
 	 * @param maxDepth to limit the recursive search to a certain depth, minimum 0

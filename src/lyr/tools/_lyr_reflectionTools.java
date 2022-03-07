@@ -68,9 +68,10 @@ public class _lyr_reflectionTools {
 	}
 
 	/**
-	 * Pass a class, and a methodName as a string to get the returnType and
-	 * parameterTypes returned, alonside a MethodType and a ready-to-use 
-	 * MethodHandle to use the said method.  
+	 * Pass a class, and a methodName as a string to get a methodMap object
+	 * that contains the returnType and parameterTypes of the method, 
+	 * alonside a MethodType and a ready-to-use MethodHandle to invoke the 
+	 * said method.   
 	 * @param clazz to search the methodName on
 	 * @param methodName in String, no "()"
 	 * @param checkDeclared overload parameter, pass false to search inherited methods as well
@@ -92,7 +93,7 @@ public class _lyr_reflectionTools {
 			}
 		}
 
-		if (method == null) throw new Throwable("Declared method with the name '"+methodName+"' not found in the class '"+clazz.getName()+"'");
+		if (method == null) throw new Throwable("Method with the name '"+methodName+"' not found in the class '"+clazz.getName()+"'");
 
 		Class<?> returnType = (Class<?>) getReturnType.invoke(method);
 		Class<?>[] parameterTypes = (Class<?>[]) getParameterTypes.invoke(method);
