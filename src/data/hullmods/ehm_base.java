@@ -1,5 +1,11 @@
 package data.hullmods;
 
+import static data.hullmods.ehm_ar._ehm_ar_base.ehm_adapterRemoval;
+import static data.hullmods.ehm_ec._ehm_ec_base.ehm_restoreEngineSlots;
+import static data.hullmods.ehm_sc._ehm_sc_base.ehm_restoreShield;
+import static data.hullmods.ehm_sr._ehm_sr_base.ehm_systemRestore;
+import static data.hullmods.ehm_wr._ehm_wr_base.ehm_weaponSlotRestore;
+
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
@@ -24,11 +30,6 @@ import com.fs.starfarer.api.fleet.FleetMemberAPI;
 
 import org.apache.log4j.Logger;
 
-import data.hullmods.ehm_ar._ehm_ar_base;
-import data.hullmods.ehm_ec._ehm_ec_base;
-import data.hullmods.ehm_sc._ehm_sc_base;
-import data.hullmods.ehm_sr._ehm_sr_base;
-import data.hullmods.ehm_wr._ehm_wr_base;
 import lyr.tools._lyr_uiTools;
 
 /**
@@ -197,11 +198,11 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 
 		String hullModType = removedHullModId.substring(0, 7); 
 		switch (hullModType) { // any weaponSlot changes and cheap removal methods require refresh
-			case ehm.affix.adapterRetrofit: _ehm_ar_base.ehm_adapterRemoval(refitVariant); playSound = true; refreshShip = true; break; // refresh needed due to cheap restore
-			case ehm.affix.systemRetrofit: _ehm_sr_base.ehm_systemRestore(refitVariant); playSound = true; break; // refresh not needed due to proper restore
-			case ehm.affix.weaponRetrofit: _ehm_wr_base.ehm_weaponSlotRestore(refitVariant); playSound = true; refreshShip = true; break; // refresh needed to update slots
-			case ehm.affix.shieldCosmetic: _ehm_sc_base.ehm_restoreShield(refitVariant); playSound = true; break; // refresh not needed due to proper restore
-			case ehm.affix.engineCosmetic: _ehm_ec_base.ehm_restoreEngineSlots(refitVariant); playSound = true; refreshShip = true; break; // refresh needed due to cheap restore
+			case ehm.affix.adapterRetrofit: ehm_adapterRemoval(refitVariant); playSound = true; refreshShip = true; break; // refresh needed due to cheap restore
+			case ehm.affix.systemRetrofit: ehm_systemRestore(refitVariant); playSound = true; break; // refresh not needed due to proper restore
+			case ehm.affix.weaponRetrofit: ehm_weaponSlotRestore(refitVariant); playSound = true; refreshShip = true; break; // refresh needed to update slots
+			case ehm.affix.shieldCosmetic: ehm_restoreShield(refitVariant); playSound = true; break; // refresh not needed due to proper restore
+			case ehm.affix.engineCosmetic: ehm_restoreEngineSlots(refitVariant); playSound = true; refreshShip = true; break; // refresh needed due to cheap restore
 			default: break;
 		}
 
