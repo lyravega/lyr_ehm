@@ -11,6 +11,8 @@ import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import lyr.tools._lyr_proxyTools;
+
 /**
  * A proxy-like class for {@link WeaponSlotAPI} that utilizes obfuscated 
  * methods without referring to them. 
@@ -21,10 +23,10 @@ import org.lwjgl.util.vector.Vector2f;
  * <p> Use {@link #retrieve()} to grab the stored {@link WeaponSlotAPI}.
  * @author lyravega
  */
-public class lyr_weaponSlot { // TODO: move methodHandles to a static block, use reflectionTools for assistance if necessary
+public final class lyr_weaponSlot extends _lyr_proxyTools { // TODO: move methodHandles to a static block, use reflectionTools for assistance if necessary
 	private WeaponSlotAPI weaponSlot;
-	private static final Class<?> weaponSlotClass = _lyr_proxyTools.weaponSlotClass;
-	private static final Class<?> nodeClass = _lyr_proxyTools.nodeClass;
+	// private static final Class<?> weaponSlotClass = _lyr_proxyTools.weaponSlotClass;
+	// private static final Class<?> nodeClass = _lyr_proxyTools.nodeClass;
 
 	/**
 	 * Creates a new instance for the passed {@link WeaponSlotAPI}, and 

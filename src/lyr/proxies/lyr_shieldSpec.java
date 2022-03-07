@@ -7,6 +7,8 @@ import java.lang.invoke.MethodType;
 
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
 
+import lyr.tools._lyr_proxyTools;
+
 /**
  * A proxy-like class for {@link ShieldSpecAPI} that utilizes obfuscated 
  * methods without referring to them. 
@@ -17,9 +19,9 @@ import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
  * <p> Use {@link #retrieve()} to grab the stored {@link ShieldSpecAPI}.
  * @author lyravega
  */
-public class lyr_shieldSpec { // TODO: move methodHandles to a static block, use reflectionTools for assistance if necessary
+public final class lyr_shieldSpec extends _lyr_proxyTools { // TODO: move methodHandles to a static block, use reflectionTools for assistance if necessary
 	private ShieldSpecAPI shieldSpec;
-	private static final Class<?> shieldSpecClass = _lyr_proxyTools.shieldSpecClass;
+	// private static final Class<?> shieldSpecClass = _lyr_proxyTools.shieldSpecClass;
 
 	/**
 	 * Creates a new instance for the passed {@link ShieldSpecAPI}, and 

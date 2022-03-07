@@ -9,6 +9,8 @@ import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
+import lyr.tools._lyr_proxyTools;
+
 /**
  * A proxy-like class for {@link ShipHullSpecAPI} that utilizes obfuscated 
  * methods without referring to them. 
@@ -19,14 +21,14 @@ import com.fs.starfarer.api.loading.WeaponSlotAPI;
  * <p> Use {@link #retrieve()} to grab the stored {@link ShipHullSpecAPI}.
  * @author lyravega
  */
-public class lyr_hullSpec { // TODO: move methodHandles to a static block, use reflectionTools for assistance if necessary
+public final class lyr_hullSpec extends _lyr_proxyTools { // TODO: move methodHandles to a static block, use reflectionTools for assistance if necessary
 	private ShipHullSpecAPI hullSpec;
 	private lyr_weaponSlot weaponSlot = null;
 	private lyr_shieldSpec shieldSpec = null;
 	private List<Object> engineSlots = null;
-	private static final Class<?> hullSpecClass = _lyr_proxyTools.hullSpecClass;
-	private static final Class<?> shieldSpecClass = _lyr_proxyTools.shieldSpecClass;
-	private static final Class<?> weaponSlotClass = _lyr_proxyTools.weaponSlotClass;
+	// private static final Class<?> hullSpecClass = _lyr_proxyTools.hullSpecClass;
+	// private static final Class<?> shieldSpecClass = _lyr_proxyTools.shieldSpecClass;
+	// private static final Class<?> weaponSlotClass = _lyr_proxyTools.weaponSlotClass;
 
 	/**
 	 * Creates a new instance for the passed {@link ShipHullSpecAPI}, and 

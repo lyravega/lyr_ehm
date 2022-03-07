@@ -4,6 +4,8 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 
+import lyr.tools._lyr_proxyTools;
+
 /**
  * A proxy-like class for... engine builder? I have no idea what 
  * this is. As far as I can tell, there is no API equalivent to
@@ -21,11 +23,11 @@ import java.lang.invoke.MethodType;
  * there are no API functions that can be taken advantage of.
  * @author lyravega
  */
-public class lyr_engineBuilder { // TODO: move methodHandles to a static block, use reflectionTools for assistance if necessary
+public final class lyr_engineBuilder extends _lyr_proxyTools { // TODO: move methodHandles to a static block, use reflectionTools for assistance if necessary
 	private Object engineBuilder;
-	private static final Class<?> engineBuilderClass = _lyr_proxyTools.engineBuilderClass;
-	private static final Class<?> engineStyleEnum = _lyr_proxyTools.engineStyleEnum;
-	private static final String engineStyleSetterName = _lyr_proxyTools.engineStyleSetterName;
+	// private static final Class<?> engineBuilderClass = _lyr_proxyTools.engineBuilderClass;
+	// private static final Class<?> engineStyleEnum = _lyr_proxyTools.engineStyleEnum;
+	// private static final String engineStyleSetterName = _lyr_proxyTools.engineStyleSetterName;
 
 	public static enum engineStyle { ;
 		public static final int lowTech = 0;
