@@ -21,7 +21,7 @@ import java.lang.invoke.MethodType;
  * there are no API functions that can be taken advantage of.
  * @author lyravega
  */
-public class lyr_engineBuilder {
+public class lyr_engineBuilder { // TODO: move methodHandles to a static block, use reflectionTools for assistance if necessary
 	private Object engineBuilder;
 	private static final Class<?> engineBuilderClass = _lyr_proxyTools.engineBuilderClass;
 	private static final Class<?> engineStyleEnum = _lyr_proxyTools.engineStyleEnum;

@@ -19,7 +19,7 @@ import com.fs.starfarer.api.loading.WeaponSlotAPI;
  * <p> Use {@link #retrieve()} to grab the stored {@link ShipHullSpecAPI}.
  * @author lyravega
  */
-public class lyr_hullSpec {
+public class lyr_hullSpec { // TODO: move methodHandles to a static block, use reflectionTools for assistance if necessary
 	private ShipHullSpecAPI hullSpec;
 	private lyr_weaponSlot weaponSlot = null;
 	private lyr_shieldSpec shieldSpec = null;

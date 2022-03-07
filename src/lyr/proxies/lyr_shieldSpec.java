@@ -17,7 +17,7 @@ import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
  * <p> Use {@link #retrieve()} to grab the stored {@link ShieldSpecAPI}.
  * @author lyravega
  */
-public class lyr_shieldSpec {
+public class lyr_shieldSpec { // TODO: move methodHandles to a static block, use reflectionTools for assistance if necessary
 	private ShieldSpecAPI shieldSpec;
 	private static final Class<?> shieldSpecClass = _lyr_proxyTools.shieldSpecClass;
 

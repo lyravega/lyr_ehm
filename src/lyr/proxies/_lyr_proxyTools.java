@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
  * can be utilized through proxy-like classes.
  * @author lyravega
  */
-public class _lyr_proxyTools {
+public class _lyr_proxyTools { // TODO: move methodHandles to a static block, use reflectionTools for assistance if necessary
 	protected static Class<?> hullSpecClass;
 	protected static Class<?> shieldSpecClass;
 	protected static Class<?> weaponSlotClass;

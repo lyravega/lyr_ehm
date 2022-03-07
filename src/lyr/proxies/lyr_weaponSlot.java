@@ -21,7 +21,7 @@ import org.lwjgl.util.vector.Vector2f;
  * <p> Use {@link #retrieve()} to grab the stored {@link WeaponSlotAPI}.
  * @author lyravega
  */
-public class lyr_weaponSlot {
+public class lyr_weaponSlot { // TODO: move methodHandles to a static block, use reflectionTools for assistance if necessary
 	private WeaponSlotAPI weaponSlot;
 	private static final Class<?> weaponSlotClass = _lyr_proxyTools.weaponSlotClass;
 	private static final Class<?> nodeClass = _lyr_proxyTools.nodeClass;

@@ -10,12 +10,12 @@ import org.apache.log4j.Logger;
 
 
 /**
- * Provides MethodHandles and a few methods that will be useful
- * where reflection package access is restricted. MethodHandles
- * are used to go around the restriction.
- * <p> These can be used anywhere, however if there's no such
- * restriction on the reflection package, then there is no 
- * point in using this. 
+ * Provides tools for reflective operations. Reflect library is used
+ * indirectly, and will not trigger the scriptClassLoader's restriction.
+ * <p> The method {@link #inspectMethod} is used to obtain 
+ * information about a method, and provide a ready-to-use methodHandle. 
+ * <p> The innerClass {@link methodMap} is used to store the said 
+ * information above in it, and provide a proper accessors for them.
  * @author lyravega
  */
 public class _lyr_reflectionTools {
@@ -44,6 +44,10 @@ public class _lyr_reflectionTools {
 		}
 	}
 
+	/**
+	 * Provides a structure with proper accessors to store and 
+	 * access to the return values for the {@code inspectMethod()}.
+	 */
 	protected static class methodMap {
 		private Class<?> returnType;
 		private Class<?>[] parameterTypes;
@@ -70,13 +74,13 @@ public class _lyr_reflectionTools {
 	 * @param clazz to search the methodName on
 	 * @param methodName in String, no "()"
 	 * @param checkDeclared overload parameter, pass false to search inherited methods as well
-	 * @return a map with "returnType", "parameterTypes", "methodType" and "methodHandle" keys
+	 * @return a methodMap
 	 * @throws Throwable 
 	 */
-	public static methodMap findTypesForMethod(Class<?> clazz, String methodName) throws Throwable {
-		return findTypesForMethod(clazz, methodName, true);
+	public static methodMap inspectMethod(Class<?> clazz, String methodName) throws Throwable {
+		return inspectMethod(clazz, methodName, true);
 	}
-	public static methodMap findTypesForMethod(Class<?> clazz, String methodName, boolean checkDeclared) throws Throwable {
+	public static methodMap inspectMethod(Class<?> clazz, String methodName, boolean checkDeclared) throws Throwable {
 		Object method = null;
 		try { // works for methods with no arguments; if there's a way to capture it through a MethodHandle, I'm not aware of it
 			method = (checkDeclared) ? getDeclaredMethod.invoke(clazz, methodName) : getMethod.invoke(clazz, methodName);

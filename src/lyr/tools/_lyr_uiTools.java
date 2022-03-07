@@ -38,6 +38,16 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 	private static methodMap refitPanel_saveCurrentVariant;
 	private static methodMap designDisplay_undo;
 
+	/**
+	 * An everyFrameScript to delay the process of finding the obfuscated
+	 * classes and providing methodHandles for them. Normally, it is not
+	 * needed, however one class I call as 'wrapper' has no easy way to
+	 * get access to, so need to delay the process till there is an 
+	 * object instance of the class. 
+	 * <p> Alternatively, a recursive search can be done to skip that
+	 * class and find a grandchild directly from a known class, but that
+	 * is sub-optimal. 
+	 */
 	public static class _lyr_delayedFinder implements EveryFrameScript {
 		private boolean isDone = false;
 
@@ -54,23 +64,23 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 				if (tab == null || !tab.equals(CoreUITabId.REFIT)) return;
 
 				campaignUIClass = Global.getSector().getCampaignUI().getClass();
-				screenPanelClass = _lyr_reflectionTools.findTypesForMethod(campaignUIClass, "getScreenPanel").getReturnType();
-				encounterDialogueClass = _lyr_reflectionTools.findTypesForMethod(campaignUIClass, "getEncounterDialog").getReturnType();
-				coreClass = _lyr_reflectionTools.findTypesForMethod(campaignUIClass, "getCore").getReturnType();
-				refitPanelClass = _lyr_reflectionTools.findTypesForMethod(campaignUIClass, "notifyFleetMemberChanged").getParameterTypes()[0]; 
-				refitTabClass = _lyr_reflectionTools.findTypesForMethod(refitPanelClass, "getRefitTab").getReturnType();
-				designDisplayClass = _lyr_reflectionTools.findTypesForMethod(refitPanelClass, "getDesignDisplay").getReturnType();
+				screenPanelClass = _lyr_reflectionTools.inspectMethod(campaignUIClass, "getScreenPanel").getReturnType();
+				encounterDialogueClass = _lyr_reflectionTools.inspectMethod(campaignUIClass, "getEncounterDialog").getReturnType();
+				coreClass = _lyr_reflectionTools.inspectMethod(campaignUIClass, "getCore").getReturnType();
+				refitPanelClass = _lyr_reflectionTools.inspectMethod(campaignUIClass, "notifyFleetMemberChanged").getParameterTypes()[0]; 
+				refitTabClass = _lyr_reflectionTools.inspectMethod(refitPanelClass, "getRefitTab").getReturnType();
+				designDisplayClass = _lyr_reflectionTools.inspectMethod(refitPanelClass, "getDesignDisplay").getReturnType();
 
 				// some similar, some same shit that is used above, defined here separately to keep them tidy because 'MUH GAEMUR OCD'
-				campaignUI_getScreenPanel = _lyr_reflectionTools.findTypesForMethod(campaignUIClass, "getScreenPanel");
-				campaignUI_getEncounterDialog = _lyr_reflectionTools.findTypesForMethod(campaignUIClass, "getEncounterDialog");
-				campaignUI_getCore = _lyr_reflectionTools.findTypesForMethod(campaignUIClass, "getCore");
-				encounterDialog_getCoreUI = _lyr_reflectionTools.findTypesForMethod(encounterDialogueClass, "getCoreUI");
-				refitTab_getRefitPanel = _lyr_reflectionTools.findTypesForMethod(refitTabClass, "getRefitPanel");
-				refitPanel_getDesignDisplay = _lyr_reflectionTools.findTypesForMethod(refitPanelClass, "getDesignDisplay");
+				campaignUI_getScreenPanel = _lyr_reflectionTools.inspectMethod(campaignUIClass, "getScreenPanel");
+				campaignUI_getEncounterDialog = _lyr_reflectionTools.inspectMethod(campaignUIClass, "getEncounterDialog");
+				campaignUI_getCore = _lyr_reflectionTools.inspectMethod(campaignUIClass, "getCore");
+				encounterDialog_getCoreUI = _lyr_reflectionTools.inspectMethod(encounterDialogueClass, "getCoreUI");
+				refitTab_getRefitPanel = _lyr_reflectionTools.inspectMethod(refitTabClass, "getRefitPanel");
+				refitPanel_getDesignDisplay = _lyr_reflectionTools.inspectMethod(refitPanelClass, "getDesignDisplay");
 
-				refitPanel_saveCurrentVariant = _lyr_reflectionTools.findTypesForMethod(refitPanelClass, "saveCurrentVariant"); // there is an overload for this, beware
-				designDisplay_undo = _lyr_reflectionTools.findTypesForMethod(designDisplayClass, "undo");
+				refitPanel_saveCurrentVariant = _lyr_reflectionTools.inspectMethod(refitPanelClass, "saveCurrentVariant"); // there is an overload for this, beware
+				designDisplay_undo = _lyr_reflectionTools.inspectMethod(designDisplayClass, "undo");
 
 				// redoing stuff just to find the wrapper, or whatever the fuck it is
 				Object campaignUI = Global.getSector().getCampaignUI();
@@ -108,26 +118,6 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 		public boolean isDone() {
 			return isDone;
 		}
-	}
-
-	private static Object recursiveSearch_findObjectWithMethod(Object object, String methodName) { // doesn't handle methods with arguments
-		try { // search the current object for the methodName
-			if (getDeclaredMethod.invoke(object.getClass(), methodName) != null) return object;
-		} catch (Throwable t) {
-			// no catch on purpose
-		}
-
-		try { // if not found, search children of the object recursively
-			MethodHandle getChildrenNonCopy = lookup.findVirtual(object.getClass(), "getChildrenNonCopy", MethodType.methodType(List.class));
-			List<?> children = List.class.cast(getChildrenNonCopy.invoke(object));
-
-			for (Object child : children) 
-				if (recursiveSearch_findObjectWithMethod(child, methodName) != null) return child; 
-		} catch (Throwable t) {
-			// no catch on purpose
-		}
-
-		return null;
 	}
 
 	/**
@@ -228,11 +218,12 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 			Object core = (encounterDialogue != null) ? encounterDialog_getCoreUI.getMethodHandle().invoke(encounterDialogue) : campaignUI_getCore.getMethodHandle().invoke(campaignUI);
 			Object wrapper = adaptiveSearch_findObjectWithChildClass(core, wrapperClass, true, 0);
 			Object refitTab = adaptiveSearch_findObjectWithChildClass(wrapper, refitTabClass, true, 0);
+			// Object refitTab = adaptiveSearch_findObjectWithChildClass(core, refitTabClass, true, 1); // to find refitTab without knowing/getting wrapper
 			refitPanel = refitTab_getRefitPanel.getMethodHandle().invoke(refitTab);
 			designDisplay = refitPanel_getDesignDisplay.getMethodHandle().invoke(refitPanel);
 		} catch (Throwable t) { // hardcoded fallback to do a brute search on ALL the UI
 			logger.warn("Fallback used in 'refreshRefitShip()'");
-			// TODO: set up a proper fallback (like using 'refreshRefitScript'), move finally to above try
+			// TODO: set up a proper fallback (like using 'refreshRefitScript'), then move finally block to above try block
 		} finally {
 			try {
 				refitPanel_saveCurrentVariant.getMethodHandle().invoke(refitPanel);
