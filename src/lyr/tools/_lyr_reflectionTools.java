@@ -10,12 +10,14 @@ import org.apache.log4j.Logger;
 
 
 /**
- * Provides tools for reflective operations. Reflect library is used
+ * Provides tools for reflective operations. Reflect package is used
  * indirectly, and will not trigger the scriptClassLoader's restriction.
  * <p> The method {@link #inspectMethod} is used to obtain 
  * information about a method, and provide a ready-to-use methodHandle. 
  * <p> The innerClass {@link methodMap} is used to store the said 
  * information above in it, and provide a proper accessors for them.
+ * <p> Serves as a base for all reflection-related classes, such as 
+ * uiTools and proxyTools.
  * @author lyravega
  */
 public class _lyr_reflectionTools {
@@ -84,7 +86,7 @@ public class _lyr_reflectionTools {
 	 * @param methodName in String, no "()"
 	 * @param checkDeclared overload parameter, pass false to search inherited methods as well
 	 * @return a methodMap
-	 * @throws Throwable 
+	 * @throws Throwable
 	 */
 	public static final methodMap inspectMethod(Class<?> clazz, String methodName) throws Throwable {
 		return inspectMethod(clazz, methodName, true);
@@ -119,7 +121,7 @@ public class _lyr_reflectionTools {
 	 * @param clazz that has the method on
 	 * @param method object
 	 * @return a methodMap
-	 * @throws Throwable 
+	 * @throws Throwable
 	 */
 	public static final methodMap inspectMethod(Class<?> clazz, Object method) throws Throwable {
 		Class<?> returnType = (Class<?>) getReturnType.invoke(method);

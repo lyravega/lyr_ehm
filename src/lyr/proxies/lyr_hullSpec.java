@@ -19,7 +19,7 @@ import lyr.tools._lyr_proxyTools;
  * <p> Use {@link #retrieve()} to grab the stored {@link ShipHullSpecAPI}.
  * @author lyravega
  */
-public final class lyr_hullSpec extends _lyr_proxyTools { // TODO: move methodHandles to a static block, use reflectionTools for assistance if necessary
+public final class lyr_hullSpec extends _lyr_proxyTools {
 	private ShipHullSpecAPI hullSpec;
 	private lyr_weaponSlot weaponSlot = null;
 	private lyr_shieldSpec shieldSpec = null;
@@ -201,7 +201,8 @@ public final class lyr_hullSpec extends _lyr_proxyTools { // TODO: move methodHa
 		try {
 			addBuiltInMod.invoke(hullSpec, hullModSpecId);
 		} catch (Throwable t) {
-			logger.error("Failed to use 'addBuiltInMod()' in 'lyr_hullSpec'", t);
+			logger.warn("Failed to use 'addBuiltInMod()' in 'lyr_hullSpec', using API version", t);
+			hullSpec.addBuiltInMod(hullModSpecId);
 		}
 	}
 	
@@ -217,7 +218,8 @@ public final class lyr_hullSpec extends _lyr_proxyTools { // TODO: move methodHa
 		try {
 			setManufacturer.invoke(hullSpec, manufacturer);
 		} catch (Throwable t) {
-			logger.error("Failed to use 'setManufacturer()' in 'lyr_hullSpec'", t);
+			logger.warn("Failed to use 'setManufacturer()' in 'lyr_hullSpec', using API version", t);
+			hullSpec.setManufacturer(manufacturer);
 		}
 	}
 
@@ -248,7 +250,8 @@ public final class lyr_hullSpec extends _lyr_proxyTools { // TODO: move methodHa
 		try {
 			setShipSystemId.invoke(hullSpec, shipSystemId);
 		} catch (Throwable t) {
-			logger.error("Failed to use 'setShipSystemId()' in 'lyr_hullSpec'", t);
+			logger.warn("Failed to use 'setShipSystemId()' in 'lyr_hullSpec', using API version", t);
+			hullSpec.setShipSystemId(shipSystemId);
 		}
 	}
 
@@ -281,7 +284,8 @@ public final class lyr_hullSpec extends _lyr_proxyTools { // TODO: move methodHa
 		try { 
 			addBuiltInWeapon.invoke(hullSpec, slotId, weaponSpecId);
 		} catch (Throwable t) {
-			logger.error("Failed to use 'addBuiltInWeapon()' in 'lyr_hullSpec'", t);
+			logger.error("Failed to use 'addBuiltInWeapon()' in 'lyr_hullSpec', using API version", t);
+			hullSpec.addBuiltInWeapon(slotId, weaponSpecId);
 		}
 	}
 

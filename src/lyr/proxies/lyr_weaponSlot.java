@@ -21,7 +21,7 @@ import lyr.tools._lyr_proxyTools;
  * <p> Use {@link #retrieve()} to grab the stored {@link WeaponSlotAPI}.
  * @author lyravega
  */
-public final class lyr_weaponSlot extends _lyr_proxyTools { // TODO: move methodHandles to a static block, use reflectionTools for assistance if necessary
+public final class lyr_weaponSlot extends _lyr_proxyTools {
 	private WeaponSlotAPI weaponSlot;
 	private static MethodHandle clone = null;
 	private static MethodHandle setWeaponType = null; 

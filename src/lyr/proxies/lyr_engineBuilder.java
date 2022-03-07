@@ -21,7 +21,7 @@ import lyr.tools._lyr_proxyTools;
  * there are no API functions that can be taken advantage of.
  * @author lyravega
  */
-public final class lyr_engineBuilder extends _lyr_proxyTools { // TODO: move methodHandles to a static block, use reflectionTools for assistance if necessary
+public final class lyr_engineBuilder extends _lyr_proxyTools {
 	private Object engineBuilder;
 	private static MethodHandle clone = null;
 	private static MethodHandle setEngineStyle = null;

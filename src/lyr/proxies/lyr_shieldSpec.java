@@ -17,7 +17,7 @@ import lyr.tools._lyr_proxyTools;
  * <p> Use {@link #retrieve()} to grab the stored {@link ShieldSpecAPI}.
  * @author lyravega
  */
-public final class lyr_shieldSpec extends _lyr_proxyTools { // TODO: move methodHandles to a static block, use reflectionTools for assistance if necessary
+public final class lyr_shieldSpec extends _lyr_proxyTools {
 	private ShieldSpecAPI shieldSpec;
 	private static MethodHandle clone = null;
 	private static MethodHandle setRingColor = null;
