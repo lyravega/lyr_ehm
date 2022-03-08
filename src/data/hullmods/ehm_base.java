@@ -77,7 +77,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 		if (!isRefitTab()) return;
 
 		if (trackOnSync) {
-			sheep = ship;
+			sheep = (fleetMemberMap.containsKey(ship.getFleetMemberId())) ? ship : null;
 		} else {
 			shipTrackerScript(ship).setVariant(ship.getVariant()); // setVariant() is necessary to reflect the changes on the "refit ship"
 		}
@@ -133,7 +133,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 			if (log) logger.info("FT: Registering ST-"+memberId);
 		}
 
-		if (!fleetMemberMap.containsKey(sheep.getFleetMemberId())) sheep = null;
+		if (!fleetMemberMap.containsKey(sheep.getFleetMemberId())) sheep = null; // probably dead code due to Ln80 and Ln89
 	}
 
 	private static void updateHullMods(ShipAPI ship) {
@@ -286,6 +286,8 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 		if (!ship.getVariant().hasHullMod(hullModSpecId)) {
 			tooltip.addSectionHeading(ehm.tooltip.header.severeWarning, ehm.tooltip.header.severeWarning_textColour, ehm.tooltip.header.severeWarning_bgColour, Alignment.MID, ehm.tooltip.header.padding).flash(1.0f, 1.0f);
 			tooltip.addPara(ehm.tooltip.text.baseRetrofitWarning, ehm.tooltip.text.padding);
+
+			super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
 		}
 	}
 }

@@ -27,19 +27,24 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 	private static Class<?> refitTabClass;
 	private static Class<?> refitPanelClass;
 	private static Class<?> designDisplayClass;
+	private static Class<?> shipDisplayClass;
 
-	private static methodMap campaignUI_getScreenPanel;
-	private static methodMap campaignUI_getEncounterDialog;
-	private static methodMap campaignUI_getCore;
-	private static methodMap encounterDialog_getCoreUI;
-	private static methodMap refitTab_getRefitPanel;
-	private static methodMap refitPanel_getDesignDisplay;
+	private static MethodHandle campaignUI_getScreenPanel;
+	private static MethodHandle campaignUI_getEncounterDialog;
+	private static MethodHandle campaignUI_getCore;
+	private static MethodHandle encounterDialog_getCoreUI;
+	private static MethodHandle refitTab_getRefitPanel;
+	private static MethodHandle refitPanel_getDesignDisplay;
+	private static MethodHandle refitPanel_getShipDisplay;
 	
-	private static methodMap refitPanel_saveCurrentVariant;
-	private static methodMap designDisplay_undo;
+	private static MethodHandle refitPanel_saveCurrentVariant;
+	private static MethodHandle refitPanel_getMember;
+	private static MethodHandle refitPanel_syncWithCurrentVariant;
+	private static MethodHandle shipDisplay_setFleetMember;
+	private static MethodHandle designDisplay_undo;
 
-	private static methodMap refitPanel_setEditedSinceLoad;
-	private static methodMap refitPanel_setEditedSinceSave;
+	private static MethodHandle refitPanel_setEditedSinceLoad;
+	private static MethodHandle refitPanel_setEditedSinceSave;
 
 	/**
 	 * An everyFrameScript to delay the process of finding the obfuscated
@@ -64,7 +69,15 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 			try {
 				// due to 'wrapperClass' not being extractable, need to wait for the refit tab
 				if (!isRefitTab()) return;
+/* 
 
+			Object shipDisplay = inspectMethod(refitPanelClass, "getShipDisplay").invoke(refitPanel);
+			Object member = inspectMethod(refitPanelClass, "getMember").invoke(refitPanel);
+			inspectMethod(shipDisplay.getClass(), "setFleetMember").invoke(shipDisplay, null, null);
+			inspectMethod(refitPanelClass, "syncWithCurrentVariant").invoke(refitPanel);
+			inspectMethod(shipDisplay.getClass(), "setFleetMember").invoke(shipDisplay, member, null);
+			inspectMethod(refitPanelClass, "syncWithCurrentVariant").invoke(refitPanel);
+*/
 				campaignUIClass = Global.getSector().getCampaignUI().getClass();
 				screenPanelClass = inspectMethod(campaignUIClass, "getScreenPanel").getReturnType();
 				encounterDialogueClass = inspectMethod(campaignUIClass, "getEncounterDialog").getReturnType();
@@ -72,30 +85,36 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 				refitPanelClass = inspectMethod(campaignUIClass, "notifyFleetMemberChanged").getParameterTypes()[0]; 
 				refitTabClass = inspectMethod(refitPanelClass, "getRefitTab").getReturnType();
 				designDisplayClass = inspectMethod(refitPanelClass, "getDesignDisplay").getReturnType();
+				shipDisplayClass = inspectMethod(refitPanelClass, "getShipDisplay").getReturnType();
 
 				// some similar, some same shit that is used above, defined here separately to keep them tidy because 'MUH GAEMUR OCD'
-				campaignUI_getScreenPanel = inspectMethod(campaignUIClass, "getScreenPanel");
-				campaignUI_getEncounterDialog = inspectMethod(campaignUIClass, "getEncounterDialog"); // same as 'Global.getSector().getCampaignUI().getCurrentInteractionDialog();'
-				campaignUI_getCore = inspectMethod(campaignUIClass, "getCore");
-				encounterDialog_getCoreUI = inspectMethod(encounterDialogueClass, "getCoreUI");
-				refitTab_getRefitPanel = inspectMethod(refitTabClass, "getRefitPanel");
-				refitPanel_getDesignDisplay = inspectMethod(refitPanelClass, "getDesignDisplay");
+				campaignUI_getScreenPanel = inspectMethod(campaignUIClass, "getScreenPanel").getMethodHandle();
+				campaignUI_getEncounterDialog = inspectMethod(campaignUIClass, "getEncounterDialog").getMethodHandle(); // same as 'Global.getSector().getCampaignUI().getCurrentInteractionDialog();'
+				campaignUI_getCore = inspectMethod(campaignUIClass, "getCore").getMethodHandle();
+				encounterDialog_getCoreUI = inspectMethod(encounterDialogueClass, "getCoreUI").getMethodHandle();
+				refitTab_getRefitPanel = inspectMethod(refitTabClass, "getRefitPanel").getMethodHandle();
+				refitPanel_getDesignDisplay = inspectMethod(refitPanelClass, "getDesignDisplay").getMethodHandle();
+				refitPanel_getShipDisplay = inspectMethod(refitPanelClass, "getShipDisplay").getMethodHandle();
 
-				refitPanel_saveCurrentVariant = inspectMethod(refitPanelClass, "saveCurrentVariant"); // there is an overload for this, beware
-				designDisplay_undo = inspectMethod(designDisplayClass, "undo");
+				refitPanel_saveCurrentVariant = inspectMethod(refitPanelClass, "saveCurrentVariant").getMethodHandle(); // there is an overload for this, beware
+				refitPanel_getMember = inspectMethod(refitPanelClass, "getMember").getMethodHandle();
+				refitPanel_syncWithCurrentVariant = inspectMethod(refitPanelClass, "syncWithCurrentVariant").getMethodHandle();
+				shipDisplay_setFleetMember = inspectMethod(shipDisplayClass, "setFleetMember").getMethodHandle();
+				designDisplay_undo = inspectMethod(designDisplayClass, "undo").getMethodHandle(); // not used anymore because fucks up for ships with officers
 
-				refitPanel_setEditedSinceLoad = inspectMethod(refitPanelClass, "setEditedSinceLoad");
-				refitPanel_setEditedSinceSave = inspectMethod(refitPanelClass, "setEditedSinceSave");
+				refitPanel_setEditedSinceLoad = inspectMethod(refitPanelClass, "setEditedSinceLoad").getMethodHandle();
+				refitPanel_setEditedSinceSave = inspectMethod(refitPanelClass, "setEditedSinceSave").getMethodHandle();
 
 				// redoing stuff just to find the wrapper, or whatever the fuck it is
 				Object campaignUI = Global.getSector().getCampaignUI();
-				Object screenPanel = campaignUI_getScreenPanel.getMethodHandle().invoke(campaignUI);
-				Object encounterDialogue = campaignUI_getEncounterDialog.getMethodHandle().invoke(campaignUI);
-				Object core = (encounterDialogue != null) ? encounterDialog_getCoreUI.getMethodHandle().invoke(encounterDialogue) : campaignUI_getCore.getMethodHandle().invoke(campaignUI);
+				Object screenPanel = campaignUI_getScreenPanel.invoke(campaignUI);
+				Object encounterDialogue = campaignUI_getEncounterDialog.invoke(campaignUI);
+				Object core = (encounterDialogue != null) ? encounterDialog_getCoreUI.invoke(encounterDialogue) : campaignUI_getCore.invoke(campaignUI);
 				Object wrapper = adaptiveSearch_findObjectWithChildClass(core, refitTabClass, false, 1); // as the 'wrapperClass' is unknown here, search for a grandChild's class and get parent object
 				Object refitTab = adaptiveSearch_findObjectWithChildClass(wrapper, refitTabClass, true, 0); // as the 'refitTabClass' is known, search for a child's class and get the child object
-				Object refitPanel = refitTab_getRefitPanel.getMethodHandle().invoke(refitTab);
-				Object designDisplay = refitPanel_getDesignDisplay.getMethodHandle().invoke(refitPanel);
+				Object refitPanel = refitTab_getRefitPanel.invoke(refitTab);
+				Object designDisplay = refitPanel_getDesignDisplay.invoke(refitPanel);
+				Object shipDisplay = refitPanel_getDesignDisplay.invoke(refitPanel);
 				
 				// campaignUIClass = campaignUI.getClass();					// com.fs.starfarer.campaign.CampaignState;
 				// screenPanelClass = screenPanel.getClass();				// com.fs.starfarer.ui.v;
@@ -105,6 +124,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 				// refitTabClass = refitTab.getClass();						// com.fs.starfarer.coreui.refit.F;
 				// refitPanelClass = refitPanel.getClass();					// com.fs.starfarer.coreui.refit.V;
 				// designDisplayClass = designDisplay.getClass();			// com.fs.starfarer.coreui.refit.oOOo;
+				// shipDisplayClass = shipDisplay.getClass();				// com.fs.starfarer.coreui.refit.oOOO;
 
 				logger.info("Found the classes"); 
 				isDone = true; return;
@@ -219,39 +239,39 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 	 * This method will immediately save the refit variant and refresh the 
 	 * UI by utilizing the available UI methods. Used to be called as 
 	 * {@code refreshRefit()}, however the new name suits it more.
-	 * <p> Refresh is achieved by executing the 'undo' method as it calls 
-	 * all the necessary methods, effectively serving as a shortcut.
+	 * <p> Refresh is achieved by executing an 'undo-like' method. Before,
+	 * it was using the 'undo' function directly, however ships with
+	 * officers were acting weirdly. Now, the 'undo-like' method is
+	 * utilized, however ships with officers do not clear the undo button
+	 * properly for some reason. 
 	 * <p> By committing changes immediately and using 'undo' up and thus 
 	 * disabling it, some odd unwanted behaviour and problems are dealt 
-	 * with as a side effect. 
-	 * <p> This may look like a cheap way to deal with those issues, and 
-	 * in a way it is, however trying to deal with those issues one by one
-	 * will bloat this method. This is the cheapest fool-proof way that is
-	 * also effective in dealing with those potential issues indirectly.
+	 * with as a side effect. Even with problematic ships where 'undo' is
+	 * not cleared properly, it'll have no effect, so it should be safe.
 	 */
 	public static void commitChanges() {
 		if (!isRefitTab()) return; // necessary for calls that are not from 'onInstalled()' or 'onRemoved()'; that originate due to 'onGameLoad()'
-		// Object campaignUI = null;
-		// Object screenPanel = null;
-		// Object encounterDialogue = null;
-		// Object core = null;
-		// Object wrapper = null;
-		// Object refitTab = null;
-		Object refitPanel = null;
-		Object designDisplay = null;
 		try {
 			Object campaignUI = Global.getSector().getCampaignUI();
-			// Object screenPanel = campaignUI_getScreenPanel.getMethodHandle().invoke(campaignUI);
-			Object encounterDialogue = campaignUI_getEncounterDialog.getMethodHandle().invoke(campaignUI);
-			Object core = (encounterDialogue != null) ? encounterDialog_getCoreUI.getMethodHandle().invoke(encounterDialogue) : campaignUI_getCore.getMethodHandle().invoke(campaignUI);
+			// Object screenPanel = campaignUI_getScreenPanel.invoke(campaignUI);
+			Object encounterDialogue = campaignUI_getEncounterDialog.invoke(campaignUI);
+			Object core = (encounterDialogue != null) ? encounterDialog_getCoreUI.invoke(encounterDialogue) : campaignUI_getCore.invoke(campaignUI);
 			Object wrapper = adaptiveSearch_findObjectWithChildClass(core, wrapperClass, true, 0);
 			Object refitTab = adaptiveSearch_findObjectWithChildClass(wrapper, refitTabClass, true, 0);
 			// Object refitTab = adaptiveSearch_findObjectWithChildClass(core, refitTabClass, true, 1); // to find refitTab without knowing/getting wrapper
-			refitPanel = refitTab_getRefitPanel.getMethodHandle().invoke(refitTab);
-			designDisplay = refitPanel_getDesignDisplay.getMethodHandle().invoke(refitPanel);
+			Object refitPanel = refitTab_getRefitPanel.invoke(refitTab);
+			Object designDisplay = refitPanel_getDesignDisplay.invoke(refitPanel);
+			Object shipDisplay = refitPanel_getShipDisplay.invoke(refitPanel);
+			Object member = refitPanel_getMember.invoke(refitPanel);
 
-			refitPanel_saveCurrentVariant.getMethodHandle().invoke(refitPanel);
-			designDisplay_undo.getMethodHandle().invoke(designDisplay);
+			refitPanel_saveCurrentVariant.invoke(refitPanel);
+			// designDisplay_undo.invoke(designDisplay); // commented for posterity; below is gutted version of 'undo'
+			shipDisplay_setFleetMember.invoke(shipDisplay, null, null);
+			refitPanel_syncWithCurrentVariant.invoke(refitPanel);
+			shipDisplay_setFleetMember.invoke(shipDisplay, member, null);
+			refitPanel_syncWithCurrentVariant.invoke(refitPanel);
+			refitPanel_setEditedSinceLoad.invoke(refitPanel, false);
+			refitPanel_setEditedSinceSave.invoke(refitPanel, false);
 		} catch (Throwable t) {
 			logger.fatal("Total failure in 'refreshRefitShip()'"); t.printStackTrace();
 		}
@@ -271,24 +291,17 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 	 */
 	public static void clearUndo() {
 		if (!isRefitTab()) return; // just in case
-		// Object campaignUI = null;
-		// Object screenPanel = null;
-		// Object encounterDialogue = null;
-		// Object core = null;
-		// Object wrapper = null;
-		// Object refitTab = null;
-		Object refitPanel = null;
 		try {
 			Object campaignUI = Global.getSector().getCampaignUI();
-			// Object screenPanel = campaignUI_getScreenPanel.getMethodHandle().invoke(campaignUI);
-			Object encounterDialogue = campaignUI_getEncounterDialog.getMethodHandle().invoke(campaignUI);
-			Object core = (encounterDialogue != null) ? encounterDialog_getCoreUI.getMethodHandle().invoke(encounterDialogue) : campaignUI_getCore.getMethodHandle().invoke(campaignUI);
+			// Object screenPanel = campaignUI_getScreenPanel.invoke(campaignUI);
+			Object encounterDialogue = campaignUI_getEncounterDialog.invoke(campaignUI);
+			Object core = (encounterDialogue != null) ? encounterDialog_getCoreUI.invoke(encounterDialogue) : campaignUI_getCore.invoke(campaignUI);
 			Object wrapper = adaptiveSearch_findObjectWithChildClass(core, wrapperClass, true, 0);
 			Object refitTab = adaptiveSearch_findObjectWithChildClass(wrapper, refitTabClass, true, 0);
-			refitPanel = refitTab_getRefitPanel.getMethodHandle().invoke(refitTab);
+			Object refitPanel = refitTab_getRefitPanel.invoke(refitTab);
 			
-			refitPanel_setEditedSinceLoad.getMethodHandle().invoke(refitPanel, false);
-			refitPanel_setEditedSinceSave.getMethodHandle().invoke(refitPanel, false);
+			refitPanel_setEditedSinceLoad.invoke(refitPanel, false);
+			refitPanel_setEditedSinceSave.invoke(refitPanel, false);
 		} catch (Throwable t) {
 			logger.fatal("Total failure in 'clearUndo()'"); t.printStackTrace();
 		}
