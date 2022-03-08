@@ -1,9 +1,6 @@
 package data.hullmods.ehm_ar;
 
-import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
-import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
-import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 
@@ -27,23 +24,23 @@ public class ehm_ar_adapterremoval extends _ehm_ar_base {
 
 	//#region INSTALLATION CHECKS
 	// all checks are reversed for this one, as it is a removal tool
-	@Override
-	protected String ehm_unapplicableReason(ShipAPI ship) {
-		if (ship == null) return ehm.excuses.noShip; 
+	// @Override
+	// protected String ehm_unapplicableReason(ShipAPI ship) {
+	// 	if (ship == null) return ehm.tooltip.excuses.noShip; 
 
-		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return ehm.excuses.lacksBase; 
-		if (ehm_hasRetrofitTag(ship, ehm.tag.adapterRetrofit, hullModSpecId)) return null; 
+	// 	if (!ehm_hasRetrofitBaseBuiltIn(ship)) return ehm.tooltip.excuses.lacksBase; 
+	// 	if (ehm_hasRetrofitTag(ship, ehm.tag.adapterRetrofit, hullModSpecId)) return null; 
 		
-		return ehm.excuses.noAdapterRetrofit; 
-	}
+	// 	return ehm.tooltip.excuses.noAdapterRetrofit; 
+	// }
 
-	@Override
-	protected String ehm_cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) { 
-		ShipVariantAPI variant = ship.getVariant();
+	// @Override
+	// protected String ehm_cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) { 
+	// 	ShipVariantAPI variant = ship.getVariant();
 
-		if (ehm_hasWeapons(variant, ehm.affix.adaptedSlot)) return ehm.excuses.hasWeaponsOnAdaptedSlots;
+	// 	if (ehm_hasWeapons(variant, ehm.affix.adaptedSlot)) return ehm.tooltip.excuses.hasWeaponsOnAdaptedSlots;
 
-		return null;
-	}
+	// 	return null;
+	// }
 	//#endregion
 }

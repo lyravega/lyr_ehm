@@ -1,8 +1,11 @@
 package data.hullmods.ehm_ec;
 
 import com.fs.starfarer.api.combat.ShipAPI;
+import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.api.ui.Alignment;
+import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import data.hullmods._ehm_base;
 import lyr.proxies.lyr_engineBuilder;
@@ -52,13 +55,25 @@ public class _ehm_ec_base extends _ehm_base {
 
 	//#region INSTALLATION CHECKS
 	@Override
-	protected String ehm_unapplicableReason(ShipAPI ship) {
-		if (ship == null) return ehm.excuses.noShip; 
+	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
+		if (!isApplicableToShip(ship)) {
+			tooltip.addSectionHeading(ehm.tooltip.header.notApplicable, ehm.tooltip.header.notApplicable_textColour, ehm.tooltip.header.notApplicable_bgColour, Alignment.MID, ehm.tooltip.header.padding);
 
-		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return ehm.excuses.lacksBase; 
-		if (ehm_hasRetrofitTag(ship, ehm.tag.engineCosmetic, hullModSpecId)) return ehm.excuses.hasEngineCosmetic;
+			if (!ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(ehm.tooltip.text.lacksBase, ehm.tooltip.text.padding);
+			if (ehm_hasRetrofitTag(ship, ehm.tag.engineCosmetic, hullModSpecId)) tooltip.addPara(ehm.tooltip.text.hasEngineCosmetic, ehm.tooltip.text.padding);
+		}
 
-		return null; 
+		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
+	}
+
+	@Override
+	public boolean isApplicableToShip(ShipAPI ship) {
+		if (ship == null) return false; 
+
+		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return false; 
+		if (ehm_hasRetrofitTag(ship, ehm.tag.engineCosmetic, hullModSpecId)) return false;
+
+		return true; 
 	}
 	//#endregion
 }

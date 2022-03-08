@@ -8,11 +8,14 @@ import java.util.Map;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
+import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
+import com.fs.starfarer.api.ui.Alignment;
+import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import org.lwjgl.util.vector.Vector2f;
 
@@ -123,22 +126,40 @@ public class _ehm_ar_base extends _ehm_base {
 
 	//#region INSTALLATION CHECKS
 	@Override
-	protected String ehm_unapplicableReason(ShipAPI ship) {
-		if (ship == null) return ehm.excuses.noShip; 
+	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
+		if (!isApplicableToShip(ship)) {
+			tooltip.addSectionHeading(ehm.tooltip.header.notApplicable, ehm.tooltip.header.notApplicable_textColour, ehm.tooltip.header.notApplicable_bgColour, Alignment.MID, ehm.tooltip.header.padding);
 
-		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return ehm.excuses.lacksBase; 
-		if (ehm_hasRetrofitTag(ship, ehm.tag.adapterRetrofit, hullModSpecId)) return ehm.excuses.hasAdapterRetrofit; 
-		
-		return null; 
+			if (!ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(ehm.tooltip.text.lacksBase, ehm.tooltip.text.padding);
+			if (ehm_hasRetrofitTag(ship, ehm.tag.adapterRetrofit, hullModSpecId)) tooltip.addPara(ehm.tooltip.text.hasAdapterRetrofit, ehm.tooltip.text.padding);
+		}
+
+		if (!canBeAddedOrRemovedNow(ship, null, null)) {
+			tooltip.addSectionHeading(ehm.tooltip.header.locked, ehm.tooltip.header.locked_textColour, ehm.tooltip.header.locked_bgColour, Alignment.MID, ehm.tooltip.header.padding);
+
+			if (ehm_hasWeapons(ship, ehm.affix.adaptedSlot)) tooltip.addPara(ehm.tooltip.text.hasWeaponsOnAdaptedSlots, ehm.tooltip.text.padding);
+		}
+
+		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
 	}
 
 	@Override
-	protected String ehm_cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
-		ShipVariantAPI variant = ship.getVariant();
+	public boolean isApplicableToShip(ShipAPI ship) {
+		if (ship == null) return false; 
 
-		if (ehm_hasWeapons(variant, ehm.affix.adaptedSlot)) return ehm.excuses.hasWeaponsOnAdaptedSlots;
+		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return false; 
+		if (ehm_hasRetrofitTag(ship, ehm.tag.adapterRetrofit, hullModSpecId)) return false; 
+		
+		return true; 
+	}
 
-		return null;
+	@Override
+	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
+		if (ship == null) return false; 
+
+		if (ehm_hasWeapons(ship, ehm.affix.adaptedSlot)) return false;
+
+		return true;
 	}
 	//#endregion
 }

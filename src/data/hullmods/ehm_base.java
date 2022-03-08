@@ -21,15 +21,15 @@ import java.util.Set;
 import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
-import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.CoreUITabId;
-import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.HullModFleetEffect;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.ui.Alignment;
+import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import org.apache.log4j.Logger;
 
@@ -281,18 +281,11 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 	}
 	//#endregion
 	// END OF SCRIPTS
-
 	@Override
-	protected String ehm_unapplicableReason(ShipAPI ship) {
-		if (ship == null) return ehm.excuses.noShip; 
-
-		return null; 
-	}
-
-	@Override
-	protected String ehm_cannotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
-		if (ehm_hasRetrofitTag(ship, ehm.tag.allRetrofit, hullModSpecId)) return ehm.excuses.hasAnyRetrofit;
-
-		return null;
+	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
+		if (!ship.getVariant().hasHullMod(hullModSpecId)) {
+			tooltip.addSectionHeading(ehm.tooltip.header.severeWarning, ehm.tooltip.header.severeWarning_textColour, ehm.tooltip.header.severeWarning_bgColour, Alignment.MID, ehm.tooltip.header.padding).flash(1.0f, 1.0f);
+			tooltip.addPara(ehm.tooltip.text.baseRetrofitWarning, ehm.tooltip.text.padding);
+		}
 	}
 }
