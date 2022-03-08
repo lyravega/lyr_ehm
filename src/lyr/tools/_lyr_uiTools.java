@@ -69,15 +69,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 			try {
 				// due to 'wrapperClass' not being extractable, need to wait for the refit tab
 				if (!isRefitTab()) return;
-/* 
 
-			Object shipDisplay = inspectMethod(refitPanelClass, "getShipDisplay").invoke(refitPanel);
-			Object member = inspectMethod(refitPanelClass, "getMember").invoke(refitPanel);
-			inspectMethod(shipDisplay.getClass(), "setFleetMember").invoke(shipDisplay, null, null);
-			inspectMethod(refitPanelClass, "syncWithCurrentVariant").invoke(refitPanel);
-			inspectMethod(shipDisplay.getClass(), "setFleetMember").invoke(shipDisplay, member, null);
-			inspectMethod(refitPanelClass, "syncWithCurrentVariant").invoke(refitPanel);
-*/
 				campaignUIClass = Global.getSector().getCampaignUI().getClass();
 				screenPanelClass = inspectMethod(campaignUIClass, "getScreenPanel").getReturnType();
 				encounterDialogueClass = inspectMethod(campaignUIClass, "getEncounterDialog").getReturnType();
