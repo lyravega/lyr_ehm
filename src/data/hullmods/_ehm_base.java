@@ -100,7 +100,7 @@ public class _ehm_base implements HullModEffect {
 	//#region INSTALLATION CHECKS
 	@Override 
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
-		if (isApplicableToShip(ship)) {
+		if (isApplicableToShip(ship) && canBeAddedOrRemovedNow(ship, null, null)) {
 			tooltip.addSectionHeading(ehm.tooltip.header.warning, ehm.tooltip.header.warning_textColour, ehm.tooltip.header.warning_bgColour, Alignment.MID, ehm.tooltip.header.padding);
 			tooltip.addPara(ehm.tooltip.text.warning, ehm.tooltip.text.padding);
 		}
@@ -274,10 +274,16 @@ public class _ehm_base implements HullModEffect {
 		}
 		public static enum tooltip { ;
 			public static enum text { ;
-				public static final String warning = "Installing or removing Experimental Hull Modifications will commit the changes immediately; the variant will be saved and any market and/or cargo transactions will be finalized";
+				public static final String flavourManufacturer = "Experimental";  // for color, must match .json TODO: make flavour optional
+				public static final String flavourDescription = "This design utilizes experimental hull modifications created by a spacer who has been living in "+
+																" a junkyard for most of his life. His 'treasure hoard' is full of franken-ships that somehow fly "+
+																"by using cannibalized parts from other ships that would be deemed incompatible. Benefits of such "+
+																"modifications are unclear as they do not provide a certain advantage over the stock designs. "+
+																"However the level of customization and flexibility they offer is certainly unparalleled.";
+				public static final String warning = "Installing or removing Experimental Hull Modifications will commit the changes immediately; "+
+														"the variant will be saved and any market and/or cargo transactions will be finalized";
 				public static final String baseRetrofitWarning = "Will become a built-in hull modification as soon as it is installed";
 				public static final float padding = 5.0f;
-				// public static final String hasAnyRetrofit = "An experimental hull modification is installed. This cannot be removed as long as they are present on the hull"; // never shown as it becomes built-in
 				public static final String noShip = "Ship does not exist";
 				public static final String lacksBase = "Requires experimental hull modifications base to be installed first";
 				public static final String hasSystemRetrofit = "Another system retrofit is already installed";
@@ -413,8 +419,8 @@ public class _ehm_base implements HullModEffect {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), true);
 
 		hullSpec.addBuiltInMod(ehm.id.baseRetrofit);
-		hullSpec.setManufacturer("Experimental"); // for color, must match .json TODO: make flavour optional
-		hullSpec.setDescriptionPrefix("This design utilizes experimental hull modifications created by a spacer who has been living in a junkyard for most of his life. His 'treasure hoard' is full of franken-ships that somehow fly by using cannibalized parts from other ships that would be deemed incompatible. Benefits of such modifications are unclear as they do not provide a certain advantage over the stock designs. However the level of customization and flexibility they offer is certainly unparalleled.");
+		hullSpec.setManufacturer(ehm.tooltip.text.flavourManufacturer);
+		hullSpec.setDescriptionPrefix(ehm.tooltip.text.flavourDescription);
 
 		return hullSpec.retrieve();
 	}
@@ -456,8 +462,8 @@ public class _ehm_base implements HullModEffect {
 		// stockHullSpec.addBuiltInWing(builtInWing);
 
 		// hullSpec.addBuiltInMod(ehm.id.baseRetrofit);
-		stockHullSpec.setManufacturer("Experimental"); 
-		stockHullSpec.setDescriptionPrefix("This design utilizes experimental hull modifications created by a spacer who has been living in a junkyard for most of his life. His 'treasure hoard' is full of franken-ships that somehow fly by using cannibalized parts from other ships that would be deemed incompatible. Benefits of such modifications are unclear as they do not provide a certain advantage over the stock designs. However the level of customization and flexibility they offer is certainly unparalleled.");
+		stockHullSpec.setManufacturer(ehm.tooltip.text.flavourManufacturer);
+		stockHullSpec.setDescriptionPrefix(ehm.tooltip.text.flavourDescription);
 		
 		return stockHullSpec.retrieve();
 	}
