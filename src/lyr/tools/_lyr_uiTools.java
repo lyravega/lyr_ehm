@@ -63,8 +63,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 		public void advance(float amount) {
 			try {
 				// due to 'wrapperClass' not being extractable, need to wait for the refit tab
-				CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
-				if (tab == null || !tab.equals(CoreUITabId.REFIT)) return;
+				if (!isRefitTab()) return;
 
 				campaignUIClass = Global.getSector().getCampaignUI().getClass();
 				screenPanelClass = inspectMethod(campaignUIClass, "getScreenPanel").getReturnType();
@@ -76,7 +75,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 
 				// some similar, some same shit that is used above, defined here separately to keep them tidy because 'MUH GAEMUR OCD'
 				campaignUI_getScreenPanel = inspectMethod(campaignUIClass, "getScreenPanel");
-				campaignUI_getEncounterDialog = inspectMethod(campaignUIClass, "getEncounterDialog");
+				campaignUI_getEncounterDialog = inspectMethod(campaignUIClass, "getEncounterDialog"); // same as 'Global.getSector().getCampaignUI().getCurrentInteractionDialog();'
 				campaignUI_getCore = inspectMethod(campaignUIClass, "getCore");
 				encounterDialog_getCoreUI = inspectMethod(encounterDialogueClass, "getCoreUI");
 				refitTab_getRefitPanel = inspectMethod(refitTabClass, "getRefitPanel");
@@ -137,8 +136,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 	 * will be performed. 
 	 * <p> Does NOT handle methods with parameters, only suitable for methods with
 	 * no arguments. And will stop at the first found. For methods with overloads,
-	 * or parameters, not suitable. 
-	 * TODO: make it suit those too somehow, butcher strings maybe.
+	 * or parameters, not suitable.
 	 * @param parent the root ui object whose children will be searched
 	 * @param methodName to search for, methods with arguments are not handled
 	 * @param maxDepth to limit the recursive search to a certain depth, minimum 0
@@ -212,6 +210,11 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 		return null;
 	}
 	
+	public static boolean isRefitTab() {
+		CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
+		return (tab != null && tab.equals(CoreUITabId.REFIT));
+	}
+
 	/**
 	 * This method will immediately save the refit variant and refresh the 
 	 * UI by utilizing the available UI methods. Used to be called as 
@@ -227,8 +230,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 	 * also effective in dealing with those potential issues indirectly.
 	 */
 	public static void commitChanges() {
-		CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
-		if (tab == null || !tab.equals(CoreUITabId.REFIT)) return; // necessary for calls that are not from 'onInstalled()' or 'onRemoved()'; that originate due to 'onGameLoad()'
+		if (!isRefitTab()) return; // necessary for calls that are not from 'onInstalled()' or 'onRemoved()'; that originate due to 'onGameLoad()'
 		// Object campaignUI = null;
 		// Object screenPanel = null;
 		// Object encounterDialogue = null;
@@ -240,23 +242,18 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 		try {
 			Object campaignUI = Global.getSector().getCampaignUI();
 			// Object screenPanel = campaignUI_getScreenPanel.getMethodHandle().invoke(campaignUI);
-			Object encounterDialogue = campaignUI_getEncounterDialog.getMethodHandle().invoke(campaignUI); // same as 'Global.getSector().getCampaignUI().getCurrentInteractionDialog();'
+			Object encounterDialogue = campaignUI_getEncounterDialog.getMethodHandle().invoke(campaignUI);
 			Object core = (encounterDialogue != null) ? encounterDialog_getCoreUI.getMethodHandle().invoke(encounterDialogue) : campaignUI_getCore.getMethodHandle().invoke(campaignUI);
 			Object wrapper = adaptiveSearch_findObjectWithChildClass(core, wrapperClass, true, 0);
 			Object refitTab = adaptiveSearch_findObjectWithChildClass(wrapper, refitTabClass, true, 0);
 			// Object refitTab = adaptiveSearch_findObjectWithChildClass(core, refitTabClass, true, 1); // to find refitTab without knowing/getting wrapper
 			refitPanel = refitTab_getRefitPanel.getMethodHandle().invoke(refitTab);
 			designDisplay = refitPanel_getDesignDisplay.getMethodHandle().invoke(refitPanel);
-		} catch (Throwable t) { // hardcoded fallback to do a brute search on ALL the UI
-			logger.warn("Fallback used in 'refreshRefitShip()'");
-			// TODO: set up a proper fallback (like using 'refreshRefitScript'), then move finally block to above try block
-		} finally {
-			try {
-				refitPanel_saveCurrentVariant.getMethodHandle().invoke(refitPanel);
-				designDisplay_undo.getMethodHandle().invoke(designDisplay);
-			} catch (Throwable t) {
-				logger.fatal("Total failure in 'refreshRefitShip()'"); t.printStackTrace();
-			}
+
+			refitPanel_saveCurrentVariant.getMethodHandle().invoke(refitPanel);
+			designDisplay_undo.getMethodHandle().invoke(designDisplay);
+		} catch (Throwable t) {
+			logger.fatal("Total failure in 'refreshRefitShip()'"); t.printStackTrace();
 		}
 	}
 
@@ -273,8 +270,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 	 * if {@code commitChanges()} is not called from those two.
 	 */
 	public static void clearUndo() {
-		CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
-		if (tab == null || !tab.equals(CoreUITabId.REFIT)) return; // just in case
+		if (!isRefitTab()) return; // just in case
 		// Object campaignUI = null;
 		// Object screenPanel = null;
 		// Object encounterDialogue = null;
@@ -285,22 +281,16 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 		try {
 			Object campaignUI = Global.getSector().getCampaignUI();
 			// Object screenPanel = campaignUI_getScreenPanel.getMethodHandle().invoke(campaignUI);
-			Object encounterDialogue = campaignUI_getEncounterDialog.getMethodHandle().invoke(campaignUI); // same as 'Global.getSector().getCampaignUI().getCurrentInteractionDialog();'
+			Object encounterDialogue = campaignUI_getEncounterDialog.getMethodHandle().invoke(campaignUI);
 			Object core = (encounterDialogue != null) ? encounterDialog_getCoreUI.getMethodHandle().invoke(encounterDialogue) : campaignUI_getCore.getMethodHandle().invoke(campaignUI);
 			Object wrapper = adaptiveSearch_findObjectWithChildClass(core, wrapperClass, true, 0);
 			Object refitTab = adaptiveSearch_findObjectWithChildClass(wrapper, refitTabClass, true, 0);
-			// Object refitTab = adaptiveSearch_findObjectWithChildClass(core, refitTabClass, true, 1); // to find refitTab without knowing/getting wrapper
 			refitPanel = refitTab_getRefitPanel.getMethodHandle().invoke(refitTab);
-		} catch (Throwable t) { // hardcoded fallback to do a brute search on ALL the UI
-			logger.warn("Fallback used in 'clearUndo()'");
-			// TODO: clean this shit up
-		} finally {
-			try {
-				refitPanel_setEditedSinceLoad.getMethodHandle().invoke(refitPanel, false);
-				refitPanel_setEditedSinceSave.getMethodHandle().invoke(refitPanel, false);
-			} catch (Throwable t) {
-				logger.fatal("Total failure in 'clearUndo()'"); t.printStackTrace();
-			}
+			
+			refitPanel_setEditedSinceLoad.getMethodHandle().invoke(refitPanel, false);
+			refitPanel_setEditedSinceSave.getMethodHandle().invoke(refitPanel, false);
+		} catch (Throwable t) {
+			logger.fatal("Total failure in 'clearUndo()'"); t.printStackTrace();
 		}
 	}
 }

@@ -7,6 +7,7 @@ import static data.hullmods.ehm_sr._ehm_sr_base.ehm_systemRestore;
 import static data.hullmods.ehm_wr._ehm_wr_base.ehm_weaponSlotRestore;
 import static lyr.tools._lyr_uiTools.clearUndo;
 import static lyr.tools._lyr_uiTools.commitChanges;
+import static lyr.tools._lyr_uiTools.isRefitTab;
 
 import java.awt.AWTException;
 import java.awt.Robot;
@@ -73,9 +74,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 	@Override 
 	public void applyEffectsAfterShipCreation(ShipAPI ship, String id) {
 		if (ship == null) return;
-		
-		CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
-		if (tab == null || !tab.equals(CoreUITabId.REFIT)) return;
+		if (!isRefitTab()) return;
 
 		if (trackOnSync) {
 			sheep = ship;
@@ -88,9 +87,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 	public void onFleetSync(CampaignFleetAPI fleet) {
 		if (!fleet.isPlayerFleet()) return;
 		if (sheep == null) return;
-
-		CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
-		if (tab == null || !tab.equals(CoreUITabId.REFIT)) return;
+		if (!isRefitTab()) return;
 
 		updateFleetMaps(fleet);
 		if (sheep != null) updateHullMods(sheep);
@@ -172,7 +169,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 		ShipVariantAPI refitVariant = ship.getVariant();
 		ShipVariantAPI realVariant = fleetMemberMap.get(ship.getFleetMemberId()).getVariant();
 		boolean playSound = false;
-		boolean commitChanges = false; // due to the changes under the hood, refresh is necessary for pretty much everything to avoid weird issues
+		boolean commitChanges = false; // due to the changes under the hood, refresh is now necessary for pretty much everything to avoid weird issues
 		boolean clearUndo = false; // either this, or 'refreshShip' should be used. 'refreshShip' has precedence if both are set to 'true'
 
 		String hullModType = newHullModId.substring(0, 7); // all affixes (not tags) are fixed to 0-7
