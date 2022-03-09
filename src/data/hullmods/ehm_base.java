@@ -7,6 +7,7 @@ import static data.hullmods.ehm_sr._ehm_sr_base.ehm_systemRestore;
 import static data.hullmods.ehm_wr._ehm_wr_base.ehm_weaponSlotRestore;
 import static lyr.tools._lyr_uiTools.clearUndo;
 import static lyr.tools._lyr_uiTools.commitChanges;
+import static lyr.tools._lyr_uiTools.playSound;
 import static lyr.tools._lyr_uiTools.isRefitTab;
 
 import java.awt.AWTException;
@@ -168,48 +169,34 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 	private static void onInstalled(String newHullModId, ShipAPI ship) {
 		ShipVariantAPI refitVariant = ship.getVariant();
 		ShipVariantAPI realVariant = fleetMemberMap.get(ship.getFleetMemberId()).getVariant();
-		boolean playSound = false;
-		boolean commitChanges = false; // due to the changes under the hood, refresh is now necessary for pretty much everything to avoid weird issues
-		boolean clearUndo = false; // either this, or 'refreshShip' should be used. 'refreshShip' has precedence if both are set to 'true'
 
 		String hullModType = newHullModId.substring(0, 7); // all affixes (not tags) are fixed to 0-7
 		switch (hullModType) {
-			case ehm.affix.adapterRetrofit: playSound = true; clearUndo = true; break;
-			case ehm.affix.systemRetrofit: playSound = true; commitChanges = true; break;
-			case ehm.affix.weaponRetrofit: playSound = true; commitChanges = true; break;
-			case ehm.affix.shieldCosmetic: playSound = true; commitChanges = true; break;
-			case ehm.affix.engineCosmetic: playSound = true; commitChanges = true; break;
+			case ehm.affix.adapterRetrofit: clearUndo(); playSound(); break; // 'commitChanges()' is triggered externally
+			case ehm.affix.systemRetrofit: commitChanges(); playSound(); break;
+			case ehm.affix.weaponRetrofit: commitChanges(); playSound(); break;
+			case ehm.affix.shieldCosmetic: commitChanges(); playSound(); break;
+			case ehm.affix.engineCosmetic: commitChanges(); playSound(); break;
 			default: switch (newHullModId) {
-				case ehm.tag.baseRetrofit: playSound = true; commitChanges = true; break;
+				case ehm.tag.baseRetrofit: commitChanges(); playSound(); break;
 			} break;
 		}
-
-		if (commitChanges) commitChanges();
-		else if (clearUndo) clearUndo();
-		if (playSound) Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f);
 	}
 
 	@SuppressWarnings("unused")
 	private static void onRemoved(String removedHullModId, ShipAPI ship) {
 		ShipVariantAPI refitVariant = ship.getVariant();
 		ShipVariantAPI realVariant = fleetMemberMap.get(ship.getFleetMemberId()).getVariant();
-		boolean playSound = false;
-		boolean commitChanges = false;
-		boolean clearUndo = false;
 
 		String hullModType = removedHullModId.substring(0, 7); 
 		switch (hullModType) {
-			case ehm.affix.adapterRetrofit: refitVariant.setHullSpecAPI(ehm_adapterRemoval(refitVariant)); playSound = true; commitChanges = true; break;
-			case ehm.affix.systemRetrofit: refitVariant.setHullSpecAPI(ehm_systemRestore(refitVariant)); playSound = true; commitChanges = true; break;
-			case ehm.affix.weaponRetrofit: refitVariant.setHullSpecAPI(ehm_weaponSlotRestore(refitVariant)); playSound = true; commitChanges = true; break;
-			case ehm.affix.shieldCosmetic: refitVariant.setHullSpecAPI(ehm_restoreShield(refitVariant)); playSound = true; commitChanges = true; break;
-			case ehm.affix.engineCosmetic: refitVariant.setHullSpecAPI(ehm_restoreEngineSlots(refitVariant)); playSound = true; commitChanges = true; break;
+			case ehm.affix.adapterRetrofit: refitVariant.setHullSpecAPI(ehm_adapterRemoval(refitVariant)); commitChanges(); playSound(); break;
+			case ehm.affix.systemRetrofit: refitVariant.setHullSpecAPI(ehm_systemRestore(refitVariant)); commitChanges(); playSound(); break;
+			case ehm.affix.weaponRetrofit: refitVariant.setHullSpecAPI(ehm_weaponSlotRestore(refitVariant)); commitChanges(); playSound(); break;
+			case ehm.affix.shieldCosmetic: refitVariant.setHullSpecAPI(ehm_restoreShield(refitVariant)); commitChanges(); playSound(); break;
+			case ehm.affix.engineCosmetic: refitVariant.setHullSpecAPI(ehm_restoreEngineSlots(refitVariant)); commitChanges(); playSound(); break;
 			default: break;
 		}
-
-		if (commitChanges) commitChanges();
-		else if (clearUndo) clearUndo();
-		if (playSound) Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f);
 	}
 	//#endregion
 	// END OF TRACKING

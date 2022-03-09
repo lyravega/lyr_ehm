@@ -227,6 +227,10 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 		return (tab != null && tab.equals(CoreUITabId.REFIT));
 	}
 
+	public static void playSound() {
+		Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f); // must match .json
+	}
+
 	/**
 	 * This method will immediately save the refit variant and refresh the 
 	 * UI by utilizing the available UI methods. Used to be called as 
