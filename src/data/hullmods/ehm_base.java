@@ -110,14 +110,15 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 	}
 
 	private static void updateFleetMaps(CampaignFleetAPI fleet) {
-		Set<FleetMemberAPI> fleetMembers = new HashSet<FleetMemberAPI>(fleet.getFleetData().getMembersListCopy());
-		Set<FleetMemberAPI> savedFleetMembers = new HashSet<FleetMemberAPI>(fleetMemberMap.values());
+		Set<FleetMemberAPI> _fleetMembers = new HashSet<FleetMemberAPI>(fleet.getFleetData().getMembersListCopy());
+		Collection<FleetMemberAPI> savedFleetMembers = fleetMemberMap.values();
 
-		if (fleetMembers.equals(savedFleetMembers)) return;
+		if (_fleetMembers.equals(savedFleetMembers)) return;
 		String memberId;
+		Set<FleetMemberAPI> _savedFleetMembers = new HashSet<FleetMemberAPI>(savedFleetMembers);
 
-		savedFleetMembers.removeAll(fleetMembers);
-		for (FleetMemberAPI member : savedFleetMembers) {
+		_savedFleetMembers.removeAll(_fleetMembers);
+		for (FleetMemberAPI member : _savedFleetMembers) {
 			memberId = member.getId();
 
 			hullModMap.remove(memberId);
@@ -125,8 +126,8 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 			if (log) logger.info("FT: Unregistering ST-"+memberId);
 		}
 
-		fleetMembers.removeAll(fleetMemberMap.values());
-		for (FleetMemberAPI member : fleetMembers) {
+		_fleetMembers.removeAll(savedFleetMembers);
+		for (FleetMemberAPI member : _fleetMembers) {
 			memberId = member.getId();
 
 			hullModMap.put(memberId, new HashSet<String>(member.getVariant().getHullMods()));
@@ -134,34 +135,33 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 			if (log) logger.info("FT: Registering ST-"+memberId);
 		}
 
-		if (!fleetMemberMap.containsKey(sheep.getFleetMemberId())) sheep = null; // probably dead code due to Ln80 and Ln89
+		if (!fleetMemberMap.containsKey(sheep.getFleetMemberId())) sheep = null; // probably dead code due to Ln81 and Ln90
 	}
 
 	private static void updateHullMods(ShipAPI ship) {
+		Set<String> _currentHullMods = new HashSet<String>(ship.getVariant().getHullMods());
 		Set<String> savedHullMods = hullModMap.get(ship.getFleetMemberId());
-		Collection<String> currentHullMods = ship.getVariant().getHullMods();
 
-		if (savedHullMods.size() == currentHullMods.size()) return;
-		
+		if (_currentHullMods.equals(savedHullMods)) return;
 		String memberId = ship.getFleetMemberId();
 		Set<String> _savedHullMods = new HashSet<String>(savedHullMods);
 
-		if (savedHullMods.size() < currentHullMods.size()) {
-			for (String newHullModId : currentHullMods) {
-				if (savedHullMods.contains(newHullModId)) continue;
+		_savedHullMods.removeAll(_currentHullMods);
+		for (String removedHullModId : _savedHullMods) {
+			if (_currentHullMods.contains(removedHullModId)) continue;
 
-				onInstalled(newHullModId, ship);
-				savedHullMods.add(newHullModId);
-				if (log) logger.info("ST-"+memberId+": New hull modification '"+newHullModId+"'");
-			}
-		} else /*if (savedHullMods.size() > currentHullMods.size())*/ {
-			for (String removedHullModId : _savedHullMods) {
-				if (currentHullMods.contains(removedHullModId)) continue;
+			onRemoved(removedHullModId, ship);
+			savedHullMods.remove(removedHullModId);
+			if (log) logger.info("ST-"+memberId+": Removed hull modification '"+removedHullModId+"'");
+		}
 
-				onRemoved(removedHullModId, ship);
-				savedHullMods.remove(removedHullModId);
-				if (log) logger.info("ST-"+memberId+": Removed hull modification '"+removedHullModId+"'");
-			}
+		_currentHullMods.removeAll(savedHullMods);
+		for (String newHullModId : _currentHullMods) {
+			if (savedHullMods.contains(newHullModId)) continue;
+
+			onInstalled(newHullModId, ship);
+			savedHullMods.add(newHullModId);
+			if (log) logger.info("ST-"+memberId+": New hull modification '"+newHullModId+"'");
 		}
 	}
 
