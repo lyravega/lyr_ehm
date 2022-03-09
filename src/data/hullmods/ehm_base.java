@@ -7,22 +7,17 @@ import static data.hullmods.ehm_sr._ehm_sr_base.ehm_systemRestore;
 import static data.hullmods.ehm_wr._ehm_wr_base.ehm_weaponSlotRestore;
 import static lyr.tools._lyr_uiTools.clearUndo;
 import static lyr.tools._lyr_uiTools.commitChanges;
-import static lyr.tools._lyr_uiTools.playSound;
 import static lyr.tools._lyr_uiTools.isRefitTab;
+import static lyr.tools._lyr_uiTools.playSound;
 
-import java.awt.AWTException;
-import java.awt.Robot;
-import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
-import com.fs.starfarer.api.campaign.CoreUITabId;
 import com.fs.starfarer.api.combat.HullModFleetEffect;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
@@ -201,73 +196,6 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 	//#endregion
 	// END OF TRACKING
 
-	//#region SCRIPTS
-	private static class refreshRefitScript implements EveryFrameScript {
-		private boolean isDone = false;
-		private boolean playSound = false;
-		private float frameCount = 0f;
-		private static Robot robot;
-
-		static {
-			try {
-				robot = new Robot();
-			} catch (AWTException e) {
-				e.printStackTrace();
-			}
-		}
-	
-		public refreshRefitScript(boolean playSound) {
-			this.playSound = playSound;
-			Global.getSector().addTransientScript(this);
-		}
-		
-		@Override
-		public void advance(float amount) {
-			CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
-			if (tab == null || !tab.equals(CoreUITabId.REFIT)) { isDone = true; return; }
-	
-			frameCount++;
-			if (frameCount < 5) {
-				robot.keyPress(KeyEvent.VK_ENTER);
-			} else {
-				robot.keyPress(KeyEvent.VK_R);
-				robot.keyRelease(KeyEvent.VK_R);
-				robot.keyRelease(KeyEvent.VK_ENTER);
-				if (log) logger.info("RR: Refreshed refit tab");
-				if (playSound) Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f);
-				isDone = true;
-				return;
-			}
-		}
-	
-		@Override
-		public boolean runWhilePaused() {
-			return true;
-		}
-	
-		@Override
-		public boolean isDone() {
-			return isDone;
-		}
-	}
-
-	private static refreshRefitScript refreshRefitScript;
-	
-	protected static void refreshRefit(boolean playSound) {
-		refreshRefitScript = null;
-		
-		for(EveryFrameScript script : Global.getSector().getTransientScripts()) {
-			if(script instanceof refreshRefitScript) {
-				refreshRefitScript = (refreshRefitScript) script; 
-			}
-		}
-
-		if (refreshRefitScript == null) { 
-			refreshRefitScript = new refreshRefitScript(playSound);
-		}
-	}
-	//#endregion
-	// END OF SCRIPTS
 	@Override
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (!ship.getVariant().hasHullMod(hullModSpecId)) {

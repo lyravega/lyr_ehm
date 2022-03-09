@@ -1,5 +1,7 @@
 package lyr.tools;
 
+import static lyr.tools._lyr_scriptTools.refreshRefit;
+
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodType;
 import java.util.List;
@@ -79,7 +81,6 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 				designDisplayClass = inspectMethod(refitPanelClass, "getDesignDisplay").getReturnType();
 				shipDisplayClass = inspectMethod(refitPanelClass, "getShipDisplay").getReturnType();
 
-				// some similar, some same shit that is used above, defined here separately to keep them tidy because 'MUH GAEMUR OCD'
 				campaignUI_getScreenPanel = inspectMethod(campaignUIClass, "getScreenPanel").getMethodHandle();
 				campaignUI_getEncounterDialog = inspectMethod(campaignUIClass, "getEncounterDialog").getMethodHandle(); // same as 'Global.getSector().getCampaignUI().getCurrentInteractionDialog();'
 				campaignUI_getCore = inspectMethod(campaignUIClass, "getCore").getMethodHandle();
@@ -269,7 +270,8 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 			refitPanel_setEditedSinceLoad.invoke(refitPanel, false);
 			refitPanel_setEditedSinceSave.invoke(refitPanel, false);
 		} catch (Throwable t) {
-			logger.fatal("Total failure in 'refreshRefitShip()'"); t.printStackTrace();
+			refreshRefit();
+			logger.error("Failure in 'commitChanges()', using 'refreshRefit()' as fallback"); t.printStackTrace();
 		}
 	}
 
@@ -299,7 +301,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 			refitPanel_setEditedSinceLoad.invoke(refitPanel, false);
 			refitPanel_setEditedSinceSave.invoke(refitPanel, false);
 		} catch (Throwable t) {
-			logger.fatal("Total failure in 'clearUndo()'"); t.printStackTrace();
+			logger.error("Failure in 'clearUndo()'"); t.printStackTrace();
 		}
 	}
 }
