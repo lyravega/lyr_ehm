@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 public class _lyr_reflectionTools {
 	protected static final Logger logger = Logger.getLogger("lyr_reflectionTools");
 	protected static final Lookup lookup = MethodHandles.lookup();
+	protected static final Class<?> lookupClass = lookup.getClass();
 	protected static Class<?> fieldClass;
 	protected static Class<?> methodClass;
 	protected static MethodHandle getName;
@@ -30,6 +31,7 @@ public class _lyr_reflectionTools {
 	protected static MethodHandle getReturnType;
 	protected static MethodHandle getDeclaredMethod;
 	protected static MethodHandle getMethod;
+	protected static MethodHandle unreflect;
 
 	static {
 		logger.setLevel(Level.INFO);
@@ -41,6 +43,7 @@ public class _lyr_reflectionTools {
 			getReturnType = lookup.findVirtual(methodClass, "getReturnType", MethodType.methodType(Class.class));
 			getDeclaredMethod = lookup.findVirtual(Class.class, "getDeclaredMethod", MethodType.methodType(methodClass, String.class, Class[].class));
 			getMethod = lookup.findVirtual(Class.class, "getMethod", MethodType.methodType(methodClass, String.class, Class[].class));
+			unreflect = lookup.findVirtual(lookupClass, "unreflect", MethodType.methodType(MethodHandle.class, methodClass));
 		} catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException e) {
 			logger.fatal("Failed to initialize reflection tools", e);
 		}
@@ -109,7 +112,8 @@ public class _lyr_reflectionTools {
 		Class<?>[] parameterTypes = (Class<?>[]) getParameterTypes.invoke(method);
 		// String methodName = (String) getName.invoke(method);
 		MethodType methodType = MethodType.methodType(returnType, parameterTypes);
-		MethodHandle methodHandle = MethodHandles.lookup().findVirtual(clazz, methodName, MethodType.methodType(returnType, parameterTypes));
+		MethodHandle methodHandle = lookup.findVirtual(clazz, methodName, MethodType.methodType(returnType, parameterTypes));
+		// MethodHandle methodHandle = (MethodHandle) unreflect.invoke(lookup, method); // alt way to get the same methodHandle
 
 		return new methodMap(returnType, parameterTypes, methodName, methodType, methodHandle);
 	}
@@ -128,7 +132,7 @@ public class _lyr_reflectionTools {
 		Class<?>[] parameterTypes = (Class<?>[]) getParameterTypes.invoke(method);
 		String methodName = (String) getName.invoke(method);
 		MethodType methodType = MethodType.methodType(returnType, parameterTypes);
-		MethodHandle methodHandle = MethodHandles.lookup().findVirtual(clazz, methodName, MethodType.methodType(returnType, parameterTypes));
+		MethodHandle methodHandle = lookup.findVirtual(clazz, methodName, MethodType.methodType(returnType, parameterTypes));
 
 		return new methodMap(returnType, parameterTypes, methodName, methodType, methodHandle);
 	}
