@@ -288,7 +288,7 @@ public class _ehm_base implements HullModEffect {
 				public static final String lacksBase = "Requires experimental hull modifications base to be installed first";
 				public static final String hasSystemRetrofit = "Another system retrofit is already installed";
 				public static final String hasWeaponRetrofit = "Another weapon retrofit is already installed";
-				public static final String hasAdapterRetrofit = "Another slot adapter is already installed";
+				public static final String hasAdapterRetrofit = "Another slot adapter retrofit is already installed";
 				public static final String hasShieldCosmetic = "Another shield cosmetic modification is already installed";
 				public static final String hasEngineCosmetic = "Another engine cosmetic modification is already installed";
 				public static final String noShields = "Cannot function without shields";

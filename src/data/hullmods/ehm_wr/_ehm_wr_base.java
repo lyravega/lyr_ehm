@@ -89,7 +89,9 @@ public class _ehm_wr_base extends _ehm_base {
 		}
 
 		if (!canBeAddedOrRemovedNow(ship, null, null)) {
-			tooltip.addSectionHeading(ehm.tooltip.header.locked, ehm.tooltip.header.locked_textColour, ehm.tooltip.header.locked_bgColour, Alignment.MID, ehm.tooltip.header.padding);
+			String inOrOut = ship.getVariant().hasHullMod(hullModSpecId) ? " IN" : " OUT";
+
+			tooltip.addSectionHeading(ehm.tooltip.header.locked+inOrOut, ehm.tooltip.header.locked_textColour, ehm.tooltip.header.locked_bgColour, Alignment.MID, ehm.tooltip.header.padding);
 
 			if (ehm_hasWeapons(ship, ehm.id.adapters.keySet())) tooltip.addPara(ehm.tooltip.text.hasWeapons, ehm.tooltip.text.padding);
 		}
