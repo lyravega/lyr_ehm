@@ -62,9 +62,11 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 	//#region TRACKING
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		ShipVariantAPI variant = stats.getVariant(); 
+		ShipVariantAPI variant = stats.getVariant();
 
-		variant.setHullSpecAPI(ehm_hullSpecClone(variant)); 
+		if (ehm_hasRetrofitBaseBuiltIn(variant)) return;
+
+		variant.setHullSpecAPI(ehm_hullSpecClone(variant)); commitChanges(); playSound();
 	}
 
 	@Override 
@@ -162,29 +164,31 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 
 	@SuppressWarnings("unused")
 	private static void onInstalled(String newHullModId, ShipAPI ship) {
+		if (!newHullModId.startsWith(ehm.affix.allRetrofit)) return;
+
 		ShipVariantAPI refitVariant = ship.getVariant();
 		ShipVariantAPI realVariant = fleetMemberMap.get(ship.getFleetMemberId()).getVariant();
 
-		String hullModType = newHullModId.substring(0, 7); // all affixes (not tags) are fixed to 0-7
-		switch (hullModType) {
+		String retrofitType = newHullModId.substring(0, 7); // all affixes (not tags) are fixed to 0-7
+		switch (retrofitType) {
 			case ehm.affix.adapterRetrofit: clearUndo(); playSound(); break; // 'commitChanges()' is triggered externally
 			case ehm.affix.systemRetrofit: commitChanges(); playSound(); break;
 			case ehm.affix.weaponRetrofit: commitChanges(); playSound(); break;
 			case ehm.affix.shieldCosmetic: commitChanges(); playSound(); break;
 			case ehm.affix.engineCosmetic: commitChanges(); playSound(); break;
-			default: switch (newHullModId) {
-				case ehm.tag.baseRetrofit: commitChanges(); playSound(); break;
-			} break;
+			default: break;
 		}
 	}
 
 	@SuppressWarnings("unused")
 	private static void onRemoved(String removedHullModId, ShipAPI ship) {
+		if (!removedHullModId.startsWith(ehm.affix.allRetrofit)) return;
+
 		ShipVariantAPI refitVariant = ship.getVariant();
 		ShipVariantAPI realVariant = fleetMemberMap.get(ship.getFleetMemberId()).getVariant();
 
-		String hullModType = removedHullModId.substring(0, 7); 
-		switch (hullModType) {
+		String retrofitType = removedHullModId.substring(0, 7); 
+		switch (retrofitType) {
 			case ehm.affix.adapterRetrofit: refitVariant.setHullSpecAPI(ehm_adapterRemoval(refitVariant)); commitChanges(); playSound(); break;
 			case ehm.affix.systemRetrofit: refitVariant.setHullSpecAPI(ehm_systemRestore(refitVariant)); commitChanges(); playSound(); break;
 			case ehm.affix.weaponRetrofit: refitVariant.setHullSpecAPI(ehm_weaponSlotRestore(refitVariant)); commitChanges(); playSound(); break;

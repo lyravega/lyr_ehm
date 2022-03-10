@@ -409,13 +409,11 @@ public class _ehm_base implements HullModEffect {
 	 * Called from the {@link ehm_base retrofit base} only. If the hull does not
 	 * have the base built-in, clones the hullSpec, adds flavour, builds the retrofit 
 	 * base in the hull, and refreshes the screen. Otherwise, just returns the same 
-	 * hullSpec.  
+	 * hullSpec.
 	 * @param variant to be used as a template
 	 * @return a cloned hullSpec
 	 */
 	protected static final ShipHullSpecAPI ehm_hullSpecClone(ShipVariantAPI variant) {
-		if (ehm_hasRetrofitBaseBuiltIn(variant)) return variant.getHullSpec();
-
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), true);
 
 		hullSpec.addBuiltInMod(ehm.id.baseRetrofit);
