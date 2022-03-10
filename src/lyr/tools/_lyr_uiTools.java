@@ -223,12 +223,21 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 		return null;
 	}
 	
+	/**
+	 * Just a simple check to see if it is the refit tab or not.
+	 * @return true if it is refit tab, false otherwise
+	 */
 	public static boolean isRefitTab() {
 		CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
 		return (tab != null && tab.equals(CoreUITabId.REFIT));
 	}
 
+	/**
+	 * Plays a hardcoded UI sound effect, used in {@code onRemove()}
+	 * and {@code onInstall()}
+	 */
 	public static void playSound() {
+		if (!isRefitTab()) return;
 		Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f); // must match .json
 	}
 

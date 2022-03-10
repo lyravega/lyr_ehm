@@ -1,6 +1,7 @@
 package data.hullmods.ehm_ar;
 
 import static data.hullmods._ehm_util.generateChildLocation;
+import static lyr.tools._lyr_uiTools.commitChanges;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +23,6 @@ import org.lwjgl.util.vector.Vector2f;
 import data.hullmods._ehm_base;
 import lyr.proxies.lyr_hullSpec;
 import lyr.proxies.lyr_weaponSlot;
-import lyr.tools._lyr_uiTools;
 
 
 /**
@@ -108,7 +108,7 @@ public class _ehm_ar_base extends _ehm_base {
 			refreshRefit = true;
 		}
 		
-		if (refreshRefit) { _lyr_uiTools.commitChanges(); refreshRefit = false; }
+		if (refreshRefit) { commitChanges(); refreshRefit = false; }
 		return hullSpec.retrieve();
 	}
 
