@@ -10,7 +10,6 @@ import static lyr.tools._lyr_uiTools.commitChanges;
 import static lyr.tools._lyr_uiTools.isRefitTab;
 import static lyr.tools._lyr_uiTools.playSound;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -108,7 +107,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 
 	private static void updateFleetMaps(CampaignFleetAPI fleet) {
 		Set<FleetMemberAPI> _fleetMembers = new HashSet<FleetMemberAPI>(fleet.getFleetData().getMembersListCopy());
-		Collection<FleetMemberAPI> savedFleetMembers = fleetMemberMap.values();
+		Set<FleetMemberAPI> savedFleetMembers = new HashSet<FleetMemberAPI>(fleetMemberMap.values());
 
 		if (_fleetMembers.equals(savedFleetMembers)) return;
 		String memberId;
@@ -132,7 +131,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 			if (log) logger.info("FT: Registering ST-"+memberId);
 		}
 
-		if (!fleetMemberMap.containsKey(sheep.getFleetMemberId())) sheep = null; // probably dead code due to Ln81 and Ln90
+		if (sheep != null && fleetMemberMap.containsKey(sheep.getFleetMemberId())) sheep = null;
 	}
 
 	private static void updateHullMods(ShipAPI ship) {
