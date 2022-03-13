@@ -1,8 +1,7 @@
 package data.hullmods;
 
 import java.awt.Color;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
 import java.util.Set;
 
 import com.fs.starfarer.api.EveryFrameScript;
@@ -242,11 +241,18 @@ public class _ehm_base implements HullModEffect {
 	public static enum ehm { ; 
 		public static enum id { ;
 			public static final String baseRetrofit = "ehm_base"; // must match hullmod id in .csv
-			public static final String adapterRemoveTool = "ehm_ar_adapterremoval"; // must match hullmod id in .csv
-			public static final Map<String, String> adapters = new HashMap<String, String>();
-			static {
-				adapters.put("ehm_ar_adaptermedium", "line"); // must match weapon id in .csv and .wpn
-				adapters.put("ehm_ar_adapterlarge", "line"); // must match weapon id in .csv and .wpn
+			public static enum adapter { ;
+				public static final String mediumDual = "ehm_adapter_meduimDual";
+				public static final String largeDual = "ehm_adapter_largeDual";
+				public static final String largeTriple = "ehm_adapter_largeTriple";
+				public static final String largeQuad = "ehm_adapter_largeQuad";
+				public static final Set<String> set = new HashSet<String>();
+				static {
+					set.add(mediumDual);
+					set.add(largeDual);
+					set.add(largeTriple);
+					set.add(largeQuad);
+				}
 			}
 		}
 		public static enum tag { ;
@@ -410,6 +416,7 @@ public class _ehm_base implements HullModEffect {
 	 * have the base built-in, clones the hullSpec, adds flavour, builds the retrofit 
 	 * base in the hull, and refreshes the screen. Otherwise, just returns the same 
 	 * hullSpec.
+	 * <p> Re-adds itself if the hullSpec is replaced with something else.
 	 * @param variant to be used as a template
 	 * @return a cloned hullSpec
 	 */
@@ -438,7 +445,6 @@ public class _ehm_base implements HullModEffect {
 	 */
 	protected static final ShipHullSpecAPI ehm_hullSpecRefresh(ShipVariantAPI variant) {
 		lyr_hullSpec stockHullSpec = new lyr_hullSpec(Global.getSettings().getHullSpec(variant.getHullSpec().getHullId()), true);
-		// lyr_hullSpec stockHullSpec = new lyr_hullSpec(Global.getSettings().getVariant(variant.getHullVariantId()).getHullSpec(), true);
 
 		ShipHullSpecAPI hullSpec = variant.getHullSpec();
 		ShipHullSpecAPI stockHullSpecAPI = stockHullSpec.retrieve();
@@ -474,6 +480,5 @@ public class _ehm_base implements HullModEffect {
 	 */
 	protected static final ShipHullSpecAPI ehm_hullSpecReference(ShipVariantAPI variant) {
 		return Global.getSettings().getHullSpec(variant.getHullSpec().getHullId());
-		// return Global.getSettings().getVariant(variant.getHullVariantId()).getHullSpec();
 	}
 }

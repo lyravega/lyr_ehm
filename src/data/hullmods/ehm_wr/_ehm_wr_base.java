@@ -64,12 +64,20 @@ public class _ehm_wr_base extends _ehm_base {
 
 		for (WeaponSlotAPI stockSlot: hullSpecReference.getAllWeaponSlotsCopy()) {
 			String slotId = stockSlot.getId();
+			String weaponId = variant.getWeaponId(slotId);
 			lyr_weaponSlot slot = hullSpec.getWeaponSlot(slotId);
 			WeaponType stockSlotWeaponType = stockSlot.getWeaponType();
-
-			if (slot.retrieve().isDecorative() && ehm.id.adapters.containsKey(variant.getWeaponId(slotId))) {
+			
+			// TODO take a look at strings, move them to base
+			if (slot.retrieve().isDecorative() && ehm.id.adapter.set.contains(weaponId)) {
 				hullSpec.getWeaponSlot(ehm.affix.adaptedSlot+slotId+"L").setWeaponType(stockSlotWeaponType);
 				hullSpec.getWeaponSlot(ehm.affix.adaptedSlot+slotId+"R").setWeaponType(stockSlotWeaponType);
+				if (weaponId.endsWith("Triple"))
+					hullSpec.getWeaponSlot(ehm.affix.adaptedSlot+slotId+"C").setWeaponType(stockSlotWeaponType);
+				else if (weaponId.endsWith("Quad")) {
+					hullSpec.getWeaponSlot(ehm.affix.adaptedSlot+slotId+"FL").setWeaponType(stockSlotWeaponType);
+					hullSpec.getWeaponSlot(ehm.affix.adaptedSlot+slotId+"FR").setWeaponType(stockSlotWeaponType);
+				}
 			} else {
 				slot.setWeaponType(stockSlotWeaponType);
 			}
@@ -93,7 +101,7 @@ public class _ehm_wr_base extends _ehm_base {
 
 			tooltip.addSectionHeading(ehm.tooltip.header.locked+inOrOut, ehm.tooltip.header.locked_textColour, ehm.tooltip.header.locked_bgColour, Alignment.MID, ehm.tooltip.header.padding);
 
-			if (ehm_hasWeapons(ship, ehm.id.adapters.keySet())) tooltip.addPara(ehm.tooltip.text.hasWeapons, ehm.tooltip.text.padding);
+			if (ehm_hasWeapons(ship, ehm.id.adapter.set)) tooltip.addPara(ehm.tooltip.text.hasWeapons, ehm.tooltip.text.padding);
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
@@ -113,7 +121,7 @@ public class _ehm_wr_base extends _ehm_base {
 	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
 		if (ship == null) return false;
 
-		if (ehm_hasWeapons(ship, ehm.id.adapters.keySet())) return false;
+		if (ehm_hasWeapons(ship, ehm.id.adapter.set)) return false;
 
 		return true;
 	}
