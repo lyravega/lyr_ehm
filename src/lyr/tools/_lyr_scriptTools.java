@@ -1,17 +1,20 @@
 package lyr.tools;
 
+import static lyr.tools._lyr_uiTools.isRefitTab;
+
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
 
 import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.campaign.CoreUITabId;
 
-public class _lyr_scriptTools {
+public class _lyr_scriptTools extends _lyr_reflectionTools {
 	private static refreshRefitScript refreshRefitScript;
 
-	protected static void refreshRefit() {
+	public static void refreshRefit() {
+		if (!isRefitTab()) return;
+
 		for(EveryFrameScript script : Global.getSector().getTransientScripts()) {
 			if(script instanceof refreshRefitScript) {
 				refreshRefitScript = (refreshRefitScript) script; 
@@ -39,12 +42,11 @@ public class _lyr_scriptTools {
 		private refreshRefitScript() {
 			Global.getSector().addTransientScript(this);
 		}
-		
+
 		@Override
 		public void advance(float amount) {
-			CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
-			if (tab == null || !tab.equals(CoreUITabId.REFIT)) { isDone = true; return; }
-	
+			if (!isRefitTab()) { isDone = true; return; }
+
 			frameCount++;
 			if (frameCount < 5) {
 				robot.keyPress(KeyEvent.VK_ENTER);
@@ -57,15 +59,65 @@ public class _lyr_scriptTools {
 				return;
 			}
 		}
-	
+
 		@Override
 		public boolean runWhilePaused() {
 			return true;
 		}
-	
+
 		@Override
 		public boolean isDone() {
 			return isDone;
 		}
 	}
+
+	// private static remoteInvokerScript remoteInvokerScript;
+	
+	// protected static void remoteInvoker(boolean isStaticMethod, Class<?> clazz, String methodName, Class<?> returnType, List<Object> parameters) {
+	// 	for(EveryFrameScript script : Global.getSector().getTransientScripts()) {
+	// 		if(script instanceof remoteInvokerScript) {
+	// 			remoteInvokerScript = (remoteInvokerScript) script; 
+	// 		}
+	// 	}
+
+	// 	if (remoteInvokerScript == null) { 
+	// 		remoteInvokerScript = new remoteInvokerScript(isStaticMethod, clazz, methodName, returnType, parameters);
+	// 	}
+	// }
+
+	// private static class remoteInvokerScript implements EveryFrameScript {
+	// 	private boolean isDone = false;
+	// 	private MethodHandle methodHandle = null;
+	// 	private List<Object> parameters;
+
+	// 	private remoteInvokerScript(boolean isStaticMethod, Class<?> clazz, String methodName, Class<?> returnType, List<Object> parameters) {
+	// 		List<Class<?>> parameterTypes = new ArrayList<Class<?>>();
+
+	// 		for (Iterator<Object> i = parameters.iterator(); i.hasNext(); )
+	// 			parameterTypes.add(i.next().getClass());
+
+	// 		this.methodHandle = findMethodHandle(isStaticMethod, clazz, methodName, returnType, parameterTypes);
+
+	// 		Global.getSector().addTransientScript(this);
+	// 	}
+
+	// 	@Override
+	// 	public void advance(float amount) {
+	// 		methodHandle.invoke(null);
+
+	// 		remoteInvokerScript = null; // clean the parent
+	// 		isDone = true;
+	// 		return;
+	// 	}
+
+	// 	@Override
+	// 	public boolean runWhilePaused() {
+	// 		return true;
+	// 	}
+
+	// 	@Override
+	// 	public boolean isDone() {
+	// 		return isDone;
+	// 	}
+	// }
 }

@@ -69,17 +69,17 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 
 	@Override 
 	public void applyEffectsAfterShipCreation(ShipAPI ship, String id) {
-		if (ship == null) return;
 		if (!isRefitTab()) return;
+		if (ship == null) return;
 
 		sheep = (fleetMemberMap.containsKey(ship.getFleetMemberId())) ? ship : null;
 	}
 
 	@Override
 	public void onFleetSync(CampaignFleetAPI fleet) {
+		if (!isRefitTab()) return;
 		if (!fleet.isPlayerFleet()) return;
 		if (sheep == null) return;
-		if (!isRefitTab()) return;
 
 		updateFleetMaps(fleet);
 		if (sheep != null) updateHullMods(sheep);

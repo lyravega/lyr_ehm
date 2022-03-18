@@ -94,12 +94,12 @@ public class _lyr_reflectionTools {
 	public static final methodMap inspectMethod(Class<?> clazz, String methodName) throws Throwable {
 		return inspectMethod(clazz, methodName, true);
 	}
-	public static final methodMap inspectMethod(Class<?> clazz, String methodName, boolean checkDeclared) throws Throwable {
+	public static final methodMap inspectMethod(Class<?> clazz, String methodName, boolean declaredOnly) throws Throwable {
 		Object method = null;
 		try { // works for methods with no arguments; if there's a way to capture it through a MethodHandle, I'm not aware of it
-			method = (checkDeclared) ? getDeclaredMethod.invoke(clazz, methodName) : getMethod.invoke(clazz, methodName);
+			method = (declaredOnly) ? getDeclaredMethod.invoke(clazz, methodName) : getMethod.invoke(clazz, methodName);
 		} catch (Throwable t) { // fallback for the problem above, searches all the methods with the passed name, and uses the FIRST found one
-			for (Object currMethod : (checkDeclared) ? clazz.getDeclaredMethods() : clazz.getMethods()) {
+			for (Object currMethod : (declaredOnly) ? clazz.getDeclaredMethods() : clazz.getMethods()) {
 				if (!String.class.cast(getName.invoke(currMethod)).equals(methodName)) continue;
 
 				method = currMethod; break;
@@ -136,4 +136,19 @@ public class _lyr_reflectionTools {
 
 		return new methodMap(returnType, parameterTypes, methodName, methodType, methodHandle);
 	}
+
+	// public static final MethodHandle findMethodHandle(boolean isStaticMethod, Class<?> clazz, String methodName, Class<?> returnType, List<Class<?>> parameterTypes) {
+	// 	MethodHandle methodHandle = null;
+
+	// 	try {
+	// 		methodHandle = isStaticMethod
+	// 			? lookup.findStatic(clazz, methodName, MethodType.methodType(returnType, parameterTypes))
+	// 			: lookup.findVirtual(clazz, methodName, MethodType.methodType(returnType, parameterTypes));
+	// 	} catch (NoSuchMethodException | IllegalAccessException e) {
+	// 		// TODO Auto-generated catch block
+	// 		e.printStackTrace();
+	// 	}
+
+	// 	return methodHandle;
+	// }
 }
