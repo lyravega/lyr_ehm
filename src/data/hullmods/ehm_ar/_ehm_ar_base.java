@@ -38,6 +38,9 @@ import lyr.proxies.lyr_weaponSlot;
  * @author lyravega
  */
 public class _ehm_ar_base extends _ehm_base {
+	/**
+	 * An inner class to supply the adapters with relevant child data
+	 */
 	private static class childrenParameters {
 		private Set<String> children; // childIds are used as position identifier, and used as a suffix
 		private Map<String, Vector2f> childrenOffsets;
@@ -142,7 +145,7 @@ public class _ehm_ar_base extends _ehm_base {
 			refreshRefit = true;
 		}
 
-		if (refreshRefit) { commitChanges(); refreshRefit = false; }
+		if (refreshRefit) { refreshRefit = false; commitChanges(); }
 		return hullSpec.retrieve();
 	}
 
