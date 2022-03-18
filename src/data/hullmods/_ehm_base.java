@@ -117,12 +117,13 @@ public class _ehm_base implements HullModEffect {
 	// isn't there an easier way to do this in java? like Lua tables?
 	public static enum ehm { ; 
 		public static enum id { ;
+			public static final String drillSound = "drill"; // must match .json
 			public static final String baseRetrofit = "ehm_base"; // must match hullmod id in .csv
 			public static enum adapter { ;
-				public static final String mediumDual = "ehm_adapter_meduimDual";
-				public static final String largeDual = "ehm_adapter_largeDual";
-				public static final String largeTriple = "ehm_adapter_largeTriple";
-				public static final String largeQuad = "ehm_adapter_largeQuad";
+				public static final String mediumDual = "ehm_adapter_meduimDual"; // must match weapon id in .csv and .wpn
+				public static final String largeDual = "ehm_adapter_largeDual"; // must match weapon id in .csv and .wpn
+				public static final String largeTriple = "ehm_adapter_largeTriple"; // must match weapon id in .csv and .wpn
+				public static final String largeQuad = "ehm_adapter_largeQuad"; // must match weapon id in .csv and .wpn
 				public static final Set<String> set = new HashSet<String>();
 				static {
 					set.add(mediumDual);
@@ -133,7 +134,6 @@ public class _ehm_base implements HullModEffect {
 			}
 		}
 		public static enum tag { ;
-			public static final String hullSpec = "ehm_experimental"; 
 			public static final String baseRetrofit = "ehm_base"; // must match hullmod tag in .csv
 			public static final String allRetrofit = "ehm"; // must match hullmod tag in .csv
 			public static final String systemRetrofit = "ehm_sr"; // must match hullmod tag in .csv

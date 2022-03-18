@@ -10,6 +10,8 @@ import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CoreUITabId;
 
+import data.hullmods._ehm_base.ehm;
+
 /**
  * Provides specialized MethodHandles and a few methods that are 
  * designed to be used on the Starsector UI, which is why these 
@@ -238,7 +240,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 	 */
 	public static void playSound() {
 		if (!isRefitTab()) return;
-		Global.getSoundPlayer().playUISound("drill", 1.0f, 0.75f); // must match .json
+		Global.getSoundPlayer().playUISound(ehm.id.drillSound, 1.0f, 0.75f);
 	}
 
 	/**
