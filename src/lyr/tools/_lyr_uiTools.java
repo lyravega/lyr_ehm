@@ -119,10 +119,10 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 				// designDisplayClass = designDisplay.getClass();			// com.fs.starfarer.coreui.refit.oOOo;
 				// shipDisplayClass = shipDisplay.getClass();				// com.fs.starfarer.coreui.refit.oOOO;
 
-				logger.info("Found the classes"); 
+				logger.info("Found the UI classes");
 				isDone = true; return;
 			} catch (Throwable t) {
-				logger.fatal("Failed to find the classes"); t.printStackTrace(); 
+				logger.fatal("Failed to find the UI classes"); t.printStackTrace();
 				isDone = true; return;
 			}
 		}
