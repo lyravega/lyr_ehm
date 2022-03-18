@@ -1,0 +1,10 @@
+{
+	"knownWeapons":{
+		"tags":[],
+		"weapons":[],
+	},
+	"knownHullMods":{
+		"tags":[],
+		"hullMods":[],
+	},
+}
