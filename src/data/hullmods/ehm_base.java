@@ -38,7 +38,6 @@ import org.apache.log4j.Logger;
  * @author lyravega
  */
 public class ehm_base extends _ehm_base implements HullModFleetEffect {	
-	private static final boolean trackOnSync = true; // if false, scripts inherited from the parent will be used for tracking
 	private static final boolean log = true;
 	private static final Logger logger = Logger.getLogger("lyr");
 	private static ShipAPI sheep = null;
@@ -51,7 +50,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 	public boolean withAdvanceInCampaign() { return false; }
 
 	@Override
-	public boolean withOnFleetSync() { return trackOnSync; }
+	public boolean withOnFleetSync() { return true; }
 
 	// @Override
 	// public void onFleetSync(CampaignFleetAPI fleet) {}
@@ -73,11 +72,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 		if (ship == null) return;
 		if (!isRefitTab()) return;
 
-		if (trackOnSync) {
-			sheep = (fleetMemberMap.containsKey(ship.getFleetMemberId())) ? ship : null;
-		} else {
-			shipTrackerScript(ship).setVariant(ship.getVariant()); // setVariant() is necessary to reflect the changes on the "refit ship"
-		}
+		sheep = (fleetMemberMap.containsKey(ship.getFleetMemberId())) ? ship : null;
 	}
 
 	@Override
@@ -94,8 +89,6 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 	private static Map<String, FleetMemberAPI> fleetMemberMap;
 
 	public static void buildFleetMaps() {
-		if (!trackOnSync) return;
-
 		hullModMap = new HashMap<String, Set<String>>(); 
 		fleetMemberMap = new HashMap<String, FleetMemberAPI>();
 
@@ -160,12 +153,12 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 		}
 	}
 
-	@SuppressWarnings("unused")
+	// @SuppressWarnings("unused")
 	private static void onInstalled(String newHullModId, ShipAPI ship) {
 		if (!newHullModId.startsWith(ehm.affix.allRetrofit)) return;
 
-		ShipVariantAPI refitVariant = ship.getVariant();
-		ShipVariantAPI realVariant = fleetMemberMap.get(ship.getFleetMemberId()).getVariant();
+		// ShipVariantAPI refitVariant = ship.getVariant();
+		// ShipVariantAPI realVariant = fleetMemberMap.get(ship.getFleetMemberId()).getVariant();
 
 		String retrofitType = newHullModId.substring(0, 7); // all affixes (not tags) are fixed to 0-7
 		switch (retrofitType) {
@@ -178,12 +171,12 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 		}
 	}
 
-	@SuppressWarnings("unused")
+	// @SuppressWarnings("unused")
 	private static void onRemoved(String removedHullModId, ShipAPI ship) {
 		if (!removedHullModId.startsWith(ehm.affix.allRetrofit)) return;
 
 		ShipVariantAPI refitVariant = ship.getVariant();
-		ShipVariantAPI realVariant = fleetMemberMap.get(ship.getFleetMemberId()).getVariant();
+		// ShipVariantAPI realVariant = fleetMemberMap.get(ship.getFleetMemberId()).getVariant();
 
 		String retrofitType = removedHullModId.substring(0, 7); 
 		switch (retrofitType) {
