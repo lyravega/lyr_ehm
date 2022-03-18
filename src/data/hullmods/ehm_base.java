@@ -107,11 +107,10 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 
 	private static void updateFleetMaps(CampaignFleetAPI fleet) {
 		Set<FleetMemberAPI> _fleetMembers = new HashSet<FleetMemberAPI>(fleet.getFleetData().getMembersListCopy());
-		Set<FleetMemberAPI> savedFleetMembers = new HashSet<FleetMemberAPI>(fleetMemberMap.values());
+		Set<FleetMemberAPI> _savedFleetMembers = new HashSet<FleetMemberAPI>(fleetMemberMap.values());
 
-		if (_fleetMembers.equals(savedFleetMembers)) return;
+		if (_fleetMembers.equals(_savedFleetMembers)) return;
 		String memberId;
-		Set<FleetMemberAPI> _savedFleetMembers = new HashSet<FleetMemberAPI>(savedFleetMembers);
 
 		_savedFleetMembers.removeAll(_fleetMembers);
 		for (FleetMemberAPI member : _savedFleetMembers) {
@@ -122,7 +121,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 			if (log) logger.info("FT: Unregistering ST-"+memberId);
 		}
 
-		_fleetMembers.removeAll(savedFleetMembers);
+		_fleetMembers.removeAll(fleetMemberMap.values());
 		for (FleetMemberAPI member : _fleetMembers) {
 			memberId = member.getId();
 
