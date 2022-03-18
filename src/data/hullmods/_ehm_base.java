@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
@@ -19,9 +18,6 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
-import data.scripts.fleetTrackerScript;
-import data.scripts.refreshRefitScript;
-import data.scripts.shipTrackerScript;
 import lyr.proxies.lyr_hullSpec;
 
 /**
@@ -117,125 +113,6 @@ public class _ehm_base implements HullModEffect {
 	//#endregion
 	// END OF IMPLEMENTATION
 
-	//#region TRACKERS
-	protected shipTrackerScript shipTracker;
-	protected fleetTrackerScript fleetTracker;
-	private static refreshRefitScript refreshRefitScript;
-
-	/**
-	 * Creates and assigns {@link #shipTracker} and {@link #fleetTracker}, then returns the 
-	 * {@link shipTrackerScript} that is unique to the ship. The overloads should be used 
-	 * for proper access. Scripts remain alive as long as the current tab is refit. The 
-	 * reference to the script MUST be dropped otherwise it will keep living on in the memory.
-	 * @param variant of the ship to track
-	 * @param memberId of the ship to track
-	 * @return a {@link shipTrackerScript}
-	 */
-	private shipTrackerScript shipTrackerScript(ShipVariantAPI variant, String memberId) {
-		for(EveryFrameScript script : Global.getSector().getScripts()) {
-			if(script instanceof shipTrackerScript) {
-				shipTrackerScript temp = (shipTrackerScript) script; 
-				if (!temp.getMemberId().equals(memberId)) continue;
-					
-				shipTracker = (shipTrackerScript) script; break;
-			}
-		}
-
-		fleetTracker = fleetTrackerScript();
-
-		return (shipTracker == null) ? new shipTrackerScript(variant, memberId, fleetTracker) : shipTracker;
-	}
-
-	/**
-	 * Creates and assigns {@link #shipTracker} and {@link #fleetTracker}, then returns the 
-	 * {@link shipTrackerScript} that is unique to the ship. Scripts remain alive as long as 
-	 * the current tab is refit. The reference to the script MUST be dropped otherwise it 
-	 * will keep living on in the memory.
-	 * @param stats of the ship to track
-	 * @return a {@link shipTrackerScript}
-	 * @see Overload: {@link #shipTrackerScript(ShipAPI)} 
-	 */
-	protected shipTrackerScript shipTrackerScript(MutableShipStatsAPI stats) {
-		if (stats == null) return null; shipTracker = null; 
-
-		ShipVariantAPI variant = stats.getVariant(); 
-		String memberId = (stats.getFleetMember() != null) ? stats.getFleetMember().getId() : null; // this can be null
-		
-		return (memberId != null) ? shipTrackerScript(variant, memberId) : null;
-	}
-
-	/**
-	 * Creates and assigns {@link #shipTracker} and {@link #fleetTracker}, then returns the 
-	 * {@link shipTrackerScript} that is unique to the ship. Scripts remain alive as long as 
-	 * the current tab is refit. The reference to the script MUST be dropped otherwise it 
-	 * will keep living on in the memory.
-	 * @param ship to track
-	 * @return a {@link shipTrackerScript}
-	 * @see Overload: {@link #shipTrackerScript(MutableShipStatsAPI)} 
-	 */
-	protected shipTrackerScript shipTrackerScript(ShipAPI ship) {
-		if (ship == null) return null; shipTracker = null; 
-
-		ShipVariantAPI variant = ship.getVariant();
-		String memberId = ship.getFleetMemberId(); // fleet member can be null, but this never is
-		
-		return shipTrackerScript(variant, memberId);
-	}
-
-	/**
-	 * Creates and assigns {@link #fleetTracker}. Initially developed to keep track of unique
-	 * {@link shipTrackerScript} scripts, and kill them if the ships are no longer present on 
-	 * the fleet, however after a few iterations, the scripts terminate theirselves as soon 
-	 * as the tab is changed from refit to something else. Now serves as a resource pool for
-	 * the shipTrackers, providing a common robot and logger for them to use. Also prints
-	 * purty info messages from time to time. In other words, redundant. 
-	 * The reference MUST be dropped otherwise it will keep living on in the memory.
-	 * @return a {@link fleetTrackerScript} script
-	 * @see Callers: {@link #shipTrackerScript(ShipVariantAPI, String)} 
-	 */
-	private fleetTrackerScript fleetTrackerScript() {
-		fleetTracker = null;
-
-		for(EveryFrameScript script : Global.getSector().getScripts()) {
-			if(script instanceof fleetTrackerScript) {
-				fleetTracker = (fleetTrackerScript) script; break; // find the fleet script
-			}
-		}
-
-		return (fleetTracker == null) ? new fleetTrackerScript() : fleetTracker;
-	}
-	
-	/**
-	 * Creates and runs a script that refreshes the refit tab by simulating key presses. 
-	 * Must be used with EXTREME CAUTION as if this is called from somewhere that is NOT
-	 * going to be executed once per frame, will cause the screen to flicker.
-	 * <p>
-	 * The other similar scripts run continuously, and will trigger a refresh on certain
-	 * conditions; in contrast, this one is designed to be called externally, and from
-	 * a piece of code that will execute ONCE. Examples are, a hullmod removing itself, 
-	 * hullmod becoming a built-in one, etc... which should already have proper checks 
-	 * that prevents further executions. 
-	 * 
-	 * @see Trigger: {@link ehm_base} (through {@link #ehm_hullSpecClone()})
-	 * @see Trigger: {@link data.hullmods.ehm_ar.ehm_ar_adapterremoval Adapter Removal} (through {@link #ehm_hullSpecRefresh()})
-	 * @see Trigger: {@link data.hullmods.ehm_ar.ehm_ar_stepdownadapter Step-Down Adapter} (everytime adapter functions)
-	 */
-	protected static void refreshRefit(boolean playSound) {
-		refreshRefitScript = null;
-		
-		for(EveryFrameScript script : Global.getSector().getTransientScripts()) {
-			if(script instanceof refreshRefitScript) {
-				refreshRefitScript = (refreshRefitScript) script; 
-			}
-		}
-
-		if (refreshRefitScript == null) { 
-			refreshRefitScript = new refreshRefitScript(playSound);
-		}
-	}
-	//#endregion
-	// END OF TRACKERS
-	
 	//#region DICTIONARY
 	// isn't there an easier way to do this in java? like Lua tables?
 	public static enum ehm { ; 
