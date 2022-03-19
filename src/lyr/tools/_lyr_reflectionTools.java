@@ -68,6 +68,14 @@ public class _lyr_reflectionTools {
 			this.methodHandle = methodHandle;
 		}
 
+		public methodMap(String methodName, MethodHandle methodHandle) {
+			this.returnType = methodHandle.type().returnType();
+			this.parameterTypes = methodHandle.type().parameterArray();
+			this.methodName = methodName;
+			this.methodType = methodHandle.type();
+			this.methodHandle = methodHandle;
+		}
+
 		public Class<?> getReturnType() { return this.returnType; }
 		public Class<?>[] getParameterTypes() { return this.parameterTypes; }
 		public String getName() { return this.methodName; }
@@ -112,10 +120,12 @@ public class _lyr_reflectionTools {
 		Class<?>[] parameterTypes = (Class<?>[]) getParameterTypes.invoke(method);
 		// String methodName = (String) getName.invoke(method);
 		MethodType methodType = MethodType.methodType(returnType, parameterTypes);
-		MethodHandle methodHandle = lookup.findVirtual(clazz, methodName, MethodType.methodType(returnType, parameterTypes));
-		// MethodHandle methodHandle = (MethodHandle) unreflect.invoke(lookup, method); // alt way to get the same methodHandle
+		MethodHandle methodHandle = lookup.findVirtual(clazz, methodName, methodType);
 
 		return new methodMap(returnType, parameterTypes, methodName, methodType, methodHandle);
+
+		// MethodHandle methodHandle = (MethodHandle) unreflect.invoke(lookup, method);
+		// return new methodMap(methodName, methodHandle); // alt way to get the same methodMap
 	}
 
 	/**
@@ -132,7 +142,7 @@ public class _lyr_reflectionTools {
 		Class<?>[] parameterTypes = (Class<?>[]) getParameterTypes.invoke(method);
 		String methodName = (String) getName.invoke(method);
 		MethodType methodType = MethodType.methodType(returnType, parameterTypes);
-		MethodHandle methodHandle = lookup.findVirtual(clazz, methodName, MethodType.methodType(returnType, parameterTypes));
+		MethodHandle methodHandle = lookup.findVirtual(clazz, methodName, methodType);
 
 		return new methodMap(returnType, parameterTypes, methodName, methodType, methodHandle);
 	}
