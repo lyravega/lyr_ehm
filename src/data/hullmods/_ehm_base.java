@@ -120,7 +120,7 @@ public class _ehm_base implements HullModEffect {
 			public static final String drillSound = "drill"; // must match .json
 			public static final String baseRetrofit = "ehm_base"; // must match hullmod id in .csv
 			public static enum adapter { ;
-				public static final String mediumDual = "ehm_adapter_meduimDual"; // must match weapon id in .csv and .wpn
+				public static final String mediumDual = "ehm_adapter_mediumDual"; // must match weapon id in .csv and .wpn
 				public static final String largeDual = "ehm_adapter_largeDual"; // must match weapon id in .csv and .wpn
 				public static final String largeTriple = "ehm_adapter_largeTriple"; // must match weapon id in .csv and .wpn
 				public static final String largeQuad = "ehm_adapter_largeQuad"; // must match weapon id in .csv and .wpn

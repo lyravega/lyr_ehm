@@ -106,10 +106,10 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 				Object encounterDialogue = campaignUI_getEncounterDialog.invoke(campaignUI);
 				Object core = (encounterDialogue != null) ? encounterDialog_getCoreUI.invoke(encounterDialogue) : campaignUI_getCore.invoke(campaignUI);
 				Object wrapper = adaptiveSearch_findObjectWithChildClass(core, refitTabClass, false, 1); // as the 'wrapperClass' is unknown here, search for a grandChild's class and get parent object
-				Object refitTab = adaptiveSearch_findObjectWithChildClass(wrapper, refitTabClass, true, 0); // as the 'refitTabClass' is known, search for a child's class and get the child object
-				Object refitPanel = refitTab_getRefitPanel.invoke(refitTab);
-				Object designDisplay = refitPanel_getDesignDisplay.invoke(refitPanel);
-				Object shipDisplay = refitPanel_getDesignDisplay.invoke(refitPanel);
+				// Object refitTab = adaptiveSearch_findObjectWithChildClass(wrapper, refitTabClass, true, 0); // as the 'refitTabClass' is known, search for a child's class and get the child object
+				// Object refitPanel = refitTab_getRefitPanel.invoke(refitTab);
+				// Object designDisplay = refitPanel_getDesignDisplay.invoke(refitPanel);
+				// Object shipDisplay = refitPanel_getDesignDisplay.invoke(refitPanel);
 				
 				// campaignUIClass = campaignUI.getClass();					// com.fs.starfarer.campaign.CampaignState;
 				// screenPanelClass = screenPanel.getClass();				// com.fs.starfarer.ui.v;

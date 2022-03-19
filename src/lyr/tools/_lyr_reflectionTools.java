@@ -87,7 +87,7 @@ public class _lyr_reflectionTools {
 	 * the methods will be searched to find it.
 	 * @param clazz to search the methodName on
 	 * @param methodName in String, no "()"
-	 * @param checkDeclared overload parameter, pass false to search inherited methods as well
+	 * @param declaredOnly overload parameter, pass false to search inherited methods as well
 	 * @return a methodMap
 	 * @throws Throwable
 	 */

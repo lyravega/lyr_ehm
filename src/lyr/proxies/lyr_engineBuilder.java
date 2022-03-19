@@ -58,7 +58,7 @@ public final class lyr_engineBuilder extends _lyr_proxyTools {
 	 * @param enginebuilder to be proxied
 	 * @param clone if the enginebuilder needs to be cloned
 	 */
-	public lyr_engineBuilder(Object enginebuilder, boolean clone) {
+	public lyr_engineBuilder(Object enginebuilder, boolean clone) { // clone what? it's a general object, clone should never be true
 		this.engineBuilder = (clone) ? this.duplicate(enginebuilder) : enginebuilder;
 	}
 	
@@ -116,7 +116,6 @@ public final class lyr_engineBuilder extends _lyr_proxyTools {
 	 * @param enumNumber
 	 * @category Proxied method
 	 */
-
 	public void setEngineStyle(int enumNumber) {
 		try {
 			setEngineStyle.invoke(engineBuilderClass.cast(engineBuilder), engineStyleEnum.getEnumConstants()[enumNumber]);
