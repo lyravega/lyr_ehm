@@ -3,6 +3,7 @@ package lyr.proxies;
 import java.awt.Color;
 import java.lang.invoke.MethodHandle;
 
+import com.fs.starfarer.api.combat.ShieldAPI.ShieldType;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
 
 import lyr.tools._lyr_proxyTools;
@@ -22,12 +23,24 @@ public final class lyr_shieldSpec extends _lyr_proxyTools {
 	private static MethodHandle clone = null;
 	private static MethodHandle setRingColor = null;
 	private static MethodHandle setInnerColor = null;
+	private static MethodHandle setType = null;
+	private static MethodHandle setFluxPerDamageAbsorbed = null;
+	private static MethodHandle setUpkeepCost = null;
+	private static MethodHandle setArc = null;
+	private static MethodHandle setPhaseCost = null;
+	private static MethodHandle setPhaseUpkeep = null;
 	
 	static {
 		try {
 			clone = inspectMethod(shieldSpecClass, "clone").getMethodHandle();
 			setRingColor = inspectMethod(shieldSpecClass, "setRingColor").getMethodHandle();
 			setInnerColor = inspectMethod(shieldSpecClass, "setInnerColor").getMethodHandle();
+			setType = inspectMethod(shieldSpecClass, "setType").getMethodHandle();
+			setFluxPerDamageAbsorbed = inspectMethod(shieldSpecClass, "setFluxPerDamageAbsorbed").getMethodHandle();
+			setUpkeepCost = inspectMethod(shieldSpecClass, "setUpkeepCost").getMethodHandle();
+			setArc = inspectMethod(shieldSpecClass, "setArc").getMethodHandle();
+			setPhaseCost = inspectMethod(shieldSpecClass, "setPhaseCost").getMethodHandle();
+			setPhaseUpkeep = inspectMethod(shieldSpecClass, "setPhaseUpkeep").getMethodHandle();
 		} catch (Throwable t) {
 			logger.fatal("Failed to find a method in 'lyr_shieldSpec'", t);
 		}
@@ -122,6 +135,54 @@ public final class lyr_shieldSpec extends _lyr_proxyTools {
 			setInnerColor.invoke(shieldSpec, colour);
 		} catch (Throwable t) {
 			logger.error("Failed to use 'setInnerColor()' in 'lyr_shieldSpec'", t);
+		}
+	}
+
+	public void setType(ShieldType shieldType) {
+		try {
+			setType.invoke(shieldSpec, shieldType);
+		} catch (Throwable t) {
+			logger.error("Failed to use 'setType()' in 'lyr_shieldSpec'", t);
+		}
+	}
+
+	public void setFluxPerDamageAbsorbed(float absorbtionRatio) {
+		try {
+			setFluxPerDamageAbsorbed.invoke(shieldSpec, absorbtionRatio);
+		} catch (Throwable t) {
+			logger.error("Failed to use 'setFluxPerDamageAbsorbed()' in 'lyr_shieldSpec'", t);
+		}
+	}
+
+	public void setUpkeepCost(float upkeepCost) {
+		try {
+			setUpkeepCost.invoke(shieldSpec, upkeepCost);
+		} catch (Throwable t) {
+			logger.error("Failed to use 'setUpkeepCost()' in 'lyr_shieldSpec'", t);
+		}
+	}
+
+	public void setArc(float arcSize) {
+		try {
+			setArc.invoke(shieldSpec, arcSize);
+		} catch (Throwable t) {
+			logger.error("Failed to use 'setArc()' in 'lyr_shieldSpec'", t);
+		}
+	}
+
+	public void setPhaseCost(float phaseCost) {
+		try {
+			setPhaseCost.invoke(shieldSpec, phaseCost);
+		} catch (Throwable t) {
+			logger.error("Failed to use 'setPhaseCost()' in 'lyr_shieldSpec'", t);
+		}
+	}
+
+	public void setPhaseUpkeep(float phaseUpkeep) {
+		try {
+			setPhaseUpkeep.invoke(shieldSpec, phaseUpkeep);
+		} catch (Throwable t) {
+			logger.error("Failed to use 'setPhaseUpkeep()' in 'lyr_shieldSpec'", t);
 		}
 	}
 	//#endregion 

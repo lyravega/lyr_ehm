@@ -34,6 +34,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	private static MethodHandle addWeaponSlot = null;
 	private static MethodHandle addBuiltInWeapon = null;
 	private static MethodHandle addBuiltInWing = null;
+	private static MethodHandle setShipDefenseId = null;
 
 	static {
 		try {
@@ -47,6 +48,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 			addWeaponSlot = inspectMethod(hullSpecClass, "addWeaponSlot").getMethodHandle();
 			addBuiltInWeapon = inspectMethod(hullSpecClass, "addBuiltInWeapon").getMethodHandle();
 			addBuiltInWing = inspectMethod(hullSpecClass, "addBuiltInWing").getMethodHandle();
+			setShipDefenseId = inspectMethod(hullSpecClass, "setShipDefenseId").getMethodHandle();
 		} catch (Throwable t) {
 			logger.fatal("Failed to find a method in 'lyr_hullSpec'", t);
 		}
@@ -301,6 +303,14 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 			addBuiltInWing.invoke(hullSpec, wingId);
 		} catch (Throwable t) {
 			logger.error("Failed to use 'addBuiltInWing()' in 'lyr_hullSpec'", t);
+		}
+	}
+	
+	public void setShipDefenseId(String defenseId) {
+		try { 
+			setShipDefenseId.invoke(hullSpec, defenseId);
+		} catch (Throwable t) {
+			logger.error("Failed to use 'setShipDefenseId()' in 'lyr_hullSpec'", t);
 		}
 	}
 	//#endregion 
