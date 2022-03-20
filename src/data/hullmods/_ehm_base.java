@@ -136,6 +136,7 @@ public class _ehm_base implements HullModEffect {
 		public static enum tag { ;
 			public static final String baseRetrofit = "ehm_base"; // must match hullmod tag in .csv
 			public static final String allRetrofit = "ehm"; // must match hullmod tag in .csv
+			public static final String externalAccess = "ehm_externalAccess"; // must match hullmod tag in .csv
 			public static final String systemRetrofit = "ehm_sr"; // must match hullmod tag in .csv
 			public static final String weaponRetrofit = "ehm_wr"; // must match hullmod tag in .csv
 			public static final String adapterRetrofit = "ehm_ar"; // must match hullmod tag in .csv

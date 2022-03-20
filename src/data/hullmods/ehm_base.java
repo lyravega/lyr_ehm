@@ -150,11 +150,12 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 
 	// @SuppressWarnings("unused")
 	private static void onInstalled(String newHullModId, ShipAPI ship) {
-		if (!newHullModId.startsWith(ehm.affix.allRetrofit)) return;
-
 		// ShipVariantAPI refitVariant = ship.getVariant();
 		// ShipVariantAPI realVariant = fleetMemberMap.get(ship.getFleetMemberId()).getVariant();
 
+		Set<String> tags = Global.getSettings().getHullModSpec(newHullModId).getTags();
+		if (tags.contains(ehm.tag.externalAccess)) { commitChanges(); playSound(); return; } 
+		if (!tags.contains(ehm.tag.allRetrofit)) return;
 		String retrofitType = newHullModId.substring(0, 7); // all affixes (not tags) are fixed to 0-7
 		switch (retrofitType) {
 			case ehm.affix.adapterRetrofit: clearUndo(); playSound(); break; // 'commitChanges()' is triggered externally
@@ -168,11 +169,12 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 
 	// @SuppressWarnings("unused")
 	private static void onRemoved(String removedHullModId, ShipAPI ship) {
-		if (!removedHullModId.startsWith(ehm.affix.allRetrofit)) return;
-
 		ShipVariantAPI refitVariant = ship.getVariant();
 		// ShipVariantAPI realVariant = fleetMemberMap.get(ship.getFleetMemberId()).getVariant();
 
+		Set<String> tags = Global.getSettings().getHullModSpec(removedHullModId).getTags();
+		if (tags.contains(ehm.tag.externalAccess)) { refitVariant.setHullSpecAPI(ehm_hullSpecRefresh(refitVariant)); commitChanges(); playSound(); return; } 
+		if (!tags.contains(ehm.tag.allRetrofit)) return;
 		String retrofitType = removedHullModId.substring(0, 7); 
 		switch (retrofitType) {
 			case ehm.affix.adapterRetrofit: refitVariant.setHullSpecAPI(ehm_adapterRemoval(refitVariant)); commitChanges(); playSound(); break;
