@@ -14,6 +14,8 @@ public class ehm_sr_drone_pd extends _ehm_sr_base {
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
 
+		stats.getSystemRegenBonus().modifyFlat(hullModSpecId, 0.1f);
+
 		if(variant.getHullSpec().getShipSystemId().equals(systemId)) return;
 
 		variant.setHullSpecAPI(ehm_systemRetrofit(variant, systemId));

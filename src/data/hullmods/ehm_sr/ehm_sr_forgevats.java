@@ -14,6 +14,8 @@ public class ehm_sr_forgevats extends _ehm_sr_base {
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
 
+		stats.getSystemCooldownBonus().modifyFlat(hullModSpecId, 45.0f);
+
 		if(variant.getHullSpec().getShipSystemId().equals(systemId)) return;
 
 		variant.setHullSpecAPI(ehm_systemRetrofit(variant, systemId));
