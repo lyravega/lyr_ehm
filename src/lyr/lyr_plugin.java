@@ -7,10 +7,12 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 
 public class lyr_plugin extends BaseModPlugin {
-	private static void teachBlueprints() {
+	private static void updateBlueprints() {
 		FactionAPI playerFaction = Global.getSector().getPlayerFaction();
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
-			if (hullModSpec.hasTag("ehm") && !playerFaction.knowsHullMod(hullModSpec.getId())) playerFaction.addKnownHullMod(hullModSpec.getId());
+			String hullModSpecId = hullModSpec.getId();
+			if (hullModSpec.hasTag("ehm") && !playerFaction.knowsHullMod(hullModSpecId)) playerFaction.addKnownHullMod(hullModSpecId);
+			else if (hullModSpec.hasTag("ehm_restricted") && playerFaction.knowsHullMod(hullModSpecId)) playerFaction.removeKnownHullMod(hullModSpecId);
 		}
 		for (WeaponSpecAPI weaponSpec : Global.getSettings().getAllWeaponSpecs()) {
 			if (weaponSpec.hasTag("ehm_adapters") && !playerFaction.knowsWeapon(weaponSpec.getWeaponId())) playerFaction.addKnownWeapon(weaponSpec.getWeaponId(), false);
@@ -21,7 +23,7 @@ public class lyr_plugin extends BaseModPlugin {
 	public void onGameLoad(boolean newGame) {
 		data.hullmods.ehm_base.buildFleetMaps();
 		new lyr.tools._lyr_uiTools._lyr_delayedFinder();
-		teachBlueprints();
+		updateBlueprints();
 	}
 
 	@Override

@@ -47,6 +47,9 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 	private static MethodHandle shipDisplay_setFleetMember;
 	private static MethodHandle designDisplay_undo;
 
+	private static MethodHandle shipDisplay_getCurrentVariant;
+	private static MethodHandle refitPanel_addAllWeaponsFromVariantToCargo;
+
 	private static MethodHandle refitPanel_setEditedSinceLoad;
 	private static MethodHandle refitPanel_setEditedSinceSave;
 
@@ -99,6 +102,9 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 
 				refitPanel_setEditedSinceLoad = inspectMethod(refitPanelClass, "setEditedSinceLoad").getMethodHandle();
 				refitPanel_setEditedSinceSave = inspectMethod(refitPanelClass, "setEditedSinceSave").getMethodHandle();
+
+				shipDisplay_getCurrentVariant = inspectMethod(shipDisplayClass, "getCurrentVariant").getMethodHandle();
+				refitPanel_addAllWeaponsFromVariantToCargo = inspectMethod(refitPanelClass, "addAllWeaponsFromVariantToCargo").getMethodHandle();
 
 				// redoing stuff just to find the wrapper, or whatever the fuck it is
 				Object campaignUI = Global.getSector().getCampaignUI();

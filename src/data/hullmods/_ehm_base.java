@@ -95,6 +95,8 @@ public class _ehm_base implements HullModEffect {
 	//#region INSTALLATION CHECKS
 	@Override 
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
+		if (ship == null) return;
+
 		if (isApplicableToShip(ship) && canBeAddedOrRemovedNow(ship, null, null)) {
 			tooltip.addSectionHeading(ehm.tooltip.header.warning, ehm.tooltip.header.warning_textColour, ehm.tooltip.header.warning_bgColour, Alignment.MID, ehm.tooltip.header.padding);
 			tooltip.addPara(ehm.tooltip.text.warning, ehm.tooltip.text.padding);

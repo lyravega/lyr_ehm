@@ -61,6 +61,8 @@ public class _ehm_sc_base extends _ehm_base {
 	//#region INSTALLATION CHECKS
 	@Override
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
+		if (ship == null) return;
+
 		if (!isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(ehm.tooltip.header.notApplicable, ehm.tooltip.header.notApplicable_textColour, ehm.tooltip.header.notApplicable_bgColour, Alignment.MID, ehm.tooltip.header.padding);
 

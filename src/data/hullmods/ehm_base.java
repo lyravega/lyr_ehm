@@ -155,6 +155,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 
 		Set<String> tags = Global.getSettings().getHullModSpec(newHullModId).getTags();
 		if (tags.contains(ehm.tag.externalAccess)) { commitChanges(); playSound(); return; } 
+
 		if (!tags.contains(ehm.tag.allRetrofit)) return;
 		String retrofitType = newHullModId.substring(0, 7); // all affixes (not tags) are fixed to 0-7
 		switch (retrofitType) {
@@ -173,7 +174,8 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 		// ShipVariantAPI realVariant = fleetMemberMap.get(ship.getFleetMemberId()).getVariant();
 
 		Set<String> tags = Global.getSettings().getHullModSpec(removedHullModId).getTags();
-		if (tags.contains(ehm.tag.externalAccess)) { refitVariant.setHullSpecAPI(ehm_hullSpecRefresh(refitVariant)); commitChanges(); playSound(); return; } 
+		if (tags.contains(ehm.tag.externalAccess)) { refitVariant.setHullSpecAPI(ehm_hullSpecRefresh(refitVariant)); commitChanges(); playSound(); return; }
+
 		if (!tags.contains(ehm.tag.allRetrofit)) return;
 		String retrofitType = removedHullModId.substring(0, 7); 
 		switch (retrofitType) {
@@ -190,6 +192,8 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 
 	@Override
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
+		if (ship == null) return;
+
 		if (!ship.getVariant().hasHullMod(hullModSpecId)) {
 			tooltip.addSectionHeading(ehm.tooltip.header.severeWarning, ehm.tooltip.header.severeWarning_textColour, ehm.tooltip.header.severeWarning_bgColour, Alignment.MID, ehm.tooltip.header.padding).flash(1.0f, 1.0f);
 			tooltip.addPara(ehm.tooltip.text.baseRetrofitWarning, ehm.tooltip.text.padding);
