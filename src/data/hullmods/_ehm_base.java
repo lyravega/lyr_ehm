@@ -1,7 +1,6 @@
 package data.hullmods;
 
 import java.awt.Color;
-import java.util.HashSet;
 import java.util.Set;
 
 import com.fs.starfarer.api.Global;
@@ -19,6 +18,9 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import lyr.proxies.lyr_hullSpec;
+import lyr.settings.lyr_internals;
+import lyr.settings.lyr_tooltip;
+import lyr.settings.lyr_externals;
 
 /**
  * This is the master base class for all experimental hullmods. Stores the most 
@@ -98,8 +100,8 @@ public class _ehm_base implements HullModEffect {
 		if (ship == null) return;
 
 		if (isApplicableToShip(ship) && canBeAddedOrRemovedNow(ship, null, null)) {
-			tooltip.addSectionHeading(ehm.tooltip.header.warning, ehm.tooltip.header.warning_textColour, ehm.tooltip.header.warning_bgColour, Alignment.MID, ehm.tooltip.header.padding);
-			tooltip.addPara(ehm.tooltip.text.warning, ehm.tooltip.text.padding);
+			tooltip.addSectionHeading(lyr_tooltip.header.warning, lyr_tooltip.header.warning_textColour, lyr_tooltip.header.warning_bgColour, Alignment.MID, lyr_tooltip.header.padding);
+			tooltip.addPara(lyr_tooltip.text.warning, lyr_tooltip.text.padding);
 		}
 	}
 
@@ -115,96 +117,6 @@ public class _ehm_base implements HullModEffect {
 	//#endregion
 	// END OF IMPLEMENTATION
 
-	//#region DICTIONARY
-	// isn't there an easier way to do this in java? like Lua tables?
-	public static enum ehm { ; 
-		public static enum id { ;
-			public static final String drillSound = "drill"; // must match .json
-			public static final String baseRetrofit = "ehm_base"; // must match hullmod id in .csv
-			public static enum adapter { ;
-				public static final String mediumDual = "ehm_adapter_mediumDual"; // must match weapon id in .csv and .wpn
-				public static final String largeDual = "ehm_adapter_largeDual"; // must match weapon id in .csv and .wpn
-				public static final String largeTriple = "ehm_adapter_largeTriple"; // must match weapon id in .csv and .wpn
-				public static final String largeQuad = "ehm_adapter_largeQuad"; // must match weapon id in .csv and .wpn
-				public static final Set<String> set = new HashSet<String>();
-				static {
-					set.add(mediumDual);
-					set.add(largeDual);
-					set.add(largeTriple);
-					set.add(largeQuad);
-				}
-			}
-		}
-		public static enum tag { ;
-			public static final String baseRetrofit = "ehm_base"; // must match hullmod tag in .csv
-			public static final String allRetrofit = "ehm"; // must match hullmod tag in .csv
-			public static final String externalAccess = "ehm_externalAccess"; // must match hullmod tag in .csv
-			public static final String systemRetrofit = "ehm_sr"; // must match hullmod tag in .csv
-			public static final String weaponRetrofit = "ehm_wr"; // must match hullmod tag in .csv
-			public static final String adapterRetrofit = "ehm_ar"; // must match hullmod tag in .csv
-			public static final String shieldCosmetic = "ehm_sc"; // must match hullmod tag in .csv
-			public static final String engineCosmetic = "ehm_ec"; // must match hullmod tag in .csv
-			public static final String adapterWeapon = "ehm_adapter"; // must match weapon tag in .csv
-			public static final String reqShields = "ehm_sr_require_shields"; // must match hullmod tag in .csv
-			public static final String reqNoPhase = "ehm_sr_require_no_phase"; // must match hullmod tag in .csv
-			public static final String reqWings = "ehm_sr_require_wings"; // must match hullmod tag in .csv
-		}
-		public static enum affix { ;
-			public static final String adaptedSlot = "AS_"; // should NOT be altered in any update
-			public static final String allRetrofit = "ehm_"; // must match hullmod id in .csv
-			public static final String systemRetrofit = "ehm_sr_"; // must match hullmod id in .csv
-			public static final String weaponRetrofit = "ehm_wr_"; // must match hullmod id in .csv
-			public static final String adapterRetrofit = "ehm_ar_"; // must match hullmod id in .csv
-			public static final String shieldCosmetic = "ehm_sc_"; // must match hullmod id in .csv
-			public static final String engineCosmetic = "ehm_ec_"; // must match hullmod id in .csv
-		}
-		public static enum tooltip { ;
-			public static enum text { ;
-				public static final String flavourManufacturer = "Experimental";  // for color, must match .json TODO: make flavour optional
-				public static final String flavourDescription = "This design utilizes experimental hull modifications created by a spacer who has been living in "+
-																" a junkyard for most of his life. His 'treasure hoard' is full of franken-ships that somehow fly "+
-																"by using cannibalized parts from other ships that would be deemed incompatible. Benefits of such "+
-																"modifications are unclear as they do not provide a certain advantage over the stock designs. "+
-																"However the level of customization and flexibility they offer is certainly unparalleled.";
-				public static final String warning = "Installing or removing Experimental Hull Modifications will commit the changes immediately; "+
-														"the variant will be saved and any market and/or cargo transactions will be finalized";
-				public static final String baseRetrofitWarning = "Will become a built-in hull modification as soon as it is installed";
-				public static final float padding = 5.0f;
-				public static final String noShip = "Ship does not exist";
-				public static final String lacksBase = "Requires experimental hull modifications base to be installed first";
-				public static final String hasSystemRetrofit = "Another system retrofit is already installed";
-				public static final String hasWeaponRetrofit = "Another weapon retrofit is already installed";
-				public static final String hasAdapterRetrofit = "Another slot adapter retrofit is already installed";
-				public static final String hasShieldCosmetic = "Another shield cosmetic modification is already installed";
-				public static final String hasEngineCosmetic = "Another engine cosmetic modification is already installed";
-				public static final String noShields = "Cannot function without shields";
-				public static final String hasPhase = "Cannot function with a phase cloak";
-				public static final String noWings = "Cannot function without wings";
-				// public static final String adapterActivated = "An adapter has been activated. Can only be removed with the adapter removal hull mod";
-				public static final String noAdapterRetrofit = "There are no adapters to remove";
-				public static final String hasWeapons = "Cannot be installed or uninstalled as long as there are weapons present on the ship";
-				public static final String hasWeaponsOnAdaptedSlots = "Cannot be uninstalled as long as adapted slots have weapons on them";
-			}
-			public static enum header { ;
-				public static final float padding = 15.0f;
-				public static final String warning = "WARNING";
-				public static final Color warning_bgColour = Color.BLACK;
-				public static final Color warning_textColour = Color.YELLOW;
-				public static final String severeWarning = "WARNING"; // use flash for severity
-				public static final Color severeWarning_bgColour = Color.BLACK;
-				public static final Color severeWarning_textColour = Color.RED;
-				public static final String notApplicable = "NOT APPLICABLE";
-				public static final Color notApplicable_bgColour = Color.BLACK;
-				public static final Color notApplicable_textColour = Color.RED;
-				public static final String locked = "LOCKED";
-				public static final Color locked_bgColour = Color.BLACK;
-				public static final Color locked_textColour = Color.ORANGE;
-			}
-		}
-	}
-	//#endregion
-	// END OF DICTIONARY
-	
 	//#region CHECK HELPERS
 	/**
 	 * Checks the ship if it has another hull modification using the passed tag
@@ -228,7 +140,7 @@ public class _ehm_base implements HullModEffect {
 	 * @see Overload: {@link #ehm_hasRetrofitBaseBuiltIn()}
 	 */
 	protected static final boolean ehm_hasRetrofitBaseBuiltIn(ShipAPI ship) {
-		return ship.getVariant().getHullSpec().isBuiltInMod(ehm.id.baseRetrofit);
+		return ship.getVariant().getHullSpec().isBuiltInMod(lyr_internals.id.baseRetrofit);
 	}
 
 	/**
@@ -238,7 +150,7 @@ public class _ehm_base implements HullModEffect {
 	 * @see Overload: {@link #ehm_hasRetrofitBaseBuiltIn()}
 	 */
 	protected static final boolean ehm_hasRetrofitBaseBuiltIn(ShipVariantAPI variant) {
-		return variant.getHullSpec().isBuiltInMod(ehm.id.baseRetrofit);
+		return variant.getHullSpec().isBuiltInMod(lyr_internals.id.baseRetrofit);
 	}
 
 	/**
@@ -303,9 +215,11 @@ public class _ehm_base implements HullModEffect {
 	protected static final ShipHullSpecAPI ehm_hullSpecClone(ShipVariantAPI variant) {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), true);
 
-		hullSpec.addBuiltInMod(ehm.id.baseRetrofit);
-		hullSpec.setManufacturer(ehm.tooltip.text.flavourManufacturer);
-		hullSpec.setDescriptionPrefix(ehm.tooltip.text.flavourDescription);
+		hullSpec.addBuiltInMod(lyr_internals.id.baseRetrofit);
+		if (lyr_externals.showFlavour) {
+			hullSpec.setManufacturer(lyr_tooltip.text.flavourManufacturer);
+			hullSpec.setDescriptionPrefix(lyr_tooltip.text.flavourDescription);
+		}
 
 		return hullSpec.retrieve();
 	}
@@ -346,8 +260,10 @@ public class _ehm_base implements HullModEffect {
 		// stockHullSpec.addBuiltInWing(builtInWing);
 
 		// hullSpec.addBuiltInMod(ehm.id.baseRetrofit);
-		stockHullSpec.setManufacturer(ehm.tooltip.text.flavourManufacturer);
-		stockHullSpec.setDescriptionPrefix(ehm.tooltip.text.flavourDescription);
+		if (lyr_externals.showFlavour) {
+			stockHullSpec.setManufacturer(lyr_tooltip.text.flavourManufacturer);
+			stockHullSpec.setDescriptionPrefix(lyr_tooltip.text.flavourDescription);
+		}
 		
 		return stockHullSpec.retrieve();
 	}

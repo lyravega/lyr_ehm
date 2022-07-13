@@ -10,7 +10,7 @@ import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CoreUITabId;
 
-import data.hullmods._ehm_base.ehm;
+import lyr.settings.lyr_internals;
 
 /**
  * Provides specialized MethodHandles and a few methods that are 
@@ -246,7 +246,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 	 */
 	public static void playSound() {
 		if (!isRefitTab()) return;
-		Global.getSoundPlayer().playUISound(ehm.id.drillSound, 1.0f, 0.75f);
+		Global.getSoundPlayer().playUISound(lyr_internals.id.drillSound, 1.0f, 0.75f);
 	}
 
 	/**

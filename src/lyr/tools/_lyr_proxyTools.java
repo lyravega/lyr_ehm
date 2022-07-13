@@ -5,8 +5,7 @@ import com.fs.starfarer.api.Global;
 import org.apache.log4j.Logger;
 
 /**
- * Provides methods to search for the obfuscated classes so that they 
- * can be utilized through proxy-like classes.
+ * Provides methods to seek and capture the obfuscated classes 
  * @author lyravega
  */
 public class _lyr_proxyTools extends _lyr_reflectionTools {

@@ -16,6 +16,8 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import data.hullmods._ehm_base;
 import lyr.proxies.lyr_hullSpec;
 import lyr.proxies.lyr_weaponSlot;
+import lyr.settings.lyr_internals;
+import lyr.settings.lyr_tooltip;
 
 /**
  * This class is used by weapon retrofit hullmods. They are pretty 
@@ -69,14 +71,14 @@ public class _ehm_wr_base extends _ehm_base {
 			WeaponType stockSlotWeaponType = stockSlot.getWeaponType();
 			
 			// TODO take a look at strings, move them to base
-			if (slot.retrieve().isDecorative() && ehm.id.adapter.set.contains(weaponId)) {
-				hullSpec.getWeaponSlot(ehm.affix.adaptedSlot+slotId+"L").setWeaponType(stockSlotWeaponType);
-				hullSpec.getWeaponSlot(ehm.affix.adaptedSlot+slotId+"R").setWeaponType(stockSlotWeaponType);
+			if (slot.retrieve().isDecorative() && lyr_internals.id.adapter.set.contains(weaponId)) {
+				hullSpec.getWeaponSlot(lyr_internals.affix.adaptedSlot+slotId+"L").setWeaponType(stockSlotWeaponType);
+				hullSpec.getWeaponSlot(lyr_internals.affix.adaptedSlot+slotId+"R").setWeaponType(stockSlotWeaponType);
 				if (weaponId.endsWith("Triple"))
-					hullSpec.getWeaponSlot(ehm.affix.adaptedSlot+slotId+"C").setWeaponType(stockSlotWeaponType);
+					hullSpec.getWeaponSlot(lyr_internals.affix.adaptedSlot+slotId+"C").setWeaponType(stockSlotWeaponType);
 				else if (weaponId.endsWith("Quad")) {
-					hullSpec.getWeaponSlot(ehm.affix.adaptedSlot+slotId+"FL").setWeaponType(stockSlotWeaponType);
-					hullSpec.getWeaponSlot(ehm.affix.adaptedSlot+slotId+"FR").setWeaponType(stockSlotWeaponType);
+					hullSpec.getWeaponSlot(lyr_internals.affix.adaptedSlot+slotId+"FL").setWeaponType(stockSlotWeaponType);
+					hullSpec.getWeaponSlot(lyr_internals.affix.adaptedSlot+slotId+"FR").setWeaponType(stockSlotWeaponType);
 				}
 			} else {
 				slot.setWeaponType(stockSlotWeaponType);
@@ -92,18 +94,18 @@ public class _ehm_wr_base extends _ehm_base {
 		if (ship == null) return;
 
 		if (!isApplicableToShip(ship)) {
-			tooltip.addSectionHeading(ehm.tooltip.header.notApplicable, ehm.tooltip.header.notApplicable_textColour, ehm.tooltip.header.notApplicable_bgColour, Alignment.MID, ehm.tooltip.header.padding);
+			tooltip.addSectionHeading(lyr_tooltip.header.notApplicable, lyr_tooltip.header.notApplicable_textColour, lyr_tooltip.header.notApplicable_bgColour, Alignment.MID, lyr_tooltip.header.padding);
 
-			if (!ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(ehm.tooltip.text.lacksBase, ehm.tooltip.text.padding);
-			if (ehm_hasRetrofitTag(ship, ehm.tag.weaponRetrofit, hullModSpecId)) tooltip.addPara(ehm.tooltip.text.hasWeaponRetrofit, ehm.tooltip.text.padding);
+			if (!ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(lyr_tooltip.text.lacksBase, lyr_tooltip.text.padding);
+			if (ehm_hasRetrofitTag(ship, lyr_internals.tag.weaponRetrofit, hullModSpecId)) tooltip.addPara(lyr_tooltip.text.hasWeaponRetrofit, lyr_tooltip.text.padding);
 		}
 
 		if (!canBeAddedOrRemovedNow(ship, null, null)) {
 			String inOrOut = ship.getVariant().hasHullMod(hullModSpecId) ? " IN" : " OUT";
 
-			tooltip.addSectionHeading(ehm.tooltip.header.locked+inOrOut, ehm.tooltip.header.locked_textColour, ehm.tooltip.header.locked_bgColour, Alignment.MID, ehm.tooltip.header.padding);
+			tooltip.addSectionHeading(lyr_tooltip.header.locked+inOrOut, lyr_tooltip.header.locked_textColour, lyr_tooltip.header.locked_bgColour, Alignment.MID, lyr_tooltip.header.padding);
 
-			if (ehm_hasWeapons(ship, ehm.id.adapter.set)) tooltip.addPara(ehm.tooltip.text.hasWeapons, ehm.tooltip.text.padding);
+			if (ehm_hasWeapons(ship, lyr_internals.id.adapter.set)) tooltip.addPara(lyr_tooltip.text.hasWeapons, lyr_tooltip.text.padding);
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
@@ -114,7 +116,7 @@ public class _ehm_wr_base extends _ehm_base {
 		if (ship == null) return false;
 
 		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return false; 
-		if (ehm_hasRetrofitTag(ship, ehm.tag.weaponRetrofit, hullModSpecId)) return false; 
+		if (ehm_hasRetrofitTag(ship, lyr_internals.tag.weaponRetrofit, hullModSpecId)) return false; 
 
 		return true; 
 	}
@@ -123,7 +125,7 @@ public class _ehm_wr_base extends _ehm_base {
 	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
 		if (ship == null) return false;
 
-		if (ehm_hasWeapons(ship, ehm.id.adapter.set)) return false;
+		if (ehm_hasWeapons(ship, lyr_internals.id.adapter.set)) return false;
 
 		return true;
 	}

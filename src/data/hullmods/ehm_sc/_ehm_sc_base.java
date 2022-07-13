@@ -14,6 +14,8 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import data.hullmods._ehm_base;
 import lyr.proxies.lyr_hullSpec;
 import lyr.proxies.lyr_shieldSpec;
+import lyr.settings.lyr_internals;
+import lyr.settings.lyr_tooltip;
 
 /**
  * This class is used by shield cosmetic hullmods. The changes are 
@@ -64,12 +66,12 @@ public class _ehm_sc_base extends _ehm_base {
 		if (ship == null) return;
 
 		if (!isApplicableToShip(ship)) {
-			tooltip.addSectionHeading(ehm.tooltip.header.notApplicable, ehm.tooltip.header.notApplicable_textColour, ehm.tooltip.header.notApplicable_bgColour, Alignment.MID, ehm.tooltip.header.padding);
+			tooltip.addSectionHeading(lyr_tooltip.header.notApplicable, lyr_tooltip.header.notApplicable_textColour, lyr_tooltip.header.notApplicable_bgColour, Alignment.MID, lyr_tooltip.header.padding);
 
-			if (!ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(ehm.tooltip.text.lacksBase, ehm.tooltip.text.padding);
-			if (ehm_hasRetrofitTag(ship, ehm.tag.shieldCosmetic, hullModSpecId)) tooltip.addPara(ehm.tooltip.text.hasShieldCosmetic, ehm.tooltip.text.padding);
+			if (!ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(lyr_tooltip.text.lacksBase, lyr_tooltip.text.padding);
+			if (ehm_hasRetrofitTag(ship, lyr_internals.tag.shieldCosmetic, hullModSpecId)) tooltip.addPara(lyr_tooltip.text.hasShieldCosmetic, lyr_tooltip.text.padding);
 
-			if (hullModSpec.getTags().contains(ehm.tag.reqShields) && ship.getShield() == null) tooltip.addPara(ehm.tooltip.text.noShields, ehm.tooltip.text.padding);
+			if (hullModSpec.getTags().contains(lyr_internals.tag.reqShields) && ship.getShield() == null) tooltip.addPara(lyr_tooltip.text.noShields, lyr_tooltip.text.padding);
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
@@ -80,10 +82,10 @@ public class _ehm_sc_base extends _ehm_base {
 		if (ship == null) return false;
 
 		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return false;
-		if (ehm_hasRetrofitTag(ship, ehm.tag.shieldCosmetic, hullModSpecId)) return false;
+		if (ehm_hasRetrofitTag(ship, lyr_internals.tag.shieldCosmetic, hullModSpecId)) return false;
 
 		Set<String> hullModSpecTags = hullModSpec.getTags();
-		if (hullModSpecTags.contains(ehm.tag.reqShields) && ship.getShield() == null) return false;
+		if (hullModSpecTags.contains(lyr_internals.tag.reqShields) && ship.getShield() == null) return false;
 
 		return true;
 	}

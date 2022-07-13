@@ -11,6 +11,8 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import data.hullmods._ehm_base;
 import lyr.proxies.lyr_hullSpec;
+import lyr.settings.lyr_internals;
+import lyr.settings.lyr_tooltip;
 
 /**
  * This class is used by system retrofit hullmods. They are pretty 
@@ -55,15 +57,15 @@ public class _ehm_sr_base extends _ehm_base {
 		if (ship == null) return;
 
 		if (!isApplicableToShip(ship)) {
-			tooltip.addSectionHeading(ehm.tooltip.header.notApplicable, ehm.tooltip.header.notApplicable_textColour, ehm.tooltip.header.notApplicable_bgColour, Alignment.MID, ehm.tooltip.header.padding);
+			tooltip.addSectionHeading(lyr_tooltip.header.notApplicable, lyr_tooltip.header.notApplicable_textColour, lyr_tooltip.header.notApplicable_bgColour, Alignment.MID, lyr_tooltip.header.padding);
 
-			if (!ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(ehm.tooltip.text.lacksBase, ehm.tooltip.text.padding);
-			if (ehm_hasRetrofitTag(ship, ehm.tag.systemRetrofit, hullModSpecId)) tooltip.addPara(ehm.tooltip.text.hasSystemRetrofit, ehm.tooltip.text.padding);
+			if (!ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(lyr_tooltip.text.lacksBase, lyr_tooltip.text.padding);
+			if (ehm_hasRetrofitTag(ship, lyr_internals.tag.systemRetrofit, hullModSpecId)) tooltip.addPara(lyr_tooltip.text.hasSystemRetrofit, lyr_tooltip.text.padding);
 
 			Set<String> hullModSpecTags = hullModSpec.getTags();
-			if (hullModSpecTags.contains(ehm.tag.reqShields) && ship.getShield() == null) tooltip.addPara(ehm.tooltip.text.noShields, ehm.tooltip.text.padding);
-			if (hullModSpecTags.contains(ehm.tag.reqNoPhase) && ship.getPhaseCloak() != null) tooltip.addPara(ehm.tooltip.text.hasPhase, ehm.tooltip.text.padding);
-			if (hullModSpecTags.contains(ehm.tag.reqWings) && ship.getNumFighterBays() == 0) tooltip.addPara(ehm.tooltip.text.noWings, ehm.tooltip.text.padding);
+			if (hullModSpecTags.contains(lyr_internals.tag.reqShields) && ship.getShield() == null) tooltip.addPara(lyr_tooltip.text.noShields, lyr_tooltip.text.padding);
+			if (hullModSpecTags.contains(lyr_internals.tag.reqNoPhase) && ship.getPhaseCloak() != null) tooltip.addPara(lyr_tooltip.text.hasPhase, lyr_tooltip.text.padding);
+			if (hullModSpecTags.contains(lyr_internals.tag.reqWings) && ship.getNumFighterBays() == 0) tooltip.addPara(lyr_tooltip.text.noWings, lyr_tooltip.text.padding);
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
@@ -74,12 +76,12 @@ public class _ehm_sr_base extends _ehm_base {
 		if (ship == null) return false; 
 
 		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return false; 
-		if (ehm_hasRetrofitTag(ship, ehm.tag.systemRetrofit, hullModSpecId)) return false; 
+		if (ehm_hasRetrofitTag(ship, lyr_internals.tag.systemRetrofit, hullModSpecId)) return false; 
 
 		Set<String> hullModSpecTags = hullModSpec.getTags();
-		if (hullModSpecTags.contains(ehm.tag.reqShields) && ship.getShield() == null) return false; 
-		if (hullModSpecTags.contains(ehm.tag.reqNoPhase) && ship.getPhaseCloak() != null) return false; 
-		if (hullModSpecTags.contains(ehm.tag.reqWings) && ship.getNumFighterBays() == 0) return false; 
+		if (hullModSpecTags.contains(lyr_internals.tag.reqShields) && ship.getShield() == null) return false; 
+		if (hullModSpecTags.contains(lyr_internals.tag.reqNoPhase) && ship.getPhaseCloak() != null) return false; 
+		if (hullModSpecTags.contains(lyr_internals.tag.reqWings) && ship.getNumFighterBays() == 0) return false; 
 		
 		return true; 
 	}

@@ -4,20 +4,21 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.invoke.MethodType;
+import java.lang.reflect.Method;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 
 /**
- * Provides tools for reflective operations. Reflect package is used
- * indirectly, and will not trigger the scriptClassLoader's restriction.
- * <p> The method {@link #inspectMethod} is used to obtain 
- * information about a method, and provide a ready-to-use methodHandle. 
- * <p> The innerClass {@link methodMap} is used to store the said 
- * information above in it, and provide a proper accessors for them.
- * <p> Serves as a base for all reflection-related classes, such as 
- * uiTools and proxyTools.
+ * Reflective operation tools for all such reflection-related classes as 
+ * uiTools and ProxyTools.
+ * <p>This package is used indirectly and will not trigger the 
+ * scriptClassLoader's restriction.
+ * <p> The method {@link #inspectMethod} returns information about a
+ * method a ready-to-use methodHandle to invoke it.
+ * <p> The innerClass {@link methodMap} stores and provides accessors
+ * for this information.
  * @author lyravega
  */
 public class _lyr_reflectionTools {
@@ -75,7 +76,7 @@ public class _lyr_reflectionTools {
 			this.methodType = methodHandle.type();
 			this.methodHandle = methodHandle;
 		}
-
+		
 		public Class<?> getReturnType() { return this.returnType; }
 		public Class<?>[] getParameterTypes() { return this.parameterTypes; }
 		public String getName() { return this.methodName; }

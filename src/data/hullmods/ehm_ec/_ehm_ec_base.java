@@ -10,6 +10,8 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import data.hullmods._ehm_base;
 import lyr.proxies.lyr_engineBuilder;
 import lyr.proxies.lyr_hullSpec;
+import lyr.settings.lyr_internals;
+import lyr.settings.lyr_tooltip;
 
 /**
  * This class is used by engine cosmetic hullmods. The changes are 
@@ -59,10 +61,10 @@ public class _ehm_ec_base extends _ehm_base {
 		if (ship == null) return;
 
 		if (!isApplicableToShip(ship)) {
-			tooltip.addSectionHeading(ehm.tooltip.header.notApplicable, ehm.tooltip.header.notApplicable_textColour, ehm.tooltip.header.notApplicable_bgColour, Alignment.MID, ehm.tooltip.header.padding);
+			tooltip.addSectionHeading(lyr_tooltip.header.notApplicable, lyr_tooltip.header.notApplicable_textColour, lyr_tooltip.header.notApplicable_bgColour, Alignment.MID, lyr_tooltip.header.padding);
 
-			if (!ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(ehm.tooltip.text.lacksBase, ehm.tooltip.text.padding);
-			if (ehm_hasRetrofitTag(ship, ehm.tag.engineCosmetic, hullModSpecId)) tooltip.addPara(ehm.tooltip.text.hasEngineCosmetic, ehm.tooltip.text.padding);
+			if (!ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(lyr_tooltip.text.lacksBase, lyr_tooltip.text.padding);
+			if (ehm_hasRetrofitTag(ship, lyr_internals.tag.engineCosmetic, hullModSpecId)) tooltip.addPara(lyr_tooltip.text.hasEngineCosmetic, lyr_tooltip.text.padding);
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
@@ -73,7 +75,7 @@ public class _ehm_ec_base extends _ehm_base {
 		if (ship == null) return false; 
 
 		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return false; 
-		if (ehm_hasRetrofitTag(ship, ehm.tag.engineCosmetic, hullModSpecId)) return false;
+		if (ehm_hasRetrofitTag(ship, lyr_internals.tag.engineCosmetic, hullModSpecId)) return false;
 
 		return true; 
 	}

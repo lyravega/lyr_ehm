@@ -25,6 +25,8 @@ import org.lwjgl.util.vector.Vector2f;
 import data.hullmods._ehm_base;
 import lyr.proxies.lyr_hullSpec;
 import lyr.proxies.lyr_weaponSlot;
+import lyr.settings.lyr_internals;
+import lyr.settings.lyr_tooltip;
 
 
 /**
@@ -79,22 +81,22 @@ public class _ehm_ar_base extends _ehm_base {
 	static {
 		mediumDual.addChild("L", WeaponSize.SMALL, new Vector2f(0.0f, 6.0f)); // left
 		mediumDual.addChild("R", WeaponSize.SMALL, new Vector2f(0.0f, -6.0f)); // right
-		adapters.put(ehm.id.adapter.mediumDual, mediumDual);
+		adapters.put(lyr_internals.id.adapter.mediumDual, mediumDual);
 
 		largeDual.addChild("L", WeaponSize.MEDIUM, new Vector2f(0.0f, 12.0f)); // left
 		largeDual.addChild("R", WeaponSize.MEDIUM, new Vector2f(0.0f, -12.0f)); // right
-		adapters.put(ehm.id.adapter.largeDual, largeDual);
+		adapters.put(lyr_internals.id.adapter.largeDual, largeDual);
 
 		largeTriple.addChild("L", WeaponSize.SMALL, new Vector2f(-4.0f, 17.0f)); // left
 		largeTriple.addChild("R", WeaponSize.SMALL, new Vector2f(-4.0f, -17.0f)); // right
 		largeTriple.addChild("C", WeaponSize.MEDIUM, new Vector2f(0.0f, 0.0f)); // center
-		adapters.put(ehm.id.adapter.largeTriple, largeTriple);
+		adapters.put(lyr_internals.id.adapter.largeTriple, largeTriple);
 
 		largeQuad.addChild("L", WeaponSize.SMALL, new Vector2f(0.0f, 6.0f)); // left
 		largeQuad.addChild("R", WeaponSize.SMALL, new Vector2f(0.0f, -6.0f)); // right
 		largeQuad.addChild("FL", WeaponSize.SMALL, new Vector2f(-4.0f, 17.0f)); // far left
 		largeQuad.addChild("FR", WeaponSize.SMALL, new Vector2f(-4.0f, -17.0f)); // far right
-		adapters.put(ehm.id.adapter.largeQuad, largeQuad);
+		adapters.put(lyr_internals.id.adapter.largeQuad, largeQuad);
 	}
 	
 	/** 
@@ -107,7 +109,7 @@ public class _ehm_ar_base extends _ehm_base {
 		boolean refreshRefit = false;
 
 		for (String slotId: variant.getFittedWeaponSlots()) {
-			if (slotId.startsWith(ehm.affix.adaptedSlot)) continue; // short-circuit to avoid weapons in adapted slots causing an error on load, must be first
+			if (slotId.startsWith(lyr_internals.affix.adaptedSlot)) continue; // short-circuit to avoid weapons in adapted slots causing an error on load, must be first
 
 			//WeaponType slotType = variant.getSlot(slotId).getWeaponType();
 			//WeaponSize slotSize = variant.getSlot(slotId).getSlotSize();
@@ -117,7 +119,7 @@ public class _ehm_ar_base extends _ehm_base {
 			String weaponId = weaponSpec.getWeaponId();
 
 			if (!weaponSize.equals(variant.getSlot(slotId).getSlotSize())) continue; // to avoid plugging medium universal to large universal
-			if (!ehm.id.adapter.set.contains(weaponId)) continue; // to short-circuit the function if it isn't an adapter
+			if (!lyr_internals.id.adapter.set.contains(weaponId)) continue; // to short-circuit the function if it isn't an adapter
 
 			childrenParameters childrenParameters = adapters.get(weaponId);
 
@@ -129,7 +131,7 @@ public class _ehm_ar_base extends _ehm_base {
 			for (String childId: childrenParameters.getChildren()) { // childId and childSlotId are not the same, be aware
 				lyr_weaponSlot childSlot = parentSlot.clone();
 
-				String childSlotId = ehm.affix.adaptedSlot + parentSlotId + childId; // also used as nodeId because nodeId isn't visible
+				String childSlotId = lyr_internals.affix.adaptedSlot + parentSlotId + childId; // also used as nodeId because nodeId isn't visible
 				Vector2f childSlotLocation = generateChildLocation(parentSlotLocation, parentSlotAngle, childrenParameters.getChildOffset(childId));
 				WeaponSize childSlotSize = childrenParameters.getChildSize(childId);
 
@@ -167,18 +169,18 @@ public class _ehm_ar_base extends _ehm_base {
 		if (ship == null) return;
 
 		if (!isApplicableToShip(ship)) {
-			tooltip.addSectionHeading(ehm.tooltip.header.notApplicable, ehm.tooltip.header.notApplicable_textColour, ehm.tooltip.header.notApplicable_bgColour, Alignment.MID, ehm.tooltip.header.padding);
+			tooltip.addSectionHeading(lyr_tooltip.header.notApplicable, lyr_tooltip.header.notApplicable_textColour, lyr_tooltip.header.notApplicable_bgColour, Alignment.MID, lyr_tooltip.header.padding);
 
-			if (!ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(ehm.tooltip.text.lacksBase, ehm.tooltip.text.padding);
-			if (ehm_hasRetrofitTag(ship, ehm.tag.adapterRetrofit, hullModSpecId)) tooltip.addPara(ehm.tooltip.text.hasAdapterRetrofit, ehm.tooltip.text.padding);
+			if (!ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(lyr_tooltip.text.lacksBase, lyr_tooltip.text.padding);
+			if (ehm_hasRetrofitTag(ship, lyr_internals.tag.adapterRetrofit, hullModSpecId)) tooltip.addPara(lyr_tooltip.text.hasAdapterRetrofit, lyr_tooltip.text.padding);
 		}
 
 		if (!canBeAddedOrRemovedNow(ship, null, null)) {
 			String inOrOut = ship.getVariant().hasHullMod(hullModSpecId) ? " IN" : " OUT";
 
-			tooltip.addSectionHeading(ehm.tooltip.header.locked+inOrOut, ehm.tooltip.header.locked_textColour, ehm.tooltip.header.locked_bgColour, Alignment.MID, ehm.tooltip.header.padding);
+			tooltip.addSectionHeading(lyr_tooltip.header.locked+inOrOut, lyr_tooltip.header.locked_textColour, lyr_tooltip.header.locked_bgColour, Alignment.MID, lyr_tooltip.header.padding);
 
-			if (ehm_hasWeapons(ship, ehm.affix.adaptedSlot)) tooltip.addPara(ehm.tooltip.text.hasWeaponsOnAdaptedSlots, ehm.tooltip.text.padding);
+			if (ehm_hasWeapons(ship, lyr_internals.affix.adaptedSlot)) tooltip.addPara(lyr_tooltip.text.hasWeaponsOnAdaptedSlots, lyr_tooltip.text.padding);
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
@@ -189,7 +191,7 @@ public class _ehm_ar_base extends _ehm_base {
 		if (ship == null) return false; 
 
 		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return false; 
-		if (ehm_hasRetrofitTag(ship, ehm.tag.adapterRetrofit, hullModSpecId)) return false; 
+		if (ehm_hasRetrofitTag(ship, lyr_internals.tag.adapterRetrofit, hullModSpecId)) return false; 
 		
 		return true; 
 	}
@@ -198,7 +200,7 @@ public class _ehm_ar_base extends _ehm_base {
 	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
 		if (ship == null) return false; 
 
-		if (ehm_hasWeapons(ship, ehm.affix.adaptedSlot)) return false;
+		if (ehm_hasWeapons(ship, lyr_internals.affix.adaptedSlot)) return false;
 
 		return true;
 	}

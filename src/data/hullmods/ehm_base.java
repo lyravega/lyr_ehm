@@ -26,6 +26,9 @@ import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
+import lyr.settings.lyr_internals;
+import lyr.settings.lyr_tooltip;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -154,16 +157,16 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 		// ShipVariantAPI realVariant = fleetMemberMap.get(ship.getFleetMemberId()).getVariant();
 
 		Set<String> tags = Global.getSettings().getHullModSpec(newHullModId).getTags();
-		if (tags.contains(ehm.tag.externalAccess)) { commitChanges(); playSound(); return; } 
+		if (tags.contains(lyr_internals.tag.externalAccess)) { commitChanges(); playSound(); return; } 
 
-		if (!tags.contains(ehm.tag.allRetrofit)) return;
+		if (!tags.contains(lyr_internals.tag.allRetrofit)) return;
 		String retrofitType = newHullModId.substring(0, 7); // all affixes (not tags) are fixed to 0-7
 		switch (retrofitType) {
-			case ehm.affix.adapterRetrofit: clearUndo(); playSound(); break; // 'commitChanges()' is triggered externally
-			case ehm.affix.systemRetrofit: commitChanges(); playSound(); break;
-			case ehm.affix.weaponRetrofit: commitChanges(); playSound(); break;
-			case ehm.affix.shieldCosmetic: commitChanges(); playSound(); break;
-			case ehm.affix.engineCosmetic: commitChanges(); playSound(); break;
+			case lyr_internals.affix.adapterRetrofit: clearUndo(); playSound(); break; // 'commitChanges()' is triggered externally
+			case lyr_internals.affix.systemRetrofit: commitChanges(); playSound(); break;
+			case lyr_internals.affix.weaponRetrofit: commitChanges(); playSound(); break;
+			case lyr_internals.affix.shieldCosmetic: commitChanges(); playSound(); break;
+			case lyr_internals.affix.engineCosmetic: commitChanges(); playSound(); break;
 			default: break;
 		}
 	}
@@ -174,16 +177,16 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 		// ShipVariantAPI realVariant = fleetMemberMap.get(ship.getFleetMemberId()).getVariant();
 
 		Set<String> tags = Global.getSettings().getHullModSpec(removedHullModId).getTags();
-		if (tags.contains(ehm.tag.externalAccess)) { refitVariant.setHullSpecAPI(ehm_hullSpecRefresh(refitVariant)); commitChanges(); playSound(); return; }
+		if (tags.contains(lyr_internals.tag.externalAccess)) { refitVariant.setHullSpecAPI(ehm_hullSpecRefresh(refitVariant)); commitChanges(); playSound(); return; }
 
-		if (!tags.contains(ehm.tag.allRetrofit)) return;
+		if (!tags.contains(lyr_internals.tag.allRetrofit)) return;
 		String retrofitType = removedHullModId.substring(0, 7); 
 		switch (retrofitType) {
-			case ehm.affix.adapterRetrofit: refitVariant.setHullSpecAPI(ehm_adapterRemoval(refitVariant)); commitChanges(); playSound(); break;
-			case ehm.affix.systemRetrofit: refitVariant.setHullSpecAPI(ehm_systemRestore(refitVariant)); commitChanges(); playSound(); break;
-			case ehm.affix.weaponRetrofit: refitVariant.setHullSpecAPI(ehm_weaponSlotRestore(refitVariant)); commitChanges(); playSound(); break;
-			case ehm.affix.shieldCosmetic: refitVariant.setHullSpecAPI(ehm_restoreShield(refitVariant)); commitChanges(); playSound(); break;
-			case ehm.affix.engineCosmetic: refitVariant.setHullSpecAPI(ehm_restoreEngineSlots(refitVariant)); commitChanges(); playSound(); break;
+			case lyr_internals.affix.adapterRetrofit: refitVariant.setHullSpecAPI(ehm_adapterRemoval(refitVariant)); commitChanges(); playSound(); break;
+			case lyr_internals.affix.systemRetrofit: refitVariant.setHullSpecAPI(ehm_systemRestore(refitVariant)); commitChanges(); playSound(); break;
+			case lyr_internals.affix.weaponRetrofit: refitVariant.setHullSpecAPI(ehm_weaponSlotRestore(refitVariant)); commitChanges(); playSound(); break;
+			case lyr_internals.affix.shieldCosmetic: refitVariant.setHullSpecAPI(ehm_restoreShield(refitVariant)); commitChanges(); playSound(); break;
+			case lyr_internals.affix.engineCosmetic: refitVariant.setHullSpecAPI(ehm_restoreEngineSlots(refitVariant)); commitChanges(); playSound(); break;
 			default: break;
 		}
 	}
@@ -195,8 +198,8 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 		if (ship == null) return;
 
 		if (!ship.getVariant().hasHullMod(hullModSpecId)) {
-			tooltip.addSectionHeading(ehm.tooltip.header.severeWarning, ehm.tooltip.header.severeWarning_textColour, ehm.tooltip.header.severeWarning_bgColour, Alignment.MID, ehm.tooltip.header.padding).flash(1.0f, 1.0f);
-			tooltip.addPara(ehm.tooltip.text.baseRetrofitWarning, ehm.tooltip.text.padding);
+			tooltip.addSectionHeading(lyr_tooltip.header.severeWarning, lyr_tooltip.header.severeWarning_textColour, lyr_tooltip.header.severeWarning_bgColour, Alignment.MID, lyr_tooltip.header.padding).flash(1.0f, 1.0f);
+			tooltip.addPara(lyr_tooltip.text.baseRetrofitWarning, lyr_tooltip.text.padding);
 
 			super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
 		}
