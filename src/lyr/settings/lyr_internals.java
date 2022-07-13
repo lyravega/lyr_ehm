@@ -1,14 +1,7 @@
 package lyr.settings;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.json.JSONException;
-
-import com.fs.starfarer.api.Global;
-
-import lyr.lyr_plugin;
 
 public class lyr_internals {
 	//#region INTERNALS
