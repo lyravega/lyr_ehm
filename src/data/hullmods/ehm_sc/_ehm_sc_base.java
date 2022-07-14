@@ -32,7 +32,6 @@ import lyr.settings.lyr_tooltip;
  */
 public class _ehm_sc_base extends _ehm_base {
 	protected lyr_shieldSettings shieldSettings;
-	protected String hullModName;
 	protected Color innerColour;
 	protected Color ringColour;
 
@@ -41,10 +40,9 @@ public class _ehm_sc_base extends _ehm_base {
 		super.init(hullModSpec);
 		if (lyr_externals.shieldSettings.containsKey(this.getClass().getSimpleName())) {
 			this.shieldSettings = lyr_externals.shieldSettings.get(this.getClass().getSimpleName());
-			this.hullModName = shieldSettings.getName();
 			this.innerColour = shieldSettings.getInnerColour();
 			this.ringColour = shieldSettings.getRingColour();
-			this.hullModSpec.setDisplayName(hullModName);
+			this.hullModSpec.setDisplayName(shieldSettings.getName());
 		}
 	}
 
