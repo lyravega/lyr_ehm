@@ -10,13 +10,10 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
  * @author lyravega
  */
 public class ehm_sc_yellowShields extends _ehm_sc_base {
-	private static final Color inner = new Color(192, 192, 0, 128);
-	private static final Color ring = new Color(192, 192, 0, 128);
-
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
 
-		variant.setHullSpecAPI(ehm_pimpMyShield(variant, inner, ring));
+		variant.setHullSpecAPI(ehm_pimpMyShield(variant, innerColour, ringColour));
 	}
 }

@@ -22,6 +22,7 @@ public class lyr_plugin extends BaseModPlugin {
 		try {
 			lyr_plugin.localizationJSON = Global.getSettings().getMergedJSONForMod(lyr_plugin.LOCALIZATION_JSON, lyr_plugin.EHM_ID);
 			lyr_plugin.settingsJSON = Global.getSettings().getMergedJSONForMod(lyr_plugin.SETTINGS_JSON, lyr_plugin.EHM_ID);
+		// TODO: add success messages and failure ones and shit
 		} catch (IOException | JSONException e) {
 			e.printStackTrace();
 		}

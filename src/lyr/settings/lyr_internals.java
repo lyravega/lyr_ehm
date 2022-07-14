@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class lyr_internals {
-	//#region INTERNALS
 	public static class id {
 		public static final String drillSound = "drill"; // must match .json
 		public static final String baseRetrofit = "ehm_base"; // must match hullmod id in .csv
@@ -47,6 +46,4 @@ public class lyr_internals {
 		public static final String shieldCosmetic = "ehm_sc_"; // must match hullmod id in .csv
 		public static final String engineCosmetic = "ehm_ec_"; // must match hullmod id in .csv
 	}
-	//#endregion 
-	// END OF INTERNALS
 }
