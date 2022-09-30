@@ -20,7 +20,6 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import lyr.proxies.lyr_hullSpec;
 import lyr.settings.lyr_internals;
 import lyr.settings.lyr_tooltip;
-import lyr.settings.lyr_externals;
 
 /**
  * This is the master base class for all experimental hullmods. Stores the most 
@@ -216,7 +215,7 @@ public class _ehm_base implements HullModEffect {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), true);
 
 		hullSpec.addBuiltInMod(lyr_internals.id.baseRetrofit);
-		if (lyr_externals.showExperimentalFlavour) {
+		if (lyr_tooltip.text.showExperimentalFlavour) {
 			hullSpec.setManufacturer(lyr_tooltip.text.flavourManufacturer);
 			hullSpec.setDescriptionPrefix(lyr_tooltip.text.flavourDescription);
 		}
@@ -260,7 +259,7 @@ public class _ehm_base implements HullModEffect {
 		// stockHullSpec.addBuiltInWing(builtInWing);
 
 		// hullSpec.addBuiltInMod(ehm.id.baseRetrofit);
-		if (lyr_externals.showExperimentalFlavour) {
+		if (lyr_tooltip.text.showExperimentalFlavour) {
 			stockHullSpec.setManufacturer(lyr_tooltip.text.flavourManufacturer);
 			stockHullSpec.setDescriptionPrefix(lyr_tooltip.text.flavourDescription);
 		}

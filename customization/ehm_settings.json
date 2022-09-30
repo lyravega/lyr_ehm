@@ -1,5 +1,5 @@
 {
-	"showExperimentalFlavour": true,
+	# You can alter the shield names and their colour to anything you want. RGBA format, 0-255 range
 	"shieldSettings": {
 		"ehm_sc_blueShields": {
 			"name": "Blue Shields",

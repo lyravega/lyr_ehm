@@ -1,9 +1,14 @@
 {
 	"tooltip": {
+		"showExperimentalFlavour": true, # This setting will enable/disable flavour text applied on ships
 		"text": {
 			"padding": 5.0,
-			"flavourManufacturer": "Experimental", 
+
+			# Ship manufacturer & description flavour; all ships using experimental mods will get these applied on them
+			"flavourManufacturer": "Experimental",
 			"flavourDescription": "This design utilizes experimental hull modifications created by a spacer who has been living in a junkyard for most of his life. His 'treasure hoard' is full of franken-ships that somehow fly by using cannibalized parts from other ships that would be deemed incompatible. Benefits of such modifications are unclear as they do not provide a certain advantage over the stock designs. However the level of customization and flexibility they offer is certainly unparalleled.",
+
+			# Below are various warning and info texts displayed on the experimental modifications
 			"warning": "Installing or removing Experimental Hull Modifications will commit the changes immediately, the variant will be saved and any market and/or cargo transactions will be finalized",
 			"baseRetrofitWarning": "Will become a built-in hull modification as soon as it is installed",
 			"noShip": "Ship does not exist",
@@ -23,10 +28,14 @@
 		},
 		"header": {
 			"padding": 15.0,
+
+			# Below are various warning and info header texts displayed on experimental modifications
 			"warning": "WARNING",
-			"severeWarning": "WARNING",
+			"severeWarning": "WARNING", # Uses a flashing effect to distinct itself from a normal warning
 			"notApplicable": "NOT APPLICABLE",
 			"locked": "LOCKED",
+
+			# Below are hexadecimal RGB colour codes that stylize the headers
 			"warning_bgColour": "0x000000",
 			"warning_textColour": "0xFFFF00",
 			"severeWarning_bgColour": "0x000000",

@@ -13,17 +13,9 @@ import lyr.lyr_plugin;
 public class lyr_externals {
 	private static final JSONObject settingsJSON = lyr_plugin.settingsJSON;
 	public static Map<String, lyr_shieldSettings> shieldSettings = new HashMap<String, lyr_shieldSettings>();
-	public static lyr_shieldSettings blueShieldsSettings;
-	
-	public static boolean showExperimentalFlavour;
-	public static String blueShieldsName;
-	public static Color blueShieldsInnerColour;
-	public static Color blueShieldsRingColour;
 
 	static {
 		try {
-			showExperimentalFlavour = settingsJSON.getBoolean("showExperimentalFlavour");
-
 			JSONObject shieldSettingsJSON = settingsJSON.getJSONObject("shieldSettings");
 			for (int i = 0; i < shieldSettingsJSON.names().length(); i++) {
 				String key = shieldSettingsJSON.names().getString(i);
