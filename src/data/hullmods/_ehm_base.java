@@ -215,7 +215,7 @@ public class _ehm_base implements HullModEffect {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), true);
 
 		hullSpec.addBuiltInMod(lyr_internals.id.baseRetrofit);
-		if (lyr_tooltip.text.showExperimentalFlavour) {
+		if (lyr_tooltip.showExperimentalFlavour) {
 			hullSpec.setManufacturer(lyr_tooltip.text.flavourManufacturer);
 			hullSpec.setDescriptionPrefix(lyr_tooltip.text.flavourDescription);
 		}
@@ -259,7 +259,7 @@ public class _ehm_base implements HullModEffect {
 		// stockHullSpec.addBuiltInWing(builtInWing);
 
 		// hullSpec.addBuiltInMod(ehm.id.baseRetrofit);
-		if (lyr_tooltip.text.showExperimentalFlavour) {
+		if (lyr_tooltip.showExperimentalFlavour) {
 			stockHullSpec.setManufacturer(lyr_tooltip.text.flavourManufacturer);
 			stockHullSpec.setDescriptionPrefix(lyr_tooltip.text.flavourDescription);
 		}
