@@ -10,6 +10,7 @@ import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 
 public class _lyr_scriptTools extends _lyr_reflectionTools {
+	//#region INNER CLASS DECLARATION: refreshRefitScript
 	private static refreshRefitScript refreshRefitScript;
 
 	public static void refreshRefit() {
@@ -70,54 +71,61 @@ public class _lyr_scriptTools extends _lyr_reflectionTools {
 			return isDone;
 		}
 	}
+	//#endregion
+	// END OF INNER CLASS DECLARATION: refreshRefitScript
 
-	// private static remoteInvokerScript remoteInvokerScript;
+	//#region EXPERIMENTS
+	/*
+	private static remoteInvokerScript remoteInvokerScript;
 	
-	// protected static void remoteInvoker(boolean isStaticMethod, Class<?> clazz, String methodName, Class<?> returnType, List<Object> parameters) {
-	// 	for(EveryFrameScript script : Global.getSector().getTransientScripts()) {
-	// 		if(script instanceof remoteInvokerScript) {
-	// 			remoteInvokerScript = (remoteInvokerScript) script; 
-	// 		}
-	// 	}
+	protected static void remoteInvoker(boolean isStaticMethod, Class<?> clazz, String methodName, Class<?> returnType, List<Object> parameters) {
+		for(EveryFrameScript script : Global.getSector().getTransientScripts()) {
+			if(script instanceof remoteInvokerScript) {
+				remoteInvokerScript = (remoteInvokerScript) script; 
+			}
+		}
 
-	// 	if (remoteInvokerScript == null) { 
-	// 		remoteInvokerScript = new remoteInvokerScript(isStaticMethod, clazz, methodName, returnType, parameters);
-	// 	}
-	// }
+		if (remoteInvokerScript == null) { 
+			remoteInvokerScript = new remoteInvokerScript(isStaticMethod, clazz, methodName, returnType, parameters);
+		}
+	}
 
-	// private static class remoteInvokerScript implements EveryFrameScript {
-	// 	private boolean isDone = false;
-	// 	private MethodHandle methodHandle = null;
-	// 	private List<Object> parameters;
+	private static class remoteInvokerScript implements EveryFrameScript {
+		private boolean isDone = false;
+		private MethodHandle methodHandle = null;
+		private List<Object> parameters;
 
-	// 	private remoteInvokerScript(boolean isStaticMethod, Class<?> clazz, String methodName, Class<?> returnType, List<Object> parameters) {
-	// 		List<Class<?>> parameterTypes = new ArrayList<Class<?>>();
+		private remoteInvokerScript(boolean isStaticMethod, Class<?> clazz, String methodName, Class<?> returnType, List<Object> parameters) {
+			List<Class<?>> parameterTypes = new ArrayList<Class<?>>();
 
-	// 		for (Iterator<Object> i = parameters.iterator(); i.hasNext(); )
-	// 			parameterTypes.add(i.next().getClass());
+			for (Iterator<Object> i = parameters.iterator(); i.hasNext(); )
+				parameterTypes.add(i.next().getClass());
 
-	// 		this.methodHandle = findMethodHandle(isStaticMethod, clazz, methodName, returnType, parameterTypes);
+			this.methodHandle = findMethodHandle(isStaticMethod, clazz, methodName, returnType, parameterTypes);
 
-	// 		Global.getSector().addTransientScript(this);
-	// 	}
+			Global.getSector().addTransientScript(this);
+		}
 
-	// 	@Override
-	// 	public void advance(float amount) {
-	// 		methodHandle.invoke(null);
+		@Override
+		public void advance(float amount) {
+			methodHandle.invoke(null);
 
-	// 		remoteInvokerScript = null; // clean the parent
-	// 		isDone = true;
-	// 		return;
-	// 	}
+			remoteInvokerScript = null; // clean the parent
+			isDone = true;
+			return;
+		}
 
-	// 	@Override
-	// 	public boolean runWhilePaused() {
-	// 		return true;
-	// 	}
+		@Override
+		public boolean runWhilePaused() {
+			return true;
+		}
 
-	// 	@Override
-	// 	public boolean isDone() {
-	// 		return isDone;
-	// 	}
-	// }
+		@Override
+		public boolean isDone() {
+			return isDone;
+		}
+	}
+	*/
+	//#endregion
+	// END OF EXPERIMENTS
 }
