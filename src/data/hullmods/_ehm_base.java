@@ -18,24 +18,25 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import lyr.proxies.lyr_hullSpec;
+import lyr.settings.lyr_externals;
 import lyr.settings.lyr_internals;
 import lyr.settings.lyr_tooltip;
 
 /**
  * This is the master base class for all experimental hullmods. Stores the most 
- * common methods and strings for global access to some degree, which are used by
- * other bases, and hullMods. 
+ * common methods and strings for global access, which are used by other bases, 
+ * and hullMods. 
  * <p> The other bases implement their own, more specific methods for the hullMods 
  * that use them as their parent, and it usually is the place where the hullSpec
- * changes occur.
+ * changes occur. 
  * <p> The usable hullMods themselves only contain extremely specific things like 
  * the values to be passed, and custom {@code ehm_cannotBeInstalledNowReason(...)} 
- * and/or {@code ehm_unapplicableReason(...))} if necessary. It is here that the 
- * variants swap their hullSpecs.
+ * and/or {@code ehm_unapplicableReason(...))} if necessary. 
  * <p> Primary reason for doing it this way is to provide better maintenance for 
  * different categories at the cost of a few extra calls to get to where the 
  * action is.
- * <p> Do NOT alter the string values, and avoid using this directly if possible. 
+ * <p> Do NOT alter the string values (if there are any), and avoid using this 
+ * directly if possible. 
  * @see {@link data.hullmods.ehm_ar._ehm_ar_base _ehm_ar_base} for slot adapter base
  * @see {@link data.hullmods.ehm_sr._ehm_sr_base _ehm_sr_base} for system retrofit base
  * @see {@link data.hullmods.ehm_wr._ehm_wr_base _ehm_wr_base} for weapon retrofit base
@@ -215,7 +216,7 @@ public class _ehm_base implements HullModEffect {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), true);
 
 		hullSpec.addBuiltInMod(lyr_internals.id.baseRetrofit);
-		if (lyr_tooltip.showExperimentalFlavour) {
+		if (lyr_externals.showExperimentalFlavour) {
 			hullSpec.setManufacturer(lyr_tooltip.text.flavourManufacturer);
 			hullSpec.setDescriptionPrefix(lyr_tooltip.text.flavourDescription);
 		}
@@ -259,7 +260,7 @@ public class _ehm_base implements HullModEffect {
 		// stockHullSpec.addBuiltInWing(builtInWing);
 
 		// hullSpec.addBuiltInMod(ehm.id.baseRetrofit);
-		if (lyr_tooltip.showExperimentalFlavour) {
+		if (lyr_externals.showExperimentalFlavour) {
 			stockHullSpec.setManufacturer(lyr_tooltip.text.flavourManufacturer);
 			stockHullSpec.setDescriptionPrefix(lyr_tooltip.text.flavourDescription);
 		}
