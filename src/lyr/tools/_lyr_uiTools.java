@@ -10,6 +10,7 @@ import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CoreUITabId;
 
+import lyr.settings.lyr_externals;
 import lyr.settings.lyr_internals;
 
 /**
@@ -147,7 +148,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 	}
 
 	/**
-	 * Does a recursive search on a UI object, trying to find a child object with 
+	 * Does a recursive search on an UI object, trying to find a child object with 
 	 * the given declared methodName. Useful for finding the class of a child, or
 	 * for finding a unique one to utilize. Useless if the goal is neither finding
 	 * the class, nor utilizing the child object.
@@ -245,7 +246,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 	 * and {@code onInstall()}
 	 */
 	public static void playSound() {
-		if (!isRefitTab()) return;
+		if (!isRefitTab() || !lyr_externals.playDrillSound) return;
 		Global.getSoundPlayer().playUISound(lyr_internals.id.drillSound, 1.0f, 0.75f);
 	}
 

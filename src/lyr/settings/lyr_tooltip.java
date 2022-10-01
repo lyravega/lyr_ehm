@@ -11,13 +11,9 @@ public class lyr_tooltip {
 	private static final JSONObject localizationJSON = lyr_plugin.localizationJSON;
 	private static JSONObject tooltipJSON;
 
-	public static boolean showExperimentalFlavour;
-
 	static {
 		try {
 			tooltipJSON = localizationJSON.getJSONObject("tooltip");
-			
-			showExperimentalFlavour = tooltipJSON.getBoolean("showExperimentalFlavour");
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

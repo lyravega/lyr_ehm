@@ -1,6 +1,5 @@
 {
 	"tooltip": {
-		"showExperimentalFlavour": true, # This setting will enable/disable flavour text applied on ships
 		"text": {
 			"padding": 5.0,
 

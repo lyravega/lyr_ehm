@@ -12,10 +12,17 @@ import lyr.lyr_plugin;
 
 public class lyr_externals {
 	private static final JSONObject settingsJSON = lyr_plugin.settingsJSON;
+	public static boolean showExperimentalFlavour,
+		playDrillSound,
+		usePrettyWarnings;
 	public static Map<String, lyr_shieldSettings> shieldSettings = new HashMap<String, lyr_shieldSettings>();
 
 	static {
 		try {
+			showExperimentalFlavour = settingsJSON.getBoolean("showExperimentalFlavour");
+			playDrillSound = settingsJSON.getBoolean("playDrillSound");
+			usePrettyWarnings = settingsJSON.getBoolean("usePrettyWarnings");
+			
 			JSONObject shieldSettingsJSON = settingsJSON.getJSONObject("shieldSettings");
 			for (int i = 0; i < shieldSettingsJSON.names().length(); i++) {
 				String key = shieldSettingsJSON.names().getString(i);
