@@ -47,7 +47,7 @@ public final class lyr_engineBuilder extends _lyr_proxyTools {
 			clone = inspectMethod(engineBuilderClass, "clone").getMethodHandle();
 			setEngineStyle = inspectMethod(engineBuilderClass, engineStyleSetter).getMethodHandle();
 		} catch (Throwable t) {
-			logger.fatal("Failed to find a method in 'lyr_engineBuilder'", t);
+			logger.fatal("EHM (Experimental Hull Modifications) - Failed to find a method in 'lyr_engineBuilder'", t);
 		}
 	}
 	
@@ -95,7 +95,7 @@ public final class lyr_engineBuilder extends _lyr_proxyTools {
 		try {
 			return (Object) clone.invoke(enginebuilder);
 		} catch (Throwable t) {
-			logger.error("Failed to use 'duplicate()' in 'lyr_engineBuilder'", t); return engineBuilder;
+			logger.error("EHM (Experimental Hull Modifications) - Failed to use 'duplicate()' in 'lyr_engineBuilder'", t); return engineBuilder;
 		}
 	}
 	
@@ -120,7 +120,7 @@ public final class lyr_engineBuilder extends _lyr_proxyTools {
 		try {
 			setEngineStyle.invoke(engineBuilderClass.cast(engineBuilder), engineStyleEnum.getEnumConstants()[enumNumber]);
 		} catch (Throwable t) {
-			logger.error("Failed to use 'setEngineStyle()' in 'lyr_engineBuilder'", t);
+			logger.error("EHM (Experimental Hull Modifications) - Failed to use 'setEngineStyle()' in 'lyr_engineBuilder'", t);
 		}
 	}
 	//#endregion 

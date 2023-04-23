@@ -41,7 +41,7 @@ public final class lyr_weaponSlot extends _lyr_proxyTools {
 			newNode = lookup.findConstructor(nodeClass, MethodType.methodType(void.class, String.class, Vector2f.class));
 			setNode = inspectMethod(weaponSlotClass, "setNode").getMethodHandle();
 		} catch (Throwable t) {
-			logger.fatal("Failed to find a method in 'lyr_weaponSlot'", t);
+			logger.fatal("EHM (Experimental Hull Modifications) - Failed to find a method in 'lyr_weaponSlot'", t);
 		}
 	}
 
@@ -89,7 +89,7 @@ public final class lyr_weaponSlot extends _lyr_proxyTools {
 		try {
 			return (WeaponSlotAPI) clone.invoke(weaponSlot);
 		} catch (Throwable t) {
-			logger.error("Failed to use 'duplicate()' in 'lyr_weaponSlot'", t);
+			logger.error("EHM (Experimental Hull Modifications) - Failed to use 'duplicate()' in 'lyr_weaponSlot'", t);
 		} return weaponSlot; // java, pls...
 	}
 	
@@ -112,7 +112,7 @@ public final class lyr_weaponSlot extends _lyr_proxyTools {
 		try {
 			setWeaponType.invoke(weaponSlot, weaponType);
 		} catch (Throwable t) {
-			logger.error("Failed to use 'setWeaponType()' in 'lyr_weaponSlot'", t);
+			logger.error("EHM (Experimental Hull Modifications) - Failed to use 'setWeaponType()' in 'lyr_weaponSlot'", t);
 		}
 	}
 
@@ -126,7 +126,7 @@ public final class lyr_weaponSlot extends _lyr_proxyTools {
 		try {
 			return (boolean) isWeaponSlot.invoke(weaponSlot);
 		} catch (Throwable t) {
-			logger.error("Failed to use 'isWeaponSlot()' in 'lyr_weaponSlot'", t);
+			logger.error("EHM (Experimental Hull Modifications) - Failed to use 'isWeaponSlot()' in 'lyr_weaponSlot'", t);
 		} return false; // java, pls...
 	}
 
@@ -141,7 +141,7 @@ public final class lyr_weaponSlot extends _lyr_proxyTools {
 		try {
 			setId.invoke(weaponSlot, weaponSlotId);
 		} catch (Throwable t) {
-			logger.error("Failed to use 'setId()' in 'lyr_weaponSlot'", t);
+			logger.error("EHM (Experimental Hull Modifications) - Failed to use 'setId()' in 'lyr_weaponSlot'", t);
 		}
 	}
 
@@ -155,7 +155,7 @@ public final class lyr_weaponSlot extends _lyr_proxyTools {
 		try {
 			setSlotSize.invoke(weaponSlot, weaponSize);
 		} catch (Throwable t) {
-			logger.error("Failed to use 'setSlotSize()' in 'lyr_weaponSlot'", t);
+			logger.error("EHM (Experimental Hull Modifications) - Failed to use 'setSlotSize()' in 'lyr_weaponSlot'", t);
 		}
 	}
 
@@ -178,7 +178,7 @@ public final class lyr_weaponSlot extends _lyr_proxyTools {
 		try {
 			setNode.invoke(weaponSlot, nodeClass.cast(newNode.invoke(nodeId, location)));
 		} catch (Throwable t) {
-			logger.error("Failed to use 'setNode()' in 'lyr_weaponSlot'", t);
+			logger.error("EHM (Experimental Hull Modifications) - Failed to use 'setNode()' in 'lyr_weaponSlot'", t);
 		}
 	}
 	//#endregion 

@@ -64,7 +64,6 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 	//#endregion
 	// END OF IMPLEMENTATION (HullModFleetEffect)
 
-	//#region TRACKING
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
@@ -84,6 +83,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 		}
 	}
 
+	//#region EVENT TRACKING
 	@Override
 	public void onFleetSync(CampaignFleetAPI fleet) {
 		if (!isRefitTab()) return;
@@ -119,7 +119,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 
 			hullModMap.remove(memberId);
 			fleetMemberMap.remove(memberId);
-			if (log) logger.info("FT: Unregistering ST-"+memberId);
+			if (log) logger.info("EHM (Experimental Hull Modifications) - FT: Unregistering ST-"+memberId);
 		}
 
 		_fleetMembers.removeAll(fleetMemberMap.values());
@@ -128,7 +128,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 
 			hullModMap.put(memberId, new HashSet<String>(member.getVariant().getHullMods()));
 			fleetMemberMap.put(memberId, member);
-			if (log) logger.info("FT: Registering ST-"+memberId);
+			if (log) logger.info("EHM (Experimental Hull Modifications) - FT: Registering ST-"+memberId);
 		}
 
 		if (sheep != null && !fleetMemberMap.containsKey(sheep.getFleetMemberId())) sheep = null;
@@ -148,7 +148,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 
 			onRemoved(removedHullModId, ship);
 			savedHullMods.remove(removedHullModId);
-			if (log) logger.info("ST-"+memberId+": Removed hull modification '"+removedHullModId+"'");
+			if (log) logger.info("EHM (Experimental Hull Modifications) - ST-"+memberId+": Removed hull modification '"+removedHullModId+"'");
 		}
 
 		_currentHullMods.removeAll(savedHullMods);
@@ -157,7 +157,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 
 			onInstalled(newHullModId, ship);
 			savedHullMods.add(newHullModId);
-			if (log) logger.info("ST-"+memberId+": New hull modification '"+newHullModId+"'");
+			if (log) logger.info("EHM (Experimental Hull Modifications) - ST-"+memberId+": New hull modification '"+newHullModId+"'");
 		}
 	}
 
@@ -201,9 +201,9 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 		}
 	}
 	//#endregion
-	// END OF TRACKING
+	// END OF EVENT TRACKING
 
-	//#region TRACKERS
+	//#region SCRIPT TRACKERS
 	protected shipTrackerScript shipTracker;
 	protected fleetTrackerScript fleetTracker;
 
@@ -290,7 +290,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 		return (fleetTracker == null) ? new fleetTrackerScript() : fleetTracker;
 	}
 	//#endregion
-	// END OF TRACKERS
+	// END OF SCRIPT TRACKERS
 
 		//#region INNER CLASS: fleetTrackerScript
 	public class fleetTrackerScript implements EveryFrameScriptWithCleanup {
@@ -302,51 +302,51 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 		
 		//#region CONSTRUCTORS & ACCESSORS
 		public fleetTrackerScript() {
-			logger.info("xFT: Initialized fleet tracking");
+			logger.info("EHM (Experimental Hull Modifications) - xFT: Initialized fleet tracking");
 			
 			Global.getSector().addScript(this);
 		}
 	
 		public void addshipTracker(String memberId, shipTrackerScript shipTracker) {
 			shipTrackers.put(memberId, shipTracker);
-			logger.info("xFT: Keeping track of ST-"+memberId);
+			logger.info("EHM (Experimental Hull Modifications) - xFT: Keeping track of ST-"+memberId);
 		}
 		//#endregion
 		// END OF CONSTRUCTORS & ACCESSORS
 		
 		@Override
 		public void advance(float amount) {	
-			if (!isRefitTab()) { logger.info("xFT: Stopping fleet tracking"); isDone = true; return; }
+			if (!isRefitTab()) { logger.info("EHM (Experimental Hull Modifications) - xFT: Stopping fleet tracking"); isDone = true; return; }
 	
 			if (runTime > 10f) {
 				runTime = 0f;
-				logger.info("xFT: Tracking "+shipTrackers.size()+" ships");
+				logger.info("EHM (Experimental Hull Modifications) - xFT: Tracking "+shipTrackers.size()+" ships");
 			} runTime += amount;
-	
+
 			// Set<FleetMember> newMembers = new HashSet<FleetMember>();
 			// Set<FleetMember> oldMembers = new HashSet<FleetMember>();
-	
+
 			// for (FleetMember member : playerFleet.getMembers()) {
 			// 	if (members.contains(member)) continue;
-				
-			// 	newMembers.add(member);	
-			// } members.addAll(newMembers); 
-	
+
+			// 	newMembers.add(member);
+			// } members.addAll(newMembers);
+
 			// for (FleetMember member : members) {
 			// 	if (playerFleet.getMembers().contains(member)) continue;
-	
-			// 	oldMembers.add(member);	
-			// } members.removeAll(oldMembers); 
-			
+
+			// 	oldMembers.add(member);
+			// } members.removeAll(oldMembers);
+
 			// for (FleetMember member : newMembers) {
 			// 	spawnshipTracker(member);
-			// } newMembers.clear(); 
-	
+			// } newMembers.clear();
+
 			// for (FleetMember member : oldMembers) {
 			// 	killshipTracker(member.getId());
 			// } oldMembers.clear();
-	
-			// if (shipTrackers.isEmpty()) { logger.info("FT: Stopping fleet tracking, no ship trackers remaining"); isDone = true; return; }
+
+			// if (shipTrackers.isEmpty()) { logger.info("EHM (Experimental Hull Modifications) - FT: Stopping fleet tracking, no ship trackers remaining"); isDone = true; return; }
 		}
 	
 		@Override
@@ -387,7 +387,8 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 			// this.fleetTracker = fleetTracker;
 			fleetTracker.addshipTracker(memberId, this);
 	
-			for (String hullModId : variant.getHullMods()) { if (!hullModId.startsWith(lyr_internals.affix.allRetrofit)) continue; 
+			for (String hullModId : variant.getHullMods()) { 
+				// if (!hullModId.startsWith(lyr_internals.affix.allRetrofit)) continue; 
 				if (hullMods.contains(hullModId)) continue;
 	
 				hullMods.add(hullModId);
@@ -395,7 +396,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 			
 			Global.getSector().addScript(this); 
 	
-			logger.info("xST-"+memberId+": Initial hull modifications '"+hullMods.toString()+"'");
+			logger.info("EHM (Experimental Hull Modifications) - xST-"+memberId+": Initial hull modifications '"+hullMods.toString()+"'");
 		}
 	
 		public String getMemberId() {
@@ -410,23 +411,25 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 		
 		@Override
 		public void advance(float amount) {
-			if (!isRefitTab()) { logger.info("xST-"+memberId+": Stopping ship tracking"); isDone = true; return; }
+			if (!isRefitTab()) { logger.info("EHM (Experimental Hull Modifications) - xST-"+memberId+": Stopping ship tracking"); isDone = true; return; }
 	
 			Set<String> newHullMods = new HashSet<String>();
 			Set<String> removedHullMods = new HashSet<String>();
 			
-			for (String hullModId : variant.getHullMods()) { if (!hullModId.startsWith(lyr_internals.affix.allRetrofit)) continue; 
+			for (String hullModId : variant.getHullMods()) {
+				if (!hullModId.startsWith(lyr_internals.affix.allRetrofit)) continue;
 				if (hullMods.contains(hullModId)) continue;
 	
-				logger.info("xST-"+memberId+": New hull modification '"+hullModId+"'");
+				logger.info("EHM (Experimental Hull Modifications) - xST-"+memberId+": New hull modification '"+hullModId+"'");
 	
 				newHullMods.add(hullModId);
 			} 
 	
 			for (Iterator<String> i = hullMods.iterator(); i.hasNext();) { String hullModId = i.next(); 
+				if (!hullModId.startsWith(lyr_internals.affix.allRetrofit)) continue;
 				if (variant.hasHullMod(hullModId)) continue;
 	
-				logger.info("xST-"+memberId+": Removed hull modification '"+hullModId+"'");
+				logger.info("EHM (Experimental Hull Modifications) - xST-"+memberId+": Removed hull modification '"+hullModId+"'");
 	
 				removedHullMods.add(hullModId);
 			} 

@@ -45,7 +45,7 @@ public class _lyr_reflectionTools {
 			getMethod = lookup.findVirtual(Class.class, "getMethod", MethodType.methodType(methodClass, String.class, Class[].class));
 			unreflect = lookup.findVirtual(lookupClass, "unreflect", MethodType.methodType(MethodHandle.class, methodClass));
 		} catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException e) {
-			logger.fatal("Failed to initialize reflection tools", e);
+			logger.fatal("EHM (Experimental Hull Modifications) - Failed to initialize reflection tools", e);
 		}
 	}
 

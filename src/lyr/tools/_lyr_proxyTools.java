@@ -33,7 +33,7 @@ public class _lyr_proxyTools extends _lyr_reflectionTools {
 		try {
 			return Global.getSettings().getAllShipHullSpecs().iterator().next().getClass();
 		} catch (Exception e) { // this doesn't throw jack shit, but 'MUH GAEMUR OCD' (TM)
-			logger.fatal("'hullSpecClass' not found in '_lyr_proxyTools'", e); return null;
+			logger.fatal("EHM (Experimental Hull Modifications) - 'hullSpecClass' not found in '_lyr_proxyTools'", e); return null;
 		}
 	}
 
@@ -41,7 +41,7 @@ public class _lyr_proxyTools extends _lyr_reflectionTools {
 		try {
 			return inspectMethod(hullSpecClass, "getShieldSpec").getReturnType();
 		} catch (Throwable t) {
-			logger.fatal("'shieldSpecClass' not found in '_lyr_proxyTools'", t); return null;
+			logger.fatal("EHM (Experimental Hull Modifications) - 'shieldSpecClass' not found in '_lyr_proxyTools'", t); return null;
 		}
 	}
 
@@ -49,7 +49,7 @@ public class _lyr_proxyTools extends _lyr_reflectionTools {
 		try {
 			return inspectMethod(hullSpecClass, "getWeaponSlot").getReturnType();
 		} catch (Throwable t) {
-			logger.fatal("'weaponSlotClass' not found in '_lyr_proxyTools'", t); return null;
+			logger.fatal("EHM (Experimental Hull Modifications) - 'weaponSlotClass' not found in '_lyr_proxyTools'", t); return null;
 		}
 	}
 
@@ -57,7 +57,7 @@ public class _lyr_proxyTools extends _lyr_reflectionTools {
 		try {
 			return inspectMethod(weaponSlotClass, "getNode").getReturnType();
 		} catch (Throwable t) {
-			logger.fatal("'nodeClass' not found in '_lyr_proxyTools'", t); return null;
+			logger.fatal("EHM (Experimental Hull Modifications) - 'nodeClass' not found in '_lyr_proxyTools'", t); return null;
 		}
 	}
 
@@ -65,14 +65,14 @@ public class _lyr_proxyTools extends _lyr_reflectionTools {
 		try {
 			return inspectMethod(hullSpecClass, "addEngineSlot").getParameterTypes()[0];
 		} catch (Throwable t) {
-			logger.fatal("'engineBuilderClass' not found in '_lyr_proxyTools'", t); return null;
+			logger.fatal("EHM (Experimental Hull Modifications) - 'engineBuilderClass' not found in '_lyr_proxyTools'", t); return null;
 		}
 	}
 
 	private static Class<?> lyr_findEngineStyleEnum() {
 		for (Class<?> clazz : engineBuilderClass.getDeclaredClasses()) {
 			if (clazz.isEnum()) return clazz;
-		} logger.fatal("'engineStyleEnum' not found in '_lyr_proxyTools'"); return null;
+		} logger.fatal("EHM (Experimental Hull Modifications) - 'engineStyleEnum' not found in '_lyr_proxyTools'"); return null;
 	}
 
 	private static Object lyr_findEngineStyleSetter() {
@@ -85,6 +85,6 @@ public class _lyr_proxyTools extends _lyr_reflectionTools {
 			if (parameterTypes == null || parameterTypes.length == 0) continue;
 
 			if (parameterTypes[0].equals(engineStyleEnum)) return method;
-		} logger.fatal("'engineStyleSetterName' not found in '_lyr_proxyTools'"); return null;
+		} logger.fatal("EHM (Experimental Hull Modifications) - 'engineStyleSetterName' not found in '_lyr_proxyTools'"); return null;
 	}
 }
