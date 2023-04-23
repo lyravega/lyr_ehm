@@ -6,7 +6,7 @@ import java.util.Set;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
-import com.fs.starfarer.api.combat.HullModEffect;
+import com.fs.starfarer.api.combat.BaseHullMod;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
@@ -44,7 +44,7 @@ import lyr.settings.lyr_tooltip;
  * @see {@link data.hullmods.ehm_sc._ehm_sc_base _ehm_sc_base} for shield cosmetic base
  * @author lyravega
  */
-public class _ehm_base implements HullModEffect {
+public class _ehm_base /*implements HullModEffect*/ extends BaseHullMod {
 	//#region IMPLEMENTATION
 	protected HullModSpecAPI hullModSpec;
 	protected String hullModSpecId;
