@@ -41,8 +41,8 @@ import lyr.settings.lyr_tooltip;
  * @author lyravega
  */
 public class ehm_base extends _ehm_base {
-	private static final boolean log = true;
 	private static final Logger logger = Logger.getLogger("lyr");
+	private static final boolean log = true;
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
@@ -180,31 +180,6 @@ public class ehm_base extends _ehm_base {
 				runTime = 0f;
 				if (log) logger.info("EHM (Experimental Hull Modifications) - xFT: Tracking "+shipTrackers.size()+" ships");
 			} runTime += amount;
-
-			// Set<FleetMember> newMembers = new HashSet<FleetMember>();
-			// Set<FleetMember> oldMembers = new HashSet<FleetMember>();
-
-			// for (FleetMember member : playerFleet.getMembers()) {
-			// 	if (members.contains(member)) continue;
-
-			// 	newMembers.add(member);
-			// } members.addAll(newMembers);
-
-			// for (FleetMember member : members) {
-			// 	if (playerFleet.getMembers().contains(member)) continue;
-
-			// 	oldMembers.add(member);
-			// } members.removeAll(oldMembers);
-
-			// for (FleetMember member : newMembers) {
-			// 	spawnshipTracker(member);
-			// } newMembers.clear();
-
-			// for (FleetMember member : oldMembers) {
-			// 	killshipTracker(member.getId());
-			// } oldMembers.clear();
-
-			// if (shipTrackers.isEmpty()) { if (log) logger.info("EHM (Experimental Hull Modifications) - FT: Stopping fleet tracking, no ship trackers remaining"); isDone = true; return; }
 		}
 	
 		@Override
@@ -234,7 +209,7 @@ public class ehm_base extends _ehm_base {
 		private boolean isDone = false;
 		
 		//#region CONSTRUCTORS & ACCESSORS
-		public void setVariant(ShipVariantAPI variant) { // this can be moved to initialize
+		public void setVariant(ShipVariantAPI variant) { // this can be moved to initialize / a year later, I have no idea what I mean by this
 			this.variant = variant;
 		}
 		

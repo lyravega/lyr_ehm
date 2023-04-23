@@ -155,7 +155,6 @@ public class _lyr_reflectionTools {
 	// 			? lookup.findStatic(clazz, methodName, MethodType.methodType(returnType, parameterTypes))
 	// 			: lookup.findVirtual(clazz, methodName, MethodType.methodType(returnType, parameterTypes));
 	// 	} catch (NoSuchMethodException | IllegalAccessException e) {
-	// 		// TODO Auto-generated catch block
 	// 		e.printStackTrace();
 	// 	}
 

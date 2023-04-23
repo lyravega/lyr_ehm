@@ -67,7 +67,6 @@ public class lyr_tooltip {
 				noAdapterRetrofit = textJSON.getString("noAdapterRetrofit");
 				hasWeapons = textJSON.getString("hasWeapons");
 				hasWeaponsOnAdaptedSlots = textJSON.getString("hasWeaponsOnAdaptedSlots");
-	
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
