@@ -73,6 +73,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 		variant.setHullSpecAPI(ehm_hullSpecClone(variant)); commitChanges(); playSound();
 	}
 
+	// this only fires when a change is committed; for example, through commitChanges() (ui hack) or refreshRefit() (reloading refit screen)
 	@Override 
 	public void applyEffectsAfterShipCreation(ShipAPI ship, String id) {
 		if (!isRefitTab()) return;
@@ -292,7 +293,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 	//#endregion
 	// END OF SCRIPT TRACKERS
 
-		//#region INNER CLASS: fleetTrackerScript
+	//#region INNER CLASS: fleetTrackerScript
 	public class fleetTrackerScript implements EveryFrameScriptWithCleanup {
 		private Map<String, shipTrackerScript> shipTrackers = new HashMap<String, shipTrackerScript>();
 		// private Set<FleetMember> members = new HashSet<FleetMember>();
@@ -372,7 +373,7 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 		// private fleetTrackerScript fleetTracker = null;
 		private ShipVariantAPI variant = null;
 		private String memberId = null;
-		private Set<String> hullMods = new HashSet<String>();
+		protected Set<String> hullMods = null;
 		private boolean isDone = false;
 		
 		//#region CONSTRUCTORS & ACCESSORS
@@ -387,12 +388,14 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 			// this.fleetTracker = fleetTracker;
 			fleetTracker.addshipTracker(memberId, this);
 	
-			for (String hullModId : variant.getHullMods()) { 
-				// if (!hullModId.startsWith(lyr_internals.affix.allRetrofit)) continue; 
-				if (hullMods.contains(hullModId)) continue;
+			this.hullMods = new HashSet<String>(variant.getHullMods());
+
+			// for (String hullModId : variant.getHullMods()) { 
+			// 	// if (!hullModId.startsWith(lyr_internals.affix.allRetrofit)) continue; 
+			// 	if (this.hullMods.contains(hullModId)) continue;
 	
-				hullMods.add(hullModId);
-			}
+			// 	this.hullMods.add(hullModId);
+			// }
 			
 			Global.getSector().addScript(this); 
 	
@@ -417,22 +420,22 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 			Set<String> removedHullMods = new HashSet<String>();
 			
 			for (String hullModId : variant.getHullMods()) {
-				if (!hullModId.startsWith(lyr_internals.affix.allRetrofit)) continue;
+				// if (!hullModId.startsWith(lyr_internals.affix.allRetrofit)) continue;
 				if (hullMods.contains(hullModId)) continue;
 	
 				logger.info("EHM (Experimental Hull Modifications) - xST-"+memberId+": New hull modification '"+hullModId+"'");
 	
 				newHullMods.add(hullModId);
-			} 
+			}
 	
 			for (Iterator<String> i = hullMods.iterator(); i.hasNext();) { String hullModId = i.next(); 
-				if (!hullModId.startsWith(lyr_internals.affix.allRetrofit)) continue;
+				// if (!hullModId.startsWith(lyr_internals.affix.allRetrofit)) continue;
 				if (variant.hasHullMod(hullModId)) continue;
 	
 				logger.info("EHM (Experimental Hull Modifications) - xST-"+memberId+": Removed hull modification '"+hullModId+"'");
 	
 				removedHullMods.add(hullModId);
-			} 
+			}
 			
 			if (!newHullMods.isEmpty()) {
 				for (Iterator<String> i = newHullMods.iterator(); i.hasNext();) { 
@@ -456,17 +459,18 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 					Set<String> tags = Global.getSettings().getHullModSpec(newHullModId).getTags();
 					if (tags.contains(lyr_internals.tag.externalAccess)) { commitChanges(); playSound(); return; } 
 
-					if (!tags.contains(lyr_internals.tag.allRetrofit)) return;
-					String retrofitType = newHullModId.substring(0, 7); // all affixes (not tags) are fixed to 0-7
-					switch (retrofitType) {
-						case lyr_internals.affix.adapterRetrofit: clearUndo(); playSound(); break; // 'commitChanges()' is triggered externally
-						case lyr_internals.affix.systemRetrofit: commitChanges(); playSound(); break;
-						case lyr_internals.affix.weaponRetrofit: commitChanges(); playSound(); break;
-						case lyr_internals.affix.shieldCosmetic: commitChanges(); playSound(); break;
-						case lyr_internals.affix.engineCosmetic: commitChanges(); playSound(); break;
-						default: break;
+					if (tags.contains(lyr_internals.tag.allRetrofit)) {
+						String retrofitType = newHullModId.substring(0, 7); // all affixes (not tags) are fixed to 0-7
+						switch (retrofitType) {
+							case lyr_internals.affix.adapterRetrofit: clearUndo(); playSound(); break; // 'commitChanges()' is triggered externally
+							case lyr_internals.affix.systemRetrofit: commitChanges(); playSound(); break;
+							case lyr_internals.affix.weaponRetrofit: commitChanges(); playSound(); break;
+							case lyr_internals.affix.shieldCosmetic: commitChanges(); playSound(); break;
+							case lyr_internals.affix.engineCosmetic: commitChanges(); playSound(); break;
+							default: break;
+						}
 					}
-				} hullMods.addAll(newHullMods); newHullMods.clear();
+				} this.hullMods.addAll(newHullMods); newHullMods.clear();
 			}
 			
 			if (!removedHullMods.isEmpty()) {
@@ -491,17 +495,18 @@ public class ehm_base extends _ehm_base implements HullModFleetEffect {
 					Set<String> tags = Global.getSettings().getHullModSpec(removedHullModId).getTags();
 					if (tags.contains(lyr_internals.tag.externalAccess)) { refitVariant.setHullSpecAPI(ehm_hullSpecRefresh(refitVariant)); commitChanges(); playSound(); return; }
 			
-					if (!tags.contains(lyr_internals.tag.allRetrofit)) return;
-					String retrofitType = removedHullModId.substring(0, 7); 
-					switch (retrofitType) {
-						case lyr_internals.affix.adapterRetrofit: refitVariant.setHullSpecAPI(ehm_adapterRemoval(refitVariant)); commitChanges(); playSound(); break;
-						case lyr_internals.affix.systemRetrofit: refitVariant.setHullSpecAPI(ehm_systemRestore(refitVariant)); commitChanges(); playSound(); break;
-						case lyr_internals.affix.weaponRetrofit: refitVariant.setHullSpecAPI(ehm_weaponSlotRestore(refitVariant)); commitChanges(); playSound(); break;
-						case lyr_internals.affix.shieldCosmetic: refitVariant.setHullSpecAPI(ehm_restoreShield(refitVariant)); commitChanges(); playSound(); break;
-						case lyr_internals.affix.engineCosmetic: refitVariant.setHullSpecAPI(ehm_restoreEngineSlots(refitVariant)); commitChanges(); playSound(); break;
-						default: break;
+					if (tags.contains(lyr_internals.tag.allRetrofit)) {
+						String retrofitType = removedHullModId.substring(0, 7); 
+						switch (retrofitType) {
+							case lyr_internals.affix.adapterRetrofit: refitVariant.setHullSpecAPI(ehm_adapterRemoval(refitVariant)); commitChanges(); playSound(); break;
+							case lyr_internals.affix.systemRetrofit: refitVariant.setHullSpecAPI(ehm_systemRestore(refitVariant)); commitChanges(); playSound(); break;
+							case lyr_internals.affix.weaponRetrofit: refitVariant.setHullSpecAPI(ehm_weaponSlotRestore(refitVariant)); commitChanges(); playSound(); break;
+							case lyr_internals.affix.shieldCosmetic: refitVariant.setHullSpecAPI(ehm_restoreShield(refitVariant)); commitChanges(); playSound(); break;
+							case lyr_internals.affix.engineCosmetic: refitVariant.setHullSpecAPI(ehm_restoreEngineSlots(refitVariant)); commitChanges(); playSound(); break;
+							default: break;
+						}
 					}
-				} hullMods.removeAll(removedHullMods); removedHullMods.clear();
+				} this.hullMods.removeAll(removedHullMods); removedHullMods.clear();
 			}
 		}
 	
