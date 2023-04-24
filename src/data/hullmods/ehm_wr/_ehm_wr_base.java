@@ -71,7 +71,7 @@ public class _ehm_wr_base extends _ehm_base {
 			WeaponType stockSlotWeaponType = stockSlot.getWeaponType();
 			
 			// TODO take a look at strings, move them to base
-			if (slot.retrieve().isDecorative() && lyr_internals.id.adapter.set.contains(weaponId)) {
+			if (slot.retrieve().isDecorative() && lyr_internals.id.utility.adapter.set.contains(weaponId)) {
 				hullSpec.getWeaponSlot(lyr_internals.affix.adaptedSlot+slotId+"L").setWeaponType(stockSlotWeaponType);
 				hullSpec.getWeaponSlot(lyr_internals.affix.adaptedSlot+slotId+"R").setWeaponType(stockSlotWeaponType);
 				if (weaponId.endsWith("Triple"))
@@ -105,7 +105,7 @@ public class _ehm_wr_base extends _ehm_base {
 
 			tooltip.addSectionHeading(inOrOut, lyr_tooltip.header.locked_textColour, lyr_tooltip.header.locked_bgColour, Alignment.MID, lyr_tooltip.header.padding);
 
-			if (ehm_hasWeapons(ship, lyr_internals.id.adapter.set)) tooltip.addPara(lyr_tooltip.text.hasWeapons, lyr_tooltip.text.padding);
+			if (ehm_hasWeapons(ship, lyr_internals.id.utility.adapter.set)) tooltip.addPara(lyr_tooltip.text.hasWeapons, lyr_tooltip.text.padding);
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
@@ -125,7 +125,7 @@ public class _ehm_wr_base extends _ehm_base {
 	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
 		if (ship == null) return false;
 
-		if (ehm_hasWeapons(ship, lyr_internals.id.adapter.set)) return false;
+		if (ehm_hasWeapons(ship, lyr_internals.id.utility.set)) return false;
 
 		return true;
 	}

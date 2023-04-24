@@ -1,5 +1,5 @@
 {
-	"id":"ehm_adapter_largeQuad",
+	"id":"ehm_shunt_largeCapacitor",
 	"specClass":"beam",
 	"type":"UNIVERSAL",
 	"size":"LARGE",

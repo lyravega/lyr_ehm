@@ -12,6 +12,7 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.api.combat.WeaponAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
@@ -162,7 +163,12 @@ public class _ehm_base /*implements HullModEffect*/ extends BaseHullMod {
 	 * @return true if the ship has weapons on weapon slots
 	 */
 	protected static final boolean ehm_hasWeapons(ShipAPI ship) {
-		return !ship.getVariant().getNonBuiltInWeaponSlots().isEmpty();
+		for (WeaponAPI weapon: ship.getAllWeapons()) {
+			if (weapon.getSlot().isBuiltIn()) continue;
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -175,10 +181,12 @@ public class _ehm_base /*implements HullModEffect*/ extends BaseHullMod {
 	 * @return true if the ship has weapons on specific slots
 	 */
 	protected static final boolean ehm_hasWeapons(ShipAPI ship, String slotAffix) {
-		for (String slotId : ship.getVariant().getNonBuiltInWeaponSlots()) {
-			if (slotId.startsWith(slotAffix)) return true; break;
+		for (WeaponAPI weapon: ship.getAllWeapons()) {
+			if (weapon.getSlot().isBuiltIn()) continue;
+			if (!weapon.getSlot().getId().startsWith(slotAffix)) continue;
+			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -192,12 +200,12 @@ public class _ehm_base /*implements HullModEffect*/ extends BaseHullMod {
 	 * @return true if the ship has weapons with non-matching weapon ids
 	 */
 	protected static final boolean ehm_hasWeapons(ShipAPI ship, Set<String> weaponIdsToIgnore) {
-		ShipVariantAPI variant = ship.getVariant();
-
-		for (String slotId : variant.getNonBuiltInWeaponSlots()) {
-			if (weaponIdsToIgnore.contains(variant.getWeaponId(slotId))) continue; return true;
+		for (WeaponAPI weapon: ship.getAllWeapons()) {
+			if (weapon.getSlot().isBuiltIn()) continue;
+			if (weaponIdsToIgnore.contains(weapon.getId())) continue;
+			return true;
 		}
-		
+
 		return false;
 	}
 	//#endregion

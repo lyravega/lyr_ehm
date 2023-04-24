@@ -1,8 +1,8 @@
 {
-	"id":"ehm_adapter_largeQuad",
+	"id":"ehm_shunt_mediumCapacitor",
 	"specClass":"beam",
 	"type":"UNIVERSAL",
-	"size":"LARGE",
+	"size":"MEDIUM",
 	"showDamageWhenDecorative":true,
 	"renderBelowAllWeapons":true,
 	"turretSprite":"graphics/weapons/decorative/sensor_array_dish.png",
