@@ -32,7 +32,8 @@
 			"warning": "WARNING",
 			"severeWarning": "WARNING", # Uses a flashing effect to distinct itself from a normal warning
 			"notApplicable": "NOT APPLICABLE",
-			"locked": "LOCKED",
+			"lockedIn": "LOCKED IN",
+			"lockedOut": "LOCKED OUT",
 
 			# Below are hexadecimal RGB colour codes that stylize the headers
 			"warning_bgColour": "0x000000",

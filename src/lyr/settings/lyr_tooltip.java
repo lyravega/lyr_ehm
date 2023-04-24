@@ -82,7 +82,8 @@ public class lyr_tooltip {
 			warning,
 			severeWarning,
 			notApplicable,
-			locked;
+			lockedIn,
+			lockedOut;
 		public static Color 
 			warning_bgColour,
 			warning_textColour,
@@ -101,7 +102,8 @@ public class lyr_tooltip {
 				warning = headerJSON.getString("warning");
 				severeWarning = headerJSON.getString("severeWarning");
 				notApplicable = headerJSON.getString("notApplicable");
-				locked = headerJSON.getString("locked");
+				lockedIn = headerJSON.getString("lockedIn");
+				lockedOut = headerJSON.getString("lockedOut");
 				warning_bgColour = Color.decode(headerJSON.getString("warning_bgColour"));
 				warning_textColour = Color.decode(headerJSON.getString("warning_textColour"));
 				severeWarning_bgColour = Color.decode(headerJSON.getString("severeWarning_bgColour"));

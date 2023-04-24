@@ -101,9 +101,9 @@ public class _ehm_wr_base extends _ehm_base {
 		}
 
 		if (!canBeAddedOrRemovedNow(ship, null, null)) {
-			String inOrOut = ship.getVariant().hasHullMod(hullModSpecId) ? " IN" : " OUT";
+			String inOrOut = ship.getVariant().hasHullMod(hullModSpecId) ? lyr_tooltip.header.lockedIn : lyr_tooltip.header.lockedOut;
 
-			tooltip.addSectionHeading(lyr_tooltip.header.locked+inOrOut, lyr_tooltip.header.locked_textColour, lyr_tooltip.header.locked_bgColour, Alignment.MID, lyr_tooltip.header.padding);
+			tooltip.addSectionHeading(inOrOut, lyr_tooltip.header.locked_textColour, lyr_tooltip.header.locked_bgColour, Alignment.MID, lyr_tooltip.header.padding);
 
 			if (ehm_hasWeapons(ship, lyr_internals.id.adapter.set)) tooltip.addPara(lyr_tooltip.text.hasWeapons, lyr_tooltip.text.padding);
 		}

@@ -172,13 +172,12 @@ public class _ehm_ar_base extends _ehm_base {
 			tooltip.addSectionHeading(lyr_tooltip.header.notApplicable, lyr_tooltip.header.notApplicable_textColour, lyr_tooltip.header.notApplicable_bgColour, Alignment.MID, lyr_tooltip.header.padding);
 
 			if (!ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(lyr_tooltip.text.lacksBase, lyr_tooltip.text.padding);
-			if (ehm_hasRetrofitTag(ship, lyr_internals.tag.adapterRetrofit, hullModSpecId)) tooltip.addPara(lyr_tooltip.text.hasAdapterRetrofit, lyr_tooltip.text.padding);
 		}
 
 		if (!canBeAddedOrRemovedNow(ship, null, null)) {
-			String inOrOut = ship.getVariant().hasHullMod(hullModSpecId) ? " IN" : " OUT";
+			String inOrOut = ship.getVariant().hasHullMod(hullModSpecId) ? lyr_tooltip.header.lockedIn : lyr_tooltip.header.lockedOut;
 
-			tooltip.addSectionHeading(lyr_tooltip.header.locked+inOrOut, lyr_tooltip.header.locked_textColour, lyr_tooltip.header.locked_bgColour, Alignment.MID, lyr_tooltip.header.padding);
+			tooltip.addSectionHeading(inOrOut, lyr_tooltip.header.locked_textColour, lyr_tooltip.header.locked_bgColour, Alignment.MID, lyr_tooltip.header.padding);
 
 			if (ehm_hasWeapons(ship, lyr_internals.affix.adaptedSlot)) tooltip.addPara(lyr_tooltip.text.hasWeaponsOnAdaptedSlots, lyr_tooltip.text.padding);
 		}
