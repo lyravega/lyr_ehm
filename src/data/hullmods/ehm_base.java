@@ -176,7 +176,7 @@ public class ehm_base extends _ehm_base {
 		public void advance(float amount) {	
 			if (!isRefitTab()) { if (log) logger.info(lyr_internals.logPrefix+"xFT: Stopping fleet tracking"); isDone = true; return; }
 	
-			if (runTime > 10f) {
+			if (runTime > 30f) {
 				runTime = 0f;
 				if (log) logger.info(lyr_internals.logPrefix+"xFT: Tracking "+shipTrackers.size()+" ships");
 			} runTime += amount;
