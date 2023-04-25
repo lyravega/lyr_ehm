@@ -4,7 +4,6 @@ import static lyr.tools._lyr_uiTools.commitChanges;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
@@ -34,7 +33,7 @@ public class ehm_ar_slotshunt extends _ehm_ar_base {
 	 * @param stats of the ship whose variant / hullSpec will be altered
 	 * @param hullModSpecId to properly accumulate the bonuses under the same id
 	 */
-	protected static final void ehm_slotShunt(MutableShipStatsAPI stats, String hullModSpecId) {
+	private static final void ehm_slotShunt(MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant(); 
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 		boolean refreshRefit = false;
@@ -42,7 +41,7 @@ public class ehm_ar_slotshunt extends _ehm_ar_base {
 		float heatsinkBonus = 1.0f;
 
 		// slot conversion
-		for (String slotId: variant.getNonBuiltInWeaponSlots()) {
+		for (String slotId: variant.getFittedWeaponSlots()) {
 			WeaponSpecAPI weaponSpec = variant.getWeaponSpec(slotId);
 			String weaponId = weaponSpec.getWeaponId();
 
@@ -54,7 +53,7 @@ public class ehm_ar_slotshunt extends _ehm_ar_base {
 
 			parentSlot.setWeaponType(WeaponType.DECORATIVE);
 			hullSpec.addBuiltInWeapon(parentSlotId, weaponId);
-			refreshRefit = true;
+			refreshRefit = true; 
 		}
 
 		// bonus calculation
@@ -76,8 +75,8 @@ public class ehm_ar_slotshunt extends _ehm_ar_base {
 		stats.getFluxCapacity().modifyMult(hullModSpecId, capacitorBonus);
 		stats.getFluxDissipation().modifyMult(hullModSpecId, heatsinkBonus);
 
-		variant.setHullSpecAPI(hullSpec.retrieve()); 
-		if (refreshRefit) { refreshRefit = false; commitChanges(); }
+		variant.setHullSpecAPI(hullSpec.retrieve());
+		if (refreshRefit) { refreshRefit = false; ehm_cleanWeaponGroupsUp(variant); commitChanges(); }
 	}
 
 	@Override

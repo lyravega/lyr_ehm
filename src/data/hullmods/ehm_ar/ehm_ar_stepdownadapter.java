@@ -97,7 +97,7 @@ public class ehm_ar_stepdownadapter extends _ehm_ar_base {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 		boolean refreshRefit = false;
 
-		for (String slotId: variant.getNonBuiltInWeaponSlots()) {
+		for (String slotId: variant.getFittedWeaponSlots()) {
 			if (slotId.startsWith(lyr_internals.affix.adaptedSlot)) continue; // short-circuit to avoid weapons in adapted slots causing an error on load, must be first
 
 			//WeaponType slotType = variant.getSlot(slotId).getWeaponType();
@@ -137,7 +137,7 @@ public class ehm_ar_stepdownadapter extends _ehm_ar_base {
 		}
 
 		variant.setHullSpecAPI(hullSpec.retrieve()); 
-		if (refreshRefit) { refreshRefit = false; commitChanges(); }
+		if (refreshRefit) { refreshRefit = false; ehm_cleanWeaponGroupsUp(variant); commitChanges(); }
 	}
 
 	@Override

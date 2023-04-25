@@ -1,11 +1,16 @@
 package data.hullmods.ehm_ar;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.api.loading.WeaponGroupSpec;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
@@ -35,6 +40,26 @@ public class _ehm_ar_base extends _ehm_base {
 		ShipHullSpecAPI hullSpec = ehm_hullSpecRefresh(variant);
 
 		return hullSpec;
+	}
+
+	/** 
+	 * Activated shunts and adapters (decorative, built-in ones) are added
+	 * to the weapon groups by the game in some cases such as installing
+	 * them first then their activators immediately. When this happens,
+	 * even though they are unusable, they appear as ghosts under weapon
+	 * groups and as a selectable group in combat.
+	 * <p>This method goes over the groups and removes them. Not sure when
+	 * / why / how this happens. This is a sufficient workaround till the
+	 * root cause can be found, however.
+	 * @param variant whose weapon groups will be purged of activated stuff
+	 */
+	protected static final void ehm_cleanWeaponGroupsUp(ShipVariantAPI variant) {
+		List<WeaponGroupSpec> weaponGroups = variant.getWeaponGroups();
+		Map<String, String> groupCleanupTargets = new HashMap<String, String>(variant.getHullSpec().getBuiltInWeapons());
+		groupCleanupTargets.values().retainAll(lyr_internals.id.utility.set);
+		for (WeaponGroupSpec weaponGroup: weaponGroups) {
+			weaponGroup.getSlots().removeAll(groupCleanupTargets.keySet());
+		}
 	}
 
 	//#region INSTALLATION CHECKS
