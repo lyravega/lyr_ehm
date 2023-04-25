@@ -126,9 +126,9 @@ public class _ehm_base /*implements HullModEffect*/ extends BaseHullMod {
 	 * @param retrofitTag to check if the ship has one already
 	 * @return true if there is another mod with the searched tag, false otherwise
 	 */
-	protected static final boolean ehm_hasRetrofitTag(ShipAPI ship, String retrofitTag, String ownHullModId) {
+	protected static final boolean ehm_hasRetrofitTag(ShipAPI ship, String retrofitTag, String thisHullModId) {
 		for (String hullModId : ship.getVariant().getHullMods()) {
-			if (hullModId.equals(ownHullModId)) continue;
+			if (hullModId.equals(thisHullModId)) continue;
 			if (Global.getSettings().getHullModSpec(hullModId).hasTag(retrofitTag)) return true;
 		}
 

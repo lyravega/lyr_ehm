@@ -276,7 +276,7 @@ public class ehm_base extends _ehm_base {
 
 					Set<String> tags = Global.getSettings().getHullModSpec(newHullModId).getTags();
 					if (tags.contains(lyr_internals.tag.externalAccess)) { commitChanges(); playSound(); break; } 
-					if (!tags.contains(lyr_internals.tag.allRetrofit)) continue;
+					if (!tags.contains(lyr_internals.tag.anyExperimental)) continue;
 
 					String retrofitType = newHullModId.substring(0, 7); // all affixes (not tags) are fixed to 0-7
 					switch (retrofitType) {
@@ -297,7 +297,7 @@ public class ehm_base extends _ehm_base {
 			
 					Set<String> tags = Global.getSettings().getHullModSpec(removedHullModId).getTags();
 					if (tags.contains(lyr_internals.tag.externalAccess)) { refitVariant.setHullSpecAPI(ehm_hullSpecRefresh(refitVariant)); commitChanges(); playSound(); break; }
-					if (!tags.contains(lyr_internals.tag.allRetrofit)) continue;
+					if (!tags.contains(lyr_internals.tag.anyExperimental)) continue;
 
 					String retrofitType = removedHullModId.substring(0, 7); 
 					switch (retrofitType) {

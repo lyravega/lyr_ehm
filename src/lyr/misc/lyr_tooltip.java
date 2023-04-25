@@ -36,6 +36,7 @@ public class lyr_tooltip {
 			hasAdapterRetrofit,
 			hasShieldCosmetic,
 			hasEngineCosmetic,
+			hasAnyExperimental,
 			noShields,
 			hasPhase,
 			noWings,
@@ -60,6 +61,7 @@ public class lyr_tooltip {
 				hasAdapterRetrofit = textJSON.getString("hasAdapterRetrofit");
 				hasShieldCosmetic = textJSON.getString("hasShieldCosmetic");
 				hasEngineCosmetic = textJSON.getString("hasEngineCosmetic");
+				hasAnyExperimental = textJSON.getString("hasAnyExperimental");
 				noShields = textJSON.getString("noShields");
 				hasPhase = textJSON.getString("hasPhase");
 				noWings = textJSON.getString("noWings");

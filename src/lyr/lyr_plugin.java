@@ -36,7 +36,7 @@ public class lyr_plugin extends BaseModPlugin {
 
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
 			String hullModSpecId = hullModSpec.getId();
-			if (hullModSpec.hasTag(lyr_internals.tag.allRetrofit) && !playerFaction.knowsHullMod(hullModSpecId)) playerFaction.addKnownHullMod(hullModSpecId);
+			if (hullModSpec.hasTag(lyr_internals.tag.anyExperimental) && !playerFaction.knowsHullMod(hullModSpecId)) playerFaction.addKnownHullMod(hullModSpecId);
 			else if (hullModSpec.hasTag(lyr_internals.tag.restricted) && playerFaction.knowsHullMod(hullModSpecId)) playerFaction.removeKnownHullMod(hullModSpecId);
 		}
 

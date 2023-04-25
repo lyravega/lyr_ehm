@@ -17,6 +17,7 @@
 			"hasAdapterRetrofit": "Another slot adapter retrofit is already installed",
 			"hasShieldCosmetic": "Another shield cosmetic modification is already installed",
 			"hasEngineCosmetic": "Another engine cosmetic modification is already installed",
+			"hasAnyExperimental": "Another engine cosmetic modification is already installed",
 			"noShields": "Cannot function without shields",
 			"hasPhase": "Cannot function with a phase cloak",
 			"noWings": "Cannot function without wings",

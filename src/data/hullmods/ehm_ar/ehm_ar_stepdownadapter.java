@@ -148,7 +148,7 @@ public class ehm_ar_stepdownadapter extends _ehm_ar_base {
 	//#region INSTALLATION CHECKS
 	@Override
 	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
-		if (!super.canBeAddedOrRemovedNow(ship, marketOrNull, mode)) return false;
+		if (ship == null) return false; 
 
 		if (ehm_hasWeapons(ship, lyr_internals.affix.adaptedSlot)) return false;
 

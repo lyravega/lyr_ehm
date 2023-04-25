@@ -66,8 +66,8 @@ public class lyr_internals {
 
 	public static class tag {
 		public static final String
-			baseRetrofit = "ehm_base", // must match hullmod tag in .csv
-			allRetrofit = "ehm", // must match hullmod tag in .csv
+			baseExperimental = "ehm_base", // must match hullmod tag in .csv
+			anyExperimental = "ehm", // must match hullmod tag in .csv
 			externalAccess = "ehm_externalAccess", // must match hullmod tag in .csv
 			restricted = "ehm_restricted", // must match hullmod tag in .csv
 			systemRetrofit = "ehm_sr", // must match hullmod tag in .csv
