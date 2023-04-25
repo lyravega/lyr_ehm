@@ -1,4 +1,4 @@
-package lyr.settings;
+package lyr.misc;
 
 import java.awt.Color;
 

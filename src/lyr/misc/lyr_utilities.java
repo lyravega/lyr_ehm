@@ -1,4 +1,4 @@
-package data.hullmods;
+package lyr.misc;
 
 import org.lwjgl.util.vector.Vector2f;
 
@@ -7,7 +7,7 @@ import org.lwjgl.util.vector.Vector2f;
  * calculate the new locations of child slots.
  * @author lyravega
  */
-public class _ehm_util {
+public class lyr_utilities {
 	private static final double PI = Math.PI;
 
 	private static double reduceSinAngle(double radians)
