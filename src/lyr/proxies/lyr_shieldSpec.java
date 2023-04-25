@@ -6,6 +6,7 @@ import java.lang.invoke.MethodHandle;
 import com.fs.starfarer.api.combat.ShieldAPI.ShieldType;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
 
+import lyr.settings.lyr_internals;
 import lyr.tools._lyr_proxyTools;
 
 /**
@@ -42,7 +43,7 @@ public final class lyr_shieldSpec extends _lyr_proxyTools {
 			setPhaseCost = inspectMethod(shieldSpecClass, "setPhaseCost").getMethodHandle();
 			setPhaseUpkeep = inspectMethod(shieldSpecClass, "setPhaseUpkeep").getMethodHandle();
 		} catch (Throwable t) {
-			logger.fatal("EHM (Experimental Hull Modifications) - Failed to find a method in 'lyr_shieldSpec'", t);
+			logger.fatal(lyr_internals.logPrefix+"Failed to find a method in 'lyr_shieldSpec'", t);
 		}
 	}
 
@@ -96,7 +97,7 @@ public final class lyr_shieldSpec extends _lyr_proxyTools {
 		try {
 			return (ShieldSpecAPI) clone.invoke(shieldSpec);
 		} catch (Throwable t) {
-			logger.error("EHM (Experimental Hull Modifications) - Failed to use 'duplicate()' in 'lyr_shieldSpec'", t);
+			logger.error(lyr_internals.logPrefix+"Failed to use 'duplicate()' in 'lyr_shieldSpec'", t);
 		} return shieldSpec; // java, pls...
 	}
 	
@@ -120,7 +121,7 @@ public final class lyr_shieldSpec extends _lyr_proxyTools {
 		try {
 			setRingColor.invoke(shieldSpec, colour);
 		} catch (Throwable t) {
-			logger.error("EHM (Experimental Hull Modifications) - Failed to use 'setRingColor()' in 'lyr_shieldSpec'", t);
+			logger.error(lyr_internals.logPrefix+"Failed to use 'setRingColor()' in 'lyr_shieldSpec'", t);
 		}
 	}
 
@@ -134,7 +135,7 @@ public final class lyr_shieldSpec extends _lyr_proxyTools {
 		try {
 			setInnerColor.invoke(shieldSpec, colour);
 		} catch (Throwable t) {
-			logger.error("EHM (Experimental Hull Modifications) - Failed to use 'setInnerColor()' in 'lyr_shieldSpec'", t);
+			logger.error(lyr_internals.logPrefix+"Failed to use 'setInnerColor()' in 'lyr_shieldSpec'", t);
 		}
 	}
 
@@ -142,7 +143,7 @@ public final class lyr_shieldSpec extends _lyr_proxyTools {
 		try {
 			setType.invoke(shieldSpec, shieldType);
 		} catch (Throwable t) {
-			logger.error("EHM (Experimental Hull Modifications) - Failed to use 'setType()' in 'lyr_shieldSpec'", t);
+			logger.error(lyr_internals.logPrefix+"Failed to use 'setType()' in 'lyr_shieldSpec'", t);
 		}
 	}
 
@@ -150,7 +151,7 @@ public final class lyr_shieldSpec extends _lyr_proxyTools {
 		try {
 			setFluxPerDamageAbsorbed.invoke(shieldSpec, absorbtionRatio);
 		} catch (Throwable t) {
-			logger.error("EHM (Experimental Hull Modifications) - Failed to use 'setFluxPerDamageAbsorbed()' in 'lyr_shieldSpec'", t);
+			logger.error(lyr_internals.logPrefix+"Failed to use 'setFluxPerDamageAbsorbed()' in 'lyr_shieldSpec'", t);
 		}
 	}
 
@@ -158,7 +159,7 @@ public final class lyr_shieldSpec extends _lyr_proxyTools {
 		try {
 			setUpkeepCost.invoke(shieldSpec, upkeepCost);
 		} catch (Throwable t) {
-			logger.error("EHM (Experimental Hull Modifications) - Failed to use 'setUpkeepCost()' in 'lyr_shieldSpec'", t);
+			logger.error(lyr_internals.logPrefix+"Failed to use 'setUpkeepCost()' in 'lyr_shieldSpec'", t);
 		}
 	}
 
@@ -166,7 +167,7 @@ public final class lyr_shieldSpec extends _lyr_proxyTools {
 		try {
 			setArc.invoke(shieldSpec, arcSize);
 		} catch (Throwable t) {
-			logger.error("EHM (Experimental Hull Modifications) - Failed to use 'setArc()' in 'lyr_shieldSpec'", t);
+			logger.error(lyr_internals.logPrefix+"Failed to use 'setArc()' in 'lyr_shieldSpec'", t);
 		}
 	}
 
@@ -174,7 +175,7 @@ public final class lyr_shieldSpec extends _lyr_proxyTools {
 		try {
 			setPhaseCost.invoke(shieldSpec, phaseCost);
 		} catch (Throwable t) {
-			logger.error("EHM (Experimental Hull Modifications) - Failed to use 'setPhaseCost()' in 'lyr_shieldSpec'", t);
+			logger.error(lyr_internals.logPrefix+"Failed to use 'setPhaseCost()' in 'lyr_shieldSpec'", t);
 		}
 	}
 
@@ -182,7 +183,7 @@ public final class lyr_shieldSpec extends _lyr_proxyTools {
 		try {
 			setPhaseUpkeep.invoke(shieldSpec, phaseUpkeep);
 		} catch (Throwable t) {
-			logger.error("EHM (Experimental Hull Modifications) - Failed to use 'setPhaseUpkeep()' in 'lyr_shieldSpec'", t);
+			logger.error(lyr_internals.logPrefix+"Failed to use 'setPhaseUpkeep()' in 'lyr_shieldSpec'", t);
 		}
 	}
 	//#endregion 

@@ -69,7 +69,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 
 		public _lyr_delayedFinder() {
 			Global.getSector().addTransientScript(this);
-			logger.info("EHM (Experimental Hull Modifications) - Waiting to find the UI classes");
+			logger.info(lyr_internals.logPrefix+"Waiting to find the UI classes");
 		}
 
 		@Override
@@ -128,10 +128,10 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 				// designDisplayClass = designDisplay.getClass();			// com.fs.starfarer.coreui.refit.oOOo;
 				// shipDisplayClass = shipDisplay.getClass();				// com.fs.starfarer.coreui.refit.oOOO;
 
-				logger.info("EHM (Experimental Hull Modifications) - Found the UI classes");
+				logger.info(lyr_internals.logPrefix+"Found the UI classes");
 				isDone = true; return;
 			} catch (Throwable t) {
-				logger.fatal("EHM (Experimental Hull Modifications) - Failed to find the UI classes"); t.printStackTrace();
+				logger.fatal(lyr_internals.logPrefix+"Failed to find the UI classes"); t.printStackTrace();
 				isDone = true; return;
 			}
 		}
@@ -289,7 +289,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 			refitPanel_setEditedSinceSave.invoke(refitPanel, false);
 		} catch (Throwable t) {
 			refreshRefit();
-			logger.error("EHM (Experimental Hull Modifications) - Failure in 'commitChanges()', using 'refreshRefit()' as fallback"); t.printStackTrace();
+			logger.error(lyr_internals.logPrefix+"Failure in 'commitChanges()', using 'refreshRefit()' as fallback"); t.printStackTrace();
 		}
 	}
 
@@ -319,7 +319,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 			refitPanel_setEditedSinceLoad.invoke(refitPanel, false);
 			refitPanel_setEditedSinceSave.invoke(refitPanel, false);
 		} catch (Throwable t) {
-			logger.error("EHM (Experimental Hull Modifications) - Failure in 'clearUndo()'"); t.printStackTrace();
+			logger.error(lyr_internals.logPrefix+"Failure in 'clearUndo()'"); t.printStackTrace();
 		}
 	}
 }

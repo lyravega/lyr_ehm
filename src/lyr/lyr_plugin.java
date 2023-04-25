@@ -27,7 +27,7 @@ public class lyr_plugin extends BaseModPlugin {
 			lyr_plugin.localizationJSON = Global.getSettings().getMergedJSONForMod(lyr_plugin.LOCALIZATION_JSON, lyr_plugin.EHM_ID);
 			lyr_plugin.settingsJSON = Global.getSettings().getMergedJSONForMod(lyr_plugin.SETTINGS_JSON, lyr_plugin.EHM_ID);
 		} catch (IOException | JSONException e) {
-			logger.fatal("EHM (Experimental Hull Modifications) - Problem importing configuration JSONs");
+			logger.fatal(lyr_internals.logPrefix+"Problem importing configuration JSONs");
 		}
 	}
 

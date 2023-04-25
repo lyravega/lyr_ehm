@@ -101,7 +101,7 @@ public class _lyr_scriptTools extends _lyr_reflectionTools {
 		//#region CONSTRUCTORS & ACCESSORS
 		public fleetTrackerScript() {
 			logger.setLevel(Level.INFO);
-			logger.info("EHM (Experimental Hull Modifications) - FT: Initialized fleet tracking");
+			logger.info(lyr_internals.logPrefix+"FT: Initialized fleet tracking");
 	
 			try {
 				robot = new Robot();
@@ -114,7 +114,7 @@ public class _lyr_scriptTools extends _lyr_reflectionTools {
 	
 		public void addshipTracker(String memberId, shipTrackerScript shipTracker) {
 			shipTrackers.put(memberId, shipTracker);
-			logger.info("EHM (Experimental Hull Modifications) - FT: Keeping track of ST-"+memberId);
+			logger.info(lyr_internals.logPrefix+"FT: Keeping track of ST-"+memberId);
 		}
 		//#endregion
 		// END OF CONSTRUCTORS & ACCESSORS
@@ -122,11 +122,11 @@ public class _lyr_scriptTools extends _lyr_reflectionTools {
 		@Override
 		public void advance(float amount) {	
 			CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
-			if (tab == null || !tab.equals(CoreUITabId.REFIT)) { logger.info("EHM (Experimental Hull Modifications) - FT: Stopping fleet tracking"); isDone = true; return; }
+			if (tab == null || !tab.equals(CoreUITabId.REFIT)) { logger.info(lyr_internals.logPrefix+"FT: Stopping fleet tracking"); isDone = true; return; }
 	
 			if (runTime > 10f) {
 				runTime = 0f;
-				logger.info("EHM (Experimental Hull Modifications) - FT: Tracking "+shipTrackers.size()+" ships");
+				logger.info(lyr_internals.logPrefix+"FT: Tracking "+shipTrackers.size()+" ships");
 			} runTime += amount;
 	
 			// Set<FleetMember> newMembers = new HashSet<FleetMember>();
@@ -152,7 +152,7 @@ public class _lyr_scriptTools extends _lyr_reflectionTools {
 			// 	killshipTracker(member.getId());
 			// } oldMembers.clear();
 	
-			// if (shipTrackers.isEmpty()) { logger.info("EHM (Experimental Hull Modifications) - FT: Stopping fleet tracking, no ship trackers remaining"); isDone = true; return; }
+			// if (shipTrackers.isEmpty()) { logger.info(lyr_internals.logPrefix+"FT: Stopping fleet tracking, no ship trackers remaining"); isDone = true; return; }
 		}
 	
 		@Override
@@ -201,7 +201,7 @@ public class _lyr_scriptTools extends _lyr_reflectionTools {
 			
 			Global.getSector().addScript(this); 
 	
-			logger.info("EHM (Experimental Hull Modifications) - ST-"+memberId+": Initial hull modifications '"+hullMods.toString()+"'");
+			logger.info(lyr_internals.logPrefix+"ST-"+memberId+": Initial hull modifications '"+hullMods.toString()+"'");
 		}
 	
 		public String getMemberId() {
@@ -217,7 +217,7 @@ public class _lyr_scriptTools extends _lyr_reflectionTools {
 		@Override
 		public void advance(float amount) {
 			CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
-			if (tab == null || !tab.equals(CoreUITabId.REFIT)) { logger.info("EHM (Experimental Hull Modifications) - ST-"+memberId+": Stopping ship tracking"); isDone = true; return; }
+			if (tab == null || !tab.equals(CoreUITabId.REFIT)) { logger.info(lyr_internals.logPrefix+"ST-"+memberId+": Stopping ship tracking"); isDone = true; return; }
 	
 			Set<String> newHullMods = new HashSet<String>();
 			Set<String> removedHullMods = new HashSet<String>();
@@ -225,7 +225,7 @@ public class _lyr_scriptTools extends _lyr_reflectionTools {
 			for (String hullModId : variant.getHullMods()) { if (!hullModId.startsWith(lyr_internals.affix.allRetrofit)) continue; 
 				if (hullMods.contains(hullModId)) continue;
 	
-				logger.info("EHM (Experimental Hull Modifications) - ST-"+memberId+": New hull modification '"+hullModId+"'");
+				logger.info(lyr_internals.logPrefix+"ST-"+memberId+": New hull modification '"+hullModId+"'");
 	
 				newHullMods.add(hullModId);
 			} 
@@ -233,7 +233,7 @@ public class _lyr_scriptTools extends _lyr_reflectionTools {
 			for (Iterator<String> i = hullMods.iterator(); i.hasNext();) { String hullModId = i.next(); 
 				if (variant.hasHullMod(hullModId)) continue;
 	
-				logger.info("EHM (Experimental Hull Modifications) - ST-"+memberId+": Removed hull modification '"+hullModId+"'");
+				logger.info(lyr_internals.logPrefix+"ST-"+memberId+": Removed hull modification '"+hullModId+"'");
 	
 				removedHullMods.add(hullModId);
 			} 

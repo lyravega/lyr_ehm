@@ -160,25 +160,25 @@ public class ehm_base extends _ehm_base {
 		
 		//#region CONSTRUCTORS & ACCESSORS
 		public fleetTrackerScript() {
-			if (log) logger.info("EHM (Experimental Hull Modifications) - xFT: Initialized fleet tracking");
+			if (log) logger.info(lyr_internals.logPrefix+"xFT: Initialized fleet tracking");
 			
 			Global.getSector().addScript(this);
 		}
 	
 		public void addshipTracker(String memberId, shipTrackerScript shipTracker) {
 			shipTrackers.put(memberId, shipTracker);
-			if (log) logger.info("EHM (Experimental Hull Modifications) - xFT: Keeping track of ST-"+memberId);
+			if (log) logger.info(lyr_internals.logPrefix+"xFT: Keeping track of ST-"+memberId);
 		}
 		//#endregion
 		// END OF CONSTRUCTORS & ACCESSORS
 		
 		@Override
 		public void advance(float amount) {	
-			if (!isRefitTab()) { if (log) logger.info("EHM (Experimental Hull Modifications) - xFT: Stopping fleet tracking"); isDone = true; return; }
+			if (!isRefitTab()) { if (log) logger.info(lyr_internals.logPrefix+"xFT: Stopping fleet tracking"); isDone = true; return; }
 	
 			if (runTime > 10f) {
 				runTime = 0f;
-				if (log) logger.info("EHM (Experimental Hull Modifications) - xFT: Tracking "+shipTrackers.size()+" ships");
+				if (log) logger.info(lyr_internals.logPrefix+"xFT: Tracking "+shipTrackers.size()+" ships");
 			} runTime += amount;
 		}
 	
@@ -231,7 +231,7 @@ public class ehm_base extends _ehm_base {
 			
 			Global.getSector().addScript(this); 
 	
-			if (log) logger.info("EHM (Experimental Hull Modifications) - xST-"+memberId+": Initial hull modifications '"+hullMods.toString()+"'");
+			if (log) logger.info(lyr_internals.logPrefix+"xST-"+memberId+": Initial hull modifications '"+hullMods.toString()+"'");
 		}
 	
 		public String getMemberId() {
@@ -246,7 +246,7 @@ public class ehm_base extends _ehm_base {
 		
 		@Override
 		public void advance(float amount) {
-			if (!isRefitTab()) { if (log) logger.info("EHM (Experimental Hull Modifications) - xST-"+memberId+": Stopping ship tracking"); isDone = true; return; }
+			if (!isRefitTab()) { if (log) logger.info(lyr_internals.logPrefix+"xST-"+memberId+": Stopping ship tracking"); isDone = true; return; }
 	
 			Set<String> newHullMods = new HashSet<String>();
 			Set<String> removedHullMods = new HashSet<String>();
@@ -255,7 +255,7 @@ public class ehm_base extends _ehm_base {
 				// if (!hullModId.startsWith(lyr_internals.affix.allRetrofit)) continue;
 				if (hullMods.contains(hullModId)) continue;
 	
-				if (log) logger.info("EHM (Experimental Hull Modifications) - xST-"+memberId+": New hull modification '"+hullModId+"'");
+				if (log) logger.info(lyr_internals.logPrefix+"xST-"+memberId+": New hull modification '"+hullModId+"'");
 	
 				newHullMods.add(hullModId);
 			}
@@ -264,7 +264,7 @@ public class ehm_base extends _ehm_base {
 				// if (!hullModId.startsWith(lyr_internals.affix.allRetrofit)) continue;
 				if (variant.hasHullMod(hullModId)) continue;
 	
-				if (log) logger.info("EHM (Experimental Hull Modifications) - xST-"+memberId+": Removed hull modification '"+hullModId+"'");
+				if (log) logger.info(lyr_internals.logPrefix+"xST-"+memberId+": Removed hull modification '"+hullModId+"'");
 	
 				removedHullMods.add(hullModId);
 			}

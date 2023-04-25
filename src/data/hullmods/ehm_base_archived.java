@@ -113,7 +113,7 @@ public class ehm_base_archived extends _ehm_base implements HullModFleetEffect {
 
 			hullModMap.remove(memberId);
 			fleetMemberMap.remove(memberId);
-			if (log) logger.info("EHM (Experimental Hull Modifications) - FT: Unregistering ST-"+memberId);
+			if (log) logger.info(lyr_internals.logPrefix+"FT: Unregistering ST-"+memberId);
 		}
 
 		_fleetMembers.removeAll(fleetMemberMap.values());
@@ -122,7 +122,7 @@ public class ehm_base_archived extends _ehm_base implements HullModFleetEffect {
 
 			hullModMap.put(memberId, new HashSet<String>(member.getVariant().getHullMods()));
 			fleetMemberMap.put(memberId, member);
-			if (log) logger.info("EHM (Experimental Hull Modifications) - FT: Registering ST-"+memberId);
+			if (log) logger.info(lyr_internals.logPrefix+"FT: Registering ST-"+memberId);
 		}
 
 		if (sheep != null && !fleetMemberMap.containsKey(sheep.getFleetMemberId())) sheep = null;
@@ -142,7 +142,7 @@ public class ehm_base_archived extends _ehm_base implements HullModFleetEffect {
 
 			onRemoved(removedHullModId, ship);
 			savedHullMods.remove(removedHullModId);
-			if (log) logger.info("EHM (Experimental Hull Modifications) - ST-"+memberId+": Removed hull modification '"+removedHullModId+"'");
+			if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": Removed hull modification '"+removedHullModId+"'");
 		}
 
 		_currentHullMods.removeAll(savedHullMods);
@@ -151,7 +151,7 @@ public class ehm_base_archived extends _ehm_base implements HullModFleetEffect {
 
 			onInstalled(newHullModId, ship);
 			savedHullMods.add(newHullModId);
-			if (log) logger.info("EHM (Experimental Hull Modifications) - ST-"+memberId+": New hull modification '"+newHullModId+"'");
+			if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": New hull modification '"+newHullModId+"'");
 		}
 	}
 

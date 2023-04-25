@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class lyr_internals {
+	public static final String logPrefix = "EHM (Experimental Hull Modifications) - ";
 	public static class id {
 		public static final String
 			drillSound = "drill", // must match .json

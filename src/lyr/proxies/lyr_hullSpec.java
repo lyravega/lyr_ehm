@@ -7,6 +7,7 @@ import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
+import lyr.settings.lyr_internals;
 import lyr.tools._lyr_proxyTools;
 
 /**
@@ -50,7 +51,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 			addBuiltInWing = inspectMethod(hullSpecClass, "addBuiltInWing").getMethodHandle();
 			setShipDefenseId = inspectMethod(hullSpecClass, "setShipDefenseId").getMethodHandle();
 		} catch (Throwable t) {
-			logger.fatal("EHM (Experimental Hull Modifications) - Failed to find a method in 'lyr_hullSpec'", t);
+			logger.fatal(lyr_internals.logPrefix+"Failed to find a method in 'lyr_hullSpec'", t);
 		}
 	}
 
@@ -105,7 +106,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		try {
 			return (ShipHullSpecAPI) clone.invoke(hullSpec);
 		} catch (Throwable t) {
-			logger.error("EHM (Experimental Hull Modifications) - Failed to use 'duplicate()' in 'lyr_hullSpec'", t);
+			logger.error(lyr_internals.logPrefix+"Failed to use 'duplicate()' in 'lyr_hullSpec'", t);
 		} return hullSpec; // java, pls...
 	}
 	
@@ -174,7 +175,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		try {
 			this.engineSlots = (List<Object>) getEngineSlots.invoke(hullSpec);
 		} catch (Throwable t) {
-			logger.error("EHM (Experimental Hull Modifications) - Failed to use 'getEngineSlots()' in 'lyr_hullSpec'", t);
+			logger.error(lyr_internals.logPrefix+"Failed to use 'getEngineSlots()' in 'lyr_hullSpec'", t);
 		} 
 
 		return this.engineSlots; 
@@ -188,7 +189,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		try {
 			setShieldSpec.invoke(hullSpec, shieldSpec);
 		} catch (Throwable t) {
-			logger.error("EHM (Experimental Hull Modifications) - Failed to use 'setShieldSpec()' in 'lyr_hullSpec'", t);
+			logger.error(lyr_internals.logPrefix+"Failed to use 'setShieldSpec()' in 'lyr_hullSpec'", t);
 		}
 	}
 	
@@ -203,7 +204,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		try {
 			addBuiltInMod.invoke(hullSpec, hullModSpecId);
 		} catch (Throwable t) {
-			logger.warn("EHM (Experimental Hull Modifications) - Failed to use 'addBuiltInMod()' in 'lyr_hullSpec', using API version", t);
+			logger.warn(lyr_internals.logPrefix+"Failed to use 'addBuiltInMod()' in 'lyr_hullSpec', using API version", t);
 			hullSpec.addBuiltInMod(hullModSpecId);
 		}
 	}
@@ -220,7 +221,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		try {
 			setManufacturer.invoke(hullSpec, manufacturer);
 		} catch (Throwable t) {
-			logger.warn("EHM (Experimental Hull Modifications) - Failed to use 'setManufacturer()' in 'lyr_hullSpec', using API version", t);
+			logger.warn(lyr_internals.logPrefix+"Failed to use 'setManufacturer()' in 'lyr_hullSpec', using API version", t);
 			hullSpec.setManufacturer(manufacturer);
 		}
 	}
@@ -236,7 +237,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		try {
 			setDescriptionPrefix.invoke(hullSpec, destriptionPrefix);
 		} catch (Throwable t) {
-			logger.error("EHM (Experimental Hull Modifications) - Failed to use 'setDescriptionPrefix()' in 'lyr_hullSpec'", t);
+			logger.error(lyr_internals.logPrefix+"Failed to use 'setDescriptionPrefix()' in 'lyr_hullSpec'", t);
 		}
 	}
 
@@ -252,7 +253,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		try {
 			setShipSystemId.invoke(hullSpec, shipSystemId);
 		} catch (Throwable t) {
-			logger.warn("EHM (Experimental Hull Modifications) - Failed to use 'setShipSystemId()' in 'lyr_hullSpec', using API version", t);
+			logger.warn(lyr_internals.logPrefix+"Failed to use 'setShipSystemId()' in 'lyr_hullSpec', using API version", t);
 			hullSpec.setShipSystemId(shipSystemId);
 		}
 	}
@@ -269,7 +270,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		try {
 			addWeaponSlot.invoke(hullSpec, weaponSlotClass.cast(weaponSlot));
 		} catch (Throwable t) {
-			logger.error("EHM (Experimental Hull Modifications) - Failed to use 'addWeaponSlot()' in 'lyr_hullSpec'", t);
+			logger.error(lyr_internals.logPrefix+"Failed to use 'addWeaponSlot()' in 'lyr_hullSpec'", t);
 		}
 	}
 
@@ -286,7 +287,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		try { 
 			addBuiltInWeapon.invoke(hullSpec, slotId, weaponSpecId);
 		} catch (Throwable t) {
-			logger.error("EHM (Experimental Hull Modifications) - Failed to use 'addBuiltInWeapon()' in 'lyr_hullSpec', using API version", t);
+			logger.error(lyr_internals.logPrefix+"Failed to use 'addBuiltInWeapon()' in 'lyr_hullSpec', using API version", t);
 			hullSpec.addBuiltInWeapon(slotId, weaponSpecId);
 		}
 	}
@@ -302,7 +303,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		try { 
 			addBuiltInWing.invoke(hullSpec, wingId);
 		} catch (Throwable t) {
-			logger.error("EHM (Experimental Hull Modifications) - Failed to use 'addBuiltInWing()' in 'lyr_hullSpec'", t);
+			logger.error(lyr_internals.logPrefix+"Failed to use 'addBuiltInWing()' in 'lyr_hullSpec'", t);
 		}
 	}
 	
@@ -310,7 +311,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		try { 
 			setShipDefenseId.invoke(hullSpec, defenseId);
 		} catch (Throwable t) {
-			logger.error("EHM (Experimental Hull Modifications) - Failed to use 'setShipDefenseId()' in 'lyr_hullSpec'", t);
+			logger.error(lyr_internals.logPrefix+"Failed to use 'setShipDefenseId()' in 'lyr_hullSpec'", t);
 		}
 	}
 	//#endregion 
