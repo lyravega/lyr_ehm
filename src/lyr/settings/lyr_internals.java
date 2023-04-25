@@ -67,6 +67,7 @@ public class lyr_internals {
 			baseRetrofit = "ehm_base", // must match hullmod tag in .csv
 			allRetrofit = "ehm", // must match hullmod tag in .csv
 			externalAccess = "ehm_externalAccess", // must match hullmod tag in .csv
+			restricted = "ehm_restricted", // must match hullmod tag in .csv
 			systemRetrofit = "ehm_sr", // must match hullmod tag in .csv
 			weaponRetrofit = "ehm_wr", // must match hullmod tag in .csv
 			adapterRetrofit = "ehm_ar", // must match hullmod tag in .csv
