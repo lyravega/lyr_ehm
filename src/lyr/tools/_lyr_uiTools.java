@@ -305,8 +305,8 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 	 * to be used from {@code onRemove()} and {@code onInstalled()} methods 
 	 * if {@code commitChanges()} is not called from those two.
 	 * 
-	 * @deprecated as a reminder to investigate a possible issue for later.
-	 * This is/was supposed to clean the undo button by resetting the last
+	 * @deprecated - {@code commitChanges()} is used instead to do the same. 
+	 * <p> This is/was supposed to clean the undo button by resetting the last
 	 * save and load, executing a purely visual function.
 	 * <p> However, if a different ship is selected right after this is used,
 	 * going back to the former ship effectively does the real undo. In other
@@ -328,7 +328,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 			Object refitTab = adaptiveSearch_findObjectWithChildClass(wrapper, refitTabClass, true, 0);
 			Object refitPanel = refitTab_getRefitPanel.invoke(refitTab);
 			
-			refitPanel_syncWithCurrentVariant.invoke(refitPanel);	// added line for a potential fix
+			refitPanel_syncWithCurrentVariant.invoke(refitPanel);	// added line for a potential fix; works if it activates something, fails otherwise
 			refitPanel_setEditedSinceLoad.invoke(refitPanel, false);
 			refitPanel_setEditedSinceSave.invoke(refitPanel, false);
 		} catch (Throwable t) {

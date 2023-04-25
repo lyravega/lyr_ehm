@@ -280,7 +280,7 @@ public class ehm_base extends _ehm_base {
 
 					String retrofitType = newHullModId.substring(0, 7); // all affixes (not tags) are fixed to 0-7
 					switch (retrofitType) {
-						case lyr_internals.affix.adapterRetrofit: clearUndo(); playSound(); break; // 'commitChanges()' is triggered externally
+						case lyr_internals.affix.adapterRetrofit: commitChanges(); playSound(); break; // no longer uses 'clearUndo()' as it fails in some cases and as such, is deprecated.
 						case lyr_internals.affix.systemRetrofit: commitChanges(); playSound(); break;
 						case lyr_internals.affix.weaponRetrofit: commitChanges(); playSound(); break;
 						case lyr_internals.affix.shieldCosmetic: commitChanges(); playSound(); break;
@@ -299,7 +299,7 @@ public class ehm_base extends _ehm_base {
 					if (tags.contains(lyr_internals.tag.externalAccess)) { refitVariant.setHullSpecAPI(ehm_hullSpecRefresh(refitVariant)); commitChanges(); playSound(); break; }
 					if (!tags.contains(lyr_internals.tag.anyExperimental)) continue;
 
-					String retrofitType = removedHullModId.substring(0, 7); 
+					String retrofitType = removedHullModId.substring(0, 7); // all affixes (not tags) are fixed to 0-7
 					switch (retrofitType) {
 						case lyr_internals.affix.adapterRetrofit: refitVariant.setHullSpecAPI(ehm_adapterRemoval(refitVariant)); commitChanges(); playSound(); break;
 						case lyr_internals.affix.systemRetrofit: refitVariant.setHullSpecAPI(ehm_systemRestore(refitVariant)); commitChanges(); playSound(); break;
