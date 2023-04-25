@@ -15,13 +15,14 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
+import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
+import lyr.misc.lyr_externals;
+import lyr.misc.lyr_internals;
+import lyr.misc.lyr_tooltip;
 import lyr.proxies.lyr_hullSpec;
-import lyr.settings.lyr_externals;
-import lyr.settings.lyr_internals;
-import lyr.settings.lyr_tooltip;
 
 /**
  * This is the master base class for all experimental hullmods. Stores the most 
@@ -159,7 +160,7 @@ public class _ehm_base /*implements HullModEffect*/ extends BaseHullMod {
 	 * through {@code getNonBuiltInWeaponSlots()}, and as such the activated adapters
 	 * are ignored as the adapters turn the slots into decorative ones after 
 	 * activation. Evolved into its overloads for more specific checks.
-	 * @param variant to check
+	 * @param ship to check
 	 * @return true if the ship has weapons on weapon slots
 	 */
 	protected static final boolean ehm_hasWeapons(ShipAPI ship) {
@@ -176,14 +177,15 @@ public class _ehm_base /*implements HullModEffect*/ extends BaseHullMod {
 	 * that start with the passed slotAffix.
 	 * <p> Example: If the slotAffix is "AS", then only the slots with the slot ids
 	 * starting with "AS" are considered, and the rest are ignored.
-	 * @param variant to check
+	 * @param ship to check
 	 * @param slotAffix for checking the slotId
 	 * @return true if the ship has weapons on specific slots
 	 */
 	protected static final boolean ehm_hasWeapons(ShipAPI ship, String slotAffix) {
 		for (WeaponAPI weapon: ship.getAllWeapons()) {
-			if (weapon.getSlot().isBuiltIn()) continue;
-			if (!weapon.getSlot().getId().startsWith(slotAffix)) continue;
+			WeaponSlotAPI slot = weapon.getSlot();
+			if (slot.isBuiltIn()) continue;
+			if (!slot.getId().startsWith(slotAffix)) continue;
 			return true;
 		}
 
@@ -195,7 +197,7 @@ public class _ehm_base /*implements HullModEffect*/ extends BaseHullMod {
 	 * contained in the passed ignore set.
 	 * <p> Example: If the passed set contains a weapon id like "adapter", then
 	 * any slot having this weapon installed on them are ignored.
-	 * @param variant to check
+	 * @param ship to check
 	 * @param weaponIdsToIgnore while checking the weapon slots
 	 * @return true if the ship has weapons with non-matching weapon ids
 	 */

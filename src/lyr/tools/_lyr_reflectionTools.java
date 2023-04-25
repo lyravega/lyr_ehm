@@ -8,7 +8,7 @@ import java.lang.invoke.MethodType;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import lyr.settings.lyr_internals;
+import lyr.misc.lyr_internals;
 
 
 /**

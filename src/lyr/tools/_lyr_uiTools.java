@@ -10,8 +10,8 @@ import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CoreUITabId;
 
-import lyr.settings.lyr_externals;
-import lyr.settings.lyr_internals;
+import lyr.misc.lyr_externals;
+import lyr.misc.lyr_internals;
 
 /**
  * Provides specialized MethodHandles and a few methods that are 

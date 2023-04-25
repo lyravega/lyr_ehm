@@ -7,7 +7,7 @@ import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
-import lyr.settings.lyr_internals;
+import lyr.misc.lyr_internals;
 import lyr.tools._lyr_proxyTools;
 
 /**

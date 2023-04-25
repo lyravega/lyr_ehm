@@ -13,9 +13,9 @@ import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 
+import lyr.misc.lyr_internals;
 import lyr.proxies.lyr_hullSpec;
 import lyr.proxies.lyr_weaponSlot;
-import lyr.settings.lyr_internals;
 
 /**@category Adapter Retrofit
  * @author lyravega

@@ -6,7 +6,7 @@ import java.lang.invoke.MethodHandle;
 import com.fs.starfarer.api.combat.ShieldAPI.ShieldType;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
 
-import lyr.settings.lyr_internals;
+import lyr.misc.lyr_internals;
 import lyr.tools._lyr_proxyTools;
 
 /**

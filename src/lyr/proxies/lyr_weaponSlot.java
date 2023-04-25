@@ -9,7 +9,7 @@ import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
 import org.lwjgl.util.vector.Vector2f;
 
-import lyr.settings.lyr_internals;
+import lyr.misc.lyr_internals;
 import lyr.tools._lyr_proxyTools;
 
 /**
@@ -172,7 +172,7 @@ public final class lyr_weaponSlot extends _lyr_proxyTools {
 	 * @param nodeId an id to assign to the node (using slotId is fine)
 	 * @param location a ship-relative vector to create the node at
 	 * @category Proxied method
-	 * @see {@link data.hullmods._ehm_util#generateChildLocation} that
+	 * @see {@link lyr.misc.lyr_utilities#generateChildLocation} that
 	 * calculates new node positions through passed offsets
 	 */
 	public void setNode(String nodeId, Vector2f location) {

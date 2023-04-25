@@ -20,7 +20,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CoreUITabId;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 
-import lyr.settings.lyr_internals;
+import lyr.misc.lyr_internals;
 
 public class _lyr_scriptTools extends _lyr_reflectionTools {
 	protected static final Logger logger = Logger.getLogger("lyr_scriptTools");

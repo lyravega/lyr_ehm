@@ -10,8 +10,8 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import data.hullmods._ehm_base;
-import lyr.settings.lyr_internals;
-import lyr.settings.lyr_tooltip;
+import lyr.misc.lyr_internals;
+import lyr.misc.lyr_tooltip;
 
 
 /**

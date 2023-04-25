@@ -2,7 +2,7 @@ package lyr.proxies;
 
 import java.lang.invoke.MethodHandle;
 
-import lyr.settings.lyr_internals;
+import lyr.misc.lyr_internals;
 import lyr.tools._lyr_proxyTools;
 
 /**

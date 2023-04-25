@@ -12,7 +12,7 @@ import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 
-import lyr.settings.lyr_internals;
+import lyr.misc.lyr_internals;
 
 public class lyr_plugin extends BaseModPlugin {
 	private static final Logger logger = Logger.getLogger("lyr");

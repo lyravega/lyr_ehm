@@ -28,8 +28,8 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
-import lyr.settings.lyr_internals;
-import lyr.settings.lyr_tooltip;
+import lyr.misc.lyr_internals;
+import lyr.misc.lyr_tooltip;
 
 /**
  * Serves as a requirement for all experimental hull modifications, and provides hullMod

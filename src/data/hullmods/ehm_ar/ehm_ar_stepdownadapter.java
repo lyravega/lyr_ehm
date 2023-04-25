@@ -1,6 +1,6 @@
 package data.hullmods.ehm_ar;
 
-import static data.hullmods._ehm_util.generateChildLocation;
+import static lyr.misc.lyr_utilities.generateChildLocation;
 import static lyr.tools._lyr_uiTools.commitChanges;
 
 import java.util.HashMap;
@@ -20,9 +20,9 @@ import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 
+import lyr.misc.lyr_internals;
 import lyr.proxies.lyr_hullSpec;
 import lyr.proxies.lyr_weaponSlot;
-import lyr.settings.lyr_internals;
 
 /**@category Adapter Retrofit 
  * @author lyravega

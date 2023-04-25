@@ -14,10 +14,10 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import data.hullmods._ehm_base;
+import lyr.misc.lyr_internals;
+import lyr.misc.lyr_tooltip;
 import lyr.proxies.lyr_hullSpec;
 import lyr.proxies.lyr_weaponSlot;
-import lyr.settings.lyr_internals;
-import lyr.settings.lyr_tooltip;
 
 /**
  * This class is used by weapon retrofit hullmods. They are pretty 

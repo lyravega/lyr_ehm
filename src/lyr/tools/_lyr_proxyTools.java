@@ -2,7 +2,7 @@ package lyr.tools;
 
 import com.fs.starfarer.api.Global;
 
-import lyr.settings.lyr_internals;
+import lyr.misc.lyr_internals;
 
 import org.apache.log4j.Logger;
 

@@ -13,12 +13,12 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import data.hullmods._ehm_base;
+import lyr.misc.lyr_externals;
+import lyr.misc.lyr_internals;
+import lyr.misc.lyr_tooltip;
+import lyr.misc.lyr_externals.lyr_shieldSettings;
 import lyr.proxies.lyr_hullSpec;
 import lyr.proxies.lyr_shieldSpec;
-import lyr.settings.lyr_externals.lyr_shieldSettings;
-import lyr.settings.lyr_externals;
-import lyr.settings.lyr_internals;
-import lyr.settings.lyr_tooltip;
 
 /**
  * This class is used by shield cosmetic hullmods. The changes are 
