@@ -23,7 +23,7 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import lyr.misc.lyr_internals;
 
 public class _lyr_scriptTools extends _lyr_reflectionTools {
-	protected static final Logger logger = Logger.getLogger("lyr_scriptTools");
+	protected static final Logger logger = Logger.getLogger(lyr_internals.logName);
 
 	//#region INNER CLASS: refreshRefitScript
 	private static refreshRefitScript refreshRefitScript;
@@ -42,6 +42,7 @@ public class _lyr_scriptTools extends _lyr_reflectionTools {
 		}
 	}
 
+	// TODO: either use these from here or from the base; keep one
 	private static class refreshRefitScript implements EveryFrameScript {
 		private boolean isDone = false;
 		private float frameCount = 0f;

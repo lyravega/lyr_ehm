@@ -23,7 +23,7 @@ import lyr.misc.lyr_internals;
  * @author lyravega
  */
 public class _lyr_reflectionTools {
-	protected static final Logger logger = Logger.getLogger("lyr_reflectionTools");
+	protected static final Logger logger = Logger.getLogger(lyr_internals.logName);
 	protected static final Lookup lookup = MethodHandles.lookup();
 	protected static final Class<?> lookupClass = lookup.getClass();
 	protected static Class<?> fieldClass;

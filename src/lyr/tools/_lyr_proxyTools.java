@@ -19,7 +19,7 @@ public class _lyr_proxyTools extends _lyr_reflectionTools {
 	protected static final Class<?> engineStyleEnum;
 	protected static final Object engineStyleSetter;
 
-	protected static final Logger logger = Logger.getLogger("lyr");
+	protected static final Logger logger = Logger.getLogger(lyr_internals.logName);
 
 	static {
 		hullSpecClass = lyr_findHullSpecClass();

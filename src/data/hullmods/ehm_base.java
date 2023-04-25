@@ -41,7 +41,7 @@ import lyr.misc.lyr_tooltip;
  * @author lyravega
  */
 public class ehm_base extends _ehm_base {
-	private static final Logger logger = Logger.getLogger("lyr");
+	private static final Logger logger = Logger.getLogger(lyr_internals.logName);
 	private static final boolean log = true;
 
 	@Override
