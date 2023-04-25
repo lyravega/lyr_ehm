@@ -304,7 +304,19 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 	 * <p> In essence, this method serves as a supplement for that issue, 
 	 * to be used from {@code onRemove()} and {@code onInstalled()} methods 
 	 * if {@code commitChanges()} is not called from those two.
+	 * 
+	 * @deprecated as a reminder to investigate a possible issue for later.
+	 * This is/was supposed to clean the undo button by resetting the last
+	 * save and load, executing a purely visual function.
+	 * <p> However, if a different ship is selected right after this is used,
+	 * going back to the former ship effectively does the real undo. In other
+	 * words, had an issue that caused this to malfunction. Probable cause
+	 * is lack of {@code syncWithCurrentVariant()}. Added it for now.
+	 * <p> Removal of this function all together is also a valid solution,
+	 * since this effectively does only a visual function, and the undo
+	 * button doesn't really do anything in cases where/when this is needed.
 	 */
+	@Deprecated
 	public static void clearUndo() {
 		if (!isRefitTab()) return; // just in case
 		try {
@@ -316,6 +328,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 			Object refitTab = adaptiveSearch_findObjectWithChildClass(wrapper, refitTabClass, true, 0);
 			Object refitPanel = refitTab_getRefitPanel.invoke(refitTab);
 			
+			refitPanel_syncWithCurrentVariant.invoke(refitPanel);	// added line for a potential fix
 			refitPanel_setEditedSinceLoad.invoke(refitPanel, false);
 			refitPanel_setEditedSinceSave.invoke(refitPanel, false);
 		} catch (Throwable t) {

@@ -42,12 +42,11 @@ public class ehm_ar_slotshunt extends _ehm_ar_base {
 		float heatsinkBonus = 1.0f;
 
 		// slot conversion
-		for (String slotId: variant.getFittedWeaponSlots()) {
-			WeaponSpecAPI weaponSpec = variant.getWeaponSpec(slotId); if (weaponSpec == null) continue;
-			WeaponSize weaponSize = weaponSpec.getSize();
+		for (String slotId: variant.getNonBuiltInWeaponSlots()) {
+			WeaponSpecAPI weaponSpec = variant.getWeaponSpec(slotId);
 			String weaponId = weaponSpec.getWeaponId();
 
-			if (!weaponSize.equals(variant.getSlot(slotId).getSlotSize())) continue; // requires matching slot size
+			if (!weaponSpec.getSize().equals(variant.getSlot(slotId).getSlotSize())) continue; // requires matching slot size
 			if (!lyr_internals.id.utility.shunt.set.contains(weaponId)) continue; // to short-circuit the function if it isn't a shunt
 
 			lyr_weaponSlot parentSlot = hullSpec.getWeaponSlot(slotId); 
@@ -60,6 +59,8 @@ public class ehm_ar_slotshunt extends _ehm_ar_base {
 
 		// bonus calculation
 		for (WeaponSlotAPI slot: variant.getHullSpec().getAllWeaponSlotsCopy()) {
+			if (!slot.getWeaponType().equals(WeaponType.DECORATIVE)) continue;
+
 			String slotId = slot.getId();
 			WeaponSpecAPI weaponSpec = variant.getWeaponSpec(slotId); if (weaponSpec == null) continue;
 			WeaponSize weaponSize = weaponSpec.getSize();
