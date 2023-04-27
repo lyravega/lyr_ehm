@@ -46,7 +46,7 @@ public class ehm_ar_slotshunt extends _ehm_ar_base {
 			String weaponId = weaponSpec.getWeaponId();
 
 			if (!weaponSpec.getSize().equals(variant.getSlot(slotId).getSlotSize())) continue; // requires matching slot size
-			if (!lyr_internals.id.utility.shunt.set.contains(weaponId)) continue; // to short-circuit the function if it isn't a shunt
+			if (!lyr_internals.id.shunts.hasMutableBonus.set.contains(weaponId)) continue; // to short-circuit the function if it isn't a shunt
 
 			lyr_weaponSlot parentSlot = hullSpec.getWeaponSlot(slotId); 
 			String parentSlotId = parentSlot.retrieve().getId();
@@ -66,10 +66,10 @@ public class ehm_ar_slotshunt extends _ehm_ar_base {
 			String weaponId = weaponSpec.getWeaponId();
 
 			if (!weaponSize.equals(variant.getSlot(slotId).getSlotSize())) continue; // requires matching slot size
-			if (!lyr_internals.id.utility.shunt.set.contains(weaponId)) continue; // to short-circuit the function if it isn't a shunt
+			if (!lyr_internals.id.shunts.hasMutableBonus.set.contains(weaponId)) continue; // to short-circuit the function if it isn't a shunt
 
-			if (lyr_internals.id.utility.shunt.capacitor.set.contains(weaponId)) capacitorBonus += bonus.get(weaponSize);
-			else if (lyr_internals.id.utility.shunt.heatsink.set.contains(weaponId)) heatsinkBonus += bonus.get(weaponSize);
+			if (lyr_internals.id.shunts.capacitors.set.contains(weaponId)) capacitorBonus += bonus.get(weaponSize);
+			else if (lyr_internals.id.shunts.dissipators.set.contains(weaponId)) heatsinkBonus += bonus.get(weaponSize);
 		}
 
 		stats.getFluxCapacity().modifyMult(hullModSpecId, capacitorBonus);

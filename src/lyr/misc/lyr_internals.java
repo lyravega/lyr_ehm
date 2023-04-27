@@ -10,8 +10,8 @@ public class lyr_internals {
 		public static final String
 			drillSound = "drill", // must match .json
 			baseRetrofit = "ehm_base"; // must match hullmod id in .csv
-		public static class utility {
-			public static class adapter {
+		public static class shunts {
+			public static class adapters {
 				public static final String
 					mediumDual = "ehm_adapter_mediumDual", // must match weapon id in .csv and .wpn
 					largeDual = "ehm_adapter_largeDual", // must match weapon id in .csv and .wpn
@@ -25,41 +25,42 @@ public class lyr_internals {
 					set.add(largeQuad);
 				}
 			}
-			public static class shunt {
-				public static class capacitor {
-					public static final String
-						largeCapacitor = "ehm_shunt_largeCapacitor", // must match weapon id in .csv and .wpn
-						mediumCapacitor = "ehm_shunt_mediumCapacitor", // must match weapon id in .csv and .wpn
-						smallCapacitor = "ehm_shunt_smallCapacitor"; // must match weapon id in .csv and .wpn
-					public static final Set<String> set = new HashSet<String>();
-					static {
-						set.add(largeCapacitor);
-						set.add(mediumCapacitor);
-						set.add(smallCapacitor);
-					}
-				}
-				public static class heatsink {
-					public static final String
-						largeHeatsink = "ehm_shunt_largeHeatsink", // must match weapon id in .csv and .wpn
-						mediumHeatsink = "ehm_shunt_mediumHeatsink", // must match weapon id in .csv and .wpn
-						smallHeatsink = "ehm_shunt_smallHeatsink"; // must match weapon id in .csv and .wpn
-					public static final Set<String> set = new HashSet<String>();
-					static {
-						set.add(largeHeatsink);
-						set.add(mediumHeatsink);
-						set.add(smallHeatsink);
-					}
-				}
+			public static class capacitors {
+				public static final String
+					large = "ehm_capacitor_large", // must match weapon id in .csv and .wpn
+					medium = "ehm_capacitor_medium", // must match weapon id in .csv and .wpn
+					small = "ehm_capacitor_small"; // must match weapon id in .csv and .wpn
 				public static final Set<String> set = new HashSet<String>();
 				static {
-					set.addAll(heatsink.set);
-					set.addAll(capacitor.set);
+					set.add(large);
+					set.add(medium);
+					set.add(small);
+				}
+			}
+			public static class dissipators {
+				public static final String
+					large = "ehm_dissipator_large", // must match weapon id in .csv and .wpn
+					medium = "ehm_dissipator_medium", // must match weapon id in .csv and .wpn
+					small = "ehm_dissipator_small"; // must match weapon id in .csv and .wpn
+				public static final Set<String> set = new HashSet<String>();
+				static {
+					set.add(large);
+					set.add(medium);
+					set.add(small);
+				}
+			}
+			public static class hasMutableBonus {
+				public static final Set<String> set = new HashSet<String>();
+				static {
+					set.addAll(capacitors.set);
+					set.addAll(dissipators.set);
 				}
 			}
 			public static final Set<String> set = new HashSet<String>();
 			static {
-				set.addAll(shunt.set);
-				set.addAll(adapter.set);
+				set.addAll(adapters.set);
+				set.addAll(capacitors.set);
+				set.addAll(dissipators.set);
 			}
 		}
 	}

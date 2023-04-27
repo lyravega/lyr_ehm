@@ -1,8 +1,8 @@
 {
-	"id":"ehm_shunt_largeHeatsink",
+	"id":"ehm_dissipator_small",
 	"specClass":"beam",
 	"type":"UNIVERSAL",
-	"size":"LARGE",
+	"size":"SMALL",
 	"showDamageWhenDecorative":true,
 	"renderBelowAllWeapons":true,
 	"turretSprite":"graphics/weapons/decorative/sensor_array_dish.png",

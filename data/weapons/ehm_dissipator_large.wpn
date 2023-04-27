@@ -1,8 +1,8 @@
 {
-	"id":"ehm_shunt_mediumCapacitor",
+	"id":"ehm_dissipator_large",
 	"specClass":"beam",
 	"type":"UNIVERSAL",
-	"size":"MEDIUM",
+	"size":"LARGE",
 	"showDamageWhenDecorative":true,
 	"renderBelowAllWeapons":true,
 	"turretSprite":"graphics/weapons/decorative/sensor_array_dish.png",

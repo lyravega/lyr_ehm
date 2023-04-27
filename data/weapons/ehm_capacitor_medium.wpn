@@ -1,5 +1,5 @@
 {
-	"id":"ehm_shunt_mediumHeatsink",
+	"id":"ehm_capacitor_medium",
 	"specClass":"beam",
 	"type":"UNIVERSAL",
 	"size":"MEDIUM",

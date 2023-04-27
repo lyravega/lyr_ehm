@@ -1,8 +1,8 @@
 {
-	"id":"ehm_shunt_smallCapacitor",
+	"id":"ehm_capacitor_large",
 	"specClass":"beam",
 	"type":"UNIVERSAL",
-	"size":"SMALL",
+	"size":"LARGE",
 	"showDamageWhenDecorative":true,
 	"renderBelowAllWeapons":true,
 	"turretSprite":"graphics/weapons/decorative/sensor_array_dish.png",
