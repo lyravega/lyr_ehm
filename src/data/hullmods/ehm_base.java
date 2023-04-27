@@ -5,7 +5,6 @@ import static data.hullmods.ehm_ec._ehm_ec_base.ehm_restoreEngineSlots;
 import static data.hullmods.ehm_sc._ehm_sc_base.ehm_restoreShield;
 import static data.hullmods.ehm_sr._ehm_sr_base.ehm_systemRestore;
 import static data.hullmods.ehm_wr._ehm_wr_base.ehm_weaponSlotRestore;
-import static lyr.tools._lyr_uiTools.clearUndo;
 import static lyr.tools._lyr_uiTools.commitChanges;
 import static lyr.tools._lyr_uiTools.isRefitTab;
 import static lyr.tools._lyr_uiTools.playSound;
@@ -276,7 +275,7 @@ public class ehm_base extends _ehm_base {
 
 					Set<String> tags = Global.getSettings().getHullModSpec(newHullModId).getTags();
 					if (tags.contains(lyr_internals.tag.externalAccess)) { commitChanges(); playSound(); break; } 
-					if (!tags.contains(lyr_internals.tag.anyExperimental)) continue;
+					if (!tags.contains(lyr_internals.tag.experimental)) continue;
 
 					String retrofitType = newHullModId.substring(0, 7); // all affixes (not tags) are fixed to 0-7
 					switch (retrofitType) {
@@ -297,7 +296,7 @@ public class ehm_base extends _ehm_base {
 			
 					Set<String> tags = Global.getSettings().getHullModSpec(removedHullModId).getTags();
 					if (tags.contains(lyr_internals.tag.externalAccess)) { refitVariant.setHullSpecAPI(ehm_hullSpecRefresh(refitVariant)); commitChanges(); playSound(); break; }
-					if (!tags.contains(lyr_internals.tag.anyExperimental)) continue;
+					if (!tags.contains(lyr_internals.tag.experimental)) continue;
 
 					String retrofitType = removedHullModId.substring(0, 7); // all affixes (not tags) are fixed to 0-7
 					switch (retrofitType) {

@@ -67,22 +67,25 @@ public class lyr_internals {
 
 	public static class tag {
 		public static final String
-			baseExperimental = "ehm_base", // must match hullmod tag in .csv
-			anyExperimental = "ehm", // must match hullmod tag in .csv
+			base = "ehm_base", // must match hullmod tag in .csv
+
+			experimental = "ehm", // must match hullmod/weapon tag in .csv
+			restricted = "ehm_restricted", // must match hullmod/weapon tag in .csv
+			extended = "ehm_extended", // must match hullmod/weapon tag in .csv
+
 			systemRetrofit = "ehm_sr", // must match hullmod tag in .csv
 			weaponRetrofit = "ehm_wr", // must match hullmod tag in .csv
 			adapterRetrofit = "ehm_ar", // must match hullmod tag in .csv
 			shieldCosmetic = "ehm_sc", // must match hullmod tag in .csv
 			engineCosmetic = "ehm_ec", // must match hullmod tag in .csv
 			externalAccess = "ehm_externalAccess", // must match hullmod tag in .csv
-			restricted = "ehm_restricted", // must match hullmod tag in .csv
-			adapterShunt = "ehm_adapter", // must match weapon tag in .csv
-			capacitorShunt = "ehm_capacitor", // must match weapon tag in .csv
-			dissipatorShunt = "ehm_dissipator", // must match weapon tag in .csv
-			anyShunt = "ehm_shunt", // must match weapon tag in .csv
 			reqShields = "ehm_sr_require_shields", // must match hullmod tag in .csv
 			reqNoPhase = "ehm_sr_require_no_phase", // must match hullmod tag in .csv
-			reqWings = "ehm_sr_require_wings"; // must match hullmod tag in .csv
+			reqWings = "ehm_sr_require_wings", // must match hullmod tag in .csv
+
+			adapterShunt = "ehm_adapter", // must match weapon tag in .csv
+			capacitorShunt = "ehm_capacitor", // must match weapon tag in .csv
+			dissipatorShunt = "ehm_dissipator"; // must match weapon tag in .csv
 	}
 
 	public static class affix {

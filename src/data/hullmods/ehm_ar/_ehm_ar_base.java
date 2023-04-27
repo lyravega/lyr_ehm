@@ -56,7 +56,7 @@ public class _ehm_ar_base extends _ehm_base {
 	protected static final void ehm_cleanWeaponGroupsUp(ShipVariantAPI variant) {
 		List<WeaponGroupSpec> weaponGroups = variant.getWeaponGroups();
 		Map<String, String> groupCleanupTargets = new HashMap<String, String>(variant.getHullSpec().getBuiltInWeapons());
-		groupCleanupTargets.values().retainAll(lyr_internals.id.utility.set);
+		groupCleanupTargets.values().retainAll(lyr_internals.id.shunts.set);
 		for (WeaponGroupSpec weaponGroup: weaponGroups) {
 			weaponGroup.getSlots().removeAll(groupCleanupTargets.keySet());
 		}
