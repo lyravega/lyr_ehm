@@ -105,7 +105,7 @@ public class _ehm_wr_base extends _ehm_base {
 
 			tooltip.addSectionHeading(inOrOut, lyr_tooltip.header.locked_textColour, lyr_tooltip.header.locked_bgColour, Alignment.MID, lyr_tooltip.header.padding);
 
-			if (ehm_hasWeapons(ship, lyr_internals.id.shunts.adapters.set)) tooltip.addPara(lyr_tooltip.text.hasWeapons, lyr_tooltip.text.padding);
+			if (ehm_hasWeapons(ship, lyr_internals.id.shunts.set)) tooltip.addPara(lyr_tooltip.text.hasWeapons, lyr_tooltip.text.padding);
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
