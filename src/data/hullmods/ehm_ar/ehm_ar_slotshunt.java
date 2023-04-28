@@ -4,6 +4,7 @@ import static lyr.tools._lyr_uiTools.commitChanges;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
@@ -42,32 +43,31 @@ public class ehm_ar_slotshunt extends _ehm_ar_base {
 
 		// slot conversion
 		for (String slotId: variant.getFittedWeaponSlots()) {
+			if (variant.getSlot(slotId) == null) continue;	// short-circuit to avoid a potential null pointer (may/will happen when vanilla hullSpec is (re)loaded)
+
 			WeaponSpecAPI weaponSpec = variant.getWeaponSpec(slotId);
 			String weaponId = weaponSpec.getWeaponId();
 
 			if (!weaponSpec.getSize().equals(variant.getSlot(slotId).getSlotSize())) continue; // requires matching slot size
 			if (!lyr_internals.id.shunts.hasMutableBonus.set.contains(weaponId)) continue; // to short-circuit the function if it isn't a shunt
 
-			lyr_weaponSlot parentSlot = hullSpec.getWeaponSlot(slotId); 
-			String parentSlotId = parentSlot.retrieve().getId();
+			lyr_weaponSlot slot = hullSpec.getWeaponSlot(slotId); 
 
-			parentSlot.setWeaponType(WeaponType.DECORATIVE);
-			hullSpec.addBuiltInWeapon(parentSlotId, weaponId);
+			slot.setWeaponType(WeaponType.DECORATIVE);
+			hullSpec.addBuiltInWeapon(slotId, weaponId);
 			refreshRefit = true; 
 		}
 
 		// bonus calculation
 		for (WeaponSlotAPI slot: variant.getHullSpec().getAllWeaponSlotsCopy()) {
-			if (!slot.getWeaponType().equals(WeaponType.DECORATIVE)) continue;
+			if (!slot.getWeaponType().equals(WeaponType.DECORATIVE)) continue;	// since activated shunts become decorative, only need to check them
 
 			String slotId = slot.getId();
-			WeaponSpecAPI weaponSpec = variant.getWeaponSpec(slotId); if (weaponSpec == null) continue;
+			WeaponSpecAPI weaponSpec = variant.getWeaponSpec(slotId); if (weaponSpec == null) continue;	// skip empty slots
 			WeaponSize weaponSize = weaponSpec.getSize();
 			String weaponId = weaponSpec.getWeaponId();
 
 			if (!weaponSize.equals(variant.getSlot(slotId).getSlotSize())) continue; // requires matching slot size
-			if (!lyr_internals.id.shunts.hasMutableBonus.set.contains(weaponId)) continue; // to short-circuit the function if it isn't a shunt
-
 			if (lyr_internals.id.shunts.capacitors.set.contains(weaponId)) capacitorBonus += bonus.get(weaponSize);
 			else if (lyr_internals.id.shunts.dissipators.set.contains(weaponId)) heatsinkBonus += bonus.get(weaponSize);
 		}

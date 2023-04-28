@@ -20,12 +20,12 @@ public class lyr_plugin extends BaseModPlugin {
 	public static final String LOCALIZATION_JSON = "customization/ehm_localization.json";
 	public static final String SETTINGS_JSON = "customization/ehm_settings.json";
 	public static JSONObject localizationJSON;
-	public static JSONObject settingsJSON;	
+	public static JSONObject settingsJSON;
 	
 	static {
 		try {
-			lyr_plugin.localizationJSON = Global.getSettings().getMergedJSONForMod(lyr_plugin.LOCALIZATION_JSON, lyr_plugin.EHM_ID);
-			lyr_plugin.settingsJSON = Global.getSettings().getMergedJSONForMod(lyr_plugin.SETTINGS_JSON, lyr_plugin.EHM_ID);
+			localizationJSON = Global.getSettings().getMergedJSONForMod(LOCALIZATION_JSON, EHM_ID);
+			settingsJSON = Global.getSettings().getMergedJSONForMod(SETTINGS_JSON, EHM_ID);
 		} catch (IOException | JSONException e) {
 			logger.fatal(lyr_internals.logPrefix+"Problem importing configuration JSONs");
 		}
@@ -36,12 +36,13 @@ public class lyr_plugin extends BaseModPlugin {
 
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
 			String hullModSpecId = hullModSpec.getId();
-			if (hullModSpec.hasTag(lyr_internals.tag.anyExperimental) && !playerFaction.knowsHullMod(hullModSpecId)) playerFaction.addKnownHullMod(hullModSpecId);
+			if (hullModSpec.hasTag(lyr_internals.tag.experimental) && !playerFaction.knowsHullMod(hullModSpecId)) playerFaction.addKnownHullMod(hullModSpecId);
 			else if (hullModSpec.hasTag(lyr_internals.tag.restricted) && playerFaction.knowsHullMod(hullModSpecId)) playerFaction.removeKnownHullMod(hullModSpecId);
 		}
 
 		for (WeaponSpecAPI weaponSpec : Global.getSettings().getAllWeaponSpecs()) {
-			if ((weaponSpec.hasTag(lyr_internals.tag.adapterUtility) || weaponSpec.hasTag(lyr_internals.tag.shuntUtility)) && !playerFaction.knowsWeapon(weaponSpec.getWeaponId())) playerFaction.addKnownWeapon(weaponSpec.getWeaponId(), false);
+			if (weaponSpec.hasTag(lyr_internals.tag.experimental) && !playerFaction.knowsWeapon(weaponSpec.getWeaponId())) playerFaction.addKnownWeapon(weaponSpec.getWeaponId(), false);
+			else if (weaponSpec.hasTag(lyr_internals.tag.restricted) && playerFaction.knowsWeapon(weaponSpec.getWeaponId())) playerFaction.removeKnownWeapon(weaponSpec.getWeaponId());
 		}
 	}
 

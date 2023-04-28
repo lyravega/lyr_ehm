@@ -49,6 +49,30 @@ public class lyr_internals {
 					set.add(small);
 				}
 			}
+			public static class converters {
+				public static final String
+					mediumToLarge = "ehm_converter_mediumToLarge", // must match weapon id in .csv and .wpn
+					smallToLarge = "ehm_converter_smallToLarge", // must match weapon id in .csv and .wpn
+					smallToMedium = "ehm_converter_smallToMedium"; // must match weapon id in .csv and .wpn
+				public static final Set<String> set = new HashSet<String>();
+				static {
+					set.add(mediumToLarge);
+					set.add(smallToLarge);
+					set.add(smallToMedium);
+				}
+			}
+			public static class diverters {
+				public static final String
+					large = "ehm_diverter_large", // must match weapon id in .csv and .wpn
+					medium = "ehm_diverter_medium", // must match weapon id in .csv and .wpn
+					small = "ehm_diverter_small"; // must match weapon id in .csv and .wpn
+				public static final Set<String> set = new HashSet<String>();
+				static {
+					set.add(large);
+					set.add(medium);
+					set.add(small);
+				}
+			}
 			public static class hasMutableBonus {
 				public static final Set<String> set = new HashSet<String>();
 				static {
@@ -61,6 +85,8 @@ public class lyr_internals {
 				set.addAll(adapters.set);
 				set.addAll(capacitors.set);
 				set.addAll(dissipators.set);
+				set.addAll(converters.set);
+				set.addAll(diverters.set);
 			}
 		}
 	}
@@ -91,6 +117,7 @@ public class lyr_internals {
 	public static class affix {
 		public static final String
 			adaptedSlot = "AS_", // should NOT be altered in any update
+			convertedSlot = "CS_", // should NOT be altered in any update
 			allRetrofit = "ehm_", // must match hullmod id in .csv
 			systemRetrofit = "ehm_sr_", // must match hullmod id in .csv
 			weaponRetrofit = "ehm_wr_", // must match hullmod id in .csv

@@ -49,7 +49,7 @@ public class ehm_ar_stepdownadapter extends _ehm_ar_base {
 		}
 
 		public Set<String> getChildren() {
-			return children;
+			return this.children;
 		}
 
 		private Vector2f getChildOffset(String childPrefix) {
@@ -98,28 +98,28 @@ public class ehm_ar_stepdownadapter extends _ehm_ar_base {
 		boolean refreshRefit = false;
 
 		for (String slotId: variant.getFittedWeaponSlots()) {
-			if (slotId.startsWith(lyr_internals.affix.adaptedSlot)) continue; // short-circuit to avoid weapons in adapted slots causing an error on load, must be first
+			if (variant.getSlot(slotId) == null) continue;	// short-circuit to avoid a potential null pointer (may happen when vanilla hullSpec is (re)loaded)
+			if (slotId.startsWith(lyr_internals.affix.adaptedSlot)) continue;	// short-circuit to prevent adapters working on adapted slots
+			if (slotId.startsWith(lyr_internals.affix.convertedSlot)) continue;	// short-circuit to prevent adapters working on converted slots
 
-			//WeaponType slotType = variant.getSlot(slotId).getWeaponType();
-			//WeaponSize slotSize = variant.getSlot(slotId).getSlotSize();
+			// WeaponType slotType = variant.getSlot(slotId).getWeaponType();
+			// WeaponSize slotSize = variant.getSlot(slotId).getSlotSize();
 			WeaponSpecAPI weaponSpec = variant.getWeaponSpec(slotId);
-			//WeaponType weaponType = weaponSpec.getType();
-			WeaponSize weaponSize = weaponSpec.getSize();
+			// WeaponType weaponType = weaponSpec.getType();
+			// WeaponSize weaponSize = weaponSpec.getSize();
 			String weaponId = weaponSpec.getWeaponId();
 
-			if (!weaponSize.equals(variant.getSlot(slotId).getSlotSize())) continue; // to avoid plugging medium universal to large universal
-			if (!lyr_internals.id.shunts.adapters.set.contains(weaponId)) continue; // to short-circuit the function if it isn't an adapter
-
-			childrenParameters childrenParameters = adapters.get(weaponId);
+			if (!weaponSpec.getSize().equals(variant.getSlot(slotId).getSlotSize())) continue;	// to avoid plugging medium universal to large universal
+			if (!lyr_internals.id.shunts.adapters.set.contains(weaponId)) continue;	// to short-circuit the function if it isn't an adapter
 
 			lyr_weaponSlot parentSlot = hullSpec.getWeaponSlot(slotId); 
 			Vector2f parentSlotLocation = parentSlot.retrieve().getLocation();
 			float parentSlotAngle = parentSlot.retrieve().getAngle();
-			String parentSlotId = parentSlot.retrieve().getId();
+			String parentSlotId = slotId; /*parentSlot.retrieve().getId();*/
 
+			childrenParameters childrenParameters = adapters.get(weaponId);
 			for (String childId: childrenParameters.getChildren()) { // childId and childSlotId are not the same, be aware
 				lyr_weaponSlot childSlot = parentSlot.clone();
-
 				String childSlotId = lyr_internals.affix.adaptedSlot + parentSlotId + childId; // also used as nodeId because nodeId isn't visible
 				Vector2f childSlotLocation = generateChildLocation(parentSlotLocation, parentSlotAngle, childrenParameters.getChildOffset(childId));
 				WeaponSize childSlotSize = childrenParameters.getChildSize(childId);
