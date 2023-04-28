@@ -2,7 +2,6 @@ package data.hullmods.ehm_ar;
 
 import static lyr.tools._lyr_uiTools.commitChanges;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedSet;
@@ -101,7 +100,6 @@ public class ehm_ar_stepupadapter extends _ehm_ar_base {
 			WeaponSpecAPI weaponSpec = variant.getWeaponSpec(slotId);
 			WeaponSize weaponSize = weaponSpec.getSize();
 			String weaponId = weaponSpec.getWeaponId();
-			SortedSet<String> fittedWeaponSlots = new TreeSet<String>(variant.getFittedWeaponSlots());
 
 			if (!weaponSize.equals(variant.getSlot(slotId).getSlotSize())) continue; // requires matching slot size
 			if (!lyr_internals.id.shunts.diverters.set.contains(weaponId)) continue; // to short-circuit the function if it isn't a shunt
