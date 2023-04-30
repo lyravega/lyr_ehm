@@ -33,15 +33,15 @@ public final class lyr_shieldSpec extends _lyr_proxyTools {
 	
 	static {
 		try {
-			clone = inspectMethod(shieldSpecClass, "clone").getMethodHandle();
-			setRingColor = inspectMethod(shieldSpecClass, "setRingColor").getMethodHandle();
-			setInnerColor = inspectMethod(shieldSpecClass, "setInnerColor").getMethodHandle();
-			setType = inspectMethod(shieldSpecClass, "setType").getMethodHandle();
-			setFluxPerDamageAbsorbed = inspectMethod(shieldSpecClass, "setFluxPerDamageAbsorbed").getMethodHandle();
-			setUpkeepCost = inspectMethod(shieldSpecClass, "setUpkeepCost").getMethodHandle();
-			setArc = inspectMethod(shieldSpecClass, "setArc").getMethodHandle();
-			setPhaseCost = inspectMethod(shieldSpecClass, "setPhaseCost").getMethodHandle();
-			setPhaseUpkeep = inspectMethod(shieldSpecClass, "setPhaseUpkeep").getMethodHandle();
+			clone = inspectMethod("clone", shieldSpecClass).getMethodHandle();
+			setRingColor = inspectMethod("setRingColor", shieldSpecClass).getMethodHandle();
+			setInnerColor = inspectMethod("setInnerColor", shieldSpecClass).getMethodHandle();
+			setType = inspectMethod("setType", shieldSpecClass).getMethodHandle();
+			setFluxPerDamageAbsorbed = inspectMethod("setFluxPerDamageAbsorbed", shieldSpecClass).getMethodHandle();
+			setUpkeepCost = inspectMethod("setUpkeepCost", shieldSpecClass).getMethodHandle();
+			setArc = inspectMethod("setArc", shieldSpecClass).getMethodHandle();
+			setPhaseCost = inspectMethod("setPhaseCost", shieldSpecClass).getMethodHandle();
+			setPhaseUpkeep = inspectMethod("setPhaseUpkeep", shieldSpecClass).getMethodHandle();
 		} catch (Throwable t) {
 			logger.fatal(lyr_internals.logPrefix+"Failed to find a method in 'lyr_shieldSpec'", t);
 		}

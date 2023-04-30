@@ -39,17 +39,17 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 
 	static {
 		try {
-			clone = inspectMethod(hullSpecClass, "clone").getMethodHandle();
-			getEngineSlots = inspectMethod(hullSpecClass, "getEngineSlots").getMethodHandle();
-			setShieldSpec = inspectMethod(hullSpecClass, "setShieldSpec").getMethodHandle();
-			addBuiltInMod = inspectMethod(hullSpecClass, "addBuiltInMod").getMethodHandle();
-			setManufacturer = inspectMethod(hullSpecClass, "setManufacturer").getMethodHandle();
-			setDescriptionPrefix = inspectMethod(hullSpecClass, "setDescriptionPrefix").getMethodHandle();
-			setShipSystemId = inspectMethod(hullSpecClass, "setShipSystemId").getMethodHandle();
-			addWeaponSlot = inspectMethod(hullSpecClass, "addWeaponSlot").getMethodHandle();
-			addBuiltInWeapon = inspectMethod(hullSpecClass, "addBuiltInWeapon").getMethodHandle();
-			addBuiltInWing = inspectMethod(hullSpecClass, "addBuiltInWing").getMethodHandle();
-			setShipDefenseId = inspectMethod(hullSpecClass, "setShipDefenseId").getMethodHandle();
+			clone = inspectMethod("clone", hullSpecClass).getMethodHandle();
+			getEngineSlots = inspectMethod("getEngineSlots", hullSpecClass).getMethodHandle();
+			setShieldSpec = inspectMethod("setShieldSpec", hullSpecClass).getMethodHandle();
+			addBuiltInMod = inspectMethod("addBuiltInMod", hullSpecClass).getMethodHandle();
+			setManufacturer = inspectMethod("setManufacturer", hullSpecClass).getMethodHandle();
+			setDescriptionPrefix = inspectMethod("setDescriptionPrefix", hullSpecClass).getMethodHandle();
+			setShipSystemId = inspectMethod("setShipSystemId", hullSpecClass).getMethodHandle();
+			addWeaponSlot = inspectMethod("addWeaponSlot", hullSpecClass).getMethodHandle();
+			addBuiltInWeapon = inspectMethod("addBuiltInWeapon", hullSpecClass).getMethodHandle();
+			addBuiltInWing = inspectMethod("addBuiltInWing", hullSpecClass).getMethodHandle();
+			setShipDefenseId = inspectMethod("setShipDefenseId", hullSpecClass).getMethodHandle();
 		} catch (Throwable t) {
 			logger.fatal(lyr_internals.logPrefix+"Failed to find a method in 'lyr_hullSpec'", t);
 		}

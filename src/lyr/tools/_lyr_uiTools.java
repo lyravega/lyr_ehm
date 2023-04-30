@@ -79,33 +79,33 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 				if (!isRefitTab()) return;
 
 				campaignUIClass = Global.getSector().getCampaignUI().getClass();
-				screenPanelClass = inspectMethod(campaignUIClass, "getScreenPanel").getReturnType();
-				encounterDialogueClass = inspectMethod(campaignUIClass, "getEncounterDialog").getReturnType();
-				coreClass = inspectMethod(campaignUIClass, "getCore").getReturnType();
-				refitPanelClass = inspectMethod(campaignUIClass, "notifyFleetMemberChanged").getParameterTypes()[0]; 
-				refitTabClass = inspectMethod(refitPanelClass, "getRefitTab").getReturnType();
-				designDisplayClass = inspectMethod(refitPanelClass, "getDesignDisplay").getReturnType();
-				shipDisplayClass = inspectMethod(refitPanelClass, "getShipDisplay").getReturnType();
+				screenPanelClass = inspectMethod("getScreenPanel", campaignUIClass).getReturnType();
+				encounterDialogueClass = inspectMethod("getEncounterDialog", campaignUIClass).getReturnType();
+				coreClass = inspectMethod("getCore", campaignUIClass).getReturnType();
+				refitPanelClass = inspectMethod("notifyFleetMemberChanged", campaignUIClass).getParameterTypes()[0]; 
+				refitTabClass = inspectMethod("getRefitTab", refitPanelClass).getReturnType();
+				designDisplayClass = inspectMethod("getDesignDisplay", refitPanelClass).getReturnType();
+				shipDisplayClass = inspectMethod("getShipDisplay", refitPanelClass).getReturnType();
 
-				campaignUI_getScreenPanel = inspectMethod(campaignUIClass, "getScreenPanel").getMethodHandle();
-				campaignUI_getEncounterDialog = inspectMethod(campaignUIClass, "getEncounterDialog").getMethodHandle(); // same as 'Global.getSector().getCampaignUI().getCurrentInteractionDialog();'
-				campaignUI_getCore = inspectMethod(campaignUIClass, "getCore").getMethodHandle();
-				encounterDialog_getCoreUI = inspectMethod(encounterDialogueClass, "getCoreUI").getMethodHandle();
-				refitTab_getRefitPanel = inspectMethod(refitTabClass, "getRefitPanel").getMethodHandle();
-				refitPanel_getDesignDisplay = inspectMethod(refitPanelClass, "getDesignDisplay").getMethodHandle();
-				refitPanel_getShipDisplay = inspectMethod(refitPanelClass, "getShipDisplay").getMethodHandle();
+				campaignUI_getScreenPanel = inspectMethod("getScreenPanel", campaignUIClass).getMethodHandle();
+				campaignUI_getEncounterDialog = inspectMethod("getEncounterDialog", campaignUIClass).getMethodHandle(); // same as 'Global.getSector().getCampaignUI().getCurrentInteractionDialog();'
+				campaignUI_getCore = inspectMethod("getCore", campaignUIClass).getMethodHandle();
+				encounterDialog_getCoreUI = inspectMethod("getCoreUI", encounterDialogueClass).getMethodHandle();
+				refitTab_getRefitPanel = inspectMethod("getRefitPanel", refitTabClass).getMethodHandle();
+				refitPanel_getDesignDisplay = inspectMethod("getDesignDisplay", refitPanelClass).getMethodHandle();
+				refitPanel_getShipDisplay = inspectMethod("getShipDisplay", refitPanelClass).getMethodHandle();
 
-				refitPanel_saveCurrentVariant = inspectMethod(refitPanelClass, "saveCurrentVariant").getMethodHandle(); // there is an overload for this, beware
-				refitPanel_getMember = inspectMethod(refitPanelClass, "getMember").getMethodHandle();
-				refitPanel_syncWithCurrentVariant = inspectMethod(refitPanelClass, "syncWithCurrentVariant").getMethodHandle();
-				shipDisplay_setFleetMember = inspectMethod(shipDisplayClass, "setFleetMember").getMethodHandle();
-				designDisplay_undo = inspectMethod(designDisplayClass, "undo").getMethodHandle(); // not used anymore because fucks up for ships with officers
+				refitPanel_saveCurrentVariant = inspectMethod("saveCurrentVariant", refitPanelClass).getMethodHandle(); // there is an overload for this, beware
+				refitPanel_getMember = inspectMethod("getMember", refitPanelClass).getMethodHandle();
+				refitPanel_syncWithCurrentVariant = inspectMethod("syncWithCurrentVariant", refitPanelClass).getMethodHandle();
+				shipDisplay_setFleetMember = inspectMethod("setFleetMember", shipDisplayClass).getMethodHandle();
+				designDisplay_undo = inspectMethod("undo", designDisplayClass).getMethodHandle(); // not used anymore because fucks up for ships with officers
 
-				refitPanel_setEditedSinceLoad = inspectMethod(refitPanelClass, "setEditedSinceLoad").getMethodHandle();
-				refitPanel_setEditedSinceSave = inspectMethod(refitPanelClass, "setEditedSinceSave").getMethodHandle();
+				refitPanel_setEditedSinceLoad = inspectMethod("setEditedSinceLoad", refitPanelClass).getMethodHandle();
+				refitPanel_setEditedSinceSave = inspectMethod("setEditedSinceSave", refitPanelClass).getMethodHandle();
 
-				shipDisplay_getCurrentVariant = inspectMethod(shipDisplayClass, "getCurrentVariant").getMethodHandle();
-				refitPanel_addAllWeaponsFromVariantToCargo = inspectMethod(refitPanelClass, "addAllWeaponsFromVariantToCargo").getMethodHandle();
+				shipDisplay_getCurrentVariant = inspectMethod("getCurrentVariant", shipDisplayClass).getMethodHandle();
+				refitPanel_addAllWeaponsFromVariantToCargo = inspectMethod("addAllWeaponsFromVariantToCargo", refitPanelClass).getMethodHandle();
 
 				// redoing stuff just to find the wrapper, or whatever the fuck it is
 				Object campaignUI = Global.getSector().getCampaignUI();

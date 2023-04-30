@@ -45,8 +45,8 @@ public final class lyr_engineBuilder extends _lyr_proxyTools {
 
 	static {
 		try {
-			clone = inspectMethod(engineBuilderClass, "clone").getMethodHandle();
-			setEngineStyle = inspectMethod(engineBuilderClass, engineStyleSetter).getMethodHandle();
+			clone = inspectMethod("clone", engineBuilderClass).getMethodHandle();
+			setEngineStyle = inspectMethod(engineBuilderClass, null, engineStyleEnum).getMethodHandle();
 		} catch (Throwable t) {
 			logger.fatal(lyr_internals.logPrefix+"Failed to find a method in 'lyr_engineBuilder'", t);
 		}

@@ -34,13 +34,13 @@ public final class lyr_weaponSlot extends _lyr_proxyTools {
 
 	static {
 		try {
-			clone = inspectMethod(weaponSlotClass, "clone").getMethodHandle();
-			setWeaponType = inspectMethod(weaponSlotClass, "setWeaponType").getMethodHandle();
-			isWeaponSlot = inspectMethod(weaponSlotClass, "isWeaponSlot").getMethodHandle();
-			setId = inspectMethod(weaponSlotClass, "setId").getMethodHandle();
-			setSlotSize = inspectMethod(weaponSlotClass, "setSlotSize").getMethodHandle();
+			clone = inspectMethod("clone", weaponSlotClass).getMethodHandle();
+			setWeaponType = inspectMethod("setWeaponType", weaponSlotClass).getMethodHandle();
+			isWeaponSlot = inspectMethod("isWeaponSlot", weaponSlotClass).getMethodHandle();
+			setId = inspectMethod("setId", weaponSlotClass).getMethodHandle();
+			setSlotSize = inspectMethod("setSlotSize", weaponSlotClass).getMethodHandle();
 			newNode = lookup.findConstructor(nodeClass, MethodType.methodType(void.class, String.class, Vector2f.class));
-			setNode = inspectMethod(weaponSlotClass, "setNode").getMethodHandle();
+			setNode = inspectMethod("setNode", weaponSlotClass).getMethodHandle();
 		} catch (Throwable t) {
 			logger.fatal(lyr_internals.logPrefix+"Failed to find a method in 'lyr_weaponSlot'", t);
 		}
