@@ -1,7 +1,6 @@
 package lyr;
 
 import java.io.IOException;
-
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,6 +12,7 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 
 import lyr.misc.lyr_internals;
+import lyr.tools._lyr_uiTools._lyr_delayedFinder;
 
 public class lyr_plugin extends BaseModPlugin {
 	private static final Logger logger = Logger.getLogger(lyr_internals.logName);
@@ -48,7 +48,7 @@ public class lyr_plugin extends BaseModPlugin {
 
 	@Override
 	public void onGameLoad(boolean newGame) {
-		new lyr.tools._lyr_uiTools._lyr_delayedFinder();
+		new _lyr_delayedFinder();
 		updateBlueprints();
 	}
 }
