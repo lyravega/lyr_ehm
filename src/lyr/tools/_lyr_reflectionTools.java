@@ -63,7 +63,7 @@ public class _lyr_reflectionTools {
 		private MethodType methodType;
 		private MethodHandle methodHandle;
 
-		/* methodMap created through brute forcing through the methods of the class, identical to the one below */
+		/* methodMap created through getting every single type by invoking method methods on the object */
 		public methodMap(Class<?> returnType, Class<?>[] parameterTypes, String methodName, MethodType methodType, MethodHandle methodHandle) {
 			this.returnType = returnType;
 			this.parameterTypes = parameterTypes;
@@ -72,7 +72,7 @@ public class _lyr_reflectionTools {
 			this.methodHandle = methodHandle;
 		}
 
-		/* methodMap created through unreflect, parameterTypes has the first one dropped as it is the return type */
+		/* methodMap created through unreflect, parameterTypes has the first one dropped as it isn't a parameter */
 		public methodMap(String methodName, MethodHandle methodHandle) {
 			this.returnType = methodHandle.type().returnType();
 			this.parameterTypes = methodHandle.type().dropParameterTypes(0, 1).parameterArray();
@@ -195,24 +195,5 @@ public class _lyr_reflectionTools {
 		/* alternative way to build a methodMap that involves using unreflect and use the methodHandle */
 		MethodHandle methodHandle = (MethodHandle) unreflect.invoke(lookup, method);
 		return new methodMap(methodName, methodHandle);
-	}
-
-	/**
-	 * For cases where the method objects are available and a methodMap
-	 * is needed, this alternative overload can be used to store and gain
-	 * access to everything that a methodMap offers.
-	 * @param clazz that has the method on
-	 * @param method object
-	 * @return a methodMap
-	 * @throws Throwable
-	 */
-	public static final methodMap inspectMethodObject(Class<?> clazz, Object method) throws Throwable {
-		Class<?> returnType = (Class<?>) getReturnType.invoke(method);
-		Class<?>[] parameterTypes = (Class<?>[]) getParameterTypes.invoke(method);
-		String methodName = (String) getName.invoke(method);
-		MethodType methodType = MethodType.methodType(returnType, parameterTypes);
-		MethodHandle methodHandle = lookup.findVirtual(clazz, methodName, methodType);
-
-		return new methodMap(returnType, parameterTypes, methodName, methodType, methodHandle);
 	}
 }
