@@ -1,5 +1,8 @@
 package data.hullmods;
 
+import static lyr.tools._lyr_scriptTools.shipTrackerScript;
+import static lyr.tools._lyr_uiTools.isRefitTab;
+
 import java.awt.Color;
 import java.util.Set;
 
@@ -210,29 +213,16 @@ public class _ehm_base /*implements HullModEffect*/ extends BaseHullMod {
 
 		return false;
 	}
-
-	/**
-	 * Checks if the ship has any weapons installed on slots with specific slot ids
-	 * that start with the passed slotAffix.
-	 * <p> Example: If the slotAffix is "AS", then only the slots with the slot ids
-	 * starting with "AS" are considered, and the rest are ignored.
-	 * @param ship to check
-	 * @param slotAffix for checking the slotId
-	 * @return true if the ship has weapons on specific slots
-	 */
-	protected static final boolean ehm_hasWeapons(ShipAPI ship, String slotAffix, Set<String> weaponIdsToIgnore) {
-		for (WeaponAPI weapon: ship.getAllWeapons()) {
-			WeaponSlotAPI slot = weapon.getSlot();
-			if (slot.isBuiltIn()) continue;
-			if (weaponIdsToIgnore.contains(weapon.getId())) continue;
-			if (!slot.getId().startsWith(slotAffix)) continue;
-			return true;
-		}
-
-		return false;
-	}
 	//#endregion
 	// END OF CHECK HELPERS
+
+	/**
+	 * Initializes ship tracking in refit tab to detects hullmod changes
+	 * @param ship to track
+	 */
+	protected static void ehm_trackShip(ShipAPI ship) {
+		if (isRefitTab()) shipTrackerScript(ship).setVariant(ship.getVariant());
+	}
 
 	/**
 	 * Called from the {@link ehm_base retrofit base} only. If the hull does not

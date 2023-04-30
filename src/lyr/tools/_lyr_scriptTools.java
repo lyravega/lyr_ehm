@@ -9,6 +9,7 @@ import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -205,6 +206,8 @@ public class _lyr_scriptTools extends _lyr_reflectionTools {
 		private ShipVariantAPI variant = null;
 		private String memberId = null;
 		private Set<String> hullMods = new HashSet<String>();
+		private Set<String> newHullMods = new HashSet<String>();
+		private Set<String> removedHullMods = new HashSet<String>();
 		private boolean isDone = false;
 		
 		//#region CONSTRUCTORS & ACCESSORS
@@ -238,8 +241,36 @@ public class _lyr_scriptTools extends _lyr_reflectionTools {
 		@Override
 		public void advance(float amount) {
 			if (!isRefitTab()) { if (log) logger.info(lyr_internals.logPrefix+"xST-"+memberId+": Stopping ship tracking"); isDone = true; return; }
-			onInstalled(variant, hullMods, memberId);
-			onRemoved(variant, hullMods, memberId);
+			
+			for (String hullModId : variant.getHullMods()) {
+				// if (!hullModId.startsWith(lyr_internals.affix.allRetrofit)) continue;
+				if (hullMods.contains(hullModId)) continue;
+	
+				if (log) logger.info(lyr_internals.logPrefix+"xST-"+memberId+": New hull modification '"+hullModId+"'");
+	
+				newHullMods.add(hullModId);
+			}
+
+			for (Iterator<String> i = hullMods.iterator(); i.hasNext();) { String hullModId = i.next(); 
+				// if (!hullModId.startsWith(lyr_internals.affix.allRetrofit)) continue;
+				if (variant.hasHullMod(hullModId)) continue;
+	
+				if (log) logger.info(lyr_internals.logPrefix+"xST-"+memberId+": Removed hull modification '"+hullModId+"'");
+	
+				removedHullMods.add(hullModId);
+			}
+			
+			if (!newHullMods.isEmpty()) {
+				onInstalled(variant, newHullMods);
+				hullMods.addAll(newHullMods);
+				newHullMods.clear();
+			}
+			
+			if (!removedHullMods.isEmpty()) {
+				onRemoved(variant, removedHullMods);
+				hullMods.removeAll(removedHullMods);
+				removedHullMods.clear();
+			}
 		}
 	
 		@Override
