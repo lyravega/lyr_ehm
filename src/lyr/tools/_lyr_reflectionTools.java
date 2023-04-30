@@ -147,7 +147,7 @@ public class _lyr_reflectionTools {
 	 * <p> Depending on the supplied parameters, one or both of the types will be
 	 * used in search.
 	 * @param declaredOnly (overload, default {@code true})
-	 * @param clazz to search the methodName on
+	 * @param clazz to search the method in
 	 * @param returnType of the method being searched for
 	 * @param parameterTypes (optional) full set of parameters, if available and
 	 * needed
