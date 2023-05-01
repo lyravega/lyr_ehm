@@ -32,6 +32,7 @@ public class _lyr_reflectionTools {
 	protected static MethodHandle getName;
 	protected static MethodHandle getParameterTypes;
 	protected static MethodHandle getReturnType;
+	protected static MethodHandle getModifiers;
 	protected static MethodHandle getDeclaredMethod;
 	protected static MethodHandle getMethod;
 	protected static MethodHandle unreflect;
@@ -44,6 +45,7 @@ public class _lyr_reflectionTools {
 			getName = lookup.findVirtual(methodClass, "getName", MethodType.methodType(String.class));
 			getParameterTypes = lookup.findVirtual(methodClass, "getParameterTypes", MethodType.methodType(Class[].class));
 			getReturnType = lookup.findVirtual(methodClass, "getReturnType", MethodType.methodType(Class.class));
+			getModifiers = lookup.findVirtual(methodClass, "getModifiers", MethodType.methodType(int.class));
 			getDeclaredMethod = lookup.findVirtual(Class.class, "getDeclaredMethod", MethodType.methodType(methodClass, String.class, Class[].class));
 			getMethod = lookup.findVirtual(Class.class, "getMethod", MethodType.methodType(methodClass, String.class, Class[].class));
 			unreflect = lookup.findVirtual(lookupClass, "unreflect", MethodType.methodType(MethodHandle.class, methodClass));
@@ -60,23 +62,26 @@ public class _lyr_reflectionTools {
 		private Class<?> returnType;
 		private Class<?>[] parameterTypes;
 		private String methodName;
+		private int methodModifiers;
 		private MethodType methodType;
 		private MethodHandle methodHandle;
 
 		/* methodMap created through getting every single type by invoking method methods on the object */
-		public methodMap(Class<?> returnType, Class<?>[] parameterTypes, String methodName, MethodType methodType, MethodHandle methodHandle) {
+		public methodMap(Class<?> returnType, Class<?>[] parameterTypes, String methodName, int methodModifiers, MethodType methodType, MethodHandle methodHandle) {
 			this.returnType = returnType;
 			this.parameterTypes = parameterTypes;
 			this.methodName = methodName;
+			this.methodModifiers = methodModifiers;
 			this.methodType = methodType;
 			this.methodHandle = methodHandle;
 		}
 
 		/* methodMap created through unreflect, parameterTypes has the first one dropped as it isn't a parameter */
-		public methodMap(String methodName, MethodHandle methodHandle) {
+		public methodMap(String methodName, MethodHandle methodHandle, int methodModifiers) {
 			this.returnType = methodHandle.type().returnType();
 			this.parameterTypes = methodHandle.type().dropParameterTypes(0, 1).parameterArray();
 			this.methodName = methodName;
+			this.methodModifiers = methodModifiers;
 			this.methodType = methodHandle.type();
 			this.methodHandle = methodHandle;
 		}
@@ -84,6 +89,7 @@ public class _lyr_reflectionTools {
 		public Class<?> getReturnType() { return this.returnType; }
 		public Class<?>[] getParameterTypes() { return this.parameterTypes; }
 		public String getName() { return this.methodName; }
+		public int getModifiers() { return this.methodModifiers; }
 		public MethodType getMethodType() { return this.methodType; }
 		public MethodHandle getMethodHandle() { return this.methodHandle; }
 	}
@@ -128,15 +134,17 @@ public class _lyr_reflectionTools {
 
 		/* original way to build a methodMap that uses method methods to gather relevant fields */
 		// Class<?> returnType = (Class<?>) getReturnType.invoke(method);
-		// Class<?>[] parameterTypes = (Class<?>[]) getParameterTypes.invoke(method);
+		// Class<?>[] paramTypes = (Class<?>[]) getParameterTypes.invoke(method);
 		// // String methodName = (String) getName.invoke(method);
-		// MethodType methodType = MethodType.methodType(returnType, parameterTypes);
+		// int methodModifiers = (int) getModifiers.invoke(method);
+		// MethodType methodType = MethodType.methodType(returnType, paramTypes);
 		// MethodHandle methodHandle = lookup.findVirtual(clazz, methodName, methodType);
-		// return new methodMap(returnType, parameterTypes, methodName, methodType, methodHandle);
+		// return new methodMap(returnType, parameterTypes, methodName, methodModifiers, methodType, methodHandle);
 
 		/* alternative way to build a methodMap that involves using unreflect and use the methodHandle */
+		int methodModifiers = (int) getModifiers.invoke(method);
 		MethodHandle methodHandle = (MethodHandle) unreflect.invoke(lookup, method);
-		return new methodMap(methodName, methodHandle);
+		return new methodMap(methodName, methodHandle, methodModifiers);
 	}
 
 	/**
@@ -193,7 +201,8 @@ public class _lyr_reflectionTools {
 		}
 
 		/* alternative way to build a methodMap that involves using unreflect and use the methodHandle */
+		int methodModifiers = (int) getModifiers.invoke(method);
 		MethodHandle methodHandle = (MethodHandle) unreflect.invoke(lookup, method);
-		return new methodMap(methodName, methodHandle);
+		return new methodMap(methodName, methodHandle, methodModifiers);
 	}
 }
