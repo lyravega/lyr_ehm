@@ -8,6 +8,7 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import data.hullmods._ehm_base;
+import data.hullmods._ehm_hullmodevents;
 import lyr.misc.lyr_internals;
 import lyr.misc.lyr_tooltip;
 import lyr.proxies.lyr_engineBuilder;
@@ -22,7 +23,18 @@ import lyr.proxies.lyr_hullSpec;
  * @see {@link data.hullmods.ehm_sc._ehm_sc_base _ehm_sc_base} for shield cosmetic base
  * @author lyravega
  */
-public class _ehm_ec_base extends _ehm_base {
+public class _ehm_ec_base extends _ehm_base implements _ehm_hullmodevents {
+	@Override
+	public boolean onInstall(ShipVariantAPI variant) {
+		return true;
+	}
+
+	@Override
+	public boolean onRemove(ShipVariantAPI variant) {
+		variant.setHullSpecAPI(ehm_restoreEngineSlots(variant));
+		return true;
+	}
+
 	/**
 	 * Alters the engine visuals of the ship. Uses the vanilla engine styles
 	 * (as I haven't found a way to alter engine colours directly)
@@ -47,7 +59,9 @@ public class _ehm_ec_base extends _ehm_base {
 	 * @param variant whose hullSpec will be altered
 	 * @param styleEnum somewhat hardcoded {@link lyr.proxies.lyr_engineBuilder.engineStyle engineStyle}
 	 * @return a hullSpec with restored engine visuals
-	 * @see {@link data.hullmods.ehm_base#onRemoved(String, ShipAPI) onRemoved()} called externally by this method
+	 * @see {@link data.hullmods.ehm_base#onRemoved(ShipVariantAPI, Set) onRemoved()}
+	 * invokes {@link #onRemove(ShipVariantAPI) onRemove()} of this class, which uses
+	 * this method
 	 */
 	public static final ShipHullSpecAPI ehm_restoreEngineSlots(ShipVariantAPI variant) {
 		ShipHullSpecAPI hullSpec = ehm_hullSpecRefresh(variant);

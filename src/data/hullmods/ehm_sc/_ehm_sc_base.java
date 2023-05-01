@@ -13,6 +13,7 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import data.hullmods._ehm_base;
+import data.hullmods._ehm_hullmodevents;
 import lyr.misc.lyr_externals;
 import lyr.misc.lyr_internals;
 import lyr.misc.lyr_tooltip;
@@ -30,7 +31,18 @@ import lyr.proxies.lyr_shieldSpec;
  * @see {@link data.hullmods.ehm_ec._ehm_ec_base _ehm_ec_base} for engine cosmetic base
  * @author lyravega
  */
-public class _ehm_sc_base extends _ehm_base {
+public class _ehm_sc_base extends _ehm_base implements _ehm_hullmodevents {
+	@Override
+	public boolean onInstall(ShipVariantAPI variant) {
+		return true;
+	}
+
+	@Override
+	public boolean onRemove(ShipVariantAPI variant) {
+		variant.setHullSpecAPI(ehm_restoreShield(variant));
+		return true;
+	}
+	
 	protected lyr_shieldSettings shieldSettings;
 	protected Color innerColour;
 	protected Color ringColour;
@@ -67,7 +79,9 @@ public class _ehm_sc_base extends _ehm_base {
 	 * referring to a stock one.
 	 * @param variant whose shieldSpec will be restored
 	 * @return an altered hullSpec with its shieldSpec is restored
-	 * @see {@link data.hullmods.ehm_base#onRemoved(String, ShipAPI) onRemoved()} called externally by this method
+	 * @see {@link data.hullmods.ehm_base#onRemoved(ShipVariantAPI, Set) onRemoved()}
+	 * invokes {@link #onRemove(ShipVariantAPI) onRemove()} of this class, which uses
+	 * this method
 	 */
 	public static final ShipHullSpecAPI ehm_restoreShield(ShipVariantAPI variant) {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);

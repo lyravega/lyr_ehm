@@ -1,6 +1,7 @@
 package data.hullmods.ehm_wr;
 
 import java.util.Map;
+import java.util.Set;
 
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
@@ -14,6 +15,7 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import data.hullmods._ehm_base;
+import data.hullmods._ehm_hullmodevents;
 import lyr.misc.lyr_internals;
 import lyr.misc.lyr_tooltip;
 import lyr.proxies.lyr_hullSpec;
@@ -29,7 +31,19 @@ import lyr.proxies.lyr_weaponSlot;
  * @see {@link data.hullmods.ehm_sc._ehm_sc_base _ehm_sc_base} for shield cosmetic base
  * @author lyravega
  */
-public class _ehm_wr_base extends _ehm_base {
+public class _ehm_wr_base extends _ehm_base implements _ehm_hullmodevents {
+	@Override
+	public boolean onInstall(ShipVariantAPI variant) {
+		return true;
+	}
+
+	@Override
+	public boolean onRemove(ShipVariantAPI variant) {
+		// variant.setHullSpecAPI(ehm_weaponSlotRestore(variant));
+		variant.setHullSpecAPI(ehm_lazyWeaponSlotRestore(variant));
+		return true;
+	}
+
 	/**
 	 * Alters the weapon slots on the passed variant's hullSpec, and returns it.
 	 * @param variant whose hullSpec will be altered
@@ -58,7 +72,9 @@ public class _ehm_wr_base extends _ehm_base {
 	 * hullSpec one by one. Ignores activated adapters, and affects adapted slots.
 	 * @param variant whose hullSpec will have its weaponSlots restored
 	 * @return an altered hullSpec with restored weaponSlots
-	 * @see {@link data.hullmods.ehm_base#onRemoved(String, ShipAPI) onRemoved()} called externally by this method
+	 * @see {@link data.hullmods.ehm_base#onRemoved(ShipVariantAPI, Set) onRemoved()}
+	 * invokes {@link #onRemove(ShipVariantAPI) onRemove()} of this class, which uses
+	 * this method
 	 */
 	public static final ShipHullSpecAPI ehm_weaponSlotRestore(ShipVariantAPI variant) {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
@@ -71,6 +87,7 @@ public class _ehm_wr_base extends _ehm_base {
 			WeaponType stockSlotWeaponType = stockSlot.getWeaponType();
 			
 			// TODO take a look at strings, move them to base
+			// TODO doesn't support new additions most probably; diverters/converters/etc...
 			if (slot.retrieve().isDecorative() && lyr_internals.id.shunts.adapters.set.contains(weaponId)) {
 				hullSpec.getWeaponSlot(lyr_internals.affix.adaptedSlot+slotId+"L").setWeaponType(stockSlotWeaponType);
 				hullSpec.getWeaponSlot(lyr_internals.affix.adaptedSlot+slotId+"R").setWeaponType(stockSlotWeaponType);
@@ -86,6 +103,12 @@ public class _ehm_wr_base extends _ehm_base {
 		}
 
 		return hullSpec.retrieve();
+	}
+	
+	public static final ShipHullSpecAPI ehm_lazyWeaponSlotRestore(ShipVariantAPI variant) {
+		ShipHullSpecAPI hullSpec = ehm_hullSpecRefresh(variant);
+
+		return hullSpec;
 	}
 
 	//#region INSTALLATION CHECKS
