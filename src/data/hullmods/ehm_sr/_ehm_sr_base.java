@@ -10,7 +10,7 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import data.hullmods._ehm_base;
-import data.hullmods._ehm_hullmodevents;
+import data.hullmods._ehm_hullmodeventmethods;
 import lyr.misc.lyr_internals;
 import lyr.misc.lyr_tooltip;
 import lyr.proxies.lyr_hullSpec;
@@ -24,8 +24,8 @@ import lyr.proxies.lyr_hullSpec;
  * @see {@link data.hullmods.ehm_sc._ehm_sc_base _ehm_sc_base} for shield cosmetic base
  * @author lyravega
  */
-public class _ehm_sr_base extends _ehm_base implements _ehm_hullmodevents {
-	@Override
+public class _ehm_sr_base extends _ehm_base implements _ehm_hullmodeventmethods {
+	@Override	// not used
 	public boolean onInstall(ShipVariantAPI variant) {
 		return true;
 	}

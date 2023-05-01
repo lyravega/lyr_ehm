@@ -63,8 +63,8 @@ public class _ehm_base extends BaseHullMod {
 		this.hullModSpec = hullModSpec;
 		this.hullModSpecId = hullModSpec.getId();
 		this.hullModListener = new hullModEventListener(this.hullModSpecId, this);
-		hullModListener.registerInstallEvent(null, true, true);
-		hullModListener.registerRemoveEvent(null, true, true);
+		hullModListener.registerInstallEvent(true, true);
+		hullModListener.registerRemoveEvent(true, true, null);
 	}
 
 	@Override 
