@@ -1,10 +1,9 @@
 package data.hullmods;
 
-import static lyr.tools._lyr_scriptTools.shipTrackerScript;
-import static lyr.tools._lyr_uiTools.isRefitTab;
-
 import java.awt.Color;
 import java.util.Set;
+
+import org.apache.log4j.Logger;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
@@ -22,6 +21,7 @@ import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
+import data.hullmods._ehm_basetracker.hullModEventListener;
 import lyr.misc.lyr_externals;
 import lyr.misc.lyr_internals;
 import lyr.misc.lyr_tooltip;
@@ -49,15 +49,22 @@ import lyr.proxies.lyr_hullSpec;
  * @see {@link data.hullmods.ehm_sc._ehm_sc_base _ehm_sc_base} for shield cosmetic base
  * @author lyravega
  */
-public class _ehm_base /*implements HullModEffect*/ extends BaseHullMod {
+public class _ehm_base extends BaseHullMod {
+	protected static final Logger logger = Logger.getLogger(lyr_internals.logName);
+	protected static final boolean log = true;
+
 	//#region IMPLEMENTATION
 	protected HullModSpecAPI hullModSpec;
 	protected String hullModSpecId;
+	protected hullModEventListener hullModListener;
 
 	@Override 
-	public void init(HullModSpecAPI hullModSpec) {	
-		this.hullModSpec = hullModSpec; 
+	public void init(HullModSpecAPI hullModSpec) {
+		this.hullModSpec = hullModSpec;
 		this.hullModSpecId = hullModSpec.getId();
+		this.hullModListener = new hullModEventListener(this.hullModSpecId, this);
+		hullModListener.registerInstallEvent(null, true, true);
+		hullModListener.registerRemoveEvent(null, true, true);
 	}
 
 	@Override 
@@ -215,14 +222,6 @@ public class _ehm_base /*implements HullModEffect*/ extends BaseHullMod {
 	}
 	//#endregion
 	// END OF CHECK HELPERS
-
-	/**
-	 * Initializes ship tracking in refit tab to detects hullmod changes
-	 * @param ship to track
-	 */
-	protected static void ehm_trackShip(ShipAPI ship) {
-		if (isRefitTab()) shipTrackerScript(ship).setVariant(ship.getVariant());
-	}
 
 	/**
 	 * Called from the {@link ehm_base retrofit base} only. If the hull does not
