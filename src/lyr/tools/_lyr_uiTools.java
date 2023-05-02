@@ -147,6 +147,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 		}
 	}
 
+	//#region SEARCH TOOLS
 	/**
 	 * Does a recursive search on an UI object, trying to find a child object with 
 	 * the given declared methodName. Useful for finding the class of a child, or
@@ -204,6 +205,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 	 * @param object the root ui object whose children will be searched
 	 * @param childClass to search for
 	 * @param getChild to determine whether the child or its parent object to be retrieved
+	 * @param depth (overload) initial depth, default 0
 	 * @param maxDepth to limit the recursive search to a certain depth, minimum 0
 	 * @return the child object with the given childClass, or its parent object
 	 */
@@ -231,6 +233,8 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 
 		return null;
 	}
+	//#endregion
+	// END OF SEARCH TOOLS
 	
 	/**
 	 * Just a simple check to see if it is the refit tab or not.
@@ -275,7 +279,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 			Object refitTab = adaptiveSearch_findObjectWithChildClass(wrapper, refitTabClass, true, 0);
 			// Object refitTab = adaptiveSearch_findObjectWithChildClass(core, refitTabClass, true, 1); // to find refitTab without knowing/getting wrapper
 			Object refitPanel = refitTab_getRefitPanel.invoke(refitTab);
-			Object designDisplay = refitPanel_getDesignDisplay.invoke(refitPanel);
+			// Object designDisplay = refitPanel_getDesignDisplay.invoke(refitPanel);
 			Object shipDisplay = refitPanel_getShipDisplay.invoke(refitPanel);
 			Object member = refitPanel_getMember.invoke(refitPanel);
 

@@ -164,7 +164,7 @@ public class _ehm_basetracker extends _ehm_base {
 		 * @see #executeEvent() for the main method
 		 */
 		private void executeRemoveEvent(ShipVariantAPI variant) {
-			executeEvent(this.onRemove, variant);
+			if (this.onRemove != null) executeEvent(this.onRemove, variant);
 		}
 
 		/**
@@ -202,7 +202,7 @@ public class _ehm_basetracker extends _ehm_base {
 		 * @see #executeEvent() for the main method
 		 */
 		private void executeInstallEvent(ShipVariantAPI variant) {
-			executeEvent(this.onInstall, variant);
+			if (this.onRemove != null) executeEvent(this.onInstall, variant);
 		}
 
 		/**

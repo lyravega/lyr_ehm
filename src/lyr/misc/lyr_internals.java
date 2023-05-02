@@ -73,6 +73,14 @@ public class lyr_internals {
 					set.add(small);
 				}
 			}
+			public static class launchTube {
+				public static final String
+					large = "ehm_bay_large"; // must match weapon id in .csv and .wpn
+				public static final Set<String> set = new HashSet<String>();
+				static {
+					set.add(large);
+				}
+			}
 			public static class hasMutableBonus {
 				public static final Set<String> set = new HashSet<String>();
 				static {
@@ -104,10 +112,12 @@ public class lyr_internals {
 			adapterRetrofit = "ehm_ar", // must match hullmod tag in .csv
 			shieldCosmetic = "ehm_sc", // must match hullmod tag in .csv
 			engineCosmetic = "ehm_ec", // must match hullmod tag in .csv
-			externalAccess = "ehm_externalAccess", // must match hullmod tag in .csv
+
 			reqShields = "ehm_sr_require_shields", // must match hullmod tag in .csv
 			reqNoPhase = "ehm_sr_require_no_phase", // must match hullmod tag in .csv
 			reqWings = "ehm_sr_require_wings", // must match hullmod tag in .csv
+
+			externalAccess = "ehm_externalAccess", // must match hullmod tag in .csv
 
 			adapterShunt = "ehm_adapter", // must match weapon tag in .csv
 			capacitorShunt = "ehm_capacitor", // must match weapon tag in .csv

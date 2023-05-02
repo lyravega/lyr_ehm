@@ -48,15 +48,10 @@ public final class lyr_shieldSpec extends _lyr_proxyTools {
 	}
 
 	/**
-	 * Creates a new instance for the passed {@link ShieldSpecAPI}, and 
-	 * clones it if necessary. 
-	 * <p> The clone argument MUST be set to true if the shieldSpec is not 
-	 * unique; not cloned prior to the creation of this instance of the 
-	 * proxy-class. Otherwise changes WILL apply to ALL ships with the same 
-	 * shieldSpec.
-	 * <p> If this is a shieldSpec of an  already cloned hullSpec, then the 
-	 * shieldSpec is already cloned. No need to clone it for yet another
-	 * time in that case.
+	 * Creates a new proxy-like object instance for the passed {@link ShieldSpecAPI
+	 * shieldSpec}, and clones it if needed.
+	 * <p> Cloning a hullSpecs will also clone its shieldSpec (and engineSpec), so
+	 * the clone parameter should be false unless otherwise is needed.
 	 * @param shieldSpec to be proxied
 	 * @param clone if the shieldSpec needs to be cloned
 	 */

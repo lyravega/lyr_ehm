@@ -3,6 +3,7 @@ package lyr.proxies;
 import java.lang.invoke.MethodHandle;
 import java.util.List;
 
+import com.fs.starfarer.api.characters.MutableCharacterStatsAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
@@ -36,6 +37,8 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	private static MethodHandle addBuiltInWeapon = null;
 	private static MethodHandle addBuiltInWing = null;
 	private static MethodHandle setShipDefenseId = null;
+	private static MethodHandle getOrdnancePoints = null;
+	private static MethodHandle setOrdnancePoints = null;
 
 	static {
 		try {
@@ -50,22 +53,21 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 			addBuiltInWeapon = inspectMethod("addBuiltInWeapon", hullSpecClass).getMethodHandle();
 			addBuiltInWing = inspectMethod("addBuiltInWing", hullSpecClass).getMethodHandle();
 			setShipDefenseId = inspectMethod("setShipDefenseId", hullSpecClass).getMethodHandle();
+			getOrdnancePoints = inspectMethod("getOrdnancePoints", hullSpecClass).getMethodHandle();
+			setOrdnancePoints = inspectMethod("setOrdnancePoints", hullSpecClass).getMethodHandle();
 		} catch (Throwable t) {
 			logger.fatal(lyr_internals.logPrefix+"Failed to find a method in 'lyr_hullSpec'", t);
 		}
 	}
 
 	/**
-	 * Creates a new instance for the passed {@link ShipHullSpecAPI}, and 
-	 * clones it if necessary. 
-	 * <p>
-	 * The clone argument MUST be set to true if the hullSpec is not unique; 
-	 * not cloned prior to the creation of this instance of the proxy-class. 
-	 * Otherwise changes WILL apply to ALL ships of the same hullSpec.
-	 * <p>
-	 * Cloning should be done as early as possible, and should be avoided
-	 * on already cloned hullSpecs. Otherwise loose hullSpecs will float
-	 * around till they are garbage-collected, which is, unnecessary (duh)
+	 * Creates a new proxy-like object instance for the passed {@link ShipHullSpecAPI
+	 * hullSpec}, and clones it if needed. 
+	 * <p> If the spec is not unique, it must be cloned first using the argument, as
+	 * otherwise changes on this spec will affect all other specs of the same type.
+	 * <p> Cloning should be done as early as possible, and should be avoided on
+	 * already cloned hullSpecs. Otherwise loose hullSpecs will float around till
+	 * they are garbage-collected, which is, unnecessary (duh)
 	 * @param hullSpec to be proxied
 	 * @param clone if the hullSpec needs to be cloned
 	 */
@@ -129,7 +131,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	 * @param weaponSlotId to get
 	 * @return {@link lyr_weaponSlot} proxy
 	 * @category Proxy spawner
-	 * @see Non-Obfuscated: {@link com.fs.starfarer.api.combat.ShipHullSpecAPI#getWeaponSlotAPI(String) getWeaponSlotAPI(String)}
+	 * @see Non-Obfuscated: {@link ShipHullSpecAPI#getWeaponSlotAPI(String) getWeaponSlotAPI(String)}
 	 */
 	public lyr_weaponSlot getWeaponSlot(String weaponSlotId) {
 		this.weaponSlot = (this.weaponSlot == null) ? new lyr_weaponSlot(hullSpec.getWeaponSlotAPI(weaponSlotId), false) : this.weaponSlot.recycle(hullSpec.getWeaponSlotAPI(weaponSlotId));
@@ -144,7 +146,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	 * <p> Use {@link #retrieve()} to use the API version through the proxy.
 	 * @return {@link lyr_weaponSlot} proxy
 	 * @category Proxy spawner
-	 * @see Non-Obfuscated: {@link com.fs.starfarer.api.combat.ShipHullSpecAPI#getShieldSpec() getShieldSpec()}
+	 * @see Non-Obfuscated: {@link ShipHullSpecAPI#getShieldSpec() getShieldSpec()}
 	 */
 	public lyr_shieldSpec getShieldSpec() {
 		this.shieldSpec = (this.shieldSpec == null) ? new lyr_shieldSpec(hullSpec.getShieldSpec(), false) : this.shieldSpec;
@@ -198,7 +200,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	 * <p> Use {@link #retrieve()} to use the API version through the proxy.
 	 * @param hullModSpecId the id of the hullModSpec
 	 * @category Proxied method
-	 * @see Non-Obfuscated: {@link com.fs.starfarer.api.combat.ShipHullSpecAPI#addBuiltInMod(String) addBuiltInMod(String)}
+	 * @see Non-Obfuscated: {@link ShipHullSpecAPI#addBuiltInMod(String) addBuiltInMod(String)}
 	 */
 	public void addBuiltInMod(String hullModSpecId) { 
 		try {
@@ -215,7 +217,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	 * <p> Use {@link #retrieve()} to use the API version through the proxy.
 	 * @param manufacturer to set
 	 * @category Proxied method
-	 * @see Non-Obfuscated: {@link com.fs.starfarer.api.combat.ShipHullSpecAPI#setManufacturer(String) setManufacturer(String)}
+	 * @see Non-Obfuscated: {@link ShipHullSpecAPI#setManufacturer(String) setManufacturer(String)}
 	 */
 	public void setManufacturer(String manufacturer) {
 		try {
@@ -247,7 +249,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	 * <p> Use {@link #retrieve()} to use the API version through the proxy.
 	 * @param shipSystemId to set
 	 * @category Proxied method
-	 * @see Non-Obfuscated: {@link com.fs.starfarer.api.combat.ShipHullSpecAPI#setShipSystemId(String) setShipSystemId(String)}
+	 * @see Non-Obfuscated: {@link ShipHullSpecAPI#setShipSystemId(String) setShipSystemId(String)}
 	 */
 	public void setShipSystemId(String shipSystemId) {
 		try {
@@ -281,7 +283,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	 * @param slotId of the slot that will have the weapon installed as built-in
 	 * @param weaponSpecId of the weapon that will be installed on the slot
 	 * @category Proxied method
-	 * @see Non-Obfuscated: {@link com.fs.starfarer.api.combat.ShipHullSpecAPI#addBuiltInWeapon(String, String) addBuiltInWeapon(String, String)}
+	 * @see Non-Obfuscated: {@link ShipHullSpecAPI#addBuiltInWeapon(String, String) addBuiltInWeapon(String, String)}
 	 */
 	public void addBuiltInWeapon(String slotId, String weaponSpecId) {
 		try { 
@@ -312,6 +314,37 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 			setShipDefenseId.invoke(hullSpec, defenseId);
 		} catch (Throwable t) {
 			logger.error(lyr_internals.logPrefix+"Failed to use 'setShipDefenseId()' in 'lyr_hullSpec'", t);
+		}
+	}
+	
+	/**
+	 * Gets the ordnance points of the stored {@link ShipHullSpecAPI}. Argument
+	 * can be null to get the base.
+	 * <p> Use {@link #retrieve()} to use the API version through the proxy.
+	 * @param shipSystemId to set
+	 * @category Proxied method
+	 * @see Non-Obfuscated: {@link ShipHullSpecAPI#getOrdnancePoints(MutableCharacterStatsAPI) getOrdnancePoints(MutableCharacterStatsAPI)}
+	 */
+	public int getOrdnancePoints(MutableCharacterStatsAPI characterStats) {
+		try { 
+			return (int) getOrdnancePoints.invoke(hullSpec, characterStats);
+		} catch (Throwable t) {
+			logger.warn(lyr_internals.logPrefix+"Failed to use 'getOrdnancePoints()' in 'lyr_hullSpec', using API version", t);
+			return hullSpec.getOrdnancePoints(characterStats);
+		}
+	}
+	
+	/**
+	 * Sets the ordnance points of the stored {@link ShipHullSpecAPI} to the passed 
+	 * value.
+	 * @param ordnancePoints to set
+	 * @category Proxied method
+	 */
+	public void setOrdnancePoints(int ordnancePoints) {
+		try { 
+			setOrdnancePoints.invoke(hullSpec, ordnancePoints);
+		} catch (Throwable t) {
+			logger.error(lyr_internals.logPrefix+"Failed to use 'setOrdnancePoints()' in 'lyr_hullSpec'", t);
 		}
 	}
 	//#endregion 
