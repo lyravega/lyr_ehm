@@ -329,13 +329,17 @@ public class _ehm_basetracker extends _ehm_base {
 	 */
 	private static class fleetTrackerScript implements EveryFrameScriptWithCleanup {
 		private Map<String, shipTrackerScript> shipTrackers = new HashMap<String, shipTrackerScript>();
-		// private Set<FleetMember> members = new HashSet<FleetMember>();
+		// private Map<String, FleetMemberAPI> fleetMembers = new HashMap<String, FleetMemberAPI> ();
 		// private CampaignFleet playerFleet = (CampaignFleet) Global.getSector().getPlayerFleet();
 		private boolean isDone = false;
 		private float runTime = 0f;
 		
 		//#region CONSTRUCTORS & ACCESSORS
 		public fleetTrackerScript() {
+			// for (FleetMemberAPI fleetMember: Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy()) {
+			// 	fleetMembers.put(fleetMember.getId(), fleetMember);
+			// }
+
 			if (log) logger.info(lyr_internals.logPrefix+"FT: Fleet Tracker initialized");
 			
 			Global.getSector().addScript(this);
@@ -375,7 +379,7 @@ public class _ehm_basetracker extends _ehm_base {
 	
 		@Override
 		public void cleanup() {
-			if (log) logger.info(lyr_internals.logPrefix+"FT: Fleet Tracker terminated"); 
+			if (log) logger.info(lyr_internals.logPrefix+"FT: Fleet Tracker terminated");
 			shipTrackers.clear();
 			isDone = true;
 		}
@@ -434,14 +438,14 @@ public class _ehm_basetracker extends _ehm_base {
 		}
 		
 		public shipTrackerScript(ShipVariantAPI variant, String memberId, fleetTrackerScript fleetTracker) {
+			fleetTracker.addshipTracker(memberId, this);
+
+			this.fleetTracker = fleetTracker;
 			this.variant = variant;
 			this.memberId = memberId;
 			this.hullMods.addAll(variant.getHullMods());
-			this.fleetTracker = fleetTracker;
-
-			fleetTracker.addshipTracker(memberId, this);
 			
-			Global.getSector().addScript(this); 
+			Global.getSector().addScript(this);
 	
 			if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": Initial hull modifications '"+hullMods.toString()+"'");
 		}
