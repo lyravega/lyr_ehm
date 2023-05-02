@@ -15,6 +15,7 @@ import java.util.Set;
 import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.EveryFrameScriptWithCleanup;
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 
@@ -46,6 +47,30 @@ public class _ehm_basetracker extends _ehm_base {
 	 */
 	protected static void ehm_trackShip(ShipAPI ship) {
 		if (isRefitTab()) shipTrackerScript(ship).setVariant(ship.getVariant());
+	}
+
+	protected static void ehm_trackShip(MutableShipStatsAPI stats) {
+		if (!isRefitTab()) return;
+
+		if (stats.getEntity() instanceof ShipAPI) {
+			ShipAPI ship = (ShipAPI) stats.getEntity();
+
+			shipTrackerScript(ship).setVariant(ship.getVariant());
+		}
+	}
+
+	protected static void ehm_stopTracking(ShipAPI ship) {
+		if (isRefitTab()) shipTrackerScript(ship).cleanup();
+	}
+	
+	protected static void ehm_stopTracking(MutableShipStatsAPI stats) {
+		if (!isRefitTab()) return;
+
+		if (stats.getEntity() instanceof ShipAPI) {
+			ShipAPI ship = (ShipAPI) stats.getEntity();
+
+			shipTrackerScript(ship).cleanup();
+		}
 	}
 
 	public static Map<String, hullModEventListener> registeredHullMods = new HashMap<String, hullModEventListener>();
@@ -311,25 +336,30 @@ public class _ehm_basetracker extends _ehm_base {
 		
 		//#region CONSTRUCTORS & ACCESSORS
 		public fleetTrackerScript() {
-			if (log) logger.info(lyr_internals.logPrefix+"xFT: Initialized fleet tracking");
+			if (log) logger.info(lyr_internals.logPrefix+"FT: Fleet Tracker initialized");
 			
 			Global.getSector().addScript(this);
 		}
 	
 		public void addshipTracker(String memberId, shipTrackerScript shipTracker) {
 			shipTrackers.put(memberId, shipTracker);
-			if (log) logger.info(lyr_internals.logPrefix+"xFT: Keeping track of ST-"+memberId);
+			if (log) logger.info(lyr_internals.logPrefix+"FT: Ship Tracker ST-"+memberId+" starting");
+		}
+	
+		public void removeShipTracker(String memberId) {
+			shipTrackers.remove(memberId);
+			if (log) logger.info(lyr_internals.logPrefix+"FT: Ship Tracker ST-"+memberId+" stopping");
 		}
 		//#endregion
 		// END OF CONSTRUCTORS & ACCESSORS
 		
 		@Override
 		public void advance(float amount) {	
-			if (!isRefitTab()) { if (log) logger.info(lyr_internals.logPrefix+"xFT: Stopping fleet tracking"); isDone = true; return; }
+			if (!isRefitTab() || shipTrackers.size() == 0) { cleanup(); return; }
 	
 			if (runTime > 30f) {
 				runTime = 0f;
-				if (log) logger.info(lyr_internals.logPrefix+"xFT: Tracking "+shipTrackers.size()+" ships");
+				if (log) logger.info(lyr_internals.logPrefix+"FT: Tracking "+shipTrackers.size()+" ships");
 			} runTime += amount;
 		}
 	
@@ -345,7 +375,9 @@ public class _ehm_basetracker extends _ehm_base {
 	
 		@Override
 		public void cleanup() {
+			if (log) logger.info(lyr_internals.logPrefix+"FT: Fleet Tracker terminated"); 
 			shipTrackers.clear();
+			isDone = true;
 		}
 	}
 	//#endregion
@@ -388,7 +420,7 @@ public class _ehm_basetracker extends _ehm_base {
 	 * onRemoved()}
 	 */
 	private static class shipTrackerScript implements EveryFrameScriptWithCleanup {
-		// private fleetTrackerScript fleetTracker = null;
+		private fleetTrackerScript fleetTracker = null;
 		private ShipVariantAPI variant = null;
 		private String memberId = null;
 		private Set<String> hullMods = new HashSet<String>();
@@ -405,13 +437,13 @@ public class _ehm_basetracker extends _ehm_base {
 			this.variant = variant;
 			this.memberId = memberId;
 			this.hullMods.addAll(variant.getHullMods());
-			// this.fleetTracker = fleetTracker;
+			this.fleetTracker = fleetTracker;
 
 			fleetTracker.addshipTracker(memberId, this);
 			
 			Global.getSector().addScript(this); 
 	
-			if (log) logger.info(lyr_internals.logPrefix+"xST-"+memberId+": Initial hull modifications '"+hullMods.toString()+"'");
+			if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": Initial hull modifications '"+hullMods.toString()+"'");
 		}
 	
 		public String getMemberId() {
@@ -422,13 +454,13 @@ public class _ehm_basetracker extends _ehm_base {
 		
 		@Override
 		public void advance(float amount) {
-			if (!isRefitTab()) { if (log) logger.info(lyr_internals.logPrefix+"xST-"+memberId+": Stopping ship tracking"); isDone = true; return; }
+			if (!isRefitTab()) { cleanup(); return; }
 			
 			for (String hullModId : variant.getHullMods()) {
 				// if (!hullModId.startsWith(lyr_internals.affix.allRetrofit)) continue;
 				if (hullMods.contains(hullModId)) continue;
 	
-				if (log) logger.info(lyr_internals.logPrefix+"xST-"+memberId+": New hull modification '"+hullModId+"'");
+				if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": New hull modification '"+hullModId+"'");
 	
 				newHullMods.add(hullModId);
 			}
@@ -437,7 +469,7 @@ public class _ehm_basetracker extends _ehm_base {
 				// if (!hullModId.startsWith(lyr_internals.affix.allRetrofit)) continue;
 				if (variant.hasHullMod(hullModId)) continue;
 	
-				if (log) logger.info(lyr_internals.logPrefix+"xST-"+memberId+": Removed hull modification '"+hullModId+"'");
+				if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": Removed hull modification '"+hullModId+"'");
 	
 				removedHullMods.add(hullModId);
 			}
@@ -467,6 +499,7 @@ public class _ehm_basetracker extends _ehm_base {
 	
 		@Override
 		public void cleanup() {
+			this.fleetTracker.removeShipTracker(memberId);
 			this.isDone = true;
 		}
 	}

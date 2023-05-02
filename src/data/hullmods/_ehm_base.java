@@ -285,7 +285,7 @@ public class _ehm_base extends BaseHullMod {
 
 	/**
 	 * Simply returns a stock hullSpec, with no changes or whatsoever. Should ONLY
-	 * be used as a reference.
+	 * be used as a reference, or when the base is removed.
 	 * @param variant to be used as a template
 	 * @return a stock hullSpec from the SpecStore
 	 */
