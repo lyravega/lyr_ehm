@@ -53,7 +53,7 @@ public class _ehm_basetracker extends _ehm_base {
 	/**
 	 * Inner class that stores listener specific data
 	 */
-	protected static class hullModEventListener {
+	public static class hullModEventListener {
 		private String hullModId;
 		private Object hullModObject;
 		private event onRemove;
@@ -123,7 +123,7 @@ public class _ehm_basetracker extends _ehm_base {
 		 * @param hullModId
 		 * @param hullModObject
 		 */
-		protected hullModEventListener(String hullModId, Object hullModObject) {
+		public hullModEventListener(String hullModId, Object hullModObject) {
 			this.hullModId = hullModId;
 			this.hullModObject = hullModObject; 
 			registeredHullMods.put(hullModId, this);
@@ -142,7 +142,7 @@ public class _ehm_basetracker extends _ehm_base {
 		 * @see data.hullmods.ehm_sr._ehm_sr_base#onRemove(ShipVariantAPI)
 		 * @see #executeRemoveEvent(ShipVariantAPI)
 		 */
-		protected void registerRemoveEvent(boolean commitChanges, boolean playSound, String onRemoveMethodName) {
+		public void registerRemoveEvent(boolean commitChanges, boolean playSound, String onRemoveMethodName) {
 			this.onRemove = new event(commitChanges, playSound, onRemoveMethodName == null ? "onRemove" : onRemoveMethodName, this.hullModObject);
 		}
 
@@ -154,7 +154,7 @@ public class _ehm_basetracker extends _ehm_base {
 		 * @param playSound a basic sound will be played after removal
 		 * @see #executeRemoveEvent(ShipVariantAPI)
 		 */
-		protected void registerRemoveEvent(boolean commitChanges, boolean playSound) {
+		public void registerRemoveEvent(boolean commitChanges, boolean playSound) {
 			this.onRemove = new event(commitChanges, playSound);
 		}
 
@@ -163,7 +163,7 @@ public class _ehm_basetracker extends _ehm_base {
 		 * @param variant passed to the invoked method, if any
 		 * @see #executeEvent() for the main method
 		 */
-		protected void executeRemoveEvent(ShipVariantAPI variant) {
+		private void executeRemoveEvent(ShipVariantAPI variant) {
 			executeEvent(this.onRemove, variant);
 		}
 
@@ -180,7 +180,7 @@ public class _ehm_basetracker extends _ehm_base {
 		 * @see data.hullmods.ehm_sr._ehm_sr_base#onInstall(ShipVariantAPI)
 		 * @see #executeInstallEvent(ShipVariantAPI)
 		 */
-		protected void registerInstallEvent(boolean commitChanges, boolean playSound, String onInstallMethodName) {
+		public void registerInstallEvent(boolean commitChanges, boolean playSound, String onInstallMethodName) {
 			this.onInstall = new event(commitChanges, playSound, onInstallMethodName == null ? "onInstall" : onInstallMethodName, this.hullModObject);
 		}
 
@@ -192,7 +192,7 @@ public class _ehm_basetracker extends _ehm_base {
 		 * @param playSound a basic sound will be played after installation
 		 * @see #executeInstallEvent(ShipVariantAPI)
 		 */
-		protected void registerInstallEvent(boolean commitChanges, boolean playSound) {
+		public void registerInstallEvent(boolean commitChanges, boolean playSound) {
 			this.onInstall = new event(commitChanges, playSound);
 		}
 
@@ -201,7 +201,7 @@ public class _ehm_basetracker extends _ehm_base {
 		 * @param variant passed to the invoked method, if any
 		 * @see #executeEvent() for the main method
 		 */
-		protected void executeInstallEvent(ShipVariantAPI variant) {
+		private void executeInstallEvent(ShipVariantAPI variant) {
 			executeEvent(this.onInstall, variant);
 		}
 
