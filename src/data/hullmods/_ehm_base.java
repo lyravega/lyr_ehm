@@ -21,7 +21,6 @@ import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
-import data.hullmods._ehm_basetracker.hullModEventListener;
 import lyr.misc.lyr_externals;
 import lyr.misc.lyr_internals;
 import lyr.misc.lyr_tooltip;
@@ -53,20 +52,16 @@ public class _ehm_base extends BaseHullMod {
 	protected static final Logger logger = Logger.getLogger(lyr_internals.logName);
 	protected static final boolean log = true;
 
-	//#region IMPLEMENTATION
 	protected HullModSpecAPI hullModSpec;
 	protected String hullModSpecId;
-	protected hullModEventListener hullModListener;
 
 	@Override 
 	public void init(HullModSpecAPI hullModSpec) {
 		this.hullModSpec = hullModSpec;
 		this.hullModSpecId = hullModSpec.getId();
-		this.hullModListener = new hullModEventListener(this.hullModSpecId, this);
-		hullModListener.registerInstallEvent(true, true);
-		hullModListener.registerRemoveEvent(true, true, null);
 	}
 
+	//#region IMPLEMENTATION
 	@Override 
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {}
 

@@ -10,11 +10,13 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
+import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import data.hullmods._ehm_base;
+import data.hullmods._ehm_basetracker.hullModEventListener;
 import data.hullmods._ehm_hullmodeventmethods;
 import lyr.misc.lyr_internals;
 import lyr.misc.lyr_tooltip;
@@ -32,6 +34,9 @@ import lyr.proxies.lyr_weaponSlot;
  * @author lyravega
  */
 public class _ehm_wr_base extends _ehm_base implements _ehm_hullmodeventmethods {
+	//#region LISTENER & EVENT REGISTRATION
+	protected hullModEventListener hullModEventListener;
+
 	@Override	// not used
 	public boolean onInstall(ShipVariantAPI variant) {
 		return true;
@@ -43,6 +48,16 @@ public class _ehm_wr_base extends _ehm_base implements _ehm_hullmodeventmethods 
 		variant.setHullSpecAPI(ehm_lazyWeaponSlotRestore(variant));
 		return true;
 	}
+
+	@Override 
+	public void init(HullModSpecAPI hullModSpec) {
+		super.init(hullModSpec);
+		this.hullModEventListener = new hullModEventListener(this.hullModSpecId, this);
+		hullModEventListener.registerInstallEvent(true, true);
+		hullModEventListener.registerRemoveEvent(true, true, null);
+	}
+	//#endregion
+	// END OF LISTENER & EVENT REGISTRATION
 
 	/**
 	 * Alters the weapon slots on the passed variant's hullSpec, and returns it.

@@ -13,11 +13,12 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import data.hullmods._ehm_base;
+import data.hullmods._ehm_basetracker.hullModEventListener;
 import data.hullmods._ehm_hullmodeventmethods;
 import lyr.misc.lyr_externals;
+import lyr.misc.lyr_externals.lyr_shieldSettings;
 import lyr.misc.lyr_internals;
 import lyr.misc.lyr_tooltip;
-import lyr.misc.lyr_externals.lyr_shieldSettings;
 import lyr.proxies.lyr_hullSpec;
 import lyr.proxies.lyr_shieldSpec;
 
@@ -32,6 +33,13 @@ import lyr.proxies.lyr_shieldSpec;
  * @author lyravega
  */
 public class _ehm_sc_base extends _ehm_base implements _ehm_hullmodeventmethods {
+	protected lyr_shieldSettings shieldSettings;
+	protected Color innerColour;
+	protected Color ringColour;
+
+	//#region LISTENER & EVENT REGISTRATION
+	protected hullModEventListener hullModEventListener;
+
 	@Override	// not used
 	public boolean onInstall(ShipVariantAPI variant) {
 		return true;
@@ -42,14 +50,24 @@ public class _ehm_sc_base extends _ehm_base implements _ehm_hullmodeventmethods 
 		variant.setHullSpecAPI(ehm_restoreShield(variant));
 		return true;
 	}
-	
-	protected lyr_shieldSettings shieldSettings;
-	protected Color innerColour;
-	protected Color ringColour;
 
-	@Override
+	@Override 
 	public void init(HullModSpecAPI hullModSpec) {
 		super.init(hullModSpec);
+		this.hullModEventListener = new hullModEventListener(this.hullModSpecId, this);
+		hullModEventListener.registerInstallEvent(true, true);
+		hullModEventListener.registerRemoveEvent(true, true, null);
+		
+		ehm_assignColourValues();
+	}
+	//#endregion
+	// END OF LISTENER & EVENT REGISTRATION
+
+	/**
+	 * Assigns the color values stored at the external JSON in the
+	 * objects during initialization
+	 */
+	private final void ehm_assignColourValues() {
 		if (lyr_externals.shieldSettings.containsKey(this.getClass().getSimpleName())) {
 			this.shieldSettings = lyr_externals.shieldSettings.get(this.getClass().getSimpleName());
 			this.innerColour = shieldSettings.getInnerColour();
