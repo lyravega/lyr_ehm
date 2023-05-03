@@ -1,7 +1,6 @@
 package data.hullmods.ehm_wr;
 
 import java.util.Map;
-import java.util.Set;
 
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
@@ -38,23 +37,23 @@ public class _ehm_wr_base extends _ehm_base implements _ehm_hullmodeventmethods 
 	protected hullModEventListener hullModEventListener;
 
 	@Override	// not used
-	public boolean onInstall(ShipVariantAPI variant) {
-		return true;
+	public void onInstall(ShipVariantAPI variant) {}
+
+	@Override
+	public void onRemove(ShipVariantAPI variant) {
+		// variant.setHullSpecAPI(ehm_weaponSlotRestore(variant));
+		variant.setHullSpecAPI(ehm_lazyWeaponSlotRestore(variant));
 	}
 
 	@Override
-	public boolean onRemove(ShipVariantAPI variant) {
-		// variant.setHullSpecAPI(ehm_weaponSlotRestore(variant));
-		variant.setHullSpecAPI(ehm_lazyWeaponSlotRestore(variant));
-		return true;
-	}
+	public void sModCleanUp(ShipVariantAPI variant) {}
 
 	@Override 
 	public void init(HullModSpecAPI hullModSpec) {
 		super.init(hullModSpec);
 		this.hullModEventListener = new hullModEventListener(this.hullModSpecId, this);
-		hullModEventListener.registerInstallEvent(true, true);
-		hullModEventListener.registerRemoveEvent(true, true, null);
+		hullModEventListener.registerEvent(lyr_internals.event.onInstall, true, true, null);
+		hullModEventListener.registerEvent(lyr_internals.event.onRemove, true, true, lyr_internals.eventMethod.onRemove);
 	}
 	//#endregion
 	// END OF LISTENER & EVENT REGISTRATION
@@ -87,9 +86,6 @@ public class _ehm_wr_base extends _ehm_base implements _ehm_hullmodeventmethods 
 	 * hullSpec one by one. Ignores activated adapters, and affects adapted slots.
 	 * @param variant whose hullSpec will have its weaponSlots restored
 	 * @return an altered hullSpec with restored weaponSlots
-	 * @see {@link data.hullmods.ehm_base#onRemoved(ShipVariantAPI, Set) onRemoved()}
-	 * invokes {@link #onRemove(ShipVariantAPI) onRemove()} of this class, which uses
-	 * this method
 	 */
 	public static final ShipHullSpecAPI ehm_weaponSlotRestore(ShipVariantAPI variant) {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);

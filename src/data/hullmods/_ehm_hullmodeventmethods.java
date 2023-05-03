@@ -12,10 +12,11 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
  * <p> Change detection & event firing happens on the {@link
  * data.hullmods.ehm_base base hullmod}, which uses {@link 
  * data.hullmods._ehm_basetracker}. The events will be fired for the 
- * hullMods only if they are registered.
+ * hullMods only if they are registered, and the event exists.
  * @author lyravega
  */
 public interface _ehm_hullmodeventmethods {
-	public boolean onRemove(ShipVariantAPI variant);
-	public boolean onInstall(ShipVariantAPI variant);
+	public void onInstall(ShipVariantAPI variant);
+	public void onRemove(ShipVariantAPI variant);
+	public void sModCleanUp(ShipVariantAPI variant);
 }

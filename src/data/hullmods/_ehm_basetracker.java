@@ -60,7 +60,7 @@ public class _ehm_basetracker extends _ehm_base {
 	}
 
 	protected static void ehm_stopTracking(ShipAPI ship) {
-		if (isRefitTab()) shipTrackerScript(ship).cleanup();
+		if (isRefitTab()) shipTrackerScript(ship).kill();
 	}
 	
 	protected static void ehm_stopTracking(MutableShipStatsAPI stats) {
@@ -69,7 +69,7 @@ public class _ehm_basetracker extends _ehm_base {
 		if (stats.getEntity() instanceof ShipAPI) {
 			ShipAPI ship = (ShipAPI) stats.getEntity();
 
-			shipTrackerScript(ship).cleanup();
+			shipTrackerScript(ship).kill();
 		}
 	}
 
@@ -81,15 +81,14 @@ public class _ehm_basetracker extends _ehm_base {
 	public static class hullModEventListener {
 		private String hullModId;
 		private Object hullModObject;
-		private event onRemove;
-		private event onInstall;
+		private Map<String, event> events = new HashMap<String, event>();
 
 		/**
 		 * Inner class that stores event specific data
 		 */
 		private static class event {
 			private static final int STATIC = 0x00000008;
-			private boolean hasEventMethod;
+			private boolean hasEventMethod = false;
 			private String eventMethodName;
 			private MethodHandle eventMethodHandle;
 			private boolean isEventMethodStatic;
@@ -105,16 +104,16 @@ public class _ehm_basetracker extends _ehm_base {
 			 * @param hullModObject object of the hull modification for invocation purposes
 			 */
 			private event(boolean commitChanges, boolean playSound, String eventMethodName, Object hullModObject) {
-				this.eventMethodName = eventMethodName;
 				this.commitChanges = commitChanges;
 				this.playSound = playSound;
 				try {
 					methodMap methodMap = inspectMethod(false, eventMethodName, hullModObject.getClass(), ShipVariantAPI.class);
+					this.eventMethodName = eventMethodName;
 					this.eventMethodHandle = methodMap.getMethodHandle();
 					this.isEventMethodStatic = (methodMap.getModifiers() & STATIC) != 0;
 					this.hasEventMethod = true;
 				} catch (Throwable e) {
-					this.hasEventMethod = false;
+					logger.error(lyr_internals.logPrefix+"Problem during creating a handle for the event method '"+eventMethodName+"'", e);
 				}
 			}
 
@@ -126,7 +125,6 @@ public class _ehm_basetracker extends _ehm_base {
 			private event(boolean commitChanges, boolean playSound) {
 				this.commitChanges = commitChanges;
 				this.playSound = playSound;
-				this.hasEventMethod = false;
 			}
 		
 			private boolean hasEventMethod() { return this.hasEventMethod; }
@@ -153,101 +151,39 @@ public class _ehm_basetracker extends _ehm_base {
 			this.hullModObject = hullModObject; 
 			registeredHullMods.put(hullModId, this);
 		}
-
+		
 		/**
-		 * Registers the remove event; what happens when this hull mod is
-		 * removed from the variant on the refit screen. A custom method's
-		 * name can be given to execute that method's actions after the
-		 * removal.
-		 * @param commitChanges changes will be committed and refit screen
-		 * will be refreshed after removal
-		 * @param playSound a basic sound will be played after removal
-		 * @param onRemoveMethodName name of the method whose actions can be
-		 * utilized, defaults to "onRemove", is completely optional
-		 * @see data.hullmods.ehm_sr._ehm_sr_base#onRemove(ShipVariantAPI)
-		 * @see #executeRemoveEvent(ShipVariantAPI)
+		 * Registers an event with the eventName to the listener. A special methodName
+		 * can be specified for it to be invoked when the event happens.
+		 * <p> This method can have any name, but its visibility and arguments must
+		 * match the ones found at {@link data.hullmods._ehm_hullmodeventmethods event
+		 * methods} interface. That interface is for guidance, and not really needed.
+		 * <p> The booleans control the execution of hardcoded methods in essence.
+		 * One of them will commit the changes, while the other plays a sound when the
+		 * event occurs.
+		 * @param eventName hardcoded to these: {@link lyr_internals.event}
+		 * @param commitChanges on the event if true
+		 * @param playSound on the event if true
+		 * @param methodName to invoke on the event, null if not needed
 		 */
-		public void registerRemoveEvent(boolean commitChanges, boolean playSound, String onRemoveMethodName) {
-			this.onRemove = new event(commitChanges, playSound, onRemoveMethodName == null ? "onRemove" : onRemoveMethodName, this.hullModObject);
+		public void registerEvent(String eventName, boolean commitChanges, boolean playSound, String methodName) {
+			if (this.events.containsKey(eventName)) return;
+			if (methodName != null) this.events.put(eventName, new event(commitChanges, playSound, methodName, this.hullModObject));
+			else this.events.put(eventName, new event(commitChanges, playSound));
 		}
 
 		/**
-		 * Registers the install event; what happens when this hull mod is
-		 * removed to the variant on the refit screen.
-		 * @param commitChanges changes will be committed and refit screen
-		 * will be refreshed after removal
-		 * @param playSound a basic sound will be played after removal
-		 * @see #executeRemoveEvent(ShipVariantAPI)
+		 * Executes an event if such an event exists. Depending on the registration
+		 * values, relevant actions will be taken.
+		 * <p> Order of execution: customMethod (if any) > commitChanges > playSound
+		 * @param eventName hardcoded to these: {@link lyr_internals.event}
+		 * @param variant to pass to the invoked customMethod (if any)
 		 */
-		public void registerRemoveEvent(boolean commitChanges, boolean playSound) {
-			this.onRemove = new event(commitChanges, playSound);
-		}
+		protected void executeEvent(String eventName, ShipVariantAPI variant) {
+			if (!this.events.containsKey(eventName)) return;
 
-		/**
-		 * Executes the stored "onRemove" event on the main method
-		 * @param variant passed to the invoked method, if any
-		 * @see #executeEvent() for the main method
-		 */
-		private void executeRemoveEvent(ShipVariantAPI variant) {
-			if (this.onRemove != null) executeEvent(this.onRemove, variant);
-		}
+			event event = this.events.get(eventName);
 
-		/**
-		 * Registers the install event; what happens when this hull mod is
-		 * installed to the variant on the refit screen. A custom method's
-		 * name can be given to execute that method's actions after the
-		 * installation.
-		 * @param commitChanges changes will be committed and refit screen
-		 * will be refreshed after installation
-		 * @param playSound a basic sound will be played after installation
-		 * @param onInstallMethodName name of the method whose actions can be
-		 * utilized, defaults to "onInstall", is completely optional
-		 * @see data.hullmods.ehm_sr._ehm_sr_base#onInstall(ShipVariantAPI)
-		 * @see #executeInstallEvent(ShipVariantAPI)
-		 */
-		public void registerInstallEvent(boolean commitChanges, boolean playSound, String onInstallMethodName) {
-			this.onInstall = new event(commitChanges, playSound, onInstallMethodName == null ? "onInstall" : onInstallMethodName, this.hullModObject);
-		}
-
-		/**
-		 * Registers the install event; what happens when this hull mod is
-		 * installed to the variant on the refit screen.
-		 * @param commitChanges changes will be committed and refit screen
-		 * will be refreshed after installation
-		 * @param playSound a basic sound will be played after installation
-		 * @see #executeInstallEvent(ShipVariantAPI)
-		 */
-		public void registerInstallEvent(boolean commitChanges, boolean playSound) {
-			this.onInstall = new event(commitChanges, playSound);
-		}
-
-		/**
-		 * Executes the stored "onInstall" event on the main method
-		 * @param variant passed to the invoked method, if any
-		 * @see #executeEvent() for the main method
-		 */
-		private void executeInstallEvent(ShipVariantAPI variant) {
-			if (this.onRemove != null) executeEvent(this.onInstall, variant);
-		}
-
-		/**
-		 * Executes the received event ("onRemove" or "onInstall").
-		 * <p> If there is a custom method, it will be invoked first. If any
-		 * problems occur during this invocation, an error message will be
-		 * displayed. Basic problems are, name mismatch, visibility and
-		 * argument mismatch.
-		 * <p> The method invocation somewhat puts a limitation on what can
-		 * be called remotely, as the arguments and the method name must 
-		 * match. As long as the name is correct, method only takes a
-		 * variant as an argument, and it is visible (public), it should be
-		 * invoked without any problems.
-		 * <p> After the custom method, the pre-made ones will be executed
-		 * if their value is registered as true. Refit screen will be
-		 * refreshed and a sound effect will be played after the event. 
-		 * @param event	either "onRemove" or "onInstall" (for now)
-		 * @param variant of the ship that may be used in custom method
-		 */
-		protected void executeEvent(event event, ShipVariantAPI variant) {
 			if (event.hasEventMethod()) {
 				try {
 					if (event.isEventMethodStatic()) event.getEventMethodHandle().invoke(variant);	// since static methods belong to the class, no need for an instancing object
@@ -274,9 +210,9 @@ public class _ehm_basetracker extends _ehm_base {
 			newHullModId = i.next(); 
 
 			if (registeredHullMods.containsKey(newHullModId)) {
-				registeredHullMods.get(newHullModId).executeInstallEvent(variant);
+				registeredHullMods.get(newHullModId).executeEvent(lyr_internals.event.onInstall, variant);
 			} else if (Global.getSettings().getHullModSpec(newHullModId).hasTag(lyr_internals.tag.externalAccess)) { 
-				commitChanges(); playSound(); break;
+				commitChanges(); playSound();
 			}
 		}
 	}
@@ -295,9 +231,30 @@ public class _ehm_basetracker extends _ehm_base {
 			removedHullModId = i.next(); 
 
 			if (registeredHullMods.containsKey(removedHullModId)) {
-				registeredHullMods.get(removedHullModId).executeRemoveEvent(variant); break;
+				registeredHullMods.get(removedHullModId).executeEvent(lyr_internals.event.onRemove, variant);
 			} else if (Global.getSettings().getHullModSpec(removedHullModId).hasTag(lyr_internals.tag.externalAccess)) { 
-				variant.setHullSpecAPI(ehm_hullSpecRefresh(variant)); commitChanges(); playSound(); break;
+				variant.setHullSpecAPI(ehm_hullSpecRefresh(variant)); commitChanges(); playSound();
+			}
+		}
+	}
+
+	/**
+	 * If a change is detected in the ship's {@link shipTrackerScript}, this method is
+	 * called. Executes sMod clean-up actions.
+	 * @param variant of the ship
+	 * @param removedSMods set of removed hull mods
+	 * @throws Throwable
+	 */
+	private static void onSModRemoved(ShipVariantAPI variant, Set<String> removedSMods) {	
+		String removedSModId;
+
+		for (Iterator<String> i = removedSMods.iterator(); i.hasNext();) {
+			removedSModId = i.next(); 
+
+			if (registeredHullMods.containsKey(removedSModId)) {
+				registeredHullMods.get(removedSModId).executeEvent(lyr_internals.event.sModCleanUp, variant);
+			} else if (Global.getSettings().getHullModSpec(removedSModId).hasTag(lyr_internals.tag.externalAccess)) { 
+				variant.setHullSpecAPI(ehm_hullSpecRefresh(variant)); commitChanges(); playSound();
 			}
 		}
 	}
@@ -359,7 +316,7 @@ public class _ehm_basetracker extends _ehm_base {
 		
 		@Override
 		public void advance(float amount) {	
-			if (!isRefitTab() || shipTrackers.size() == 0) { cleanup(); return; }
+			if (!isRefitTab() || shipTrackers.size() == 0) { kill(); return; }
 	
 			if (runTime > 30f) {
 				runTime = 0f;
@@ -379,6 +336,12 @@ public class _ehm_basetracker extends _ehm_base {
 	
 		@Override
 		public void cleanup() {
+			if (log) logger.info(lyr_internals.logPrefix+"FT: Fleet Tracker terminated");
+			shipTrackers.clear();
+			isDone = true;
+		}
+	
+		public void kill() {
 			if (log) logger.info(lyr_internals.logPrefix+"FT: Fleet Tracker terminated");
 			shipTrackers.clear();
 			isDone = true;
@@ -430,6 +393,9 @@ public class _ehm_basetracker extends _ehm_base {
 		private Set<String> hullMods = new HashSet<String>();
 		private Set<String> newHullMods = new HashSet<String>();
 		private Set<String> removedHullMods = new HashSet<String>();
+		private Set<String> sMods = new HashSet<String>();
+		private Set<String> newSMods = new HashSet<String>();
+		private Set<String> removedSMods = new HashSet<String>();
 		private boolean isDone = false;
 		
 		//#region CONSTRUCTORS & ACCESSORS
@@ -444,6 +410,7 @@ public class _ehm_basetracker extends _ehm_base {
 			this.variant = variant;
 			this.memberId = memberId;
 			this.hullMods.addAll(variant.getHullMods());
+			this.sMods.addAll(variant.getSMods());
 			
 			Global.getSector().addScript(this);
 	
@@ -458,7 +425,7 @@ public class _ehm_basetracker extends _ehm_base {
 		
 		@Override
 		public void advance(float amount) {
-			if (!isRefitTab()) { cleanup(); return; }
+			if (!isRefitTab()) { kill(); return; }
 			
 			for (String hullModId : variant.getHullMods()) {
 				// if (!hullModId.startsWith(lyr_internals.affix.allRetrofit)) continue;
@@ -477,6 +444,24 @@ public class _ehm_basetracker extends _ehm_base {
 	
 				removedHullMods.add(hullModId);
 			}
+
+			for (String hullModId : variant.getSMods()) {
+				// if (!hullModId.startsWith(lyr_internals.affix.allRetrofit)) continue;
+				if (sMods.contains(hullModId)) continue;
+	
+				if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": New hull s-modification '"+hullModId+"'");
+	
+				newSMods.add(hullModId);
+			}
+
+			for (Iterator<String> i = sMods.iterator(); i.hasNext();) { String hullModId = i.next(); 
+				// if (!hullModId.startsWith(lyr_internals.affix.allRetrofit)) continue;
+				if (variant.getSMods().contains(hullModId)) continue;
+	
+				if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": Removed hull s-modification '"+hullModId+"'");
+	
+				removedSMods.add(hullModId);
+			}
 			
 			if (!newHullMods.isEmpty()) {
 				onInstalled(variant, newHullMods);
@@ -488,6 +473,18 @@ public class _ehm_basetracker extends _ehm_base {
 				onRemoved(variant, removedHullMods);
 				hullMods.removeAll(removedHullMods);
 				removedHullMods.clear();
+			}
+			
+			if (!newSMods.isEmpty()) {
+				// onInstalled(variant, newSMods, true);
+				sMods.addAll(newSMods);
+				newSMods.clear();
+			}
+			
+			if (!removedSMods.isEmpty()) {
+				onSModRemoved(variant, removedSMods);
+				sMods.removeAll(removedSMods);
+				removedSMods.clear();
 			}
 		}
 	
@@ -503,6 +500,11 @@ public class _ehm_basetracker extends _ehm_base {
 	
 		@Override
 		public void cleanup() {
+			this.fleetTracker.removeShipTracker(memberId);
+			this.isDone = true;
+		}
+	
+		public void kill() {
 			this.fleetTracker.removeShipTracker(memberId);
 			this.isDone = true;
 		}

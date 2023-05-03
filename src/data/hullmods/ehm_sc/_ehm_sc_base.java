@@ -41,22 +41,22 @@ public class _ehm_sc_base extends _ehm_base implements _ehm_hullmodeventmethods 
 	protected hullModEventListener hullModEventListener;
 
 	@Override	// not used
-	public boolean onInstall(ShipVariantAPI variant) {
-		return true;
+	public void onInstall(ShipVariantAPI variant) {}
+
+	@Override
+	public void onRemove(ShipVariantAPI variant) {
+		variant.setHullSpecAPI(ehm_restoreShield(variant));
 	}
 
 	@Override
-	public boolean onRemove(ShipVariantAPI variant) {
-		variant.setHullSpecAPI(ehm_restoreShield(variant));
-		return true;
-	}
+	public void sModCleanUp(ShipVariantAPI variant) {}
 
 	@Override 
 	public void init(HullModSpecAPI hullModSpec) {
 		super.init(hullModSpec);
 		this.hullModEventListener = new hullModEventListener(this.hullModSpecId, this);
-		hullModEventListener.registerInstallEvent(true, true);
-		hullModEventListener.registerRemoveEvent(true, true, null);
+		hullModEventListener.registerEvent(lyr_internals.event.onInstall, true, true, null);
+		hullModEventListener.registerEvent(lyr_internals.event.onRemove, true, true, lyr_internals.eventMethod.onRemove);
 		
 		ehm_assignColourValues();
 	}
@@ -97,9 +97,6 @@ public class _ehm_sc_base extends _ehm_base implements _ehm_hullmodeventmethods 
 	 * referring to a stock one.
 	 * @param variant whose shieldSpec will be restored
 	 * @return an altered hullSpec with its shieldSpec is restored
-	 * @see {@link data.hullmods.ehm_base#onRemoved(ShipVariantAPI, Set) onRemoved()}
-	 * invokes {@link #onRemove(ShipVariantAPI) onRemove()} of this class, which uses
-	 * this method
 	 */
 	public static final ShipHullSpecAPI ehm_restoreShield(ShipVariantAPI variant) {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);

@@ -135,4 +135,16 @@ public class lyr_internals {
 			shieldCosmetic = "ehm_sc_", // must match hullmod id in .csv
 			engineCosmetic = "ehm_ec_"; // must match hullmod id in .csv
 	}
+
+	public static class event {
+		public static final String onInstall = "onInstall";
+		public static final String onRemove = "onRemove";
+		public static final String sModCleanUp = "sModCleanUp";
+	}
+
+	public static class eventMethod {
+		public static final String onInstall = "onInstall";
+		public static final String onRemove = "onRemove";
+		public static final String sModCleanUp = "sModCleanUp";
+	}
 }

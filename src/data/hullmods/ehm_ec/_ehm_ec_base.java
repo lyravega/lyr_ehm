@@ -1,7 +1,5 @@
 package data.hullmods.ehm_ec;
 
-import java.util.Set;
-
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
@@ -32,22 +30,22 @@ public class _ehm_ec_base extends _ehm_base implements _ehm_hullmodeventmethods 
 	protected hullModEventListener hullModEventListener;
 
 	@Override	// not used
-	public boolean onInstall(ShipVariantAPI variant) {
-		return true;
+	public void onInstall(ShipVariantAPI variant) {}
+
+	@Override
+	public void onRemove(ShipVariantAPI variant) {
+		variant.setHullSpecAPI(ehm_restoreEngineSlots(variant));
 	}
 
 	@Override
-	public boolean onRemove(ShipVariantAPI variant) {
-		variant.setHullSpecAPI(ehm_restoreEngineSlots(variant));
-		return true;
-	}
+	public void sModCleanUp(ShipVariantAPI variant) {}
 
 	@Override 
 	public void init(HullModSpecAPI hullModSpec) {
 		super.init(hullModSpec);
 		this.hullModEventListener = new hullModEventListener(this.hullModSpecId, this);
-		hullModEventListener.registerInstallEvent(true, true);
-		hullModEventListener.registerRemoveEvent(true, true, null);
+		hullModEventListener.registerEvent(lyr_internals.event.onInstall, true, true, null);
+		hullModEventListener.registerEvent(lyr_internals.event.onRemove, true, true, lyr_internals.eventMethod.onRemove);
 	}
 	//#endregion
 	// END OF LISTENER & EVENT REGISTRATION
@@ -76,9 +74,6 @@ public class _ehm_ec_base extends _ehm_base implements _ehm_hullmodeventmethods 
 	 * @param variant whose hullSpec will be altered
 	 * @param styleEnum somewhat hardcoded {@link lyr.proxies.lyr_engineBuilder.engineStyle engineStyle}
 	 * @return a hullSpec with restored engine visuals
-	 * @see {@link data.hullmods.ehm_base#onRemoved(ShipVariantAPI, Set) onRemoved()}
-	 * invokes {@link #onRemove(ShipVariantAPI) onRemove()} of this class, which uses
-	 * this method
 	 */
 	public static final ShipHullSpecAPI ehm_restoreEngineSlots(ShipVariantAPI variant) {
 		ShipHullSpecAPI hullSpec = ehm_hullSpecRefresh(variant);
