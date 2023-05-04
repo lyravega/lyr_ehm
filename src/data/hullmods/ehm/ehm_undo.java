@@ -1,4 +1,4 @@
-package data.hullmods;
+package data.hullmods.ehm;
 
 import static lyr.tools._lyr_uiTools.commitChanges;
 import static lyr.tools._lyr_uiTools.playSound;
@@ -14,9 +14,9 @@ import lyr.misc.lyr_internals;
 import lyr.misc.lyr_tooltip;
 
 /**
- * Serves as a requirement for all experimental hull modifications, and provides hullMod
- * tracking to the ship.
- * @category Base Hull Modification 
+ * Removes the base hull modification that all other experimental ones require
+ * from the ship. Strict installation requirements to avoid issues.
+ * @category Misc
  * @author lyravega
  */
 public class ehm_undo extends _ehm_basetracker {
@@ -30,7 +30,7 @@ public class ehm_undo extends _ehm_basetracker {
 
 		variant.getHullMods().remove(this.hullModSpecId);
 		variant.getHullMods().remove(lyr_internals.id.baseRetrofit);
-		variant.setHullSpecAPI(ehm_hullSpecReference(variant)); commitChanges(); playSound();
+		variant.setHullSpecAPI(ehm_hullSpecReference(variant)); commitChanges(); playSound(); 
 	}
 
 	@Override

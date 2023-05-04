@@ -13,8 +13,8 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import data.hullmods._ehm_base;
-import data.hullmods._ehm_basetracker.hullModEventListener;
-import data.hullmods._ehm_hullmodeventmethods;
+import data.hullmods.ehm._ehm_eventhandler;
+import data.hullmods.ehm._ehm_eventmethod;
 import lyr.misc.lyr_externals;
 import lyr.misc.lyr_externals.lyr_shieldSettings;
 import lyr.misc.lyr_internals;
@@ -32,15 +32,15 @@ import lyr.proxies.lyr_shieldSpec;
  * @see {@link data.hullmods.ehm_ec._ehm_ec_base _ehm_ec_base} for engine cosmetic base
  * @author lyravega
  */
-public class _ehm_sc_base extends _ehm_base implements _ehm_hullmodeventmethods {
+public class _ehm_sc_base extends _ehm_base implements _ehm_eventmethod {
 	protected lyr_shieldSettings shieldSettings;
 	protected Color innerColour;
 	protected Color ringColour;
 
 	//#region LISTENER & EVENT REGISTRATION
-	protected hullModEventListener hullModEventListener;
+	protected _ehm_eventhandler hullModEventHandler = null;
 
-	@Override	// not used
+	@Override
 	public void onInstall(ShipVariantAPI variant) {}
 
 	@Override
@@ -51,13 +51,16 @@ public class _ehm_sc_base extends _ehm_base implements _ehm_hullmodeventmethods 
 	@Override
 	public void sModCleanUp(ShipVariantAPI variant) {}
 
-	@Override 
+	@Override
 	public void init(HullModSpecAPI hullModSpec) {
 		super.init(hullModSpec);
-		this.hullModEventListener = new hullModEventListener(this.hullModSpecId, this);
-		hullModEventListener.registerEvent(lyr_internals.event.onInstall, true, true, null);
-		hullModEventListener.registerEvent(lyr_internals.event.onRemove, true, true, lyr_internals.eventMethod.onRemove);
-		
+
+		if (this.hullModEventHandler == null) {
+			this.hullModEventHandler = new _ehm_eventhandler(this.hullModSpecId, this);
+			hullModEventHandler.registerOnInstall(true, true, false);
+			hullModEventHandler.registerOnRemove(true, true, true);
+		}
+
 		ehm_assignColourValues();
 	}
 	//#endregion

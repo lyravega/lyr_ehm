@@ -1,11 +1,9 @@
-package data.hullmods;
+package data.hullmods.ehm;
 
-import static lyr.tools._lyr_reflectionTools.inspectMethod;
 import static lyr.tools._lyr_uiTools.commitChanges;
 import static lyr.tools._lyr_uiTools.isRefitTab;
 import static lyr.tools._lyr_uiTools.playSound;
 
-import java.lang.invoke.MethodHandle;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -19,25 +17,17 @@ import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 
+import data.hullmods._ehm_base;
 import lyr.misc.lyr_internals;
-import lyr.tools._lyr_reflectionTools.methodMap;
 
 /**
- * This class is used by primary hull modification, and contains relevant
- * methods, inner classes and whatnot to keep track of the new and old 
- * ones, and execute actions if the hull modification in question has any.
- * <p> Actions are only taken if they are registered with this classes'
- * {@link hullModEventListener}, for this mod it happens during initialization
- * {@link data.hullmods._ehm_base#init() init()} but might as well be done 
- * during initial game start-up.
- * <p> Basic actions include committing the changes on a variant and
- * refreshing the refit screen, and playing a sound after a hull modification
- * is added or removed. Advanced actions can be taken by providing a method
- * name, which are by default {@code onInstall()} and {@code onRemove()}.
- * <p> {@link data.hullmods._ehm_hullmodeventmethods} interface provides guidance
- * for any hull modification, however it is not necessary. As long as the
- * methods are public and they only take a variant as their argument, any
- * method can be used for more specific tasks.
+ * Provides tools to track any change on a ship, mainly the hull modifications. When a change is
+ * detected, will look if the hull modification has a registered handler for the event.
+ * <p> If the event has a handler, then additional actions will be taken depending on how the
+ * handler is set-up. In addition to some pre-defined actions, custom methods can be executed.
+* @see {@link ehm_base Main Modification} Enables & initializes tracking features when installed
+* @see {@link _ehm_eventhandler Event Handler} Used by the modifications to register the events
+* @see {@link _ehm_eventmethod Event Method Interface} Implemented by the hull modifications
  * @author lyravega
  */
 public class _ehm_basetracker extends _ehm_base {
@@ -55,7 +45,7 @@ public class _ehm_basetracker extends _ehm_base {
 		if (stats.getEntity() instanceof ShipAPI) {
 			ShipAPI ship = (ShipAPI) stats.getEntity();
 
-			shipTrackerScript(ship).setVariant(ship.getVariant());
+			shipTrackerScript(ship).setVariant(stats.getVariant());
 		}
 	}
 
@@ -73,129 +63,7 @@ public class _ehm_basetracker extends _ehm_base {
 		}
 	}
 
-	public static Map<String, hullModEventListener> registeredHullMods = new HashMap<String, hullModEventListener>();
-
-	/**
-	 * Inner class that stores listener specific data
-	 */
-	public static class hullModEventListener {
-		private String hullModId;
-		private Object hullModObject;
-		private Map<String, event> events = new HashMap<String, event>();
-
-		/**
-		 * Inner class that stores event specific data
-		 */
-		private static class event {
-			private static final int STATIC = 0x00000008;
-			private boolean hasEventMethod = false;
-			private String eventMethodName;
-			private MethodHandle eventMethodHandle;
-			private boolean isEventMethodStatic;
-			private boolean commitChanges;
-			private boolean playSound;
-		
-			/**
-			 * Adds a new event to be used by the listener, with a custom methodName
-			 * located in the hullMod's object/class to be invoked when the event occurs
-			 * @param commitChanges whether the changes will be committed in the event
-			 * @param playSound whether a sound will be played in the event
-			 * @param eventMethodName name of the method to be invoked in the event
-			 * @param hullModObject object of the hull modification for invocation purposes
-			 */
-			private event(boolean commitChanges, boolean playSound, String eventMethodName, Object hullModObject) {
-				this.commitChanges = commitChanges;
-				this.playSound = playSound;
-				try {
-					methodMap methodMap = inspectMethod(false, eventMethodName, hullModObject.getClass(), ShipVariantAPI.class);
-					this.eventMethodName = eventMethodName;
-					this.eventMethodHandle = methodMap.getMethodHandle();
-					this.isEventMethodStatic = (methodMap.getModifiers() & STATIC) != 0;
-					this.hasEventMethod = true;
-				} catch (Throwable e) {
-					logger.error(lyr_internals.logPrefix+"Problem during creating a handle for the event method '"+eventMethodName+"'", e);
-				}
-			}
-
-			/**
-			 * Adds a new simpler event to be used by the listener
-			 * @param commitChanges whether the changes will be committed in the event
-			 * @param playSound whether a sound will be played in the event
-			 */
-			private event(boolean commitChanges, boolean playSound) {
-				this.commitChanges = commitChanges;
-				this.playSound = playSound;
-			}
-		
-			private boolean hasEventMethod() { return this.hasEventMethod; }
-			private String getEventMethodName() { return this.eventMethodName; }
-			private MethodHandle getEventMethodHandle() { return this.eventMethodHandle; }
-			private boolean isEventMethodStatic() { return this.isEventMethodStatic; }
-			private boolean shouldCommitChanges() { return this.commitChanges; }
-			private boolean shouldPlaySound() { return this.playSound; }
-		}
-
-		/**
-		 * Creates a new listener and stores it among the others. {@link 
-		 * #registerRemoveEvent()} and/or {@link #registerInstallEvent()}
-		 * should be set/used right after initialization of this object. 
-		 * <p> Change detection & event firing happens on the {@link
-		 * data.hullmods.ehm_base base hullmod}, which uses {@link 
-		 * data.hullmods._ehm_basetracker}. The events will be fired for 
-		 * the hullMods only if they are registered.
-		 * @param hullModId
-		 * @param hullModObject
-		 */
-		public hullModEventListener(String hullModId, Object hullModObject) {
-			this.hullModId = hullModId;
-			this.hullModObject = hullModObject; 
-			registeredHullMods.put(hullModId, this);
-		}
-		
-		/**
-		 * Registers an event with the eventName to the listener. A special methodName
-		 * can be specified for it to be invoked when the event happens.
-		 * <p> This method can have any name, but its visibility and arguments must
-		 * match the ones found at {@link data.hullmods._ehm_hullmodeventmethods event
-		 * methods} interface. That interface is for guidance, and not really needed.
-		 * <p> The booleans control the execution of hardcoded methods in essence.
-		 * One of them will commit the changes, while the other plays a sound when the
-		 * event occurs.
-		 * @param eventName hardcoded to these: {@link lyr_internals.event}
-		 * @param commitChanges on the event if true
-		 * @param playSound on the event if true
-		 * @param methodName to invoke on the event, null if not needed
-		 */
-		public void registerEvent(String eventName, boolean commitChanges, boolean playSound, String methodName) {
-			if (this.events.containsKey(eventName)) return;
-			if (methodName != null) this.events.put(eventName, new event(commitChanges, playSound, methodName, this.hullModObject));
-			else this.events.put(eventName, new event(commitChanges, playSound));
-		}
-
-		/**
-		 * Executes an event if such an event exists. Depending on the registration
-		 * values, relevant actions will be taken.
-		 * <p> Order of execution: customMethod (if any) > commitChanges > playSound
-		 * @param eventName hardcoded to these: {@link lyr_internals.event}
-		 * @param variant to pass to the invoked customMethod (if any)
-		 */
-		protected void executeEvent(String eventName, ShipVariantAPI variant) {
-			if (!this.events.containsKey(eventName)) return;
-
-			event event = this.events.get(eventName);
-
-			if (event.hasEventMethod()) {
-				try {
-					if (event.isEventMethodStatic()) event.getEventMethodHandle().invoke(variant);	// since static methods belong to the class, no need for an instancing object
-					else event.getEventMethodHandle().invoke(hullModObject, variant);	// if the check fails, that means method is not static and requires an object
-				} catch (Throwable t) {
-					logger.error(lyr_internals.logPrefix+"Failure while trying to invoke '"+event.getEventMethodName()+"(...)' of the '"+this.hullModId+"'", t);
-				}
-			}
-			if (event.shouldCommitChanges()) commitChanges();
-			if (event.shouldPlaySound()) playSound();
-		}
-	}
+	public static Map<String, _ehm_eventhandler> registeredHullMods = new HashMap<String, _ehm_eventhandler>();
 
 	/**
 	 * If a change is detected in the ship's {@link shipTrackerScript}, this method is
@@ -203,14 +71,14 @@ public class _ehm_basetracker extends _ehm_base {
 	 * @param variant of the ship
 	 * @param newHullMods set of new hull mods
 	 */
-	private static void onInstalled(ShipVariantAPI variant, Set<String> newHullMods) {
+	static void onInstalled(ShipVariantAPI variant, Set<String> newHullMods) {
 		String newHullModId;
 
 		for (Iterator<String> i = newHullMods.iterator(); i.hasNext();) {
-			newHullModId = i.next(); 
+			newHullModId = i.next();
 
 			if (registeredHullMods.containsKey(newHullModId)) {
-				registeredHullMods.get(newHullModId).executeEvent(lyr_internals.event.onInstall, variant);
+				registeredHullMods.get(newHullModId).executeOnInstall(variant);
 			} else if (Global.getSettings().getHullModSpec(newHullModId).hasTag(lyr_internals.tag.externalAccess)) { 
 				commitChanges(); playSound();
 			}
@@ -224,14 +92,14 @@ public class _ehm_basetracker extends _ehm_base {
 	 * @param removedHullMods set of removed hull mods
 	 * @throws Throwable
 	 */
-	private static void onRemoved(ShipVariantAPI variant, Set<String> removedHullMods) {	
+	static void onRemoved(ShipVariantAPI variant, Set<String> removedHullMods) {	
 		String removedHullModId;
 
 		for (Iterator<String> i = removedHullMods.iterator(); i.hasNext();) {
 			removedHullModId = i.next(); 
 
 			if (registeredHullMods.containsKey(removedHullModId)) {
-				registeredHullMods.get(removedHullModId).executeEvent(lyr_internals.event.onRemove, variant);
+				registeredHullMods.get(removedHullModId).executeOnRemove(variant);
 			} else if (Global.getSettings().getHullModSpec(removedHullModId).hasTag(lyr_internals.tag.externalAccess)) { 
 				variant.setHullSpecAPI(ehm_hullSpecRefresh(variant)); commitChanges(); playSound();
 			}
@@ -245,14 +113,14 @@ public class _ehm_basetracker extends _ehm_base {
 	 * @param removedSMods set of removed hull mods
 	 * @throws Throwable
 	 */
-	private static void onSModRemoved(ShipVariantAPI variant, Set<String> removedSMods) {	
+	static void onSModRemoved(ShipVariantAPI variant, Set<String> removedSMods) {	
 		String removedSModId;
 
 		for (Iterator<String> i = removedSMods.iterator(); i.hasNext();) {
 			removedSModId = i.next(); 
 
 			if (registeredHullMods.containsKey(removedSModId)) {
-				registeredHullMods.get(removedSModId).executeEvent(lyr_internals.event.sModCleanUp, variant);
+				registeredHullMods.get(removedSModId).executeSModCleanUp(variant);
 			} else if (Global.getSettings().getHullModSpec(removedSModId).hasTag(lyr_internals.tag.externalAccess)) { 
 				variant.setHullSpecAPI(ehm_hullSpecRefresh(variant)); commitChanges(); playSound();
 			}

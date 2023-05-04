@@ -1,4 +1,4 @@
-package data.hullmods;
+package data.hullmods.ehm;
 
 import static lyr.tools._lyr_uiTools.commitChanges;
 import static lyr.tools._lyr_uiTools.playSound;
@@ -13,8 +13,8 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import lyr.misc.lyr_tooltip;
 
 /**
- * Serves as a requirement for all experimental hull modifications, and provides hullMod
- * tracking to the ship.
+ * Serves as a requirement for all experimental hull modifications, and enables tracking
+ * on the ship. Main methods for tracking is located in the class that this one extends.
  * @category Base Hull Modification 
  * @author lyravega
  */
