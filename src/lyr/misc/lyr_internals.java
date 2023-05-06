@@ -86,6 +86,7 @@ public class lyr_internals {
 				static {
 					set.addAll(capacitors.set);
 					set.addAll(dissipators.set);
+					set.addAll(launchTube.set);
 				}
 			}
 			public static final Set<String> set = new HashSet<String>();
@@ -121,11 +122,15 @@ public class lyr_internals {
 
 			adapterShunt = "ehm_adapter", // must match weapon tag in .csv
 			capacitorShunt = "ehm_capacitor", // must match weapon tag in .csv
-			dissipatorShunt = "ehm_dissipator"; // must match weapon tag in .csv
+			dissipatorShunt = "ehm_dissipator", // must match weapon tag in .csv
+			converterShunt = "ehm_converter", // must match weapon tag in .csv
+			diverterShunt = "ehm_diverter", // must match weapon tag in .csv
+			mutableShunt = "ehm_mutable"; // must match weapon tag in .csv
 	}
 
 	public static class affix {
 		public static final String
+			normalSlot = "WS", // should NOT be altered in any update
 			adaptedSlot = "AS_", // should NOT be altered in any update
 			convertedSlot = "CS_", // should NOT be altered in any update
 			allRetrofit = "ehm_", // must match hullmod id in .csv

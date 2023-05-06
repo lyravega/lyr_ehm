@@ -5,12 +5,13 @@ import static lyr.tools._lyr_uiTools.commitChanges;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.lwjgl.util.vector.Vector2f;
 
@@ -77,6 +78,7 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 	//#endregion
 	// END OF LISTENER & EVENT REGISTRATION
 
+	//#region ADAPTERS
 	/**
 	 * An inner class to supply the adapters with relevant child data
 	 */
@@ -135,6 +137,9 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 		largeQuad.addChild("FR", WeaponSize.SMALL, new Vector2f(-4.0f, -17.0f)); // far right
 		adapters.put(lyr_internals.id.shunts.adapters.largeQuad, largeQuad);
 	}
+
+	private static final Pattern pattern = Pattern.compile("WS [0-9]{3}");
+	private static Matcher matcher;
 	
 	/** 
 	 * Spawns additional weapon slots, if the slots have adapters on them.
@@ -145,31 +150,22 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 		ShipVariantAPI variant = stats.getVariant(); 
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 		boolean refreshRefit = false;
+		
+		for (String shuntSlotId: variant.getFittedWeaponSlots()) {
+			if (!shuntSlotId.startsWith(lyr_internals.affix.normalSlot)) continue;	// only works on normal slots
+			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(shuntSlotId);
+			if (!shuntSpec.getSize().equals(variant.getSlot(shuntSlotId).getSlotSize())) continue;	// requires size match
+			String shuntId = shuntSpec.getWeaponId();
+			if (!lyr_internals.id.shunts.adapters.set.contains(shuntId)) continue;	// only care about these shunts
 
-		for (String slotId: variant.getFittedWeaponSlots()) {
-			if (variant.getSlot(slotId) == null) continue;	// short-circuit to avoid a potential null pointer (may happen when vanilla hullSpec is (re)loaded)
-			if (slotId.startsWith(lyr_internals.affix.adaptedSlot)) continue;	// short-circuit to prevent adapters working on adapted slots
-			if (slotId.startsWith(lyr_internals.affix.convertedSlot)) continue;	// short-circuit to prevent adapters working on converted slots
-
-			// WeaponType slotType = variant.getSlot(slotId).getWeaponType();
-			// WeaponSize slotSize = variant.getSlot(slotId).getSlotSize();
-			WeaponSpecAPI weaponSpec = variant.getWeaponSpec(slotId);
-			// WeaponType weaponType = weaponSpec.getType();
-			// WeaponSize weaponSize = weaponSpec.getSize();
-			String weaponId = weaponSpec.getWeaponId();
-
-			if (!weaponSpec.getSize().equals(variant.getSlot(slotId).getSlotSize())) continue;	// to avoid plugging medium universal to large universal
-			if (!lyr_internals.id.shunts.adapters.set.contains(weaponId)) continue;	// to short-circuit the function if it isn't an adapter
-
-			lyr_weaponSlot parentSlot = hullSpec.getWeaponSlot(slotId); 
+			childrenParameters childrenParameters = adapters.get(shuntId);
+			lyr_weaponSlot parentSlot = hullSpec.getWeaponSlot(shuntSlotId); 
 			Vector2f parentSlotLocation = parentSlot.retrieve().getLocation();
 			float parentSlotAngle = parentSlot.retrieve().getAngle();
-			String parentSlotId = slotId; /*parentSlot.retrieve().getId();*/
 
-			childrenParameters childrenParameters = adapters.get(weaponId);
 			for (String childId: childrenParameters.getChildren()) { // childId and childSlotId are not the same, be aware
 				lyr_weaponSlot childSlot = parentSlot.clone();
-				String childSlotId = lyr_internals.affix.adaptedSlot + parentSlotId + childId; // also used as nodeId because nodeId isn't visible
+				String childSlotId = lyr_internals.affix.adaptedSlot + shuntSlotId + childId; // also used as nodeId because nodeId isn't visible
 				Vector2f childSlotLocation = generateChildLocation(parentSlotLocation, parentSlotAngle, childrenParameters.getChildOffset(childId));
 				WeaponSize childSlotSize = childrenParameters.getChildSize(childId);
 
@@ -181,14 +177,17 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 			}
 
 			parentSlot.setWeaponType(WeaponType.DECORATIVE);
-			hullSpec.addBuiltInWeapon(parentSlotId, weaponId);
+			hullSpec.addBuiltInWeapon(shuntSlotId, shuntId);
 			refreshRefit = true;
 		}
 
 		variant.setHullSpecAPI(hullSpec.retrieve()); 
 		if (refreshRefit) { refreshRefit = false; ehm_cleanWeaponGroupsUp(variant); commitChanges(); }
 	}
+	//#endregion
+	// END OF ADAPTERS
 
+	//#region MUTABLES
 	private static final Map<String,Float> fluxCapacityBonus = new HashMap<String,Float>();
 	private static final Map<String,Float> fluxDissipationBonus = new HashMap<String,Float>();
 	private static final Map<String,Float> fighterBayBonus = new HashMap<String,Float>();
@@ -223,22 +222,17 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 		int fighterBayFlat = 0;
 
 		// slot conversion
-		for (String slotId: variant.getFittedWeaponSlots()) {
-			if (variant.getSlot(slotId) == null) continue;	// short-circuit to avoid a potential null pointer (may/will happen when vanilla hullSpec is (re)loaded)
-			if (slotId.startsWith(lyr_internals.affix.adaptedSlot)) continue;	// short-circuit to prevent diverters working on adapted slots
-			if (slotId.startsWith(lyr_internals.affix.convertedSlot)) continue;	// short-circuit to prevent diverters working on converted slots
+		for (String shuntSlotId: variant.getFittedWeaponSlots()) {
+			if (shuntSlotId.startsWith(lyr_internals.affix.convertedSlot)) continue;	// only works on normal and adapted slots
+			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(shuntSlotId);
+			if (!shuntSpec.getSize().equals(variant.getSlot(shuntSlotId).getSlotSize())) continue;	// requires size match
+			String shuntId = shuntSpec.getWeaponId();
+			if (!lyr_internals.id.shunts.hasMutableBonus.set.contains(shuntId)) continue;	// only care about these shunts
 
-			WeaponSpecAPI weaponSpec = variant.getWeaponSpec(slotId);
-			String weaponId = weaponSpec.getWeaponId();
-
-			if (!weaponSpec.getSize().equals(variant.getSlot(slotId).getSlotSize())) continue; // requires matching slot size
-			if (!mutableStatBonus.containsKey(weaponId)) continue; // to short-circuit the function if it isn't a shunt
-
-			lyr_weaponSlot slot = hullSpec.getWeaponSlot(slotId); 
-
-			slot.setWeaponType(WeaponType.DECORATIVE);
-			hullSpec.addBuiltInWeapon(slotId, weaponId);
-			refreshRefit = true; 
+			// slotPoints += slotValue.get(weaponSize);	// needs to be calculated afterwards like mutableStat bonus as this block will execute only on install
+			hullSpec.getWeaponSlot(shuntSlotId).setWeaponType(WeaponType.DECORATIVE);
+			hullSpec.addBuiltInWeapon(shuntSlotId, shuntId);
+			refreshRefit = true;
 		}
 
 		// bonus calculation
@@ -246,14 +240,14 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 			if (!slot.getWeaponType().equals(WeaponType.DECORATIVE)) continue;	// since activated shunts become decorative, only need to check them
 
 			String slotId = slot.getId();
-			WeaponSpecAPI weaponSpec = variant.getWeaponSpec(slotId); if (weaponSpec == null) continue;	// skip empty slots
-			WeaponSize weaponSize = weaponSpec.getSize();
-			String weaponId = weaponSpec.getWeaponId();
+			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId); if (shuntSpec == null) continue;	// skip empty slots
+			WeaponSize shuntSize = shuntSpec.getSize();
+			String shuntId = shuntSpec.getWeaponId();
 	
-			if (!weaponSize.equals(variant.getSlot(slotId).getSlotSize())) continue; // requires matching slot size
-			if (fluxCapacityBonus.containsKey(weaponId)) fluxCapacityMult += fluxCapacityBonus.get(weaponId);
-			else if (fluxDissipationBonus.containsKey(weaponId)) fluxDissipationMult += fluxDissipationBonus.get(weaponId);
-			else if (fighterBayBonus.containsKey(weaponId)) fighterBayFlat += fighterBayBonus.get(weaponId);
+			if (!shuntSize.equals(variant.getSlot(slotId).getSlotSize())) continue; // requires matching slot size
+			if (fluxCapacityBonus.containsKey(shuntId)) fluxCapacityMult += fluxCapacityBonus.get(shuntId);
+			else if (fluxDissipationBonus.containsKey(shuntId)) fluxDissipationMult += fluxDissipationBonus.get(shuntId);
+			else if (fighterBayBonus.containsKey(shuntId)) fighterBayFlat += fighterBayBonus.get(shuntId);
 		}
 
 		stats.getFluxCapacity().modifyMult(hullModSpecId, fluxCapacityMult);
@@ -263,7 +257,10 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 		variant.setHullSpecAPI(hullSpec.retrieve());
 		if (refreshRefit) { refreshRefit = false; ehm_cleanWeaponGroupsUp(variant); commitChanges(); }
 	}
+	//#endregion
+	// END OF MUTABLES
 
+	//#region CONVERTERS & DIVERTERS
 	/**
 	 * An inner class to supply the converters with relevant child data
 	 */
@@ -308,52 +305,30 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 		slotValue.put(WeaponSize.SMALL, 1);
 	}
 
-	private static Map<String, Integer> converterCost = new HashMap<String, Integer>();
-	static {
-		converterCost.put(lyr_internals.id.shunts.converters.mediumToLarge, 2);
-		converterCost.put(lyr_internals.id.shunts.converters.smallToLarge, 3);
-		converterCost.put(lyr_internals.id.shunts.converters.smallToMedium, 1);
-	}
-
 	/** 
 	 * Spawns additional weapon slots, if the slots have adapters on them.
 	 * Adapters are turned into decorative pieces in the process.
 	 * @param stats of the ship whose variant / hullSpec will be altered
 	 */
-	protected static final void ehm_diverterAndConverterActivator(MutableShipStatsAPI stats) {
+	protected static final void ehm_diverterAndConverterActivator(MutableShipStatsAPI stats, int slotBonus) {
 		ShipVariantAPI variant = stats.getVariant(); 
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 		boolean refreshRefit = false;
-		int slotPoints = variant.getSMods().contains("ehm_test") ? 8 : 0;
+		int slotPoints = variant.getSMods().contains("ehm_test") ? slotBonus : 0;
 		SortedSet<String> sortedFittedWeaponSlots = new TreeSet<String>(variant.getFittedWeaponSlots());
 
-		LinkedHashSet<String> sMods = variant.getSMods();
-		sMods = sMods;
-		String testId = "CS_WS 001ML";
-		String derp = testId.substring(3, testId.length()-2);
-		derp = derp;         
 
 		// slot conversion for diverters
-		for (String slotId: sortedFittedWeaponSlots) {	// need to use a sorted set to keep diversion/conversion in order
-			if (variant.getSlot(slotId) == null) {
-				slotId = slotId.substring(3, slotId.length()-2);
-			} else {
-				if (slotId.startsWith(lyr_internals.affix.adaptedSlot)) continue;	// short-circuit to prevent diverters working on adapted slots
-				if (slotId.startsWith(lyr_internals.affix.convertedSlot)) continue;	// short-circuit to prevent diverters working on converted slots
-			}
-
-			WeaponSpecAPI weaponSpec = variant.getWeaponSpec(slotId);
-			WeaponSize weaponSize = weaponSpec.getSize();
-			String weaponId = weaponSpec.getWeaponId();
-
-			if (!weaponSize.equals(variant.getSlot(slotId).getSlotSize())) continue; // requires matching slot size
-			if (!lyr_internals.id.shunts.diverters.set.contains(weaponId)) continue; // to short-circuit the function if it isn't a shunt
-
-			lyr_weaponSlot slot = hullSpec.getWeaponSlot(slotId); 
+		for (String shuntSlotId: sortedFittedWeaponSlots) {
+			if (shuntSlotId.startsWith(lyr_internals.affix.convertedSlot)) continue;	// only works on normal and adapted slots
+			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(shuntSlotId);
+			if (!shuntSpec.getSize().equals(variant.getSlot(shuntSlotId).getSlotSize())) continue;	// requires size match
+			String shuntId = shuntSpec.getWeaponId();
+			if (!lyr_internals.id.shunts.diverters.set.contains(shuntId)) continue;	// only care about these shunts
 
 			// slotPoints += slotValue.get(weaponSize);	// needs to be calculated afterwards like mutableStat bonus as this block will execute only on install
-			slot.setWeaponType(WeaponType.DECORATIVE);
-			hullSpec.addBuiltInWeapon(slotId, weaponId);
+			hullSpec.getWeaponSlot(shuntSlotId).setWeaponType(WeaponType.DECORATIVE);
+			hullSpec.addBuiltInWeapon(shuntSlotId, shuntId);
 			refreshRefit = true;
 		}
 
@@ -367,49 +342,48 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 			String weaponId = weaponSpec.getWeaponId();
 
 			if (!weaponSize.equals(variant.getSlot(slotId).getSlotSize())) continue; // requires matching slot size
-			if (lyr_internals.id.shunts.diverters.set.contains(weaponId)) slotPoints += slotValue.get(weaponSize); // to short-circuit the function if it isn't a shunt
-			else if (lyr_internals.id.shunts.converters.set.contains(weaponId)) slotPoints -= converterCost.get(weaponId); // to short-circuit the function if it isn't a shunt
+			if (lyr_internals.id.shunts.diverters.set.contains(weaponId)) slotPoints += slotValue.get(weaponSize);
+			else if (lyr_internals.id.shunts.converters.set.contains(weaponId)) slotPoints -= converters.get(weaponId).getChildCost();
 		}
 
 		// slot conversion for converters
-		for (String slotId: sortedFittedWeaponSlots) {	// need to use a sorted set to keep diversion/conversion in order
-			if (variant.getSlot(slotId) == null) {
-				slotId = slotId.substring(3, slotId.length()-2);
-			} else {
-				if (slotId.startsWith(lyr_internals.affix.adaptedSlot)) continue;	// short-circuit to prevent diverters working on adapted slots
-				if (slotId.startsWith(lyr_internals.affix.convertedSlot)) continue;	// short-circuit to prevent diverters working on converted slots
+		for (String shuntSlotId: sortedFittedWeaponSlots) {
+			if (variant.getSlot(shuntSlotId) == null) {
+				matcher = pattern.matcher(shuntSlotId);
+				shuntSlotId = matcher.find() ? matcher.group() : null;
+				if (shuntSlotId == null) continue;
 			}
+			if (!shuntSlotId.startsWith(lyr_internals.affix.normalSlot)) continue;	// only works on normal slots
+			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(shuntSlotId);
+			if (!shuntSpec.getSize().equals(variant.getSlot(shuntSlotId).getSlotSize())) continue;	// requires size match
+			String shuntId = shuntSpec.getWeaponId();
+			if (!lyr_internals.id.shunts.converters.set.contains(shuntId)) continue;	// only care about these shunts
 
-			WeaponSpecAPI weaponSpec = variant.getWeaponSpec(slotId);
-			String weaponId = weaponSpec.getWeaponId();
+			childParameters childParameters = converters.get(shuntId);
+			int childCost = childParameters.getChildCost();
+			if (slotPoints - childCost < 0) continue;
 
-			if (!weaponSpec.getSize().equals(variant.getSlot(slotId).getSlotSize())) continue; // requires matching slot size
-			if (!lyr_internals.id.shunts.converters.set.contains(weaponId)) continue; // to short-circuit the function if it isn't a shunt
-
-			childParameters childParameters = converters.get(weaponId);
-			int childCost = childParameters.getChildCost(); if (slotPoints - childCost < 0) continue;
-
-			lyr_weaponSlot parentSlot = hullSpec.getWeaponSlot(slotId);
+			lyr_weaponSlot parentSlot = hullSpec.getWeaponSlot(shuntSlotId);
 			lyr_weaponSlot childSlot = parentSlot.clone();
-			String childSlotId = lyr_internals.affix.convertedSlot + slotId + childParameters.getChildSuffix(); // also used as nodeId because nodeId isn't visible
-			Vector2f childSlotLocation = parentSlot.retrieve().getLocation();
-			WeaponSize childSlotSize = childParameters.getChildSize();
+			String childSlotId = lyr_internals.affix.convertedSlot + shuntSlotId + childParameters.getChildSuffix(); // also used as nodeId because nodeId isn't visible
 
 			childSlot.setId(childSlotId);
-			childSlot.setNode(childSlotId, childSlotLocation);
-			childSlot.setSlotSize(childSlotSize);
+			childSlot.setNode(childSlotId, parentSlot.retrieve().getLocation());
+			childSlot.setSlotSize(childParameters.getChildSize());
 
 			hullSpec.addWeaponSlot(childSlot.retrieve());
 
-			slotPoints -= converterCost.get(weaponId);	// needs to be subtracted from here on initial install to avoid infinite installs
+			slotPoints -= converters.get(shuntId).getChildCost();	// needs to be subtracted from here on initial install to avoid infinite installs
 			parentSlot.setWeaponType(WeaponType.DECORATIVE);
-			hullSpec.addBuiltInWeapon(slotId, weaponId);
+			hullSpec.addBuiltInWeapon(shuntSlotId, shuntId);
 			refreshRefit = true; 
 		}
 
 		variant.setHullSpecAPI(hullSpec.retrieve()); 
 		if (refreshRefit) { refreshRefit = false; ehm_cleanWeaponGroupsUp(variant); commitChanges(); }
 	}
+	//#endregion
+	// END OF CONVERTERS & DIVERTERS
 
 	/** 
 	 * Refreshes the hullSpec and returns it.

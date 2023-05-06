@@ -31,6 +31,7 @@ public final class lyr_weaponSlot extends _lyr_proxyTools {
 	private static MethodHandle setSlotSize = null;
 	private static MethodHandle newNode = null;
 	private static MethodHandle setNode = null;
+	private static MethodHandle setNode_alt = null;
 
 	static {
 		try {
@@ -40,7 +41,8 @@ public final class lyr_weaponSlot extends _lyr_proxyTools {
 			setId = inspectMethod("setId", weaponSlotClass).getMethodHandle();
 			setSlotSize = inspectMethod("setSlotSize", weaponSlotClass).getMethodHandle();
 			newNode = lookup.findConstructor(nodeClass, MethodType.methodType(void.class, String.class, Vector2f.class));
-			setNode = inspectMethod("setNode", weaponSlotClass).getMethodHandle();
+			setNode = inspectMethod("setNode", weaponSlotClass, String.class, Vector2f.class).getMethodHandle();
+			setNode_alt = inspectMethod("setNode", weaponSlotClass, nodeClass).getMethodHandle();
 		} catch (Throwable t) {
 			logger.fatal(lyr_internals.logPrefix+"Failed to find a method in 'lyr_weaponSlot'", t);
 		}
@@ -177,7 +179,8 @@ public final class lyr_weaponSlot extends _lyr_proxyTools {
 	 */
 	public void setNode(String nodeId, Vector2f location) {
 		try {
-			setNode.invoke(weaponSlot, nodeClass.cast(newNode.invoke(nodeId, location)));
+			// setNode_alt.invoke(weaponSlot, nodeClass.cast(newNode.invoke(nodeId, location)));
+			setNode.invoke(weaponSlot, nodeId, location);
 		} catch (Throwable t) {
 			logger.error(lyr_internals.logPrefix+"Failed to use 'setNode()' in 'lyr_weaponSlot'", t);
 		}

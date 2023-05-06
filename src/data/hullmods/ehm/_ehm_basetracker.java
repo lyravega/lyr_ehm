@@ -264,6 +264,7 @@ public class _ehm_basetracker extends _ehm_base {
 		private Set<String> sMods = new HashSet<String>();
 		private Set<String> newSMods = new HashSet<String>();
 		private Set<String> removedSMods = new HashSet<String>();
+		// private Set<String> weapons = new HashSet<String>();
 		private boolean isDone = false;
 		
 		//#region CONSTRUCTORS & ACCESSORS
@@ -279,6 +280,7 @@ public class _ehm_basetracker extends _ehm_base {
 			this.memberId = memberId;
 			this.hullMods.addAll(variant.getHullMods());
 			this.sMods.addAll(variant.getSMods());
+			// this.weapons.addAll(variant.getFittedWeaponSlots());
 			
 			Global.getSector().addScript(this);
 	
@@ -312,6 +314,18 @@ public class _ehm_basetracker extends _ehm_base {
 	
 				removedHullMods.add(hullModId);
 			}
+			
+			if (!newHullMods.isEmpty()) {
+				onInstalled(variant, newHullMods);
+				hullMods.addAll(newHullMods);
+				newHullMods.clear();
+			}
+			
+			if (!removedHullMods.isEmpty()) {
+				onRemoved(variant, removedHullMods);
+				hullMods.removeAll(removedHullMods);
+				removedHullMods.clear();
+			}
 
 			for (String hullModId : variant.getSMods()) {
 				// if (!hullModId.startsWith(lyr_internals.affix.allRetrofit)) continue;
@@ -329,18 +343,6 @@ public class _ehm_basetracker extends _ehm_base {
 				if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": Removed hull s-modification '"+hullModId+"'");
 	
 				removedSMods.add(hullModId);
-			}
-			
-			if (!newHullMods.isEmpty()) {
-				onInstalled(variant, newHullMods);
-				hullMods.addAll(newHullMods);
-				newHullMods.clear();
-			}
-			
-			if (!removedHullMods.isEmpty()) {
-				onRemoved(variant, removedHullMods);
-				hullMods.removeAll(removedHullMods);
-				removedHullMods.clear();
 			}
 			
 			if (!newSMods.isEmpty()) {

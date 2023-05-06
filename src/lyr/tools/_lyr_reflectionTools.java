@@ -124,7 +124,8 @@ public class _lyr_reflectionTools {
 			method = (declaredOnly) ? clazz.getDeclaredMethod(methodName, parameterTypes) : clazz.getMethod(methodName, parameterTypes);
 		} catch (Throwable t) { // searches all the methods with the passed name if the above fails, and uses the FIRST found one
 			for (Object currMethod : (declaredOnly) ? clazz.getDeclaredMethods() : clazz.getMethods()) {
-				if (!String.class.cast(getName.invoke(currMethod)).equals(methodName)) continue;
+				String currMethodName = (String) getName.invoke(currMethod);
+				if (currMethodName.contains("API") || !currMethodName.equals(methodName)) continue;
 	
 				method = currMethod; break;
 			}
