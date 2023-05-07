@@ -59,7 +59,7 @@ public class ehm_base extends _ehm_basetracker {
 			String playerRank = Global.getSector().getPlayerPerson().getRank();
 			switch ((int) Math.round(Math.random() * 10)) {
 				case 0: 
-					tooltip.addPara("01001001 00100000 01100001 01101101 00100000 01110100 01101001 01110010 01100101 01100100... *cough* All systems operational, " + playerRank, lyr_tooltip.text.padding);
+					tooltip.addPara("I am investigating ways to make the slot shunts widely available, " + playerRank + ". But for now, our only source is establishing and using our own industries.", lyr_tooltip.text.padding);
 					break;
 				case 1: 
 					tooltip.addPara(playerRank + ", if you are unhappy with what I am offering you, I can get rid of the base hull modifications that I've made. Let me know!", lyr_tooltip.text.padding);
