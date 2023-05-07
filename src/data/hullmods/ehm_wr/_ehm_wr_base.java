@@ -26,7 +26,7 @@ import lyr.proxies.lyr_weaponSlot;
  * This class is used by weapon retrofit hullmods. They are pretty 
  * straightforward in their operation; change all of the weapon slots 
  * on a ship to a different type. 
- * @see {@link data.hullmods.ehm_ar._ehm_ar_base _ehm_ar_base} for slot adapter base
+ * @see {@link data.hullmods._ehm_ar_base _ehm_ar_base} for slot adapter base
  * @see {@link data.hullmods.ehm_sr._ehm_sr_base _ehm_sr_base} for system retrofit base
  * @see {@link data.hullmods.ehm_ec._ehm_ec_base _ehm_ec_base} for engine cosmetic base
  * @see {@link data.hullmods.ehm_sc._ehm_sc_base _ehm_sc_base} for shield cosmetic base
@@ -125,7 +125,7 @@ public class _ehm_wr_base extends _ehm_base implements _ehm_eventmethod {
 		return hullSpec;
 	}
 
-	//#region INSTALLATION CHECKS
+	//#region INSTALLATION CHECKS / DESCRIPTION
 	@Override
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (ship == null) return;
@@ -133,7 +133,7 @@ public class _ehm_wr_base extends _ehm_base implements _ehm_eventmethod {
 		if (!isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(lyr_tooltip.header.notApplicable, lyr_tooltip.header.notApplicable_textColour, lyr_tooltip.header.notApplicable_bgColour, Alignment.MID, lyr_tooltip.header.padding);
 
-			if (!ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(lyr_tooltip.text.lacksBase, lyr_tooltip.text.padding);
+			if (!ehm_hasRetrofitBaseBuiltIn(ship.getVariant())) tooltip.addPara(lyr_tooltip.text.lacksBase, lyr_tooltip.text.padding);
 			if (ehm_hasRetrofitTag(ship, lyr_internals.tag.weaponRetrofit, hullModSpecId)) tooltip.addPara(lyr_tooltip.text.hasWeaponRetrofit, lyr_tooltip.text.padding);
 		}
 
@@ -152,7 +152,7 @@ public class _ehm_wr_base extends _ehm_base implements _ehm_eventmethod {
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false;
 
-		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return false; 
+		if (!ehm_hasRetrofitBaseBuiltIn(ship.getVariant())) return false; 
 		if (ehm_hasRetrofitTag(ship, lyr_internals.tag.weaponRetrofit, hullModSpecId)) return false; 
 
 		return true; 

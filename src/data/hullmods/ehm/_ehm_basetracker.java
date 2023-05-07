@@ -100,7 +100,7 @@ public class _ehm_basetracker extends _ehm_base {
 
 			if (registeredHullMods.containsKey(removedHullModId)) {
 				registeredHullMods.get(removedHullModId).executeOnRemove(variant);
-			} else if (Global.getSettings().getHullModSpec(removedHullModId).hasTag(lyr_internals.tag.externalAccess)) { 
+			} else if (Global.getSettings().getHullModSpec(removedHullModId).hasTag(lyr_internals.tag.externalAccess)) {
 				variant.setHullSpecAPI(ehm_hullSpecRefresh(variant)); commitChanges(); playSound();
 			}
 		}

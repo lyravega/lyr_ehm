@@ -73,10 +73,20 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 			this.hullModEventHandler = new _ehm_eventhandler(this.hullModSpecId, this);
 			hullModEventHandler.registerOnInstall(true, true, false);
 			hullModEventHandler.registerOnRemove(true, true, true);
-		} 
+		}
 	}
 	//#endregion
 	// END OF LISTENER & EVENT REGISTRATION
+
+	public static final Map<HullSize, Integer> slotPointBonus = new HashMap<HullSize, Integer>();
+	static {
+		slotPointBonus.put(HullSize.FIGHTER, 0);
+		slotPointBonus.put(HullSize.DEFAULT, 0);
+		slotPointBonus.put(HullSize.FRIGATE, 0);
+		slotPointBonus.put(HullSize.DESTROYER, 2);
+		slotPointBonus.put(HullSize.CRUISER, 4);
+		slotPointBonus.put(HullSize.CAPITAL_SHIP, 6);
+	}
 
 	//#region ADAPTERS
 	/**
@@ -87,7 +97,7 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 		private Map<String, Vector2f> childrenOffsets;
 		private Map<String, WeaponSize> childrenSizes;
 
-		protected childrenParameters() {
+		private childrenParameters() {
 			children = new HashSet<String>();
 			childrenOffsets = new HashMap<String, Vector2f>();
 			childrenSizes = new HashMap<String, WeaponSize>();
@@ -99,7 +109,7 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 			this.childrenSizes.put(childId, childSize);
 		}
 
-		public Set<String> getChildren() {
+		private Set<String> getChildren() {
 			return this.children;
 		}
 
@@ -137,16 +147,13 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 		largeQuad.addChild("FR", WeaponSize.SMALL, new Vector2f(-4.0f, -17.0f)); // far right
 		adapters.put(lyr_internals.id.shunts.adapters.largeQuad, largeQuad);
 	}
-
-	private static final Pattern pattern = Pattern.compile("WS [0-9]{3}");
-	private static Matcher matcher;
 	
 	/** 
 	 * Spawns additional weapon slots, if the slots have adapters on them.
 	 * Adapters are turned into decorative pieces in the process.
 	 * @param stats of the ship whose variant / hullSpec will be altered
 	 */
-	protected static final void ehm_adapterActivator(MutableShipStatsAPI stats) {
+	public static final void ehm_adapterActivator(MutableShipStatsAPI stats) {
 		ShipVariantAPI variant = stats.getVariant(); 
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 		boolean refreshRefit = false;
@@ -154,9 +161,9 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 		for (String shuntSlotId: variant.getFittedWeaponSlots()) {
 			if (!shuntSlotId.startsWith(lyr_internals.affix.normalSlot)) continue;	// only works on normal slots
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(shuntSlotId);
-			if (!shuntSpec.getSize().equals(variant.getSlot(shuntSlotId).getSlotSize())) continue;	// requires size match
 			String shuntId = shuntSpec.getWeaponId();
 			if (!lyr_internals.id.shunts.adapters.set.contains(shuntId)) continue;	// only care about these shunts
+			if (!shuntSpec.getSize().equals(variant.getSlot(shuntSlotId).getSlotSize())) continue;	// requires size match
 
 			childrenParameters childrenParameters = adapters.get(shuntId);
 			lyr_weaponSlot parentSlot = hullSpec.getWeaponSlot(shuntSlotId); 
@@ -213,7 +220,7 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 	 * @param stats of the ship whose variant / hullSpec will be altered
 	 * @param hullModSpecId to properly accumulate the bonuses under the same id
 	 */
-	protected static final void ehm_mutableShuntActivator(MutableShipStatsAPI stats, String hullModSpecId) {
+	public static final void ehm_mutableShuntActivator(MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant(); 
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 		boolean refreshRefit = false;
@@ -225,9 +232,9 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 		for (String shuntSlotId: variant.getFittedWeaponSlots()) {
 			if (shuntSlotId.startsWith(lyr_internals.affix.convertedSlot)) continue;	// only works on normal and adapted slots
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(shuntSlotId);
-			if (!shuntSpec.getSize().equals(variant.getSlot(shuntSlotId).getSlotSize())) continue;	// requires size match
 			String shuntId = shuntSpec.getWeaponId();
 			if (!lyr_internals.id.shunts.hasMutableBonus.set.contains(shuntId)) continue;	// only care about these shunts
+			if (!shuntSpec.getSize().equals(variant.getSlot(shuntSlotId).getSlotSize())) continue;	// requires size match
 
 			// slotPoints += slotValue.get(weaponSize);	// needs to be calculated afterwards like mutableStat bonus as this block will execute only on install
 			hullSpec.getWeaponSlot(shuntSlotId).setWeaponType(WeaponType.DECORATIVE);
@@ -269,13 +276,13 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 		private int childCost;
 		private WeaponSize childSize;
 
-		protected childParameters(String childSuffix, WeaponSize childSize, int childCost) {
+		private childParameters(String childSuffix, WeaponSize childSize, int childCost) {
 			this.childSuffix = childSuffix;
 			this.childCost = childCost;
 			this.childSize = childSize;
 		}
 
-		public String getChildSuffix() {
+		private String getChildSuffix() {
 			return this.childSuffix;
 		}
 
@@ -298,7 +305,7 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 		converters.put(lyr_internals.id.shunts.converters.smallToMedium, smallToMedium);
 	}
 
-	private static Map<WeaponSize, Integer> slotValue = new HashMap<WeaponSize, Integer>();
+	private static final Map<WeaponSize, Integer> slotValue = new HashMap<WeaponSize, Integer>();
 	static {
 		slotValue.put(WeaponSize.LARGE, 4);
 		slotValue.put(WeaponSize.MEDIUM, 2);
@@ -310,21 +317,19 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 	 * Adapters are turned into decorative pieces in the process.
 	 * @param stats of the ship whose variant / hullSpec will be altered
 	 */
-	protected static final void ehm_diverterAndConverterActivator(MutableShipStatsAPI stats, int slotBonus) {
+	public static final void ehm_diverterAndConverterActivator(MutableShipStatsAPI stats, int slotPoints) {
 		ShipVariantAPI variant = stats.getVariant(); 
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 		boolean refreshRefit = false;
-		int slotPoints = variant.getSMods().contains("ehm_test") ? slotBonus : 0;
 		SortedSet<String> sortedFittedWeaponSlots = new TreeSet<String>(variant.getFittedWeaponSlots());
-
 
 		// slot conversion for diverters
 		for (String shuntSlotId: sortedFittedWeaponSlots) {
 			if (shuntSlotId.startsWith(lyr_internals.affix.convertedSlot)) continue;	// only works on normal and adapted slots
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(shuntSlotId);
-			if (!shuntSpec.getSize().equals(variant.getSlot(shuntSlotId).getSlotSize())) continue;	// requires size match
 			String shuntId = shuntSpec.getWeaponId();
 			if (!lyr_internals.id.shunts.diverters.set.contains(shuntId)) continue;	// only care about these shunts
+			if (!shuntSpec.getSize().equals(variant.getSlot(shuntSlotId).getSlotSize())) continue;	// requires size match
 
 			// slotPoints += slotValue.get(weaponSize);	// needs to be calculated afterwards like mutableStat bonus as this block will execute only on install
 			hullSpec.getWeaponSlot(shuntSlotId).setWeaponType(WeaponType.DECORATIVE);
@@ -346,6 +351,9 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 			else if (lyr_internals.id.shunts.converters.set.contains(weaponId)) slotPoints -= converters.get(weaponId).getChildCost();
 		}
 
+		final Pattern pattern = Pattern.compile("WS [0-9]{3}");
+		Matcher matcher;
+
 		// slot conversion for converters
 		for (String shuntSlotId: sortedFittedWeaponSlots) {
 			if (variant.getSlot(shuntSlotId) == null) {
@@ -355,9 +363,9 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 			}
 			if (!shuntSlotId.startsWith(lyr_internals.affix.normalSlot)) continue;	// only works on normal slots
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(shuntSlotId);
-			if (!shuntSpec.getSize().equals(variant.getSlot(shuntSlotId).getSlotSize())) continue;	// requires size match
 			String shuntId = shuntSpec.getWeaponId();
 			if (!lyr_internals.id.shunts.converters.set.contains(shuntId)) continue;	// only care about these shunts
+			if (!shuntSpec.getSize().equals(variant.getSlot(shuntSlotId).getSlotSize())) continue;	// requires size match
 
 			childParameters childParameters = converters.get(shuntId);
 			int childCost = childParameters.getChildCost();
@@ -407,7 +415,7 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 	 * root cause can be found, however.
 	 * @param variant whose weapon groups will be purged of activated stuff
 	 */
-	protected static final void ehm_cleanWeaponGroupsUp(ShipVariantAPI variant) {
+	private static final void ehm_cleanWeaponGroupsUp(ShipVariantAPI variant) {
 		List<WeaponGroupSpec> weaponGroups = variant.getWeaponGroups();
 		Map<String, String> groupCleanupTargets = new HashMap<String, String>(variant.getHullSpec().getBuiltInWeapons());
 		groupCleanupTargets.values().retainAll(lyr_internals.id.shunts.set);
@@ -416,7 +424,7 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 		}
 	}
 
-	//#region INSTALLATION CHECKS
+	//#region INSTALLATION CHECKS / DESCRIPTION
 	@Override
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (ship == null) return;
@@ -424,15 +432,7 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 		if (!isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(lyr_tooltip.header.notApplicable, lyr_tooltip.header.notApplicable_textColour, lyr_tooltip.header.notApplicable_bgColour, Alignment.MID, lyr_tooltip.header.padding);
 
-			if (!ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(lyr_tooltip.text.lacksBase, lyr_tooltip.text.padding);
-		}
-
-		if (!canBeAddedOrRemovedNow(ship, null, null)) {
-			String inOrOut = ship.getVariant().hasHullMod(hullModSpecId) ? lyr_tooltip.header.lockedIn : lyr_tooltip.header.lockedOut;
-
-			tooltip.addSectionHeading(inOrOut, lyr_tooltip.header.locked_textColour, lyr_tooltip.header.locked_bgColour, Alignment.MID, lyr_tooltip.header.padding);
-
-			if (ehm_hasWeapons(ship, lyr_internals.affix.adaptedSlot)) tooltip.addPara(lyr_tooltip.text.hasWeaponsOnAdaptedSlots, lyr_tooltip.text.padding);
+			if (!ehm_hasRetrofitBaseBuiltIn(ship.getVariant())) tooltip.addPara(lyr_tooltip.text.lacksBase, lyr_tooltip.text.padding);
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
@@ -442,8 +442,8 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false; 
 
-		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return false; 
-		// if (ehm_hasRetrofitTag(ship, lyr_internals.tag.adapterRetrofit, hullModSpecId)) return false; 
+		if (!ehm_hasRetrofitBaseBuiltIn(ship.getVariant())) return false; 
+		// if (ehm_hasRetrofitTag(ship, tag.adapterRetrofit, hullModSpecId)) return false; 
 		
 		return true; 
 	}

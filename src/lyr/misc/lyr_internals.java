@@ -10,6 +10,13 @@ public class lyr_internals {
 		public static final String
 			drillSound = "drill", // must match .json
 			baseRetrofit = "ehm_base"; // must match hullmod id in .csv
+		public static class hullmods {
+			public static final String
+				overengineered = "ehm_mr_overengineered",
+				stepdownadapter = "ehm_ar_stepdownadapter",
+				diverterandconverter = "ehm_ar_diverterandconverter",
+				mutableshunt = "ehm_ar_mutableshunt";
+		}
 		public static class shunts {
 			public static class adapters {
 				public static final String

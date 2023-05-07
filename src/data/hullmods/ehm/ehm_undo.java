@@ -40,9 +40,12 @@ public class ehm_undo extends _ehm_basetracker {
 		if (!isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(lyr_tooltip.header.notApplicable, lyr_tooltip.header.notApplicable_textColour, lyr_tooltip.header.notApplicable_bgColour, Alignment.MID, lyr_tooltip.header.padding);
 
-			if (!ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(lyr_tooltip.text.lacksBase, lyr_tooltip.text.padding);
-			if (ehm_hasRetrofitTag(ship, lyr_internals.tag.experimental, hullModSpecId)) tooltip.addPara(lyr_tooltip.text.hasAnyExperimental, lyr_tooltip.text.padding);
-			if (ehm_hasWeapons(ship)) tooltip.addPara(lyr_tooltip.text.hasWeapons, lyr_tooltip.text.padding);
+			if (!ehm_hasRetrofitBaseBuiltIn(ship.getVariant())) tooltip.addPara(lyr_tooltip.text.lacksBase, lyr_tooltip.text.padding);
+			if (ehm_hasExperimentalSMod(ship.getVariant())) tooltip.addPara(lyr_tooltip.text.hasAnyExperimentalBuiltIn, lyr_tooltip.text.padding); 
+			else {
+				if (ehm_hasRetrofitTag(ship, lyr_internals.tag.experimental, hullModSpecId)) tooltip.addPara(lyr_tooltip.text.hasAnyExperimental, lyr_tooltip.text.padding);
+				if (ehm_hasWeapons(ship)) tooltip.addPara(lyr_tooltip.text.hasWeapons, lyr_tooltip.text.padding);
+			}
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
@@ -52,10 +55,17 @@ public class ehm_undo extends _ehm_basetracker {
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false;
 
-		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return false;
+		if (!ehm_hasRetrofitBaseBuiltIn(ship.getVariant())) return false;
 		if (ehm_hasRetrofitTag(ship, lyr_internals.tag.experimental, hullModSpecId)) return false;
 		if (ehm_hasWeapons(ship)) return false; 
 
 		return true; 
+	}
+	
+	@Override
+	public boolean showInRefitScreenModPickerFor(ShipAPI ship) {
+		ShipVariantAPI variant = ship.getVariant();
+
+		return (ehm_hasRetrofitBaseBuiltIn(variant)) ? true : false;
 	}
 }

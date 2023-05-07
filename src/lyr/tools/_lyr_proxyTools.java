@@ -46,8 +46,8 @@ public class _lyr_proxyTools extends _lyr_reflectionTools {
 	}
 
 	private static Class<?> lyr_findWeaponSlotClass() {
-		try {
-			return inspectMethod("getWeaponSlot", hullSpecClass).getReturnType();
+		try {	// special case: there also is a public synthetic bridge method for this and as such the class has two of the same methods
+			return inspectMethod(true, "getWeaponSlot", 1, hullSpecClass).getReturnType();
 		} catch (Throwable t) {
 			logger.fatal(lyr_internals.logPrefix+"'weaponSlotClass' not found in '_lyr_proxyTools'", t); return null;
 		}

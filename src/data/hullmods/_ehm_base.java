@@ -1,11 +1,14 @@
 package data.hullmods;
 
 import java.awt.Color;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.SettingsAPI;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.BaseHullMod;
@@ -15,12 +18,15 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI;
+import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
+import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
+import data.hullmods.ehm.ehm_base;
 import lyr.misc.lyr_externals;
 import lyr.misc.lyr_internals;
 import lyr.misc.lyr_tooltip;
@@ -51,6 +57,7 @@ import lyr.proxies.lyr_hullSpec;
 public class _ehm_base extends BaseHullMod {
 	protected static final Logger logger = Logger.getLogger(lyr_internals.logName);
 	protected static final boolean log = true;
+	public static final SettingsAPI settings = Global.getSettings();
 
 	protected HullModSpecAPI hullModSpec;
 	protected String hullModSpecId;
@@ -107,10 +114,12 @@ public class _ehm_base extends BaseHullMod {
 	@Override 
 	public int getDisplayCategoryIndex() { return -1; }
 
-	//#region INSTALLATION CHECKS
+	//#region INSTALLATION CHECKS / DESCRIPTION
 	@Override 
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (ship == null) return;
+
+		if (ship.getVariant().getSMods().contains(this.hullModSpecId)) return;
 
 		if (isApplicableToShip(ship) && canBeAddedOrRemovedNow(ship, null, null)) {
 			tooltip.addSectionHeading(lyr_tooltip.header.warning, lyr_tooltip.header.warning_textColour, lyr_tooltip.header.warning_bgColour, Alignment.MID, lyr_tooltip.header.padding);
@@ -126,7 +135,7 @@ public class _ehm_base extends BaseHullMod {
 
 	@Override public String getCanNotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) { return null; }
 	//#endregion
-	// END OF INSTALLATION CHECKS
+	// END OF INSTALLATION CHECKS / DESCRIPTION
 	//#endregion
 	// END OF IMPLEMENTATION
 
@@ -140,7 +149,7 @@ public class _ehm_base extends BaseHullMod {
 	protected static final boolean ehm_hasRetrofitTag(ShipAPI ship, String retrofitTag, String thisHullModId) {
 		for (String hullModId : ship.getVariant().getHullMods()) {
 			if (hullModId.equals(thisHullModId)) continue;
-			if (Global.getSettings().getHullModSpec(hullModId).hasTag(retrofitTag)) return true;
+			if (settings.getHullModSpec(hullModId).hasTag(retrofitTag)) return true;
 		}
 
 		return false;
@@ -148,22 +157,55 @@ public class _ehm_base extends BaseHullMod {
 
 	/**
 	 * Checks the ship if it has retrofit base ({@link ehm_base}) installed
-	 * @param ship to check 
+	 * @param variant to check 
 	 * @return true if ship has it, false otherwise (duh)
-	 * @see Overload: {@link #ehm_hasRetrofitBaseBuiltIn()}
 	 */
-	protected static final boolean ehm_hasRetrofitBaseBuiltIn(ShipAPI ship) {
-		return ship.getVariant().getHullSpec().isBuiltInMod(lyr_internals.id.baseRetrofit);
+	protected static final boolean ehm_hasRetrofitBaseBuiltIn(ShipVariantAPI variant) {
+		return variant.getHullSpec().isBuiltInMod(lyr_internals.id.baseRetrofit);
 	}
 
 	/**
 	 * Checks the ship if it has retrofit base ({@link ehm_base}) installed
 	 * @param variant to check 
 	 * @return true if ship has it, false otherwise (duh)
-	 * @see Overload: {@link #ehm_hasRetrofitBaseBuiltIn()}
 	 */
-	protected static final boolean ehm_hasRetrofitBaseBuiltIn(ShipVariantAPI variant) {
-		return variant.getHullSpec().isBuiltInMod(lyr_internals.id.baseRetrofit);
+	protected static final boolean ehm_hasExperimentalSMod(ShipVariantAPI variant) {
+		for (String hullModId: variant.getSMods()) {
+			if (settings.getHullModSpec(hullModId).hasTag(lyr_internals.tag.experimental)) return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Checks the ship if it has retrofit base ({@link ehm_base}) installed
+	 * @param variant to check 
+	 * @return true if ship has it, false otherwise (duh)
+	 */
+	protected static final boolean ehm_hasExperimentalModWithTag(ShipVariantAPI variant, String tag) {
+		for (String hullModId: variant.getHullMods()) {
+			if (settings.getHullModSpec(hullModId).hasTag(tag)) return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Checks the ship if it has retrofit base ({@link ehm_base}) installed
+	 * @param variant to check 
+	 * @return true if ship has it, false otherwise (duh)
+	 */
+	protected static final Map<String, Integer> ehm_shuntCount(ShipVariantAPI variant, String tag) {
+		Map<String, Integer> shuntMap = new HashMap<String, Integer>();
+
+		for (WeaponSlotAPI slot : variant.getHullSpec().getAllWeaponSlotsCopy()) {
+			if (!slot.getWeaponType().equals(WeaponType.DECORATIVE)) continue;
+			WeaponSpecAPI weaponSpec = variant.getWeaponSpec(slot.getId()); if (weaponSpec == null) continue;
+			if (!weaponSpec.hasTag(tag)) continue;
+			String weaponId = weaponSpec.getWeaponId();
+
+			shuntMap.put(weaponId, shuntMap.containsKey(weaponId) ? shuntMap.get(weaponId) + 1 : 1);
+		}
+
+		return shuntMap;
 	}
 
 	/**
@@ -259,7 +301,7 @@ public class _ehm_base extends BaseHullMod {
 	 * @return a 'fresh' hullSpec from the SpecStore
 	 */
 	protected static final ShipHullSpecAPI ehm_hullSpecRefresh(ShipVariantAPI variant) {
-		lyr_hullSpec stockHullSpec = new lyr_hullSpec(Global.getSettings().getHullSpec(variant.getHullSpec().getHullId()), true);
+		lyr_hullSpec stockHullSpec = new lyr_hullSpec(settings.getHullSpec(variant.getHullSpec().getHullId()), true);
 
 		ShipHullSpecAPI hullSpec = variant.getHullSpec();
 		ShipHullSpecAPI stockHullSpecAPI = stockHullSpec.retrieve();
@@ -296,6 +338,6 @@ public class _ehm_base extends BaseHullMod {
 	 * @return a stock hullSpec from the SpecStore
 	 */
 	protected static final ShipHullSpecAPI ehm_hullSpecReference(ShipVariantAPI variant) {
-		return Global.getSettings().getHullSpec(variant.getHullSpec().getHullId());
+		return settings.getHullSpec(variant.getHullSpec().getHullId());
 	}
 }

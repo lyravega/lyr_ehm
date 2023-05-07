@@ -1,7 +1,7 @@
 package lyr.proxies;
 
 import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodType;
+// import java.lang.invoke.MethodType;
 
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
@@ -29,20 +29,20 @@ public final class lyr_weaponSlot extends _lyr_proxyTools {
 	private static MethodHandle isWeaponSlot = null;
 	private static MethodHandle setId = null;
 	private static MethodHandle setSlotSize = null;
-	private static MethodHandle newNode = null;
+	// private static MethodHandle newNode = null;
 	private static MethodHandle setNode = null;
-	private static MethodHandle setNode_alt = null;
+	// private static MethodHandle setNode_alt = null;
 
 	static {
 		try {
 			clone = inspectMethod("clone", weaponSlotClass).getMethodHandle();
-			setWeaponType = inspectMethod("setWeaponType", weaponSlotClass).getMethodHandle();
+			setWeaponType = inspectMethod("setWeaponType", weaponSlotClass, WeaponType.class).getMethodHandle();
 			isWeaponSlot = inspectMethod("isWeaponSlot", weaponSlotClass).getMethodHandle();
-			setId = inspectMethod("setId", weaponSlotClass).getMethodHandle();
+			setId = inspectMethod("setId", weaponSlotClass, String.class).getMethodHandle();
 			setSlotSize = inspectMethod("setSlotSize", weaponSlotClass).getMethodHandle();
-			newNode = lookup.findConstructor(nodeClass, MethodType.methodType(void.class, String.class, Vector2f.class));
+			// newNode = lookup.findConstructor(nodeClass, MethodType.methodType(void.class, String.class, Vector2f.class));
 			setNode = inspectMethod("setNode", weaponSlotClass, String.class, Vector2f.class).getMethodHandle();
-			setNode_alt = inspectMethod("setNode", weaponSlotClass, nodeClass).getMethodHandle();
+			// setNode_alt = inspectMethod("setNode", weaponSlotClass, nodeClass).getMethodHandle();
 		} catch (Throwable t) {
 			logger.fatal(lyr_internals.logPrefix+"Failed to find a method in 'lyr_weaponSlot'", t);
 		}

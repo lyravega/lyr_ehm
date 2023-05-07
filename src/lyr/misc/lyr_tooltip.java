@@ -29,6 +29,8 @@ public class lyr_tooltip {
 			flavourDescription,
 			warning,
 			baseRetrofitWarning,
+			overEngineeredNoEffect,
+			overEngineeredWarning,
 			noShip,
 			lacksBase,
 			hasSystemRetrofit,
@@ -37,13 +39,15 @@ public class lyr_tooltip {
 			hasShieldCosmetic,
 			hasEngineCosmetic,
 			hasAnyExperimental,
+			hasAnyExperimentalBuiltIn,
 			noShields,
 			hasPhase,
 			noWings,
 			adapterActivated,
 			noAdapterRetrofit,
 			hasWeapons,
-			hasWeaponsOnAdaptedSlots;
+			hasWeaponsOnAdaptedSlots,
+			hasWeaponsOnConvertedSlots;
 
 		static {
 			try {
@@ -54,6 +58,8 @@ public class lyr_tooltip {
 				flavourDescription = textJSON.getString("flavourDescription");
 				warning = textJSON.getString("warning");
 				baseRetrofitWarning = textJSON.getString("baseRetrofitWarning");
+				overEngineeredNoEffect = textJSON.getString("overEngineeredNoEffect");
+				overEngineeredWarning = textJSON.getString("overEngineeredWarning");
 				noShip = textJSON.getString("noShip");
 				lacksBase = textJSON.getString("lacksBase");
 				hasSystemRetrofit = textJSON.getString("hasSystemRetrofit");
@@ -62,6 +68,7 @@ public class lyr_tooltip {
 				hasShieldCosmetic = textJSON.getString("hasShieldCosmetic");
 				hasEngineCosmetic = textJSON.getString("hasEngineCosmetic");
 				hasAnyExperimental = textJSON.getString("hasAnyExperimental");
+				hasAnyExperimentalBuiltIn = textJSON.getString("hasAnyExperimentalBuiltIn");
 				noShields = textJSON.getString("noShields");
 				hasPhase = textJSON.getString("hasPhase");
 				noWings = textJSON.getString("noWings");
@@ -69,6 +76,7 @@ public class lyr_tooltip {
 				noAdapterRetrofit = textJSON.getString("noAdapterRetrofit");
 				hasWeapons = textJSON.getString("hasWeapons");
 				hasWeaponsOnAdaptedSlots = textJSON.getString("hasWeaponsOnAdaptedSlots");
+				hasWeaponsOnConvertedSlots = textJSON.getString("hasWeaponsOnConvertedSlots");
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -81,14 +89,23 @@ public class lyr_tooltip {
 
 		public static float padding;
 		public static String 
+			info,
 			warning,
+			noEffect,
+			sEffect,
 			severeWarning,
 			notApplicable,
 			lockedIn,
 			lockedOut;
 		public static Color 
+			info_bgColour,
+			info_textColour,
 			warning_bgColour,
 			warning_textColour,
+			noEffect_bgColour,
+			noEffect_textColour,
+			sEffect_bgColour,
+			sEffect_textColour,
 			severeWarning_bgColour,
 			severeWarning_textColour,
 			notApplicable_bgColour,
@@ -101,13 +118,22 @@ public class lyr_tooltip {
 				headerJSON = tooltipJSON.getJSONObject("header");
 
 				padding = (float) headerJSON.getDouble("padding");
+				info = headerJSON.getString("info");
 				warning = headerJSON.getString("warning");
+				noEffect = headerJSON.getString("noEffect");
+				sEffect = headerJSON.getString("sEffect");
 				severeWarning = headerJSON.getString("severeWarning");
 				notApplicable = headerJSON.getString("notApplicable");
 				lockedIn = headerJSON.getString("lockedIn");
 				lockedOut = headerJSON.getString("lockedOut");
+				info_bgColour = Color.decode(headerJSON.getString("info_bgColour"));
+				info_textColour = Color.decode(headerJSON.getString("info_textColour"));
 				warning_bgColour = Color.decode(headerJSON.getString("warning_bgColour"));
 				warning_textColour = Color.decode(headerJSON.getString("warning_textColour"));
+				noEffect_bgColour = Color.decode(headerJSON.getString("noEffect_bgColour"));
+				noEffect_textColour = Color.decode(headerJSON.getString("noEffect_textColour"));
+				sEffect_bgColour = Color.decode(headerJSON.getString("sEffect_bgColour"));
+				sEffect_textColour = Color.decode(headerJSON.getString("sEffect_textColour"));
 				severeWarning_bgColour = Color.decode(headerJSON.getString("severeWarning_bgColour"));
 				severeWarning_textColour = Color.decode(headerJSON.getString("severeWarning_textColour"));
 				notApplicable_bgColour = Color.decode(headerJSON.getString("notApplicable_bgColour"));

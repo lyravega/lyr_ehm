@@ -105,27 +105,28 @@ public class _lyr_reflectionTools {
 	 * <p> {@code methodParameters} can be ignored, however if given alongside a 
 	 * {@code methodName}, they'll be used to perform a more specific search that
 	 * can also target overloaded methods.
-	 * @param declaredOnly (overload, default {@code true})
+	 * @param declaredOnly (overload, default {@code true}) to search declared only or all methods
 	 * @param methodName as String, no "()"
 	 * @param clazz to search the methodName on
+	 * @param methodModifier (overload, default {@code null}) to search a method with a specific modifier
 	 * @param parameterTypes (optional) full set of parameters, if available and
 	 * needed
 	 * @return {@link methodMap}
 	 * @throws Throwable if such a method is cannot be found
 	 */
 	public static final methodMap inspectMethod(String methodName, Class<?> clazz, Class<?>... parameterTypes) throws Throwable {
-		return inspectMethod(true, methodName, clazz, parameterTypes);
+		return inspectMethod(true, methodName, null, clazz, parameterTypes);
 	}
 	/** @see #inspectMethod(String, Class, Class...) */
-	public static final methodMap inspectMethod(boolean declaredOnly, String methodName, Class<?> clazz, Class<?>... parameterTypes) throws Throwable {
+	public static final methodMap inspectMethod(boolean declaredOnly, String methodName, Integer methodModifier, Class<?> clazz, Class<?>... parameterTypes) throws Throwable {
 		Object method = null; // as long as methods are stored as objects and not as methods, game is okay with it
-		
+
 		try {
 			method = (declaredOnly) ? clazz.getDeclaredMethod(methodName, parameterTypes) : clazz.getMethod(methodName, parameterTypes);
 		} catch (Throwable t) { // searches all the methods with the passed name if the above fails, and uses the FIRST found one
 			for (Object currMethod : (declaredOnly) ? clazz.getDeclaredMethods() : clazz.getMethods()) {
-				String currMethodName = (String) getName.invoke(currMethod);
-				if (currMethodName.contains("API") || !currMethodName.equals(methodName)) continue;
+				if (!String.class.cast(getName.invoke(currMethod)).equals(methodName)) continue;
+				if (methodModifier != null && methodModifier != (int) getModifiers.invoke(currMethod)) continue;
 	
 				method = currMethod; break;
 			}
