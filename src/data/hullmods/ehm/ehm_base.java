@@ -15,6 +15,7 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
+import lyr.misc.lyr_externals;
 import lyr.misc.lyr_internals;
 import lyr.misc.lyr_tooltip;
 
@@ -54,7 +55,7 @@ public class ehm_base extends _ehm_basetracker {
 			tooltip.addPara(lyr_tooltip.text.baseRetrofitWarning, lyr_tooltip.text.padding);
 
 			super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
-		} else {
+		} else if (lyr_externals.showFluff) {
 			tooltip.addSectionHeading("FLUFF", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
 			String playerRank = Global.getSector().getPlayerPerson().getRank();
 			switch ((int) Math.round(Math.random() * 10)) {

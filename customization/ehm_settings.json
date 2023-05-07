@@ -3,6 +3,7 @@
 	"playDrillSound": true, # Play drill sounds when installing an experimental hull modification
 	"extraActiveInfoInHullMods": true, # Show extra information in applicable experimental hull modifications when they are providing a bonus
 	"extraInactiveInfoInHullMods": true, # Show extra information in applicable experimental hull modifications when they are NOT providing a bonus
+	"showFluff": true, # Show random fluff messages on the base experimental hull modification's tooltip. In a way, it's me commenting on stuff :)
 	
 	# You can alter the shield names and their colour to anything you want. RGBA format, 0-255 range
 	"shieldSettings": {

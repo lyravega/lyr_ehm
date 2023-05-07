@@ -16,7 +16,8 @@ public class lyr_externals {
 		showExperimentalFlavour,
 		playDrillSound,
 		extraActiveInfoInHullMods,
-		extraInactiveInfoInHullMods;
+		extraInactiveInfoInHullMods,
+		showFluff;
 	public static Map<String, lyr_shieldSettings> shieldSettings = new HashMap<String, lyr_shieldSettings>();
 
 	static {
@@ -25,6 +26,7 @@ public class lyr_externals {
 			playDrillSound = settingsJSON.getBoolean("playDrillSound");
 			extraActiveInfoInHullMods = settingsJSON.getBoolean("extraActiveInfoInHullMods");
 			extraInactiveInfoInHullMods = settingsJSON.getBoolean("extraInactiveInfoInHullMods");
+			showFluff = settingsJSON.getBoolean("showFluff");
 			
 			JSONObject shieldSettingsJSON = settingsJSON.getJSONObject("shieldSettings");
 			for (int i = 0; i < shieldSettingsJSON.names().length(); i++) {
