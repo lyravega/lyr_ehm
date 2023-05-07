@@ -82,18 +82,10 @@ public class lyr_internals {
 			}
 			public static class launchTube {
 				public static final String
-					large = "ehm_bay_large"; // must match weapon id in .csv and .wpn
+					large = "ehm_tube_large"; // must match weapon id in .csv and .wpn
 				public static final Set<String> set = new HashSet<String>();
 				static {
 					set.add(large);
-				}
-			}
-			public static class hasMutableBonus {
-				public static final Set<String> set = new HashSet<String>();
-				static {
-					set.addAll(capacitors.set);
-					set.addAll(dissipators.set);
-					set.addAll(launchTube.set);
 				}
 			}
 			public static final Set<String> set = new HashSet<String>();
@@ -132,7 +124,7 @@ public class lyr_internals {
 			dissipatorShunt = "ehm_dissipator", // must match weapon tag in .csv
 			converterShunt = "ehm_converter", // must match weapon tag in .csv
 			diverterShunt = "ehm_diverter", // must match weapon tag in .csv
-			mutableShunt = "ehm_mutable"; // must match weapon tag in .csv
+			tubeShunt = "ehm_tube"; // must match weapon tag in .csv
 	}
 
 	public static class affix {

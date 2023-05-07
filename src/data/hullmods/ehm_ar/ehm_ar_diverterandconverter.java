@@ -1,7 +1,11 @@
 package data.hullmods.ehm_ar;
 
+import static data.hullmods.ehm_mr.ehm_mr_overengineered.slotPointBonus;
+
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
@@ -57,16 +61,22 @@ public class ehm_ar_diverterandconverter extends _ehm_ar_base {
 		converters.put(lyr_internals.id.shunts.converters.smallToMedium, smallToMedium);
 	}
 
-	static final Map<String, Integer> diverters = new HashMap<String, Integer>();
+	static final Map<String, Integer> diverters = new HashMap<String, Integer>();	// slotPoint reward
 	static {
 		diverters.put(lyr_internals.id.shunts.diverters.large, 4);
 		diverters.put(lyr_internals.id.shunts.diverters.medium, 2);
 		diverters.put(lyr_internals.id.shunts.diverters.small, 1);
 	}
 
+	static final Set<String> divertersAndConverters = new HashSet<String>();
+	static {
+		divertersAndConverters.addAll(converters.keySet());
+		divertersAndConverters.addAll(diverters.keySet());
+	}
+
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		// DUMMY MOD, HANDLED THROUGH BASE
+		// DUMMY MOD / DATA CLASS, ACTIONS ARE HANDLED THROUGH BASE
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION
@@ -77,16 +87,42 @@ public class ehm_ar_diverterandconverter extends _ehm_ar_base {
 		ShipVariantAPI variant = ship.getVariant();
 
 		if (variant.hasHullMod(hullModSpecId)) {
-			Map<String, Integer> adapters = ehm_shuntCount(variant, lyr_internals.tag.adapterShunt);
+			int pointBonus = variant.getSMods().contains(lyr_internals.id.hullmods.overengineered) ? slotPointBonus.get(hullSize) : 0;
+			int[] pointArray = ehm_slotPointCalculation(variant, pointBonus);
 
-			if (!adapters.isEmpty()) {
-				tooltip.addSectionHeading("ACTIVE ADAPTERS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
-				for (String shuntId: adapters.keySet()) {
-					tooltip.addPara(adapters.get(shuntId) + "x " + settings.getWeaponSpec(shuntId).getWeaponName(), 2f);
-				}
+			if (pointArray[0] > 0) {
+				tooltip.addSectionHeading(pointArray[0] + " UNUSED SLOT POINTS", lyr_tooltip.header.notApplicable_textColour, lyr_tooltip.header.notApplicable_bgColour, Alignment.MID, lyr_tooltip.header.padding).flash(1.0f, 1.0f);
 			} else {
-				tooltip.addSectionHeading("NO ADAPTERS", lyr_tooltip.header.notApplicable_textColour, lyr_tooltip.header.notApplicable_bgColour, Alignment.MID, lyr_tooltip.header.padding);
-				tooltip.addPara("No installed adapters", 2f);
+				tooltip.addSectionHeading("NO SLOT POINTS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
+			}
+			if (pointArray[1] > 0) tooltip.addPara("Hull modifications are providing " + pointArray[1] + " slot points", 2f, lyr_tooltip.header.sEffect_textColour, pointArray[1] + " slot points");
+			if (pointArray[2] > 0)tooltip.addPara("Diverter shunts are providing " + pointArray[2] + " slot points in total", 2f, lyr_tooltip.header.sEffect_textColour, pointArray[2] + " slot points");
+			if (pointArray[3] < 0)tooltip.addPara("Converter shunts are consuming " + pointArray[3] + " slot points in total", 2f, lyr_tooltip.header.notApplicable_textColour, pointArray[3] + " slot points");
+
+			if (extraActiveInfoInHullMods) {
+				Map<String, Integer> converters = ehm_shuntCount(variant, lyr_internals.tag.converterShunt);
+
+				if (!converters.isEmpty()) {
+					tooltip.addSectionHeading("ACTIVE CONVERTERS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
+					for (String shuntId: converters.keySet()) {
+						tooltip.addPara(converters.get(shuntId) + "x " + settings.getWeaponSpec(shuntId).getWeaponName(), 2f);
+					}
+				} else if (extraInactiveInfoInHullMods) {
+					tooltip.addSectionHeading("NO CONVERTERS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
+					tooltip.addPara("No converters are installed. Converters are used to make a smaller slot a bigger one, if there are enough slot points.", 2f);
+				}
+
+				Map<String, Integer> diverters = ehm_shuntCount(variant, lyr_internals.tag.diverterShunt);
+
+				if (!diverters.isEmpty()) {
+					tooltip.addSectionHeading("ACTIVE DIVERTERS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
+					for (String shuntId: diverters.keySet()) {
+						tooltip.addPara(diverters.get(shuntId) + "x " + settings.getWeaponSpec(shuntId).getWeaponName(), 2f);
+					}
+				} else if (extraInactiveInfoInHullMods) {
+					tooltip.addSectionHeading("NO DIVERTERS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
+					tooltip.addPara("No diverters are installed. Diverters disable a slot and provide slot points that are used by converters in turn.", 2f);
+				}
 			}
 		}
 		

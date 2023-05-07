@@ -85,7 +85,7 @@ public class ehm_ar_stepdownadapter extends _ehm_ar_base {
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		// DUMMY MOD, HANDLED THROUGH BASE
+		// DUMMY MOD / DATA CLASS, ACTIONS ARE HANDLED THROUGH BASE
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION
@@ -96,16 +96,18 @@ public class ehm_ar_stepdownadapter extends _ehm_ar_base {
 		ShipVariantAPI variant = ship.getVariant();
 
 		if (variant.hasHullMod(hullModSpecId)) {
-			Map<String, Integer> adapters = ehm_shuntCount(variant, lyr_internals.tag.adapterShunt);
+			if (extraActiveInfoInHullMods) {
+				Map<String, Integer> adapters = ehm_shuntCount(variant, lyr_internals.tag.adapterShunt);
 
-			if (!adapters.isEmpty()) {
-				tooltip.addSectionHeading("ACTIVE ADAPTERS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
-				for (String shuntId: adapters.keySet()) {
-					tooltip.addPara(adapters.get(shuntId) + "x " + settings.getWeaponSpec(shuntId).getWeaponName(), 2f);
+				if (!adapters.isEmpty()) {
+					tooltip.addSectionHeading("ACTIVE ADAPTERS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
+					for (String shuntId: adapters.keySet()) {
+						tooltip.addPara(adapters.get(shuntId) + "x " + settings.getWeaponSpec(shuntId).getWeaponName(), 2f);
+					}
+				} else if (extraInactiveInfoInHullMods) {
+					tooltip.addSectionHeading("NO ADAPTERS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
+					tooltip.addPara("No adapters are installed. Adapters turn bigger slots into smaller ones.", 2f);
 				}
-			} else {
-				tooltip.addSectionHeading("NO ADAPTERS", lyr_tooltip.header.notApplicable_textColour, lyr_tooltip.header.notApplicable_bgColour, Alignment.MID, lyr_tooltip.header.padding);
-				tooltip.addPara("No installed adapters", 2f);
 			}
 		}
 

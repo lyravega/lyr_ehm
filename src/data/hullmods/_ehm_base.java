@@ -189,26 +189,6 @@ public class _ehm_base extends BaseHullMod {
 	}
 
 	/**
-	 * Checks the ship if it has retrofit base ({@link ehm_base}) installed
-	 * @param variant to check 
-	 * @return true if ship has it, false otherwise (duh)
-	 */
-	protected static final Map<String, Integer> ehm_shuntCount(ShipVariantAPI variant, String tag) {
-		Map<String, Integer> shuntMap = new HashMap<String, Integer>();
-
-		for (WeaponSlotAPI slot : variant.getHullSpec().getAllWeaponSlotsCopy()) {
-			if (!slot.getWeaponType().equals(WeaponType.DECORATIVE)) continue;
-			WeaponSpecAPI weaponSpec = variant.getWeaponSpec(slot.getId()); if (weaponSpec == null) continue;
-			if (!weaponSpec.hasTag(tag)) continue;
-			String weaponId = weaponSpec.getWeaponId();
-
-			shuntMap.put(weaponId, shuntMap.containsKey(weaponId) ? shuntMap.get(weaponId) + 1 : 1);
-		}
-
-		return shuntMap;
-	}
-
-	/**
 	 * Checks if the ship has any weapons installed. Decorative slots are ignored 
 	 * through {@code getNonBuiltInWeaponSlots()}, and as such the activated adapters
 	 * are ignored as the adapters turn the slots into decorative ones after 

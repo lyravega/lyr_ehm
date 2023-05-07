@@ -17,10 +17,10 @@ import lyr.misc.lyr_tooltip;
  * @author lyravega
  */
 public class ehm_ar_mutableshunt extends _ehm_ar_base {
+	static final Map<String,Float> mutableStatBonus = new HashMap<String,Float>();
 	static final Map<String,Float> fluxCapacityBonus = new HashMap<String,Float>();
 	static final Map<String,Float> fluxDissipationBonus = new HashMap<String,Float>();
 	static final Map<String,Float> fighterBayBonus = new HashMap<String,Float>();
-	static final Map<String,Float> mutableStatBonus = new HashMap<String,Float>();
 	static {
 		fluxCapacityBonus.put(lyr_internals.id.shunts.capacitors.large, 0.16f);
 		fluxCapacityBonus.put(lyr_internals.id.shunts.capacitors.medium, 0.08f);
@@ -38,7 +38,7 @@ public class ehm_ar_mutableshunt extends _ehm_ar_base {
 	
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		// DUMMY MOD, HANDLED THROUGH BASE
+		// DUMMY MOD / DATA CLASS, ACTIONS ARE HANDLED THROUGH BASE
 	}
 
 	@Override
@@ -48,19 +48,45 @@ public class ehm_ar_mutableshunt extends _ehm_ar_base {
 		ShipVariantAPI variant = ship.getVariant();
 
 		if (variant.hasHullMod(hullModSpecId)) {
-			Map<String, Integer> adapters = ehm_shuntCount(variant, lyr_internals.tag.adapterShunt);
-
-			if (!adapters.isEmpty()) {
-				tooltip.addSectionHeading("ACTIVE ADAPTERS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
-				for (String shuntId: adapters.keySet()) {
-					tooltip.addPara(adapters.get(shuntId) + "x " + settings.getWeaponSpec(shuntId).getWeaponName(), 2f);
+			if (extraActiveInfoInHullMods) {
+				Map<String, Integer> capacitors = ehm_shuntCount(variant, lyr_internals.tag.capacitorShunt);
+	
+				if (!capacitors.isEmpty()) {
+					tooltip.addSectionHeading("ACTIVE CAPACITORS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
+					for (String shuntId: capacitors.keySet()) {
+						tooltip.addPara(capacitors.get(shuntId) + "x " + settings.getWeaponSpec(shuntId).getWeaponName(), 2f);
+					}
+				} else if (extraInactiveInfoInHullMods) {
+					tooltip.addSectionHeading("NO CAPACITORS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
+					tooltip.addPara("No capacitors are installed. Capacitors increase the total flux capacity of the ship, and affect built-in capacitors.", 2f);
 				}
-			} else {
-				tooltip.addSectionHeading("NO ADAPTERS", lyr_tooltip.header.notApplicable_textColour, lyr_tooltip.header.notApplicable_bgColour, Alignment.MID, lyr_tooltip.header.padding);
-				tooltip.addPara("No installed adapters", 2f);
-			}
+
+				Map<String, Integer> dissipators = ehm_shuntCount(variant, lyr_internals.tag.dissipatorShunt);
+	
+				if (!dissipators.isEmpty()) {
+					tooltip.addSectionHeading("ACTIVE DISSIPATORS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
+					for (String shuntId: dissipators.keySet()) {
+						tooltip.addPara(dissipators.get(shuntId) + "x " + settings.getWeaponSpec(shuntId).getWeaponName(), 2f);
+					}
+				} else if (extraInactiveInfoInHullMods) {
+					tooltip.addSectionHeading("NO DISSIPATORS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
+					tooltip.addPara("No dissipators are installed. Dissipators increase the total flux dissipation of the ship, and affect built-in vents.", 2f);
+				}
+	
+				Map<String, Integer> launchTubes = ehm_shuntCount(variant, lyr_internals.tag.tubeShunt);
+	
+				if (!launchTubes.isEmpty()) {
+					tooltip.addSectionHeading("EXTRA HANGARS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
+					for (String shuntId: launchTubes.keySet()) {
+						tooltip.addPara(launchTubes.get(shuntId) + "x " + settings.getWeaponSpec(shuntId).getWeaponName(), 2f);
+					}
+				} else if (extraInactiveInfoInHullMods) {
+					tooltip.addSectionHeading("NO EXTRA HANGARS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
+					tooltip.addPara("No large weapon slots are turned into hangars. Each large slot is turned into a single fighter bay with a launch tube.", 2f);
+				}
+			}	
 		}
-		
+
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
 	}
 }

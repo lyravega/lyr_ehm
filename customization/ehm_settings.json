@@ -1,7 +1,8 @@
 {
 	"showExperimentalFlavour": true, # Apply a flavour description text to ships and change their manufacturer
 	"playDrillSound": true, # Play drill sounds when installing an experimental hull modification
-	"usePrettyWarnings": true, # Use a different way to display all of the reasons why you may/may not install an experimental hullmod 
+	"extraActiveInfoInHullMods": true, # Show extra information in applicable experimental hull modifications when they are providing a bonus
+	"extraInactiveInfoInHullMods": true, # Show extra information in applicable experimental hull modifications when they are NOT providing a bonus
 	
 	# You can alter the shield names and their colour to anything you want. RGBA format, 0-255 range
 	"shieldSettings": {

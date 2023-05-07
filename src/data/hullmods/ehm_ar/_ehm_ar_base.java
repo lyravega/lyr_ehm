@@ -2,6 +2,7 @@ package data.hullmods.ehm_ar;
 
 import static data.hullmods.ehm_ar.ehm_ar_diverterandconverter.converters;
 import static data.hullmods.ehm_ar.ehm_ar_diverterandconverter.diverters;
+import static data.hullmods.ehm_ar.ehm_ar_diverterandconverter.divertersAndConverters;
 import static data.hullmods.ehm_ar.ehm_ar_mutableshunt.fighterBayBonus;
 import static data.hullmods.ehm_ar.ehm_ar_mutableshunt.fluxCapacityBonus;
 import static data.hullmods.ehm_ar.ehm_ar_mutableshunt.fluxDissipationBonus;
@@ -41,6 +42,7 @@ import data.hullmods.ehm._ehm_eventhandler;
 import data.hullmods.ehm._ehm_eventmethod;
 import data.hullmods.ehm_ar.ehm_ar_diverterandconverter.childParameters;
 import data.hullmods.ehm_ar.ehm_ar_stepdownadapter.childrenParameters;
+import lyr.misc.lyr_externals;
 import lyr.misc.lyr_internals;
 import lyr.misc.lyr_tooltip;
 import lyr.proxies.lyr_hullSpec;
@@ -84,6 +86,9 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 	}
 	//#endregion
 	// END OF LISTENER & EVENT REGISTRATION
+
+	protected static final boolean extraActiveInfoInHullMods = lyr_externals.extraActiveInfoInHullMods;
+	protected static final boolean extraInactiveInfoInHullMods = lyr_externals.extraInactiveInfoInHullMods;
 
 	//#region ADAPTERS	
 	/** 
@@ -164,13 +169,12 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 		// bonus calculation
 		for (WeaponSlotAPI slot: variant.getHullSpec().getAllWeaponSlotsCopy()) {
 			if (!slot.getWeaponType().equals(WeaponType.DECORATIVE)) continue;	// since activated shunts become decorative, only need to check them
-
 			String slotId = slot.getId();
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId); if (shuntSpec == null) continue;	// skip empty slots
-			WeaponSize shuntSize = shuntSpec.getSize();
 			String shuntId = shuntSpec.getWeaponId();
-	
-			if (!shuntSize.equals(variant.getSlot(slotId).getSlotSize())) continue; // requires matching slot size
+			if (!mutableStatBonus.containsKey(shuntId)) continue;	// only care about these shunts
+			if (!shuntSpec.getSize().equals(variant.getSlot(slotId).getSlotSize())) continue; // requires matching slot size
+
 			if (fluxCapacityBonus.containsKey(shuntId)) fluxCapacityMult += fluxCapacityBonus.get(shuntId);
 			else if (fluxDissipationBonus.containsKey(shuntId)) fluxDissipationMult += fluxDissipationBonus.get(shuntId);
 			else if (fighterBayBonus.containsKey(shuntId)) fighterBayFlat += fighterBayBonus.get(shuntId);
@@ -215,15 +219,14 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 		// slotPoints calculation
 		for (WeaponSlotAPI slot: variant.getHullSpec().getAllWeaponSlotsCopy()) {
 			if (!slot.getWeaponType().equals(WeaponType.DECORATIVE)) continue;	// since activated shunts become decorative, only need to check decorative
-
 			String slotId = slot.getId();
-			WeaponSpecAPI weaponSpec = variant.getWeaponSpec(slotId); if (weaponSpec == null) continue;	// skip empty slots
-			WeaponSize weaponSize = weaponSpec.getSize();
-			String weaponId = weaponSpec.getWeaponId();
+			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId); if (shuntSpec == null) continue;	// skip empty slots
+			String shuntId = shuntSpec.getWeaponId();
+			if (!divertersAndConverters.contains(shuntId)) continue;	// only care about these shunts
+			if (!shuntSpec.getSize().equals(variant.getSlot(slotId).getSlotSize())) continue; // requires matching slot size
 
-			if (!weaponSize.equals(variant.getSlot(slotId).getSlotSize())) continue; // requires matching slot size
-			if (diverters.containsKey(weaponId)) slotPoints += diverters.get(weaponId);
-			else if (converters.containsKey(weaponId)) slotPoints -= converters.get(weaponId).getChildCost();
+			if (diverters.containsKey(shuntId)) slotPoints += diverters.get(shuntId);
+			else if (converters.containsKey(shuntId)) slotPoints -= converters.get(shuntId).getChildCost();
 		}
 
 		final Pattern pattern = Pattern.compile("WS [0-9]{3}");
@@ -267,6 +270,41 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 	}
 	//#endregion
 	// END OF CONVERTERS & DIVERTERS
+
+	protected static final int[] ehm_slotPointCalculation(ShipVariantAPI variant, int initialBonus) {
+		int diverterBonus = 0;
+		int converterMalus = 0;
+
+		for (WeaponSlotAPI slot: variant.getHullSpec().getAllWeaponSlotsCopy()) {
+			if (!slot.getWeaponType().equals(WeaponType.DECORATIVE)) continue;	// since activated shunts become decorative, only need to check decorative
+			String slotId = slot.getId();
+			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId); if (shuntSpec == null) continue;	// skip empty slots
+			String shuntId = shuntSpec.getWeaponId();
+			if (!divertersAndConverters.contains(shuntId)) continue;	// only care about these shunts
+			if (!shuntSpec.getSize().equals(variant.getSlot(slotId).getSlotSize())) continue; // requires matching slot size
+
+			if (diverters.containsKey(shuntId)) diverterBonus += diverters.get(shuntId);
+			else if (converters.containsKey(shuntId)) converterMalus -= converters.get(shuntId).getChildCost();
+		}
+
+		int[] pointArray = {initialBonus+converterMalus+diverterBonus, initialBonus, diverterBonus, converterMalus};
+		return pointArray;
+	}
+
+	protected static final Map<String, Integer> ehm_shuntCount(ShipVariantAPI variant, String tag) {
+		Map<String, Integer> shuntMap = new HashMap<String, Integer>();
+
+		for (WeaponSlotAPI slot : variant.getHullSpec().getAllWeaponSlotsCopy()) {
+			if (!slot.getWeaponType().equals(WeaponType.DECORATIVE)) continue;
+			WeaponSpecAPI weaponSpec = variant.getWeaponSpec(slot.getId()); if (weaponSpec == null) continue;
+			if (!weaponSpec.hasTag(tag)) continue;
+			String weaponId = weaponSpec.getWeaponId();
+
+			shuntMap.put(weaponId, shuntMap.containsKey(weaponId) ? shuntMap.get(weaponId) + 1 : 1);
+		}
+
+		return shuntMap;
+	}
 
 	/** 
 	 * Refreshes the hullSpec and returns it.
