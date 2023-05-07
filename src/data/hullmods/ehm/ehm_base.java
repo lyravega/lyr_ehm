@@ -3,7 +3,7 @@ package data.hullmods.ehm;
 import static data.hullmods.ehm_ar._ehm_ar_base.ehm_adapterActivator;
 import static data.hullmods.ehm_ar._ehm_ar_base.ehm_diverterAndConverterActivator;
 import static data.hullmods.ehm_ar._ehm_ar_base.ehm_mutableShuntActivator;
-import static data.hullmods.ehm_ar._ehm_ar_base.slotPointBonus;
+import static data.hullmods.ehm_mr.ehm_mr_overengineered.slotPointBonus;
 import static lyr.tools._lyr_uiTools.commitChanges;
 import static lyr.tools._lyr_uiTools.playSound;
 

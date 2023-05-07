@@ -1,6 +1,11 @@
 package data.hullmods.ehm_ar;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+
+import org.lwjgl.util.vector.Vector2f;
 
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
@@ -8,6 +13,7 @@ import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
@@ -18,6 +24,65 @@ import lyr.misc.lyr_tooltip;
  * @author lyravega
  */
 public class ehm_ar_stepdownadapter extends _ehm_ar_base {
+	/**
+	 * An inner class to supply the adapters with relevant child data
+	 */
+	static class childrenParameters {
+		private Set<String> children; // childIds are used as position identifier, and used as a suffix
+		private Map<String, Vector2f> childrenOffsets;
+		private Map<String, WeaponSize> childrenSizes;
+
+		private childrenParameters() {
+			children = new HashSet<String>();
+			childrenOffsets = new HashMap<String, Vector2f>();
+			childrenSizes = new HashMap<String, WeaponSize>();
+		}
+
+		private void addChild(String childId, WeaponSize childSize, Vector2f childOffset) {
+			this.children.add(childId);
+			this.childrenOffsets.put(childId, childOffset);
+			this.childrenSizes.put(childId, childSize);
+		}
+
+		Set<String> getChildren() {
+			return this.children;
+		}
+
+		Vector2f getChildOffset(String childPrefix) {
+			return this.childrenOffsets.get(childPrefix);
+		}
+
+		WeaponSize getChildSize(String childPrefix) {
+			return this.childrenSizes.get(childPrefix);
+		}
+	}
+
+	static final Map<String, childrenParameters> adapters = new HashMap<String, childrenParameters>();
+	private static final childrenParameters mediumDual = new childrenParameters();
+	private static final childrenParameters largeDual = new childrenParameters();
+	private static final childrenParameters largeTriple = new childrenParameters();
+	private static final childrenParameters largeQuad = new childrenParameters();
+	static {
+		mediumDual.addChild("L", WeaponSize.SMALL, new Vector2f(0.0f, 6.0f)); // left
+		mediumDual.addChild("R", WeaponSize.SMALL, new Vector2f(0.0f, -6.0f)); // right
+		adapters.put(lyr_internals.id.shunts.adapters.mediumDual, mediumDual);
+
+		largeDual.addChild("L", WeaponSize.MEDIUM, new Vector2f(0.0f, 12.0f)); // left
+		largeDual.addChild("R", WeaponSize.MEDIUM, new Vector2f(0.0f, -12.0f)); // right
+		adapters.put(lyr_internals.id.shunts.adapters.largeDual, largeDual);
+
+		largeTriple.addChild("L", WeaponSize.SMALL, new Vector2f(-4.0f, 17.0f)); // left
+		largeTriple.addChild("R", WeaponSize.SMALL, new Vector2f(-4.0f, -17.0f)); // right
+		largeTriple.addChild("C", WeaponSize.MEDIUM, new Vector2f(0.0f, 0.0f)); // center
+		adapters.put(lyr_internals.id.shunts.adapters.largeTriple, largeTriple);
+
+		largeQuad.addChild("L", WeaponSize.SMALL, new Vector2f(0.0f, 6.0f)); // left
+		largeQuad.addChild("R", WeaponSize.SMALL, new Vector2f(0.0f, -6.0f)); // right
+		largeQuad.addChild("FL", WeaponSize.SMALL, new Vector2f(-4.0f, 17.0f)); // far left
+		largeQuad.addChild("FR", WeaponSize.SMALL, new Vector2f(-4.0f, -17.0f)); // far right
+		adapters.put(lyr_internals.id.shunts.adapters.largeQuad, largeQuad);
+	}
+
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		// DUMMY MOD, HANDLED THROUGH BASE

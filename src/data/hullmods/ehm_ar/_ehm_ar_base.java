@@ -1,13 +1,18 @@
 package data.hullmods.ehm_ar;
 
+import static data.hullmods.ehm_ar.ehm_ar_diverterandconverter.converters;
+import static data.hullmods.ehm_ar.ehm_ar_diverterandconverter.diverters;
+import static data.hullmods.ehm_ar.ehm_ar_mutableshunt.fighterBayBonus;
+import static data.hullmods.ehm_ar.ehm_ar_mutableshunt.fluxCapacityBonus;
+import static data.hullmods.ehm_ar.ehm_ar_mutableshunt.fluxDissipationBonus;
+import static data.hullmods.ehm_ar.ehm_ar_mutableshunt.mutableStatBonus;
+import static data.hullmods.ehm_ar.ehm_ar_stepdownadapter.adapters;
 import static lyr.misc.lyr_utilities.generateChildLocation;
 import static lyr.tools._lyr_uiTools.commitChanges;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
@@ -34,6 +39,8 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import data.hullmods._ehm_base;
 import data.hullmods.ehm._ehm_eventhandler;
 import data.hullmods.ehm._ehm_eventmethod;
+import data.hullmods.ehm_ar.ehm_ar_diverterandconverter.childParameters;
+import data.hullmods.ehm_ar.ehm_ar_stepdownadapter.childrenParameters;
 import lyr.misc.lyr_internals;
 import lyr.misc.lyr_tooltip;
 import lyr.proxies.lyr_hullSpec;
@@ -78,76 +85,7 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 	//#endregion
 	// END OF LISTENER & EVENT REGISTRATION
 
-	public static final Map<HullSize, Integer> slotPointBonus = new HashMap<HullSize, Integer>();
-	static {
-		slotPointBonus.put(HullSize.FIGHTER, 0);
-		slotPointBonus.put(HullSize.DEFAULT, 0);
-		slotPointBonus.put(HullSize.FRIGATE, 0);
-		slotPointBonus.put(HullSize.DESTROYER, 2);
-		slotPointBonus.put(HullSize.CRUISER, 4);
-		slotPointBonus.put(HullSize.CAPITAL_SHIP, 6);
-	}
-
-	//#region ADAPTERS
-	/**
-	 * An inner class to supply the adapters with relevant child data
-	 */
-	private static class childrenParameters {
-		private Set<String> children; // childIds are used as position identifier, and used as a suffix
-		private Map<String, Vector2f> childrenOffsets;
-		private Map<String, WeaponSize> childrenSizes;
-
-		private childrenParameters() {
-			children = new HashSet<String>();
-			childrenOffsets = new HashMap<String, Vector2f>();
-			childrenSizes = new HashMap<String, WeaponSize>();
-		}
-
-		private void addChild(String childId, WeaponSize childSize, Vector2f childOffset) {
-			this.children.add(childId);
-			this.childrenOffsets.put(childId, childOffset);
-			this.childrenSizes.put(childId, childSize);
-		}
-
-		private Set<String> getChildren() {
-			return this.children;
-		}
-
-		private Vector2f getChildOffset(String childPrefix) {
-			return this.childrenOffsets.get(childPrefix);
-		}
-
-		private WeaponSize getChildSize(String childPrefix) {
-			return this.childrenSizes.get(childPrefix);
-		}
-	}
-
-	private static final Map<String, childrenParameters> adapters = new HashMap<String, childrenParameters>();
-	private static final childrenParameters mediumDual = new childrenParameters();
-	private static final childrenParameters largeDual = new childrenParameters();
-	private static final childrenParameters largeTriple = new childrenParameters();
-	private static final childrenParameters largeQuad = new childrenParameters();
-	static {
-		mediumDual.addChild("L", WeaponSize.SMALL, new Vector2f(0.0f, 6.0f)); // left
-		mediumDual.addChild("R", WeaponSize.SMALL, new Vector2f(0.0f, -6.0f)); // right
-		adapters.put(lyr_internals.id.shunts.adapters.mediumDual, mediumDual);
-
-		largeDual.addChild("L", WeaponSize.MEDIUM, new Vector2f(0.0f, 12.0f)); // left
-		largeDual.addChild("R", WeaponSize.MEDIUM, new Vector2f(0.0f, -12.0f)); // right
-		adapters.put(lyr_internals.id.shunts.adapters.largeDual, largeDual);
-
-		largeTriple.addChild("L", WeaponSize.SMALL, new Vector2f(-4.0f, 17.0f)); // left
-		largeTriple.addChild("R", WeaponSize.SMALL, new Vector2f(-4.0f, -17.0f)); // right
-		largeTriple.addChild("C", WeaponSize.MEDIUM, new Vector2f(0.0f, 0.0f)); // center
-		adapters.put(lyr_internals.id.shunts.adapters.largeTriple, largeTriple);
-
-		largeQuad.addChild("L", WeaponSize.SMALL, new Vector2f(0.0f, 6.0f)); // left
-		largeQuad.addChild("R", WeaponSize.SMALL, new Vector2f(0.0f, -6.0f)); // right
-		largeQuad.addChild("FL", WeaponSize.SMALL, new Vector2f(-4.0f, 17.0f)); // far left
-		largeQuad.addChild("FR", WeaponSize.SMALL, new Vector2f(-4.0f, -17.0f)); // far right
-		adapters.put(lyr_internals.id.shunts.adapters.largeQuad, largeQuad);
-	}
-	
+	//#region ADAPTERS	
 	/** 
 	 * Spawns additional weapon slots, if the slots have adapters on them.
 	 * Adapters are turned into decorative pieces in the process.
@@ -162,7 +100,7 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 			if (!shuntSlotId.startsWith(lyr_internals.affix.normalSlot)) continue;	// only works on normal slots
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(shuntSlotId);
 			String shuntId = shuntSpec.getWeaponId();
-			if (!lyr_internals.id.shunts.adapters.set.contains(shuntId)) continue;	// only care about these shunts
+			if (!adapters.containsKey(shuntId)) continue;	// only care about these shunts
 			if (!shuntSpec.getSize().equals(variant.getSlot(shuntSlotId).getSlotSize())) continue;	// requires size match
 
 			childrenParameters childrenParameters = adapters.get(shuntId);
@@ -195,25 +133,6 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 	// END OF ADAPTERS
 
 	//#region MUTABLES
-	private static final Map<String,Float> fluxCapacityBonus = new HashMap<String,Float>();
-	private static final Map<String,Float> fluxDissipationBonus = new HashMap<String,Float>();
-	private static final Map<String,Float> fighterBayBonus = new HashMap<String,Float>();
-	private static final Map<String,Float> mutableStatBonus = new HashMap<String,Float>();
-	static {
-		fluxCapacityBonus.put(lyr_internals.id.shunts.capacitors.large, 0.16f);
-		fluxCapacityBonus.put(lyr_internals.id.shunts.capacitors.medium, 0.08f);
-		fluxCapacityBonus.put(lyr_internals.id.shunts.capacitors.small, 0.04f);
-		mutableStatBonus.putAll(fluxCapacityBonus);
-
-		fluxDissipationBonus.put(lyr_internals.id.shunts.dissipators.large, 0.16f);
-		fluxDissipationBonus.put(lyr_internals.id.shunts.dissipators.medium, 0.08f);
-		fluxDissipationBonus.put(lyr_internals.id.shunts.dissipators.small, 0.04f);
-		mutableStatBonus.putAll(fluxDissipationBonus);
-
-		fighterBayBonus.put(lyr_internals.id.shunts.launchTube.large, 1.00f);
-		mutableStatBonus.putAll(fighterBayBonus);
-	}
-
 	/** 
 	 * Provides bonuses based on the number of shunts installed in slots.
 	 * Shunts are turned into decorative pieces in the process.
@@ -233,7 +152,7 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 			if (shuntSlotId.startsWith(lyr_internals.affix.convertedSlot)) continue;	// only works on normal and adapted slots
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(shuntSlotId);
 			String shuntId = shuntSpec.getWeaponId();
-			if (!lyr_internals.id.shunts.hasMutableBonus.set.contains(shuntId)) continue;	// only care about these shunts
+			if (!mutableStatBonus.containsKey(shuntId)) continue;	// only care about these shunts
 			if (!shuntSpec.getSize().equals(variant.getSlot(shuntSlotId).getSlotSize())) continue;	// requires size match
 
 			// slotPoints += slotValue.get(weaponSize);	// needs to be calculated afterwards like mutableStat bonus as this block will execute only on install
@@ -268,50 +187,6 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 	// END OF MUTABLES
 
 	//#region CONVERTERS & DIVERTERS
-	/**
-	 * An inner class to supply the converters with relevant child data
-	 */
-	private static class childParameters {
-		private String childSuffix; // childIds are used as position identifier, and used as a suffix
-		private int childCost;
-		private WeaponSize childSize;
-
-		private childParameters(String childSuffix, WeaponSize childSize, int childCost) {
-			this.childSuffix = childSuffix;
-			this.childCost = childCost;
-			this.childSize = childSize;
-		}
-
-		private String getChildSuffix() {
-			return this.childSuffix;
-		}
-
-		private int getChildCost() {
-			return this.childCost;
-		}
-
-		private WeaponSize getChildSize() {
-			return this.childSize;
-		}
-	}
-	
-	private static Map<String, childParameters> converters = new HashMap<String, childParameters>();
-	private static childParameters mediumToLarge = new childParameters("ML", WeaponSize.LARGE, 2);
-	private static childParameters smallToLarge = new childParameters("SL", WeaponSize.LARGE, 3);
-	private static childParameters smallToMedium = new childParameters("SM", WeaponSize.MEDIUM, 1);
-	static {
-		converters.put(lyr_internals.id.shunts.converters.mediumToLarge, mediumToLarge);
-		converters.put(lyr_internals.id.shunts.converters.smallToLarge, smallToLarge);
-		converters.put(lyr_internals.id.shunts.converters.smallToMedium, smallToMedium);
-	}
-
-	private static final Map<WeaponSize, Integer> slotValue = new HashMap<WeaponSize, Integer>();
-	static {
-		slotValue.put(WeaponSize.LARGE, 4);
-		slotValue.put(WeaponSize.MEDIUM, 2);
-		slotValue.put(WeaponSize.SMALL, 1);
-	}
-
 	/** 
 	 * Spawns additional weapon slots, if the slots have adapters on them.
 	 * Adapters are turned into decorative pieces in the process.
@@ -328,7 +203,7 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 			if (shuntSlotId.startsWith(lyr_internals.affix.convertedSlot)) continue;	// only works on normal and adapted slots
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(shuntSlotId);
 			String shuntId = shuntSpec.getWeaponId();
-			if (!lyr_internals.id.shunts.diverters.set.contains(shuntId)) continue;	// only care about these shunts
+			if (!diverters.containsKey(shuntId)) continue;	// only care about these shunts
 			if (!shuntSpec.getSize().equals(variant.getSlot(shuntSlotId).getSlotSize())) continue;	// requires size match
 
 			// slotPoints += slotValue.get(weaponSize);	// needs to be calculated afterwards like mutableStat bonus as this block will execute only on install
@@ -347,8 +222,8 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 			String weaponId = weaponSpec.getWeaponId();
 
 			if (!weaponSize.equals(variant.getSlot(slotId).getSlotSize())) continue; // requires matching slot size
-			if (lyr_internals.id.shunts.diverters.set.contains(weaponId)) slotPoints += slotValue.get(weaponSize);
-			else if (lyr_internals.id.shunts.converters.set.contains(weaponId)) slotPoints -= converters.get(weaponId).getChildCost();
+			if (diverters.containsKey(weaponId)) slotPoints += diverters.get(weaponId);
+			else if (converters.containsKey(weaponId)) slotPoints -= converters.get(weaponId).getChildCost();
 		}
 
 		final Pattern pattern = Pattern.compile("WS [0-9]{3}");
@@ -364,7 +239,7 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 			if (!shuntSlotId.startsWith(lyr_internals.affix.normalSlot)) continue;	// only works on normal slots
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(shuntSlotId);
 			String shuntId = shuntSpec.getWeaponId();
-			if (!lyr_internals.id.shunts.converters.set.contains(shuntId)) continue;	// only care about these shunts
+			if (!converters.containsKey(shuntId)) continue;	// only care about these shunts
 			if (!shuntSpec.getSize().equals(variant.getSlot(shuntSlotId).getSlotSize())) continue;	// requires size match
 
 			childParameters childParameters = converters.get(shuntId);

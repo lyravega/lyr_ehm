@@ -1,5 +1,6 @@
 package data.hullmods.ehm_mr;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
@@ -13,7 +14,6 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import data.hullmods._ehm_base;
 import data.hullmods.ehm._ehm_eventhandler;
 import data.hullmods.ehm._ehm_eventmethod;
-import data.hullmods.ehm_ar._ehm_ar_base;
 import lyr.misc.lyr_tooltip;
 import lyr.proxies.lyr_hullSpec;
 
@@ -46,6 +46,16 @@ public class ehm_mr_overengineered extends _ehm_base implements _ehm_eventmethod
 	//#endregion
 	// END OF LISTENER & EVENT REGISTRATION
 
+	public static final Map<HullSize, Integer> slotPointBonus = new HashMap<HullSize, Integer>();
+	static {
+		slotPointBonus.put(HullSize.FIGHTER, 0);
+		slotPointBonus.put(HullSize.DEFAULT, 0);
+		slotPointBonus.put(HullSize.FRIGATE, 0);
+		slotPointBonus.put(HullSize.DESTROYER, 2);
+		slotPointBonus.put(HullSize.CRUISER, 4);
+		slotPointBonus.put(HullSize.CAPITAL_SHIP, 6);
+	}
+
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
@@ -63,8 +73,6 @@ public class ehm_mr_overengineered extends _ehm_base implements _ehm_eventmethod
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION
-	private static final Map<HullSize, Integer> slotPointBonus = _ehm_ar_base.slotPointBonus;
-
 	@Override
 	public boolean hasSModEffect() {
 		return true;
