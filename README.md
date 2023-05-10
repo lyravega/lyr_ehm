@@ -1,14 +1,20 @@
-Experimental Hull Modifications
+## **Experimental Hull Modifications**
+Just some hull modifications. By some, I mean 40+ or something. However, most are mutually exclusive, so the usable list is rather short actually. On a new game or a load, all hull modifications will be added to player's known list. Slot shunts too, however you'll need a small industry to build them. Or you can use console to give yourself a few.
 
-Just some hull modifications. By some, I mean 60 something. Most are mutually exclusive, so the list is rather short actually. Experimental on the name is not just for posterity, as all mods butcher the hullSpecs. Currently offers these categories:
+**Hull Modifications**:
+• Experimental Hull Modifications: Provides a base to all other hull modifications in this mod. Also has a removal tool
+• Over-Engineered: Provides 15% OP bonus and some slot-points to the ship when built-in. Resides under "Retrofit" category
 
-• Systems: Ship System Retrofits - 
-All vanilla systems are turned into a hullMod. Some are hidden as they are designed for [REDACTED] or used by stations. All use flat costs, nothing adjusted beyond the initial addition.
+**Hull Modification Categories**:
+• Systems: All vanilla systems are turned into hull modifications. Some are hidden as they are designed for [REDACTED] or used by stations. All use flat costs. Some have tiny adjustments that make them reusable if they didn't have that capability
+• Retrofits: Alters the weapon slots of a ship all together. Straightforward modifications for the ship, each with a cost
+• Cosmetics: Cosmetic hull modification that change the shield and engine colours. Shield colours can be fully customized by altering the external settings file
+• Activators: Uses the slot shunts to provide the ship with various enhancements by altering the slot they're installed on
 
-• Retrofits: Weapon Slot Retrofits & Slot Adapters - 
-Retrofits that alters the weapon slots. Basic ones do a ship-wide slot conversion, advanced ones (adapters) do interesting things like turning slot into two smaller ones. 
-
-• Cosmetics: Shield & Engine Cosmetics - 
-Cosmetic hullmods that change the shield and engine colours. 
-
-Also features some scripts to track the fleet, to refresh the refit screen on demand and to track added/removed hullmods on ships, which can be used to trigger jury-rigged 'onAdded()' / 'onRemoved()' methods remotely.
+**Slot Shunt Categories**: These are utilities that can be equipped on weapon slots. Each require its own activator to do what it's supposed to do
+• Adapters: Turns a bigger slot into smaller versions (3 large, 1 medium types)
+• Converters: Turns a smaller slot into a bigger one by using slot points (1 medium, 1 small types)
+• Diverters: Turns a slot inactive and yield slot points to be used by above (1 small type)
+• Capacitors: Enhances the total flux capacity of the ship (1 small type)
+• Dissipators: Enhances the total flux dissipation of the ship (1 small type)
+• Launch Tubes: Turns a large slot into a fighter hangar (1 large type)
