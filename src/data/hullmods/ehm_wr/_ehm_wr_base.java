@@ -43,7 +43,7 @@ public class _ehm_wr_base extends _ehm_base implements _ehm_eventmethod {
 	@Override
 	public void onRemove(ShipVariantAPI variant) {
 		// variant.setHullSpecAPI(ehm_weaponSlotRestore(variant));
-		variant.setHullSpecAPI(ehm_lazyWeaponSlotRestore(variant));
+		variant.setHullSpecAPI(ehm_weaponSlotRestore_lazy(variant));
 	}
 
 	@Override
@@ -123,7 +123,7 @@ public class _ehm_wr_base extends _ehm_base implements _ehm_eventmethod {
 		return hullSpec.retrieve();
 	}
 	
-	public static final ShipHullSpecAPI ehm_lazyWeaponSlotRestore(ShipVariantAPI variant) {
+	public static final ShipHullSpecAPI ehm_weaponSlotRestore_lazy(ShipVariantAPI variant) {
 		ShipHullSpecAPI hullSpec = ehm_hullSpecRefresh(variant);
 
 		return hullSpec;

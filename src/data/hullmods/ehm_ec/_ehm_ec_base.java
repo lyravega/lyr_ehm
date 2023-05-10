@@ -34,7 +34,7 @@ public class _ehm_ec_base extends _ehm_base implements _ehm_eventmethod {
 
 	@Override
 	public void onRemove(ShipVariantAPI variant) {
-		variant.setHullSpecAPI(ehm_restoreEngineSlots(variant));
+		variant.setHullSpecAPI(ehm_restoreEngineSlots_lazy(variant));
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class _ehm_ec_base extends _ehm_base implements _ehm_eventmethod {
 	 * @param styleEnum somewhat hardcoded {@link lyr.proxies.lyr_engineBuilder.engineStyle engineStyle}
 	 * @return a hullSpec with restored engine visuals
 	 */
-	public static final ShipHullSpecAPI ehm_restoreEngineSlots(ShipVariantAPI variant) {
+	public static final ShipHullSpecAPI ehm_restoreEngineSlots_lazy(ShipVariantAPI variant) {
 		ShipHullSpecAPI hullSpec = ehm_hullSpecRefresh(variant);
 
 		return hullSpec;

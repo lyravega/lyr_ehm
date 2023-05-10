@@ -38,6 +38,8 @@ public class ehm_base extends _ehm_basetracker {
 			if (variant.hasHullMod(lyr_internals.id.hullmods.stepdownadapter)) ehm_adapterActivator(stats);
 			if (variant.hasHullMod(lyr_internals.id.hullmods.diverterandconverter)) ehm_diverterAndConverterActivator(stats, slotPoints);
 			if (variant.hasHullMod(lyr_internals.id.hullmods.mutableshunt)) ehm_mutableShuntActivator(stats, lyr_internals.id.hullmods.mutableshunt);
+			
+			ehm_cleanWeaponGroupsUp(variant);
 		}
 	}
 

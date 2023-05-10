@@ -1,6 +1,9 @@
 package data.hullmods;
 
 import java.awt.Color;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -18,6 +21,7 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
+import com.fs.starfarer.api.loading.WeaponGroupSpec;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
@@ -241,6 +245,23 @@ public class _ehm_base extends BaseHullMod {
 	}
 	//#endregion
 	// END OF CHECK HELPERS
+
+	/** 
+	 * Activated shunts (decorative, built-in ones) are added to the weapon
+	 * groups by the game in some cases, like when the hullSpec is replaced.
+	 * <p>This method goes over the groups and removes them. Not sure when
+	 * / why / how this happens. This is a sufficient workaround till the
+	 * root cause can be found, however.
+	 * @param variant whose weapon groups will be purged of activated stuff
+	 */
+	protected static final void ehm_cleanWeaponGroupsUp(ShipVariantAPI variant) {
+		List<WeaponGroupSpec> weaponGroups = variant.getWeaponGroups();
+		Map<String, String> groupCleanupTargets = new HashMap<String, String>(variant.getHullSpec().getBuiltInWeapons());
+		groupCleanupTargets.values().retainAll(lyr_internals.id.shunts.set);
+		for (WeaponGroupSpec weaponGroup: weaponGroups) {
+			weaponGroup.getSlots().removeAll(groupCleanupTargets.keySet());
+		}
+	}
 
 	/**
 	 * Called from the {@link ehm_base retrofit base} only. If the hull does not

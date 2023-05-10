@@ -12,7 +12,6 @@ import static lyr.misc.lyr_utilities.generateChildLocation;
 import static lyr.tools._lyr_uiTools.commitChanges;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -31,7 +30,6 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
-import com.fs.starfarer.api.loading.WeaponGroupSpec;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
@@ -68,7 +66,7 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 
 	@Override
 	public void onRemove(ShipVariantAPI variant) {
-		variant.setHullSpecAPI(ehm_adapterRemoval(variant));
+		variant.setHullSpecAPI(ehm_adapterRemoval_lazy(variant));
 	}
 
 	@Override
@@ -323,30 +321,10 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 	 * @param variant whose hullSpec will be restored
 	 * @return a restored hullSpec
 	 */
-	public static final ShipHullSpecAPI ehm_adapterRemoval(ShipVariantAPI variant) {
+	public static final ShipHullSpecAPI ehm_adapterRemoval_lazy(ShipVariantAPI variant) {
 		ShipHullSpecAPI hullSpec = ehm_hullSpecRefresh(variant);
 
 		return hullSpec;
-	}
-
-	/** 
-	 * Activated shunts and adapters (decorative, built-in ones) are added
-	 * to the weapon groups by the game in some cases such as installing
-	 * them first then their activators immediately. When this happens,
-	 * even though they are unusable, they appear as ghosts under weapon
-	 * groups and as a selectable group in combat.
-	 * <p>This method goes over the groups and removes them. Not sure when
-	 * / why / how this happens. This is a sufficient workaround till the
-	 * root cause can be found, however.
-	 * @param variant whose weapon groups will be purged of activated stuff
-	 */
-	private static final void ehm_cleanWeaponGroupsUp(ShipVariantAPI variant) {
-		List<WeaponGroupSpec> weaponGroups = variant.getWeaponGroups();
-		Map<String, String> groupCleanupTargets = new HashMap<String, String>(variant.getHullSpec().getBuiltInWeapons());
-		groupCleanupTargets.values().retainAll(lyr_internals.id.shunts.set);
-		for (WeaponGroupSpec weaponGroup: weaponGroups) {
-			weaponGroup.getSlots().removeAll(groupCleanupTargets.keySet());
-		}
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION
