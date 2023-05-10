@@ -6,7 +6,7 @@
 	"showDamageWhenDecorative":true,
 	"renderBelowAllWeapons":true,
 	"turretSprite":"data/graphics/weapons/ehm_adapter_mediumDual_t.png",
-	"hardpointSprite":"data/graphics/weapons/ehm_adapter_mediumDual_t.png",
+	"hardpointSprite":"data/graphics/weapons/ehm_adapter_mediumDual_h.png",
 	"turretOffsets":[0, 0],
 	"turretAngleOffsets":[0],
 	"hardpointOffsets":[0, 0],

@@ -23,6 +23,6 @@ public class ehm_wr_energyslotretrofit extends _ehm_wr_base {
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
 
-		variant.setHullSpecAPI(ehm_weaponSlotRetrofit(variant, conversion));
+		variant.setHullSpecAPI(ehm_weaponSlotRetrofit(variant, conversion, null));
 	}
 }

@@ -47,19 +47,19 @@ public class _ehm_test extends _ehm_base implements _ehm_eventmethod {
 	public static final Logger logger = Logger.getLogger(lyr_internals.logName);
 
 	@Override
-	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
+	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) { try {
 
-	}
-
-	@Override
-	public void applyEffectsAfterShipCreation(ShipAPI ship, String id) {
-
-	}
+	} catch (Throwable t ) { logger.warn("Test fail in 'applyEffectsBeforeShipCreation()'", t);	}}
 
 	@Override
-	public void applyEffectsToFighterSpawnedByShip(ShipAPI fighter, ShipAPI ship, String id) {
+	public void applyEffectsAfterShipCreation(ShipAPI ship, String id) { try {
 
-	}
+	} catch (Throwable t ) { logger.warn("Test fail in 'applyEffectsAfterShipCreation()'", t);	}}
+
+	@Override
+	public void applyEffectsToFighterSpawnedByShip(ShipAPI fighter, ShipAPI ship, String id) { try {
+
+	} catch (Throwable t ) { logger.warn("Test fail in 'applyEffectsToFighterSpawnedByShip()'", t);	}}
 
 	@Override
 	public void advanceInCampaign(FleetMemberAPI member, float amount) {

@@ -192,8 +192,8 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 
 	//#region CONVERTERS & DIVERTERS
 	/** 
-	 * Spawns additional weapon slots, if the slots have adapters on them.
-	 * Adapters are turned into decorative pieces in the process.
+	 * Spawns additional weapon slots, if the slots have converters or diverters
+	 * on them. They are turned into decorative pieces in the process.
 	 * @param stats of the ship whose variant / hullSpec will be altered
 	 */
 	public static final void ehm_diverterAndConverterActivator(MutableShipStatsAPI stats, int slotPoints) {
@@ -271,6 +271,12 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 	//#endregion
 	// END OF CONVERTERS & DIVERTERS
 
+	/**
+	 * Calculates slot point relevant stats, only to be used in the tooltips.
+	 * @param variant of the ship
+	 * @param initialBonus if the ship has any initial bonus slot points
+	 * @return int array, 0=total, 1=misc, 2=diverters, 3=converters
+	 */
 	protected static final int[] ehm_slotPointCalculation(ShipVariantAPI variant, int initialBonus) {
 		int diverterBonus = 0;
 		int converterMalus = 0;
@@ -291,6 +297,12 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 		return pointArray;
 	}
 
+	/**
+	 * Checks and reports any shunt and shunt counts, only to be used in the tooltips.
+	 * @param variant of the ship
+	 * @param tag of the shunts to be counted
+	 * @return a map with shuntId:count entries
+	 */
 	protected static final Map<String, Integer> ehm_shuntCount(ShipVariantAPI variant, String tag) {
 		Map<String, Integer> shuntMap = new HashMap<String, Integer>();
 

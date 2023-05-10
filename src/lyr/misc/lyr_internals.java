@@ -95,6 +95,7 @@ public class lyr_internals {
 				set.addAll(dissipators.set);
 				set.addAll(converters.set);
 				set.addAll(diverters.set);
+				set.addAll(launchTube.set);
 			}
 		}
 	}

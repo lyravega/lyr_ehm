@@ -8,6 +8,7 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
@@ -65,16 +66,19 @@ public class _ehm_wr_base extends _ehm_base implements _ehm_eventmethod {
 	 * Alters the weapon slots on the passed variant's hullSpec, and returns it.
 	 * @param variant whose hullSpec will be altered
 	 * @param conversions is a map that pairs slot types
+	 * @param slotSize of the applicable slots, all sizes if {@code null}
 	 * @return an altered hullSpec with different weaponSlots
 	 * @see {@link #ehm_weaponSlotRestore()} reverses this process one slot at a time
 	 */
-	protected static final ShipHullSpecAPI ehm_weaponSlotRetrofit(ShipVariantAPI variant, Map<WeaponType, WeaponType> conversions) {	
+	protected static final ShipHullSpecAPI ehm_weaponSlotRetrofit(ShipVariantAPI variant, Map<WeaponType, WeaponType> conversions, WeaponSize slotSize) {	
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 
 		for (WeaponSlotAPI slot: hullSpec.retrieve().getAllWeaponSlotsCopy()) {
 			String slotId = slot.getId();
 			WeaponType convertFrom = slot.getWeaponType();
-			
+
+			if (slotSize != null && !slot.getSlotSize().equals(slotSize)) continue;
+
 			if (conversions.containsKey(convertFrom)) {
 				WeaponType convertTo = (WeaponType) conversions.get(convertFrom); // Why is the typecast necessary here? Doesn't '.get()' return a 'WeaponType'?!?
 				hullSpec.getWeaponSlot(slotId).setWeaponType(convertTo);

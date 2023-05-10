@@ -11,12 +11,15 @@ import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 /**@category Weapon Retrofit 
  * @author lyravega
  */
-public class ehm_wr_missileslotretrofit extends _ehm_wr_base {
+public class ehm_wr_universalslotretrofit extends _ehm_wr_base {
 	private static final Map<WeaponType,WeaponType> conversion = new HashMap<WeaponType,WeaponType>();
 	static {
+		conversion.put(WeaponType.BALLISTIC, WeaponType.UNIVERSAL);
+		conversion.put(WeaponType.ENERGY, WeaponType.UNIVERSAL);
+		conversion.put(WeaponType.MISSILE, WeaponType.UNIVERSAL);
+		conversion.put(WeaponType.COMPOSITE, WeaponType.UNIVERSAL);
 		conversion.put(WeaponType.HYBRID, WeaponType.UNIVERSAL);
-		conversion.put(WeaponType.BALLISTIC, WeaponType.COMPOSITE);
-		conversion.put(WeaponType.ENERGY, WeaponType.SYNERGY);
+		conversion.put(WeaponType.SYNERGY, WeaponType.UNIVERSAL);
 	}
 
 	@Override
