@@ -130,7 +130,7 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 		}
 
 		variant.setHullSpecAPI(hullSpec.retrieve()); 
-		if (refreshRefit) { refreshRefit = false; ehm_cleanWeaponGroupsUp(variant); commitChanges(); }
+		if (refreshRefit) { refreshRefit = false; commitChanges(); }
 	}
 	//#endregion
 	// END OF ADAPTERS
@@ -183,7 +183,7 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 		stats.getNumFighterBays().modifyFlat(hullModSpecId, fighterBayFlat);
 
 		variant.setHullSpecAPI(hullSpec.retrieve());
-		if (refreshRefit) { refreshRefit = false; ehm_cleanWeaponGroupsUp(variant); commitChanges(); }
+		if (refreshRefit) { refreshRefit = false; commitChanges(); }
 	}
 	//#endregion
 	// END OF MUTABLES
@@ -264,7 +264,7 @@ public class _ehm_ar_base extends _ehm_base implements _ehm_eventmethod {
 		}
 
 		variant.setHullSpecAPI(hullSpec.retrieve()); 
-		if (refreshRefit) { refreshRefit = false; ehm_cleanWeaponGroupsUp(variant); commitChanges(); }
+		if (refreshRefit) { refreshRefit = false; commitChanges(); }
 	}
 	//#endregion
 	// END OF CONVERTERS & DIVERTERS

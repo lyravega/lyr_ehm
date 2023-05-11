@@ -32,15 +32,15 @@ public class ehm_base extends _ehm_basetracker {
 
 		if (!ehm_hasRetrofitBaseBuiltIn(variant)) {
 			variant.setHullSpecAPI(ehm_hullSpecClone(variant)); commitChanges(); playSound();
-		} else {
-			final int slotPoints = variant.getSMods().contains(lyr_internals.id.hullmods.overengineered) ? slotPointBonus.get(hullSize) : 0;
-
-			if (variant.hasHullMod(lyr_internals.id.hullmods.stepdownadapter)) ehm_adapterActivator(stats);
-			if (variant.hasHullMod(lyr_internals.id.hullmods.diverterandconverter)) ehm_diverterAndConverterActivator(stats, slotPoints);
-			if (variant.hasHullMod(lyr_internals.id.hullmods.mutableshunt)) ehm_mutableShuntActivator(stats, lyr_internals.id.hullmods.mutableshunt);
-			
-			ehm_cleanWeaponGroupsUp(variant);
 		}
+		
+		final int slotPoints = variant.getSMods().contains(lyr_internals.id.hullmods.overengineered) ? slotPointBonus.get(hullSize) : 0;
+
+		if (variant.hasHullMod(lyr_internals.id.hullmods.stepdownadapter)) ehm_adapterActivator(stats);
+		if (variant.hasHullMod(lyr_internals.id.hullmods.diverterandconverter)) ehm_diverterAndConverterActivator(stats, slotPoints);
+		if (variant.hasHullMod(lyr_internals.id.hullmods.mutableshunt)) ehm_mutableShuntActivator(stats, lyr_internals.id.hullmods.mutableshunt);
+		
+		ehm_cleanWeaponGroupsUp(variant);
 	}
 
 	@Override 
