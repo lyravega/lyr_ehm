@@ -22,14 +22,14 @@ public class ehm_ar_mutableshunt extends _ehm_ar_base {
 	static final Map<String,Float> fluxDissipationBonus = new HashMap<String,Float>();
 	static final Map<String,Float> fighterBayBonus = new HashMap<String,Float>();
 	static {
-		fluxCapacityBonus.put(lyr_internals.id.shunts.capacitors.large, 0.16f);
-		fluxCapacityBonus.put(lyr_internals.id.shunts.capacitors.medium, 0.08f);
-		fluxCapacityBonus.put(lyr_internals.id.shunts.capacitors.small, 0.04f);
+		fluxCapacityBonus.put(lyr_internals.id.shunts.capacitors.large, 0.08f);
+		fluxCapacityBonus.put(lyr_internals.id.shunts.capacitors.medium, 0.04f);
+		fluxCapacityBonus.put(lyr_internals.id.shunts.capacitors.small, 0.02f);
 		mutableStatBonus.putAll(fluxCapacityBonus);
 
-		fluxDissipationBonus.put(lyr_internals.id.shunts.dissipators.large, 0.16f);
-		fluxDissipationBonus.put(lyr_internals.id.shunts.dissipators.medium, 0.08f);
-		fluxDissipationBonus.put(lyr_internals.id.shunts.dissipators.small, 0.04f);
+		fluxDissipationBonus.put(lyr_internals.id.shunts.dissipators.large, 0.08f);
+		fluxDissipationBonus.put(lyr_internals.id.shunts.dissipators.medium, 0.04f);
+		fluxDissipationBonus.put(lyr_internals.id.shunts.dissipators.small, 0.02f);
 		mutableStatBonus.putAll(fluxDissipationBonus);
 
 		fighterBayBonus.put(lyr_internals.id.shunts.launchTube.large, 1.00f);

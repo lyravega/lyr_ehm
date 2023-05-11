@@ -9,7 +9,8 @@ public class lyr_internals {
 	public static class id {
 		public static final String
 			drillSound = "drill", // must match .json
-			baseRetrofit = "ehm_base"; // must match hullmod id in .csv
+			baseRetrofit = "ehm_base", // must match hullmod id in .csv
+			undoRetrofit = "ehm_undo"; // must match hullmod id in .csv
 		public static class hullmods {
 			public static final String
 				overengineered = "ehm_mr_overengineered",

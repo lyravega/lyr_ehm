@@ -34,6 +34,9 @@ public class lyr_plugin extends BaseModPlugin {
 	private static void updateBlueprints() {
 		FactionAPI playerFaction = Global.getSector().getPlayerFaction();
 
+		playerFaction.addKnownHullMod(lyr_internals.id.baseRetrofit);
+		playerFaction.addKnownHullMod(lyr_internals.id.undoRetrofit);
+
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
 			String hullModSpecId = hullModSpec.getId();
 			if (hullModSpec.hasTag(lyr_internals.tag.experimental) && !playerFaction.knowsHullMod(hullModSpecId)) playerFaction.addKnownHullMod(hullModSpecId);
@@ -44,6 +47,8 @@ public class lyr_plugin extends BaseModPlugin {
 			if (weaponSpec.hasTag(lyr_internals.tag.experimental) && !playerFaction.knowsWeapon(weaponSpec.getWeaponId())) playerFaction.addKnownWeapon(weaponSpec.getWeaponId(), false);
 			else if (weaponSpec.hasTag(lyr_internals.tag.restricted) && playerFaction.knowsWeapon(weaponSpec.getWeaponId())) playerFaction.removeKnownWeapon(weaponSpec.getWeaponId());
 		}
+
+		logger.info(lyr_internals.logPrefix + "Updated spec entries");
 	}
 
 	@Override
