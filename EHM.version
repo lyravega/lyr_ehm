@@ -1,7 +1,8 @@
 {
-    "masterVersionFile":"https://raw.githubusercontent.com/lyravega/lyr_ehm/experimental/EHM.version",
+    "masterVersionFile":"https://raw.githubusercontent.com/lyravega/lyr_ehm/stable/EHM.version",
     "modName":"Experimental Hull Modifications",
     "modThreadId":24291,
+    "modNexusId":91,
     "modVersion":
     {
         "major":0,
