@@ -15,7 +15,7 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
  * @author lyravega
  */
 public class _ehm_eventhandler {
-	private _ehm_eventmethod hullModObject;
+	private _ehm_eventmethod hullModEffect;
 	private onInstallEventProperties onInstallEvent;
 	private onRemoveEventProperties onRemoveEvent;
 	private sModCleanUpEventProperties sModCleanUpEvent;
@@ -29,13 +29,13 @@ public class _ehm_eventhandler {
 	 * even though initialization occurs only once, sometimes hot swapping the code
 	 * causes access violations for whatever reason. 
 	 * @param hullModId for storage and check purposes
-	 * @param hullModObject to properly access the custom methods, if any
+	 * @param hullModEffect to properly access the custom methods, if any
 	 */
-	public _ehm_eventhandler(String hullModId, Object hullModObject) {
-		this.hullModObject = (_ehm_eventmethod) hullModObject;
+	public _ehm_eventhandler(String hullModId, Object hullModEffect) {
+		this.hullModEffect = (_ehm_eventmethod) hullModEffect;
 		_ehm_basetracker.registeredHullMods.put(hullModId, this);
 	}
-
+	
 	/** Inner class for the {@code onInstall} event */
 	private static class onInstallEventProperties {
 		private boolean executeMethod;
@@ -140,7 +140,7 @@ public class _ehm_eventhandler {
 	 * @param variant of the ship that'll be passed to any custom methods
 	 */
 	protected void executeOnInstall(ShipVariantAPI variant) {
-		if (this.onInstallEvent != null) this.onInstallEvent.execute(this.hullModObject, variant);
+		if (this.onInstallEvent != null) this.onInstallEvent.execute(this.hullModEffect, variant);
 	}
 
 	/**
@@ -150,7 +150,7 @@ public class _ehm_eventhandler {
 	 * @param variant of the ship that'll be passed to any custom methods
 	 */
 	protected void executeOnRemove(ShipVariantAPI variant) {
-		if (this.onRemoveEvent != null) this.onRemoveEvent.execute(this.hullModObject, variant);
+		if (this.onRemoveEvent != null) this.onRemoveEvent.execute(this.hullModEffect, variant);
 	}
 
 	/**
@@ -160,6 +160,6 @@ public class _ehm_eventhandler {
 	 * @param variant of the ship that'll be passed to any custom methods
 	 */
 	protected void executeSModCleanUp(ShipVariantAPI variant) {
-		if (this.sModCleanUpEvent != null) this.sModCleanUpEvent.execute(this.hullModObject, variant);
+		if (this.sModCleanUpEvent != null) this.sModCleanUpEvent.execute(this.hullModEffect, variant);
 	}
 }

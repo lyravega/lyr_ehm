@@ -50,7 +50,7 @@ public class _ehm_basetracker extends _ehm_base {
 	}
 
 	protected static void ehm_stopTracking(ShipAPI ship) {
-		if (isRefitTab()) shipTrackerScript(ship).kill();
+		if (isRefitTab()) shipTrackerScript(ship).cleanup();
 	}
 	
 	protected static void ehm_stopTracking(MutableShipStatsAPI stats) {
@@ -59,7 +59,7 @@ public class _ehm_basetracker extends _ehm_base {
 		if (stats.getEntity() instanceof ShipAPI) {
 			ShipAPI ship = (ShipAPI) stats.getEntity();
 
-			shipTrackerScript(ship).kill();
+			shipTrackerScript(ship).cleanup();
 		}
 	}
 
@@ -71,17 +71,11 @@ public class _ehm_basetracker extends _ehm_base {
 	 * @param variant of the ship
 	 * @param newHullMods set of new hull mods
 	 */
-	static void onInstalled(ShipVariantAPI variant, Set<String> newHullMods) {
-		String newHullModId;
-
-		for (Iterator<String> i = newHullMods.iterator(); i.hasNext();) {
-			newHullModId = i.next();
-
-			if (registeredHullMods.containsKey(newHullModId)) {
-				registeredHullMods.get(newHullModId).executeOnInstall(variant);
-			} else if (Global.getSettings().getHullModSpec(newHullModId).hasTag(lyr_internals.tag.externalAccess)) { 
-				commitChanges(); playSound();
-			}
+	private static void onInstalled(ShipVariantAPI variant, String newHullModId) {
+		if (registeredHullMods.containsKey(newHullModId)) {
+			registeredHullMods.get(newHullModId).executeOnInstall(variant);
+		} else if (settings.getHullModSpec(newHullModId).hasTag(lyr_internals.tag.externalAccess)) { 
+			commitChanges(); playSound();
 		}
 	}
 
@@ -89,20 +83,14 @@ public class _ehm_basetracker extends _ehm_base {
 	 * If a change is detected in the ship's {@link shipTrackerScript}, this method is
 	 * called. Executes removal actions if there are any for the old hullmods.
 	 * @param variant of the ship
-	 * @param removedHullMods set of removed hull mods
+	 * @param removedHullModId set of removed hull mods
 	 * @throws Throwable
 	 */
-	static void onRemoved(ShipVariantAPI variant, Set<String> removedHullMods) {	
-		String removedHullModId;
-
-		for (Iterator<String> i = removedHullMods.iterator(); i.hasNext();) {
-			removedHullModId = i.next(); 
-
-			if (registeredHullMods.containsKey(removedHullModId)) {
-				registeredHullMods.get(removedHullModId).executeOnRemove(variant);
-			} else if (Global.getSettings().getHullModSpec(removedHullModId).hasTag(lyr_internals.tag.externalAccess)) {
-				variant.setHullSpecAPI(ehm_hullSpecRefresh(variant)); commitChanges(); playSound();
-			}
+	private static void onRemoved(ShipVariantAPI variant, String removedHullModId) {
+		if (registeredHullMods.containsKey(removedHullModId)) {
+			registeredHullMods.get(removedHullModId).executeOnRemove(variant);
+		} else if (Global.getSettings().getHullModSpec(removedHullModId).hasTag(lyr_internals.tag.externalAccess)) {
+			variant.setHullSpecAPI(ehm_hullSpecRefresh(variant)); commitChanges(); playSound();
 		}
 	}
 
@@ -110,20 +98,14 @@ public class _ehm_basetracker extends _ehm_base {
 	 * If a change is detected in the ship's {@link shipTrackerScript}, this method is
 	 * called. Executes sMod clean-up actions.
 	 * @param variant of the ship
-	 * @param removedSMods set of removed hull mods
+	 * @param removedSModId set of removed hull mods
 	 * @throws Throwable
 	 */
-	static void onSModRemoved(ShipVariantAPI variant, Set<String> removedSMods) {	
-		String removedSModId;
-
-		for (Iterator<String> i = removedSMods.iterator(); i.hasNext();) {
-			removedSModId = i.next(); 
-
-			if (registeredHullMods.containsKey(removedSModId)) {
-				registeredHullMods.get(removedSModId).executeSModCleanUp(variant);
-			} else if (Global.getSettings().getHullModSpec(removedSModId).hasTag(lyr_internals.tag.externalAccess)) { 
-				variant.setHullSpecAPI(ehm_hullSpecRefresh(variant)); commitChanges(); playSound();
-			}
+	private static void onSModRemoved(ShipVariantAPI variant, String removedSModId) {
+		if (registeredHullMods.containsKey(removedSModId)) {
+			registeredHullMods.get(removedSModId).executeSModCleanUp(variant);
+		} else if (settings.getHullModSpec(removedSModId).hasTag(lyr_internals.tag.externalAccess)) { 
+			variant.setHullSpecAPI(ehm_hullSpecRefresh(variant)); commitChanges(); playSound();
 		}
 	}
 	
@@ -184,7 +166,7 @@ public class _ehm_basetracker extends _ehm_base {
 		
 		@Override
 		public void advance(float amount) {	
-			if (!isRefitTab() || shipTrackers.size() == 0) { kill(); return; }
+			if (!isRefitTab() || shipTrackers.size() == 0) { cleanup(); return; }
 	
 			if (runTime > 30f) {
 				runTime = 0f;
@@ -204,12 +186,6 @@ public class _ehm_basetracker extends _ehm_base {
 	
 		@Override
 		public void cleanup() {
-			if (log) logger.info(lyr_internals.logPrefix+"FT: Fleet Tracker terminated");
-			shipTrackers.clear();
-			isDone = true;
-		}
-	
-		public void kill() {
 			if (log) logger.info(lyr_internals.logPrefix+"FT: Fleet Tracker terminated");
 			shipTrackers.clear();
 			isDone = true;
@@ -259,12 +235,10 @@ public class _ehm_basetracker extends _ehm_base {
 		private ShipVariantAPI variant = null;
 		private String memberId = null;
 		private Set<String> hullMods = new HashSet<String>();
-		private Set<String> newHullMods = new HashSet<String>();
-		private Set<String> removedHullMods = new HashSet<String>();
-		private Set<String> sMods = new HashSet<String>();
-		private Set<String> newSMods = new HashSet<String>();
-		private Set<String> removedSMods = new HashSet<String>();
+		private Set<String> enhancedMods = new HashSet<String>();
+		// private Set<String> suppressedMods = new HashSet<String>();
 		// private Set<String> weapons = new HashSet<String>();
+		private Iterator<String> iterator;
 		private boolean isDone = false;
 		
 		//#region CONSTRUCTORS & ACCESSORS
@@ -279,7 +253,7 @@ public class _ehm_basetracker extends _ehm_base {
 			this.variant = variant;
 			this.memberId = memberId;
 			this.hullMods.addAll(variant.getHullMods());
-			this.sMods.addAll(variant.getSMods());
+			this.enhancedMods.addAll(variant.getSMods());
 			// this.weapons.addAll(variant.getFittedWeaponSlots());
 			
 			Global.getSector().addScript(this);
@@ -295,66 +269,41 @@ public class _ehm_basetracker extends _ehm_base {
 		
 		@Override
 		public void advance(float amount) {
-			if (!isRefitTab()) { kill(); return; }
-			
+			if (!isRefitTab()) { cleanup(); return; }
+
+			checkHullMods();
+			checkEnhancedMods();
+		}
+
+		private void checkHullMods() {
 			for (String hullModId : variant.getHullMods()) {
-				// if (!hullModId.startsWith(lyr_internals.affix.allRetrofit)) continue;
 				if (hullMods.contains(hullModId)) continue;
 	
 				if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": New hull modification '"+hullModId+"'");
-	
-				newHullMods.add(hullModId);
+				hullMods.add(hullModId); onInstalled(variant, hullModId);
 			}
 
-			for (Iterator<String> i = hullMods.iterator(); i.hasNext();) { String hullModId = i.next(); 
-				// if (!hullModId.startsWith(lyr_internals.affix.allRetrofit)) continue;
+			for (iterator = hullMods.iterator(); iterator.hasNext();) { String hullModId = iterator.next();
 				if (variant.hasHullMod(hullModId)) continue;
-	
-				if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": Removed hull modification '"+hullModId+"'");
-	
-				removedHullMods.add(hullModId);
-			}
-			
-			if (!newHullMods.isEmpty()) {
-				onInstalled(variant, newHullMods);
-				hullMods.addAll(newHullMods);
-				newHullMods.clear();
-			}
-			
-			if (!removedHullMods.isEmpty()) {
-				onRemoved(variant, removedHullMods);
-				hullMods.removeAll(removedHullMods);
-				removedHullMods.clear();
-			}
 
+				if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": Removed hull modification '"+hullModId+"'");
+				iterator.remove(); onRemoved(variant, hullModId);
+			}
+		}
+
+		private void checkEnhancedMods() {
 			for (String hullModId : variant.getSMods()) {
-				// if (!hullModId.startsWith(lyr_internals.affix.allRetrofit)) continue;
-				if (sMods.contains(hullModId)) continue;
+				if (enhancedMods.contains(hullModId)) continue;
 	
 				if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": New hull s-modification '"+hullModId+"'");
-	
-				newSMods.add(hullModId);
+				enhancedMods.add(hullModId); // onInstalled(variant, newSMods, true);
 			}
 
-			for (Iterator<String> i = sMods.iterator(); i.hasNext();) { String hullModId = i.next(); 
-				// if (!hullModId.startsWith(lyr_internals.affix.allRetrofit)) continue;
+			for (iterator = enhancedMods.iterator(); iterator.hasNext();) { String hullModId = iterator.next();
 				if (variant.getSMods().contains(hullModId)) continue;
 	
 				if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": Removed hull s-modification '"+hullModId+"'");
-	
-				removedSMods.add(hullModId);
-			}
-			
-			if (!newSMods.isEmpty()) {
-				// onInstalled(variant, newSMods, true);
-				sMods.addAll(newSMods);
-				newSMods.clear();
-			}
-			
-			if (!removedSMods.isEmpty()) {
-				onSModRemoved(variant, removedSMods);
-				sMods.removeAll(removedSMods);
-				removedSMods.clear();
+				iterator.remove(); onSModRemoved(variant, hullModId);
 			}
 		}
 	
@@ -370,11 +319,6 @@ public class _ehm_basetracker extends _ehm_base {
 	
 		@Override
 		public void cleanup() {
-			this.fleetTracker.removeShipTracker(memberId);
-			this.isDone = true;
-		}
-	
-		public void kill() {
 			this.fleetTracker.removeShipTracker(memberId);
 			this.isDone = true;
 		}
