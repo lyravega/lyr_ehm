@@ -27,7 +27,7 @@ import lyr.proxies.lyr_hullSpec;
  * @author lyravega
  */
 public class _ehm_ec_base extends _ehm_base implements normalEvents {
-	//#region LISTENER & EVENT REGISTRATION
+	//#region CUSTOM EVENTS
 	@Override
 	public void onInstall(ShipVariantAPI variant) {
 		commitChanges(); playSound();
@@ -39,7 +39,7 @@ public class _ehm_ec_base extends _ehm_base implements normalEvents {
 		commitChanges(); playSound();
 	}
 	//#endregion
-	// END OF LISTENER & EVENT REGISTRATION
+	// END OF CUSTOM EVENTS
 
 	/**
 	 * Alters the engine visuals of the ship. Uses the vanilla engine styles

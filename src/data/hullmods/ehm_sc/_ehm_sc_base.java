@@ -39,7 +39,7 @@ public class _ehm_sc_base extends _ehm_base implements normalEvents {
 	protected Color innerColour;
 	protected Color ringColour;
 
-	//#region LISTENER & EVENT REGISTRATION
+	//#region CUSTOM EVENTS
 	@Override
 	public void onInstall(ShipVariantAPI variant) {
 		commitChanges(); playSound();
@@ -58,7 +58,7 @@ public class _ehm_sc_base extends _ehm_base implements normalEvents {
 		ehm_assignColourValues();
 	}
 	//#endregion
-	// END OF LISTENER & EVENT REGISTRATION
+	// END OF CUSTOM EVENTS
 
 	/**
 	 * Assigns the color values stored at the external JSON in the

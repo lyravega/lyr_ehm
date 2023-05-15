@@ -1,7 +1,5 @@
 package data.hullmods;
 
-import java.util.Arrays;
-
 import org.apache.log4j.Logger;
 
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
@@ -18,7 +16,7 @@ import data.hullmods.ehm.events.normalEvents;
 import lyr.misc.lyr_internals;
 
 public class _ehm_test extends _ehm_base implements normalEvents {
-	//#region LISTENER & EVENT REGISTRATION
+	//#region CUSTOM EVENTS
 	@Override
 	public void onInstall(ShipVariantAPI variant) {}
 
@@ -30,21 +28,13 @@ public class _ehm_test extends _ehm_base implements normalEvents {
 		super.init(hullModSpec);
 	}
 	//#endregion
-	// END OF LISTENER & EVENT REGISTRATION
+	// END OF CUSTOM EVENTS
 
 	public static final Logger logger = Logger.getLogger(lyr_internals.logName);
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) { try {
-		// stats.getVariant().getHullMods().removeAll(stats.getVariant().getNonBuiltInHullmods());
-		for ( HullModSpecAPI hullModSpec : settings.getAllHullModSpecs()) {
-			Class<?> clazz = hullModSpec.getEffect().getClass();
-			
-			if (Arrays.asList(clazz.getInterfaces()).contains(normalEvents.class)	|| Arrays.asList(clazz.getSuperclass().getInterfaces()).contains(normalEvents.class)) {
-				String displayName = hullModSpec.getDisplayName();
-				displayName = displayName;
-			}
-		}
+
 	} catch (Throwable t ) { logger.warn("Test fail in 'applyEffectsBeforeShipCreation()'", t);	}}
 
 	@Override

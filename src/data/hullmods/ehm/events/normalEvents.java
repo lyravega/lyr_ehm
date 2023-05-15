@@ -14,13 +14,13 @@ import data.hullmods.ehm._ehm_basetracker;
  */
 public interface normalEvents {
 	/**
-	 * Fired if the refit ship has a new hull modification
+	 * Fired if this hull modification is installed on the refit ship.
 	 * @param variant
 	 */
 	public void onInstall(ShipVariantAPI variant);
 
 	/**
-	 * Fired if the refit ship has an old hull modification
+	 * Fired if this hull modification is removed from the refit ship.
 	 * @param variant
 	 */
 	public void onRemove(ShipVariantAPI variant);

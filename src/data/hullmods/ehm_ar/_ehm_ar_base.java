@@ -57,7 +57,7 @@ import lyr.proxies.lyr_weaponSlot;
  * @author lyravega
  */
 public class _ehm_ar_base extends _ehm_base implements normalEvents {
-	//#region LISTENER & EVENT REGISTRATION
+	//#region CUSTOM EVENTS
 	@Override
 	public void onInstall(ShipVariantAPI variant) {
 		commitChanges(); playSound();
@@ -69,7 +69,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		commitChanges(); playSound();
 	}
 	//#endregion
-	// END OF LISTENER & EVENT REGISTRATION
+	// END OF CUSTOM EVENTS
 
 	protected static final boolean extraActiveInfoInHullMods = lyr_externals.extraActiveInfoInHullMods;
 	protected static final boolean extraInactiveInfoInHullMods = lyr_externals.extraInactiveInfoInHullMods;

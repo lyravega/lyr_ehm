@@ -14,14 +14,14 @@ import data.hullmods.ehm._ehm_basetracker;
  */
 public interface enhancedEvents {
 	/**
-	 * Fired if the refit ship has a new s-mod
+	 * Fired if this hull modification is enhanced with a story point on the refit ship.
 	 * @param variant
 	 */
 	public void onEnhance(ShipVariantAPI variant);
 
 	/**
-	 * Fired if the refit ship no longer has an s-mod
-	 * <p> Is primarily used to remove any lasting effects that the s-mod may introduce
+	 * Fired if this hull modification is no longer enhanced on the refit ship.
+	 * <p> Is primarily used to remove any lasting effects that the s-mod effect may introduce
 	 * @param variant
 	 */
 	public void onNormalize(ShipVariantAPI variant);
