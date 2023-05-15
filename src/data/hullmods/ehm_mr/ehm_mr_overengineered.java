@@ -20,8 +20,8 @@ import lyr.misc.lyr_tooltip;
 import lyr.proxies.lyr_hullSpec;
 
 public class ehm_mr_overengineered extends _ehm_base implements normalEvents, enhancedEvents {
-	//#region LISTENER & EVENT REGISTRATION
-	@Override	// not used
+	//#region CUSTOM EVENTS
+	@Override
 	public void onInstall(ShipVariantAPI variant) {
 		playSound();
 	}
@@ -40,13 +40,13 @@ public class ehm_mr_overengineered extends _ehm_base implements normalEvents, en
 		commitChanges();
 	}
 	//#endregion
-	// END OF LISTENER & EVENT REGISTRATION
+	// END OF CUSTOM EVENTS
 
 	public static final Map<HullSize, Integer> slotPointBonus = new HashMap<HullSize, Integer>();
 	static {
 		slotPointBonus.put(HullSize.FIGHTER, 0);
 		slotPointBonus.put(HullSize.DEFAULT, 0);
-		slotPointBonus.put(HullSize.FRIGATE, 0);
+		slotPointBonus.put(HullSize.FRIGATE, 1);
 		slotPointBonus.put(HullSize.DESTROYER, 2);
 		slotPointBonus.put(HullSize.CRUISER, 4);
 		slotPointBonus.put(HullSize.CAPITAL_SHIP, 6);
@@ -79,7 +79,7 @@ public class ehm_mr_overengineered extends _ehm_base implements normalEvents, en
 		switch (index) {
 			case 0: return "story point";
 			case 1: return "" + 15 + "%";
-			case 2: return "0/2/4/6 slot points";
+			case 2: return "1/2/4/6 slot points";
 			case 3: return "slot point";
 			case 4: return "converter shunts";
 			default: return null;
