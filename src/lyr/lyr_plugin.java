@@ -42,6 +42,17 @@ public class lyr_plugin extends BaseModPlugin {
 		}
 	}
 
+	@Override
+	public void onGameLoad(boolean newGame) {
+		new _lyr_delayedFinder();
+		updateBlueprints();
+	}
+
+	@Override
+	public void onApplicationLoad() throws Exception {
+		registerHullMods();
+	}
+
 	private static void updateBlueprints() {
 		FactionAPI playerFaction = Global.getSector().getPlayerFaction();
 
@@ -59,17 +70,10 @@ public class lyr_plugin extends BaseModPlugin {
 			else if (weaponSpec.hasTag(lyr_internals.tag.restricted) && playerFaction.knowsWeapon(weaponSpec.getWeaponId())) playerFaction.removeKnownWeapon(weaponSpec.getWeaponId());
 		}
 
-		logger.info(lyr_internals.logPrefix + "Updated spec entries");
+		logger.info(lyr_internals.logPrefix + "Player faction blueprints are updated");
 	}
 
-	@Override
-	public void onGameLoad(boolean newGame) {
-		new _lyr_delayedFinder();
-		updateBlueprints();
-	}
-
-	@Override
-	public void onApplicationLoad() throws Exception {
+	private static void registerHullMods() {
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
 			Class<?> clazz = hullModSpec.getEffect().getClass();
 			Set<Class<?>> interfaces = new HashSet<Class<?>>(Arrays.asList(clazz.getInterfaces()));
@@ -87,5 +91,7 @@ public class lyr_plugin extends BaseModPlugin {
 				suppressedEvents.put(hullModSpec.getId(), (suppressedEvents) hullModSpec.getEffect());
 			}
 		}
+
+		logger.info(lyr_internals.logPrefix + "Hull modifications are registered");
 	}
 }
