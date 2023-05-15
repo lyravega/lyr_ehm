@@ -78,7 +78,7 @@ public class ehm_mr_overengineered extends _ehm_base implements normalEvents, en
 	public String getDescriptionParam(int index, HullSize hullSize) {
 		switch (index) {
 			case 0: return "story point";
-			case 1: return "" + 15 + "%";
+			case 1: return "" + 20 + "%";
 			case 2: return "1/2/4/6 slot points";
 			case 3: return "slot point";
 			case 4: return "converter shunts";
@@ -105,7 +105,7 @@ public class ehm_mr_overengineered extends _ehm_base implements normalEvents, en
 	@Override
 	public String getSModDescriptionParam(int index, HullSize hullSize) {
 		switch (index) {
-			case 0: return "+" + 15 + "% OP";
+			case 0: return "+" + 20 + "% OP";
 			case 1: return "" + slotPointBonus.get(hullSize) + " slot points";
 			default: return null;
 		}

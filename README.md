@@ -3,7 +3,7 @@ Just some hull modifications. By some, I mean 40+ or something. However, most ar
 
 **Hull Modifications**:
 - Experimental Hull Modifications: Provides a base to all other hull modifications in this mod. Also has a removal tool
-- Over-Engineered: Provides 15% OP bonus and some slot-points to the ship when built-in. Resides under "Retrofit" category
+- Over-Engineered: Provides 20% OP bonus and some slot-points to the ship when built-in. Resides under "Retrofit" category
 
 **Hull Modification Categories**:
 - Systems: All vanilla systems are turned into hull modifications. Some are hidden as they are designed for [REDACTED] or used by stations. All use flat costs. Some have tiny adjustments that make them reusable if they didn't have that capability
