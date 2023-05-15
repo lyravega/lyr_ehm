@@ -1,6 +1,14 @@
 package data.hullmods.ehm;
 
+import static lyr.misc.lyr_internals.logPrefix;
+import static lyr.misc.lyr_internals.events.onEnhance;
+import static lyr.misc.lyr_internals.events.onInstall;
+import static lyr.misc.lyr_internals.events.onNormalize;
+import static lyr.misc.lyr_internals.events.onRemove;
+import static lyr.misc.lyr_internals.events.onRestore;
+import static lyr.misc.lyr_internals.events.onSuppress;
 import static lyr.tools._lyr_uiTools.isRefitTab;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -18,7 +26,6 @@ import data.hullmods._ehm_base;
 import data.hullmods.ehm.events.enhancedEvents;
 import data.hullmods.ehm.events.normalEvents;
 import data.hullmods.ehm.events.suppressedEvents;
-import lyr.misc.lyr_internals;
 
 /**
  * Provides tools to track any change on a ship, mainly the hull modifications. When a change is
@@ -70,12 +77,12 @@ public class _ehm_basetracker extends _ehm_base {
 
 	private static void onEvent(String eventName, ShipVariantAPI variant, String hullModId) {
 		switch (eventName) {
-			case "onInstall":	if (normalEvents.containsKey(hullModId)) normalEvents.get(hullModId).onInstall(variant); return;
-			case "onRemove":	if (normalEvents.containsKey(hullModId)) normalEvents.get(hullModId).onRemove(variant); return;
-			case "onEnhance":	if (enhancedEvents.containsKey(hullModId)) enhancedEvents.get(hullModId).onEnhance(variant); return;
-			case "onNormalize":	if (enhancedEvents.containsKey(hullModId)) enhancedEvents.get(hullModId).onNormalize(variant); return;
-			case "onSuppress":	if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onSuppress(variant); return;
-			case "onRestore":	if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onRestore(variant); return;
+			case onInstall:		if (normalEvents.containsKey(hullModId)) normalEvents.get(hullModId).onInstall(variant); return;
+			case onRemove:		if (normalEvents.containsKey(hullModId)) normalEvents.get(hullModId).onRemove(variant); return;
+			case onEnhance:		if (enhancedEvents.containsKey(hullModId)) enhancedEvents.get(hullModId).onEnhance(variant); return;
+			case onNormalize:	if (enhancedEvents.containsKey(hullModId)) enhancedEvents.get(hullModId).onNormalize(variant); return;
+			case onSuppress:	if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onSuppress(variant); return;
+			case onRestore:		if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onRestore(variant); return;
 			default: return;
 		}
 	}
@@ -118,19 +125,19 @@ public class _ehm_basetracker extends _ehm_base {
 			// 	fleetMembers.put(fleetMember.getId(), fleetMember);
 			// }
 
-			if (log) logger.info(lyr_internals.logPrefix+"FT: Fleet Tracker initialized");
+			if (log) logger.info(logPrefix+"FT: Fleet Tracker initialized");
 			
 			Global.getSector().addScript(this);
 		}
 	
 		public void addshipTracker(String memberId, shipTrackerScript shipTracker) {
 			shipTrackers.put(memberId, shipTracker);
-			if (log) logger.info(lyr_internals.logPrefix+"FT: Ship Tracker ST-"+memberId+" starting");
+			if (log) logger.info(logPrefix+"FT: Ship Tracker ST-"+memberId+" starting");
 		}
 	
 		public void removeShipTracker(String memberId) {
 			shipTrackers.remove(memberId);
-			if (log) logger.info(lyr_internals.logPrefix+"FT: Ship Tracker ST-"+memberId+" stopping");
+			if (log) logger.info(logPrefix+"FT: Ship Tracker ST-"+memberId+" stopping");
 		}
 		//#endregion
 		// END OF CONSTRUCTORS & ACCESSORS
@@ -141,7 +148,7 @@ public class _ehm_basetracker extends _ehm_base {
 	
 			if (runTime > 30f) {
 				runTime = 0f;
-				if (log) logger.info(lyr_internals.logPrefix+"FT: Tracking "+shipTrackers.size()+" ships");
+				if (log) logger.info(logPrefix+"FT: Tracking "+shipTrackers.size()+" ships");
 			} runTime += amount;
 		}
 	
@@ -157,7 +164,7 @@ public class _ehm_basetracker extends _ehm_base {
 	
 		@Override
 		public void cleanup() {
-			if (log) logger.info(lyr_internals.logPrefix+"FT: Fleet Tracker terminated");
+			if (log) logger.info(logPrefix+"FT: Fleet Tracker terminated");
 			shipTrackers.clear();
 			isDone = true;
 		}
@@ -192,13 +199,9 @@ public class _ehm_basetracker extends _ehm_base {
 	}
 
 	/**
-	 * An inner class with only one purpose: cache the hullmods installed on the
-	 * ship to provide a base for comparisons. Actual changes are handled on the
-	 * {@link data.hullmods.ehm_base} class to keep things tidy.
+	 * An inner class with only one purpose: cache the variant, report any changes.
 	 * <p>Created through {@link #shipTrackerScript(ShipAPI)} method that checks 
-	 * for existing trackers beforehand. Runs / used by the methods located in 
-	 * the base hullmod {@link data.hullmods.ehm_base#onInstalled(ShipVariantAPI, Set)
-	 * onInstalled()} and {@link data.hullmods.ehm_base#onRemoved(ShipVariantAPI, Set) 
+	 * for existing trackers beforehand
 	 * onRemoved()}
 	 */
 	private static class shipTrackerScript implements EveryFrameScriptWithCleanup {
@@ -230,7 +233,7 @@ public class _ehm_basetracker extends _ehm_base {
 			
 			Global.getSector().addScript(this);
 	
-			if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": Initial hull modifications '"+hullMods.toString()+"'");
+			if (log) logger.info(logPrefix+"ST-"+memberId+": Initial hull modifications '"+hullMods.toString()+"'");
 		}
 	
 		public String getMemberId() {
@@ -252,15 +255,15 @@ public class _ehm_basetracker extends _ehm_base {
 			for (String hullModId : variant.getHullMods()) {
 				if (hullMods.contains(hullModId)) continue;
 	
-				if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": Installed '"+hullModId+"'");
-				hullMods.add(hullModId); onEvent("onInstall", variant, hullModId);
+				if (log) logger.info(logPrefix+"ST-"+memberId+": Installed '"+hullModId+"'");
+				hullMods.add(hullModId); onEvent(onInstall, variant, hullModId);
 			}
 
 			for (iterator = hullMods.iterator(); iterator.hasNext();) { String hullModId = iterator.next();
 				if (variant.hasHullMod(hullModId)) continue;
 
-				if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": Removed '"+hullModId+"'");
-				iterator.remove(); onEvent("onRemove", variant, hullModId);
+				if (log) logger.info(logPrefix+"ST-"+memberId+": Removed '"+hullModId+"'");
+				iterator.remove(); onEvent(onRemove, variant, hullModId);
 			}
 		}
 
@@ -268,15 +271,15 @@ public class _ehm_basetracker extends _ehm_base {
 			for (String hullModId : variant.getSMods()) {
 				if (enhancedMods.contains(hullModId)) continue;
 	
-				if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": Enhanced '"+hullModId+"'");
-				enhancedMods.add(hullModId); onEvent("onEnhance", variant, hullModId);
+				if (log) logger.info(logPrefix+"ST-"+memberId+": Enhanced '"+hullModId+"'");
+				enhancedMods.add(hullModId); onEvent(onEnhance, variant, hullModId);
 			}
 
 			for (iterator = enhancedMods.iterator(); iterator.hasNext();) { String hullModId = iterator.next();
 				if (variant.getSMods().contains(hullModId)) continue;
 	
-				if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": Normalized '"+hullModId+"'");
-				iterator.remove(); onEvent("onNormalize", variant, hullModId);
+				if (log) logger.info(logPrefix+"ST-"+memberId+": Normalized '"+hullModId+"'");
+				iterator.remove(); onEvent(onNormalize, variant, hullModId);
 			}
 		}
 
@@ -284,15 +287,15 @@ public class _ehm_basetracker extends _ehm_base {
 			for (String hullModId : variant.getSuppressedMods()) {
 				if (suppressedMods.contains(hullModId)) continue;
 	
-				if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": Suppressed '"+hullModId+"'");
-				suppressedMods.add(hullModId); onEvent("onSuppress", variant, hullModId);
+				if (log) logger.info(logPrefix+"ST-"+memberId+": Suppressed '"+hullModId+"'");
+				suppressedMods.add(hullModId); onEvent(onSuppress, variant, hullModId);
 			}
 
 			for (iterator = suppressedMods.iterator(); iterator.hasNext();) { String hullModId = iterator.next();
 				if (variant.getSMods().contains(hullModId)) continue;
 	
-				if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": Restored '"+hullModId+"'");
-				iterator.remove(); onEvent("onRestore", variant, hullModId);
+				if (log) logger.info(logPrefix+"ST-"+memberId+": Restored '"+hullModId+"'");
+				iterator.remove(); onEvent(onRestore, variant, hullModId);
 			}
 		}
 	
