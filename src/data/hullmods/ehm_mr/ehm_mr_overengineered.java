@@ -1,5 +1,8 @@
 package data.hullmods.ehm_mr;
 
+import static lyr.tools._lyr_uiTools.commitChanges;
+import static lyr.tools._lyr_uiTools.playSound;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,41 +10,34 @@ import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
-import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import data.hullmods._ehm_base;
-import data.hullmods.ehm._ehm_eventhandler;
-import data.hullmods.ehm._ehm_eventmethod;
+import data.hullmods.ehm.events.enhancedEvents;
+import data.hullmods.ehm.events.normalEvents;
 import lyr.misc.lyr_tooltip;
 import lyr.proxies.lyr_hullSpec;
 
-public class ehm_mr_overengineered extends _ehm_base implements _ehm_eventmethod {
+public class ehm_mr_overengineered extends _ehm_base implements normalEvents, enhancedEvents {
 	//#region LISTENER & EVENT REGISTRATION
-	protected _ehm_eventhandler hullModEventHandler;
-
 	@Override	// not used
-	public void onInstall(ShipVariantAPI variant) {}
-
-	@Override
-	public void onRemove(ShipVariantAPI variant) {}
-
-	@Override
-	public void sModCleanUp(ShipVariantAPI variant) {
-		variant.setHullSpecAPI(ehm_hullSpecRefresh(variant));
+	public void onInstall(ShipVariantAPI variant) {
+		playSound();
 	}
 
-	@Override 
-	public void init(HullModSpecAPI hullModSpec) {
-		super.init(hullModSpec);
+	@Override
+	public void onRemove(ShipVariantAPI variant) {
+		playSound();
+	}
 
-		if (this.hullModEventHandler == null) {
-			this.hullModEventHandler = new _ehm_eventhandler(this.hullModSpecId, this);
-			hullModEventHandler.registerOnInstall(false, true, false);
-			hullModEventHandler.registerOnRemove(false, true, false);
-			hullModEventHandler.registerSModCleanUp(true, false, true);
-		}
+	@Override
+	public void onEnhance(ShipVariantAPI variant) {}
+
+	@Override
+	public void onNormalize(ShipVariantAPI variant) {
+		variant.setHullSpecAPI(ehm_hullSpecRefresh(variant));
+		commitChanges();
 	}
 	//#endregion
 	// END OF LISTENER & EVENT REGISTRATION

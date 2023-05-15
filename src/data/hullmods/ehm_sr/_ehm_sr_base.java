@@ -1,18 +1,19 @@
 package data.hullmods.ehm_sr;
 
+import static lyr.tools._lyr_uiTools.commitChanges;
+import static lyr.tools._lyr_uiTools.playSound;
+
 import java.util.Set;
 
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
-import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import data.hullmods._ehm_base;
-import data.hullmods.ehm._ehm_eventhandler;
-import data.hullmods.ehm._ehm_eventmethod;
+import data.hullmods.ehm.events.normalEvents;
 import lyr.misc.lyr_internals;
 import lyr.misc.lyr_tooltip;
 import lyr.proxies.lyr_hullSpec;
@@ -26,30 +27,17 @@ import lyr.proxies.lyr_hullSpec;
  * @see {@link data.hullmods.ehm_sc._ehm_sc_base _ehm_sc_base} for shield cosmetic base
  * @author lyravega
  */
-public class _ehm_sr_base extends _ehm_base implements _ehm_eventmethod {
+public class _ehm_sr_base extends _ehm_base implements normalEvents {
 	//#region LISTENER & EVENT REGISTRATION
-	protected _ehm_eventhandler hullModEventHandler = null;
-
 	@Override
-	public void onInstall(ShipVariantAPI variant) {}
+	public void onInstall(ShipVariantAPI variant) {
+		commitChanges(); playSound();
+	}
 
 	@Override
 	public void onRemove(ShipVariantAPI variant) {
 		variant.setHullSpecAPI(ehm_systemRestore(variant));
-	}
-
-	@Override
-	public void sModCleanUp(ShipVariantAPI variant) {}
-
-	@Override
-	public void init(HullModSpecAPI hullModSpec) {
-		super.init(hullModSpec);
-
-		if (this.hullModEventHandler == null) {
-			this.hullModEventHandler = new _ehm_eventhandler(this.hullModSpecId, this);
-			hullModEventHandler.registerOnInstall(true, true, false);
-			hullModEventHandler.registerOnRemove(true, true, true);	
-		}
+		commitChanges(); playSound();
 	}
 	//#endregion
 	// END OF LISTENER & EVENT REGISTRATION

@@ -1,6 +1,14 @@
 package lyr;
 
+import static data.hullmods.ehm._ehm_basetracker.enhancedEvents;
+import static data.hullmods.ehm._ehm_basetracker.normalEvents;
+import static data.hullmods.ehm._ehm_basetracker.suppressedEvents;
+
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,6 +19,9 @@ import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 
+import data.hullmods.ehm.events.enhancedEvents;
+import data.hullmods.ehm.events.normalEvents;
+import data.hullmods.ehm.events.suppressedEvents;
 import lyr.misc.lyr_internals;
 import lyr.tools._lyr_uiTools._lyr_delayedFinder;
 
@@ -55,5 +66,26 @@ public class lyr_plugin extends BaseModPlugin {
 	public void onGameLoad(boolean newGame) {
 		new _lyr_delayedFinder();
 		updateBlueprints();
+	}
+
+	@Override
+	public void onApplicationLoad() throws Exception {
+		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
+			Class<?> clazz = hullModSpec.getEffect().getClass();
+			Set<Class<?>> interfaces = new HashSet<Class<?>>(Arrays.asList(clazz.getInterfaces()));
+			interfaces.addAll(Arrays.asList(clazz.getSuperclass().getInterfaces()));
+			
+			if (interfaces.contains(normalEvents.class)) {
+				normalEvents.put(hullModSpec.getId(), (normalEvents) hullModSpec.getEffect());
+			}
+			
+			if (interfaces.contains(enhancedEvents.class)) {
+				enhancedEvents.put(hullModSpec.getId(), (enhancedEvents) hullModSpec.getEffect());
+			}
+			
+			if (interfaces.contains(suppressedEvents.class)) {
+				suppressedEvents.put(hullModSpec.getId(), (suppressedEvents) hullModSpec.getEffect());
+			}
+		}
 	}
 }

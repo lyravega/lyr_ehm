@@ -1,9 +1,6 @@
 package data.hullmods.ehm;
 
-import static lyr.tools._lyr_uiTools.commitChanges;
 import static lyr.tools._lyr_uiTools.isRefitTab;
-import static lyr.tools._lyr_uiTools.playSound;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -18,6 +15,9 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 
 import data.hullmods._ehm_base;
+import data.hullmods.ehm.events.enhancedEvents;
+import data.hullmods.ehm.events.normalEvents;
+import data.hullmods.ehm.events.suppressedEvents;
 import lyr.misc.lyr_internals;
 
 /**
@@ -27,7 +27,7 @@ import lyr.misc.lyr_internals;
  * handler is set-up. In addition to some pre-defined actions, custom methods can be executed.
 * @see {@link ehm_base Main Modification} Enables & initializes tracking features when installed
 * @see {@link _ehm_eventhandler Event Handler} Used by the modifications to register the events
-* @see {@link _ehm_eventmethod Event Method Interface} Implemented by the hull modifications
+* @see {@link normalEvents Event Method Interface} Implemented by the hull modifications
  * @author lyravega
  */
 public class _ehm_basetracker extends _ehm_base {
@@ -63,49 +63,20 @@ public class _ehm_basetracker extends _ehm_base {
 		}
 	}
 
-	public static Map<String, _ehm_eventhandler> registeredHullMods = new HashMap<String, _ehm_eventhandler>();
+	// hull modification effects that implement any of the event interfaces are stored in these maps
+	public static final Map<String, normalEvents> normalEvents = new HashMap<String, normalEvents>();
+	public static final Map<String, enhancedEvents> enhancedEvents = new HashMap<String, enhancedEvents>();
+	public static final Map<String, suppressedEvents> suppressedEvents = new HashMap<String, suppressedEvents>();
 
-	/**
-	 * If a change is detected in the ship's {@link shipTrackerScript}, this method is
-	 * called. Executes installation actions if there are any for the new hullmods.
-	 * @param variant of the ship
-	 * @param newHullMods set of new hull mods
-	 */
-	private static void onInstalled(ShipVariantAPI variant, String newHullModId) {
-		if (registeredHullMods.containsKey(newHullModId)) {
-			registeredHullMods.get(newHullModId).executeOnInstall(variant);
-		} else if (settings.getHullModSpec(newHullModId).hasTag(lyr_internals.tag.externalAccess)) { 
-			commitChanges(); playSound();
-		}
-	}
-
-	/**
-	 * If a change is detected in the ship's {@link shipTrackerScript}, this method is
-	 * called. Executes removal actions if there are any for the old hullmods.
-	 * @param variant of the ship
-	 * @param removedHullModId set of removed hull mods
-	 * @throws Throwable
-	 */
-	private static void onRemoved(ShipVariantAPI variant, String removedHullModId) {
-		if (registeredHullMods.containsKey(removedHullModId)) {
-			registeredHullMods.get(removedHullModId).executeOnRemove(variant);
-		} else if (Global.getSettings().getHullModSpec(removedHullModId).hasTag(lyr_internals.tag.externalAccess)) {
-			variant.setHullSpecAPI(ehm_hullSpecRefresh(variant)); commitChanges(); playSound();
-		}
-	}
-
-	/**
-	 * If a change is detected in the ship's {@link shipTrackerScript}, this method is
-	 * called. Executes sMod clean-up actions.
-	 * @param variant of the ship
-	 * @param removedSModId set of removed hull mods
-	 * @throws Throwable
-	 */
-	private static void onSModRemoved(ShipVariantAPI variant, String removedSModId) {
-		if (registeredHullMods.containsKey(removedSModId)) {
-			registeredHullMods.get(removedSModId).executeSModCleanUp(variant);
-		} else if (settings.getHullModSpec(removedSModId).hasTag(lyr_internals.tag.externalAccess)) { 
-			variant.setHullSpecAPI(ehm_hullSpecRefresh(variant)); commitChanges(); playSound();
+	private static void onEvent(String eventName, ShipVariantAPI variant, String hullModId) {
+		switch (eventName) {
+			case "onInstall":	if (normalEvents.containsKey(hullModId)) normalEvents.get(hullModId).onInstall(variant); return;
+			case "onRemove":	if (normalEvents.containsKey(hullModId)) normalEvents.get(hullModId).onRemove(variant); return;
+			case "onEnhance":	if (enhancedEvents.containsKey(hullModId)) enhancedEvents.get(hullModId).onEnhance(variant); return;
+			case "onNormalize":	if (enhancedEvents.containsKey(hullModId)) enhancedEvents.get(hullModId).onNormalize(variant); return;
+			case "onSuppress":	if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onSuppress(variant); return;
+			case "onRestore":	if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onRestore(variant); return;
+			default: return;
 		}
 	}
 	
@@ -236,7 +207,7 @@ public class _ehm_basetracker extends _ehm_base {
 		private String memberId = null;
 		private Set<String> hullMods = new HashSet<String>();
 		private Set<String> enhancedMods = new HashSet<String>();
-		// private Set<String> suppressedMods = new HashSet<String>();
+		private Set<String> suppressedMods = new HashSet<String>();
 		// private Set<String> weapons = new HashSet<String>();
 		private Iterator<String> iterator;
 		private boolean isDone = false;
@@ -254,6 +225,7 @@ public class _ehm_basetracker extends _ehm_base {
 			this.memberId = memberId;
 			this.hullMods.addAll(variant.getHullMods());
 			this.enhancedMods.addAll(variant.getSMods());
+			this.suppressedMods.addAll(variant.getSuppressedMods());
 			// this.weapons.addAll(variant.getFittedWeaponSlots());
 			
 			Global.getSector().addScript(this);
@@ -273,21 +245,22 @@ public class _ehm_basetracker extends _ehm_base {
 
 			checkHullMods();
 			checkEnhancedMods();
+			checkSuppressedMods();
 		}
 
 		private void checkHullMods() {
 			for (String hullModId : variant.getHullMods()) {
 				if (hullMods.contains(hullModId)) continue;
 	
-				if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": New hull modification '"+hullModId+"'");
-				hullMods.add(hullModId); onInstalled(variant, hullModId);
+				if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": Installed '"+hullModId+"'");
+				hullMods.add(hullModId); onEvent("onInstall", variant, hullModId);
 			}
 
 			for (iterator = hullMods.iterator(); iterator.hasNext();) { String hullModId = iterator.next();
 				if (variant.hasHullMod(hullModId)) continue;
 
-				if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": Removed hull modification '"+hullModId+"'");
-				iterator.remove(); onRemoved(variant, hullModId);
+				if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": Removed '"+hullModId+"'");
+				iterator.remove(); onEvent("onRemove", variant, hullModId);
 			}
 		}
 
@@ -295,15 +268,31 @@ public class _ehm_basetracker extends _ehm_base {
 			for (String hullModId : variant.getSMods()) {
 				if (enhancedMods.contains(hullModId)) continue;
 	
-				if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": New hull s-modification '"+hullModId+"'");
-				enhancedMods.add(hullModId); // onInstalled(variant, newSMods, true);
+				if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": Enhanced '"+hullModId+"'");
+				enhancedMods.add(hullModId); onEvent("onEnhance", variant, hullModId);
 			}
 
 			for (iterator = enhancedMods.iterator(); iterator.hasNext();) { String hullModId = iterator.next();
 				if (variant.getSMods().contains(hullModId)) continue;
 	
-				if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": Removed hull s-modification '"+hullModId+"'");
-				iterator.remove(); onSModRemoved(variant, hullModId);
+				if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": Normalized '"+hullModId+"'");
+				iterator.remove(); onEvent("onNormalize", variant, hullModId);
+			}
+		}
+
+		private void checkSuppressedMods() {
+			for (String hullModId : variant.getSuppressedMods()) {
+				if (suppressedMods.contains(hullModId)) continue;
+	
+				if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": Suppressed '"+hullModId+"'");
+				suppressedMods.add(hullModId); onEvent("onSuppress", variant, hullModId);
+			}
+
+			for (iterator = suppressedMods.iterator(); iterator.hasNext();) { String hullModId = iterator.next();
+				if (variant.getSMods().contains(hullModId)) continue;
+	
+				if (log) logger.info(lyr_internals.logPrefix+"ST-"+memberId+": Restored '"+hullModId+"'");
+				iterator.remove(); onEvent("onRestore", variant, hullModId);
 			}
 		}
 	

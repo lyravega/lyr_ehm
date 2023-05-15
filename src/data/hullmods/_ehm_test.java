@@ -1,5 +1,7 @@
 package data.hullmods;
 
+import java.util.Arrays;
+
 import org.apache.log4j.Logger;
 
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
@@ -11,35 +13,21 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
-import data.hullmods.ehm._ehm_eventhandler;
-import data.hullmods.ehm._ehm_eventmethod;
+
+import data.hullmods.ehm.events.normalEvents;
 import lyr.misc.lyr_internals;
 
-public class _ehm_test extends _ehm_base implements _ehm_eventmethod {
+public class _ehm_test extends _ehm_base implements normalEvents {
 	//#region LISTENER & EVENT REGISTRATION
-	protected _ehm_eventhandler hullModEventHandler;
-
-	@Override	// not used
+	@Override
 	public void onInstall(ShipVariantAPI variant) {}
 
 	@Override
 	public void onRemove(ShipVariantAPI variant) {}
 
-	@Override
-	public void sModCleanUp(ShipVariantAPI variant) {
-		variant.setHullSpecAPI(ehm_hullSpecRefresh(variant));
-	}
-
 	@Override 
 	public void init(HullModSpecAPI hullModSpec) {
 		super.init(hullModSpec);
-
-		if (this.hullModEventHandler == null) {
-			this.hullModEventHandler = new _ehm_eventhandler(this.hullModSpecId, this);
-			hullModEventHandler.registerOnInstall(true, true, true);
-			hullModEventHandler.registerOnRemove(true, true, true);
-			hullModEventHandler.registerSModCleanUp(true, true, true);
-		}
 	}
 	//#endregion
 	// END OF LISTENER & EVENT REGISTRATION
@@ -48,7 +36,15 @@ public class _ehm_test extends _ehm_base implements _ehm_eventmethod {
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) { try {
-
+		// stats.getVariant().getHullMods().removeAll(stats.getVariant().getNonBuiltInHullmods());
+		for ( HullModSpecAPI hullModSpec : settings.getAllHullModSpecs()) {
+			Class<?> clazz = hullModSpec.getEffect().getClass();
+			
+			if (Arrays.asList(clazz.getInterfaces()).contains(normalEvents.class)	|| Arrays.asList(clazz.getSuperclass().getInterfaces()).contains(normalEvents.class)) {
+				String displayName = hullModSpec.getDisplayName();
+				displayName = displayName;
+			}
+		}
 	} catch (Throwable t ) { logger.warn("Test fail in 'applyEffectsBeforeShipCreation()'", t);	}}
 
 	@Override
