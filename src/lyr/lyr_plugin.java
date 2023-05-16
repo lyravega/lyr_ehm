@@ -49,11 +49,15 @@ public class lyr_plugin extends BaseModPlugin {
 		@Override
 		public void reportPlayerOpenedMarket(MarketAPI market) {
 			market.addSubmarket(lyr_internals.id.submarket);
+
+			logger.info(lyr_internals.logPrefix + "Attached experimental submarket");
 		}
 
 		@Override
 		public void reportPlayerClosedMarket(MarketAPI market) {
 			market.removeSubmarket(lyr_internals.id.submarket);
+
+			logger.info(lyr_internals.logPrefix + "Detached experimental submarket");
 		}
 
 		@Override

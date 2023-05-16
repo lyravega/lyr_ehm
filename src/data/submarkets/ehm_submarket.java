@@ -9,6 +9,7 @@ import com.fs.starfarer.api.campaign.CargoStackAPI;
 import com.fs.starfarer.api.campaign.CoreUIAPI;
 import com.fs.starfarer.api.campaign.econ.SubmarketAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.fleet.FleetMemberType;
 import com.fs.starfarer.api.impl.campaign.submarkets.BaseSubmarketPlugin;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 
@@ -17,7 +18,7 @@ import lyr.misc.lyr_internals;
 public class ehm_submarket extends BaseSubmarketPlugin {
     private static final Set<String> shunts = new HashSet<String>();    // doing this here separately as there can be disabled/unused shunts
     static {
-        for (WeaponSpecAPI weaponSpec : Global.getSettings().getAllWeaponSpecs()) {
+        for (WeaponSpecAPI weaponSpec : Global.getSettings().getAllWeaponSpecs()) {	// doing this here might be problematic, OK so far
             if (!weaponSpec.hasTag(lyr_internals.tag.experimental)) continue;
 
             shunts.add(weaponSpec.getWeaponId());
@@ -33,10 +34,21 @@ public class ehm_submarket extends BaseSubmarketPlugin {
         for (String shuntId : shunts) {
             this.cargo.addWeapons(shuntId, 1000);
         }
+		this.cargo.addMothballedShip(FleetMemberType.SHIP, "crig_Standard", "EHM Lab");
+		this.cargo.getMothballedShips().getMembersListCopy().iterator().next().getVariant().addMod(lyr_internals.id.baseRetrofit);
 	}
 
-    @Override
+	@Override
 	public CargoAPI getCargo() {
+		if (this.cargo == null) {
+			this.cargo = Global.getFactory().createCargo(true);
+		}
+
+		return this.cargo;
+	}
+	
+	@Override
+	public CargoAPI getCargoNullOk() {
 		return this.cargo;
 	}
 
