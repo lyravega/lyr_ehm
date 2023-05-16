@@ -1,0 +1,5 @@
+id,name,faction,desc,script,icon,order
+experimental,"Experimental
+Engineering",experimental,"Grants access to weapon slot shunts that can be used along with their activators.
+
+Salvage the unused slot shunts as they will take up cargo space.",data.submarkets.ehm_submarket,,10000

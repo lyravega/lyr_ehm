@@ -16,6 +16,9 @@ import org.json.JSONObject;
 import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.FactionAPI;
+import com.fs.starfarer.api.campaign.PlayerMarketTransaction;
+import com.fs.starfarer.api.campaign.econ.MarketAPI;
+import com.fs.starfarer.api.campaign.listeners.ColonyInteractionListener;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 
@@ -42,9 +45,28 @@ public class lyr_plugin extends BaseModPlugin {
 		}
 	}
 
+	private static class interactionListener implements ColonyInteractionListener {
+		@Override
+		public void reportPlayerOpenedMarket(MarketAPI market) {
+			market.addSubmarket(lyr_internals.id.submarket);
+		}
+
+		@Override
+		public void reportPlayerClosedMarket(MarketAPI market) {
+			market.removeSubmarket(lyr_internals.id.submarket);
+		}
+
+		@Override
+		public void reportPlayerMarketTransaction(PlayerMarketTransaction transaction) {}
+
+		@Override
+		public void reportPlayerOpenedMarketAndCargoUpdated(MarketAPI market) {}
+	}
+
 	@Override
 	public void onGameLoad(boolean newGame) {
-		new _lyr_delayedFinder();
+		findUIClasses();
+		attachInteractionListener();
 		updateBlueprints();
 	}
 
@@ -93,5 +115,18 @@ public class lyr_plugin extends BaseModPlugin {
 		}
 
 		logger.info(lyr_internals.logPrefix + "Hull modifications are registered");
+	}
+
+	private static void attachInteractionListener() {
+		interactionListener interactionListener = new interactionListener();
+		Global.getSector().getListenerManager().addListener(interactionListener, true);
+
+		logger.info(lyr_internals.logPrefix + "Attached colony interaction listener");
+	}
+
+	private static void findUIClasses() {
+		logger.info(lyr_internals.logPrefix + "Initializing UI class finder");
+
+		new _lyr_delayedFinder();
 	}
 }
