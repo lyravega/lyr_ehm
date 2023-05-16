@@ -1,5 +1,5 @@
 ## **Experimental Hull Modifications**
-Just some hull modifications. By some, I mean 40+ or something. However, most are mutually exclusive, so the usable list is rather short actually. On a new game or a load, all hull modifications will be added to player's known list. Slot shunts too, however you'll need a small industry to build them. Or you can use console to give yourself a few.
+Just some hull modifications. By some, I mean 40+ or something. However, most are mutually exclusive, so the usable list is rather short actually. On a new game or a load, all hull modifications and slot shunts will be added to player's known list. Any port you visit will have a new submarket where you can grab slot shunts from.
 
 **Hull Modifications**:
 - Experimental Hull Modifications: Provides a base to all other hull modifications in this mod. Also has a removal tool
