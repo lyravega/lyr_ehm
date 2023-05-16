@@ -198,7 +198,9 @@ public class _ehm_base extends BaseHullMod {
 	 */
 	protected static final boolean ehm_hasWeapons(ShipAPI ship) {
 		for (WeaponAPI weapon: ship.getAllWeapons()) {
-			if (weapon.getSlot().isBuiltIn()) continue;
+			WeaponSlotAPI slot = weapon.getSlot();
+
+			if (slot.isBuiltIn() || slot.isSystemSlot()) continue;
 			return true;
 		}
 
@@ -217,7 +219,8 @@ public class _ehm_base extends BaseHullMod {
 	protected static final boolean ehm_hasWeapons(ShipAPI ship, String slotAffix) {
 		for (WeaponAPI weapon: ship.getAllWeapons()) {
 			WeaponSlotAPI slot = weapon.getSlot();
-			if (slot.isBuiltIn()) continue;
+
+			if (slot.isBuiltIn() || slot.isSystemSlot()) continue;
 			if (!slot.getId().startsWith(slotAffix)) continue;
 			return true;
 		}
