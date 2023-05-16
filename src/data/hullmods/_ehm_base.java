@@ -236,7 +236,9 @@ public class _ehm_base extends BaseHullMod {
 	 */
 	protected static final boolean ehm_hasWeapons(ShipAPI ship, Set<String> weaponIdsToIgnore) {
 		for (WeaponAPI weapon: ship.getAllWeapons()) {
-			if (weapon.getSlot().isBuiltIn()) continue;
+			WeaponSlotAPI slot = weapon.getSlot();
+
+			if (slot.isBuiltIn() || slot.isSystemSlot()) continue;
 			if (weaponIdsToIgnore.contains(weapon.getId())) continue;
 			return true;
 		}
