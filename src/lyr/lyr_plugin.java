@@ -54,7 +54,7 @@ public class lyr_plugin extends BaseModPlugin {
 	}
 
 	private static void updateBlueprints() {
-		FactionAPI playerFaction = Global.getSector().getPlayerFaction();
+		FactionAPI playerFaction = Global.getSector().getPlayerPerson().getFaction();
 
 		playerFaction.addKnownHullMod(lyr_internals.id.baseRetrofit);
 		playerFaction.addKnownHullMod(lyr_internals.id.undoRetrofit);
