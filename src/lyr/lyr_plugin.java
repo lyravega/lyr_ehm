@@ -120,6 +120,8 @@ public class lyr_plugin extends BaseModPlugin {
 	 */
 	private static void registerHullMods() {
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
+			if (!hullModSpec.hasTag(lyr_internals.tag.experimental)) continue;
+
 			Class<?> clazz = hullModSpec.getEffect().getClass();
 			Set<Class<?>> interfaces = new HashSet<Class<?>>(Arrays.asList(clazz.getInterfaces()));
 			interfaces.addAll(Arrays.asList(clazz.getSuperclass().getInterfaces()));
@@ -137,7 +139,7 @@ public class lyr_plugin extends BaseModPlugin {
 			}
 		}
 
-		logger.info(lyr_internals.logPrefix + "Hull modifications are registered");
+		logger.info(lyr_internals.logPrefix + "Experimental hull modifications are registered");
 	}
 
 	/**
