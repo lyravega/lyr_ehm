@@ -122,8 +122,7 @@ public class lyr_plugin extends BaseModPlugin {
 	}
 
 	private static void attachInteractionListener() {
-		interactionListener interactionListener = new interactionListener();
-		Global.getSector().getListenerManager().addListener(interactionListener, true);
+		Global.getSector().getListenerManager().addListener(new interactionListener(), true);
 
 		logger.info(lyr_internals.logPrefix + "Attached colony interaction listener");
 	}
