@@ -16,7 +16,7 @@ import lyr.misc.lyr_tooltip;
 /**
  * Removes the base hull modification that all other experimental ones require
  * from the ship. Strict installation requirements to avoid issues.
- * @category Misc
+ * @category Base Hull Un-Modification
  * @author lyravega
  */
 public class ehm_undo extends _ehm_basetracker {

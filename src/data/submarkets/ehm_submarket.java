@@ -15,6 +15,14 @@ import com.fs.starfarer.api.loading.WeaponSpecAPI;
 
 import lyr.misc.lyr_internals;
 
+/**
+ * A submarket for the experimental slot shunts. The submarket is attached/detached
+ * whenever the player interacts with a valid market, and is not persistent.
+ * <p> Each time it is attached to a market, it will get re-initialized, at which
+ * point its contens will be refreshed.
+ * @see {@link lyr.lyr_plugin.interactionListener interactionListener} for attaching/detaching the submarket
+ * @author lyravega
+ */
 public class ehm_submarket extends BaseSubmarketPlugin {
     private static final Set<String> shunts = new HashSet<String>();    // doing this here separately as there can be disabled/unused shunts
     static {

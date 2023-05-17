@@ -21,7 +21,9 @@ import lyr.misc.lyr_tooltip;
 
 /**
  * Serves as a requirement for all experimental hull modifications, and enables tracking
- * on the ship. Main methods for tracking is located in the class that this one extends.
+ * on the ship. Some hull modification effects are also executed from here, and the
+ * actual hull modifications only contribute to their tooltips and used for installation
+ * checks.
  * @category Base Hull Modification 
  * @author lyravega
  */

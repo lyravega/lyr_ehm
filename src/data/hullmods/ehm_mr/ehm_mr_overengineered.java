@@ -19,6 +19,15 @@ import data.hullmods.ehm.events.normalEvents;
 import lyr.misc.lyr_tooltip;
 import lyr.proxies.lyr_hullSpec;
 
+/**
+ * First experimental hull modification that can be built-in, with an original effect.
+ * Increases the OP limit of the ship and also yields slot points.
+ * <p> This category {@code ehm_mr} covers the odd ones since the evens have their own
+ * categories, and as such they extend the base effect directly and don't have a base
+ * of their own.
+ * @category Miscellaneous Retrofit 
+ * @author lyravega
+ */
 public class ehm_mr_overengineered extends _ehm_base implements normalEvents, enhancedEvents {
 	//#region CUSTOM EVENTS
 	@Override

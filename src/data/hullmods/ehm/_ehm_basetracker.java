@@ -29,12 +29,21 @@ import data.hullmods.ehm.events.suppressedEvents;
 
 /**
  * Provides tools to track any change on a ship, mainly the hull modifications. When a change is
- * detected, will look if the hull modification has a registered handler for the event.
- * <p> If the event has a handler, then additional actions will be taken depending on how the
- * handler is set-up. In addition to some pre-defined actions, custom methods can be executed.
-* @see {@link ehm_base Main Modification} Enables & initializes tracking features when installed
-* @see {@link _ehm_eventhandler Event Handler} Used by the modifications to register the events
-* @see {@link normalEvents Event Method Interface} Implemented by the hull modifications
+ * detected, if the hull modification's effect has implemented an event interface, that event
+ * will be fired after the ship is created.
+ * <p> These additional events are inert during normal gameplay, combat, or while loading as
+ * there is no tracking outside the refit tab. They cannot be used as an extension to the
+ * already existing effects that apply on the ship.
+ * <p> They're designed to trigger something only once. For example, some changes may apply a 
+ * lasting effect that persists even after the hull modification is removed, so {@code onRemove()}
+ * can be used to restore the ship to its former state. Or UI related actions can be performed.
+ * <p> The UI related actions cannot be executed from the normal hullmod effects, as those methods
+ * are called several times from different parts of the UI to construct the refit ship. Having
+ * such actions in those methods will cause the game to play a sound several times, for example.
+ * @see {@link ehm_base} base hull modification that enables tracking
+ * @see {@link normalEvents} onInstall / onRemove events for hullmods
+ * @see {@link enhancedEvents} onEnhance / onNormalize events for investing a story point in hullmods
+ * @see {@link suppressedEvents} onSuppress / onRestore events for hullmods
  * @author lyravega
  */
 public class _ehm_basetracker extends _ehm_base {
