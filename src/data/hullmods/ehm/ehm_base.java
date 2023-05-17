@@ -21,7 +21,9 @@ import lyr.misc.lyr_tooltip;
 
 /**
  * Serves as a requirement for all experimental hull modifications, and enables tracking
- * on the ship. Main methods for tracking is located in the class that this one extends.
+ * on the ship. Some hull modification effects are also executed from here, and the
+ * actual hull modifications only contribute to their tooltips and used for installation
+ * checks.
  * @category Base Hull Modification 
  * @author lyravega
  */
@@ -62,7 +64,7 @@ public class ehm_base extends _ehm_basetracker {
 			String playerRank = Global.getSector().getPlayerPerson().getRank();
 			switch ((int) Math.round(Math.random() * 10)) {
 				case 0: 
-					tooltip.addPara("I am investigating ways to make the slot shunts widely available, " + playerRank + ". But for now, our only source is establishing and using our own industries.", lyr_tooltip.text.padding);
+					tooltip.addPara("If you need slot shunts " + playerRank + ", we need to dock in a colony or a spaceport so that I can get to work!", lyr_tooltip.text.padding);
 					break;
 				case 1: 
 					tooltip.addPara(playerRank + ", if you are unhappy with what I am offering you, I can get rid of the base hull modifications that I've made. Let me know!", lyr_tooltip.text.padding);

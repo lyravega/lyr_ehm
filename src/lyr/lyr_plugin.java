@@ -45,6 +45,10 @@ public class lyr_plugin extends BaseModPlugin {
 		}
 	}
 
+	/**
+	 * An inner listener class whose sole purpose is to attach/detach the
+	 * {@link data.submarkets.ehm_submarket experimental submarket}
+	 */
 	private static class interactionListener implements ColonyInteractionListener {
 		@Override
 		public void reportPlayerOpenedMarket(MarketAPI market) {
@@ -79,6 +83,12 @@ public class lyr_plugin extends BaseModPlugin {
 		registerHullMods();
 	}
 
+	/**
+	 * Adds all mod weapons and hull modifications that have the {@link
+	 * lyr_internals.tag#experimental "ehm"} tag to the player's faction.
+	 * Removes any known with the {@link lyr_internals.tag#restricted
+	 * "ehm_restricted"} ones.
+	 */
 	private static void updateBlueprints() {
 		FactionAPI playerFaction = Global.getSector().getPlayerPerson().getFaction();
 
@@ -99,8 +109,19 @@ public class lyr_plugin extends BaseModPlugin {
 		logger.info(lyr_internals.logPrefix + "Player faction blueprints are updated");
 	}
 
+	/**
+	 * Searches all hull modification effect classes and their superclasses for any interfaces
+	 * they implement. If any one of them has implemented an event interface, adds them to
+	 * their respective sets; registers them in essence.
+	 * <p> During tracking, if any one of these events are detected, the relevant event methods
+	 * will be triggered as long as the hull mod's effect has implemented the interfaces.
+	 * @see {@link data.hullmods.ehm.ehm_base ehm_base} base hull modification that enables tracking
+	 * @see {@link normalEvents} / {@link enhancedEvents} / {@link suppressedEvents}
+	 */
 	private static void registerHullMods() {
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
+			if (!hullModSpec.hasTag(lyr_internals.tag.experimental)) continue;
+
 			Class<?> clazz = hullModSpec.getEffect().getClass();
 			Set<Class<?>> interfaces = new HashSet<Class<?>>(Arrays.asList(clazz.getInterfaces()));
 			interfaces.addAll(Arrays.asList(clazz.getSuperclass().getInterfaces()));
@@ -118,16 +139,22 @@ public class lyr_plugin extends BaseModPlugin {
 			}
 		}
 
-		logger.info(lyr_internals.logPrefix + "Hull modifications are registered");
+		logger.info(lyr_internals.logPrefix + "Experimental hull modifications are registered");
 	}
 
+	/**
+	 * A simple method that attaches a transient interaction listener
+	 */
 	private static void attachInteractionListener() {
-		interactionListener interactionListener = new interactionListener();
-		Global.getSector().getListenerManager().addListener(interactionListener, true);
+		Global.getSector().getListenerManager().addListener(new interactionListener(), true);
 
 		logger.info(lyr_internals.logPrefix + "Attached colony interaction listener");
 	}
 
+	/**
+	 * A simple method that initializes an every frame script that waits
+	 * till the relevant UI parts are available and can be fished for classes
+	 */
 	private static void findUIClasses() {
 		logger.info(lyr_internals.logPrefix + "Initializing UI class finder");
 

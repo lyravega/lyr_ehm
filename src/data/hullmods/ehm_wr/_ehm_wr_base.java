@@ -28,7 +28,7 @@ import lyr.proxies.lyr_weaponSlot;
  * This class is used by weapon retrofit hullmods. They are pretty 
  * straightforward in their operation; change all of the weapon slots 
  * on a ship to a different type. 
- * @see {@link data.hullmods._ehm_ar_base _ehm_ar_base} for slot adapter base
+ * @see {@link data.hullmods.ehm_ar._ehm_ar_base _ehm_ar_base} for slot adapter base
  * @see {@link data.hullmods.ehm_sr._ehm_sr_base _ehm_sr_base} for system retrofit base
  * @see {@link data.hullmods.ehm_ec._ehm_ec_base _ehm_ec_base} for engine cosmetic base
  * @see {@link data.hullmods.ehm_sc._ehm_sc_base _ehm_sc_base} for shield cosmetic base
