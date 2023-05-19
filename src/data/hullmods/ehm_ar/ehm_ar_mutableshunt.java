@@ -1,7 +1,9 @@
 package data.hullmods.ehm_ar;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
@@ -9,6 +11,7 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.api.util.Misc;
 
 import lyr.misc.lyr_internals;
 import lyr.misc.lyr_tooltip;
@@ -17,23 +20,23 @@ import lyr.misc.lyr_tooltip;
  * @author lyravega
  */
 public class ehm_ar_mutableshunt extends _ehm_ar_base {
-	static final Map<String,Float> mutableStatBonus = new HashMap<String,Float>();
-	static final Map<String,Float> fluxCapacityBonus = new HashMap<String,Float>();
-	static final Map<String,Float> fluxDissipationBonus = new HashMap<String,Float>();
-	static final Map<String,Float> fighterBayBonus = new HashMap<String,Float>();
+	static final Set<String> mutableStatBonus = new HashSet<String>();
+	static final Map<String, Float[]> fluxCapacityBonus = new HashMap<String, Float[]>();
+	static final Map<String, Float[]> fluxDissipationBonus = new HashMap<String, Float[]>();
+	static final Map<String, Float> fighterBayBonus = new HashMap<String, Float>();
 	static {
-		fluxCapacityBonus.put(lyr_internals.id.shunts.capacitors.large, 0.08f);
-		fluxCapacityBonus.put(lyr_internals.id.shunts.capacitors.medium, 0.04f);
-		fluxCapacityBonus.put(lyr_internals.id.shunts.capacitors.small, 0.02f);
-		mutableStatBonus.putAll(fluxCapacityBonus);
+		fluxCapacityBonus.put(lyr_internals.id.shunts.capacitors.large, new Float[] {0.04f, 8f * Misc.FLUX_PER_CAPACITOR});
+		fluxCapacityBonus.put(lyr_internals.id.shunts.capacitors.medium, new Float[] {0.02f, 4f * Misc.FLUX_PER_CAPACITOR});
+		fluxCapacityBonus.put(lyr_internals.id.shunts.capacitors.small, new Float[] {0.01f, 2f * Misc.FLUX_PER_CAPACITOR});
+		mutableStatBonus.addAll(fluxCapacityBonus.keySet());
 
-		fluxDissipationBonus.put(lyr_internals.id.shunts.dissipators.large, 0.08f);
-		fluxDissipationBonus.put(lyr_internals.id.shunts.dissipators.medium, 0.04f);
-		fluxDissipationBonus.put(lyr_internals.id.shunts.dissipators.small, 0.02f);
-		mutableStatBonus.putAll(fluxDissipationBonus);
+		fluxDissipationBonus.put(lyr_internals.id.shunts.dissipators.large, new Float[] {0.04f, 8f * Misc.DISSIPATION_PER_VENT});
+		fluxDissipationBonus.put(lyr_internals.id.shunts.dissipators.medium, new Float[] {0.02f, 4f * Misc.DISSIPATION_PER_VENT});
+		fluxDissipationBonus.put(lyr_internals.id.shunts.dissipators.small, new Float[] {0.01f, 2f * Misc.DISSIPATION_PER_VENT});
+		mutableStatBonus.addAll(fluxDissipationBonus.keySet());
 
-		fighterBayBonus.put(lyr_internals.id.shunts.launchTube.large, 1.00f);
-		mutableStatBonus.putAll(fighterBayBonus);
+		fighterBayBonus.put(lyr_internals.id.shunts.launchTube.large, 1.0f);
+		mutableStatBonus.addAll(fighterBayBonus.keySet());
 	}
 	
 	@Override

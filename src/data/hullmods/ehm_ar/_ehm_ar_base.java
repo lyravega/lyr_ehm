@@ -132,8 +132,8 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		ShipVariantAPI variant = stats.getVariant(); 
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 		boolean refreshRefit = false;
-		float fluxCapacityMult = 1.0f;
-		float fluxDissipationMult = 1.0f;
+		float[] totalFluxCapacityBonus = {1.0f, 0.0f};	// 0 mult, 1 flat
+		float[] totalFluxDissipationBonus = {1.0f, 0.0f};	// 0 mult, 1 flat
 		int fighterBayFlat = 0;
 
 		// slot conversion
@@ -141,7 +141,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 			if (shuntSlotId.startsWith(lyr_internals.affix.convertedSlot)) continue;	// only works on normal and adapted slots
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(shuntSlotId);
 			String shuntId = shuntSpec.getWeaponId();
-			if (!mutableStatBonus.containsKey(shuntId)) continue;	// only care about these shunts
+			if (!mutableStatBonus.contains(shuntId)) continue;	// only care about these shunts
 			if (!shuntSpec.getSize().equals(variant.getSlot(shuntSlotId).getSlotSize())) continue;	// requires size match
 
 			// slotPoints += slotValue.get(weaponSize);	// needs to be calculated afterwards like mutableStat bonus as this block will execute only on install
@@ -156,16 +156,24 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 			String slotId = slot.getId();
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId); if (shuntSpec == null) continue;	// skip empty slots
 			String shuntId = shuntSpec.getWeaponId();
-			if (!mutableStatBonus.containsKey(shuntId)) continue;	// only care about these shunts
+			if (!mutableStatBonus.contains(shuntId)) continue;	// only care about these shunts
 			if (!shuntSpec.getSize().equals(variant.getSlot(slotId).getSlotSize())) continue; // requires matching slot size
 
-			if (fluxCapacityBonus.containsKey(shuntId)) fluxCapacityMult += fluxCapacityBonus.get(shuntId);
-			else if (fluxDissipationBonus.containsKey(shuntId)) fluxDissipationMult += fluxDissipationBonus.get(shuntId);
+			if (fluxCapacityBonus.containsKey(shuntId)) {
+				totalFluxCapacityBonus[0] += fluxCapacityBonus.get(shuntId)[0];
+				totalFluxCapacityBonus[1] += fluxCapacityBonus.get(shuntId)[1];
+			}
+			else if (fluxDissipationBonus.containsKey(shuntId)) {
+				totalFluxDissipationBonus[0] += fluxDissipationBonus.get(shuntId)[0];
+				totalFluxDissipationBonus[1] += fluxDissipationBonus.get(shuntId)[1];
+			}
 			else if (fighterBayBonus.containsKey(shuntId)) fighterBayFlat += fighterBayBonus.get(shuntId);
 		}
 
-		stats.getFluxCapacity().modifyMult(hullModSpecId, fluxCapacityMult);
-		stats.getFluxDissipation().modifyMult(hullModSpecId, fluxDissipationMult);
+		stats.getFluxCapacity().modifyMult(hullModSpecId, totalFluxCapacityBonus[0]);
+		stats.getFluxCapacity().modifyFlat(hullModSpecId, totalFluxCapacityBonus[1]);
+		stats.getFluxDissipation().modifyMult(hullModSpecId, totalFluxDissipationBonus[0]);
+		stats.getFluxDissipation().modifyFlat(hullModSpecId, totalFluxDissipationBonus[1]);
 		stats.getNumFighterBays().modifyFlat(hullModSpecId, fighterBayFlat);
 
 		variant.setHullSpecAPI(hullSpec.retrieve());
