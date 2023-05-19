@@ -1,7 +1,7 @@
 name,id,tier,rarity,tech/manufacturer,tags,uiTags,base value,unlocked,hidden,hiddenEverywhere,cost_frigate,cost_dest,cost_cruiser,cost_capital,script,desc,short,sModDesc,sprite
 Experimental Hull Modifications,ehm_base,1,,Experimental,"special, ehm_base, no_build_in","Systems, Retrofits, Cosmetics, Activators",25000,,,,0,0,0,0,data.hullmods.ehm.ehm_base,"Provides a base for all other experimental hull modifications to use. Without this, none of them can be installed or may be with unexpected results.",Installs EHM base to the ship.,,graphics/icons/skills/reliability_engineering.png
 Experimental Hull Unmodification,ehm_undo,1,,Experimental,"special, ehm_undo, no_build_in","Systems, Retrofits, Cosmetics, Activators",25000,,,,0,0,0,0,data.hullmods.ehm.ehm_undo,Can be used to remove the base hull modification from the ship. Are you sure? <Continue> <Cancel>,Removes EHM base from the ship.,,graphics/icons/skills/reliability_engineering.png
-" EHM Test",ehm_test,1,,Experimental,"special, ehm_externalAccess, ehm_restricted","Systems, Retrofits, Cosmetics, Activators",25000,,TRUE,TRUE,0,0,0,0,data.hullmods._ehm_test,,,,
+" EHM Test",ehm_test,1,,Experimental,"special, ehm_externalAccess, ehm_restricted","Systems, Retrofits, Cosmetics, Activators",25000,,,,0,0,0,0,data.hullmods._ehm_test,,,,
 Quantum Disruptor,ehm_sr_acausaldisruptor,1,,Experimental,"special, ehm, ehm_sr, no_build_in",Systems,25000,,,,3,6,9,15,data.hullmods.ehm_sr.ehm_sr_acausaldisruptor,"Briefly overloads a nearby enemy ship.
 
 Exploits weakly acausal principles poorly understood even before the Collapse. In the present day, the effects may as well be magic.",Briefly overloads a nearby enemy ship.,,graphics/icons/hullsys/quantum_disruptor.png
