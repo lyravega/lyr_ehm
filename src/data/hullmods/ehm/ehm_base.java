@@ -1,6 +1,6 @@
 package data.hullmods.ehm;
 
-import static data.hullmods.ehm_ar._ehm_ar_base.ehm_test;
+import static data.hullmods.ehm_ar._ehm_ar_base.ehm_processShunts;
 import static data.hullmods.ehm_mr.ehm_mr_overengineered.slotPointBonus;
 import static lyr.tools._lyr_uiTools.commitChanges;
 import static lyr.tools._lyr_uiTools.playSound;
@@ -36,11 +36,7 @@ public class ehm_base extends _ehm_basetracker {
 		
 		final int slotPoints = variant.getSMods().contains(lyr_internals.id.hullmods.overengineered) ? slotPointBonus.get(hullSize) : 0;
 
-		ehm_test(stats, slotPoints);
-		// if (variant.hasHullMod(lyr_internals.id.hullmods.stepdownadapter)) ehm_adapterActivator(stats);
-		// if (variant.hasHullMod(lyr_internals.id.hullmods.diverterandconverter)) ehm_diverterAndConverterActivator(stats, slotPoints);
-		// if (variant.hasHullMod(lyr_internals.id.hullmods.mutableshunt)) ehm_mutableShuntActivator(stats, lyr_internals.id.hullmods.mutableshunt);
-		
+		ehm_processShunts(stats, slotPoints);
 		ehm_cleanWeaponGroupsUp(variant);
 	}
 

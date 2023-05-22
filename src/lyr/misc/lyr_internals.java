@@ -3,24 +3,24 @@ package lyr.misc;
 import java.util.HashSet;
 import java.util.Set;
 
-public class lyr_internals {
+public final class lyr_internals {
 	public static final String logName = "EHM";
 	public static final String logPrefix = "(Experimental Hull Modifications) - ";
-	public static class id {
+	public static final class id {
 		public static final String
 			submarket = "experimental", // must match submarket id in .csv
 			drillSound = "drill", // must match .json
 			baseRetrofit = "ehm_base", // must match hullmod id in .csv
 			undoRetrofit = "ehm_undo"; // must match hullmod id in .csv
-		public static class hullmods {
+		public static final class hullmods {
 			public static final String
 				overengineered = "ehm_mr_overengineered",
 				stepdownadapter = "ehm_ar_stepdownadapter",
 				diverterandconverter = "ehm_ar_diverterandconverter",
 				mutableshunt = "ehm_ar_mutableshunt";
 		}
-		public static class shunts {
-			public static class adapters {
+		public static final class shunts {
+			public static final class adapters {
 				public static final String
 					mediumDual = "ehm_adapter_mediumDual", // must match weapon id in .csv and .wpn
 					largeDual = "ehm_adapter_largeDual", // must match weapon id in .csv and .wpn
@@ -34,7 +34,7 @@ public class lyr_internals {
 					set.add(largeQuad);
 				}
 			}
-			public static class capacitors {
+			public static final class capacitors {
 				public static final String
 					large = "ehm_capacitor_large", // must match weapon id in .csv and .wpn
 					medium = "ehm_capacitor_medium", // must match weapon id in .csv and .wpn
@@ -46,7 +46,7 @@ public class lyr_internals {
 					set.add(small);
 				}
 			}
-			public static class dissipators {
+			public static final class dissipators {
 				public static final String
 					large = "ehm_dissipator_large", // must match weapon id in .csv and .wpn
 					medium = "ehm_dissipator_medium", // must match weapon id in .csv and .wpn
@@ -58,7 +58,7 @@ public class lyr_internals {
 					set.add(small);
 				}
 			}
-			public static class converters {
+			public static final class converters {
 				public static final String
 					mediumToLarge = "ehm_converter_mediumToLarge", // must match weapon id in .csv and .wpn
 					smallToLarge = "ehm_converter_smallToLarge", // must match weapon id in .csv and .wpn
@@ -70,7 +70,7 @@ public class lyr_internals {
 					set.add(smallToMedium);
 				}
 			}
-			public static class diverters {
+			public static final class diverters {
 				public static final String
 					large = "ehm_diverter_large", // must match weapon id in .csv and .wpn
 					medium = "ehm_diverter_medium", // must match weapon id in .csv and .wpn
@@ -82,7 +82,7 @@ public class lyr_internals {
 					set.add(small);
 				}
 			}
-			public static class launchTube {
+			public static final class launchTubes {
 				public static final String
 					large = "ehm_tube_large"; // must match weapon id in .csv and .wpn
 				public static final Set<String> set = new HashSet<String>();
@@ -97,12 +97,12 @@ public class lyr_internals {
 				set.addAll(dissipators.set);
 				set.addAll(converters.set);
 				set.addAll(diverters.set);
-				set.addAll(launchTube.set);
+				set.addAll(launchTubes.set);
 			}
 		}
 	}
 
-	public static class tag {
+	public static final class tag {
 		public static final String
 			base = "ehm_base", // must match hullmod tag in .csv
 
@@ -130,7 +130,7 @@ public class lyr_internals {
 			tubeShunt = "ehm_tube"; // must match weapon tag in .csv
 	}
 
-	public static class affix {
+	public static final class affix {
 		public static final String
 			normalSlot = "WS", // should NOT be altered in any update
 			adaptedSlot = "AS_", // should NOT be altered in any update
@@ -143,7 +143,7 @@ public class lyr_internals {
 			engineCosmetic = "ehm_ec_"; // must match hullmod id in .csv
 	}
 
-	public static class events {
+	public static final class events {
 		public static final String 
 			onInstall = "onInstall",
 			onRemove = "onRemove",
