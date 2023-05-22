@@ -49,10 +49,18 @@ public class lyr_plugin extends BaseModPlugin {
 	 * An inner listener class whose sole purpose is to attach/detach the
 	 * {@link data.submarkets.ehm_submarket experimental submarket}
 	 */
-	private static class interactionListener implements ColonyInteractionListener {
+	private static class ehm_interactionListener implements ColonyInteractionListener {
+		private ehm_interactionListener() {
+			if (!Global.getSector().getCharacterData().getAbilities().contains(lyr_internals.id.ability)) {
+				Global.getSector().getCharacterData().addAbility(lyr_internals.id.ability);	// add ability to ongoing games if not present
+			}
+		}
+
 		@Override
 		public void reportPlayerOpenedMarket(MarketAPI market) {
 			if (market == null) return;
+			if (!Global.getSector().getPlayerFleet().getAbility(lyr_internals.id.ability).isActive()) return;	// show submarket only if this ability is active
+			if (market.hasSubmarket(lyr_internals.id.submarket)) return;
 
 			market.addSubmarket(lyr_internals.id.submarket);
 
@@ -62,6 +70,8 @@ public class lyr_plugin extends BaseModPlugin {
 		@Override
 		public void reportPlayerClosedMarket(MarketAPI market) {
 			if (market == null) return;
+			if (!Global.getSector().getPlayerFleet().getAbility(lyr_internals.id.ability).isActive()) return;
+			if (!market.hasSubmarket(lyr_internals.id.submarket)) return;
 
 			market.removeSubmarket(lyr_internals.id.submarket);
 
@@ -96,8 +106,8 @@ public class lyr_plugin extends BaseModPlugin {
 	private static void updateBlueprints() {
 		FactionAPI playerFaction = Global.getSector().getPlayerPerson().getFaction();
 
-		playerFaction.addKnownHullMod(lyr_internals.id.baseRetrofit);
-		playerFaction.addKnownHullMod(lyr_internals.id.undoRetrofit);
+		playerFaction.addKnownHullMod(lyr_internals.id.baseModification);
+		playerFaction.addKnownHullMod(lyr_internals.id.undoModification);
 
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
 			String hullModSpecId = hullModSpec.getId();
@@ -150,7 +160,7 @@ public class lyr_plugin extends BaseModPlugin {
 	 * A simple method that attaches a transient interaction listener
 	 */
 	private static void attachInteractionListener() {
-		Global.getSector().getListenerManager().addListener(new interactionListener(), true);
+		Global.getSector().getListenerManager().addListener(new ehm_interactionListener(), true);
 
 		logger.info(lyr_internals.logPrefix + "Attached colony interaction listener");
 	}

@@ -163,13 +163,13 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 			}
 		}
 
-		if (hasMutableActivator) {
+		// if (hasMutableActivator) {
 			stats.getFluxCapacity().modifyMult(hullmods.mutableshunt, totalFluxCapacityBonus[0]);
 			stats.getFluxCapacity().modifyFlat(hullmods.mutableshunt, totalFluxCapacityBonus[1]);
 			stats.getFluxDissipation().modifyMult(hullmods.mutableshunt, totalFluxDissipationBonus[0]);
 			stats.getFluxDissipation().modifyFlat(hullmods.mutableshunt, totalFluxDissipationBonus[1]);
 			stats.getNumFighterBays().modifyFlat(hullmods.mutableshunt, fighterBayFlat);
-		}
+		// }
 
 		for (Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
 			WeaponSlotAPI slot = iterator.next();

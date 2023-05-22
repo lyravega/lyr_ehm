@@ -161,7 +161,7 @@ public class _ehm_base extends BaseHullMod {
 	 * @return true if ship has it, false otherwise (duh)
 	 */
 	protected static final boolean ehm_hasRetrofitBaseBuiltIn(ShipVariantAPI variant) {
-		return variant.getHullSpec().isBuiltInMod(lyr_internals.id.baseRetrofit);
+		return variant.getHullSpec().isBuiltInMod(lyr_internals.id.baseModification);
 	}
 
 	/**
@@ -280,7 +280,7 @@ public class _ehm_base extends BaseHullMod {
 	protected static final ShipHullSpecAPI ehm_hullSpecClone(ShipVariantAPI variant) {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), true);
 
-		hullSpec.addBuiltInMod(lyr_internals.id.baseRetrofit);
+		hullSpec.addBuiltInMod(lyr_internals.id.baseModification);
 		if (lyr_externals.showExperimentalFlavour) {
 			hullSpec.setManufacturer(lyr_tooltip.text.flavourManufacturer);
 			hullSpec.setDescriptionPrefix(lyr_tooltip.text.flavourDescription);

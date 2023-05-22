@@ -8,10 +8,11 @@ public final class lyr_internals {
 	public static final String logPrefix = "(Experimental Hull Modifications) - ";
 	public static final class id {
 		public static final String
-			submarket = "experimental", // must match submarket id in .csv
+			submarket = "ehm_submarket", // must match submarket id in .csv
+			ability = "ehm_ability", // must match submarket id in .csv
 			drillSound = "drill", // must match .json
-			baseRetrofit = "ehm_base", // must match hullmod id in .csv
-			undoRetrofit = "ehm_undo"; // must match hullmod id in .csv
+			baseModification = "ehm_base", // must match hullmod id in .csv
+			undoModification = "ehm_undo"; // must match hullmod id in .csv
 		public static final class hullmods {
 			public static final String
 				overengineered = "ehm_mr_overengineered",
