@@ -100,7 +100,9 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		for (Iterator<String> iterator = variant.getFittedWeaponSlots().iterator(); iterator.hasNext();) {
 			String slotId = iterator.next();
 			if (variant.getSlot(slotId) != null) continue;
-			matcher = pattern.matcher(slotId); matcher.find(); slotId = matcher.group();
+			matcher = pattern.matcher(slotId);
+			if (matcher.find()) slotId = matcher.group();
+			else continue;	// this should never happen
 
 			if (!slotId.startsWith(lyr_internals.affix.normalSlot)) continue;
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
