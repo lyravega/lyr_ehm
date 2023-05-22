@@ -52,6 +52,8 @@ public class lyr_plugin extends BaseModPlugin {
 	private static class interactionListener implements ColonyInteractionListener {
 		@Override
 		public void reportPlayerOpenedMarket(MarketAPI market) {
+			if (market == null) return;
+
 			market.addSubmarket(lyr_internals.id.submarket);
 
 			logger.info(lyr_internals.logPrefix + "Attached experimental submarket");
@@ -59,6 +61,8 @@ public class lyr_plugin extends BaseModPlugin {
 
 		@Override
 		public void reportPlayerClosedMarket(MarketAPI market) {
+			if (market == null) return;
+
 			market.removeSubmarket(lyr_internals.id.submarket);
 
 			logger.info(lyr_internals.logPrefix + "Detached experimental submarket");
