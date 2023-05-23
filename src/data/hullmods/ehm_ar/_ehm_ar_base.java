@@ -80,7 +80,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 	protected static final boolean extraActiveInfoInHullMods = lyr_externals.extraActiveInfoInHullMods;
 	protected static final boolean extraInactiveInfoInHullMods = lyr_externals.extraInactiveInfoInHullMods;
 
-	private static final Pattern pattern = Pattern.compile("WS [0-9]{3}");
+	private static final Pattern pattern = Pattern.compile("WS[ 0-9]{4}");
 	private static Matcher matcher;
 
 	public static final void ehm_processShunts(MutableShipStatsAPI stats, int slotPoints) {
