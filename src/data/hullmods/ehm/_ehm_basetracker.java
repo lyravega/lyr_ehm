@@ -186,8 +186,7 @@ public class _ehm_basetracker extends _ehm_base {
 	 * Creates and assigns {@link #shipTracker} and {@link #fleetTracker}, then returns the 
 	 * {@link shipTrackerScript} that is unique to the ship. If a trackers already exists,
 	 * returns that one.
-	 * @param variant of the ship to track
-	 * @param memberId of the ship to track
+	 * @param ship to track
 	 * @return a {@link shipTrackerScript}
 	 */
 	protected static shipTrackerScript shipTrackerScript(ShipAPI ship) {
@@ -209,9 +208,8 @@ public class _ehm_basetracker extends _ehm_base {
 
 	/**
 	 * An inner class with only one purpose: cache the variant, report any changes.
-	 * <p>Created through {@link #shipTrackerScript(ShipAPI)} method that checks 
-	 * for existing trackers beforehand
-	 * onRemoved()}
+	 * Created through {@link #shipTrackerScript(ShipAPI)} method that checks for
+	 * existing trackers beforehand
 	 */
 	private static class shipTrackerScript implements EveryFrameScriptWithCleanup {
 		private fleetTrackerScript fleetTracker = null;
@@ -242,7 +240,7 @@ public class _ehm_basetracker extends _ehm_base {
 			
 			Global.getSector().addScript(this);
 	
-			if (log) logger.info(logPrefix+"ST-"+memberId+": Initial hull modifications '"+hullMods.toString()+"'");
+			// if (log) logger.info(logPrefix+"ST-"+memberId+": Initial hull modifications '"+hullMods.toString()+"'");
 		}
 	
 		public String getMemberId() {

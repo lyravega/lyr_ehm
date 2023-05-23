@@ -161,7 +161,7 @@ public class _ehm_base extends BaseHullMod {
 	 * @return true if ship has it, false otherwise (duh)
 	 */
 	protected static final boolean ehm_hasRetrofitBaseBuiltIn(ShipVariantAPI variant) {
-		return variant.getHullSpec().isBuiltInMod(lyr_internals.id.baseRetrofit);
+		return variant.getHullSpec().isBuiltInMod(lyr_internals.id.baseModification);
 	}
 
 	/**
@@ -269,18 +269,46 @@ public class _ehm_base extends BaseHullMod {
 	}
 
 	/**
-	 * Called from the {@link ehm_base retrofit base} only. If the hull does not
-	 * have the base built-in, clones the hullSpec, adds flavour, builds the retrofit 
-	 * base in the hull, and refreshes the screen. Otherwise, just returns the same 
-	 * hullSpec.
-	 * <p> Re-adds itself if the hullSpec is replaced with something else.
+	 * Called from the {@link ehm_base retrofit base} only. If the hull does not have the base built-in, clones
+	 * the hullSpec, adds flavour, builds the retrofit base in the hull, and refreshes the screen. Otherwise,
+	 * just returns the same hullSpec. Re-adds itself if the hullSpec is replaced with something else.
+	 * <p> Contains an ugly workaround to avoid a crash, regarding d-mods and d-hulls. When ships get damaged in
+	 * combat for example, the variants change the hull specs to the damaged versions (d-hull specs). While this
+	 * transition happens without a crash (from what I can tell), the opposite way is forced through the vanilla
+	 * {@link com.fs.starfarer.api.impl.campaign.skills.FieldRepairsScript#restoreToNonDHull FieldRepairsScript}
+	 * at which point there might be slots used by the variant that do NOT exist on the non-damaged hull spec.
+	 * <p> That script is one of the core scripts that I do not want to mess around with; every game has one of
+	 * those running in the background that could potentially be suppressed, and the same job can be offloaded
+	 * to a similar script with overridden methods. But that's a bad way to solve this problem, even if it is
+	 * possible, and given that script also writes to the save files, it's out of the question as the potential
+	 * future ramifications are unknown. This is the bad part of the problem.
+	 * <p> The ugly part is, these d-hulls only get their parent's (original's) hull spec id assigned to them,
+	 * and the hull spec is directly loaded from the spec store with no way of intercepting it in between. As
+	 * that is the case, I cannot access, clone and alter the parent's hull spec as it's only stored as an id.
+	 * <p> The workaround is checking if the variant is using a d-hull and if that is the case and the d-hull has
+	 * a parent hull spec id stored, using that one directly. The crash will be avoided this way as there will
+	 * not be any potential slot mismatches between the variant and the original hull spec. The script mentioned
+	 * above will continue to correctly remove d-mods from the ships. But this may cause some other effects on
+	 * the long run that I cannot foresee.
+	 * <p> For now, this workaround is an ugly one in my opinion (yes I am talking to future you/me), but it gets
+	 * the job done. However, long term effects, if any, needs to be researched. If instead of just an id, the
+	 * parent's hull spec was stored, that'd be the best solution. Even though it would be useless to Alex and
+	 * everyone else on the planet, maybe Alex might help - maybe after the update winds are calmed down.
+	 * <p>Too long didn't read version: workaround simply ignores the d-hull specs, and makes the mod
+	 * use the original. As d-mods are parts of the variant, they'll still be there and will get fixed properly,
+	 * but any unforeseen effects needs to be researched.
 	 * @param variant to be used as a template
 	 * @return a cloned hullSpec
 	 */
 	protected static final ShipHullSpecAPI ehm_hullSpecClone(ShipVariantAPI variant) {
-		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), true);
+		lyr_hullSpec hullSpec;
 
-		hullSpec.addBuiltInMod(lyr_internals.id.baseRetrofit);
+		if (variant.isDHull() && variant.getHullSpec().getDParentHullId() != null)
+			hullSpec = new lyr_hullSpec(variant.getHullSpec().getDParentHull(), true);
+		else
+			hullSpec = new lyr_hullSpec(variant.getHullSpec(), true);
+
+		hullSpec.addBuiltInMod(lyr_internals.id.baseModification);
 		if (lyr_externals.showExperimentalFlavour) {
 			hullSpec.setManufacturer(lyr_tooltip.text.flavourManufacturer);
 			hullSpec.setDescriptionPrefix(lyr_tooltip.text.flavourDescription);

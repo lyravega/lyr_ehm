@@ -51,27 +51,27 @@ public class ehm_ar_diverterandconverter extends _ehm_ar_base {
 		}
 	}
 	
-	static final Map<String, childParameters> converters = new HashMap<String, childParameters>();
+	static final Map<String, childParameters> converterMap = new HashMap<String, childParameters>();
 	private static childParameters mediumToLarge = new childParameters("ML", WeaponSize.LARGE, 2);
 	private static childParameters smallToLarge = new childParameters("SL", WeaponSize.LARGE, 3);
 	private static childParameters smallToMedium = new childParameters("SM", WeaponSize.MEDIUM, 1);
 	static {
-		converters.put(lyr_internals.id.shunts.converters.mediumToLarge, mediumToLarge);
-		converters.put(lyr_internals.id.shunts.converters.smallToLarge, smallToLarge);
-		converters.put(lyr_internals.id.shunts.converters.smallToMedium, smallToMedium);
+		converterMap.put(lyr_internals.id.shunts.converters.mediumToLarge, mediumToLarge);
+		converterMap.put(lyr_internals.id.shunts.converters.smallToLarge, smallToLarge);
+		converterMap.put(lyr_internals.id.shunts.converters.smallToMedium, smallToMedium);
 	}
 
-	static final Map<String, Integer> diverters = new HashMap<String, Integer>();	// slotPoint reward
+	static final Map<String, Integer> diverterMap = new HashMap<String, Integer>();	// slotPoint reward
 	static {
-		diverters.put(lyr_internals.id.shunts.diverters.large, 4);
-		diverters.put(lyr_internals.id.shunts.diverters.medium, 2);
-		diverters.put(lyr_internals.id.shunts.diverters.small, 1);
+		diverterMap.put(lyr_internals.id.shunts.diverters.large, 4);
+		diverterMap.put(lyr_internals.id.shunts.diverters.medium, 2);
+		diverterMap.put(lyr_internals.id.shunts.diverters.small, 1);
 	}
 
-	static final Set<String> divertersAndConverters = new HashSet<String>();
+	static final Set<String> diverterConverterSet = new HashSet<String>();
 	static {
-		divertersAndConverters.addAll(converters.keySet());
-		divertersAndConverters.addAll(diverters.keySet());
+		diverterConverterSet.addAll(converterMap.keySet());
+		diverterConverterSet.addAll(diverterMap.keySet());
 	}
 
 	@Override
