@@ -240,7 +240,7 @@ public class _ehm_basetracker extends _ehm_base {
 			
 			Global.getSector().addScript(this);
 	
-			if (log) logger.info(logPrefix+"ST-"+memberId+": Initial hull modifications '"+hullMods.toString()+"'");
+			// if (log) logger.info(logPrefix+"ST-"+memberId+": Initial hull modifications '"+hullMods.toString()+"'");
 		}
 	
 		public String getMemberId() {
