@@ -34,7 +34,7 @@ public class ehm_base extends _ehm_basetracker {
 			variant.setHullSpecAPI(ehm_hullSpecClone(variant)); commitChanges(); playSound();
 		}
 		
-		final int slotPoints = variant.getSMods().contains(lyr_internals.id.hullmods.overengineered) ? slotPointBonus.get(hullSize) : 0;
+		int slotPoints = variant.getSMods().contains(lyr_internals.id.hullmods.overengineered) ? slotPointBonus.get(hullSize) : 0;
 
 		ehm_processShunts(stats, slotPoints);
 		ehm_cleanWeaponGroupsUp(variant);
