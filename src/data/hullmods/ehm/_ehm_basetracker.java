@@ -311,7 +311,7 @@ public class _ehm_basetracker extends _ehm_base {
 			}
 
 			for (iterator = suppressedMods.iterator(); iterator.hasNext();) { String hullModId = iterator.next();
-				if (variant.getSMods().contains(hullModId)) continue;
+				if (variant.getSuppressedMods().contains(hullModId)) continue;
 	
 				if (log) logger.info(logPrefix+"ST-"+memberId+": Restored '"+hullModId+"'");
 				iterator.remove(); onEvent(onRestore, variant, hullModId);
