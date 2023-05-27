@@ -39,6 +39,8 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	private static MethodHandle setShipDefenseId = null;
 	private static MethodHandle getOrdnancePoints = null;
 	private static MethodHandle setOrdnancePoints = null;
+	private static MethodHandle setDParentHullId = null;
+	private static MethodHandle setBaseHullId = null;
 
 	static {
 		try {
@@ -55,6 +57,8 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 			setShipDefenseId = inspectMethod("setShipDefenseId", hullSpecClass).getMethodHandle();
 			getOrdnancePoints = inspectMethod("getOrdnancePoints", hullSpecClass).getMethodHandle();
 			setOrdnancePoints = inspectMethod("setOrdnancePoints", hullSpecClass).getMethodHandle();
+			setDParentHullId = inspectMethod("setDParentHullId", hullSpecClass).getMethodHandle();
+			setBaseHullId = inspectMethod("setBaseHullId", hullSpecClass).getMethodHandle();
 		} catch (Throwable t) {
 			logger.fatal(lyr_internals.logPrefix+"Failed to find a method in 'lyr_hullSpec'", t);
 		}
@@ -345,6 +349,22 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 			setOrdnancePoints.invoke(hullSpec, ordnancePoints);
 		} catch (Throwable t) {
 			logger.error(lyr_internals.logPrefix+"Failed to use 'setOrdnancePoints()' in 'lyr_hullSpec'", t);
+		}
+	}
+
+	public void setBaseHullId(String baseHullId) {
+		try { 
+			setBaseHullId.invoke(hullSpec, baseHullId);
+		} catch (Throwable t) {
+			logger.error(lyr_internals.logPrefix+"Failed to use 'setBaseHullId()' in 'lyr_hullSpec'", t);
+		}
+	}
+
+	public void setDParentHullId(String parentHullId) {
+		try { 
+			setDParentHullId.invoke(hullSpec, parentHullId);
+		} catch (Throwable t) {
+			logger.error(lyr_internals.logPrefix+"Failed to use 'setDParentHullId()' in 'lyr_hullSpec'", t);
 		}
 	}
 	//#endregion 
