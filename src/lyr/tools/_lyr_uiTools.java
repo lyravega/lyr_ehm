@@ -283,7 +283,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 			Object shipDisplay = refitPanel_getShipDisplay.invoke(refitPanel);
 			Object member = refitPanel_getMember.invoke(refitPanel);
 
-			refitPanel_saveCurrentVariant.invoke(refitPanel);
+			refitPanel_saveCurrentVariant.invoke(refitPanel);	// this will fail on ship restoration
 			// designDisplay_undo.invoke(designDisplay); // commented for posterity; below is gutted version of 'undo'
 			shipDisplay_setFleetMember.invoke(shipDisplay, null, null);
 			refitPanel_syncWithCurrentVariant.invoke(refitPanel);
@@ -293,7 +293,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 			refitPanel_setEditedSinceSave.invoke(refitPanel, false);
 		} catch (Throwable t) {
 			refreshRefit();
-			logger.error(lyr_internals.logPrefix+"Failure in 'commitChanges()', using 'refreshRefit()' as fallback"); t.printStackTrace();
+			logger.error(lyr_internals.logPrefix+"Failure in 'commitChanges()', using 'refreshRefit()' as fallback");
 		}
 	}
 

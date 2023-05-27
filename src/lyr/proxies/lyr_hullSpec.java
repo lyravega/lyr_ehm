@@ -26,21 +26,21 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	private lyr_weaponSlot weaponSlot = null;
 	private lyr_shieldSpec shieldSpec = null;
 	private List<Object> engineSlots = null;
-	private static MethodHandle clone = null;
-	private static MethodHandle getEngineSlots = null;
-	private static MethodHandle setShieldSpec = null;
-	private static MethodHandle addBuiltInMod = null;
-	private static MethodHandle setManufacturer = null;
-	private static MethodHandle setDescriptionPrefix = null;
-	private static MethodHandle setShipSystemId = null;
-	private static MethodHandle addWeaponSlot = null;
-	private static MethodHandle addBuiltInWeapon = null;
-	private static MethodHandle addBuiltInWing = null;
-	private static MethodHandle setShipDefenseId = null;
-	private static MethodHandle getOrdnancePoints = null;
-	private static MethodHandle setOrdnancePoints = null;
-	private static MethodHandle setDParentHullId = null;
-	private static MethodHandle setBaseHullId = null;
+	public static MethodHandle clone = null;
+	public static MethodHandle getEngineSlots = null;
+	public static MethodHandle setShieldSpec = null;
+	public static MethodHandle addBuiltInMod = null;
+	public static MethodHandle setManufacturer = null;
+	public static MethodHandle setDescriptionPrefix = null;
+	public static MethodHandle setShipSystemId = null;
+	public static MethodHandle addWeaponSlot = null;
+	public static MethodHandle addBuiltInWeapon = null;
+	public static MethodHandle addBuiltInWing = null;
+	public static MethodHandle setShipDefenseId = null;
+	public static MethodHandle getOrdnancePoints = null;
+	public static MethodHandle setOrdnancePoints = null;
+	public static MethodHandle setDParentHullId = null;
+	public static MethodHandle setBaseHullId = null;
 
 	static {
 		try {
