@@ -8,10 +8,12 @@ import static lyr.tools._lyr_uiTools.playSound;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
+import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.api.util.Misc;
 
 import lyr.misc.lyr_externals;
 import lyr.misc.lyr_internals;
@@ -29,8 +31,10 @@ public class ehm_base extends _ehm_basetracker {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
+		ShipHullSpecAPI hullSpec = variant.getHullSpec();
 
-		if (!ehm_hasRetrofitBaseBuiltIn(variant)) {
+		// if (!ehm_hasRetrofitBaseBuiltIn(variant)) {
+		if (!ehm_hasRetrofitBaseBuiltIn(variant) || !Misc.getDHullId(hullSpec).equals(hullSpec.getHullId())) {
 			variant.setHullSpecAPI(ehm_hullSpecClone(variant)); commitChanges(); playSound();
 		}
 		

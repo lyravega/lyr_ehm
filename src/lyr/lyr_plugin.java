@@ -21,14 +21,17 @@ import com.fs.starfarer.api.campaign.PlayerMarketTransaction;
 import com.fs.starfarer.api.campaign.CargoAPI.CargoItemQuantity;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.listeners.ColonyInteractionListener;
+import com.fs.starfarer.api.impl.campaign.skills.FieldRepairsScript;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
+import com.thoughtworks.xstream.XStream;
 
 import data.hullmods.ehm.events.enhancedEvents;
 import data.hullmods.ehm.events.normalEvents;
 import data.hullmods.ehm.events.suppressedEvents;
 import data.submarkets.ehm_submarket;
 import lyr.misc.lyr_internals;
+import lyr.scripts._lyr_fieldRepairsScript;
 import lyr.tools._lyr_uiTools._lyr_delayedFinder;
 
 public class lyr_plugin extends BaseModPlugin {
@@ -98,11 +101,17 @@ public class lyr_plugin extends BaseModPlugin {
 		findUIClasses();
 		attachInteractionListener();
 		updateBlueprints();
+		replaceFieldRepairsScript();
 	}
 
 	@Override
 	public void onApplicationLoad() throws Exception {
 		registerHullMods();
+	}
+
+	@Override
+	public void configureXStream(XStream x) {
+		x.alias("FieldRepairsScript", _lyr_fieldRepairsScript.class);
 	}
 
 	/**
@@ -181,5 +190,15 @@ public class lyr_plugin extends BaseModPlugin {
 		logger.info(lyr_internals.logPrefix + "Initializing UI class finder");
 
 		new _lyr_delayedFinder();
+	}
+
+	private static void replaceFieldRepairsScript() {
+		if (Global.getSector().hasScript(FieldRepairsScript.class)) {
+			Global.getSector().removeScriptsOfClass(FieldRepairsScript.class);
+		}
+
+		if (!Global.getSector().hasScript(_lyr_fieldRepairsScript.class)) {
+			Global.getSector().addScript(new _lyr_fieldRepairsScript());
+		}
 	}
 }
