@@ -292,8 +292,8 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 			refitPanel_setEditedSinceLoad.invoke(refitPanel, false);
 			refitPanel_setEditedSinceSave.invoke(refitPanel, false);
 		} catch (Throwable t) {
-			refreshRefit();
-			logger.error(lyr_internals.logPrefix+"Failure in 'commitChanges()', using 'refreshRefit()' as fallback");
+			// refreshRefit();
+			logger.error(lyr_internals.logPrefix+"Failure in 'commitChanges()', possible hull restoration");
 		}
 	}
 
