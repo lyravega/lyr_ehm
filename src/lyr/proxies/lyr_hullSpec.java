@@ -41,6 +41,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	public static MethodHandle setOrdnancePoints = null;
 	public static MethodHandle setDParentHullId = null;
 	public static MethodHandle setBaseHullId = null;
+	public static MethodHandle setRestoreToBase = null;
 
 	static {
 		try {
@@ -59,6 +60,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 			setOrdnancePoints = inspectMethod("setOrdnancePoints", hullSpecClass).getMethodHandle();
 			setDParentHullId = inspectMethod("setDParentHullId", hullSpecClass).getMethodHandle();
 			setBaseHullId = inspectMethod("setBaseHullId", hullSpecClass).getMethodHandle();
+			setRestoreToBase = inspectMethod("setRestoreToBase", hullSpecClass).getMethodHandle();
 		} catch (Throwable t) {
 			logger.fatal(lyr_internals.logPrefix+"Failed to find a method in 'lyr_hullSpec'", t);
 		}
@@ -352,6 +354,14 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		}
 	}
 
+	public void setDParentHullId(String parentHullId) {
+		try { 
+			setDParentHullId.invoke(hullSpec, parentHullId);
+		} catch (Throwable t) {
+			logger.error(lyr_internals.logPrefix+"Failed to use 'setDParentHullId()' in 'lyr_hullSpec'", t);
+		}
+	}
+
 	public void setBaseHullId(String baseHullId) {
 		try { 
 			setBaseHullId.invoke(hullSpec, baseHullId);
@@ -360,11 +370,11 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		}
 	}
 
-	public void setDParentHullId(String parentHullId) {
+	public void setRestoreToBase(boolean restoreToBase) {
 		try { 
-			setDParentHullId.invoke(hullSpec, parentHullId);
+			setRestoreToBase.invoke(hullSpec, restoreToBase);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'setDParentHullId()' in 'lyr_hullSpec'", t);
+			logger.error(lyr_internals.logPrefix+"Failed to use 'setRestoreToBase()' in 'lyr_hullSpec'", t);
 		}
 	}
 	//#endregion 
