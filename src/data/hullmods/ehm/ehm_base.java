@@ -35,7 +35,12 @@ public class ehm_base extends _ehm_basetracker {
 
 		// if (!ehm_hasRetrofitBaseBuiltIn(variant)) {
 		if (!ehm_hasRetrofitBaseBuiltIn(variant) || !Misc.getDHullId(hullSpec).equals(hullSpec.getHullId())) {
-			variant.setHullSpecAPI(ehm_hullSpecClone(variant)); commitChanges(); playSound();
+			variant.setHullSpecAPI(ehm_hullSpecClone(variant)); 
+			
+			if (!variant.getPermaMods().contains(lyr_internals.id.baseModification)) {
+				variant.addPermaMod(lyr_internals.id.baseModification, false);
+				commitChanges(); playSound();
+			}
 		}
 		
 		int slotPoints = variant.getSMods().contains(lyr_internals.id.hullmods.overengineered) ? slotPointBonus.get(hullSize) : 0;
