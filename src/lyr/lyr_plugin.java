@@ -15,8 +15,10 @@ import org.json.JSONObject;
 
 import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.campaign.CargoAPI;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.campaign.PlayerMarketTransaction;
+import com.fs.starfarer.api.campaign.CargoAPI.CargoItemQuantity;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.listeners.ColonyInteractionListener;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
@@ -25,6 +27,7 @@ import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import data.hullmods.ehm.events.enhancedEvents;
 import data.hullmods.ehm.events.normalEvents;
 import data.hullmods.ehm.events.suppressedEvents;
+import data.submarkets.ehm_submarket;
 import lyr.misc.lyr_internals;
 import lyr.tools._lyr_uiTools._lyr_delayedFinder;
 
@@ -74,6 +77,11 @@ public class lyr_plugin extends BaseModPlugin {
 			if (!market.hasSubmarket(lyr_internals.id.submarket)) return;
 
 			market.removeSubmarket(lyr_internals.id.submarket);
+
+			CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
+			for (CargoItemQuantity<String> weaponCargo : playerCargo.getWeapons()) {
+				if (ehm_submarket.shunts.contains(weaponCargo.getItem())) playerCargo.removeWeapons(weaponCargo.getItem(), weaponCargo.getCount());
+			}
 
 			logger.info(lyr_internals.logPrefix + "Detached experimental submarket");
 		}
