@@ -1,7 +1,14 @@
 Version 0.7.3
 
+- Added automatic clean-up for the slot shunts remaining in cargo holds after the shunt market interaction
+- Added workarounds* to prevent possible crashes related to slot not found errors
+- Fixed an issue with ship restoration that'd make the refit UI unresponsive for a bit (in addition to spamming the log) 
 - Updated slot shunt tooltips
 - Improved Version Checker support
+
+* These workarounds unfortunately causes a few visual issues:
+- Ships that can be restored will have their visuals restored immediately. They'll retain their d-mods
+- Ships will be marked with a (D)
 
 
 
