@@ -8,7 +8,7 @@
         "minor":7,
         "patch":3,
     },
-	"starsectorVersion":"0.96a-RC10",
-	"directDownloadURL":"https://github.com/lyravega/lyr_ehm/releases/download/0.7.3/lyr_ehm.0.7.3.zip",
-	"changelogURL":"https://raw.githubusercontent.com/lyravega/lyr_ehm/stable/changelog.txt"
+    "starsectorVersion":"0.96a-RC10",
+    "directDownloadURL":"https://github.com/lyravega/lyr_ehm/releases/download/0.7.3/lyr_ehm.0.7.3.zip",
+    "changelogURL":"https://raw.githubusercontent.com/lyravega/lyr_ehm/stable/changelog.txt"
 }
