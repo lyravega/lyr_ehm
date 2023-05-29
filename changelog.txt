@@ -2,15 +2,16 @@ Version 0.7.3
 
 - Added automatic clean-up for the slot shunts remaining in cargo holds after the shunt market interaction
 - Added workarounds* to prevent possible crashes related to slot not found errors
-- Fixed an issue** with ship restoration that made refit tab unresponsive
-- Updated slot shunt tooltips
+- Fixed an issue with ship restoration that made refit tab unresponsive for a few seconds
+- Updated out-dated slot shunt tooltips
 - Improved Version Checker support
 
-* These workarounds unfortunately causes a few visual issues:
-- Ships that can be restored will have their visuals restored immediately. They'll retain their d-mods
-- Ships will be marked with a (D)
+* These workarounds unfortunately cause a few "visual" issues:
+- Ships that can be restored to their base versions will have their visuals restored immediately
+- Restoration is still required and can be used to remove the d-mods, restoration cost remains the same
+- Ships will be marked as (D)amaged, even though they don't have any and are identical to pristine ones
+- The value loss due to being (D)amaged is negated, d-mods and actual damage still reduce value as normal
 
-** There are a few more cases that trigger this issue, but it won't spam the log anymore
 
 
 Version 0.7.2

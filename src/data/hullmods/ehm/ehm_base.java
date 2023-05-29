@@ -32,12 +32,16 @@ public class ehm_base extends _ehm_basetracker {
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
 		ShipHullSpecAPI hullSpec = variant.getHullSpec();
+		
+		boolean isBasePerma = variant.getPermaMods().contains(lyr_internals.id.baseModification);
+		boolean isBaseBuiltIn = ehm_hasRetrofitBaseBuiltIn(variant);
+		boolean isGettingRestored = !(isBasePerma && isBaseBuiltIn);	// when the ship is getting restored, hull spec won't have the base, but variant will
 
-		// if (!ehm_hasRetrofitBaseBuiltIn(variant)) {
-		if (!ehm_hasRetrofitBaseBuiltIn(variant) || !Misc.getDHullId(hullSpec).equals(hullSpec.getHullId())) {
+		// if (!isBaseBuiltIn) {
+		if (!isBaseBuiltIn || !Misc.getDHullId(hullSpec).equals(hullSpec.getHullId())) {
 			variant.setHullSpecAPI(ehm_hullSpecClone(variant)); 
 			
-			if (!variant.getPermaMods().contains(lyr_internals.id.baseModification)) {
+			if (!isBasePerma) {	// to make this a one-time commit, and to avoid re-committing if/when the ship is getting restored
 				variant.addPermaMod(lyr_internals.id.baseModification, false);
 				commitChanges(); playSound();
 			}
@@ -45,7 +49,7 @@ public class ehm_base extends _ehm_basetracker {
 		
 		int slotPoints = variant.getSMods().contains(lyr_internals.id.hullmods.overengineered) ? slotPointBonus.get(hullSize) : 0;
 
-		ehm_processShunts(stats, slotPoints);
+		ehm_processShunts(stats, slotPoints, isGettingRestored);
 		ehm_cleanWeaponGroupsUp(variant);
 	}
 

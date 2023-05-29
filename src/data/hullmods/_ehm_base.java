@@ -324,6 +324,7 @@ public class _ehm_base extends BaseHullMod {
 		// hullSpec.setDParentHullId(null);
 		// hullSpec.setBaseHullId(null);
 		// hullSpec.setRestoreToBase(false);
+		hullSpec.setBaseValue(settings.getHullSpec(hullSpec.retrieve().getHullId().replace(Misc.D_HULL_SUFFIX, "")).getBaseValue());
 		if (lyr_externals.showExperimentalFlavour) {
 			hullSpec.setManufacturer(lyr_tooltip.text.flavourManufacturer);
 			hullSpec.setDescriptionPrefix(lyr_tooltip.text.flavourDescription);

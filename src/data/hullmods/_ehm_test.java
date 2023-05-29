@@ -15,6 +15,7 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
+
 import data.hullmods.ehm.events.normalEvents;
 import lyr.misc.lyr_internals;
 
