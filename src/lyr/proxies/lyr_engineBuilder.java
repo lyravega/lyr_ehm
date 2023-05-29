@@ -24,8 +24,8 @@ import lyr.tools._lyr_proxyTools;
  */
 public final class lyr_engineBuilder extends _lyr_proxyTools {
 	private Object engineBuilder;
-	public static MethodHandle clone = null;
-	public static MethodHandle setEngineStyle = null;
+	protected static MethodHandle clone = null;
+	protected static MethodHandle setEngineStyle = null;
 
 	public static enum engineStyle { ;
 		public static final int lowTech = 0;

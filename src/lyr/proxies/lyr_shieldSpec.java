@@ -21,15 +21,15 @@ import lyr.tools._lyr_proxyTools;
  */
 public final class lyr_shieldSpec extends _lyr_proxyTools {
 	private ShieldSpecAPI shieldSpec;
-	public static MethodHandle clone = null;
-	public static MethodHandle setRingColor = null;
-	public static MethodHandle setInnerColor = null;
-	public static MethodHandle setType = null;
-	public static MethodHandle setFluxPerDamageAbsorbed = null;
-	public static MethodHandle setUpkeepCost = null;
-	public static MethodHandle setArc = null;
-	public static MethodHandle setPhaseCost = null;
-	public static MethodHandle setPhaseUpkeep = null;
+	protected static MethodHandle clone = null;
+	protected static MethodHandle setRingColor = null;
+	protected static MethodHandle setInnerColor = null;
+	protected static MethodHandle setType = null;
+	protected static MethodHandle setFluxPerDamageAbsorbed = null;
+	protected static MethodHandle setUpkeepCost = null;
+	protected static MethodHandle setArc = null;
+	protected static MethodHandle setPhaseCost = null;
+	protected static MethodHandle setPhaseUpkeep = null;
 	
 	static {
 		try {

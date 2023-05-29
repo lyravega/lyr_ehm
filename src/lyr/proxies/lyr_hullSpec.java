@@ -26,22 +26,24 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	private lyr_weaponSlot weaponSlot = null;
 	private lyr_shieldSpec shieldSpec = null;
 	private List<Object> engineSlots = null;
-	public static MethodHandle clone = null;
-	public static MethodHandle getEngineSlots = null;
-	public static MethodHandle setShieldSpec = null;
-	public static MethodHandle addBuiltInMod = null;
-	public static MethodHandle setManufacturer = null;
-	public static MethodHandle setDescriptionPrefix = null;
-	public static MethodHandle setShipSystemId = null;
-	public static MethodHandle addWeaponSlot = null;
-	public static MethodHandle addBuiltInWeapon = null;
-	public static MethodHandle addBuiltInWing = null;
-	public static MethodHandle setShipDefenseId = null;
-	public static MethodHandle getOrdnancePoints = null;
-	public static MethodHandle setOrdnancePoints = null;
-	public static MethodHandle setDParentHullId = null;
-	public static MethodHandle setBaseHullId = null;
-	public static MethodHandle setRestoreToBase = null;
+	protected static MethodHandle clone = null;
+	protected static MethodHandle getEngineSlots = null;
+	protected static MethodHandle setShieldSpec = null;
+	protected static MethodHandle addBuiltInMod = null;
+	protected static MethodHandle setManufacturer = null;
+	protected static MethodHandle setDescriptionPrefix = null;
+	protected static MethodHandle setShipSystemId = null;
+	protected static MethodHandle addWeaponSlot = null;
+	protected static MethodHandle addBuiltInWeapon = null;
+	protected static MethodHandle addBuiltInWing = null;
+	protected static MethodHandle setShipDefenseId = null;
+	protected static MethodHandle getOrdnancePoints = null;
+	protected static MethodHandle setOrdnancePoints = null;
+	protected static MethodHandle setDParentHullId = null;
+	protected static MethodHandle setBaseHullId = null;
+	protected static MethodHandle setRestoreToBase = null;
+	protected static MethodHandle getBaseValue = null;
+	protected static MethodHandle setBaseValue = null;
 
 	static {
 		try {
@@ -61,6 +63,8 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 			setDParentHullId = inspectMethod("setDParentHullId", hullSpecClass).getMethodHandle();
 			setBaseHullId = inspectMethod("setBaseHullId", hullSpecClass).getMethodHandle();
 			setRestoreToBase = inspectMethod("setRestoreToBase", hullSpecClass).getMethodHandle();
+			getBaseValue = inspectMethod("getBaseValue", hullSpecClass).getMethodHandle();
+			setBaseValue = inspectMethod("setBaseValue", hullSpecClass).getMethodHandle();
 		} catch (Throwable t) {
 			logger.fatal(lyr_internals.logPrefix+"Failed to find a method in 'lyr_hullSpec'", t);
 		}
@@ -354,14 +358,29 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		}
 	}
 
+	/**
+	 * Sets the d-hull parent id of the current hull spec. D-hulls are damaged versions,
+	 * and might have d-mods on them
+	 * <p> Use {@link #retrieve()} to use the API version through the proxy.
+	 * @param parentHullId to set
+	 * @category Proxied method
+	 * @see Non-Obfuscated: {@link ShipHullSpecAPI#setDParentHullId(String) setDParentHullId(String)}
+	 */
 	public void setDParentHullId(String parentHullId) {
 		try { 
 			setDParentHullId.invoke(hullSpec, parentHullId);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'setDParentHullId()' in 'lyr_hullSpec'", t);
+			logger.warn(lyr_internals.logPrefix+"Failed to use 'setDParentHullId()' in 'lyr_hullSpec', using API version", t);
+			hullSpec.setDParentHullId(parentHullId);
 		}
 	}
 
+	/**
+	 * Sets the base hull id of the current hull spec. Skins use bases, and some can
+	 * be restored to them if they have relevant field set.
+	 * @param baseHullId to set
+	 * @category Proxied method
+	 */
 	public void setBaseHullId(String baseHullId) {
 		try { 
 			setBaseHullId.invoke(hullSpec, baseHullId);
@@ -370,11 +389,50 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		}
 	}
 
+	/**
+	 * Sets if the ship has a base that it can be restored to
+	 * <p> Use {@link #retrieve()} to use the API version through the proxy.
+	 * @param restoreToBase to set
+	 * @category Proxied method
+	 * @see Non-Obfuscated: {@link ShipHullSpecAPI#setRestoreToBase(boolean) setRestoreToBase(boolean)}
+	 */
 	public void setRestoreToBase(boolean restoreToBase) {
-		try { 
+		try {
 			setRestoreToBase.invoke(hullSpec, restoreToBase);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'setRestoreToBase()' in 'lyr_hullSpec'", t);
+			logger.warn(lyr_internals.logPrefix+"Failed to use 'setRestoreToBase()' in 'lyr_hullSpec', using API version", t);
+			hullSpec.setRestoreToBase(restoreToBase);
+		}
+	}
+
+	/**
+	 * Gets the ordnance points of the stored {@link ShipHullSpecAPI}. Argument
+	 * can be null to get the base.
+	 * <p> Use {@link #retrieve()} to use the API version through the proxy.
+	 * @param shipSystemId to set
+	 * @category Proxied method
+	 * @see Non-Obfuscated: {@link ShipHullSpecAPI#getBaseValue() getBaseValue()}
+	 */
+	public float getBaseValue() {
+		try {
+			return (float) getBaseValue.invoke(hullSpec);
+		} catch (Throwable t) {
+			logger.error(lyr_internals.logPrefix+"Failed to use 'getBaseValue()' in 'lyr_hullSpec', using API version", t);
+			return hullSpec.getBaseValue();
+		}
+	}
+
+	/**
+	 * Gets the ordnance points of the stored {@link ShipHullSpecAPI}. Argument
+	 * can be null to get the base.
+	 * @param value to set
+	 * @category Proxied method
+	 */
+	public void setBaseValue(float value) {
+		try {
+			setBaseValue.invoke(hullSpec, value);
+		} catch (Throwable t) {
+			logger.error(lyr_internals.logPrefix+"Failed to use 'setBaseValue()' in 'lyr_hullSpec'", t);
 		}
 	}
 	//#endregion 
