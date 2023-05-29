@@ -3,6 +3,7 @@ Version 0.7.3
 - Added automatic clean-up for the slot shunts remaining in cargo holds after the shunt market interaction
 - Added workarounds* to prevent possible crashes related to slot not found errors
 - Fixed an issue with ship restoration that made refit tab unresponsive for a few seconds
+- Fixed weapon checking; mass retrofits can now be installed on Invictus and Retribution (and alike)
 - Updated out-dated slot shunt tooltips
 - Improved Version Checker support
 
