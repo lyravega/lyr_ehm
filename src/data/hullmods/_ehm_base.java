@@ -320,18 +320,20 @@ public class _ehm_base extends BaseHullMod implements _lyr_logger {
 
 		// lyr_hullSpec hullSpec = new lyr_hullSpec(hullSpecToClone, true);
 
-		hullSpec.addBuiltInMod(lyr_internals.id.baseModification);
 		// hullSpec.setDParentHullId(null);
 		// hullSpec.setBaseHullId(null);
 		// hullSpec.setRestoreToBase(false);
+		hullSpec.getTags().clear();
+		hullSpec.getTags().addAll(hullSpecToClone.getTags());
 		hullSpec.setBaseValue(hullSpecToClone.getBaseValue());
 		if (lyr_externals.showExperimentalFlavour) {
 			hullSpec.setManufacturer(lyr_tooltip.text.flavourManufacturer);
 			hullSpec.setDescriptionPrefix(lyr_tooltip.text.flavourDescription);
-			hullSpec.retrieve().setHullName(hullSpecToClone.getHullName() + " (E)");
+			hullSpec.setHullName(hullSpecToClone.getHullName() + " (E)");
 		} else {
-			hullSpec.retrieve().setHullName(hullSpecToClone.getHullName());
+			hullSpec.setHullName(hullSpecToClone.getHullName());
 		}
+		hullSpec.addBuiltInMod(lyr_internals.id.baseModification);
 
 		return hullSpec.retrieve();
 	}

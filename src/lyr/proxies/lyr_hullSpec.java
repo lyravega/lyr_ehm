@@ -2,6 +2,7 @@ package lyr.proxies;
 
 import java.lang.invoke.MethodHandle;
 import java.util.List;
+import java.util.Set;
 
 import com.fs.starfarer.api.characters.MutableCharacterStatsAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
@@ -26,44 +27,44 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	private lyr_weaponSlot weaponSlot = null;
 	private lyr_shieldSpec shieldSpec = null;
 	private List<Object> engineSlots = null;
-	protected static MethodHandle clone = null;
-	protected static MethodHandle getEngineSlots = null;
-	protected static MethodHandle setShieldSpec = null;
-	protected static MethodHandle addBuiltInMod = null;
-	protected static MethodHandle setManufacturer = null;
-	protected static MethodHandle setDescriptionPrefix = null;
-	protected static MethodHandle setShipSystemId = null;
-	protected static MethodHandle addWeaponSlot = null;
-	protected static MethodHandle addBuiltInWeapon = null;
-	protected static MethodHandle addBuiltInWing = null;
-	protected static MethodHandle setShipDefenseId = null;
-	protected static MethodHandle getOrdnancePoints = null;
-	protected static MethodHandle setOrdnancePoints = null;
-	protected static MethodHandle setDParentHullId = null;
-	protected static MethodHandle setBaseHullId = null;
-	protected static MethodHandle setRestoreToBase = null;
-	protected static MethodHandle getBaseValue = null;
-	protected static MethodHandle setBaseValue = null;
+	private static MethodHandle clone = null;
+	private static MethodHandle getEngineSlots = null;
+	private static MethodHandle setShieldSpec = null;
+	// private static MethodHandle addBuiltInMod = null;
+	// private static MethodHandle setManufacturer = null;
+	// private static MethodHandle setDescriptionPrefix = null;
+	// private static MethodHandle setShipSystemId = null;
+	private static MethodHandle addWeaponSlot = null;
+	// private static MethodHandle addBuiltInWeapon = null;
+	private static MethodHandle addBuiltInWing = null;
+	// private static MethodHandle setShipDefenseId = null;
+	// private static MethodHandle getOrdnancePoints = null;
+	private static MethodHandle setOrdnancePoints = null;
+	// private static MethodHandle setDParentHullId = null;
+	private static MethodHandle setBaseHullId = null;
+	// private static MethodHandle setRestoreToBase = null;
+	// private static MethodHandle getBaseValue = null;
+	private static MethodHandle setBaseValue = null;
 
 	static {
 		try {
 			clone = inspectMethod("clone", hullSpecClass).getMethodHandle();
 			getEngineSlots = inspectMethod("getEngineSlots", hullSpecClass).getMethodHandle();
 			setShieldSpec = inspectMethod("setShieldSpec", hullSpecClass).getMethodHandle();
-			addBuiltInMod = inspectMethod("addBuiltInMod", hullSpecClass).getMethodHandle();
-			setManufacturer = inspectMethod("setManufacturer", hullSpecClass).getMethodHandle();
-			setDescriptionPrefix = inspectMethod("setDescriptionPrefix", hullSpecClass).getMethodHandle();
-			setShipSystemId = inspectMethod("setShipSystemId", hullSpecClass).getMethodHandle();
+			// addBuiltInMod = inspectMethod("addBuiltInMod", hullSpecClass).getMethodHandle();
+			// setManufacturer = inspectMethod("setManufacturer", hullSpecClass).getMethodHandle();
+			// setDescriptionPrefix = inspectMethod("setDescriptionPrefix", hullSpecClass).getMethodHandle();
+			// setShipSystemId = inspectMethod("setShipSystemId", hullSpecClass).getMethodHandle();
 			addWeaponSlot = inspectMethod("addWeaponSlot", hullSpecClass).getMethodHandle();
-			addBuiltInWeapon = inspectMethod("addBuiltInWeapon", hullSpecClass).getMethodHandle();
+			// addBuiltInWeapon = inspectMethod("addBuiltInWeapon", hullSpecClass).getMethodHandle();
 			addBuiltInWing = inspectMethod("addBuiltInWing", hullSpecClass).getMethodHandle();
-			setShipDefenseId = inspectMethod("setShipDefenseId", hullSpecClass).getMethodHandle();
-			getOrdnancePoints = inspectMethod("getOrdnancePoints", hullSpecClass).getMethodHandle();
+			// setShipDefenseId = inspectMethod("setShipDefenseId", hullSpecClass).getMethodHandle();
+			// getOrdnancePoints = inspectMethod("getOrdnancePoints", hullSpecClass).getMethodHandle();
 			setOrdnancePoints = inspectMethod("setOrdnancePoints", hullSpecClass).getMethodHandle();
-			setDParentHullId = inspectMethod("setDParentHullId", hullSpecClass).getMethodHandle();
+			// setDParentHullId = inspectMethod("setDParentHullId", hullSpecClass).getMethodHandle();
 			setBaseHullId = inspectMethod("setBaseHullId", hullSpecClass).getMethodHandle();
-			setRestoreToBase = inspectMethod("setRestoreToBase", hullSpecClass).getMethodHandle();
-			getBaseValue = inspectMethod("getBaseValue", hullSpecClass).getMethodHandle();
+			// setRestoreToBase = inspectMethod("setRestoreToBase", hullSpecClass).getMethodHandle();
+			// getBaseValue = inspectMethod("getBaseValue", hullSpecClass).getMethodHandle();
 			setBaseValue = inspectMethod("setBaseValue", hullSpecClass).getMethodHandle();
 		} catch (Throwable t) {
 			logger.fatal(lyr_internals.logPrefix+"Failed to find a method in 'lyr_hullSpec'", t);
@@ -105,14 +106,13 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		this.hullSpec = hullSpec;
 		return this;
 	}
-
-	//#region API-LIKE & PROXIED METHODS
+	
 	/**
 	 * Clones the stored {@link ShipHullSpecAPI}, and returns it. For 
 	 * internal use if necessary. {@link #retrieve()} should be used
 	 * if access to the API is needed.
 	 * @return a cloned {@link ShipHullSpecAPI}
-	 * @category Proxied method
+	 * @category Proxy method
 	 */
 	private ShipHullSpecAPI duplicate(ShipHullSpecAPI hullSpec) {
 		try {
@@ -132,6 +132,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		return new lyr_hullSpec(hullSpec, true);
 	}
 	
+	//#region BRIDGE / PROXY METHODS
 	/**
 	 * Gets the weapon slot with the matching id, and creates a {@link lyr_weaponSlot} 
 	 * proxy for it. The created proxy is returned, which is necessary to access the 
@@ -141,7 +142,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	 * @param weaponSlotId to get
 	 * @return {@link lyr_weaponSlot} proxy
 	 * @category Proxy spawner
-	 * @see Non-Obfuscated: {@link ShipHullSpecAPI#getWeaponSlotAPI(String) getWeaponSlotAPI(String)}
+	 * @see {@link ShipHullSpecAPI#getWeaponSlotAPI(String) getWeaponSlotAPI(String)}
 	 */
 	public lyr_weaponSlot getWeaponSlot(String weaponSlotId) {
 		this.weaponSlot = (this.weaponSlot == null) ? new lyr_weaponSlot(hullSpec.getWeaponSlotAPI(weaponSlotId), false) : this.weaponSlot.recycle(hullSpec.getWeaponSlotAPI(weaponSlotId));
@@ -156,7 +157,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	 * <p> Use {@link #retrieve()} to use the API version through the proxy.
 	 * @return {@link lyr_weaponSlot} proxy
 	 * @category Proxy spawner
-	 * @see Non-Obfuscated: {@link ShipHullSpecAPI#getShieldSpec() getShieldSpec()}
+	 * @see {@link ShipHullSpecAPI#getShieldSpec() getShieldSpec()}
 	 */
 	public lyr_shieldSpec getShieldSpec() {
 		this.shieldSpec = (this.shieldSpec == null) ? new lyr_shieldSpec(hullSpec.getShieldSpec(), false) : this.shieldSpec;
@@ -180,6 +181,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	 * an engineSlot. Check the long-winded javadoc for the 
 	 * {@link lyr_engineBuilder} for more information.
 	 * @return an object list with engineBuilders (?) in it
+	 * @category Proxy method
 	 */
 	public List<?> getEngineSlots() {
 		if (engineSlots != null) return this.engineSlots; 
@@ -194,8 +196,8 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	}
 
 	/**
-	 * Sets the shieldSpec of the hullSpec to the passed one. 
-	 * @category Proxied method
+	 * @param shieldSpec
+	 * @category Proxy method
 	 */
 	public void setShieldSpec(ShieldSpecAPI shieldSpec) {
 		try {
@@ -206,77 +208,43 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	}
 	
 	/**
-	 * Adds a hullModSpec as a built-in one on the stored {@link ShipHullSpecAPI}
-	 * <p> Use {@link #retrieve()} to use the API version through the proxy.
-	 * @param hullModSpecId the id of the hullModSpec
-	 * @category Proxied method
-	 * @see Non-Obfuscated: {@link ShipHullSpecAPI#addBuiltInMod(String) addBuiltInMod(String)}
+	 * @param hullModSpecId
+	 * @category Bridge method
+	 * @see {@link ShipHullSpecAPI#addBuiltInMod(String) addBuiltInMod(String)}
 	 */
 	public void addBuiltInMod(String hullModSpecId) { 
-		try {
-			addBuiltInMod.invoke(hullSpec, hullModSpecId);
-		} catch (Throwable t) {
-			logger.warn(lyr_internals.logPrefix+"Failed to use 'addBuiltInMod()' in 'lyr_hullSpec', using API version", t);
-			hullSpec.addBuiltInMod(hullModSpecId);
-		}
+		hullSpec.addBuiltInMod(hullModSpecId);
 	}
 	
 	/**
-	 * Sets the manufacturer of the stored {@link ShipHullSpecAPI} to the passed 
-	 * value.
-	 * <p> Use {@link #retrieve()} to use the API version through the proxy.
-	 * @param manufacturer to set
-	 * @category Proxied method
-	 * @see Non-Obfuscated: {@link ShipHullSpecAPI#setManufacturer(String) setManufacturer(String)}
+	 * @param manufacturer
+	 * @category Bridge method
+	 * @see {@link ShipHullSpecAPI#setManufacturer(String) setManufacturer(String)}
 	 */
 	public void setManufacturer(String manufacturer) {
-		try {
-			setManufacturer.invoke(hullSpec, manufacturer);
-		} catch (Throwable t) {
-			logger.warn(lyr_internals.logPrefix+"Failed to use 'setManufacturer()' in 'lyr_hullSpec', using API version", t);
-			hullSpec.setManufacturer(manufacturer);
-		}
+		hullSpec.setManufacturer(manufacturer);
 	}
 
 	/**
-	 * Sets the description prefix of the stored {@link ShipHullSpecAPI} to the 
-	 * passed value. Might overwrite or get overwritten; doesn't care about the
-	 * existing value, so to speak.
-	 * @param destriptionPrefix to set
-	 * @category Proxied method
+	 * @param destriptionPrefix (overwrites any existing)
+	 * @category Bridge method
 	 */
 	public void setDescriptionPrefix(String destriptionPrefix) {
-		try {
-			setDescriptionPrefix.invoke(hullSpec, destriptionPrefix);
-		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'setDescriptionPrefix()' in 'lyr_hullSpec'", t);
-		}
+		hullSpec.setDescriptionPrefix(destriptionPrefix);
 	}
 
 	/**
-	 * Sets the system id of the stored {@link ShipHullSpecAPI} to the passed 
-	 * value. 
-	 * <p> Use {@link #retrieve()} to use the API version through the proxy.
-	 * @param shipSystemId to set
-	 * @category Proxied method
-	 * @see Non-Obfuscated: {@link ShipHullSpecAPI#setShipSystemId(String) setShipSystemId(String)}
+	 * @param shipSystemId
+	 * @category Bridge method
+	 * @see {@link ShipHullSpecAPI#setShipSystemId(String) setShipSystemId(String)}
 	 */
 	public void setShipSystemId(String shipSystemId) {
-		try {
-			setShipSystemId.invoke(hullSpec, shipSystemId);
-		} catch (Throwable t) {
-			logger.warn(lyr_internals.logPrefix+"Failed to use 'setShipSystemId()' in 'lyr_hullSpec', using API version", t);
-			hullSpec.setShipSystemId(shipSystemId);
-		}
+		hullSpec.setShipSystemId(shipSystemId);
 	}
 
 	/**
-	 * Adds a {@link WeaponSlotAPI} on the stored {@link ShipHullSpecAPI}. 
-	 * Removal of slots is rather tricky, and it is easier to grab a stock
-	 * hullSpec and go from there. The slot needs to have its own node
-	 * and its own id, but the rest can just be cloned.
 	 * @param weaponSlot to be added
-	 * @category Proxied method
+	 * @category Proxy method
 	 */
 	public void addWeaponSlot(WeaponSlotAPI weaponSlot) {
 		try {
@@ -287,29 +255,18 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	}
 
 	/**
-	 * Adds a weapon as a built-in one on the stored {@link ShipHullSpecAPI}. 
-	 * There are no checks, be aware of what you are installing on what slot.
-	 * <p> Use {@link #retrieve()} to use the API version through the proxy.
 	 * @param slotId of the slot that will have the weapon installed as built-in
 	 * @param weaponSpecId of the weapon that will be installed on the slot
-	 * @category Proxied method
-	 * @see Non-Obfuscated: {@link ShipHullSpecAPI#addBuiltInWeapon(String, String) addBuiltInWeapon(String, String)}
+	 * @category Bridge method
+	 * @see {@link ShipHullSpecAPI#addBuiltInWeapon(String, String) addBuiltInWeapon(String, String)}
 	 */
 	public void addBuiltInWeapon(String slotId, String weaponSpecId) {
-		try { 
-			addBuiltInWeapon.invoke(hullSpec, slotId, weaponSpecId);
-		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'addBuiltInWeapon()' in 'lyr_hullSpec', using API version", t);
-			hullSpec.addBuiltInWeapon(slotId, weaponSpecId);
-		}
+		hullSpec.addBuiltInWeapon(slotId, weaponSpecId);
 	}
 
 	/**
-	 * Adds a wing as a built-in one on the stored {@link ShipHullSpecAPI}. 
-	 * There is no API version of this, however adding the wingId to the 
-	 * {@code getBuiltInWings()} might work. In any case, here it is proxied.
 	 * @param wingId of the wing that will be added as built-in
-	 * @category Proxied method
+	 * @category Proxy method
 	 */
 	public void addBuiltInWing(String wingId) {
 		try { 
@@ -319,36 +276,28 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		}
 	}
 	
+	/**
+	 * @param defenseId
+	 * @category Bridge method
+	 * @see {@link ShipHullSpecAPI#setShipDefenseId(String) setShipDefenseId(String)}
+	 */
 	public void setShipDefenseId(String defenseId) {
-		try { 
-			setShipDefenseId.invoke(hullSpec, defenseId);
-		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'setShipDefenseId()' in 'lyr_hullSpec'", t);
-		}
+		hullSpec.setShipDefenseId(defenseId);
 	}
 	
 	/**
-	 * Gets the ordnance points of the stored {@link ShipHullSpecAPI}. Argument
-	 * can be null to get the base.
-	 * <p> Use {@link #retrieve()} to use the API version through the proxy.
-	 * @param shipSystemId to set
-	 * @category Proxied method
-	 * @see Non-Obfuscated: {@link ShipHullSpecAPI#getOrdnancePoints(MutableCharacterStatsAPI) getOrdnancePoints(MutableCharacterStatsAPI)}
+	 * @param characterStats (can be null)
+	 * @return Ordnance Points
+	 * @category Bridge method
+	 * @see {@link ShipHullSpecAPI#getOrdnancePoints(MutableCharacterStatsAPI) getOrdnancePoints(MutableCharacterStatsAPI)}
 	 */
 	public int getOrdnancePoints(MutableCharacterStatsAPI characterStats) {
-		try { 
-			return (int) getOrdnancePoints.invoke(hullSpec, characterStats);
-		} catch (Throwable t) {
-			logger.warn(lyr_internals.logPrefix+"Failed to use 'getOrdnancePoints()' in 'lyr_hullSpec', using API version", t);
-			return hullSpec.getOrdnancePoints(characterStats);
-		}
+		return hullSpec.getOrdnancePoints(characterStats);
 	}
 	
 	/**
-	 * Sets the ordnance points of the stored {@link ShipHullSpecAPI} to the passed 
-	 * value.
-	 * @param ordnancePoints to set
-	 * @category Proxied method
+	 * @param ordnancePoints
+	 * @category Proxy method
 	 */
 	public void setOrdnancePoints(int ordnancePoints) {
 		try { 
@@ -359,27 +308,17 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	}
 
 	/**
-	 * Sets the d-hull parent id of the current hull spec. D-hulls are damaged versions,
-	 * and might have d-mods on them
-	 * <p> Use {@link #retrieve()} to use the API version through the proxy.
-	 * @param parentHullId to set
-	 * @category Proxied method
-	 * @see Non-Obfuscated: {@link ShipHullSpecAPI#setDParentHullId(String) setDParentHullId(String)}
+	 * @param parentHullId
+	 * @category Bridge method
+	 * @see {@link ShipHullSpecAPI#setDParentHullId(String) setDParentHullId(String)}
 	 */
 	public void setDParentHullId(String parentHullId) {
-		try { 
-			setDParentHullId.invoke(hullSpec, parentHullId);
-		} catch (Throwable t) {
-			logger.warn(lyr_internals.logPrefix+"Failed to use 'setDParentHullId()' in 'lyr_hullSpec', using API version", t);
-			hullSpec.setDParentHullId(parentHullId);
-		}
+		hullSpec.setDParentHullId(parentHullId);
 	}
 
 	/**
-	 * Sets the base hull id of the current hull spec. Skins use bases, and some can
-	 * be restored to them if they have relevant field set.
-	 * @param baseHullId to set
-	 * @category Proxied method
+	 * @param baseHullId
+	 * @category Proxy method
 	 */
 	public void setBaseHullId(String baseHullId) {
 		try { 
@@ -390,43 +329,26 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	}
 
 	/**
-	 * Sets if the ship has a base that it can be restored to
-	 * <p> Use {@link #retrieve()} to use the API version through the proxy.
-	 * @param restoreToBase to set
-	 * @category Proxied method
-	 * @see Non-Obfuscated: {@link ShipHullSpecAPI#setRestoreToBase(boolean) setRestoreToBase(boolean)}
+	 * @param restoreToBase
+	 * @category Bridge method
+	 * @see {@link ShipHullSpecAPI#setRestoreToBase(boolean) setRestoreToBase(boolean)}
 	 */
 	public void setRestoreToBase(boolean restoreToBase) {
-		try {
-			setRestoreToBase.invoke(hullSpec, restoreToBase);
-		} catch (Throwable t) {
-			logger.warn(lyr_internals.logPrefix+"Failed to use 'setRestoreToBase()' in 'lyr_hullSpec', using API version", t);
-			hullSpec.setRestoreToBase(restoreToBase);
-		}
+		hullSpec.setRestoreToBase(restoreToBase);
 	}
 
 	/**
-	 * Gets the ordnance points of the stored {@link ShipHullSpecAPI}. Argument
-	 * can be null to get the base.
-	 * <p> Use {@link #retrieve()} to use the API version through the proxy.
-	 * @param shipSystemId to set
-	 * @category Proxied method
-	 * @see Non-Obfuscated: {@link ShipHullSpecAPI#getBaseValue() getBaseValue()}
+	 * @return Value of the hull
+	 * @category Bridge method
+	 * @see {@link ShipHullSpecAPI#getBaseValue() getBaseValue()}
 	 */
 	public float getBaseValue() {
-		try {
-			return (float) getBaseValue.invoke(hullSpec);
-		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'getBaseValue()' in 'lyr_hullSpec', using API version", t);
-			return hullSpec.getBaseValue();
-		}
+		return hullSpec.getBaseValue();
 	}
 
 	/**
-	 * Gets the ordnance points of the stored {@link ShipHullSpecAPI}. Argument
-	 * can be null to get the base.
-	 * @param value to set
-	 * @category Proxied method
+	 * @param value
+	 * @category Proxy method
 	 */
 	public void setBaseValue(float value) {
 		try {
@@ -435,6 +357,32 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 			logger.error(lyr_internals.logPrefix+"Failed to use 'setBaseValue()' in 'lyr_hullSpec'", t);
 		}
 	}
+
+	/**
+	 * @return Name of the hull
+	 * @category Bridge method
+	 * @see {@link ShipHullSpecAPI#getTags() getTags()}
+	 */
+	public String getHullName() {
+		return hullSpec.getHullName();
+	}
+
+	/**
+	 * @category Bridge method
+	 * @see {@link ShipHullSpecAPI#getTags() getTags()}
+	 */
+	public void setHullName(String hullName) {
+		hullSpec.setHullName(hullName);
+	}
+
+	/**
+	 * @return Tags of the hull
+	 * @category Bridge method
+	 * @see {@link ShipHullSpecAPI#getTags() getTags()}
+	 */
+	public Set<String> getTags() {
+		return hullSpec.getTags();
+	}
 	//#endregion 
-	// END OF API-LIKE & PROXIED METHODS
+	// END OF BRIDGE / PROXY METHODS
 }

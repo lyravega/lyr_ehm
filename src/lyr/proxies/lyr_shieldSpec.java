@@ -21,15 +21,15 @@ import lyr.tools._lyr_proxyTools;
  */
 public final class lyr_shieldSpec extends _lyr_proxyTools {
 	private ShieldSpecAPI shieldSpec;
-	protected static MethodHandle clone = null;
-	protected static MethodHandle setRingColor = null;
-	protected static MethodHandle setInnerColor = null;
-	protected static MethodHandle setType = null;
-	protected static MethodHandle setFluxPerDamageAbsorbed = null;
-	protected static MethodHandle setUpkeepCost = null;
-	protected static MethodHandle setArc = null;
-	protected static MethodHandle setPhaseCost = null;
-	protected static MethodHandle setPhaseUpkeep = null;
+	private static MethodHandle clone = null;
+	private static MethodHandle setRingColor = null;
+	private static MethodHandle setInnerColor = null;
+	private static MethodHandle setType = null;
+	private static MethodHandle setFluxPerDamageAbsorbed = null;
+	private static MethodHandle setUpkeepCost = null;
+	private static MethodHandle setArc = null;
+	private static MethodHandle setPhaseCost = null;
+	private static MethodHandle setPhaseUpkeep = null;
 	
 	static {
 		try {
@@ -80,13 +80,12 @@ public final class lyr_shieldSpec extends _lyr_proxyTools {
 		return this;
 	}
 
-	//#region API-LIKE & PROXIED METHODS
 	/**
 	 * Clones the stored {@link ShieldSpecAPI}, and returns it. For 
 	 * internal use if necessary. {@link #retrieve()} should be used
 	 * if access to the API is needed.
 	 * @return a cloned {@link ShieldSpecAPI}
-	 * @category Proxied method
+	 * @category Proxy method
 	 */
 	protected ShieldSpecAPI duplicate(ShieldSpecAPI shieldSpec) {
 		try {
@@ -106,11 +105,12 @@ public final class lyr_shieldSpec extends _lyr_proxyTools {
 		return new lyr_shieldSpec(shieldSpec, true);
 	}
 
+	//#region BRIDGE / PROXY METHODS
 	/**
 	 * Sets the ring colour of the stored {@link ShieldSpecAPI} to
 	 * the passed one. 
 	 * @param colour object to apply
-	 * @category Proxied method
+	 * @category Proxy method
 	 */
 	public void setRingColor(Color colour) {
 		try {
@@ -124,7 +124,7 @@ public final class lyr_shieldSpec extends _lyr_proxyTools {
 	 * Sets the inner colour of the stored {@link ShieldSpecAPI} to
 	 * the passed one. 
 	 * @param colour object to apply
-	 * @category Proxied method
+	 * @category Proxy method
 	 */
 	public void setInnerColor(Color colour) {
 		try {
@@ -182,5 +182,5 @@ public final class lyr_shieldSpec extends _lyr_proxyTools {
 		}
 	}
 	//#endregion 
-	// END OF API-LIKE & PROXIED METHODS
+	// END OF BRIDGE / PROXY METHODS
 }

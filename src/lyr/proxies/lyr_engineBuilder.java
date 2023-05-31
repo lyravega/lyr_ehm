@@ -24,8 +24,8 @@ import lyr.tools._lyr_proxyTools;
  */
 public final class lyr_engineBuilder extends _lyr_proxyTools {
 	private Object engineBuilder;
-	protected static MethodHandle clone = null;
-	protected static MethodHandle setEngineStyle = null;
+	private static MethodHandle clone = null;
+	private static MethodHandle setEngineStyle = null;
 
 	public static enum engineStyle { ;
 		public static final int lowTech = 0;
@@ -84,13 +84,12 @@ public final class lyr_engineBuilder extends _lyr_proxyTools {
 		return this;
 	}
 
-	//#region API-LIKE / PROXIED METHODS
 	/**
 	 * Clones the stored {@link Object}, and returns it. For 
 	 * internal use if necessary. {@link #retrieve()} should be used
 	 * if access to the API is needed.
 	 * @return a cloned {@link Object}
-	 * @category Proxied method
+	 * @category Proxy method
 	 */
 	protected Object duplicate(Object enginebuilder) {
 		try {
@@ -110,12 +109,13 @@ public final class lyr_engineBuilder extends _lyr_proxyTools {
 		return new lyr_engineBuilder(engineBuilder, true);
 	}
 	
+	//#region BRIDGE / PROXY METHODS
 	/**
 	 * Uses the passed enumNumber to grab an engine style from the
 	 * obfuscated code, and invoke the obfuscated engineBuilder 
 	 * method with it. 
 	 * @param enumNumber
-	 * @category Proxied method
+	 * @category Proxy method
 	 */
 	public void setEngineStyle(int enumNumber) {
 		try {
@@ -125,5 +125,5 @@ public final class lyr_engineBuilder extends _lyr_proxyTools {
 		}
 	}
 	//#endregion 
-	// END OF API-LIKE & PROXIED METHODS
+	// END OF BRIDGE / PROXY METHODS
 }

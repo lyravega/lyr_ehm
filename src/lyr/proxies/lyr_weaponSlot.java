@@ -24,20 +24,20 @@ import lyr.tools._lyr_proxyTools;
  */
 public final class lyr_weaponSlot extends _lyr_proxyTools {
 	private WeaponSlotAPI weaponSlot;
-	protected static MethodHandle clone = null;
-	protected static MethodHandle setWeaponType = null; 
-	protected static MethodHandle isWeaponSlot = null;
-	protected static MethodHandle setId = null;
-	protected static MethodHandle setSlotSize = null;
-	// protected static MethodHandle newNode = null;
-	protected static MethodHandle setNode = null;
-	// protected static MethodHandle setNode_alt = null;
+	private static MethodHandle clone = null;
+	private static MethodHandle setWeaponType = null; 
+	// private static MethodHandle isWeaponSlot = null;
+	private static MethodHandle setId = null;
+	private static MethodHandle setSlotSize = null;
+	// private static MethodHandle newNode = null;
+	private static MethodHandle setNode = null;
+	// private static MethodHandle setNode_alt = null;
 
 	static {
 		try {
 			clone = inspectMethod("clone", weaponSlotClass).getMethodHandle();
 			setWeaponType = inspectMethod("setWeaponType", weaponSlotClass, WeaponType.class).getMethodHandle();
-			isWeaponSlot = inspectMethod("isWeaponSlot", weaponSlotClass).getMethodHandle();
+			// isWeaponSlot = inspectMethod("isWeaponSlot", weaponSlotClass).getMethodHandle();
 			setId = inspectMethod("setId", weaponSlotClass, String.class).getMethodHandle();
 			setSlotSize = inspectMethod("setSlotSize", weaponSlotClass).getMethodHandle();
 			// newNode = lookup.findConstructor(nodeClass, MethodType.methodType(void.class, String.class, Vector2f.class));
@@ -80,13 +80,12 @@ public final class lyr_weaponSlot extends _lyr_proxyTools {
 		return this;
 	}
 
-	//#region API-LIKE & PROXIED METHODS
 	/**
 	 * Clones the stored {@link WeaponSlotAPI}, and returns it. For 
 	 * internal use if necessary. {@link #retrieve()} should be used
 	 * if access to the API is needed.
 	 * @return a cloned {@link WeaponSlotAPI}
-	 * @category Proxied method
+	 * @category Proxy method
 	 */
 	protected WeaponSlotAPI duplicate(WeaponSlotAPI weaponSlot) {
 		try {
@@ -106,10 +105,10 @@ public final class lyr_weaponSlot extends _lyr_proxyTools {
 		return new lyr_weaponSlot(weaponSlot, true);
 	}
 
+	//#region BRIDGE / PROXY METHODS
 	/**
-	 * Sets the weapon type of the slot to the passed weaponType. 
 	 * @param weaponType to be set on the slot
-	 * @category Proxied method
+	 * @category Proxy method
 	 */
 	public void setWeaponType(WeaponType weaponType) {
 		try {
@@ -120,25 +119,16 @@ public final class lyr_weaponSlot extends _lyr_proxyTools {
 	}
 
 	/**
-	 * The API lacks this check. It can easily be implemented, it is
-	 * proxied here however.
 	 * @return is it a weapon slot?
-	 * @category Proxied method
+	 * @category Bridge method
 	 */
 	public boolean isWeaponSlot() {
-		try {
-			return (boolean) isWeaponSlot.invoke(weaponSlot);
-		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'isWeaponSlot()' in 'lyr_weaponSlot'", t);
-		} return false; // java, pls...
+		return weaponSlot.isWeaponSlot();
 	}
 
 	/**
-	 * Sets the id of the stored {@link WeaponSlotAPI} to the given one.
-	 * Must be unique, otherwise the game will get confused, and only 
-	 * one of the slots that share the same id will function.
 	 * @param weaponSlotId a unique id to assign
-	 * @category Proxied method
+	 * @category Proxy method
 	 */
 	public void setId(String weaponSlotId) {
 		try {
@@ -149,14 +139,12 @@ public final class lyr_weaponSlot extends _lyr_proxyTools {
 	}
 
 	/**
-	 * Sets the {@link WeaponSize} of the stored {@link WeaponSlotAPI} 
-	 * to the given one.
-	 * @param weaponSize a different size
-	 * @category Proxied method
+	 * @param slotSize
+	 * @category Proxy method
 	 */
-	public void setSlotSize(WeaponSize weaponSize) {
+	public void setSlotSize(WeaponSize slotSize) {
 		try {
-			setSlotSize.invoke(weaponSlot, weaponSize);
+			setSlotSize.invoke(weaponSlot, slotSize);
 		} catch (Throwable t) {
 			logger.error(lyr_internals.logPrefix+"Failed to use 'setSlotSize()' in 'lyr_weaponSlot'", t);
 		}
@@ -173,7 +161,7 @@ public final class lyr_weaponSlot extends _lyr_proxyTools {
 	 * as {@code setLocation()} will affect all slots with a shared node.
 	 * @param nodeId an id to assign to the node (using slotId is fine)
 	 * @param location a ship-relative vector to create the node at
-	 * @category Proxied method
+	 * @category Proxy method
 	 * @see {@link lyr.misc.lyr_utilities#generateChildLocation} that
 	 * calculates new node positions through passed offsets
 	 */
@@ -186,5 +174,5 @@ public final class lyr_weaponSlot extends _lyr_proxyTools {
 		}
 	}
 	//#endregion 
-	// END OF API-LIKE & PROXIED METHODS
+	// END OF BRIDGE / PROXY METHODS
 }
