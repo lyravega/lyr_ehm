@@ -314,22 +314,17 @@ public class _ehm_base extends BaseHullMod implements _lyr_logger {
 			hullSpec = new lyr_hullSpec(settings.getHullSpec(Misc.getDHullId(hullSpecToClone)), true);
 		}
 
-		// if ((variant.isDHull() || hullSpecToClone.isDHull()) && hullSpecToClone.getDParentHullId() != null) {
-		// 	hullSpecToClone = hullSpecToClone.getDParentHull();
-		// }
-
-		// lyr_hullSpec hullSpec = new lyr_hullSpec(hullSpecToClone, true);
-
 		// hullSpec.setDParentHullId(null);
 		// hullSpec.setBaseHullId(null);
 		// hullSpec.setRestoreToBase(false);
-		hullSpec.setBaseValue(hullSpecToClone.getBaseValue());
+		hullSpec.setBaseValue(hullSpecToClone.getBaseValue());	// because d-hulls lose 25% in value immediately
 		if (lyr_externals.showExperimentalFlavour) {
 			hullSpec.setManufacturer(lyr_tooltip.text.flavourManufacturer);
 			hullSpec.setDescriptionPrefix(lyr_tooltip.text.flavourDescription);
-			hullSpec.setHullName(hullSpecToClone.getHullName() + " (E)");
+			hullSpec.setHullName(hullSpecToClone.getHullName() + " (E)");	// restore to base hull name, replacing "(D)" with "(E)"
 		} else {
-			hullSpec.setHullName(hullSpecToClone.getHullName());
+			hullSpec.setDescriptionPrefix("");	// empty string because this is a d-hull that comes with damaged prefix
+			hullSpec.setHullName(hullSpecToClone.getHullName());	// restore to base hull name, removing "(D)"
 		}
 		// hullSpec.getTags().clear();
 		// hullSpec.getTags().addAll(hullSpecToClone.getTags());
