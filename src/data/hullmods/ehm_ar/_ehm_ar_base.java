@@ -83,7 +83,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 	private static final Pattern pattern = Pattern.compile("WS[ 0-9]{4}");
 	private static Matcher matcher;
 
-	public static final void ehm_processShunts(MutableShipStatsAPI stats, int slotPoints) {
+	public static final void ehm_processShunts(MutableShipStatsAPI stats, int slotPoints, boolean isGettingRestored) {
 		ShipVariantAPI variant = stats.getVariant(); 
 		boolean hasAdapterActivator = variant.hasHullMod(hullmods.stepdownadapter);
 		boolean hasMutableActivator = variant.hasHullMod(hullmods.mutableshunt);
@@ -201,7 +201,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		}
 
 		variant.setHullSpecAPI(hullSpec.retrieve()); 
-		if (refreshRefit) { refreshRefit = false; commitChanges(); }
+		if (refreshRefit && !isGettingRestored) { refreshRefit = false; commitChanges(); }
 	}
 
 	private static final boolean ehm_adaptSlot(lyr_hullSpec hullSpec, String shuntId, String slotId) {

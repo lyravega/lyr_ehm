@@ -29,6 +29,7 @@ public class lyr_tooltip {
 			flavourDescription,
 			warning,
 			baseRetrofitWarning,
+			restoreWarning,
 			overEngineeredNoEffect,
 			overEngineeredWarning,
 			noShip,
@@ -58,6 +59,7 @@ public class lyr_tooltip {
 				flavourDescription = textJSON.getString("flavourDescription");
 				warning = textJSON.getString("warning");
 				baseRetrofitWarning = textJSON.getString("baseRetrofitWarning");
+				restoreWarning = textJSON.getString("restoreWarning");
 				overEngineeredNoEffect = textJSON.getString("overEngineeredNoEffect");
 				overEngineeredWarning = textJSON.getString("overEngineeredWarning");
 				noShip = textJSON.getString("noShip");
@@ -93,6 +95,7 @@ public class lyr_tooltip {
 			warning,
 			noEffect,
 			sEffect,
+			restoreWarning,
 			severeWarning,
 			notApplicable,
 			lockedIn,
@@ -122,6 +125,7 @@ public class lyr_tooltip {
 				warning = headerJSON.getString("warning");
 				noEffect = headerJSON.getString("noEffect");
 				sEffect = headerJSON.getString("sEffect");
+				restoreWarning = headerJSON.getString("baseWarning");
 				severeWarning = headerJSON.getString("severeWarning");
 				notApplicable = headerJSON.getString("notApplicable");
 				lockedIn = headerJSON.getString("lockedIn");

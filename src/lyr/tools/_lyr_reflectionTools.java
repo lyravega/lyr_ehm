@@ -3,11 +3,8 @@ package lyr.tools;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
-import java.util.Arrays;
 import java.lang.invoke.MethodType;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import java.util.Arrays;
 
 import lyr.misc.lyr_internals;
 
@@ -23,24 +20,26 @@ import lyr.misc.lyr_internals;
  * for this information.
  * @author lyravega
  */
-public class _lyr_reflectionTools {
-	protected static final Logger logger = Logger.getLogger(lyr_internals.logName);
+public class _lyr_reflectionTools implements _lyr_logger {
 	protected static final Lookup lookup = MethodHandles.lookup();
 	protected static final Class<?> lookupClass = lookup.getClass();
-	protected static Class<?> fieldClass;
-	protected static Class<?> methodClass;
-	protected static MethodHandle getName;
-	protected static MethodHandle getParameterTypes;
-	protected static MethodHandle getReturnType;
-	protected static MethodHandle getModifiers;
-	protected static MethodHandle getDeclaredMethod;
-	protected static MethodHandle getMethod;
-	protected static MethodHandle unreflect;
+	public static Class<?> fieldClass;
+	public static MethodHandle setAccessible;
+	public static MethodHandle get;
+	public static Class<?> methodClass;
+	public static MethodHandle getName;
+	public static MethodHandle getParameterTypes;
+	public static MethodHandle getReturnType;
+	public static MethodHandle getModifiers;
+	public static MethodHandle getDeclaredMethod;
+	public static MethodHandle getMethod;
+	public static MethodHandle unreflect;
 
 	static {
-		logger.setLevel(Level.INFO);
 		try {
 			fieldClass = Class.forName("java.lang.reflect.Field", false, Class.class.getClassLoader());
+			setAccessible = lookup.findVirtual(fieldClass, "setAccessible", MethodType.methodType(void.class, boolean.class));
+			get = lookup.findVirtual(fieldClass, "get", MethodType.methodType(Object.class, Object.class));
 			methodClass = Class.forName("java.lang.reflect.Method", false, Class.class.getClassLoader());
 			getName = lookup.findVirtual(methodClass, "getName", MethodType.methodType(String.class));
 			getParameterTypes = lookup.findVirtual(methodClass, "getParameterTypes", MethodType.methodType(Class[].class));

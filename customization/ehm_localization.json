@@ -8,8 +8,9 @@
 			"flavourDescription": "This design utilizes experimental hull modifications created by a spacer who has been living in a junkyard for most of his life. His 'treasure hoard' is full of franken-ships that somehow fly by using cannibalized parts from other ships that would be deemed incompatible. Benefits of such modifications are unclear as they do not provide a certain advantage over the stock designs. However the level of customization and flexibility they offer is certainly unparalleled.",
 
 			# Below are various warning and info texts displayed on the experimental modifications
-			"warning": "Installing or removing Experimental Hull Modifications will commit the changes immediately, the variant will be saved and any market and/or cargo transactions will be finalized",
-			"baseRetrofitWarning": "Will become a built-in hull modification as soon as it is installed",
+			"warning": "Installing or removing Experimental Hull Modifications will commit the changes immediately; the variant will be saved and any market and/or cargo transactions will be finalized",
+			"baseRetrofitWarning": "Will become a built-in hull modification as soon as installed. Additionally, the ship will be marked as (D)amaged, however this is purely visual and the ship will perform as normal",
+			"restoreWarning": "This ship has a base version that it can be restored to. Installing this mod will perform a visual restoration; the visuals of the ship will be restored with its base version while any d-mods will be retained",
 			"overEngineeredNoEffect": "Has no effects till it is built into the ship using a story point",
 			"overEngineeredWarning": "Removal of base experimental hull modification will be blocked if built-in",
 			"noShip": "Ship does not exist",
@@ -38,6 +39,7 @@
 			"warning": "WARNING",
 			"noEffect": "NO EFFECT",
 			"sEffect": "S-EFFECT",
+			"baseWarning": "BASE DETECTED",
 			"severeWarning": "WARNING", # Uses a flashing effect to distinct itself from a normal warning
 			"notApplicable": "NOT APPLICABLE",
 			"lockedIn": "LOCKED IN",

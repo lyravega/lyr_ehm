@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
-
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.SettingsAPI;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
@@ -20,17 +18,20 @@ import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.loading.WeaponGroupSpec;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.api.util.Misc;
 
 import data.hullmods.ehm.ehm_base;
 import lyr.misc.lyr_externals;
 import lyr.misc.lyr_internals;
 import lyr.misc.lyr_tooltip;
 import lyr.proxies.lyr_hullSpec;
+import lyr.tools._lyr_logger;
 
 /**
  * This is the master base class for all experimental hullmods. Stores the most 
@@ -54,8 +55,7 @@ import lyr.proxies.lyr_hullSpec;
  * @see {@link data.hullmods.ehm_sc._ehm_sc_base _ehm_sc_base} for shield cosmetic base
  * @author lyravega
  */
-public class _ehm_base extends BaseHullMod {
-	protected static final Logger logger = Logger.getLogger(lyr_internals.logName);
+public class _ehm_base extends BaseHullMod implements _lyr_logger {
 	protected static final boolean log = true;
 	public static final SettingsAPI settings = Global.getSettings();
 
@@ -200,7 +200,7 @@ public class _ehm_base extends BaseHullMod {
 		for (WeaponAPI weapon: ship.getAllWeapons()) {
 			WeaponSlotAPI slot = weapon.getSlot();
 
-			if (slot.isBuiltIn() || slot.isSystemSlot()) continue;
+			if (!slot.isWeaponSlot()) continue;
 			return true;
 		}
 
@@ -220,7 +220,7 @@ public class _ehm_base extends BaseHullMod {
 		for (WeaponAPI weapon: ship.getAllWeapons()) {
 			WeaponSlotAPI slot = weapon.getSlot();
 
-			if (slot.isBuiltIn() || slot.isSystemSlot()) continue;
+			if (!slot.isWeaponSlot()) continue;
 			if (!slot.getId().startsWith(slotAffix)) continue;
 			return true;
 		}
@@ -241,7 +241,7 @@ public class _ehm_base extends BaseHullMod {
 		for (WeaponAPI weapon: ship.getAllWeapons()) {
 			WeaponSlotAPI slot = weapon.getSlot();
 
-			if (slot.isBuiltIn() || slot.isSystemSlot()) continue;
+			if (!slot.isWeaponSlot()) continue;
 			if (weaponIdsToIgnore.contains(weapon.getId())) continue;
 			return true;
 		}
@@ -272,43 +272,57 @@ public class _ehm_base extends BaseHullMod {
 	 * Called from the {@link ehm_base retrofit base} only. If the hull does not have the base built-in, clones
 	 * the hullSpec, adds flavour, builds the retrofit base in the hull, and refreshes the screen. Otherwise,
 	 * just returns the same hullSpec. Re-adds itself if the hullSpec is replaced with something else.
-	 * <p> Contains an ugly workaround to avoid a crash, regarding d-mods and d-hulls. When ships get damaged in
-	 * combat for example, the variants change the hull specs to the damaged versions (d-hull specs). While this
-	 * transition happens without a crash (from what I can tell), the opposite way is forced through the vanilla
+	 * <p> There are two problems with replacing the hull specs. From what I can tell, game replaces the hull
+	 * specs of the ships after a combat, and after repairs. The latter is handled through the vanilla script
 	 * {@link com.fs.starfarer.api.impl.campaign.skills.FieldRepairsScript#restoreToNonDHull FieldRepairsScript}
-	 * at which point there might be slots used by the variant that do NOT exist on the non-damaged hull spec.
-	 * <p> That script is one of the core scripts that I do not want to mess around with; every game has one of
-	 * those running in the background that could potentially be suppressed, and the same job can be offloaded
-	 * to a similar script with overridden methods. But that's a bad way to solve this problem, even if it is
-	 * possible, and given that script also writes to the save files, it's out of the question as the potential
-	 * future ramifications are unknown. This is the bad part of the problem.
-	 * <p> The ugly part is, these d-hulls only get their parent's (original's) hull spec id assigned to them,
-	 * and the hull spec is directly loaded from the spec store with no way of intercepting it in between. As
-	 * that is the case, I cannot access, clone and alter the parent's hull spec as it's only stored as an id.
-	 * <p> The workaround is checking if the variant is using a d-hull and if that is the case and the d-hull has
-	 * a parent hull spec id stored, using that one directly. The crash will be avoided this way as there will
-	 * not be any potential slot mismatches between the variant and the original hull spec. The script mentioned
-	 * above will continue to correctly remove d-mods from the ships. But this may cause some other effects on
-	 * the long run that I cannot foresee.
-	 * <p> For now, this workaround is an ugly one in my opinion (yes I am talking to future you/me), but it gets
-	 * the job done. However, long term effects, if any, needs to be researched. If instead of just an id, the
-	 * parent's hull spec was stored, that'd be the best solution. Even though it would be useless to Alex and
-	 * everyone else on the planet, maybe Alex might help - maybe after the update winds are calmed down.
-	 * <p>Too long didn't read version: workaround simply ignores the d-hull specs, and makes the mod
-	 * use the original. As d-mods are parts of the variant, they'll still be there and will get fixed properly,
-	 * but any unforeseen effects needs to be researched.
+	 * which gets active if the player has the hull restoration skill. The former happens when a ship suffers
+	 * damage, through {@link com.fs.starfarer.api.impl.campaign.DModManager#setDHull DModManager}.
+	 * <p> Both of these linked methods have certain conditions, and check for things like if the hull spec in
+	 * question is a d-hull, or a default d-hull, or has a base hull, etc... there are no easy ways to avoid
+	 * those checks. The main problem is, these checked hull specs aren't fields; they're grabbed from the
+	 * script store directly, and only the hull spec id's are stored.
+	 * <p> As a workaround, the script is replaced with a custom one that ignores any hull spec that has the
+	 * base variant installed on them. However, avoiding the other one requires an ugly hack; applying a
+	 * damaged hull spec instead of anything else so that the check returns false and the hull spec stays
+	 * the same.
+	 * <p> Also, as a necessary evil, some variant hull specs that can be restored to a base hull spec needs
+	 * to be restored immediately or they'll stay as they are with double (D) markers. Replacing them with
+	 * their base skin right away fucks their d-mods up so they're added to the variant first. So this specific
+	 * swap only affects them visually, and nothing more.
+	 * <p> This is certainly not ideal. If hull specs for the damaged & base versions were stored in fields
+	 * instead of just their hull ids, the solution would've been easier; clone and adjust up to three hull
+	 * specs. But as long as they refer to the spec store, this workaround has to be in place. This has been
+	 * the case forever. Maybe Alex will add them as a field someday, after the update winds are calmed down.
 	 * @param variant to be used as a template
 	 * @return a cloned hullSpec
 	 */
 	protected static final ShipHullSpecAPI ehm_hullSpecClone(ShipVariantAPI variant) {
+		ShipHullSpecAPI hullSpecToClone = variant.getHullSpec();
 		lyr_hullSpec hullSpec;
 
-		if (variant.isDHull() && variant.getHullSpec().getDParentHullId() != null)
-			hullSpec = new lyr_hullSpec(variant.getHullSpec().getDParentHull(), true);
-		else
-			hullSpec = new lyr_hullSpec(variant.getHullSpec(), true);
+		if (hullSpecToClone.isRestoreToBase() && hullSpecToClone.getBaseHullId() != null ) {
+			for (String hullModId : hullSpecToClone.getBuiltInMods()) {
+				if (!settings.getHullModSpec(hullModId).hasTag(Tags.HULLMOD_DMOD)) continue;
+
+				variant.removeSuppressedMod(hullModId);
+				variant.addPermaMod(hullModId, false);
+			}
+			hullSpec = new lyr_hullSpec(settings.getHullSpec(Misc.getDHullId(hullSpecToClone.getBaseHull())), true);
+		} else {
+			hullSpec = new lyr_hullSpec(settings.getHullSpec(Misc.getDHullId(hullSpecToClone)), true);
+		}
+
+		// if ((variant.isDHull() || hullSpecToClone.isDHull()) && hullSpecToClone.getDParentHullId() != null) {
+		// 	hullSpecToClone = hullSpecToClone.getDParentHull();
+		// }
+
+		// lyr_hullSpec hullSpec = new lyr_hullSpec(hullSpecToClone, true);
 
 		hullSpec.addBuiltInMod(lyr_internals.id.baseModification);
+		// hullSpec.setDParentHullId(null);
+		// hullSpec.setBaseHullId(null);
+		// hullSpec.setRestoreToBase(false);
+		hullSpec.setBaseValue(settings.getHullSpec(hullSpec.retrieve().getHullId().replace(Misc.D_HULL_SUFFIX, "")).getBaseValue());
 		if (lyr_externals.showExperimentalFlavour) {
 			hullSpec.setManufacturer(lyr_tooltip.text.flavourManufacturer);
 			hullSpec.setDescriptionPrefix(lyr_tooltip.text.flavourDescription);

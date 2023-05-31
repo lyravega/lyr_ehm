@@ -20,6 +20,7 @@ import com.fs.starfarer.api.EveryFrameScriptWithCleanup;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
+// import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 
 import data.hullmods._ehm_base;
@@ -106,7 +107,7 @@ public class _ehm_basetracker extends _ehm_base {
 	protected static fleetTrackerScript fleetTrackerScript() {
 		fleetTrackerScript fleetTracker = null;
 
-		for(EveryFrameScript script : Global.getSector().getScripts()) {
+		for(EveryFrameScript script : Global.getSector().getTransientScripts()) {
 			if(script instanceof fleetTrackerScript) {
 				fleetTracker = (fleetTrackerScript) script; break; // find the fleet script
 			}
@@ -136,7 +137,7 @@ public class _ehm_basetracker extends _ehm_base {
 
 			if (log) logger.info(logPrefix+"FT: Fleet Tracker initialized");
 			
-			Global.getSector().addScript(this);
+			Global.getSector().addTransientScript(this);
 		}
 	
 		public void addshipTracker(String memberId, shipTrackerScript shipTracker) {
@@ -194,7 +195,7 @@ public class _ehm_basetracker extends _ehm_base {
 		ShipVariantAPI variant = ship.getVariant();
 		String memberId = ship.getFleetMemberId();
 
-		for(EveryFrameScript script : Global.getSector().getScripts()) {
+		for(EveryFrameScript script : Global.getSector().getTransientScripts()) {
 			if(script instanceof shipTrackerScript) {
 				shipTrackerScript temp = (shipTrackerScript) script; 
 				if (!temp.getMemberId().equals(memberId)) continue;
@@ -214,6 +215,7 @@ public class _ehm_basetracker extends _ehm_base {
 	private static class shipTrackerScript implements EveryFrameScriptWithCleanup {
 		private fleetTrackerScript fleetTracker = null;
 		private ShipVariantAPI variant = null;
+		// private ShipHullSpecAPI hullSpec = null;
 		private String memberId = null;
 		private Set<String> hullMods = new HashSet<String>();
 		private Set<String> enhancedMods = new HashSet<String>();
@@ -232,13 +234,14 @@ public class _ehm_basetracker extends _ehm_base {
 
 			this.fleetTracker = fleetTracker;
 			this.variant = variant;
+			// this.hullSpec = variant.getHullSpec();
 			this.memberId = memberId;
 			this.hullMods.addAll(variant.getHullMods());
 			this.enhancedMods.addAll(variant.getSMods());
 			this.suppressedMods.addAll(variant.getSuppressedMods());
 			// this.weapons.addAll(variant.getFittedWeaponSlots());
 			
-			Global.getSector().addScript(this);
+			Global.getSector().addTransientScript(this);
 	
 			// if (log) logger.info(logPrefix+"ST-"+memberId+": Initial hull modifications '"+hullMods.toString()+"'");
 		}
@@ -253,10 +256,19 @@ public class _ehm_basetracker extends _ehm_base {
 		public void advance(float amount) {
 			if (!isRefitTab()) { cleanup(); return; }
 
+			// checkHullSpec();
 			checkHullMods();
 			checkEnhancedMods();
 			checkSuppressedMods();
 		}
+
+		// private void checkHullSpec() {
+		// 	if (!variant.getHullSpec().getHullId().equals(this.hullSpec.getHullId())) {
+		// 		this.hullSpec = variant.getHullSpec();
+
+		// 		if (log) logger.info(logPrefix+"ST-"+memberId+": Hull Spec of the ship has been changed");
+		// 	}
+		// }
 
 		private void checkHullMods() {
 			for (String hullModId : variant.getHullMods()) {
@@ -299,7 +311,7 @@ public class _ehm_basetracker extends _ehm_base {
 			}
 
 			for (iterator = suppressedMods.iterator(); iterator.hasNext();) { String hullModId = iterator.next();
-				if (variant.getSMods().contains(hullModId)) continue;
+				if (variant.getSuppressedMods().contains(hullModId)) continue;
 	
 				if (log) logger.info(logPrefix+"ST-"+memberId+": Restored '"+hullModId+"'");
 				iterator.remove(); onEvent(onRestore, variant, hullModId);

@@ -24,14 +24,14 @@ import lyr.tools._lyr_proxyTools;
  */
 public final class lyr_weaponSlot extends _lyr_proxyTools {
 	private WeaponSlotAPI weaponSlot;
-	private static MethodHandle clone = null;
-	private static MethodHandle setWeaponType = null; 
-	private static MethodHandle isWeaponSlot = null;
-	private static MethodHandle setId = null;
-	private static MethodHandle setSlotSize = null;
-	// private static MethodHandle newNode = null;
-	private static MethodHandle setNode = null;
-	// private static MethodHandle setNode_alt = null;
+	protected static MethodHandle clone = null;
+	protected static MethodHandle setWeaponType = null; 
+	protected static MethodHandle isWeaponSlot = null;
+	protected static MethodHandle setId = null;
+	protected static MethodHandle setSlotSize = null;
+	// protected static MethodHandle newNode = null;
+	protected static MethodHandle setNode = null;
+	// protected static MethodHandle setNode_alt = null;
 
 	static {
 		try {

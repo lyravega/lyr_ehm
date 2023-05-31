@@ -24,7 +24,7 @@ import lyr.misc.lyr_internals;
  * @author lyravega
  */
 public class ehm_submarket extends BaseSubmarketPlugin {
-    private static final Set<String> shunts = new HashSet<String>();    // doing this here separately as there can be disabled/unused shunts
+    public static final Set<String> shunts = new HashSet<String>();    // doing this here separately as there can be disabled/unused shunts
     static {
         for (WeaponSpecAPI weaponSpec : Global.getSettings().getAllWeaponSpecs()) {	// doing this here might be problematic, OK so far
             if (!weaponSpec.hasTag(lyr_internals.tag.experimental)) continue;
