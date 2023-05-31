@@ -4,8 +4,6 @@ import com.fs.starfarer.api.Global;
 
 import lyr.misc.lyr_internals;
 
-import org.apache.log4j.Logger;
-
 /**
  * Provides methods to seek and capture the obfuscated classes 
  * @author lyravega
@@ -17,8 +15,6 @@ public class _lyr_proxyTools extends _lyr_reflectionTools {
 	protected static final Class<?> nodeClass;
 	protected static final Class<?> engineBuilderClass;
 	protected static final Class<?> engineStyleEnum;
-
-	protected static final Logger logger = Logger.getLogger(lyr_internals.logName);
 
 	static {
 		hullSpecClass = lyr_findHullSpecClass();

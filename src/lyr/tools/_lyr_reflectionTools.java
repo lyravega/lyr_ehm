@@ -3,11 +3,8 @@ package lyr.tools;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
-import java.util.Arrays;
 import java.lang.invoke.MethodType;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import java.util.Arrays;
 
 import lyr.misc.lyr_internals;
 
@@ -23,8 +20,7 @@ import lyr.misc.lyr_internals;
  * for this information.
  * @author lyravega
  */
-public class _lyr_reflectionTools {
-	protected static final Logger logger = Logger.getLogger(lyr_internals.logName);
+public class _lyr_reflectionTools implements _lyr_logger {
 	protected static final Lookup lookup = MethodHandles.lookup();
 	protected static final Class<?> lookupClass = lookup.getClass();
 	public static Class<?> fieldClass;
@@ -40,7 +36,6 @@ public class _lyr_reflectionTools {
 	public static MethodHandle unreflect;
 
 	static {
-		logger.setLevel(Level.INFO);
 		try {
 			fieldClass = Class.forName("java.lang.reflect.Field", false, Class.class.getClassLoader());
 			setAccessible = lookup.findVirtual(fieldClass, "setAccessible", MethodType.methodType(void.class, boolean.class));

@@ -3,8 +3,6 @@ package data.hullmods;
 import static lyr.tools._lyr_uiTools.commitChanges;
 import static lyr.tools._lyr_uiTools.playSound;
 
-import org.apache.log4j.Logger;
-
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
@@ -17,7 +15,6 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import data.hullmods.ehm.events.normalEvents;
-import lyr.misc.lyr_internals;
 
 public class _ehm_test extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
@@ -38,8 +35,6 @@ public class _ehm_test extends _ehm_base implements normalEvents {
 	}
 	//#endregion
 	// END OF CUSTOM EVENTS
-
-	public static final Logger logger = Logger.getLogger(lyr_internals.logName);
 
 	@SuppressWarnings("unused")
 	private static class hullInfo {

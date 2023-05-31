@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
-
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.SettingsAPI;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
@@ -33,6 +31,7 @@ import lyr.misc.lyr_externals;
 import lyr.misc.lyr_internals;
 import lyr.misc.lyr_tooltip;
 import lyr.proxies.lyr_hullSpec;
+import lyr.tools._lyr_logger;
 
 /**
  * This is the master base class for all experimental hullmods. Stores the most 
@@ -56,8 +55,7 @@ import lyr.proxies.lyr_hullSpec;
  * @see {@link data.hullmods.ehm_sc._ehm_sc_base _ehm_sc_base} for shield cosmetic base
  * @author lyravega
  */
-public class _ehm_base extends BaseHullMod {
-	protected static final Logger logger = Logger.getLogger(lyr_internals.logName);
+public class _ehm_base extends BaseHullMod implements _lyr_logger {
 	protected static final boolean log = true;
 	public static final SettingsAPI settings = Global.getSettings();
 

@@ -55,6 +55,16 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 	private static MethodHandle refitPanel_setEditedSinceSave;
 
 	/**
+	 * A simple method that initializes an every frame script that waits
+	 * till the relevant UI parts are available and can be fished for classes
+	 */
+	public static void findUIClasses() {
+		logger.info(lyr_internals.logPrefix + "Initializing UI class finder");
+
+		new _lyr_delayedFinder();
+	}
+
+	/**
 	 * An everyFrameScript to delay the process of finding the obfuscated
 	 * classes and providing methodHandles for them. Normally, it is not
 	 * needed, however one class I call as 'wrapper' has no easy way to
@@ -68,8 +78,11 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 		private boolean isDone = false;
 
 		public _lyr_delayedFinder() {
-			Global.getSector().addTransientScript(this);
-			logger.info(lyr_internals.logPrefix+"Waiting to find the UI classes");
+			if (!Global.getSector().hasTransientScript(this.getClass())) {
+				Global.getSector().addTransientScript(this);
+			
+				logger.info(lyr_internals.logPrefix+"Waiting to find the UI classes");
+			}
 		}
 
 		@Override
