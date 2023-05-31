@@ -85,7 +85,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	public lyr_hullSpec(ShipHullSpecAPI hullSpec, boolean clone) {
 		this.hullSpec = (clone) ? this.duplicate(hullSpec) : hullSpec;
 	}
-	
+
 	/**
 	 * Used to retrieve the stored {@link ShipHullSpecAPI} in the proxy to
 	 * access the API methods through the proxy itself, or to use it if
@@ -95,7 +95,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	public ShipHullSpecAPI retrieve() {
 		return hullSpec;
 	}
-	
+
 	/**
 	 * Used to exchange the {@link ShipHullSpecAPI} stored in the proxy
 	 * class in order to re-use this proxy instead of creating new ones.
@@ -106,7 +106,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		this.hullSpec = hullSpec;
 		return this;
 	}
-	
+
 	/**
 	 * Clones the stored {@link ShipHullSpecAPI}, and returns it. For 
 	 * internal use if necessary. {@link #retrieve()} should be used
@@ -121,7 +121,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 			logger.error(lyr_internals.logPrefix+"Failed to use 'duplicate()' in 'lyr_hullSpec'", t);
 		} return hullSpec; // java, pls...
 	}
-	
+
 	/**
 	 * A cheap clone that creates and returns a new instance of this
 	 * object with a duplicate of its stored object. 
@@ -131,7 +131,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	public lyr_hullSpec clone() {
 		return new lyr_hullSpec(hullSpec, true);
 	}
-	
+
 	//#region BRIDGE / PROXY METHODS
 	/**
 	 * Gets the weapon slot with the matching id, and creates a {@link lyr_weaponSlot} 
@@ -172,7 +172,6 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		return this.shieldSpec;
 	}
 
-
 	/**
 	 * Invokes a getter on the obfuscated hullSpec and returns the result 
 	 * as an object list. The returned objects aren't actually engineSlots 
@@ -206,7 +205,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 			logger.error(lyr_internals.logPrefix+"Failed to use 'setShieldSpec()' in 'lyr_hullSpec'", t);
 		}
 	}
-	
+
 	/**
 	 * @param hullModSpecId
 	 * @category Bridge method
@@ -215,7 +214,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	public void addBuiltInMod(String hullModSpecId) { 
 		hullSpec.addBuiltInMod(hullModSpecId);
 	}
-	
+
 	/**
 	 * @param manufacturer
 	 * @category Bridge method
@@ -255,6 +254,18 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	}
 
 	/**
+	 * @param weaponSlot to be added
+	 * @category Proxy method
+	 */
+	public void addWeaponSlot(lyr_weaponSlot weaponSlot) {
+		try {
+			addWeaponSlot.invoke(hullSpec, weaponSlotClass.cast(weaponSlot.retrieve()));
+		} catch (Throwable t) {
+			logger.error(lyr_internals.logPrefix+"Failed to use 'addWeaponSlot()' in 'lyr_hullSpec'", t);
+		}
+	}
+
+	/**
 	 * @param slotId of the slot that will have the weapon installed as built-in
 	 * @param weaponSpecId of the weapon that will be installed on the slot
 	 * @category Bridge method
@@ -275,7 +286,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 			logger.error(lyr_internals.logPrefix+"Failed to use 'addBuiltInWing()' in 'lyr_hullSpec'", t);
 		}
 	}
-	
+
 	/**
 	 * @param defenseId
 	 * @category Bridge method
@@ -284,7 +295,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	public void setShipDefenseId(String defenseId) {
 		hullSpec.setShipDefenseId(defenseId);
 	}
-	
+
 	/**
 	 * @param characterStats (can be null)
 	 * @return Ordnance Points
@@ -294,7 +305,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	public int getOrdnancePoints(MutableCharacterStatsAPI characterStats) {
 		return hullSpec.getOrdnancePoints(characterStats);
 	}
-	
+
 	/**
 	 * @param ordnancePoints
 	 * @category Proxy method
@@ -382,6 +393,15 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	 */
 	public Set<String> getTags() {
 		return hullSpec.getTags();
+	}
+
+	/**
+	 * @return Copied list of the all weapon slots
+	 * @category Bridge method
+	 * @see {@link ShipHullSpecAPI#getTags() getTags()}
+	 */
+	public List<WeaponSlotAPI> getAllWeaponSlotsCopy() {
+		return hullSpec.getAllWeaponSlotsCopy();
 	}
 	//#endregion 
 	// END OF BRIDGE / PROXY METHODS

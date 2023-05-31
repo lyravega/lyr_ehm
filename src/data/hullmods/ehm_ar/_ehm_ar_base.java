@@ -114,7 +114,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 			else if (converterMap.containsKey(shuntId)) refreshRefit = ehm_convertSlot(hullSpec, shuntId, slotId);
 		}
 
-		List<WeaponSlotAPI> shunts = hullSpec.retrieve().getAllWeaponSlotsCopy();
+		List<WeaponSlotAPI> shunts = hullSpec.getAllWeaponSlotsCopy();
 		
 		for (Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
 			WeaponSlotAPI slot = iterator.next();
@@ -211,14 +211,14 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		for (String childId: childrenParameters.getChildren()) { // childId and childSlotId are not the same, be aware
 			lyr_weaponSlot childSlot = parentSlot.clone();
 			String childSlotId = lyr_internals.affix.adaptedSlot + slotId + childId; // also used as nodeId because nodeId isn't visible
-			Vector2f childSlotLocation = generateChildLocation(parentSlot.retrieve().getLocation(), parentSlot.retrieve().getAngle(), childrenParameters.getChildOffset(childId));
+			Vector2f childSlotLocation = generateChildLocation(parentSlot.getLocation(), parentSlot.getAngle(), childrenParameters.getChildOffset(childId));
 			WeaponSize childSlotSize = childrenParameters.getChildSize(childId);
 
 			childSlot.setId(childSlotId);
 			childSlot.setNode(childSlotId, childSlotLocation);
 			childSlot.setSlotSize(childSlotSize);
 
-		 	hullSpec.addWeaponSlot(childSlot.retrieve());
+		 	hullSpec.addWeaponSlot(childSlot);
 		}
 
 		hullSpec.addBuiltInWeapon(slotId, shuntId);
@@ -238,10 +238,10 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		String childSlotId = lyr_internals.affix.convertedSlot + slotId + childParameters.getChildSuffix(); // also used as nodeId because nodeId isn't visible
 
 		childSlot.setId(childSlotId);
-		childSlot.setNode(childSlotId, parentSlot.retrieve().getLocation());
+		childSlot.setNode(childSlotId, parentSlot.getLocation());
 		childSlot.setSlotSize(childParameters.getChildSize());
 
-		hullSpec.addWeaponSlot(childSlot.retrieve());
+		hullSpec.addWeaponSlot(childSlot);
 
 		// if (slotPoints != null) slotPoints -= converters.get(shuntId).getChildCost();	// needs to be subtracted from here on initial install to avoid infinite installs
 		hullSpec.addBuiltInWeapon(slotId, shuntId);

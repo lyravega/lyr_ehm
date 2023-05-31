@@ -61,7 +61,7 @@ public class _ehm_wr_base extends _ehm_base implements normalEvents {
 	protected static final ShipHullSpecAPI ehm_weaponSlotRetrofit(ShipVariantAPI variant, Map<WeaponType, WeaponType> conversions, WeaponSize slotSize) {	
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 
-		for (WeaponSlotAPI slot: hullSpec.retrieve().getAllWeaponSlotsCopy()) {
+		for (WeaponSlotAPI slot: hullSpec.getAllWeaponSlotsCopy()) {
 			String slotId = slot.getId();
 			WeaponType convertFrom = slot.getWeaponType();
 
@@ -82,6 +82,7 @@ public class _ehm_wr_base extends _ehm_base implements normalEvents {
 	 * @param variant whose hullSpec will have its weaponSlots restored
 	 * @return an altered hullSpec with restored weaponSlots
 	 */
+	@Deprecated
 	public static final ShipHullSpecAPI ehm_weaponSlotRestore(ShipVariantAPI variant) {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 		ShipHullSpecAPI hullSpecReference = ehm_hullSpecReference(variant);

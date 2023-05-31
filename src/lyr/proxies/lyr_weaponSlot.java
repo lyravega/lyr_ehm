@@ -173,6 +173,22 @@ public final class lyr_weaponSlot extends _lyr_proxyTools {
 			logger.error(lyr_internals.logPrefix+"Failed to use 'setNode()' in 'lyr_weaponSlot'", t);
 		}
 	}
+
+	/**
+	 * @return Location of slot
+	 * @category Bridge method
+	 */
+	public Vector2f getLocation() {
+		return weaponSlot.getLocation();
+	}
+
+	/**
+	 * @return Angle of slot
+	 * @category Bridge method
+	 */
+	public float getAngle() {
+		return weaponSlot.getAngle();
+	}
 	//#endregion 
 	// END OF BRIDGE / PROXY METHODS
 }
