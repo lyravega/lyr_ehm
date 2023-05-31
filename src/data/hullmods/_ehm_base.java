@@ -295,6 +295,7 @@ public class _ehm_base extends BaseHullMod implements _lyr_logger {
 	 * the case forever. Maybe Alex will add them as a field someday, after the update winds are calmed down.
 	 * @param variant to be used as a template
 	 * @return a cloned hullSpec
+	 * @see {@link com.fs.starfarer.loading.ShipHullSpecLoader Hull Spec Loader} for d-hulls
 	 */
 	protected static final ShipHullSpecAPI ehm_hullSpecClone(ShipVariantAPI variant) {
 		ShipHullSpecAPI hullSpecToClone = variant.getHullSpec();
@@ -307,7 +308,8 @@ public class _ehm_base extends BaseHullMod implements _lyr_logger {
 				variant.removeSuppressedMod(hullModId);
 				variant.addPermaMod(hullModId, false);
 			}
-			hullSpec = new lyr_hullSpec(settings.getHullSpec(Misc.getDHullId(hullSpecToClone.getBaseHull())), true);
+			hullSpecToClone = hullSpecToClone.getBaseHull();
+			hullSpec = new lyr_hullSpec(settings.getHullSpec(Misc.getDHullId(hullSpecToClone)), true);
 		} else {
 			hullSpec = new lyr_hullSpec(settings.getHullSpec(Misc.getDHullId(hullSpecToClone)), true);
 		}
@@ -322,10 +324,13 @@ public class _ehm_base extends BaseHullMod implements _lyr_logger {
 		// hullSpec.setDParentHullId(null);
 		// hullSpec.setBaseHullId(null);
 		// hullSpec.setRestoreToBase(false);
-		hullSpec.setBaseValue(settings.getHullSpec(hullSpec.retrieve().getHullId().replace(Misc.D_HULL_SUFFIX, "")).getBaseValue());
+		hullSpec.setBaseValue(hullSpecToClone.getBaseValue());
 		if (lyr_externals.showExperimentalFlavour) {
 			hullSpec.setManufacturer(lyr_tooltip.text.flavourManufacturer);
 			hullSpec.setDescriptionPrefix(lyr_tooltip.text.flavourDescription);
+			hullSpec.retrieve().setHullName(hullSpecToClone.getHullName() + " (E)");
+		} else {
+			hullSpec.retrieve().setHullName(hullSpecToClone.getHullName());
 		}
 
 		return hullSpec.retrieve();
