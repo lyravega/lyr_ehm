@@ -62,9 +62,16 @@ public class ehm_base extends _ehm_basetracker {
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (ship == null) return;
 
-		if (!ship.getVariant().hasHullMod(hullModSpecId)) {
+		ShipVariantAPI variant = ship.getVariant();
+
+		if (!variant.hasHullMod(hullModSpecId)) {
 			tooltip.addSectionHeading(lyr_tooltip.header.severeWarning, lyr_tooltip.header.severeWarning_textColour, lyr_tooltip.header.severeWarning_bgColour, Alignment.MID, lyr_tooltip.header.padding).flash(1.0f, 1.0f);
 			tooltip.addPara(lyr_tooltip.text.baseRetrofitWarning, lyr_tooltip.text.padding);
+
+			if (variant.getHullSpec().isRestoreToBase()) {
+				tooltip.addSectionHeading(lyr_tooltip.header.restoreWarning, lyr_tooltip.header.warning_textColour, lyr_tooltip.header.warning_bgColour, Alignment.MID, lyr_tooltip.header.padding).flash(1.0f, 1.0f);
+				tooltip.addPara(lyr_tooltip.text.restoreWarning, lyr_tooltip.text.padding);
+			}
 
 			super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
 		} else if (lyr_externals.showFluff) {
@@ -78,42 +85,42 @@ public class ehm_base extends _ehm_basetracker {
 					tooltip.addPara(playerRank + ", if you are unhappy with what I am offering you, I can get rid of the base hull modifications that I've made. Let me know!", lyr_tooltip.text.padding);
 					break;
 				case 2: 
-					if (!ehm_hasExperimentalModWithTag(ship.getVariant(), lyr_internals.tag.weaponRetrofit))
+					if (!ehm_hasExperimentalModWithTag(variant, lyr_internals.tag.weaponRetrofit))
 						tooltip.addPara(playerRank + ", if you'd like me to alter weapon type of the every weapon slot on the ship all together, I can do so with retrofits!", lyr_tooltip.text.padding);
 					else tooltip.addPara("The weapon retrofits come at a cost, but their main purpose is to allow flexibility, and of course, let you use your favourite weapons.", lyr_tooltip.text.padding);
 					break;
 				case 3: 
-					if (!ehm_hasExperimentalModWithTag(ship.getVariant(), lyr_internals.tag.systemRetrofit))
+					if (!ehm_hasExperimentalModWithTag(variant, lyr_internals.tag.systemRetrofit))
 						tooltip.addPara(playerRank + ", the ships are designed along with their systems, but I can change them anytime you want. The effectiveness of the said systems may not be as good as on their original ships, however!", lyr_tooltip.text.padding);
 					else tooltip.addPara("Some system & ship combinations may be powerful. Some may not. No refunds! Just joking...", lyr_tooltip.text.padding);
 					break;
 				case 4: 
-					if (!ehm_hasExperimentalModWithTag(ship.getVariant(), lyr_internals.tag.engineCosmetic))
+					if (!ehm_hasExperimentalModWithTag(variant, lyr_internals.tag.engineCosmetic))
 						tooltip.addPara(playerRank + ", let me know if you'd like to have this ship's engine exhaust colour get changed. The selection is very limited and they're purely cosmetic.", lyr_tooltip.text.padding);
 					else tooltip.addPara("Flying in style!", lyr_tooltip.text.padding);
 					break;
 				case 5:
-					if (!ehm_hasExperimentalModWithTag(ship.getVariant(), lyr_internals.tag.shieldCosmetic))
+					if (!ehm_hasExperimentalModWithTag(variant, lyr_internals.tag.shieldCosmetic))
 						tooltip.addPara("If you'd like, I can modify the shield emitters to have a different colour, " + playerRank, lyr_tooltip.text.padding);
 					else tooltip.addPara("Flying in style!", lyr_tooltip.text.padding);
 					break;
 				case 6: 
-					if (!ship.getVariant().hasHullMod(lyr_internals.id.hullmods.diverterandconverter))
+					if (!variant.hasHullMod(lyr_internals.id.hullmods.diverterandconverter))
 						tooltip.addPara("I can divert power from a weapon slot using a diverter to power a converter on another slot, " + playerRank + "! Extra firepower at your fingertips!", lyr_tooltip.text.padding);
 					else tooltip.addPara("Converters use the power diverted by diverters. If I cannot activate a converter, that means we lack enough diverters!", lyr_tooltip.text.padding);
 					break;
 				case 7: 
-					if (!ship.getVariant().hasHullMod(lyr_internals.id.hullmods.mutableshunt))
+					if (!variant.hasHullMod(lyr_internals.id.hullmods.mutableshunt))
 						tooltip.addPara(playerRank + ", I can alter the weapon slots completely. I can install shunts that'll provide bonuses to flux capacity or dissipation, can even turn a large one into a fully-working fighter bay!", lyr_tooltip.text.padding);
 					else tooltip.addPara("The capacitors and dissipators are designed to improve the built-in ones and also support other on-board systems indirectly. An additional fighter bay on the other hand...", lyr_tooltip.text.padding);
 					break;
 				case 8: 
-					if (!ship.getVariant().hasHullMod(lyr_internals.id.hullmods.stepdownadapter))
+					if (!variant.hasHullMod(lyr_internals.id.hullmods.stepdownadapter))
 						tooltip.addPara(playerRank + ", if you need more weapon slots of smaller sizes for any reason, I can adapt bigger slots into smaller ones!", lyr_tooltip.text.padding);
 					else tooltip.addPara("I will activate any adapter you install on the ship, " + playerRank + ". The additional slots might be smaller, but sometimes having more of something is the answer.", lyr_tooltip.text.padding);
 					break;
 				case 9: 
-					if (!ship.getVariant().getSMods().contains(lyr_internals.id.hullmods.overengineered))
+					if (!variant.getSMods().contains(lyr_internals.id.hullmods.overengineered))
 						tooltip.addPara(playerRank + ", have you thought about letting me over-engineer the ship? It will cost you a story point, but I think you might like the benefits!", lyr_tooltip.text.padding);
 					else tooltip.addPara("This over-engineered ship is a beast, " + playerRank + "! Pretty much replaced everything internal, while keeping the structural integrity intact! A mir... *cough* masterpiece!", lyr_tooltip.text.padding);
 					break;
