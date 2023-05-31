@@ -10,7 +10,7 @@ Version 0.7.3
 * These workarounds unfortunately cause a few "visual" issues:
 - Ships that can be restored to their base versions will have their visuals restored immediately
 - Restoration is still required and can be used to remove the d-mods, restoration cost remains the same
-- Ships will be marked as (D)amaged, even though they don't have any and are identical to pristine ones
+- Ships will be marked as (D)amaged even without any damage, but they will be identical to pristine ones
 - The value loss due to being (D)amaged is negated, d-mods and actual damage still reduce value as normal
 
 

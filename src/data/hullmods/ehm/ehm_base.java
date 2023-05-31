@@ -79,17 +79,17 @@ public class ehm_base extends _ehm_basetracker {
 					break;
 				case 2: 
 					if (!ehm_hasExperimentalModWithTag(ship.getVariant(), lyr_internals.tag.weaponRetrofit))
-						tooltip.addPara(playerRank + ", if you'd like me to alter weapon type of the every weapon slot on the ship all together, let me know!", lyr_tooltip.text.padding);
+						tooltip.addPara(playerRank + ", if you'd like me to alter weapon type of the every weapon slot on the ship all together, I can do so with retrofits!", lyr_tooltip.text.padding);
 					else tooltip.addPara("The weapon retrofits come at a cost, but their main purpose is to allow flexibility, and of course, let you use your favourite weapons.", lyr_tooltip.text.padding);
 					break;
 				case 3: 
 					if (!ehm_hasExperimentalModWithTag(ship.getVariant(), lyr_internals.tag.systemRetrofit))
-						tooltip.addPara(playerRank + ", even though the ship systems are specifically designed for certain ships, I can change them anytime you want. The effectiveness of the said systems may not be as good as on their original ships, however!", lyr_tooltip.text.padding);
+						tooltip.addPara(playerRank + ", the ships are designed along with their systems, but I can change them anytime you want. The effectiveness of the said systems may not be as good as on their original ships, however!", lyr_tooltip.text.padding);
 					else tooltip.addPara("Some system & ship combinations may be powerful. Some may not. No refunds! Just joking...", lyr_tooltip.text.padding);
 					break;
 				case 4: 
 					if (!ehm_hasExperimentalModWithTag(ship.getVariant(), lyr_internals.tag.engineCosmetic))
-						tooltip.addPara(playerRank + ", let me know if you'd like to have this ship's engine exhaust colour get changed. The selection is very limited but they're purely cosmetic.", lyr_tooltip.text.padding);
+						tooltip.addPara(playerRank + ", let me know if you'd like to have this ship's engine exhaust colour get changed. The selection is very limited and they're purely cosmetic.", lyr_tooltip.text.padding);
 					else tooltip.addPara("Flying in style!", lyr_tooltip.text.padding);
 					break;
 				case 5:
