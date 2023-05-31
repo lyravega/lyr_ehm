@@ -2,6 +2,7 @@ $stuffToPack =  ("LICENSE.md"),
                 ("README.md"),
                 ("mod_info.json"),
                 ("EHM.version"),
+                ("changelog.txt"),
                 ("jars"),
                 ("data"),
                 ("customization")
