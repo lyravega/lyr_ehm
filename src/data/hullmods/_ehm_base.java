@@ -323,8 +323,6 @@ public class _ehm_base extends BaseHullMod implements _lyr_logger {
 		// hullSpec.setDParentHullId(null);
 		// hullSpec.setBaseHullId(null);
 		// hullSpec.setRestoreToBase(false);
-		hullSpec.getTags().clear();
-		hullSpec.getTags().addAll(hullSpecToClone.getTags());
 		hullSpec.setBaseValue(hullSpecToClone.getBaseValue());
 		if (lyr_externals.showExperimentalFlavour) {
 			hullSpec.setManufacturer(lyr_tooltip.text.flavourManufacturer);
@@ -333,6 +331,8 @@ public class _ehm_base extends BaseHullMod implements _lyr_logger {
 		} else {
 			hullSpec.setHullName(hullSpecToClone.getHullName());
 		}
+		// hullSpec.getTags().clear();
+		// hullSpec.getTags().addAll(hullSpecToClone.getTags());
 		hullSpec.addBuiltInMod(lyr_internals.id.baseModification);
 
 		return hullSpec.retrieve();

@@ -93,8 +93,7 @@ public class _ehm_wr_base extends _ehm_base implements normalEvents {
 			lyr_weaponSlot slot = hullSpec.getWeaponSlot(slotId);
 			WeaponType stockSlotWeaponType = stockSlot.getWeaponType();
 			
-			// TODO take a look at strings, move them to base
-			// TODO doesn't support new additions most probably; diverters/converters/etc...
+			// doesn't support new additions
 			if (slot.retrieve().isDecorative() && lyr_internals.id.shunts.adapters.set.contains(weaponId)) {
 				hullSpec.getWeaponSlot(lyr_internals.affix.adaptedSlot+slotId+"L").setWeaponType(stockSlotWeaponType);
 				hullSpec.getWeaponSlot(lyr_internals.affix.adaptedSlot+slotId+"R").setWeaponType(stockSlotWeaponType);
