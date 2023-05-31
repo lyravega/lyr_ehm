@@ -9,7 +9,8 @@ public final class lyr_internals {
 	public static final class id {
 		public static final String
 			submarket = "ehm_submarket", // must match submarket id in .csv
-			ability = "ehm_ability", // must match submarket id in .csv
+			ability = "ehm_ability", // must match ability id in .csv
+			faction = "experimental", // must match faction id in .csv and .faction
 			drillSound = "drill", // must match .json
 			baseModification = "ehm_base", // must match hullmod id in .csv
 			undoModification = "ehm_undo"; // must match hullmod id in .csv

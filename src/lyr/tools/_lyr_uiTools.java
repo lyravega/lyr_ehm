@@ -74,7 +74,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 	 * class and find a grandchild directly from a known class, but that
 	 * is sub-optimal. 
 	 */
-	public static class _lyr_delayedFinder implements EveryFrameScript {
+	private static class _lyr_delayedFinder implements EveryFrameScript {
 		private boolean isDone = false;
 
 		public _lyr_delayedFinder() {

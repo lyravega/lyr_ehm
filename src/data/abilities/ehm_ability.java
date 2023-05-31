@@ -106,7 +106,7 @@ public class ehm_ability extends BaseToggleAbility implements _lyr_logger {
 	public boolean showActiveIndicator() {
 		return isActive();
 	}
-	
+
 	@Override
 	public void createTooltip(TooltipMakerAPI tooltip, boolean expanded) {
         Color highlightColor = Misc.getHighlightColor();
@@ -119,5 +119,10 @@ public class ehm_ability extends BaseToggleAbility implements _lyr_logger {
 
 	public boolean hasTooltip() {
 		return true;
+	}
+
+	@Override
+	public Color getActiveColor() {
+		return Global.getSector().getFaction(lyr_internals.id.faction).getBrightUIColor();
 	}
 }
