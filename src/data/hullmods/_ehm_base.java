@@ -299,6 +299,7 @@ public class _ehm_base extends BaseHullMod implements _lyr_logger {
 	 */
 	protected static final ShipHullSpecAPI ehm_hullSpecClone(ShipVariantAPI variant) {
 		ShipHullSpecAPI hullSpecToClone = variant.getHullSpec();
+		ShipHullSpecAPI originalSpec;
 		lyr_hullSpec hullSpec;
 
 		if (hullSpecToClone.isRestoreToBase() && hullSpecToClone.getBaseHullId() != null ) {
@@ -310,8 +311,10 @@ public class _ehm_base extends BaseHullMod implements _lyr_logger {
 			}
 			hullSpecToClone = hullSpecToClone.getBaseHull();
 			hullSpec = new lyr_hullSpec(settings.getHullSpec(Misc.getDHullId(hullSpecToClone)), true);
+			originalSpec = settings.getHullSpec(hullSpecToClone.getHullId().replace(Misc.D_HULL_SUFFIX, ""));
 		} else {
 			hullSpec = new lyr_hullSpec(settings.getHullSpec(Misc.getDHullId(hullSpecToClone)), true);
+			originalSpec = settings.getHullSpec(hullSpecToClone.getHullId().replace(Misc.D_HULL_SUFFIX, ""));
 		}
 
 		// hullSpec.setDParentHullId(null);
@@ -321,10 +324,10 @@ public class _ehm_base extends BaseHullMod implements _lyr_logger {
 		if (lyr_externals.showExperimentalFlavour) {
 			hullSpec.setManufacturer(lyr_tooltip.text.flavourManufacturer);
 			hullSpec.setDescriptionPrefix(lyr_tooltip.text.flavourDescription);
-			hullSpec.setHullName(hullSpecToClone.getHullName().replace(" (D)", "") + " (E)");	// restore to base hull name, replacing "(D)" with "(E)"
+			hullSpec.setHullName(originalSpec.getHullName() + " (E)");	// restore to base hull name, replacing "(D)" with "(E)"
 		} else {
-			hullSpec.setDescriptionPrefix(hullSpecToClone.getDescriptionPrefix());	// restore with base prefix, if any
-			hullSpec.setHullName(hullSpecToClone.getHullName().replace(" (D)", ""));	// restore to base hull name, removing "(D)"
+			hullSpec.setDescriptionPrefix(originalSpec.getDescriptionPrefix());	// restore with base prefix, if any
+			hullSpec.setHullName(originalSpec.getHullName());	// restore to base hull name, removing "(D)"
 		}
 		// hullSpec.getTags().clear();
 		// hullSpec.getTags().addAll(hullSpecToClone.getTags());
