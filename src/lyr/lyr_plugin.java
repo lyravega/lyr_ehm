@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.FactionAPI;
+import com.fs.starfarer.api.combat.HullModEffect;
 import com.fs.starfarer.api.impl.campaign.skills.FieldRepairsScript;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
@@ -101,21 +102,11 @@ public class lyr_plugin extends BaseModPlugin implements _lyr_logger {
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
 			if (!hullModSpec.hasTag(lyr_internals.tag.experimental)) continue;
 
-			Class<?> clazz = hullModSpec.getEffect().getClass();
-			Set<Class<?>> interfaces = new HashSet<Class<?>>(Arrays.asList(clazz.getInterfaces()));
-			interfaces.addAll(Arrays.asList(clazz.getSuperclass().getInterfaces()));
-			
-			if (interfaces.contains(normalEvents.class)) {
-				normalEvents.put(hullModSpec.getId(), (normalEvents) hullModSpec.getEffect());
-			}
-			
-			if (interfaces.contains(enhancedEvents.class)) {
-				enhancedEvents.put(hullModSpec.getId(), (enhancedEvents) hullModSpec.getEffect());
-			}
-			
-			if (interfaces.contains(suppressedEvents.class)) {
-				suppressedEvents.put(hullModSpec.getId(), (suppressedEvents) hullModSpec.getEffect());
-			}
+			HullModEffect hullModEffect = hullModSpec.getEffect();
+
+			if (normalEvents.class.isInstance(hullModEffect)) normalEvents.put(hullModSpec.getId(), (normalEvents) hullModEffect);
+			if (enhancedEvents.class.isInstance(hullModEffect)) enhancedEvents.put(hullModSpec.getId(), (enhancedEvents) hullModEffect);
+			if (suppressedEvents.class.isInstance(hullModEffect)) suppressedEvents.put(hullModSpec.getId(), (suppressedEvents) hullModEffect);
 		}
 
 		logger.info(lyr_internals.logPrefix + "Experimental hull modifications are registered");

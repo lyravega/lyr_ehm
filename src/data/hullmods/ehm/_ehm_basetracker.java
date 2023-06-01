@@ -8,6 +8,7 @@ import static lyr.misc.lyr_internals.events.onRemove;
 import static lyr.misc.lyr_internals.events.onRestore;
 import static lyr.misc.lyr_internals.events.onSuppress;
 import static lyr.tools._lyr_uiTools.isRefitTab;
+import static lyr.tools._lyr_scriptTools.getTransientScriptsOfClass;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,7 +16,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.EveryFrameScriptWithCleanup;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
@@ -107,10 +107,8 @@ public class _ehm_basetracker extends _ehm_base {
 	protected static fleetTrackerScript fleetTrackerScript() {
 		fleetTrackerScript fleetTracker = null;
 
-		for(EveryFrameScript script : Global.getSector().getTransientScripts()) {
-			if(script instanceof fleetTrackerScript) {
-				fleetTracker = (fleetTrackerScript) script; break; // find the fleet script
-			}
+		for(fleetTrackerScript script : getTransientScriptsOfClass(fleetTrackerScript.class)) {
+			fleetTracker = (fleetTrackerScript) script; break; // find the fleet script
 		}
 
 		return (fleetTracker == null) ? new fleetTrackerScript() : fleetTracker;
@@ -195,13 +193,10 @@ public class _ehm_basetracker extends _ehm_base {
 		ShipVariantAPI variant = ship.getVariant();
 		String memberId = ship.getFleetMemberId();
 
-		for(EveryFrameScript script : Global.getSector().getTransientScripts()) {
-			if(script instanceof shipTrackerScript) {
-				shipTrackerScript temp = (shipTrackerScript) script; 
-				if (!temp.getMemberId().equals(memberId)) continue;
-					
-				shipTracker = (shipTrackerScript) script; break;
-			}
+		for(shipTrackerScript script : getTransientScriptsOfClass(shipTrackerScript.class)) {
+			if (!script.getMemberId().equals(memberId)) continue;
+			
+			shipTracker = script; break;
 		}
 
 		return (shipTracker == null) ? new shipTrackerScript(variant, memberId, fleetTrackerScript()) : shipTracker;
