@@ -6,9 +6,6 @@ import static data.hullmods.ehm._ehm_basetracker.suppressedEvents;
 import static lyr.tools._lyr_uiTools.findUIClasses;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.json.JSONException;
 import org.json.JSONObject;

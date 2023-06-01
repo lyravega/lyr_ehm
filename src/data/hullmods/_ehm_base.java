@@ -321,10 +321,10 @@ public class _ehm_base extends BaseHullMod implements _lyr_logger {
 		if (lyr_externals.showExperimentalFlavour) {
 			hullSpec.setManufacturer(lyr_tooltip.text.flavourManufacturer);
 			hullSpec.setDescriptionPrefix(lyr_tooltip.text.flavourDescription);
-			hullSpec.setHullName(hullSpecToClone.getHullName() + " (E)");	// restore to base hull name, replacing "(D)" with "(E)"
+			hullSpec.setHullName(hullSpecToClone.getHullName().replace(" (D)", "") + " (E)");	// restore to base hull name, replacing "(D)" with "(E)"
 		} else {
 			hullSpec.setDescriptionPrefix(hullSpecToClone.getDescriptionPrefix());	// restore with base prefix, if any
-			hullSpec.setHullName(hullSpecToClone.getHullName());	// restore to base hull name, removing "(D)"
+			hullSpec.setHullName(hullSpecToClone.getHullName().replace(" (D)", ""));	// restore to base hull name, removing "(D)"
 		}
 		// hullSpec.getTags().clear();
 		// hullSpec.getTags().addAll(hullSpecToClone.getTags());
