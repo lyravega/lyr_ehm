@@ -1,5 +1,6 @@
 package lyr;
 
+import static data.abilities.ehm_ability.attachListener;
 import static data.hullmods.ehm._ehm_basetracker.enhancedEvents;
 import static data.hullmods.ehm._ehm_basetracker.normalEvents;
 import static data.hullmods.ehm._ehm_basetracker.suppressedEvents;
@@ -48,6 +49,7 @@ public class lyr_plugin extends BaseModPlugin implements _lyr_logger {
 		teachAbility();
 		teachBlueprints();
 		replaceScript();
+		attachListener();
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 Version 0.7.4
 
 - (D) is removed, or if 'showExperimentalFlavour' is enabled, replaced with (E) from hull class names 
+- Fixed shunt market ability toggle not properly persisting through reloads
 
 
 

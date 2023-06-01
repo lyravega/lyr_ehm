@@ -24,6 +24,16 @@ import lyr.tools._lyr_logger;
  * @author lyravega
  */
 public class ehm_ability extends BaseToggleAbility implements _lyr_logger {
+	public static void attachListener() {	// used in plugin's onLoad()
+		if (!Global.getSector().getPlayerFleet().getAbility(lyr_internals.id.ability).isActive()) return;
+
+		if (!Global.getSector().getListenerManager().hasListenerOfClass(ehm_interactionListener.class)) {
+			Global.getSector().getListenerManager().addListener(new ehm_interactionListener(), true);
+
+			logger.info(lyr_internals.logPrefix + "Attached colony interaction listener");
+		}
+	}
+
 	/**
 	 * An inner listener class whose sole purpose is to attach/detach the
 	 * {@link data.submarkets.ehm_submarket experimental submarket}
