@@ -323,7 +323,7 @@ public class _ehm_base extends BaseHullMod implements _lyr_logger {
 			hullSpec.setDescriptionPrefix(lyr_tooltip.text.flavourDescription);
 			hullSpec.setHullName(hullSpecToClone.getHullName() + " (E)");	// restore to base hull name, replacing "(D)" with "(E)"
 		} else {
-			hullSpec.setDescriptionPrefix("");	// empty string because this is a d-hull that comes with damaged prefix
+			hullSpec.setDescriptionPrefix(hullSpecToClone.getDescriptionPrefix());	// restore with base prefix, if any
 			hullSpec.setHullName(hullSpecToClone.getHullName());	// restore to base hull name, removing "(D)"
 		}
 		// hullSpec.getTags().clear();
