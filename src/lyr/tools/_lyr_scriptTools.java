@@ -5,11 +5,33 @@ import static lyr.tools._lyr_uiTools.isRefitTab;
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 
 public class _lyr_scriptTools extends _lyr_reflectionTools {
+	public static <T extends EveryFrameScript> List<T> getScriptsOfClass(Class<T> clazz) {
+		List<T> scripts = new ArrayList<T>();
+
+		for(EveryFrameScript script : Global.getSector().getScripts()) {
+			if (clazz.isInstance(script)) scripts.add(clazz.cast(script));
+		}
+
+		return scripts;
+	}
+
+	public static <T extends EveryFrameScript> List<T> getTransientScriptsOfClass(Class<T> clazz) {
+		List<T> transientScripts = new ArrayList<T>();
+
+		for(EveryFrameScript transientScript : Global.getSector().getTransientScripts()) {
+			if (clazz.isInstance(transientScript)) transientScripts.add(clazz.cast(transientScript));
+		}
+
+		return transientScripts;
+	}
+
 	//#region INNER CLASS: refreshRefitScript
 	private static refreshRefitScript refreshRefitScript;
 
