@@ -2,8 +2,8 @@ package data.hullmods.ehm;
 
 import static data.hullmods.ehm_ar._ehm_ar_base.ehm_processShunts;
 import static data.hullmods.ehm_mr.ehm_mr_overengineered.slotPointBonus;
-import static lyr.tools._lyr_uiTools.commitChanges;
-import static lyr.tools._lyr_uiTools.playSound;
+import static lyravega.tools._lyr_uiTools.commitChanges;
+import static lyravega.tools._lyr_uiTools.playSound;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
@@ -15,9 +15,9 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
-import lyr.misc.lyr_externals;
-import lyr.misc.lyr_internals;
-import lyr.misc.lyr_tooltip;
+import lyravega.misc.lyr_externals;
+import lyravega.misc.lyr_internals;
+import lyravega.misc.lyr_tooltip;
 
 /**
  * Serves as a requirement for all experimental hull modifications, and enables tracking

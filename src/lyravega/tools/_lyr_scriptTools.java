@@ -1,6 +1,6 @@
-package lyr.tools;
+package lyravega.tools;
 
-import static lyr.tools._lyr_uiTools.isRefitTab;
+import static lyravega.tools._lyr_uiTools.isRefitTab;
 
 import java.awt.AWTException;
 import java.awt.Robot;

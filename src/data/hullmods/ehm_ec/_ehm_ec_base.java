@@ -1,7 +1,7 @@
 package data.hullmods.ehm_ec;
 
-import static lyr.tools._lyr_uiTools.commitChanges;
-import static lyr.tools._lyr_uiTools.playSound;
+import static lyravega.tools._lyr_uiTools.commitChanges;
+import static lyravega.tools._lyr_uiTools.playSound;
 
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
@@ -12,10 +12,10 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import data.hullmods._ehm_base;
 import data.hullmods.ehm.events.normalEvents;
-import lyr.misc.lyr_internals;
-import lyr.misc.lyr_tooltip;
-import lyr.proxies.lyr_engineBuilder;
-import lyr.proxies.lyr_hullSpec;
+import lyravega.misc.lyr_internals;
+import lyravega.misc.lyr_tooltip;
+import lyravega.proxies.lyr_engineBuilder;
+import lyravega.proxies.lyr_hullSpec;
 
 /**
  * This class is used by engine cosmetic hullmods. The changes are 
@@ -45,7 +45,7 @@ public class _ehm_ec_base extends _ehm_base implements normalEvents {
 	 * Alters the engine visuals of the ship. Uses the vanilla engine styles
 	 * (as I haven't found a way to alter engine colours directly)
 	 * @param variant whose hullSpec will be altered
-	 * @param styleEnum somewhat hardcoded {@link lyr.proxies.lyr_engineBuilder.engineStyle engineStyle}
+	 * @param styleEnum somewhat hardcoded {@link lyravega.proxies.lyr_engineBuilder.engineStyle engineStyle}
 	 * @return a hullSpec with the altered engine visuals
 	 */
 	protected static final ShipHullSpecAPI ehm_pimpMyEngineSlots(ShipVariantAPI variant, int styleEnum) {
@@ -63,7 +63,7 @@ public class _ehm_ec_base extends _ehm_base implements normalEvents {
 	 * Restores the engine visuals of the ship by applying a stock hullSpec
 	 * on the variant.
 	 * @param variant whose hullSpec will be altered
-	 * @param styleEnum somewhat hardcoded {@link lyr.proxies.lyr_engineBuilder.engineStyle engineStyle}
+	 * @param styleEnum somewhat hardcoded {@link lyravega.proxies.lyr_engineBuilder.engineStyle engineStyle}
 	 * @return a hullSpec with restored engine visuals
 	 */
 	public static final ShipHullSpecAPI ehm_restoreEngineSlots_lazy(ShipVariantAPI variant) {

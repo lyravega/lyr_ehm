@@ -1,7 +1,7 @@
 package data.hullmods.ehm_mr;
 
-import static lyr.tools._lyr_uiTools.commitChanges;
-import static lyr.tools._lyr_uiTools.playSound;
+import static lyravega.tools._lyr_uiTools.commitChanges;
+import static lyravega.tools._lyr_uiTools.playSound;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,8 +16,8 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import data.hullmods._ehm_base;
 import data.hullmods.ehm.events.enhancedEvents;
 import data.hullmods.ehm.events.normalEvents;
-import lyr.misc.lyr_tooltip;
-import lyr.proxies.lyr_hullSpec;
+import lyravega.misc.lyr_tooltip;
+import lyravega.proxies.lyr_hullSpec;
 
 /**
  * First experimental hull modification that can be built-in, with an original effect.

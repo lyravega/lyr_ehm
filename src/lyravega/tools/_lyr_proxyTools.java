@@ -1,8 +1,8 @@
-package lyr.tools;
+package lyravega.tools;
 
 import com.fs.starfarer.api.Global;
 
-import lyr.misc.lyr_internals;
+import lyravega.misc.lyr_internals;
 
 /**
  * Provides methods to seek and capture the obfuscated classes 

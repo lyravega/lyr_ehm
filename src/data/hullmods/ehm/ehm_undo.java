@@ -1,7 +1,7 @@
 package data.hullmods.ehm;
 
-import static lyr.tools._lyr_uiTools.commitChanges;
-import static lyr.tools._lyr_uiTools.playSound;
+import static lyravega.tools._lyr_uiTools.commitChanges;
+import static lyravega.tools._lyr_uiTools.playSound;
 
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
@@ -10,8 +10,8 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
-import lyr.misc.lyr_internals;
-import lyr.misc.lyr_tooltip;
+import lyravega.misc.lyr_internals;
+import lyravega.misc.lyr_tooltip;
 
 /**
  * Removes the base hull modification that all other experimental ones require

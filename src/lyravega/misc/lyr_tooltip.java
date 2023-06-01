@@ -1,14 +1,14 @@
-package lyr.misc;
+package lyravega.misc;
 
 import java.awt.Color;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import lyr.lyr_plugin;
+import lyravega.plugin.experimentalHullModifications;
 
 public class lyr_tooltip {
-	private static final JSONObject localizationJSON = lyr_plugin.localizationJSON;
+	private static final JSONObject localizationJSON = experimentalHullModifications.localizationJSON;
 	private static JSONObject tooltipJSON;
 
 	static {

@@ -1,4 +1,4 @@
-package lyr.proxies;
+package lyravega.proxies;
 
 import java.lang.invoke.MethodHandle;
 import java.util.List;
@@ -9,8 +9,8 @@ import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
-import lyr.misc.lyr_internals;
-import lyr.tools._lyr_proxyTools;
+import lyravega.misc.lyr_internals;
+import lyravega.tools._lyr_proxyTools;
 
 /**
  * A proxy-like class for {@link ShipHullSpecAPI} that utilizes obfuscated 

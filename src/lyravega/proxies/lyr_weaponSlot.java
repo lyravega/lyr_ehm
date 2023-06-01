@@ -1,4 +1,4 @@
-package lyr.proxies;
+package lyravega.proxies;
 
 import java.lang.invoke.MethodHandle;
 // import java.lang.invoke.MethodType;
@@ -7,10 +7,10 @@ import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
-import org.lwjgl.util.vector.Vector2f;
+import lyravega.misc.lyr_internals;
+import lyravega.tools._lyr_proxyTools;
 
-import lyr.misc.lyr_internals;
-import lyr.tools._lyr_proxyTools;
+import org.lwjgl.util.vector.Vector2f;
 
 /**
  * A proxy-like class for {@link WeaponSlotAPI} that utilizes obfuscated 
@@ -162,7 +162,7 @@ public final class lyr_weaponSlot extends _lyr_proxyTools {
 	 * @param nodeId an id to assign to the node (using slotId is fine)
 	 * @param location a ship-relative vector to create the node at
 	 * @category Proxy method
-	 * @see {@link lyr.misc.lyr_utilities#generateChildLocation} that
+	 * @see {@link lyravega.misc.lyr_utilities#generateChildLocation} that
 	 * calculates new node positions through passed offsets
 	 */
 	public void setNode(String nodeId, Vector2f location) {

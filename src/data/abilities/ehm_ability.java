@@ -13,13 +13,12 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
 import data.submarkets.ehm_submarket;
-import lyr.misc.lyr_internals;
-import lyr.tools._lyr_logger;
+import lyravega.misc.lyr_internals;
+import lyravega.tools._lyr_logger;
 
 /**
- * A toggle ability that works in conjunction with {@link lyr.lyr_plugin.ehm_interactionListener
- * interactionListener} to determine whether to display the {@link data.submarkets.ehm_submarket
- * shunt submarket} or not.
+ * A toggle ability that works in conjunction with {@link ehm_interactionListener interactionListener}
+ * to determine whether to display the {@link data.submarkets.ehm_submarket shunt submarket} or not.
  * <p> Submarket will only be attached/detached if this ability is toggled to prevent clutter.
  * @author lyravega
  */

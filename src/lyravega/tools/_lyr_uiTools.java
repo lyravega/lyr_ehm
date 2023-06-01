@@ -1,6 +1,6 @@
-package lyr.tools;
+package lyravega.tools;
 
-import static lyr.tools._lyr_scriptTools.refreshRefit;
+import static lyravega.tools._lyr_scriptTools.refreshRefit;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodType;
@@ -10,8 +10,8 @@ import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CoreUITabId;
 
-import lyr.misc.lyr_externals;
-import lyr.misc.lyr_internals;
+import lyravega.misc.lyr_externals;
+import lyravega.misc.lyr_internals;
 
 /**
  * Provides specialized MethodHandles and a few methods that are 

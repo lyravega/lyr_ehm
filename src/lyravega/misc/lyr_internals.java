@@ -1,4 +1,4 @@
-package lyr.misc;
+package lyravega.misc;
 
 import java.util.HashSet;
 import java.util.Set;

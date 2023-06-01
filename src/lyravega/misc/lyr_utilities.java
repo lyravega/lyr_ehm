@@ -1,4 +1,4 @@
-package lyr.misc;
+package lyravega.misc;
 
 import org.lwjgl.util.vector.Vector2f;
 

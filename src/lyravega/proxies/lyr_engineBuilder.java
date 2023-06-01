@@ -1,9 +1,9 @@
-package lyr.proxies;
+package lyravega.proxies;
 
 import java.lang.invoke.MethodHandle;
 
-import lyr.misc.lyr_internals;
-import lyr.tools._lyr_proxyTools;
+import lyravega.misc.lyr_internals;
+import lyravega.tools._lyr_proxyTools;
 
 /**
  * A proxy-like class for... engine builder? I have no idea what 

@@ -1,7 +1,7 @@
 package data.hullmods.ehm_sc;
 
-import static lyr.tools._lyr_uiTools.commitChanges;
-import static lyr.tools._lyr_uiTools.playSound;
+import static lyravega.tools._lyr_uiTools.commitChanges;
+import static lyravega.tools._lyr_uiTools.playSound;
 
 import java.awt.Color;
 import java.util.Set;
@@ -17,12 +17,12 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import data.hullmods._ehm_base;
 import data.hullmods.ehm.events.normalEvents;
-import lyr.misc.lyr_externals;
-import lyr.misc.lyr_externals.lyr_shieldSettings;
-import lyr.misc.lyr_internals;
-import lyr.misc.lyr_tooltip;
-import lyr.proxies.lyr_hullSpec;
-import lyr.proxies.lyr_shieldSpec;
+import lyravega.misc.lyr_externals;
+import lyravega.misc.lyr_internals;
+import lyravega.misc.lyr_tooltip;
+import lyravega.misc.lyr_externals.lyr_shieldSettings;
+import lyravega.proxies.lyr_hullSpec;
+import lyravega.proxies.lyr_shieldSpec;
 
 /**
  * This class is used by shield cosmetic hullmods. The changes are 

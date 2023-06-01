@@ -1,4 +1,4 @@
-package lyr.misc;
+package lyravega.misc;
 
 import java.awt.Color;
 import java.util.HashMap;
@@ -8,10 +8,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import lyr.lyr_plugin;
+import lyravega.plugin.experimentalHullModifications;
 
 public class lyr_externals {
-	private static final JSONObject settingsJSON = lyr_plugin.settingsJSON;
+	private static final JSONObject settingsJSON = experimentalHullModifications.settingsJSON;
 	public static boolean
 		showExperimentalFlavour,
 		playDrillSound,

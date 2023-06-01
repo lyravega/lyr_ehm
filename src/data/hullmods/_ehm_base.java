@@ -27,11 +27,11 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
 import data.hullmods.ehm.ehm_base;
-import lyr.misc.lyr_externals;
-import lyr.misc.lyr_internals;
-import lyr.misc.lyr_tooltip;
-import lyr.proxies.lyr_hullSpec;
-import lyr.tools._lyr_logger;
+import lyravega.misc.lyr_externals;
+import lyravega.misc.lyr_internals;
+import lyravega.misc.lyr_tooltip;
+import lyravega.proxies.lyr_hullSpec;
+import lyravega.tools._lyr_logger;
 
 /**
  * This is the master base class for all experimental hullmods. Stores the most 

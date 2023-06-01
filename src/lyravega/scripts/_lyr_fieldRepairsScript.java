@@ -1,4 +1,4 @@
-package lyr.scripts;
+package lyravega.scripts;
 
 import java.util.LinkedHashSet;
 import java.util.Random;
@@ -20,7 +20,7 @@ import com.fs.starfarer.api.util.Misc;
  * {@link FieldRepairsScript} replacement with a dirty hack to avoid getting the cloned
  * hull specs replaced in {@link #restoreToNonDHull}, as it might result in a crash due
  * to replaced hull specs lacking weapon slots that the variant may be using.
- * <p> Uses the same alias through {@link lyr.lyr_plugin#configureXStream} method so
+ * <p> Uses the same alias through {@link lyravega.plugin.experimentalHullModifications#configureXStream} method so
  * that it can be removed later on, leaving the original script pick the data up. 
  * @author Alex
  */

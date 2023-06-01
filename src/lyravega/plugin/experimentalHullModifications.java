@@ -1,10 +1,10 @@
-package lyr;
+package lyravega.plugin;
 
 import static data.abilities.ehm_ability.attachListener;
 import static data.hullmods.ehm._ehm_basetracker.enhancedEvents;
 import static data.hullmods.ehm._ehm_basetracker.normalEvents;
 import static data.hullmods.ehm._ehm_basetracker.suppressedEvents;
-import static lyr.tools._lyr_uiTools.findUIClasses;
+import static lyravega.tools._lyr_uiTools.findUIClasses;
 
 import java.io.IOException;
 
@@ -23,11 +23,11 @@ import com.thoughtworks.xstream.XStream;
 import data.hullmods.ehm.events.enhancedEvents;
 import data.hullmods.ehm.events.normalEvents;
 import data.hullmods.ehm.events.suppressedEvents;
-import lyr.misc.lyr_internals;
-import lyr.scripts._lyr_fieldRepairsScript;
-import lyr.tools._lyr_logger;
+import lyravega.misc.lyr_internals;
+import lyravega.scripts._lyr_fieldRepairsScript;
+import lyravega.tools._lyr_logger;
 
-public class lyr_plugin extends BaseModPlugin implements _lyr_logger {
+public class experimentalHullModifications extends BaseModPlugin implements _lyr_logger {
 	public static final String EHM_ID = "lyr_ehm";
 	public static final String LOCALIZATION_JSON = "customization/ehm_localization.json";
 	public static final String SETTINGS_JSON = "customization/ehm_settings.json";

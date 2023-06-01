@@ -1,14 +1,14 @@
 package data.hullmods.ehm;
 
-import static lyr.misc.lyr_internals.logPrefix;
-import static lyr.misc.lyr_internals.events.onEnhance;
-import static lyr.misc.lyr_internals.events.onInstall;
-import static lyr.misc.lyr_internals.events.onNormalize;
-import static lyr.misc.lyr_internals.events.onRemove;
-import static lyr.misc.lyr_internals.events.onRestore;
-import static lyr.misc.lyr_internals.events.onSuppress;
-import static lyr.tools._lyr_uiTools.isRefitTab;
-import static lyr.tools._lyr_scriptTools.getTransientScriptsOfClass;
+import static lyravega.misc.lyr_internals.logPrefix;
+import static lyravega.misc.lyr_internals.events.onEnhance;
+import static lyravega.misc.lyr_internals.events.onInstall;
+import static lyravega.misc.lyr_internals.events.onNormalize;
+import static lyravega.misc.lyr_internals.events.onRemove;
+import static lyravega.misc.lyr_internals.events.onRestore;
+import static lyravega.misc.lyr_internals.events.onSuppress;
+import static lyravega.tools._lyr_scriptTools.getTransientScriptsOfClass;
+import static lyravega.tools._lyr_uiTools.isRefitTab;
 
 import java.util.HashMap;
 import java.util.HashSet;

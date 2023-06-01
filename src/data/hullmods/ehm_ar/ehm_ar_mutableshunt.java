@@ -13,8 +13,8 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
-import lyr.misc.lyr_internals;
-import lyr.misc.lyr_tooltip;
+import lyravega.misc.lyr_internals;
+import lyravega.misc.lyr_tooltip;
 
 /**@category Adapter Retrofit 
  * @author lyravega

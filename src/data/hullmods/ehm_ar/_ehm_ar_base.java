@@ -7,9 +7,9 @@ import static data.hullmods.ehm_ar.ehm_ar_mutableshunt.capacitorMap;
 import static data.hullmods.ehm_ar.ehm_ar_mutableshunt.dissipatorMap;
 import static data.hullmods.ehm_ar.ehm_ar_mutableshunt.launchTubeMap;
 import static data.hullmods.ehm_ar.ehm_ar_stepdownadapter.adapterMap;
-import static lyr.misc.lyr_utilities.generateChildLocation;
-import static lyr.tools._lyr_uiTools.commitChanges;
-import static lyr.tools._lyr_uiTools.playSound;
+import static lyravega.misc.lyr_utilities.generateChildLocation;
+import static lyravega.tools._lyr_uiTools.commitChanges;
+import static lyravega.tools._lyr_uiTools.playSound;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -38,18 +38,18 @@ import data.hullmods._ehm_base;
 import data.hullmods.ehm.events.normalEvents;
 import data.hullmods.ehm_ar.ehm_ar_diverterandconverter.childParameters;
 import data.hullmods.ehm_ar.ehm_ar_stepdownadapter.childrenParameters;
-import lyr.misc.lyr_externals;
-import lyr.misc.lyr_internals;
-import lyr.misc.lyr_internals.id.hullmods;
-import lyr.misc.lyr_internals.id.shunts.adapters;
-import lyr.misc.lyr_internals.id.shunts.capacitors;
-import lyr.misc.lyr_internals.id.shunts.converters;
-import lyr.misc.lyr_internals.id.shunts.dissipators;
-import lyr.misc.lyr_internals.id.shunts.diverters;
-import lyr.misc.lyr_internals.id.shunts.launchTubes;
-import lyr.misc.lyr_tooltip;
-import lyr.proxies.lyr_hullSpec;
-import lyr.proxies.lyr_weaponSlot;
+import lyravega.misc.lyr_externals;
+import lyravega.misc.lyr_internals;
+import lyravega.misc.lyr_tooltip;
+import lyravega.misc.lyr_internals.id.hullmods;
+import lyravega.misc.lyr_internals.id.shunts.adapters;
+import lyravega.misc.lyr_internals.id.shunts.capacitors;
+import lyravega.misc.lyr_internals.id.shunts.converters;
+import lyravega.misc.lyr_internals.id.shunts.dissipators;
+import lyravega.misc.lyr_internals.id.shunts.diverters;
+import lyravega.misc.lyr_internals.id.shunts.launchTubes;
+import lyravega.proxies.lyr_hullSpec;
+import lyravega.proxies.lyr_weaponSlot;
 
 
 /**

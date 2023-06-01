@@ -1,7 +1,7 @@
 package data.hullmods.ehm_sr;
 
-import static lyr.tools._lyr_uiTools.commitChanges;
-import static lyr.tools._lyr_uiTools.playSound;
+import static lyravega.tools._lyr_uiTools.commitChanges;
+import static lyravega.tools._lyr_uiTools.playSound;
 
 import java.util.Set;
 
@@ -14,9 +14,9 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import data.hullmods._ehm_base;
 import data.hullmods.ehm.events.normalEvents;
-import lyr.misc.lyr_internals;
-import lyr.misc.lyr_tooltip;
-import lyr.proxies.lyr_hullSpec;
+import lyravega.misc.lyr_internals;
+import lyravega.misc.lyr_tooltip;
+import lyravega.proxies.lyr_hullSpec;
 
 /**
  * This class is used by system retrofit hullmods. They are pretty 
