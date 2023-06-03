@@ -151,14 +151,6 @@ public final class lyr_weaponSlot extends _lyr_proxyTools {
 	}
 
 	/**
-	 * Constructs a new node with the passed parameters, and sets it
-	 * as the node of the {@link WeaponSlotAPI}.
-	 * <p> A node holds an id, and a vector point that is relative to 
-	 * the ship. Game knows where the weapon slots are through the node
-	 * data. 
-	 * <p> If a slot was created or cloned, it will require its own,
-	 * unique node. Otherwise, node manipulations through a  method such 
-	 * as {@code setLocation()} will affect all slots with a shared node.
 	 * @param nodeId an id to assign to the node (using slotId is fine)
 	 * @param location a ship-relative vector to create the node at
 	 * @category Proxy method
@@ -188,6 +180,30 @@ public final class lyr_weaponSlot extends _lyr_proxyTools {
 	 */
 	public float getAngle() {
 		return weaponSlot.getAngle();
+	}
+
+	/**
+	 * @param angle
+	 * @category Bridge method
+	 */
+	public void setAngle(float angle) {
+		weaponSlot.setAngle(angle);
+	}
+
+	/**
+	 * @return Arc of slot
+	 * @category Bridge method
+	 */
+	public float getArc() {
+		return weaponSlot.getArc();
+	}
+
+	/**
+	 * @param angle
+	 * @category Bridge method
+	 */
+	public void setArc(float angle) {
+		weaponSlot.setArc(angle);
 	}
 	//#endregion 
 	// END OF BRIDGE / PROXY METHODS

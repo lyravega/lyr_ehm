@@ -22,8 +22,8 @@ import lyravega.tools._lyr_proxyTools;
 public final class lyr_shieldSpec extends _lyr_proxyTools {
 	private ShieldSpecAPI shieldSpec;
 	private static MethodHandle clone = null;
-	private static MethodHandle setRingColor = null;
-	private static MethodHandle setInnerColor = null;
+	// private static MethodHandle setRingColor = null;
+	// private static MethodHandle setInnerColor = null;
 	private static MethodHandle setType = null;
 	private static MethodHandle setFluxPerDamageAbsorbed = null;
 	private static MethodHandle setUpkeepCost = null;
@@ -34,8 +34,8 @@ public final class lyr_shieldSpec extends _lyr_proxyTools {
 	static {
 		try {
 			clone = inspectMethod("clone", shieldSpecClass).getMethodHandle();
-			setRingColor = inspectMethod("setRingColor", shieldSpecClass).getMethodHandle();
-			setInnerColor = inspectMethod("setInnerColor", shieldSpecClass).getMethodHandle();
+			// setRingColor = inspectMethod("setRingColor", shieldSpecClass).getMethodHandle();
+			// setInnerColor = inspectMethod("setInnerColor", shieldSpecClass).getMethodHandle();
 			setType = inspectMethod("setType", shieldSpecClass).getMethodHandle();
 			setFluxPerDamageAbsorbed = inspectMethod("setFluxPerDamageAbsorbed", shieldSpecClass).getMethodHandle();
 			setUpkeepCost = inspectMethod("setUpkeepCost", shieldSpecClass).getMethodHandle();
@@ -107,33 +107,25 @@ public final class lyr_shieldSpec extends _lyr_proxyTools {
 
 	//#region BRIDGE / PROXY METHODS
 	/**
-	 * Sets the ring colour of the stored {@link ShieldSpecAPI} to
-	 * the passed one. 
-	 * @param colour object to apply
-	 * @category Proxy method
+	 * @param colour
+	 * @category Bridge method
 	 */
 	public void setRingColor(Color colour) {
-		try {
-			setRingColor.invoke(shieldSpec, colour);
-		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'setRingColor()' in 'lyr_shieldSpec'", t);
-		}
+		shieldSpec.setRingColor(colour);
 	}
 
 	/**
-	 * Sets the inner colour of the stored {@link ShieldSpecAPI} to
-	 * the passed one. 
-	 * @param colour object to apply
-	 * @category Proxy method
+	 * @param colour
+	 * @category Bridge method
 	 */
 	public void setInnerColor(Color colour) {
-		try {
-			setInnerColor.invoke(shieldSpec, colour);
-		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'setInnerColor()' in 'lyr_shieldSpec'", t);
-		}
+		shieldSpec.setInnerColor(colour);
 	}
 
+	/**
+	 * @param shieldType
+	 * @category Proxy method
+	 */
 	public void setType(ShieldType shieldType) {
 		try {
 			setType.invoke(shieldSpec, shieldType);
@@ -142,6 +134,10 @@ public final class lyr_shieldSpec extends _lyr_proxyTools {
 		}
 	}
 
+	/**
+	 * @param absorbtionRatio
+	 * @category Proxy method
+	 */
 	public void setFluxPerDamageAbsorbed(float absorbtionRatio) {
 		try {
 			setFluxPerDamageAbsorbed.invoke(shieldSpec, absorbtionRatio);
@@ -150,6 +146,10 @@ public final class lyr_shieldSpec extends _lyr_proxyTools {
 		}
 	}
 
+	/**
+	 * @param upkeepCost
+	 * @category Proxy method
+	 */
 	public void setUpkeepCost(float upkeepCost) {
 		try {
 			setUpkeepCost.invoke(shieldSpec, upkeepCost);
@@ -158,6 +158,10 @@ public final class lyr_shieldSpec extends _lyr_proxyTools {
 		}
 	}
 
+	/**
+	 * @param arcSize
+	 * @category Proxy method
+	 */
 	public void setArc(float arcSize) {
 		try {
 			setArc.invoke(shieldSpec, arcSize);
@@ -166,6 +170,10 @@ public final class lyr_shieldSpec extends _lyr_proxyTools {
 		}
 	}
 
+	/**
+	 * @param phaseCost
+	 * @category Proxy method
+	 */
 	public void setPhaseCost(float phaseCost) {
 		try {
 			setPhaseCost.invoke(shieldSpec, phaseCost);
@@ -174,6 +182,10 @@ public final class lyr_shieldSpec extends _lyr_proxyTools {
 		}
 	}
 
+	/**
+	 * @param phaseUpkeep
+	 * @category Proxy method
+	 */
 	public void setPhaseUpkeep(float phaseUpkeep) {
 		try {
 			setPhaseUpkeep.invoke(shieldSpec, phaseUpkeep);

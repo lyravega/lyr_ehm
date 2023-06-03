@@ -116,6 +116,7 @@ public final class lyr_engineBuilder extends _lyr_proxyTools {
 	 * method with it. 
 	 * @param enumNumber
 	 * @category Proxy method
+	 * @see engineStyle
 	 */
 	public void setEngineStyle(int enumNumber) {
 		try {

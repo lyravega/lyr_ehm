@@ -165,6 +165,9 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		return this.shieldSpec;
 	}
 
+	/**
+	 * @see #getShieldSpec()
+	 */
 	@Deprecated // this shouldn't be used as cloning the hullSpec also clones the shieldSpec (and engineSpec)
 	public lyr_shieldSpec getShieldSpec(boolean clone) {
 		this.shieldSpec = (this.shieldSpec == null) ? new lyr_shieldSpec(hullSpec.getShieldSpec(), true) : this.shieldSpec.recycle(this.shieldSpec.duplicate(hullSpec.getShieldSpec()));
@@ -242,9 +245,11 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	}
 
 	/**
-	 * @param weaponSlot to be added
+	 * @param weaponSlot
 	 * @category Proxy method
+	 * @see #addWeaponSlot(lyr_weaponSlot)
 	 */
+	@Deprecated
 	public void addWeaponSlot(WeaponSlotAPI weaponSlot) {
 		try {
 			addWeaponSlot.invoke(hullSpec, weaponSlotClass.cast(weaponSlot));
