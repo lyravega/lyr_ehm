@@ -7,7 +7,6 @@ import static data.hullmods.ehm._ehm_basetracker.suppressedEvents;
 import static lyravega.tools._lyr_uiTools.findUIClasses;
 
 import java.io.IOException;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 

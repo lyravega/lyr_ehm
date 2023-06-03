@@ -6,8 +6,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import lyravega.plugin.experimentalHullModifications;
+import lyravega.tools._lyr_logger;
 
-public class lyr_tooltip {
+public class lyr_tooltip implements _lyr_logger {
 	private static final JSONObject localizationJSON = experimentalHullModifications.localizationJSON;
 	private static JSONObject tooltipJSON;
 
@@ -15,8 +16,7 @@ public class lyr_tooltip {
 		try {
 			tooltipJSON = localizationJSON.getJSONObject("tooltip");
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.fatal(lyr_internals.logPrefix+"Problem importing localization JSON");
 		}
 	}
 
@@ -80,8 +80,7 @@ public class lyr_tooltip {
 				hasWeaponsOnAdaptedSlots = textJSON.getString("hasWeaponsOnAdaptedSlots");
 				hasWeaponsOnConvertedSlots = textJSON.getString("hasWeaponsOnConvertedSlots");
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.fatal(lyr_internals.logPrefix+"Problem importing localization text JSON");
 			}
 		}
 	}
@@ -145,8 +144,7 @@ public class lyr_tooltip {
 				locked_bgColour = Color.decode(headerJSON.getString("locked_bgColour"));
 				locked_textColour = Color.decode(headerJSON.getString("locked_textColour"));
 			} catch (NumberFormatException | JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.fatal(lyr_internals.logPrefix+"Problem importing localization header JSON");
 			}
 		}
 	}

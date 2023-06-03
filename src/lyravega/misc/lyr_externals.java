@@ -9,8 +9,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import lyravega.plugin.experimentalHullModifications;
+import lyravega.tools._lyr_logger;
 
-public class lyr_externals {
+public class lyr_externals implements _lyr_logger {
 	private static final JSONObject settingsJSON = experimentalHullModifications.settingsJSON;
 	public static boolean
 		showExperimentalFlavour,
@@ -35,8 +36,7 @@ public class lyr_externals {
 				shieldSettings.put(key, new lyr_shieldSettings(currentJSONObject));
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.fatal(lyr_internals.logPrefix+"Problem importing settings JSON");
 		}
 	}
 
