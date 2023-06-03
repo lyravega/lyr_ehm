@@ -1,5 +1,7 @@
 package data.hullmods.ehm_ar;
 
+import static lyravega.plugin.lyr_lunaSettings.extraInfoInHullMods;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -47,11 +49,13 @@ public class ehm_ar_mutableshunt extends _ehm_ar_base {
 	@Override
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (ship == null) return;
-
 		ShipVariantAPI variant = ship.getVariant();
 
 		if (variant.hasHullMod(hullModSpecId)) {
-			if (extraActiveInfoInHullMods) {
+			boolean showInfo = !extraInfoInHullMods.equals("None");
+			boolean showFullInfo = extraInfoInHullMods.equals("Full");
+
+			if (showInfo) {
 				Map<String, Integer> capacitors = ehm_shuntCount(variant, lyr_internals.tag.capacitorShunt);
 	
 				if (!capacitors.isEmpty()) {
@@ -59,7 +63,7 @@ public class ehm_ar_mutableshunt extends _ehm_ar_base {
 					for (String shuntId: capacitors.keySet()) {
 						tooltip.addPara(capacitors.get(shuntId) + "x " + settings.getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
-				} else if (extraInactiveInfoInHullMods) {
+				} else if (showFullInfo) {
 					tooltip.addSectionHeading("NO CAPACITORS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
 					tooltip.addPara("No capacitors are installed. Capacitors increase the total flux capacity of the ship, and affect built-in capacitors.", 2f);
 				}
@@ -71,7 +75,7 @@ public class ehm_ar_mutableshunt extends _ehm_ar_base {
 					for (String shuntId: dissipators.keySet()) {
 						tooltip.addPara(dissipators.get(shuntId) + "x " + settings.getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
-				} else if (extraInactiveInfoInHullMods) {
+				} else if (showFullInfo) {
 					tooltip.addSectionHeading("NO DISSIPATORS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
 					tooltip.addPara("No dissipators are installed. Dissipators increase the total flux dissipation of the ship, and affect built-in vents.", 2f);
 				}
@@ -83,7 +87,7 @@ public class ehm_ar_mutableshunt extends _ehm_ar_base {
 					for (String shuntId: launchTubes.keySet()) {
 						tooltip.addPara(launchTubes.get(shuntId) + "x " + settings.getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
-				} else if (extraInactiveInfoInHullMods) {
+				} else if (showFullInfo) {
 					tooltip.addSectionHeading("NO EXTRA HANGARS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
 					tooltip.addPara("No large weapon slots are turned into hangars. Each large slot is turned into a single fighter bay with a launch tube.", 2f);
 				}

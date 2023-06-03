@@ -38,7 +38,6 @@ import data.hullmods._ehm_base;
 import data.hullmods.ehm.events.normalEvents;
 import data.hullmods.ehm_ar.ehm_ar_diverterandconverter.childParameters;
 import data.hullmods.ehm_ar.ehm_ar_stepdownadapter.childrenParameters;
-import lyravega.misc.lyr_externals;
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_tooltip;
 import lyravega.misc.lyr_internals.id.hullmods;
@@ -76,9 +75,6 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 	}
 	//#endregion
 	// END OF CUSTOM EVENTS
-
-	protected static final boolean extraActiveInfoInHullMods = lyr_externals.extraActiveInfoInHullMods;
-	protected static final boolean extraInactiveInfoInHullMods = lyr_externals.extraInactiveInfoInHullMods;
 
 	private static final Pattern pattern = Pattern.compile("WS[ 0-9]{4}");
 	private static Matcher matcher;

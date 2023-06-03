@@ -1,6 +1,7 @@
 package data.hullmods.ehm_ar;
 
 import static data.hullmods.ehm_mr.ehm_mr_overengineered.slotPointBonus;
+import static lyravega.plugin.lyr_lunaSettings.extraInfoInHullMods;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -87,6 +88,9 @@ public class ehm_ar_diverterandconverter extends _ehm_ar_base {
 		ShipVariantAPI variant = ship.getVariant();
 
 		if (variant.hasHullMod(hullModSpecId)) {
+			boolean showInfo = !extraInfoInHullMods.equals("None");
+			boolean showFullInfo = extraInfoInHullMods.equals("Full");
+
 			int pointBonus = variant.getSMods().contains(lyr_internals.id.hullmods.overengineered) ? slotPointBonus.get(hullSize) : 0;
 			int[] pointArray = ehm_slotPointCalculation(variant, pointBonus);
 
@@ -99,7 +103,7 @@ public class ehm_ar_diverterandconverter extends _ehm_ar_base {
 			if (pointArray[2] > 0)tooltip.addPara("Diverter shunts are providing " + pointArray[2] + " slot points in total", 2f, lyr_tooltip.header.sEffect_textColour, pointArray[2] + " slot points");
 			if (pointArray[3] < 0)tooltip.addPara("Converter shunts are consuming " + pointArray[3] + " slot points in total", 2f, lyr_tooltip.header.notApplicable_textColour, pointArray[3] + " slot points");
 
-			if (extraActiveInfoInHullMods) {
+			if (showInfo) {
 				Map<String, Integer> converters = ehm_shuntCount(variant, lyr_internals.tag.converterShunt);
 
 				if (!converters.isEmpty()) {
@@ -107,7 +111,7 @@ public class ehm_ar_diverterandconverter extends _ehm_ar_base {
 					for (String shuntId: converters.keySet()) {
 						tooltip.addPara(converters.get(shuntId) + "x " + settings.getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
-				} else if (extraInactiveInfoInHullMods) {
+				} else if (showFullInfo) {
 					tooltip.addSectionHeading("NO CONVERTERS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
 					tooltip.addPara("No converters are installed. Converters are used to make a smaller slot a bigger one, if there are enough slot points.", 2f);
 				}
@@ -119,7 +123,7 @@ public class ehm_ar_diverterandconverter extends _ehm_ar_base {
 					for (String shuntId: diverters.keySet()) {
 						tooltip.addPara(diverters.get(shuntId) + "x " + settings.getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
-				} else if (extraInactiveInfoInHullMods) {
+				} else if (showFullInfo) {
 					tooltip.addSectionHeading("NO DIVERTERS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
 					tooltip.addPara("No diverters are installed. Diverters disable a slot and provide slot points that are used by converters in turn.", 2f);
 				}

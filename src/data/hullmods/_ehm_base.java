@@ -1,5 +1,7 @@
 package data.hullmods;
 
+import static lyravega.plugin.lyr_lunaSettings.showExperimentalFlavour;
+
 import java.awt.Color;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +29,6 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
 import data.hullmods.ehm.ehm_base;
-import lyravega.misc.lyr_externals;
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_tooltip;
 import lyravega.proxies.lyr_hullSpec;
@@ -321,7 +322,7 @@ public class _ehm_base extends BaseHullMod implements _lyr_logger {
 		// hullSpec.setBaseHullId(null);
 		// hullSpec.setRestoreToBase(false);
 		hullSpec.setBaseValue(hullSpecToClone.getBaseValue());	// because d-hulls lose 25% in value immediately
-		if (lyr_externals.showExperimentalFlavour) {
+		if (showExperimentalFlavour) {
 			hullSpec.setManufacturer(lyr_tooltip.text.flavourManufacturer);
 			hullSpec.setDescriptionPrefix(lyr_tooltip.text.flavourDescription);
 			hullSpec.setHullName(originalSpec.getHullName() + " (E)");	// restore to base hull name, replacing "(D)" with "(E)"
@@ -372,7 +373,7 @@ public class _ehm_base extends BaseHullMod implements _lyr_logger {
 		// stockHullSpec.addBuiltInWing(builtInWing);
 
 		// hullSpec.addBuiltInMod(ehm.id.baseRetrofit);
-		if (lyr_externals.showExperimentalFlavour) {
+		if (showExperimentalFlavour) {
 			stockHullSpec.setManufacturer(lyr_tooltip.text.flavourManufacturer);
 			stockHullSpec.setDescriptionPrefix(lyr_tooltip.text.flavourDescription);
 		}

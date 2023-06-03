@@ -20,19 +20,19 @@ public class ehm_csc_redShields extends _ehm_sc_base implements _ehm_customizabl
 	private Color ringColour;
 
 	@Override
-	public void init(HullModSpecAPI hullModSpec) {
-		super.init(hullModSpec);
-
-		ehm_applyCustomization();
-	}
-
-	@Override
 	public void ehm_applyCustomization() {
 		String settingIdPrefix = this.getClass().getSimpleName();
 
 		this.innerColour = getLunaRGBAColour(settingIdPrefix+"_inner");
 		this.ringColour = getLunaRGBAColour(settingIdPrefix+"_ring");
 		this.hullModSpec.setDisplayName(getLunaName(settingIdPrefix));
+	}
+
+	@Override
+	public void init(HullModSpecAPI hullModSpec) {
+		super.init(hullModSpec);
+
+		ehm_applyCustomization();
 	}
 
 	@Override

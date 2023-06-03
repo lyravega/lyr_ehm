@@ -1,5 +1,6 @@
 package lyravega.tools;
 
+import static lyravega.plugin.lyr_lunaSettings.playDrillSound;
 import static lyravega.tools._lyr_scriptTools.refreshRefit;
 
 import java.lang.invoke.MethodHandle;
@@ -10,7 +11,6 @@ import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CoreUITabId;
 
-import lyravega.misc.lyr_externals;
 import lyravega.misc.lyr_internals;
 
 /**
@@ -263,7 +263,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 	 * and {@code onInstall()}
 	 */
 	public static void playSound() {
-		if (!isRefitTab() || !lyr_externals.playDrillSound) return;
+		if (!isRefitTab() || !playDrillSound) return;
 		Global.getSoundPlayer().playUISound(lyr_internals.id.drillSound, 1.0f, 0.75f);
 	}
 
@@ -305,7 +305,7 @@ public class _lyr_uiTools extends _lyr_reflectionTools {
 			refitPanel_setEditedSinceLoad.invoke(refitPanel, false);
 			refitPanel_setEditedSinceSave.invoke(refitPanel, false);
 		} catch (Throwable t) {
-			// refreshRefit();
+			refreshRefit();
 			logger.error(lyr_internals.logPrefix+"Failure in 'commitChanges()', possible hull restoration");
 		}
 	}

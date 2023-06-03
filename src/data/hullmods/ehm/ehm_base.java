@@ -2,20 +2,20 @@ package data.hullmods.ehm;
 
 import static data.hullmods.ehm_ar._ehm_ar_base.ehm_processShunts;
 import static data.hullmods.ehm_mr.ehm_mr_overengineered.slotPointBonus;
+import static lyravega.plugin.lyr_lunaSettings.showFluff;
 import static lyravega.tools._lyr_uiTools.commitChanges;
 import static lyravega.tools._lyr_uiTools.playSound;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
-import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
+import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
-import lyravega.misc.lyr_externals;
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_tooltip;
 
@@ -74,7 +74,7 @@ public class ehm_base extends _ehm_basetracker {
 			}
 
 			super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
-		} else if (lyr_externals.showFluff) {
+		} else if (showFluff) {
 			tooltip.addSectionHeading("FLUFF", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
 			String playerRank = Global.getSector().getPlayerPerson().getRank();
 			switch ((int) Math.round(Math.random() * 10)) {
