@@ -3,12 +3,8 @@ package data.hullmods;
 import static lyravega.tools._lyr_uiTools.commitChanges;
 import static lyravega.tools._lyr_uiTools.playSound;
 
-import java.util.Collection;
 import java.util.Map;
 
-import org.json.JSONObject;
-
-import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
@@ -72,18 +68,10 @@ public class _ehm_test extends _ehm_base implements normalEvents {
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) { try {
-		// g hullSpec = (g) stats.getVariant().getHullSpec();
-		// JSONObject testJSON = Global.getSettings().getMergedJSONForMod(SETTINGS_JSON, "lyr_ehm").getJSONObject("EHM_TEST");
-		// JSONObject test2JSON = Global.getSettings().getMergedJSONForMod(SETTINGS_JSON, "lyr_ehm").getJSONObject("EHM_TEST2");
-		// JSONObject test3JSON = Global.getSettings().getMergedJSONForMod(SETTINGS_JSON, "lyr_ehm").getJSONObject("EHM_TEST3");
-		// JSONObject test4JSON = Global.getSettings().getMergedJSONForMod(SETTINGS_JSON, "lyr_ehm").getJSONObject("EHM_TEST4");
-		// JSONObject test1 = Global.getSettings().getJSONObject("EHM_TEST");
 		int used = 1;
 
 		lyr_hullSpec hullSpec = new lyr_hullSpec(stats.getVariant().getHullSpec(), false);
 		lyr_engineBuilder engineSlot = new lyr_engineBuilder(null, false);
-
-		Map<String, Object> derp = customEngineData;
 
 		for (Object temp : hullSpec.getEngineSlots()) {
 			engineSlot.recycle(temp).setEngineStyle(engineStyle.custom);
@@ -94,9 +82,6 @@ public class _ehm_test extends _ehm_base implements normalEvents {
 	@Override
 	public void applyEffectsAfterShipCreation(ShipAPI ship, String id) { try {
 
-
-		Collection<String> hullMods = ship.getVariant().getHullMods();
-		Collection<String> hullMods2 = ship.getVariant().getHullSpec().getBuiltInMods();
 	} catch (Throwable t ) { logger.warn("Test fail in 'applyEffectsAfterShipCreation()'", t);	}}
 
 	@Override

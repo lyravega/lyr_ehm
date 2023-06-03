@@ -1,0 +1,29 @@
+fieldID,fieldName,fieldType,defaultValue,secondaryValue,fieldDescription,minValue,maxValue,tab
+ehm_settingsHeader,EHM,Header,EHM,,,,,
+ehm_showExperimentalFlavour,Add Flavour Text,Boolean,true,,"If enabled, adds ""(E)"" to ship's class text, changes the manufacturer of the ship to ""Experimental"" and adds a fluff paragraph about the manufacturer.",,,
+ehm_playDrillSound,Play Drill Sound,Boolean,true,,Controls the drill sounds that plays when an experimental hull modification is installed/uninstalled.,,,
+ehm_showFluff,Show Fluff Messages,Boolean,true,,"If enabled, the base hull modification will have randomized messages about the state of the ship and its upgrades.",,,
+ehm_extraInfoInHullMods,Show Extra Information,Radio,Full,"Full, Partial, None","Activators can display extra information on their tooltips. ""Full"" displays extra fields even if there isn't any activated slot shunt. ""Partial"" limits it to the activated slot shunts. ""None"" disables these extra fields.",,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+ehm_csc_redShields_header,Shield Header,Header,Custom Shield I,,,,,Custom Shields
+ehm_csc_redShields_name,Shield Name,String,Red Shields,,Name of the hull modification,,,Custom Shields
+ehm_csc_redShields_innerColour,Inner Colour,Color,#ff0000,,Set the inner colour of this custom shield,,,Custom Shields
+ehm_csc_redShields_innerAlpha,Inner Alpha,Int,75,,Set the alpha of the inner colour. Above 100 not recommended,0,255,Custom Shields
+ehm_csc_redShields_ringColour,Ring Colour,Color,#ffffff,,Set the ring colour of this custom shield,,,Custom Shields
+ehm_csc_redShields_ringAlpha,Ring Alpha,Int,255,,Set the alpha of the ring colour,0,255,Custom Shields
+,,,,,,,,
+ehm_csc_greenShields_header,Shield Header,Header,Custom Shield II,,,,,Custom Shields
+ehm_csc_greenShields_name,Shield Name,String,Green Shields,,Name of the hull modification,,,Custom Shields
+ehm_csc_greenShields_innerColour,Inner Colour,Color,#00ff00,,Set the inner colour of this custom shield,,,Custom Shields
+ehm_csc_greenShields_innerAlpha,Inner Alpha,Int,75,,Set the alpha of the inner colour. Above 100 not recommended,0,255,Custom Shields
+ehm_csc_greenShields_ringColour,Ring Colour,Color,#ffffff,,Set the ring colour of this custom shield,,,Custom Shields
+ehm_csc_greenShields_ringAlpha,Ring Alpha,Int,255,,Set the alpha of the ring colour,0,255,Custom Shields
+,,,,,,,,
+ehm_csc_blueShields_header,Shield Header,Header,Custom Shield III,,,,,Custom Shields
+ehm_csc_blueShields_name,Shield Name,String,Blue Shields,,Name of the hull modification,,,Custom Shields
+ehm_csc_blueShields_innerColour,Inner Colour,Color,#0000ff,,Set the inner colour of this custom shield,,,Custom Shields
+ehm_csc_blueShields_innerAlpha,Inner Alpha,Int,75,,Set the alpha of the inner colour. Above 100 not recommended,0,255,Custom Shields
+ehm_csc_blueShields_ringColour,Ring Colour,Color,#ffffff,,Set the ring colour of this custom shield,,,Custom Shields
+ehm_csc_blueShields_ringAlpha,Ring Alpha,Int,255,,Set the alpha of the ring colour,0,255,Custom Shields

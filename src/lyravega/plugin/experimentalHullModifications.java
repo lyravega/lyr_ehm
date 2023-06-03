@@ -5,6 +5,7 @@ import static data.hullmods.ehm._ehm_basetracker.enhancedEvents;
 import static data.hullmods.ehm._ehm_basetracker.normalEvents;
 import static data.hullmods.ehm._ehm_basetracker.suppressedEvents;
 import static lyravega.tools._lyr_uiTools.findUIClasses;
+import static lyravega.plugin.lyr_lunaListener.attachLunaListener;
 
 import java.io.IOException;
 import org.json.JSONException;
@@ -49,6 +50,7 @@ public class experimentalHullModifications extends BaseModPlugin implements _lyr
 		teachBlueprints();
 		replaceScript();
 		attachListener();
+		attachLunaListener();
 	}
 
 	@Override

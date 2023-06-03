@@ -12,6 +12,7 @@ public final class lyr_internals {
 			ability = "ehm_ability", // must match ability id in .csv
 			faction = "experimental", // must match faction id in .csv and .faction
 			drillSound = "drill", // must match .json
+			mod = "lyr_ehm", // must match .json
 			baseModification = "ehm_base", // must match hullmod id in .csv
 			undoModification = "ehm_undo"; // must match hullmod id in .csv
 		public static final class hullmods {
@@ -111,6 +112,7 @@ public final class lyr_internals {
 			experimental = "ehm", // must match hullmod/weapon tag in .csv
 			restricted = "ehm_restricted", // must match hullmod/weapon tag in .csv
 			extended = "ehm_extended", // must match hullmod/weapon tag in .csv
+			customizable = "ehm_customizable", // must match hullmod/weapon tag in .csv
 
 			systemRetrofit = "ehm_sr", // must match hullmod tag in .csv
 			weaponRetrofit = "ehm_wr", // must match hullmod tag in .csv

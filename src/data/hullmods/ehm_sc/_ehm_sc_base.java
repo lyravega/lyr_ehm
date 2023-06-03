@@ -11,16 +11,14 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
-import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import data.hullmods._ehm_base;
 import data.hullmods.ehm.events.normalEvents;
-import lyravega.misc.lyr_externals;
+import lunalib.lunaSettings.LunaSettings;
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_tooltip;
-import lyravega.misc.lyr_externals.lyr_shieldSettings;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.proxies.lyr_shieldSpec;
 
@@ -35,10 +33,6 @@ import lyravega.proxies.lyr_shieldSpec;
  * @author lyravega
  */
 public class _ehm_sc_base extends _ehm_base implements normalEvents {
-	protected lyr_shieldSettings shieldSettings;
-	protected Color innerColour;
-	protected Color ringColour;
-
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstall(ShipVariantAPI variant) {
@@ -50,28 +44,8 @@ public class _ehm_sc_base extends _ehm_base implements normalEvents {
 		variant.setHullSpecAPI(ehm_restoreShield(variant));
 		commitChanges(); playSound();
 	}
-
-	@Override
-	public void init(HullModSpecAPI hullModSpec) {
-		super.init(hullModSpec);
-
-		ehm_assignColourValues();
-	}
 	//#endregion
 	// END OF CUSTOM EVENTS
-
-	/**
-	 * Assigns the color values stored at the external JSON in the
-	 * objects during initialization
-	 */
-	private final void ehm_assignColourValues() {
-		if (lyr_externals.shieldSettings.containsKey(this.getClass().getSimpleName())) {
-			this.shieldSettings = lyr_externals.shieldSettings.get(this.getClass().getSimpleName());
-			this.innerColour = shieldSettings.getInnerColour();
-			this.ringColour = shieldSettings.getRingColour();
-			this.hullModSpec.setDisplayName(shieldSettings.getName());
-		}
-	}
 
 	/**
 	 * Alters the shield colours of the ship. Inner and ring colours
@@ -102,6 +76,21 @@ public class _ehm_sc_base extends _ehm_base implements normalEvents {
 		hullSpec.setShieldSpec(stockShieldSpec);
 		
 		return hullSpec.retrieve();
+	}
+
+	public static Color getLunaRGBAColour(String settingIdPrefix) {
+		String colourString = LunaSettings.getString(lyr_internals.id.mod, settingIdPrefix+"Colour");
+		int[] rgba = {0,0,0,0};
+		rgba[0] = Integer.parseInt(colourString.substring(1, 3), 16);
+		rgba[1] = Integer.parseInt(colourString.substring(3, 5), 16);
+		rgba[2] = Integer.parseInt(colourString.substring(5, 7), 16);
+		rgba[3] = LunaSettings.getInt(lyr_internals.id.mod, settingIdPrefix+"Alpha");
+
+		return new Color(rgba[0], rgba[1], rgba[2], rgba[3]);
+	}
+
+	public static String getLunaName(String settingIdPrefix) {
+		return LunaSettings.getString(lyr_internals.id.mod, settingIdPrefix+"_name");
 	}
 
 	//#region INSTALLATION CHECKS
