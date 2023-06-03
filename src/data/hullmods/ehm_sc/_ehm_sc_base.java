@@ -98,6 +98,11 @@ public class _ehm_sc_base extends _ehm_base implements normalEvents {
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (ship == null) return;
 
+		if (this.hullModSpec.hasTag(lyr_internals.tag.customizable)) {
+			tooltip.addSectionHeading(lyr_tooltip.header.customizable, lyr_tooltip.header.customizable_textColour, lyr_tooltip.header.customizable_bgColour, Alignment.MID, lyr_tooltip.header.padding).flash(1.0f, 1.0f);
+			tooltip.addPara(lyr_tooltip.text.customizable, lyr_tooltip.text.padding);
+		}
+
 		if (!isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(lyr_tooltip.header.notApplicable, lyr_tooltip.header.notApplicable_textColour, lyr_tooltip.header.notApplicable_bgColour, Alignment.MID, lyr_tooltip.header.padding);
 

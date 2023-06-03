@@ -4,12 +4,8 @@ import static data.abilities.ehm_ability.attachListener;
 import static data.hullmods.ehm._ehm_basetracker.enhancedEvents;
 import static data.hullmods.ehm._ehm_basetracker.normalEvents;
 import static data.hullmods.ehm._ehm_basetracker.suppressedEvents;
-import static lyravega.tools._lyr_uiTools.findUIClasses;
 import static lyravega.plugin.lyr_lunaSettings.attachLunaListener;
-
-import java.io.IOException;
-import org.json.JSONException;
-import org.json.JSONObject;
+import static lyravega.tools._lyr_uiTools.findUIClasses;
 
 import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
@@ -28,21 +24,6 @@ import lyravega.scripts._lyr_fieldRepairsScript;
 import lyravega.tools._lyr_logger;
 
 public class experimentalHullModifications extends BaseModPlugin implements _lyr_logger {
-	public static final String EHM_ID = "lyr_ehm";
-	public static final String LOCALIZATION_JSON = "customization/ehm_localization.json";
-	public static final String SETTINGS_JSON = "customization/ehm_settings.json";
-	public static JSONObject localizationJSON;
-	public static JSONObject settingsJSON;
-	
-	static {
-		try {
-			localizationJSON = Global.getSettings().getMergedJSONForMod(LOCALIZATION_JSON, EHM_ID);
-			settingsJSON = Global.getSettings().getMergedJSONForMod(SETTINGS_JSON, EHM_ID);
-		} catch (IOException | JSONException e) {
-			logger.fatal(lyr_internals.logPrefix+"Problem importing configuration JSONs");
-		}
-	}
-
 	@Override
 	public void onGameLoad(boolean newGame) {
 		findUIClasses();

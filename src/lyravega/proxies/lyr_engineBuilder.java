@@ -188,7 +188,6 @@ public final class lyr_engineBuilder extends _lyr_proxyTools {
 			addEngineData(test3JSON, "EHM_TEST3");
 			addEngineData(test4JSON, "EHM_TEST4");
 		} catch (JSONException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
