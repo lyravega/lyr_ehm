@@ -1,31 +1,36 @@
 package lyravega.proxies;
 
+import java.io.IOException;
 import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodType;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.fs.starfarer.api.Global;
 
 import lyravega.misc.lyr_internals;
 import lyravega.tools._lyr_proxyTools;
 
 /**
- * A proxy-like class for... engine builder? I have no idea what 
- * this is. As far as I can tell, there is no API equalivent to
- * whatever {@code getEngineSlots()} retrieves.
- * <p> I believe these objects are responsible of creating the
- * engines that go on top of the engineSlots, but for some reason
- * you can only access these, not the engines. If you can feed
- * the correct data to these builders, you'll most probably get
- * the results you want, but it's way too obfuscated for my 
- * tastes to do so, and as such I decided to go for pre-set
- * engines.
- * <p> Unlike the other proxies, whose obfuscated classes has a
- * base on the API, these do not, so they are treated as objects.
- * {@code retrieve()} is still there, but as they are objects,
- * there are no API functions that can be taken advantage of.
+ * A proxy-like class for... engine builder? When {@code getEngineSlots()}
+ * is used on a hull, these objects which seems to be creating the engines
+ * on the slots is returned. 
+ * <p> Unlike the other proxies, whose obfuscated classes has a base on the
+ * API, these do not, so they are treated as objects.
+ * <p> Contains some custom methods unlike the other proxies, with long
+ * javadocs to hopefully properly describe what they do.
  * @author lyravega
  */
 public final class lyr_engineBuilder extends _lyr_proxyTools {
 	private Object engineBuilder;
 	private static MethodHandle clone = null;
 	private static MethodHandle setEngineStyle = null;
+	private static MethodHandle setEngineDataFromJson = null;	// I'm making names up
+	private static MethodHandle newEngineData = null;
+	private static MethodHandle setEngineData = null;
 
 	public static enum engineStyle { ;
 		public static final int lowTech = 0;
@@ -43,10 +48,15 @@ public final class lyr_engineBuilder extends _lyr_proxyTools {
 		public static final int custom = 12;
 	}
 
+	public static final Map<String, Object> customEngineData = new HashMap<String, Object>();
+
 	static {
 		try {
 			clone = inspectMethod("clone", engineBuilderClass).getMethodHandle();
-			setEngineStyle = inspectMethod(engineBuilderClass, null, engineStyleEnum).getMethodHandle();
+			setEngineStyle = inspectMethod(engineBuilderClass, void.class, engineStyleEnum).getMethodHandle();
+			setEngineDataFromJson = inspectMethod(engineBuilderClass, void.class, JSONObject.class, String.class).getMethodHandle();
+			newEngineData = lookup.findConstructor(engineDataClass, MethodType.methodType(void.class, JSONObject.class, String.class));
+			setEngineData = inspectMethod(engineBuilderClass, void.class, engineDataClass).getMethodHandle();
 		} catch (Throwable t) {
 			logger.fatal(lyr_internals.logPrefix+"Failed to find a method in 'lyr_engineBuilder'", t);
 		}
@@ -64,11 +74,12 @@ public final class lyr_engineBuilder extends _lyr_proxyTools {
 	}
 	
 	/**
-	 * Used to retrieve the stored {@link Object} in the proxy to
-	 * access the API methods through the proxy itself, or to use it if
-	 * it needs to be applied on something.
+	 * Used to retrieve the stored {@link Object} in the proxy. However,
+	 * since this is an object and not some instance of an API member,
+	 * using this is somewhat pointless.
 	 * @return the stored {@link Object}
 	 */
+	@Deprecated
 	public Object retrieve() {
 		return engineBuilder;
 	}
@@ -86,8 +97,7 @@ public final class lyr_engineBuilder extends _lyr_proxyTools {
 
 	/**
 	 * Clones the stored {@link Object}, and returns it. For 
-	 * internal use if necessary. {@link #retrieve()} should be used
-	 * if access to the API is needed.
+	 * internal use if necessary.
 	 * @return a cloned {@link Object}
 	 * @category Proxy method
 	 */
@@ -124,6 +134,98 @@ public final class lyr_engineBuilder extends _lyr_proxyTools {
 		} catch (Throwable t) {
 			logger.error(lyr_internals.logPrefix+"Failed to use 'setEngineStyle()' in 'lyr_engineBuilder'", t);
 		}
+	}
+
+	/**
+	 * Tosses a JSON object with engine style data to the engine builder, creating a new
+	 * engine data object from the JSON object and uses it immediately.
+	 * <p> Shouldn't be used as there is another method that takes an engine data object
+	 * directly, making it safer to use as this might leak somewhere without proper
+	 * supervision. Creating the engine data beforehand, storing it somewhere and then
+	 * using those stored ones is much safer in theory.
+	 * @param jsonObject must have relevant stuff found in the "engine_styles.json"!
+	 * @param name
+	 * @category Proxy method
+	 * @see #newEngineData(JSONObject, String)
+	 * @see #setEngineData(Object)
+	 */
+	@Deprecated
+	public void setEngineDataFromJson(JSONObject jsonObject, String name) {
+		try {
+			setEngineDataFromJson.invoke(engineBuilderClass.cast(engineBuilder), jsonObject, name);
+		} catch (Throwable t) {
+			logger.error(lyr_internals.logPrefix+"Failed to use 'setEngineDataFromJson()' in 'lyr_engineBuilder'", t);
+		}
+	}
+
+	/**
+	 * Tosses an existing engine data object to the engine builder, and makes the engine
+	 * builder use it.
+	 * <p> Should be used in conjunction with {@link #newEngineData(JSONObject, String)},
+	 * which would create the objects required by this method, and ideally stored in the
+	 * public map {@link #customEngineData} for later use.
+	 * @param engineDataObject
+	 * @category Proxy method
+	 */
+	public void setEngineData(Object engineDataObject) {
+		try {
+			setEngineData.invoke(engineBuilderClass.cast(engineBuilder), engineDataClass.cast(engineDataObject));
+		} catch (Throwable t) {
+			logger.error(lyr_internals.logPrefix+"Failed to use 'setEngineData()' in 'lyr_engineBuilder'", t);
+		}
+	}
+
+	static {	// TODO this shit is for testing, remove it later
+		String testJsonPath = "data/config/engine_styles.json";
+		try {
+			JSONObject testJSON = Global.getSettings().loadJSON(testJsonPath, "lyr_ehm").getJSONObject("EHM_TEST");
+			JSONObject test2JSON = Global.getSettings().loadJSON(testJsonPath, "lyr_ehm").getJSONObject("EHM_TEST2");
+			JSONObject test3JSON = Global.getSettings().loadJSON(testJsonPath, "lyr_ehm").getJSONObject("EHM_TEST3");
+			JSONObject test4JSON = Global.getSettings().loadJSON(testJsonPath, "lyr_ehm").getJSONObject("EHM_TEST4");
+
+			addEngineData(testJSON, "EHM_TEST");
+			addEngineData(test2JSON, "EHM_TEST2");
+			addEngineData(test3JSON, "EHM_TEST3");
+			addEngineData(test4JSON, "EHM_TEST4");
+		} catch (JSONException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Constructs a new engine data from a JSON object, with relevant fields found in
+	 * "engine_styles.json" file.
+	 * <p> Visibility is set to private as this should NOT be used directly since there
+	 * is another method {@link #addEngineData(JSONObject, String)} which adds the new
+	 * engine style data to the {@link #customEngineData} map; storing it for later use.
+	 * @param jsonObject must have relevant stuff found in the "engine_styles.json"!
+	 * @param name
+	 * @category Proxy constructor
+	 */
+	private static Object newEngineData(JSONObject jsonObject, String name) {
+		try {
+			return newEngineData.invoke(jsonObject, name);
+		} catch (Throwable t) {
+			logger.error(lyr_internals.logPrefix+"Failed to use 'newEngineData()' in 'lyr_engineBuilder'", t); return null;
+		}
+	}
+
+	/**
+	 * Uses {@link #newEngineData(JSONObject, String)} to construct a new engine style
+	 * data object from the JSON object. Returns it after adding it to the {@link
+	 * #customEngineData}. {@link #setEngineData(Object)} should be utilized to use
+	 * these stored custom engine styles, ideally from the map instead of the return.
+	 * @param jsonObject must have relevant stuff found in the "engine_styles.json"!
+	 * @param name
+	 * @category Utility
+	 */
+	public static Object addEngineData(JSONObject jsonObject, String name) {
+		Object engineDataObject = newEngineData(jsonObject, name);
+			
+		customEngineData.put(name, engineDataObject);
+
+		return engineDataObject;
 	}
 	//#endregion 
 	// END OF BRIDGE / PROXY METHODS
