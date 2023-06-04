@@ -61,7 +61,7 @@ ehm_cec_redEngines_contrailParticleDuration,Particle Contrail Duration,Double,3,
 ehm_cec_redEngines_contrailParticleSizeMult,Particle Contrail Size Multiplier,Double,2,Particles,[Particles] initial size multiplier,0,5,Custom Engine I
 ehm_cec_redEngines_contrailParticleFinalSizeMult,Particle Contrail Final Size Multiplier,Double,2.5,Particles,"[Particles] final size multiplier. Optional, game default: '0.5'",0,5,Custom Engine I
 ehm_cec_redEngines_contrailDuration,Quad Contrail Duration,Double,1.5,Trail,"[Plasma] duration, in seconds",0,5,Custom Engine I
-ehm_cec_redEngines_contrailMinSeg,Quad Contrail Minimum Segment Length,Int,5,Trail,"[Plasma] segment minimum length, in pixels. Optional, game default: '5'",1,20,Custom Engine I
+ehm_cec_redEngines_contrailMinSeg,Quad Contrail Minimum Segment Length,Int,5,Trail,"[Plasma] segment minimum pixel length. Optional, game default: '5'",1,20,Custom Engine I
 ehm_cec_redEngines_contrailSpawnDistMult,Quad Contrail Spawn Distance Multiplier,Double,0.7,Trail,"[Plasma] spawn distance multiplier. Optional, game default: '0.7'",0,5,Custom Engine I
 ehm_cec_redEngines_contrailWidthMult,Quad Contrail Width Multiplier,Double,0.67,Trail,[Plasma] width multiplier,0,5,Custom Engine I
 ehm_cec_redEngines_contrailWidthAddedFractionAtEnd,Quad Contrail Width Added Fraction At End,Double,-1,Trail,"[Plasma] extra width at the end. Optional, game default: '0.5'",-2,2,Custom Engine I
@@ -69,8 +69,14 @@ ehm_cec_redEngines_contrailMaxSpeedMult,Contrail Max Speed Multiplier,Double,0.5
 ehm_cec_redEngines_contrailAngularVelocityMult,Contrail Angular Velocity Multiplier,Double,0.5,,Angular velocity multiplier of the [contrail]. Mostly for [Particles],0,2,Custom Engine I
 ehm_cec_redEngines_otherHeader,Other Header,Header,Other Settings,,,,,Custom Engine I
 ehm_cec_redEngines_omegaMode,[REDACTED] Mode,Boolean,false,,[???],,,Custom Engine I
-ehm_cec_redEngines_glowSprite,Engine Glow Sprite,Radio,Default,"Default, I, II, III",Adds some effects. Could be very subtle to notice,,,Custom Engine I
-ehm_cec_redEngines_glowOutline,Engine Glow Outline,Radio,Default,"Default, I, II, III",Adds some more effects. Possibly does nothing,,,Custom Engine I
+ehm_cec_redEngines_glowSprite,Engine Glow Sprite,Radio,Default,"Default, I, II, III","Adds some effects. Could be very subtle to notice
+[I]: 'graphics/fx/engineglow32.png'
+[II]: 'graphics/fx/engineglow32b.png'
+[III]: 'graphics/fx/engineglow32s.png'",,,Custom Engine I
+ehm_cec_redEngines_glowOutline,Engine Glow Outline,Radio,Default,"Default, I, II, III","Adds some more effects. Seems to do nothing
+[I]: 'graphics/fx/engineflame32.png'
+[II]: 'graphics/fx/engineflame32b.png'
+[III]: 'graphics/fx/engineflame32-orig.png'",,,Custom Engine I
 ,,,,,,,,
 ,,,,,,,,
 ,,,,,,,,
@@ -107,7 +113,7 @@ ehm_cec_greenEngines_contrailParticleDuration,Particle Contrail Duration,Double,
 ehm_cec_greenEngines_contrailParticleSizeMult,Particle Contrail Size Multiplier,Double,2,Particles,[Particles] initial size multiplier,0,5,Custom Engine II
 ehm_cec_greenEngines_contrailParticleFinalSizeMult,Particle Contrail Final Size Multiplier,Double,2.5,Particles,"[Particles] final size multiplier. Optional, game default: '0.5'",0,5,Custom Engine II
 ehm_cec_greenEngines_contrailDuration,Quad Contrail Duration,Double,1.5,Trail,"[Plasma] duration, in seconds",0,5,Custom Engine II
-ehm_cec_greenEngines_contrailMinSeg,Quad Contrail Minimum Segment Length,Int,5,Trail,"[Plasma] segment minimum length, in pixels. Optional, game default: '5'",1,20,Custom Engine II
+ehm_cec_greenEngines_contrailMinSeg,Quad Contrail Minimum Segment Length,Int,5,Trail,"[Plasma] segment minimum pixel length. Optional, game default: '5'",1,20,Custom Engine II
 ehm_cec_greenEngines_contrailSpawnDistMult,Quad Contrail Spawn Distance Multiplier,Double,0.7,Trail,"[Plasma] spawn distance multiplier. Optional, game default: '0.7'",0,5,Custom Engine II
 ehm_cec_greenEngines_contrailWidthMult,Quad Contrail Width Multiplier,Double,0.67,Trail,[Plasma] width multiplier,0,5,Custom Engine II
 ehm_cec_greenEngines_contrailWidthAddedFractionAtEnd,Quad Contrail Width Added Fraction At End,Double,-1,Trail,"[Plasma] extra width at the end. Optional, game default: '0.5'",-2,2,Custom Engine II
@@ -115,8 +121,14 @@ ehm_cec_greenEngines_contrailMaxSpeedMult,Contrail Max Speed Multiplier,Double,0
 ehm_cec_greenEngines_contrailAngularVelocityMult,Contrail Angular Velocity Multiplier,Double,0.5,,Angular velocity multiplier of the [contrail]. Mostly for [Particles],0,2,Custom Engine II
 ehm_cec_greenEngines_otherHeader,Other Header,Header,Other Settings,,,,,Custom Engine II
 ehm_cec_greenEngines_omegaMode,[REDACTED] Mode,Boolean,false,,[???],,,Custom Engine II
-ehm_cec_greenEngines_glowSprite,Engine Glow Sprite,Radio,Default,"Default, I, II, III",Adds some effects. Could be very subtle to notice,,,Custom Engine II
-ehm_cec_greenEngines_glowOutline,Engine Glow Outline,Radio,Default,"Default, I, II, III",Adds some more effects. Possibly does nothing,,,Custom Engine II
+ehm_cec_greenEngines_glowSprite,Engine Glow Sprite,Radio,Default,"Default, I, II, III","Adds some effects. Could be very subtle to notice
+[I]: 'graphics/fx/engineglow32.png'
+[II]: 'graphics/fx/engineglow32b.png'
+[III]: 'graphics/fx/engineglow32s.png'",,,Custom Engine II
+ehm_cec_greenEngines_glowOutline,Engine Glow Outline,Radio,Default,"Default, I, II, III","Adds some more effects. Seems to do nothing
+[I]: 'graphics/fx/engineflame32.png'
+[II]: 'graphics/fx/engineflame32b.png'
+[III]: 'graphics/fx/engineflame32-orig.png'",,,Custom Engine II
 ,,,,,,,,
 ,,,,,,,,
 ,,,,,,,,
@@ -153,7 +165,7 @@ ehm_cec_blueEngines_contrailParticleDuration,Particle Contrail Duration,Double,3
 ehm_cec_blueEngines_contrailParticleSizeMult,Particle Contrail Size Multiplier,Double,2,Particles,[Particles] initial size multiplier,0,5,Custom Engine III
 ehm_cec_blueEngines_contrailParticleFinalSizeMult,Particle Contrail Final Size Multiplier,Double,2.5,Particles,"[Particles] final size multiplier. Optional, game default: '0.5'",0,5,Custom Engine III
 ehm_cec_blueEngines_contrailDuration,Quad Contrail Duration,Double,1.5,Trail,"[Plasma] duration, in seconds",0,5,Custom Engine III
-ehm_cec_blueEngines_contrailMinSeg,Quad Contrail Minimum Segment Length,Int,5,Trail,"[Plasma] segment minimum length, in pixels. Optional, game default: '5'",1,20,Custom Engine III
+ehm_cec_blueEngines_contrailMinSeg,Quad Contrail Minimum Segment Length,Int,5,Trail,"[Plasma] segment minimum pixel length. Optional, game default: '5'",1,20,Custom Engine III
 ehm_cec_blueEngines_contrailSpawnDistMult,Quad Contrail Spawn Distance Multiplier,Double,0.7,Trail,"[Plasma] spawn distance multiplier. Optional, game default: '0.7'",0,5,Custom Engine III
 ehm_cec_blueEngines_contrailWidthMult,Quad Contrail Width Multiplier,Double,0.67,Trail,[Plasma] width multiplier,0,5,Custom Engine III
 ehm_cec_blueEngines_contrailWidthAddedFractionAtEnd,Quad Contrail Width Added Fraction At End,Double,-1,Trail,"[Plasma] extra width at the end. Optional, game default: '0.5'",-2,2,Custom Engine III
@@ -161,8 +173,14 @@ ehm_cec_blueEngines_contrailMaxSpeedMult,Contrail Max Speed Multiplier,Double,0.
 ehm_cec_blueEngines_contrailAngularVelocityMult,Contrail Angular Velocity Multiplier,Double,0.5,,Angular velocity multiplier of the [contrail]. Mostly for [Particles],0,2,Custom Engine III
 ehm_cec_blueEngines_otherHeader,Other Header,Header,Other Settings,,,,,Custom Engine III
 ehm_cec_blueEngines_omegaMode,[REDACTED] Mode,Boolean,false,,[???],,,Custom Engine III
-ehm_cec_blueEngines_glowSprite,Engine Glow Sprite,Radio,Default,"Default, I, II, III",Adds some effects. Could be very subtle to notice,,,Custom Engine III
-ehm_cec_blueEngines_glowOutline,Engine Glow Outline,Radio,Default,"Default, I, II, III",Adds some more effects. Possibly does nothing,,,Custom Engine III
+ehm_cec_blueEngines_glowSprite,Engine Glow Sprite,Radio,Default,"Default, I, II, III","Adds some effects. Could be very subtle to notice
+[I]: 'graphics/fx/engineglow32.png'
+[II]: 'graphics/fx/engineglow32b.png'
+[III]: 'graphics/fx/engineglow32s.png'",,,Custom Engine III
+ehm_cec_blueEngines_glowOutline,Engine Glow Outline,Radio,Default,"Default, I, II, III","Adds some more effects. Seems to do nothing
+[I]: 'graphics/fx/engineflame32.png'
+[II]: 'graphics/fx/engineflame32b.png'
+[III]: 'graphics/fx/engineflame32-orig.png'",,,Custom Engine III
 ,,,,,,,,
 ,,,,,,,,
 ,,,,,,,,
