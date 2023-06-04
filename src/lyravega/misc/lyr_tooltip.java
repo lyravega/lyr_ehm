@@ -31,7 +31,8 @@ public class lyr_tooltip {
 			hasWeapons = "Cannot be installed or uninstalled as long as there are weapons present on the ship",
 			hasWeaponsOnAdaptedSlots = "Cannot be uninstalled as long as adapted slots have weapons or shunts on them",
 			hasWeaponsOnConvertedSlots = "Cannot be uninstalled as long as converted slots have weapons or shunts on them",
-			customizable = "This hull modification can be customized through LunaLib's settings menu. Press 'F2' to open the settings menu up and adjust the colours as you wish!";
+			customizable = "This hull modification can be customized through LunaLib's settings menu. Press 'F2' in the campaign screen to open the settings menu and adjust them",
+			customizableEngine = "Campaign contrails require an update to be displayed properly. Reloading the game will trigger such an update";
 	}
 
 	public static class header {

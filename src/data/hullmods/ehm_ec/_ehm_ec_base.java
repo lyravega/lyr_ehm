@@ -207,6 +207,7 @@ public class _ehm_ec_base extends _ehm_base implements normalEvents {
 		if (this.hullModSpec.hasTag(lyr_internals.tag.customizable)) {
 			tooltip.addSectionHeading(lyr_tooltip.header.customizable, lyr_tooltip.header.customizable_textColour, lyr_tooltip.header.customizable_bgColour, Alignment.MID, lyr_tooltip.header.padding).flash(1.0f, 1.0f);
 			tooltip.addPara(lyr_tooltip.text.customizable, lyr_tooltip.text.padding);
+			tooltip.addPara(lyr_tooltip.text.customizableEngine, lyr_tooltip.text.padding);
 		}
 
 		if (!isApplicableToShip(ship)) {

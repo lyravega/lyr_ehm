@@ -31,9 +31,7 @@ ehm_csc_blueShields_ringAlpha,Ring Alpha,Int,255,,[Ring] alpha of the shield,0,2
 ehm_cec_redEngines_header,Custom Header,Header,Custom Engine I,,,,,Custom Engine I
 ehm_cec_redEngines_name,Engine Name,String,Red Engines,,Name of the [hull modification],,,Custom Engine I
 ehm_cec_redEngines_engineHeader,Engine Header,Header,Engine Colour,,,,,Custom Engine I
-ehm_cec_redEngines_engineColour,Combat Engine Colour,Color,#ff3b3b,,"Colour of the [engines] in [combat]
-
-Full saturation not recommended",,,Custom Engine I
+ehm_cec_redEngines_engineColour,Combat Engine Colour,Color,#ff3b3b,,Colour of the [engines] in [combat]. Full saturation not recommended,,,Custom Engine I
 ehm_cec_redEngines_engineAlpha,Combat Engine Alpha,Int,255,,Alpha value of the [engines] in [combat],0,255,Custom Engine I
 ehm_cec_redEngines_hasDifferentCampaignEngine,Use Different Campaign Engine Colour,Boolean,false,,"If enabled, [engines] will use a different colour on the [campaign] layer",,,Custom Engine I
 ehm_cec_redEngines_engineCampaignColour,Campaign Engine Colour,Color,#ff3b3b,,Colour of the [engines] in [campaign],,,Custom Engine I
@@ -83,9 +81,7 @@ ehm_cec_redEngines_glowOutline,Engine Glow Outline,Radio,Default,"Default, I, II
 ehm_cec_greenEngines_header,Custom Header,Header,Custom Engine II,,,,,Custom Engine II
 ehm_cec_greenEngines_name,Engine Name,String,Green Engines,,Name of the [hull modification],,,Custom Engine II
 ehm_cec_greenEngines_engineHeader,Engine Header,Header,Engine Colour,,,,,Custom Engine II
-ehm_cec_greenEngines_engineColour,Combat Engine Colour,Color,#3bff3b,,"Colour of the [engines] in [combat]
-
-Full saturation not recommended",,,Custom Engine II
+ehm_cec_greenEngines_engineColour,Combat Engine Colour,Color,#3bff3b,,Colour of the [engines] in [combat]. Full saturation not recommended,,,Custom Engine II
 ehm_cec_greenEngines_engineAlpha,Combat Engine Alpha,Int,255,,Alpha value of the [engines] in [combat],0,255,Custom Engine II
 ehm_cec_greenEngines_hasDifferentCampaignEngine,Use Different Campaign Engine Colour,Boolean,false,,"If enabled, [engines] will use a different colour on the [campaign] layer",,,Custom Engine II
 ehm_cec_greenEngines_engineCampaignColour,Campaign Engine Colour,Color,#3bff3b,,Colour of the [engines] in [campaign],,,Custom Engine II
@@ -135,9 +131,7 @@ ehm_cec_greenEngines_glowOutline,Engine Glow Outline,Radio,Default,"Default, I, 
 ehm_cec_blueEngines_header,Custom Header,Header,Custom Engine III,,,,,Custom Engine III
 ehm_cec_blueEngines_name,Engine Name,String,Blue Engines,,Name of the [hull modification],,,Custom Engine III
 ehm_cec_blueEngines_engineHeader,Engine Header,Header,Engine Colour,,,,,Custom Engine III
-ehm_cec_blueEngines_engineColour,Combat Engine Colour,Color,#3b3bff,,"Colour of the [engines] in [combat]
-
-Full saturation not recommended",,,Custom Engine III
+ehm_cec_blueEngines_engineColour,Combat Engine Colour,Color,#3b3bff,,Colour of the [engines] in [combat]. Full saturation not recommended,,,Custom Engine III
 ehm_cec_blueEngines_engineAlpha,Combat Engine Alpha,Int,255,,Alpha value of the [engines] in [combat],0,255,Custom Engine III
 ehm_cec_blueEngines_hasDifferentCampaignEngine,Use Different Campaign Engine Colour,Boolean,false,,"If enabled, [engines] will use a different colour on the [campaign] layer",,,Custom Engine III
 ehm_cec_blueEngines_engineCampaignColour,Campaign Engine Colour,Color,#3b3bff,,Colour of the [engines] in [campaign],,,Custom Engine III

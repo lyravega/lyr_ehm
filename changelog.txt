@@ -1,7 +1,24 @@
-Version 0.7.4
+Version 0.8.0
 
+Big version bump due to accomplishing another milestone; implementing fully customizable engines, and
+as a bonus, implementing LunaLib and taking advantage of its options menu for mods.
+
+- LunaLib integration; from now on, EHM will require LunaLib and LazyLib to function
+- Removed old .json files and moved necessary stuff to the new options menu
+- Renamed some shield cosmetic hullmods to "Low-Tech", "High-Tech", "Midline" and "Crimson" shields
+- Converted remaining shield hullmods to fully customizable* "Red", "Green" and "Blue" shields
+- Added 3 fully customizable* engine cosmetic hullmods; "Red", "Green" and "Blue" engines
+- Added full shield and engine customization options through the new options menu
 - (D) is removed, or if 'showExperimentalFlavour' is enabled, replaced with (E) from hull class names 
 - Fixed shunt market ability toggle not properly persisting through reloads
+
+* Shield customization is rather simple, however engine customization offers a lot with flexibility.
+All three customizable engines are tweaked like "Low-Tech" engines by default, however you can
+customize them like [REDACTED] ones as well if you so desire.
+
+To start customizing your shields/engines, simply install one of the configurable hull modifications,
+and open LunaLib's settings menu by pressing "F2" on the campaign layer. When you save the new values,
+changes will be reflected in the game.
 
 
 
