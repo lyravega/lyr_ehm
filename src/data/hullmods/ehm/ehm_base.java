@@ -2,7 +2,7 @@ package data.hullmods.ehm;
 
 import static data.hullmods.ehm_ar._ehm_ar_base.ehm_processShunts;
 import static data.hullmods.ehm_mr.ehm_mr_overengineered.slotPointBonus;
-import static lyravega.plugin.lyr_lunaSettings.showFluff;
+import static lyravega.misc.lyr_lunaSettings.showFluff;
 import static lyravega.tools._lyr_uiTools.commitChanges;
 import static lyravega.tools._lyr_uiTools.playSound;
 

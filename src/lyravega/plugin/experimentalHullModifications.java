@@ -4,7 +4,7 @@ import static data.abilities.ehm_ability.attachListener;
 import static data.hullmods.ehm._ehm_basetracker.enhancedEvents;
 import static data.hullmods.ehm._ehm_basetracker.normalEvents;
 import static data.hullmods.ehm._ehm_basetracker.suppressedEvents;
-import static lyravega.plugin.lyr_lunaSettings.attachLunaListener;
+import static lyravega.misc.lyr_lunaSettings.attachLunaListener;
 import static lyravega.tools._lyr_uiTools.findUIClasses;
 
 import com.fs.starfarer.api.BaseModPlugin;

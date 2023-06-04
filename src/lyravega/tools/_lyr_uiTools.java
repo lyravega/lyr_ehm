@@ -1,6 +1,6 @@
 package lyravega.tools;
 
-import static lyravega.plugin.lyr_lunaSettings.playDrillSound;
+import static lyravega.misc.lyr_lunaSettings.playDrillSound;
 import static lyravega.tools._lyr_scriptTools.refreshRefit;
 
 import java.lang.invoke.MethodHandle;

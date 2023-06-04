@@ -1,7 +1,7 @@
 package data.hullmods.ehm_ar;
 
 import static data.hullmods.ehm_mr.ehm_mr_overengineered.slotPointBonus;
-import static lyravega.plugin.lyr_lunaSettings.extraInfoInHullMods;
+import static lyravega.misc.lyr_lunaSettings.extraInfoInHullMods;
 
 import java.util.HashMap;
 import java.util.HashSet;

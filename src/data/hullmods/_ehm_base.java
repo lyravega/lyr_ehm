@@ -1,6 +1,6 @@
 package data.hullmods;
 
-import static lyravega.plugin.lyr_lunaSettings.showExperimentalFlavour;
+import static lyravega.misc.lyr_lunaSettings.showExperimentalFlavour;
 
 import java.awt.Color;
 import java.util.HashMap;
