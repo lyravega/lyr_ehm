@@ -3,8 +3,6 @@ package data.hullmods;
 import static lyravega.tools._lyr_uiTools.commitChanges;
 import static lyravega.tools._lyr_uiTools.playSound;
 
-import java.util.Map;
-
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
@@ -17,11 +15,6 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import data.hullmods.ehm.events.normalEvents;
-import lyravega.proxies.lyr_engineBuilder;
-import lyravega.proxies.lyr_engineBuilder.engineStyle;
-import lyravega.proxies.lyr_hullSpec;
-
-import static lyravega.proxies.lyr_engineBuilder.customEngineData;
 
 public class _ehm_test extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
@@ -68,15 +61,7 @@ public class _ehm_test extends _ehm_base implements normalEvents {
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) { try {
-		int used = 1;
 
-		lyr_hullSpec hullSpec = new lyr_hullSpec(stats.getVariant().getHullSpec(), false);
-		lyr_engineBuilder engineSlot = new lyr_engineBuilder(null, false);
-
-		for (Object temp : hullSpec.getEngineSlots()) {
-			engineSlot.recycle(temp).setEngineStyle(engineStyle.custom);
-			engineSlot.setEngineData(customEngineData.get("EHM_TEST3"));
-		}
 	} catch (Throwable t ) { logger.warn("Test fail in 'applyEffectsBeforeShipCreation()'", t);	}}
 
 	@Override

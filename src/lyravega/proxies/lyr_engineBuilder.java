@@ -1,15 +1,11 @@
 package lyravega.proxies;
 
-import java.io.IOException;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodType;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.fs.starfarer.api.Global;
 
 import lyravega.misc.lyr_internals;
 import lyravega.tools._lyr_proxyTools;
@@ -175,23 +171,6 @@ public final class lyr_engineBuilder extends _lyr_proxyTools {
 		}
 	}
 
-	static {	// TODO this shit is for testing, remove it later
-		String testJsonPath = "data/config/engine_styles.json";
-		try {
-			JSONObject testJSON = Global.getSettings().loadJSON(testJsonPath, "lyr_ehm").getJSONObject("EHM_TEST");
-			JSONObject test2JSON = Global.getSettings().loadJSON(testJsonPath, "lyr_ehm").getJSONObject("EHM_TEST2");
-			JSONObject test3JSON = Global.getSettings().loadJSON(testJsonPath, "lyr_ehm").getJSONObject("EHM_TEST3");
-			JSONObject test4JSON = Global.getSettings().loadJSON(testJsonPath, "lyr_ehm").getJSONObject("EHM_TEST4");
-
-			addEngineData(testJSON, "EHM_TEST");
-			addEngineData(test2JSON, "EHM_TEST2");
-			addEngineData(test3JSON, "EHM_TEST3");
-			addEngineData(test4JSON, "EHM_TEST4");
-		} catch (JSONException | IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 	/**
 	 * Constructs a new engine data from a JSON object, with relevant fields found in
 	 * "engine_styles.json" file.
@@ -214,17 +193,13 @@ public final class lyr_engineBuilder extends _lyr_proxyTools {
 	 * Uses {@link #newEngineData(JSONObject, String)} to construct a new engine style
 	 * data object from the JSON object. Returns it after adding it to the {@link
 	 * #customEngineData}. {@link #setEngineData(Object)} should be utilized to use
-	 * these stored custom engine styles, ideally from the map instead of the return.
+	 * these stored custom engine styles.
 	 * @param jsonObject must have relevant stuff found in the "engine_styles.json"!
 	 * @param name
 	 * @category Utility
 	 */
-	public static Object addEngineData(JSONObject jsonObject, String name) {
-		Object engineDataObject = newEngineData(jsonObject, name);
-			
-		customEngineData.put(name, engineDataObject);
-
-		return engineDataObject;
+	public static void addEngineData(JSONObject jsonObject, String name) {
+		customEngineData.put(name, newEngineData(jsonObject, name));
 	}
 	//#endregion 
 	// END OF BRIDGE / PROXY METHODS

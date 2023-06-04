@@ -20,10 +20,10 @@ public class ehm_csc_greenShields extends _ehm_sc_base implements _ehm_customiza
 
 	@Override
 	public void ehm_applyCustomization() {
-		String settingIdPrefix = this.getClass().getSimpleName();
+		String settingIdPrefix = this.getClass().getSimpleName()+"_";
 
-		this.innerColour = getLunaRGBAColour(settingIdPrefix+"_inner");
-		this.ringColour = getLunaRGBAColour(settingIdPrefix+"_ring");
+		this.innerColour = getLunaRGBAColour(settingIdPrefix+"inner");
+		this.ringColour = getLunaRGBAColour(settingIdPrefix+"ring");
 		this.hullModSpec.setDisplayName(getLunaName(settingIdPrefix));
 	}
 

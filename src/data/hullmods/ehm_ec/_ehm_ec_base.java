@@ -1,7 +1,13 @@
 package data.hullmods.ehm_ec;
 
+import static lyravega.proxies.lyr_engineBuilder.addEngineData;
 import static lyravega.tools._lyr_uiTools.commitChanges;
 import static lyravega.tools._lyr_uiTools.playSound;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.json.JSONObject;
 
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
@@ -12,6 +18,7 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import data.hullmods._ehm_base;
 import data.hullmods.ehm.events.normalEvents;
+import lunalib.lunaSettings.LunaSettings;
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_tooltip;
 import lyravega.proxies.lyr_engineBuilder;
@@ -43,9 +50,8 @@ public class _ehm_ec_base extends _ehm_base implements normalEvents {
 
 	/**
 	 * Alters the engine visuals of the ship. Uses the vanilla engine styles
-	 * (as I haven't found a way to alter engine colours directly)
 	 * @param variant whose hullSpec will be altered
-	 * @param styleEnum somewhat hardcoded {@link lyravega.proxies.lyr_engineBuilder.engineStyle engineStyle}
+	 * @param styleEnum {@link lyravega.proxies.lyr_engineBuilder.engineStyle engineStyle}
 	 * @return a hullSpec with the altered engine visuals
 	 */
 	protected static final ShipHullSpecAPI ehm_pimpMyEngineSlots(ShipVariantAPI variant, int styleEnum) {
@@ -54,6 +60,25 @@ public class _ehm_ec_base extends _ehm_base implements normalEvents {
 
 		for (Object temp : hullSpec.getEngineSlots()) {
 			engineSlot.recycle(temp).setEngineStyle(styleEnum);
+		}
+
+		return hullSpec.retrieve();
+	}
+
+	/**
+	 * Alters the engine visuals of the ship, with custom engine data
+	 * @param variant whose hullSpec will be altered
+	 * @param styleEnum {@link lyravega.proxies.lyr_engineBuilder.engineStyle engineStyle}
+	 * @param engineData {@link #generateEngineData(String, String) generateEngineData}
+	 * @return a hullSpec with the altered engine visuals
+	 */
+	protected static final ShipHullSpecAPI ehm_pimpMyEngineSlots(ShipVariantAPI variant, int styleEnum, Object engineData) {
+		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
+		lyr_engineBuilder engineSlot = new lyr_engineBuilder(null, false);
+
+		for (Object temp : hullSpec.getEngineSlots()) {
+			engineSlot.recycle(temp).setEngineStyle(styleEnum);
+			engineSlot.setEngineData(engineData);
 		}
 
 		return hullSpec.retrieve();
@@ -72,10 +97,82 @@ public class _ehm_ec_base extends _ehm_base implements normalEvents {
 		return hullSpec;
 	}
 
+
+	/**
+	 * Creates a new engine data from the current settings set through LunaLib's menu. The
+	 * data is converted into an JSON object and passed to the static method {@link
+	 * lyravega.proxies.lyr_engineBuilder#addEngineData addEngineData()}, which generates
+	 * a game-usable engine data object and stores it in a map there which can be used
+	 * afterwards {@link lyravega.proxies.lyr_engineBuilder#customEngineData customEngineData}.
+	 * <p> Directly returning this object and using is possible, but not done that way.
+	 * @param settingIdPrefix class name is used as prefix in LunaLib setting ID's
+	 * @param customEngineDataId as the mapId to retrieve it from the map later
+	 */
+	protected static void generateEngineData(String settingIdPrefix, String customEngineDataId) {
+		final String modId = lyr_internals.id.mod;
+
+		Map<String, Object> engineData = new HashMap<String, Object>();
+		engineData.put("engineColor", getLunaRGBAColourArray(settingIdPrefix+"engine"));
+		engineData.put("contrailColor", getLunaRGBAColourArray(settingIdPrefix+"contrail"));
+		if (LunaSettings.getBoolean(modId, settingIdPrefix+"hasDifferentCampaignEngine")) {
+			engineData.put("engineCampaignColor", getLunaRGBAColourArray(settingIdPrefix+"engineCampaign"));
+		}
+		if (LunaSettings.getBoolean(modId, settingIdPrefix+"hasDifferentCampaignContrail")) {
+			engineData.put("contrailCampaignColor", getLunaRGBAColourArray(settingIdPrefix+"contrailCampaign"));
+		}
+		engineData.put("glowSizeMult", LunaSettings.getDouble(modId, settingIdPrefix+"glowSizeMult"));
+		if (LunaSettings.getBoolean(modId, settingIdPrefix+"hasAlternateGlow")) {
+			engineData.put("glowAlternateColor", getLunaRGBAColourArray(settingIdPrefix+"glowAlternate"));
+		}
+		engineData.put("contrailMaxSpeedMult", LunaSettings.getDouble(modId, settingIdPrefix+"contrailMaxSpeedMult"));
+		engineData.put("contrailAngularVelocityMult", LunaSettings.getDouble(modId, settingIdPrefix+"contrailAngularVelocityMult"));
+		if (LunaSettings.getString(modId, settingIdPrefix+"mode").equals("Particles")) {
+			engineData.put("mode", "PARTICLES");
+			engineData.put("contrailParticleDuration", LunaSettings.getDouble(modId, settingIdPrefix+"contrailParticleDuration"));
+			engineData.put("contrailParticleSizeMult", LunaSettings.getDouble(modId, settingIdPrefix+"contrailParticleSizeMult"));
+			engineData.put("contrailParticleFinalSizeMult", LunaSettings.getDouble(modId, settingIdPrefix+"contrailParticleFinalSizeMult"));
+		} else /*if (LunaSettings.getString(modId, settingIdPrefix+"mode").equals("Quad"))*/ {
+			engineData.put("mode", "QUAD_STRIP");
+			engineData.put("contrailDuration", LunaSettings.getDouble(modId, settingIdPrefix+"contrailParticleFinalSizeMult"));
+			engineData.put("contrailMinSeg", LunaSettings.getDouble(modId, settingIdPrefix+"contrailParticleFinalSizeMult"));
+			engineData.put("contrailSpawnDistMult", LunaSettings.getDouble(modId, settingIdPrefix+"contrailParticleFinalSizeMult"));
+			engineData.put("contrailWidthMult", LunaSettings.getDouble(modId, settingIdPrefix+"contrailParticleFinalSizeMult"));
+			engineData.put("contrailWidthAddedFractionAtEnd", LunaSettings.getDouble(modId, settingIdPrefix+"contrailParticleFinalSizeMult"));
+		}
+		if (LunaSettings.getString(modId, settingIdPrefix+"type").equals("Glow")) {
+			engineData.put("type", "GLOW");
+		} else /*if (LunaSettings.getString(modId, settingIdPrefix+"type").equals("Smoke"))*/ {
+			engineData.put("type", "SMOKE");
+		}
+		engineData.put("omegaMode", LunaSettings.getBoolean(modId, settingIdPrefix+"omegaMode"));
+
+		addEngineData(new JSONObject(engineData), customEngineDataId);
+	}
+
+	protected static int[] getLunaRGBAColourArray(String settingIdPrefix) {
+		String colourString = LunaSettings.getString(lyr_internals.id.mod, settingIdPrefix+"Colour");
+		int[] rgba = {0,0,0,0};
+		rgba[0] = Integer.parseInt(colourString.substring(1, 3), 16);
+		rgba[1] = Integer.parseInt(colourString.substring(3, 5), 16);
+		rgba[2] = Integer.parseInt(colourString.substring(5, 7), 16);
+		rgba[3] = LunaSettings.getInt(lyr_internals.id.mod, settingIdPrefix+"Alpha");
+
+		return rgba;
+	}
+
+	protected static String getLunaName(String settingIdPrefix) {
+		return LunaSettings.getString(lyr_internals.id.mod, settingIdPrefix+"name");
+	}
+
 	//#region INSTALLATION CHECKS
 	@Override
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (ship == null) return;
+
+		if (this.hullModSpec.hasTag(lyr_internals.tag.customizable)) {
+			tooltip.addSectionHeading(lyr_tooltip.header.customizable, lyr_tooltip.header.customizable_textColour, lyr_tooltip.header.customizable_bgColour, Alignment.MID, lyr_tooltip.header.padding).flash(1.0f, 1.0f);
+			tooltip.addPara(lyr_tooltip.text.customizable, lyr_tooltip.text.padding);
+		}
 
 		if (!isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(lyr_tooltip.header.notApplicable, lyr_tooltip.header.notApplicable_textColour, lyr_tooltip.header.notApplicable_bgColour, Alignment.MID, lyr_tooltip.header.padding);

@@ -78,7 +78,7 @@ public class _ehm_sc_base extends _ehm_base implements normalEvents {
 		return hullSpec.retrieve();
 	}
 
-	public static Color getLunaRGBAColour(String settingIdPrefix) {
+	protected static Color getLunaRGBAColour(String settingIdPrefix) {
 		String colourString = LunaSettings.getString(lyr_internals.id.mod, settingIdPrefix+"Colour");
 		int[] rgba = {0,0,0,0};
 		rgba[0] = Integer.parseInt(colourString.substring(1, 3), 16);
@@ -89,8 +89,8 @@ public class _ehm_sc_base extends _ehm_base implements normalEvents {
 		return new Color(rgba[0], rgba[1], rgba[2], rgba[3]);
 	}
 
-	public static String getLunaName(String settingIdPrefix) {
-		return LunaSettings.getString(lyr_internals.id.mod, settingIdPrefix+"_name");
+	protected static String getLunaName(String settingIdPrefix) {
+		return LunaSettings.getString(lyr_internals.id.mod, settingIdPrefix+"name");
 	}
 
 	//#region INSTALLATION CHECKS
