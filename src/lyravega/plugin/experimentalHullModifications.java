@@ -31,12 +31,12 @@ public class experimentalHullModifications extends BaseModPlugin implements _lyr
 		teachBlueprints();
 		replaceScript();
 		attachListener();
-		attachLunaListener();
 	}
 
 	@Override
 	public void onApplicationLoad() throws Exception {
 		registerHullMods();
+		attachLunaListener();
 	}
 
 	@Override

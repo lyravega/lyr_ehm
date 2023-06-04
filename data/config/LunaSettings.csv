@@ -1,125 +1,173 @@
 fieldID,fieldName,fieldType,defaultValue,secondaryValue,fieldDescription,minValue,maxValue,tab
 ehm_csc_redShields_header,Shield Header,Header,Custom Shield I,,,,,Custom Shield I
-ehm_csc_redShields_name,Shield Name,String,Red Shields,,Name of the hull modification,,,Custom Shield I
-ehm_csc_redShields_innerColour,Inner Colour,Color,#ff0000,,Set the inner colour of this custom shield,,,Custom Shield I
-ehm_csc_redShields_innerAlpha,Inner Alpha,Int,75,,Set the alpha of the inner colour. Above 100 not recommended,0,255,Custom Shield I
-ehm_csc_redShields_ringColour,Ring Colour,Color,#ffffff,,Set the ring colour of this custom shield,,,Custom Shield I
-ehm_csc_redShields_ringAlpha,Ring Alpha,Int,255,,Set the alpha of the ring colour,0,255,Custom Shield I
+ehm_csc_redShields_name,Shield Name,String,Red Shields,,Name of the [hull modification],,,Custom Shield I
+ehm_csc_redShields_innerHeader,Inner Header,Header,Inner Colour,,,,,Custom Shield I
+ehm_csc_redShields_innerColour,Inner Colour,Color,#ff0000,,[Inner] colour of the shield,,,Custom Shield I
+ehm_csc_redShields_innerAlpha,Inner Alpha,Int,75,,[Inner] alpha of the shield. Above 100 not recommended,0,255,Custom Shield I
+ehm_csc_redShields_ringHeader,Ring Header,Header,Ring Colour,,,,,Custom Shield I
+ehm_csc_redShields_ringColour,Ring Colour,Color,#ffffff,,[Ring] colour of the shield,,,Custom Shield I
+ehm_csc_redShields_ringAlpha,Ring Alpha,Int,255,,[Ring] alpha of the shield,0,255,Custom Shield I
 ,,,,,,,,
 ehm_csc_greenShields_header,Shield Header,Header,Custom Shield II,,,,,Custom Shield II
-ehm_csc_greenShields_name,Shield Name,String,Green Shields,,Name of the hull modification,,,Custom Shield II
-ehm_csc_greenShields_innerColour,Inner Colour,Color,#00ff00,,Set the inner colour of this custom shield,,,Custom Shield II
-ehm_csc_greenShields_innerAlpha,Inner Alpha,Int,75,,Set the alpha of the inner colour. Above 100 not recommended,0,255,Custom Shield II
-ehm_csc_greenShields_ringColour,Ring Colour,Color,#ffffff,,Set the ring colour of this custom shield,,,Custom Shield II
-ehm_csc_greenShields_ringAlpha,Ring Alpha,Int,255,,Set the alpha of the ring colour,0,255,Custom Shield II
+ehm_csc_greenShields_name,Shield Name,String,Green Shields,,Name of the [hull modification],,,Custom Shield II
+ehm_csc_greenShields_innerHeader,Inner Header,Header,Inner Colour,,,,,Custom Shield II
+ehm_csc_greenShields_innerColour,Inner Colour,Color,#00ff00,,[Inner] colour of the shield,,,Custom Shield II
+ehm_csc_greenShields_innerAlpha,Inner Alpha,Int,75,,[Inner] alpha of the shield. Above 100 not recommended,0,255,Custom Shield II
+ehm_csc_greenShields_ringHeader,Ring Header,Header,Ring Colour,,,,,Custom Shield II
+ehm_csc_greenShields_ringColour,Ring Colour,Color,#ffffff,,[Ring] colour of the shield,,,Custom Shield II
+ehm_csc_greenShields_ringAlpha,Ring Alpha,Int,255,,[Ring] alpha of the shield,0,255,Custom Shield II
 ,,,,,,,,
 ehm_csc_blueShields_header,Shield Header,Header,Custom Shield III,,,,,Custom Shield III
-ehm_csc_blueShields_name,Shield Name,String,Blue Shields,,Name of the hull modification,,,Custom Shield III
-ehm_csc_blueShields_innerColour,Inner Colour,Color,#0000ff,,Set the inner colour of this custom shield,,,Custom Shield III
-ehm_csc_blueShields_innerAlpha,Inner Alpha,Int,75,,Set the alpha of the inner colour. Above 100 not recommended,0,255,Custom Shield III
-ehm_csc_blueShields_ringColour,Ring Colour,Color,#ffffff,,Set the ring colour of this custom shield,,,Custom Shield III
-ehm_csc_blueShields_ringAlpha,Ring Alpha,Int,255,,Set the alpha of the ring colour,0,255,Custom Shield III
+ehm_csc_blueShields_name,Shield Name,String,Blue Shields,,Name of the [hull modification],,,Custom Shield III
+ehm_csc_blueShields_innerHeader,Inner Header,Header,Inner Colour,,,,,Custom Shield III
+ehm_csc_blueShields_innerColour,Inner Colour,Color,#0000ff,,[Inner] colour of the shield,,,Custom Shield III
+ehm_csc_blueShields_innerAlpha,Inner Alpha,Int,75,,[Inner] alpha of the shield. Above 100 not recommended,0,255,Custom Shield III
+ehm_csc_blueShields_ringHeader,Ring Header,Header,Ring Colour,,,,,Custom Shield III
+ehm_csc_blueShields_ringColour,Ring Colour,Color,#ffffff,,[Ring] colour of the shield,,,Custom Shield III
+ehm_csc_blueShields_ringAlpha,Ring Alpha,Int,255,,[Ring] alpha of the shield,0,255,Custom Shield III
 ,,,,,,,,
 ,,,,,,,,
 ,,,,,,,,
-ehm_cec_redEngines_header,Engine Header,Header,Custom Engine I,,,,,Custom Engine I
-ehm_cec_redEngines_name,Shield Name,String,Red Engines,,Name of the hull modification,,,Custom Engine I
-ehm_cec_redEngines_engineColour,Combat Engine Colour,Color,#ff0000,,"Colour of the engines. ",,,Custom Engine I
-ehm_cec_redEngines_engineAlpha,Combat Engine Alpha,Int,255,,Alpha value of above.,0,255,Custom Engine I
-ehm_cec_redEngines_contrailColour,Combat Contrail Colour,Color,#323232,,Colour of the contrail.,,,Custom Engine I
-ehm_cec_redEngines_contrailAlpha,Combat Contrail Alpha,Int,50,,Alpha value of above.,0,255,Custom Engine I
-ehm_cec_redEngines_hasDifferentCampaignEngine,Use Different Campaign Engine Colour,Boolean,false,,"If enabled, engines will use a different colour on the campaign layer. Uses combat engines otherwise.",,,Custom Engine I
-ehm_cec_redEngines_engineCampaignColour,Campaign Engine Colour,Color,#ff0000,,Requires the above toggle to be enabled. Colour of the engines on the campaign layer.,,,Custom Engine I
-ehm_cec_redEngines_engineCampaignAlpha,Campaign Engine Alpha,Int,255,,Requires the above toggle to be enabled. Alpha value of above.,0,255,Custom Engine I
-ehm_cec_redEngines_hasDifferentCampaignContrail,Use Different Campaign Contrail Colour,Boolean,false,,"If enabled, contrails will use a different colour on the campaign layer. Uses combat contrails otherwise.",,,Custom Engine I
-ehm_cec_redEngines_contrailCampaignColour,Campaign Contrail Colour,Color,#323232,,Requires the above toggle to be enabled. Colour of the contrails on the campaign layer.,,,Custom Engine I
-ehm_cec_redEngines_contrailCampaignAlpha,Campaign Contrail Alpha,Int,50,,Requires the above toggle to be enabled. Alpha value of above.,0,255,Custom Engine I
-ehm_cec_redEngines_glowSizeMult,Glow Size Multiplier,Double,1.0,,"Optional, game default: '1.0'.",0,5,Custom Engine I
-ehm_cec_redEngines_hasAlternateGlow,Use Alternate Glow Colour,Boolean,false,,"If enabled, engine glow will use an alternate colour.",,,Custom Engine I
-ehm_cec_redEngines_glowAlternateColour,Alternate Glow Colour,Color,#323232,,Requires the above toggle to be enabled. Colour of the alternate glow.,,,Custom Engine I
-ehm_cec_redEngines_glowAlternateAlpha,Alternate Glow Alpha,Int,50,,Requires the above toggle to be enabled. Alpha value of above.,0,255,Custom Engine I
-ehm_cec_redEngines_contrailMaxSpeedMult,Contrail Max Speed Multiplier,Double,0.5,,,0,5,Custom Engine I
-ehm_cec_redEngines_contrailAngularVelocityMult,Contrail Angular Velocity Multiplier,Double,0.5,,,0,5,Custom Engine I
-ehm_cec_redEngines_mode,Mode,Radio,Particles,"Particles, Quad",Determines which contrail parameters below will be used.,,,Custom Engine I
-ehm_cec_redEngines_contrailParticleDuration,Particle Contrail Duration,Double,3,Particles,"Requires ""Particles"" Mode.",0,5,Custom Engine I
-ehm_cec_redEngines_contrailParticleSizeMult,Particle Contrail Size Multiplier,Double,2,Particles,"Requires ""Particles"" Mode.",0,5,Custom Engine I
-ehm_cec_redEngines_contrailParticleFinalSizeMult,Particle Contrail Final Size Multiplier,Double,0.5,Particles,"Requires ""Particles"" Mode. Optional, game default: '0.5'.",0,5,Custom Engine I
-ehm_cec_redEngines_contrailDuration,Quad Contrail Duration,Double,1.5,Quad,"Requires ""Quad"" Mode.",0,5,Custom Engine I
-ehm_cec_redEngines_contrailMinSeg,Quad Contrail Minimum Segment Length,Int,5,Quad,"Requires ""Quad"" Mode. Optional, game default: '5'. Minimum length of segments, in pixels",1,20,Custom Engine I
-ehm_cec_redEngines_contrailSpawnDistMult,Quad Contrail Spawn Distance Multiplier,Double,0.7,Quad,"Requires ""Quad"" Mode. Optional, game default: '0.7'.",0,5,Custom Engine I
-ehm_cec_redEngines_contrailWidthMult,Quad Contrail Width Multiplier,Double,0.67,Quad,"Requires ""Quad"" Mode.",0,5,Custom Engine I
-ehm_cec_redEngines_contrailWidthAddedFractionAtEnd,Quad Contrail Width Added Fraction At End,Double,0.5,Quad,"Requires ""Quad"" Mode. Optional, game default: '0.5'. Can be negative; makes trail spread out or narrow at the end.",-5,5,Custom Engine I
-ehm_cec_redEngines_type,Type,Radio,Glow,"Glow, Smoke",Determines the blend mode; additive or regular.,,,Custom Engine I
-ehm_cec_redEngines_omegaMode,[REDACTED] Mode,Boolean,false,,???,,,Custom Engine I
+ehm_cec_redEngines_header,Custom Header,Header,Custom Engine I,,,,,Custom Engine I
+ehm_cec_redEngines_name,Engine Name,String,Red Engines,,Name of the [hull modification],,,Custom Engine I
+ehm_cec_redEngines_engineHeader,Engine Header,Header,Engine Colour,,,,,Custom Engine I
+ehm_cec_redEngines_engineColour,Combat Engine Colour,Color,#ff3b3b,,"Colour of the [engines] in [combat]
+
+Full saturation not recommended",,,Custom Engine I
+ehm_cec_redEngines_engineAlpha,Combat Engine Alpha,Int,255,,Alpha value of the [engines] in [combat],0,255,Custom Engine I
+ehm_cec_redEngines_hasDifferentCampaignEngine,Use Different Campaign Engine Colour,Boolean,false,,"If enabled, [engines] will use a different colour on the [campaign] layer",,,Custom Engine I
+ehm_cec_redEngines_engineCampaignColour,Campaign Engine Colour,Color,#ff3b3b,,Colour of the [engines] in [campaign],,,Custom Engine I
+ehm_cec_redEngines_engineCampaignAlpha,Campaign Engine Alpha,Int,255,,Alpha value of the [engines] in [campaign],0,255,Custom Engine I
+ehm_cec_redEngines_contrailHeader,Contrail Header,Header,Contrail Colour,,,,,Custom Engine I
+ehm_cec_redEngines_contrailColour,Combat Contrail Colour,Color,#323232,,Colour of the [contrails] in [combat],,,Custom Engine I
+ehm_cec_redEngines_contrailAlpha,Combat Contrail Alpha,Int,50,,Alpha value of the [contrails] in [combat],0,255,Custom Engine I
+ehm_cec_redEngines_hasDifferentCampaignContrail,Use Different Campaign Contrail Colour,Boolean,true,,"If enabled, [contrails] will use a different colour on the [campaign] layer",,,Custom Engine I
+ehm_cec_redEngines_contrailCampaignColour,Campaign Contrail Colour,Color,#ff3b3b,,Colour of the [contrails] in [campaign],,,Custom Engine I
+ehm_cec_redEngines_contrailCampaignAlpha,Campaign Contrail Alpha,Int,75,,Alpha value of the [contrails] in [campaign],0,255,Custom Engine I
+ehm_cec_redEngines_glowHeader,Glow Header,Header,Engine Glow,,,,,Custom Engine I
+ehm_cec_redEngines_glowSizeMult,Glow Size Multiplier,Double,1.0,,"Size multiplier for the [engine glows]. Optional, game default: '1.0'",0,3,Custom Engine I
+ehm_cec_redEngines_hasAlternateGlow,Use Alternate Glow Colour,Boolean,true,,"If enabled, [engine glows] will use an alternate colour",,,Custom Engine I
+ehm_cec_redEngines_glowAlternateColour,Alternate Glow Colour,Color,#ff9696,,Colour of the [engine glows],,,Custom Engine I
+ehm_cec_redEngines_glowAlternateAlpha,Alternate Glow Alpha,Int,75,,Alpha value of the [engine glows],0,255,Custom Engine I
+ehm_cec_redEngines_contrailAdvanced,Contrail Advanced,Header,Advanced Contrail,,,,,Custom Engine I
+ehm_cec_redEngines_mode,Mode,Radio,Particles,"Particles, Plasma, Disabled","Sets the contrail mode
+[Particles]: Smoke clouds
+[Plasma]: Plasma trail
+[Disabled]: No contrail, disables most contrail related settings",,,Custom Engine I
+ehm_cec_redEngines_type,Type,Radio,Additive,"Additive, Regular","Determines the blend mode
+[Glow]: Usually coupled with [Trail] and bright contrail
+[Smoke]: Usually coupled with [Particles] and dim contrail",,,Custom Engine I
+ehm_cec_redEngines_contrailParticleDuration,Particle Contrail Duration,Double,3,Particles,"[Particles] duration, in seconds",0,5,Custom Engine I
+ehm_cec_redEngines_contrailParticleSizeMult,Particle Contrail Size Multiplier,Double,2,Particles,[Particles] initial size multiplier,0,5,Custom Engine I
+ehm_cec_redEngines_contrailParticleFinalSizeMult,Particle Contrail Final Size Multiplier,Double,2.5,Particles,"[Particles] final size multiplier. Optional, game default: '0.5'",0,5,Custom Engine I
+ehm_cec_redEngines_contrailDuration,Quad Contrail Duration,Double,1.5,Trail,"[Plasma] duration, in seconds",0,5,Custom Engine I
+ehm_cec_redEngines_contrailMinSeg,Quad Contrail Minimum Segment Length,Int,5,Trail,"[Plasma] segment minimum length, in pixels. Optional, game default: '5'",1,20,Custom Engine I
+ehm_cec_redEngines_contrailSpawnDistMult,Quad Contrail Spawn Distance Multiplier,Double,0.7,Trail,"[Plasma] spawn distance multiplier. Optional, game default: '0.7'",0,5,Custom Engine I
+ehm_cec_redEngines_contrailWidthMult,Quad Contrail Width Multiplier,Double,0.67,Trail,[Plasma] width multiplier,0,5,Custom Engine I
+ehm_cec_redEngines_contrailWidthAddedFractionAtEnd,Quad Contrail Width Added Fraction At End,Double,-1,Trail,"[Plasma] extra width at the end. Optional, game default: '0.5'",-2,2,Custom Engine I
+ehm_cec_redEngines_contrailMaxSpeedMult,Contrail Max Speed Multiplier,Double,0.5,,Max speed multiplier of the [contrail],0,2,Custom Engine I
+ehm_cec_redEngines_contrailAngularVelocityMult,Contrail Angular Velocity Multiplier,Double,0.5,,Angular velocity multiplier of the [contrail]. Mostly for [Particles],0,2,Custom Engine I
+ehm_cec_redEngines_otherHeader,Other Header,Header,Other Settings,,,,,Custom Engine I
+ehm_cec_redEngines_omegaMode,[REDACTED] Mode,Boolean,false,,[???],,,Custom Engine I
+ehm_cec_redEngines_glowSprite,Engine Glow Sprite,Radio,Default,"Default, I, II, III",Adds some effects. Could be very subtle to notice,,,Custom Engine I
+ehm_cec_redEngines_glowOutline,Engine Glow Outline,Radio,Default,"Default, I, II, III",Adds some more effects. Possibly does nothing,,,Custom Engine I
 ,,,,,,,,
 ,,,,,,,,
 ,,,,,,,,
-ehm_cec_greenEngines_header,Engine Header,Header,Custom Engine II,,,,,Custom Engine II
-ehm_cec_greenEngines_name,Shield Name,String,Green Engines,,Name of the hull modification,,,Custom Engine II
-ehm_cec_greenEngines_engineColour,Combat Engine Colour,Color,#ff0000,,"Colour of the engines. ",,,Custom Engine II
-ehm_cec_greenEngines_engineAlpha,Combat Engine Alpha,Int,255,,Alpha value of above.,0,255,Custom Engine II
-ehm_cec_greenEngines_contrailColour,Combat Contrail Colour,Color,#323232,,Colour of the contrail.,,,Custom Engine II
-ehm_cec_greenEngines_contrailAlpha,Combat Contrail Alpha,Int,50,,Alpha value of above.,0,255,Custom Engine II
-ehm_cec_greenEngines_hasDifferentCampaignEngine,Use Different Campaign Engine Colour,Boolean,false,,"If enabled, engines will use a different colour on the campaign layer. Uses combat engines otherwise.",,,Custom Engine II
-ehm_cec_greenEngines_engineCampaignColour,Campaign Engine Colour,Color,#ff0000,,Requires the above toggle to be enabled. Colour of the engines on the campaign layer.,,,Custom Engine II
-ehm_cec_greenEngines_engineCampaignAlpha,Campaign Engine Alpha,Int,255,,Requires the above toggle to be enabled. Alpha value of above.,0,255,Custom Engine II
-ehm_cec_greenEngines_hasDifferentCampaignContrail,Use Different Campaign Contrail Colour,Boolean,false,,"If enabled, contrails will use a different colour on the campaign layer. Uses combat contrails otherwise.",,,Custom Engine II
-ehm_cec_greenEngines_contrailCampaignColour,Campaign Contrail Colour,Color,#323232,,Requires the above toggle to be enabled. Colour of the contrails on the campaign layer.,,,Custom Engine II
-ehm_cec_greenEngines_contrailCampaignAlpha,Campaign Contrail Alpha,Int,50,,Requires the above toggle to be enabled. Alpha value of above.,0,255,Custom Engine II
-ehm_cec_greenEngines_glowSizeMult,Glow Size Multiplier,Double,1.0,,"Optional, game default: '1.0'.",0,5,Custom Engine II
-ehm_cec_greenEngines_hasAlternateGlow,Use Alternate Glow Colour,Boolean,false,,"If enabled, engine glow will use an alternate colour.",,,Custom Engine II
-ehm_cec_greenEngines_glowAlternateColour,Alternate Glow Colour,Color,#323232,,Requires the above toggle to be enabled. Colour of the alternate glow.,,,Custom Engine II
-ehm_cec_greenEngines_glowAlternateAlpha,Alternate Glow Alpha,Int,50,,Requires the above toggle to be enabled. Alpha value of above.,0,255,Custom Engine II
-ehm_cec_greenEngines_contrailMaxSpeedMult,Contrail Max Speed Multiplier,Double,0.5,,,0,5,Custom Engine II
-ehm_cec_greenEngines_contrailAngularVelocityMult,Contrail Angular Velocity Multiplier,Double,0.5,,,0,5,Custom Engine II
-ehm_cec_greenEngines_mode,Mode,Radio,Particles,"Particles, Quad",Determines which contrail parameters below will be used.,,,Custom Engine II
-ehm_cec_greenEngines_contrailParticleDuration,Particle Contrail Duration,Double,3,Particles,"Requires ""Particles"" Mode.",0,5,Custom Engine II
-ehm_cec_greenEngines_contrailParticleSizeMult,Particle Contrail Size Multiplier,Double,2,Particles,"Requires ""Particles"" Mode.",0,5,Custom Engine II
-ehm_cec_greenEngines_contrailParticleFinalSizeMult,Particle Contrail Final Size Multiplier,Double,0.5,Particles,"Requires ""Particles"" Mode. Optional, game default: '0.5'.",0,5,Custom Engine II
-ehm_cec_greenEngines_contrailDuration,Quad Contrail Duration,Double,1.5,Quad,"Requires ""Quad"" Mode.",0,5,Custom Engine II
-ehm_cec_greenEngines_contrailMinSeg,Quad Contrail Minimum Segment Length,Int,5,Quad,"Requires ""Quad"" Mode. Optional, game default: '5'. Minimum length of segments, in pixels",1,20,Custom Engine II
-ehm_cec_greenEngines_contrailSpawnDistMult,Quad Contrail Spawn Distance Multiplier,Double,0.7,Quad,"Requires ""Quad"" Mode. Optional, game default: '0.7'.",0,5,Custom Engine II
-ehm_cec_greenEngines_contrailWidthMult,Quad Contrail Width Multiplier,Double,0.67,Quad,"Requires ""Quad"" Mode.",0,5,Custom Engine II
-ehm_cec_greenEngines_contrailWidthAddedFractionAtEnd,Quad Contrail Width Added Fraction At End,Double,0.5,Quad,"Requires ""Quad"" Mode. Optional, game default: '0.5'. Can be negative; makes trail spread out or narrow at the end.",-5,5,Custom Engine II
-ehm_cec_greenEngines_type,Type,Radio,Glow,"Glow, Smoke",Determines the blend mode; additive or regular.,,,Custom Engine II
-ehm_cec_greenEngines_omegaMode,[REDACTED] Mode,Boolean,false,,???,,,Custom Engine II
+ehm_cec_greenEngines_header,Custom Header,Header,Custom Engine II,,,,,Custom Engine II
+ehm_cec_greenEngines_name,Engine Name,String,Green Engines,,Name of the [hull modification],,,Custom Engine II
+ehm_cec_greenEngines_engineHeader,Engine Header,Header,Engine Colour,,,,,Custom Engine II
+ehm_cec_greenEngines_engineColour,Combat Engine Colour,Color,#3bff3b,,"Colour of the [engines] in [combat]
+
+Full saturation not recommended",,,Custom Engine II
+ehm_cec_greenEngines_engineAlpha,Combat Engine Alpha,Int,255,,Alpha value of the [engines] in [combat],0,255,Custom Engine II
+ehm_cec_greenEngines_hasDifferentCampaignEngine,Use Different Campaign Engine Colour,Boolean,false,,"If enabled, [engines] will use a different colour on the [campaign] layer",,,Custom Engine II
+ehm_cec_greenEngines_engineCampaignColour,Campaign Engine Colour,Color,#3bff3b,,Colour of the [engines] in [campaign],,,Custom Engine II
+ehm_cec_greenEngines_engineCampaignAlpha,Campaign Engine Alpha,Int,255,,Alpha value of the [engines] in [campaign],0,255,Custom Engine II
+ehm_cec_greenEngines_contrailHeader,Contrail Header,Header,Contrail Colour,,,,,Custom Engine II
+ehm_cec_greenEngines_contrailColour,Combat Contrail Colour,Color,#323232,,Colour of the [contrails] in [combat],,,Custom Engine II
+ehm_cec_greenEngines_contrailAlpha,Combat Contrail Alpha,Int,50,,Alpha value of the [contrails] in [combat],0,255,Custom Engine II
+ehm_cec_greenEngines_hasDifferentCampaignContrail,Use Different Campaign Contrail Colour,Boolean,true,,"If enabled, [contrails] will use a different colour on the [campaign] layer",,,Custom Engine II
+ehm_cec_greenEngines_contrailCampaignColour,Campaign Contrail Colour,Color,#3bff3b,,Colour of the [contrails] in [campaign],,,Custom Engine II
+ehm_cec_greenEngines_contrailCampaignAlpha,Campaign Contrail Alpha,Int,75,,Alpha value of the [contrails] in [campaign],0,255,Custom Engine II
+ehm_cec_greenEngines_glowHeader,Glow Header,Header,Engine Glow,,,,,Custom Engine II
+ehm_cec_greenEngines_glowSizeMult,Glow Size Multiplier,Double,1.0,,"Size multiplier for the [engine glows]. Optional, game default: '1.0'",0,3,Custom Engine II
+ehm_cec_greenEngines_hasAlternateGlow,Use Alternate Glow Colour,Boolean,true,,"If enabled, [engine glows] will use an alternate colour",,,Custom Engine II
+ehm_cec_greenEngines_glowAlternateColour,Alternate Glow Colour,Color,#96ff96,,Colour of the [engine glows],,,Custom Engine II
+ehm_cec_greenEngines_glowAlternateAlpha,Alternate Glow Alpha,Int,75,,Alpha value of the [engine glows],0,255,Custom Engine II
+ehm_cec_greenEngines_contrailAdvanced,Contrail Advanced,Header,Advanced Contrail,,,,,Custom Engine II
+ehm_cec_greenEngines_mode,Mode,Radio,Particles,"Particles, Plasma, Disabled","Sets the contrail mode
+[Particles]: Smoke clouds
+[Plasma]: Plasma trail
+[Disabled]: No contrail, disables most contrail related settings",,,Custom Engine II
+ehm_cec_greenEngines_type,Type,Radio,Additive,"Additive, Regular","Determines the blend mode
+[Glow]: Usually coupled with [Trail] and bright contrail
+[Smoke]: Usually coupled with [Particles] and dim contrail",,,Custom Engine II
+ehm_cec_greenEngines_contrailParticleDuration,Particle Contrail Duration,Double,3,Particles,"[Particles] duration, in seconds",0,5,Custom Engine II
+ehm_cec_greenEngines_contrailParticleSizeMult,Particle Contrail Size Multiplier,Double,2,Particles,[Particles] initial size multiplier,0,5,Custom Engine II
+ehm_cec_greenEngines_contrailParticleFinalSizeMult,Particle Contrail Final Size Multiplier,Double,2.5,Particles,"[Particles] final size multiplier. Optional, game default: '0.5'",0,5,Custom Engine II
+ehm_cec_greenEngines_contrailDuration,Quad Contrail Duration,Double,1.5,Trail,"[Plasma] duration, in seconds",0,5,Custom Engine II
+ehm_cec_greenEngines_contrailMinSeg,Quad Contrail Minimum Segment Length,Int,5,Trail,"[Plasma] segment minimum length, in pixels. Optional, game default: '5'",1,20,Custom Engine II
+ehm_cec_greenEngines_contrailSpawnDistMult,Quad Contrail Spawn Distance Multiplier,Double,0.7,Trail,"[Plasma] spawn distance multiplier. Optional, game default: '0.7'",0,5,Custom Engine II
+ehm_cec_greenEngines_contrailWidthMult,Quad Contrail Width Multiplier,Double,0.67,Trail,[Plasma] width multiplier,0,5,Custom Engine II
+ehm_cec_greenEngines_contrailWidthAddedFractionAtEnd,Quad Contrail Width Added Fraction At End,Double,-1,Trail,"[Plasma] extra width at the end. Optional, game default: '0.5'",-2,2,Custom Engine II
+ehm_cec_greenEngines_contrailMaxSpeedMult,Contrail Max Speed Multiplier,Double,0.5,,Max speed multiplier of the [contrail],0,2,Custom Engine II
+ehm_cec_greenEngines_contrailAngularVelocityMult,Contrail Angular Velocity Multiplier,Double,0.5,,Angular velocity multiplier of the [contrail]. Mostly for [Particles],0,2,Custom Engine II
+ehm_cec_greenEngines_otherHeader,Other Header,Header,Other Settings,,,,,Custom Engine II
+ehm_cec_greenEngines_omegaMode,[REDACTED] Mode,Boolean,false,,[???],,,Custom Engine II
+ehm_cec_greenEngines_glowSprite,Engine Glow Sprite,Radio,Default,"Default, I, II, III",Adds some effects. Could be very subtle to notice,,,Custom Engine II
+ehm_cec_greenEngines_glowOutline,Engine Glow Outline,Radio,Default,"Default, I, II, III",Adds some more effects. Possibly does nothing,,,Custom Engine II
 ,,,,,,,,
 ,,,,,,,,
 ,,,,,,,,
-ehm_cec_blueEngines_header,Engine Header,Header,Custom Engine III,,,,,Custom Engine III
-ehm_cec_blueEngines_name,Shield Name,String,Blue Engines,,Name of the hull modification,,,Custom Engine III
-ehm_cec_blueEngines_engineColour,Combat Engine Colour,Color,#ff0000,,"Colour of the engines. ",,,Custom Engine III
-ehm_cec_blueEngines_engineAlpha,Combat Engine Alpha,Int,255,,Alpha value of above.,0,255,Custom Engine III
-ehm_cec_blueEngines_contrailColour,Combat Contrail Colour,Color,#323232,,Colour of the contrail.,,,Custom Engine III
-ehm_cec_blueEngines_contrailAlpha,Combat Contrail Alpha,Int,50,,Alpha value of above.,0,255,Custom Engine III
-ehm_cec_blueEngines_hasDifferentCampaignEngine,Use Different Campaign Engine Colour,Boolean,false,,"If enabled, engines will use a different colour on the campaign layer. Uses combat engines otherwise.",,,Custom Engine III
-ehm_cec_blueEngines_engineCampaignColour,Campaign Engine Colour,Color,#ff0000,,Requires the above toggle to be enabled. Colour of the engines on the campaign layer.,,,Custom Engine III
-ehm_cec_blueEngines_engineCampaignAlpha,Campaign Engine Alpha,Int,255,,Requires the above toggle to be enabled. Alpha value of above.,0,255,Custom Engine III
-ehm_cec_blueEngines_hasDifferentCampaignContrail,Use Different Campaign Contrail Colour,Boolean,false,,"If enabled, contrails will use a different colour on the campaign layer. Uses combat contrails otherwise.",,,Custom Engine III
-ehm_cec_blueEngines_contrailCampaignColour,Campaign Contrail Colour,Color,#323232,,Requires the above toggle to be enabled. Colour of the contrails on the campaign layer.,,,Custom Engine III
-ehm_cec_blueEngines_contrailCampaignAlpha,Campaign Contrail Alpha,Int,50,,Requires the above toggle to be enabled. Alpha value of above.,0,255,Custom Engine III
-ehm_cec_blueEngines_glowSizeMult,Glow Size Multiplier,Double,1.0,,"Optional, game default: '1.0'.",0,5,Custom Engine III
-ehm_cec_blueEngines_hasAlternateGlow,Use Alternate Glow Colour,Boolean,false,,"If enabled, engine glow will use an alternate colour.",,,Custom Engine III
-ehm_cec_blueEngines_glowAlternateColour,Alternate Glow Colour,Color,#323232,,Requires the above toggle to be enabled. Colour of the alternate glow.,,,Custom Engine III
-ehm_cec_blueEngines_glowAlternateAlpha,Alternate Glow Alpha,Int,50,,Requires the above toggle to be enabled. Alpha value of above.,0,255,Custom Engine III
-ehm_cec_blueEngines_contrailMaxSpeedMult,Contrail Max Speed Multiplier,Double,0.5,,,0,5,Custom Engine III
-ehm_cec_blueEngines_contrailAngularVelocityMult,Contrail Angular Velocity Multiplier,Double,0.5,,,0,5,Custom Engine III
-ehm_cec_blueEngines_mode,Mode,Radio,Particles,"Particles, Quad",Determines which contrail parameters below will be used.,,,Custom Engine III
-ehm_cec_blueEngines_contrailParticleDuration,Particle Contrail Duration,Double,3,Particles,"Requires ""Particles"" Mode.",0,5,Custom Engine III
-ehm_cec_blueEngines_contrailParticleSizeMult,Particle Contrail Size Multiplier,Double,2,Particles,"Requires ""Particles"" Mode.",0,5,Custom Engine III
-ehm_cec_blueEngines_contrailParticleFinalSizeMult,Particle Contrail Final Size Multiplier,Double,0.5,Particles,"Requires ""Particles"" Mode. Optional, game default: '0.5'.",0,5,Custom Engine III
-ehm_cec_blueEngines_contrailDuration,Quad Contrail Duration,Double,1.5,Quad,"Requires ""Quad"" Mode.",0,5,Custom Engine III
-ehm_cec_blueEngines_contrailMinSeg,Quad Contrail Minimum Segment Length,Int,5,Quad,"Requires ""Quad"" Mode. Optional, game default: '5'. Minimum length of segments, in pixels",1,20,Custom Engine III
-ehm_cec_blueEngines_contrailSpawnDistMult,Quad Contrail Spawn Distance Multiplier,Double,0.7,Quad,"Requires ""Quad"" Mode. Optional, game default: '0.7'.",0,5,Custom Engine III
-ehm_cec_blueEngines_contrailWidthMult,Quad Contrail Width Multiplier,Double,0.67,Quad,"Requires ""Quad"" Mode.",0,5,Custom Engine III
-ehm_cec_blueEngines_contrailWidthAddedFractionAtEnd,Quad Contrail Width Added Fraction At End,Double,0.5,Quad,"Requires ""Quad"" Mode. Optional, game default: '0.5'. Can be negative; makes trail spread out or narrow at the end.",-5,5,Custom Engine III
-ehm_cec_blueEngines_type,Type,Radio,Glow,"Glow, Smoke",Determines the blend mode; additive or regular.,,,Custom Engine III
-ehm_cec_blueEngines_omegaMode,[REDACTED] Mode,Boolean,false,,???,,,Custom Engine III
+ehm_cec_blueEngines_header,Custom Header,Header,Custom Engine III,,,,,Custom Engine III
+ehm_cec_blueEngines_name,Engine Name,String,Blue Engines,,Name of the [hull modification],,,Custom Engine III
+ehm_cec_blueEngines_engineHeader,Engine Header,Header,Engine Colour,,,,,Custom Engine III
+ehm_cec_blueEngines_engineColour,Combat Engine Colour,Color,#3b3bff,,"Colour of the [engines] in [combat]
+
+Full saturation not recommended",,,Custom Engine III
+ehm_cec_blueEngines_engineAlpha,Combat Engine Alpha,Int,255,,Alpha value of the [engines] in [combat],0,255,Custom Engine III
+ehm_cec_blueEngines_hasDifferentCampaignEngine,Use Different Campaign Engine Colour,Boolean,false,,"If enabled, [engines] will use a different colour on the [campaign] layer",,,Custom Engine III
+ehm_cec_blueEngines_engineCampaignColour,Campaign Engine Colour,Color,#3b3bff,,Colour of the [engines] in [campaign],,,Custom Engine III
+ehm_cec_blueEngines_engineCampaignAlpha,Campaign Engine Alpha,Int,255,,Alpha value of the [engines] in [campaign],0,255,Custom Engine III
+ehm_cec_blueEngines_contrailHeader,Contrail Header,Header,Contrail Colour,,,,,Custom Engine III
+ehm_cec_blueEngines_contrailColour,Combat Contrail Colour,Color,#323232,,Colour of the [contrails] in [combat],,,Custom Engine III
+ehm_cec_blueEngines_contrailAlpha,Combat Contrail Alpha,Int,50,,Alpha value of the [contrails] in [combat],0,255,Custom Engine III
+ehm_cec_blueEngines_hasDifferentCampaignContrail,Use Different Campaign Contrail Colour,Boolean,true,,"If enabled, [contrails] will use a different colour on the [campaign] layer",,,Custom Engine III
+ehm_cec_blueEngines_contrailCampaignColour,Campaign Contrail Colour,Color,#3b3bff,,Colour of the [contrails] in [campaign],,,Custom Engine III
+ehm_cec_blueEngines_contrailCampaignAlpha,Campaign Contrail Alpha,Int,75,,Alpha value of the [contrails] in [campaign],0,255,Custom Engine III
+ehm_cec_blueEngines_glowHeader,Glow Header,Header,Engine Glow,,,,,Custom Engine III
+ehm_cec_blueEngines_glowSizeMult,Glow Size Multiplier,Double,1.0,,"Size multiplier for the [engine glows]. Optional, game default: '1.0'",0,3,Custom Engine III
+ehm_cec_blueEngines_hasAlternateGlow,Use Alternate Glow Colour,Boolean,true,,"If enabled, [engine glows] will use an alternate colour",,,Custom Engine III
+ehm_cec_blueEngines_glowAlternateColour,Alternate Glow Colour,Color,#9696ff,,Colour of the [engine glows],,,Custom Engine III
+ehm_cec_blueEngines_glowAlternateAlpha,Alternate Glow Alpha,Int,75,,Alpha value of the [engine glows],0,255,Custom Engine III
+ehm_cec_blueEngines_contrailAdvanced,Contrail Advanced,Header,Advanced Contrail,,,,,Custom Engine III
+ehm_cec_blueEngines_mode,Mode,Radio,Particles,"Particles, Plasma, Disabled","Sets the contrail mode
+[Particles]: Smoke clouds
+[Plasma]: Plasma trail
+[Disabled]: No contrail, disables most contrail related settings",,,Custom Engine III
+ehm_cec_blueEngines_type,Type,Radio,Additive,"Additive, Regular","Determines the blend mode
+[Glow]: Usually coupled with [Trail] and bright contrail
+[Smoke]: Usually coupled with [Particles] and dim contrail",,,Custom Engine III
+ehm_cec_blueEngines_contrailParticleDuration,Particle Contrail Duration,Double,3,Particles,"[Particles] duration, in seconds",0,5,Custom Engine III
+ehm_cec_blueEngines_contrailParticleSizeMult,Particle Contrail Size Multiplier,Double,2,Particles,[Particles] initial size multiplier,0,5,Custom Engine III
+ehm_cec_blueEngines_contrailParticleFinalSizeMult,Particle Contrail Final Size Multiplier,Double,2.5,Particles,"[Particles] final size multiplier. Optional, game default: '0.5'",0,5,Custom Engine III
+ehm_cec_blueEngines_contrailDuration,Quad Contrail Duration,Double,1.5,Trail,"[Plasma] duration, in seconds",0,5,Custom Engine III
+ehm_cec_blueEngines_contrailMinSeg,Quad Contrail Minimum Segment Length,Int,5,Trail,"[Plasma] segment minimum length, in pixels. Optional, game default: '5'",1,20,Custom Engine III
+ehm_cec_blueEngines_contrailSpawnDistMult,Quad Contrail Spawn Distance Multiplier,Double,0.7,Trail,"[Plasma] spawn distance multiplier. Optional, game default: '0.7'",0,5,Custom Engine III
+ehm_cec_blueEngines_contrailWidthMult,Quad Contrail Width Multiplier,Double,0.67,Trail,[Plasma] width multiplier,0,5,Custom Engine III
+ehm_cec_blueEngines_contrailWidthAddedFractionAtEnd,Quad Contrail Width Added Fraction At End,Double,-1,Trail,"[Plasma] extra width at the end. Optional, game default: '0.5'",-2,2,Custom Engine III
+ehm_cec_blueEngines_contrailMaxSpeedMult,Contrail Max Speed Multiplier,Double,0.5,,Max speed multiplier of the [contrail],0,2,Custom Engine III
+ehm_cec_blueEngines_contrailAngularVelocityMult,Contrail Angular Velocity Multiplier,Double,0.5,,Angular velocity multiplier of the [contrail]. Mostly for [Particles],0,2,Custom Engine III
+ehm_cec_blueEngines_otherHeader,Other Header,Header,Other Settings,,,,,Custom Engine III
+ehm_cec_blueEngines_omegaMode,[REDACTED] Mode,Boolean,false,,[???],,,Custom Engine III
+ehm_cec_blueEngines_glowSprite,Engine Glow Sprite,Radio,Default,"Default, I, II, III",Adds some effects. Could be very subtle to notice,,,Custom Engine III
+ehm_cec_blueEngines_glowOutline,Engine Glow Outline,Radio,Default,"Default, I, II, III",Adds some more effects. Possibly does nothing,,,Custom Engine III
 ,,,,,,,,
 ,,,,,,,,
 ,,,,,,,,
 ehm_settingsHeader,EHM,Header,EHM,,,,,
-ehm_showExperimentalFlavour,Add Flavour Text,Boolean,true,,"If enabled, adds ""(E)"" to ship's class text, changes the manufacturer of the ship to ""Experimental"" and adds a fluff paragraph about the manufacturer.",,,
-ehm_playDrillSound,Play Drill Sound,Boolean,true,,Controls the drill sounds that plays when an experimental hull modification is installed/uninstalled.,,,
-ehm_showFluff,Show Fluff Messages,Boolean,true,,"If enabled, the base hull modification will have randomized messages about the state of the ship and its upgrades.",,,
-ehm_extraInfoInHullMods,Show Extra Information,Radio,Full,"Full, Partial, None","Activators can display extra information on their tooltips. ""Full"" displays extra fields even if there isn't any activated slot shunt. ""Partial"" limits it to the activated slot shunts. ""None"" disables these extra fields.",,,
+ehm_showExperimentalFlavour,Add Flavour Text,Boolean,true,,"If enabled, adds ""(E)"" to ship's class text, changes the manufacturer of the ship to ""Experimental"" and adds a fluff paragraph about the manufacturer",,,
+ehm_playDrillSound,Play Drill Sound,Boolean,true,,Controls the drill sounds that plays when an experimental hull modification is installed/uninstalled,,,
+ehm_showFluff,Show Fluff Messages,Boolean,true,,"If enabled, the base hull modification will have randomized messages about the state of the ship and its upgrades",,,
+ehm_extraInfoInHullMods,Show Extra Information,Radio,Full,"Full, Partial, None","Activators can display extra information on their tooltips. ""Full"" displays extra fields even if there isn't any activated slot shunt. ""Partial"" limits it to the activated slot shunts. ""None"" disables these extra fields",,,

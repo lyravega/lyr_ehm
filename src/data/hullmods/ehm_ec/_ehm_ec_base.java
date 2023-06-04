@@ -112,6 +112,7 @@ public class _ehm_ec_base extends _ehm_base implements normalEvents {
 		final String modId = lyr_internals.id.mod;
 
 		Map<String, Object> engineData = new HashMap<String, Object>();
+
 		engineData.put("engineColor", getLunaRGBAColourArray(settingIdPrefix+"engine"));
 		engineData.put("contrailColor", getLunaRGBAColourArray(settingIdPrefix+"contrail"));
 		if (LunaSettings.getBoolean(modId, settingIdPrefix+"hasDifferentCampaignEngine")) {
@@ -126,25 +127,59 @@ public class _ehm_ec_base extends _ehm_base implements normalEvents {
 		}
 		engineData.put("contrailMaxSpeedMult", LunaSettings.getDouble(modId, settingIdPrefix+"contrailMaxSpeedMult"));
 		engineData.put("contrailAngularVelocityMult", LunaSettings.getDouble(modId, settingIdPrefix+"contrailAngularVelocityMult"));
-		if (LunaSettings.getString(modId, settingIdPrefix+"mode").equals("Particles")) {
-			engineData.put("mode", "PARTICLES");
-			engineData.put("contrailParticleDuration", LunaSettings.getDouble(modId, settingIdPrefix+"contrailParticleDuration"));
-			engineData.put("contrailParticleSizeMult", LunaSettings.getDouble(modId, settingIdPrefix+"contrailParticleSizeMult"));
-			engineData.put("contrailParticleFinalSizeMult", LunaSettings.getDouble(modId, settingIdPrefix+"contrailParticleFinalSizeMult"));
-		} else /*if (LunaSettings.getString(modId, settingIdPrefix+"mode").equals("Quad"))*/ {
-			engineData.put("mode", "QUAD_STRIP");
-			engineData.put("contrailDuration", LunaSettings.getDouble(modId, settingIdPrefix+"contrailParticleFinalSizeMult"));
-			engineData.put("contrailMinSeg", LunaSettings.getDouble(modId, settingIdPrefix+"contrailParticleFinalSizeMult"));
-			engineData.put("contrailSpawnDistMult", LunaSettings.getDouble(modId, settingIdPrefix+"contrailParticleFinalSizeMult"));
-			engineData.put("contrailWidthMult", LunaSettings.getDouble(modId, settingIdPrefix+"contrailParticleFinalSizeMult"));
-			engineData.put("contrailWidthAddedFractionAtEnd", LunaSettings.getDouble(modId, settingIdPrefix+"contrailParticleFinalSizeMult"));
+		switch (LunaSettings.getString(modId, settingIdPrefix+"mode")) {
+			case "Particles": default: {
+				engineData.put("mode", "PARTICLES");
+				engineData.put("contrailParticleDuration", LunaSettings.getDouble(modId, settingIdPrefix+"contrailParticleDuration"));
+				engineData.put("contrailParticleSizeMult", LunaSettings.getDouble(modId, settingIdPrefix+"contrailParticleSizeMult"));
+				engineData.put("contrailParticleFinalSizeMult", LunaSettings.getDouble(modId, settingIdPrefix+"contrailParticleFinalSizeMult"));
+			} break;
+			case "Plasma": {
+				engineData.put("mode", "QUAD_STRIP");
+				engineData.put("contrailDuration", LunaSettings.getDouble(modId, settingIdPrefix+"contrailDuration"));
+				engineData.put("contrailMinSeg", LunaSettings.getDouble(modId, settingIdPrefix+"contrailMinSeg"));
+				engineData.put("contrailSpawnDistMult", LunaSettings.getDouble(modId, settingIdPrefix+"contrailSpawnDistMult"));
+				engineData.put("contrailWidthMult", LunaSettings.getDouble(modId, settingIdPrefix+"contrailWidthMult"));
+				engineData.put("contrailWidthAddedFractionAtEnd", LunaSettings.getDouble(modId, settingIdPrefix+"contrailWidthAddedFractionAtEnd"));
+			} break;
+			case "Disabled": {
+				engineData.put("mode", "NONE");
+			} break;
 		}
-		if (LunaSettings.getString(modId, settingIdPrefix+"type").equals("Glow")) {
+		if (LunaSettings.getString(modId, settingIdPrefix+"type").equals("Additive")) {
 			engineData.put("type", "GLOW");
-		} else /*if (LunaSettings.getString(modId, settingIdPrefix+"type").equals("Smoke"))*/ {
+		} else /*if (LunaSettings.getString(modId, settingIdPrefix+"type").equals("Regular"))*/ {
 			engineData.put("type", "SMOKE");
 		}
 		engineData.put("omegaMode", LunaSettings.getBoolean(modId, settingIdPrefix+"omegaMode"));
+		switch (LunaSettings.getString(modId, settingIdPrefix+"glowSprite")) {
+			case "I": {
+				engineData.put("glowSprite", "graphics/fx/engineglow32.png");
+			} break;
+			case "II": {
+				engineData.put("glowSprite", "graphics/fx/engineglow32b.png");
+			} break;
+			case "III": {
+				engineData.put("glowSprite", "graphics/fx/engineglow32s.png");
+			} break;
+			case "Default": default: {
+				engineData.put("glowSprite", "");
+			} break;
+		}
+		switch (LunaSettings.getString(modId, settingIdPrefix+"glowOutline")) {
+			case "I": {
+				engineData.put("glowOutline", "graphics/fx/engineflame32.png");
+			} break;
+			case "II": {
+				engineData.put("glowOutline", "graphics/fx/engineflame32b.png");
+			} break;
+			case "III": {
+				engineData.put("glowOutline", "graphics/fx/engineflame32-orig.png");	// causes a NPE, nothing loads this so "ehm_test" does it
+			} break;
+			case "Default": default: {
+				engineData.put("glowOutline", "");
+			} break;
+		}
 
 		addEngineData(new JSONObject(engineData), customEngineDataId);
 	}
