@@ -1,4 +1,4 @@
-package lyravega.plugin;
+package lyravega.misc;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,7 +10,6 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import data.hullmods._ehm_customizable;
 import lunalib.lunaSettings.LunaSettings;
 import lunalib.lunaSettings.LunaSettingsListener;
-import lyravega.misc.lyr_internals;
 import lyravega.tools._lyr_logger;
 
 public class lyr_lunaSettings implements LunaSettingsListener, _lyr_logger {

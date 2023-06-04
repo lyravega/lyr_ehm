@@ -14,8 +14,8 @@ import lyravega.proxies.lyr_engineBuilder.engineStyle;
  * @author lyravega
  */
 public class ehm_cec_blueEngines extends _ehm_ec_base implements _ehm_customizable {
-	private static final int style = engineStyle.custom;
 	private static final String customEngineDataId = ehm_cec_blueEngines.class.getSimpleName().toUpperCase();
+	private static final int style = engineStyle.custom;
 	private static Object engineData;
 
 	@Override

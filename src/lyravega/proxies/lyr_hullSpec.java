@@ -377,7 +377,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	/**
 	 * @return Name of the hull
 	 * @category Bridge method
-	 * @see {@link ShipHullSpecAPI#getTags() getTags()}
+	 * @see {@link ShipHullSpecAPI#getHullName() getHullName()}
 	 */
 	public String getHullName() {
 		return hullSpec.getHullName();
@@ -385,7 +385,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 
 	/**
 	 * @category Bridge method
-	 * @see {@link ShipHullSpecAPI#getTags() getTags()}
+	 * @see {@link ShipHullSpecAPI#setHullName(String) setHullName()}
 	 */
 	public void setHullName(String hullName) {
 		hullSpec.setHullName(hullName);
@@ -403,7 +403,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	/**
 	 * @return Copied list of the all weapon slots
 	 * @category Bridge method
-	 * @see {@link ShipHullSpecAPI#getTags() getTags()}
+	 * @see {@link ShipHullSpecAPI#getAllWeaponSlotsCopy() getAllWeaponSlotsCopy()}
 	 */
 	public List<WeaponSlotAPI> getAllWeaponSlotsCopy() {
 		return hullSpec.getAllWeaponSlotsCopy();
