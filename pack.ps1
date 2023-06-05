@@ -4,8 +4,7 @@ $stuffToPack =  ("LICENSE.md"),
                 ("EHM.version"),
                 ("changelog.txt"),
                 ("jars"),
-                ("data"),
-                ("customization")
+                ("data")
 
 foreach($line in Get-Content ".\mod_info.json") {
     if($line -match '"version"') {
