@@ -15,8 +15,8 @@ public class lyr_tooltip {
 			overEngineeredNoEffect = {"Has no effects till it is built into the ship using a story point", "built into the ship"},
 			overEngineeredWarning = {"Removal of base experimental hull modification will be blocked if built-in", "will be blocked"},
 			noShip = {"Ship does not exist", "not"},	// not used, when does this happen anyway
-			lacksBase = {"Requires base experimental hull modification base to be installed first", "experimental hull modification"},
-			lacksActivator = {"Requires diverter and converter activator hull modification to be installed first", "diverter and converter activator"},
+			lacksBase = {"Requires the base 'Experimental Hull Modifications' base to be installed first", "'Experimental Hull Modifications'"},
+			lacksActivator = {"Requires the 'Converter/Diverter Activator' hull modification to be installed first", "Converter/Diverter Activator"},
 			hasSystemRetrofit = {"Another system retrofit is already installed", "system retrofit"},
 			hasWeaponRetrofit = {"Another weapon retrofit is already installed", "weapon retrofit"},
 			hasAdapterRetrofit = {"Another slot adapter retrofit is already installed", "slot adapter retrofit"},	// not used

@@ -62,15 +62,11 @@ public class ehm_mr_auxilarygenerators extends _ehm_base implements normalEvents
 	//#region INSTALLATION CHECKS / DESCRIPTION
 	@Override
 	public String getDescriptionParam(int index, HullSize hullSize) {
-		// switch (index) {
-		// 	case 0: return "story point";
-		// 	case 1: return "" + 20 + "%";
-		// 	case 2: return "1/2/4/6 slot points";
-		// 	case 3: return "slot point";
-		// 	case 4: return "converter shunts";
-		// 	default: return null;
-		// }
-		return null;
+		switch (index) {
+			case 0: return "10/10/20/20";
+			case 1: return "1/1/2/2";
+			default: return null;
+		}
 	}
 
 	@Override

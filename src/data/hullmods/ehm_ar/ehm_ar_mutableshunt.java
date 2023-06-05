@@ -46,6 +46,17 @@ public class ehm_ar_mutableshunt extends _ehm_ar_base {
 		// DUMMY MOD / DATA CLASS, ACTIONS ARE HANDLED THROUGH BASE
 	}
 
+	//#region INSTALLATION CHECKS / DESCRIPTION
+	@Override
+	public String getDescriptionParam(int index, HullSize hullSize) {
+		switch (index) {
+			case 0: return "dissipators";
+			case 1: return "capacitors";
+			case 2: return "launch tubes";
+			default: return null;
+		}
+	}
+
 	@Override
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (ship == null) return;
@@ -96,4 +107,5 @@ public class ehm_ar_mutableshunt extends _ehm_ar_base {
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
 	}
+	//#endregion
 }

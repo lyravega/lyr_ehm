@@ -82,6 +82,15 @@ public class ehm_ar_diverterandconverter extends _ehm_ar_base {
 
 	//#region INSTALLATION CHECKS / DESCRIPTION
 	@Override
+	public String getDescriptionParam(int index, HullSize hullSize) {
+		switch (index) {
+			case 0: return "converters";
+			case 1: return "diverters";
+			default: return null;
+		}
+	}
+
+	@Override
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (ship == null) return;
 

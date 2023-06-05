@@ -93,6 +93,14 @@ public class ehm_ar_stepdownadapter extends _ehm_ar_base {
 
 	//#region INSTALLATION CHECKS / DESCRIPTION
 	@Override
+	public String getDescriptionParam(int index, HullSize hullSize) {
+		switch (index) {
+			case 0: return "adapters";
+			default: return null;
+		}
+	}
+
+	@Override
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (ship == null) return;
 		ShipVariantAPI variant = ship.getVariant();

@@ -12,6 +12,7 @@ Changes/Fixes:
 - Converted remaining shield hullmods to fully customizable* "Red", "Green" and "Blue" shields
 - Added 3 fully customizable* engine cosmetic hullmods; "Red", "Green" and "Blue" engines
 - Added full shield and engine customization options through the new options menu
+- Added "Auxilary Generators" hullmod; provides 1/1/2/2 slot points at the cost of 10/10/20/20 OP
 - (D) is removed, or if 'showExperimentalFlavour' is enabled, replaced with (E) from hull class names 
 - Fixed shunt market ability toggle not properly persisting through reloads
 - Fixed value reduction on ships that persisted till a reload
