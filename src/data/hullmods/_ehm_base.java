@@ -30,7 +30,8 @@ import com.fs.starfarer.api.util.Misc;
 
 import data.hullmods.ehm.ehm_base;
 import lyravega.misc.lyr_internals;
-import lyravega.misc.lyr_tooltip;
+import lyravega.misc.lyr_tooltip.header;
+import lyravega.misc.lyr_tooltip.text;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.tools._lyr_logger;
 
@@ -123,8 +124,8 @@ public class _ehm_base extends BaseHullMod implements _lyr_logger {
 		if (ship.getVariant().getSMods().contains(this.hullModSpecId)) return;
 
 		if (isApplicableToShip(ship) && canBeAddedOrRemovedNow(ship, null, null)) {
-			tooltip.addSectionHeading(lyr_tooltip.header.warning, lyr_tooltip.header.warning_textColour, lyr_tooltip.header.warning_bgColour, Alignment.MID, lyr_tooltip.header.padding);
-			tooltip.addPara(lyr_tooltip.text.warning, lyr_tooltip.text.padding);
+			tooltip.addSectionHeading(header.warning, header.warning_textColour, header.warning_bgColour, Alignment.MID, header.padding);
+			tooltip.addPara(text.warning[0], text.padding).setHighlight(text.warning[1]);
 		}
 	}
 
@@ -323,8 +324,8 @@ public class _ehm_base extends BaseHullMod implements _lyr_logger {
 		// hullSpec.setRestoreToBase(false);
 		hullSpec.setBaseValue(hullSpecToClone.getBaseValue());	// because d-hulls lose 25% in value immediately
 		if (showExperimentalFlavour) {
-			hullSpec.setManufacturer(lyr_tooltip.text.flavourManufacturer);
-			hullSpec.setDescriptionPrefix(lyr_tooltip.text.flavourDescription);
+			hullSpec.setManufacturer(text.flavourManufacturer);
+			hullSpec.setDescriptionPrefix(text.flavourDescription);
 			hullSpec.setHullName(originalSpec.getHullName() + " (E)");	// restore to base hull name, replacing "(D)" with "(E)"
 		} else {
 			hullSpec.setDescriptionPrefix(originalSpec.getDescriptionPrefix());	// restore with base prefix, if any
@@ -374,8 +375,8 @@ public class _ehm_base extends BaseHullMod implements _lyr_logger {
 
 		// hullSpec.addBuiltInMod(ehm.id.baseRetrofit);
 		if (showExperimentalFlavour) {
-			stockHullSpec.setManufacturer(lyr_tooltip.text.flavourManufacturer);
-			stockHullSpec.setDescriptionPrefix(lyr_tooltip.text.flavourDescription);
+			stockHullSpec.setManufacturer(text.flavourManufacturer);	// TODO check if this block is needed
+			stockHullSpec.setDescriptionPrefix(text.flavourDescription);
 		}
 		
 		return stockHullSpec.retrieve();

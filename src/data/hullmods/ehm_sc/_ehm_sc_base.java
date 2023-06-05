@@ -18,7 +18,8 @@ import data.hullmods._ehm_base;
 import data.hullmods.ehm.events.normalEvents;
 import lunalib.lunaSettings.LunaSettings;
 import lyravega.misc.lyr_internals;
-import lyravega.misc.lyr_tooltip;
+import lyravega.misc.lyr_tooltip.header;
+import lyravega.misc.lyr_tooltip.text;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.proxies.lyr_shieldSpec;
 
@@ -99,17 +100,17 @@ public class _ehm_sc_base extends _ehm_base implements normalEvents {
 		if (ship == null) return;
 
 		if (this.hullModSpec.hasTag(lyr_internals.tag.customizable)) {
-			tooltip.addSectionHeading(lyr_tooltip.header.customizable, lyr_tooltip.header.customizable_textColour, lyr_tooltip.header.customizable_bgColour, Alignment.MID, lyr_tooltip.header.padding).flash(1.0f, 1.0f);
-			tooltip.addPara(lyr_tooltip.text.customizable, lyr_tooltip.text.padding);
+			tooltip.addSectionHeading(header.customizable, header.customizable_textColour, header.customizable_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
+			tooltip.addPara(text.customizable[0], text.padding).setHighlight(text.customizable[1]);
 		}
 
 		if (!isApplicableToShip(ship)) {
-			tooltip.addSectionHeading(lyr_tooltip.header.notApplicable, lyr_tooltip.header.notApplicable_textColour, lyr_tooltip.header.notApplicable_bgColour, Alignment.MID, lyr_tooltip.header.padding);
+			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
-			if (!ehm_hasRetrofitBaseBuiltIn(ship.getVariant())) tooltip.addPara(lyr_tooltip.text.lacksBase, lyr_tooltip.text.padding);
-			if (ehm_hasRetrofitTag(ship, lyr_internals.tag.shieldCosmetic, hullModSpecId)) tooltip.addPara(lyr_tooltip.text.hasShieldCosmetic, lyr_tooltip.text.padding);
+			if (!ehm_hasRetrofitBaseBuiltIn(ship.getVariant())) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
+			if (ehm_hasRetrofitTag(ship, lyr_internals.tag.shieldCosmetic, hullModSpecId)) tooltip.addPara(text.hasShieldCosmetic[0], text.padding).setHighlight(text.hasShieldCosmetic[1]);
 
-			if (hullModSpec.getTags().contains(lyr_internals.tag.reqShields) && ship.getShield() == null) tooltip.addPara(lyr_tooltip.text.noShields, lyr_tooltip.text.padding);
+			if (hullModSpec.getTags().contains(lyr_internals.tag.reqShields) && ship.getShield() == null) tooltip.addPara(text.noShields[0], text.padding).setHighlight(text.noShields[1]);
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);

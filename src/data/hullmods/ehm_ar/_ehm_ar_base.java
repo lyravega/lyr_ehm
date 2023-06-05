@@ -39,7 +39,8 @@ import data.hullmods.ehm.events.normalEvents;
 import data.hullmods.ehm_ar.ehm_ar_diverterandconverter.childParameters;
 import data.hullmods.ehm_ar.ehm_ar_stepdownadapter.childrenParameters;
 import lyravega.misc.lyr_internals;
-import lyravega.misc.lyr_tooltip;
+import lyravega.misc.lyr_tooltip.header;
+import lyravega.misc.lyr_tooltip.text;
 import lyravega.misc.lyr_internals.id.hullmods;
 import lyravega.misc.lyr_internals.id.shunts.adapters;
 import lyravega.misc.lyr_internals.id.shunts.capacitors;
@@ -79,7 +80,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 	private static final Pattern pattern = Pattern.compile("WS[ 0-9]{4}");
 	private static Matcher matcher;
 
-	public static final void ehm_processShunts(MutableShipStatsAPI stats, int slotPoints, boolean isGettingRestored) {
+	public static final void ehm_processShunts(MutableShipStatsAPI stats, boolean isGettingRestored) {
 		ShipVariantAPI variant = stats.getVariant(); 
 		boolean hasAdapterActivator = variant.hasHullMod(hullmods.stepdownadapter);
 		boolean hasMutableActivator = variant.hasHullMod(hullmods.mutableshunt);
@@ -87,10 +88,13 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		if (!hasAdapterActivator && !hasMutableActivator && !hasConverterActivator) return;
 
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
+		List<WeaponSlotAPI> shunts = hullSpec.getAllWeaponSlotsCopy();
+
 		boolean refreshRefit = false;
 		float[] totalFluxCapacityBonus = {1.0f, 0.0f};	// 0 mult, 1 flat
 		float[] totalFluxDissipationBonus = {1.0f, 0.0f};	// 0 mult, 1 flat
 		int fighterBayFlat = 0;
+		int slotPoints = hasConverterActivator ? ehm_slotPointsFromHullMods(variant) : 0;
 
 		// primarily to deal with stuff on load
 		for (Iterator<String> iterator = variant.getFittedWeaponSlots().iterator(); iterator.hasNext();) {
@@ -109,8 +113,6 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 			if (adapterMap.containsKey(shuntId)) refreshRefit = ehm_adaptSlot(hullSpec, shuntId, slotId);
 			else if (converterMap.containsKey(shuntId)) refreshRefit = ehm_convertSlot(hullSpec, shuntId, slotId);
 		}
-
-		List<WeaponSlotAPI> shunts = hullSpec.getAllWeaponSlotsCopy();
 		
 		for (Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
 			WeaponSlotAPI slot = iterator.next();
@@ -251,15 +253,27 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		return true;
 	}
 
+	protected static final int ehm_slotPointsFromHullMods(ShipVariantAPI variant) {
+		int slotPoints = 0;
+
+		if (variant.getSMods().contains(lyr_internals.id.hullmods.overengineered))
+			slotPoints += data.hullmods.ehm_mr.ehm_mr_overengineered.slotPointBonus.get(variant.getHullSize());
+		if (variant.hasHullMod(lyr_internals.id.hullmods.auxilarygenerators))
+			slotPoints += data.hullmods.ehm_mr.ehm_mr_auxilarygenerators.slotPointBonus.get(variant.getHullSize());
+
+		return slotPoints;
+	}
+
 	/**
 	 * Calculates slot point relevant stats, only to be used in the tooltips.
 	 * @param variant of the ship
 	 * @param initialBonus if the ship has any initial bonus slot points
 	 * @return int array, 0=total, 1=misc, 2=diverters, 3=converters
 	 */
-	protected static final int[] ehm_slotPointCalculation(ShipVariantAPI variant, int initialBonus) {
+	protected static final int[] ehm_slotPointCalculation(ShipVariantAPI variant) {
 		int diverterBonus = 0;
 		int converterMalus = 0;
+		int initialBonus = ehm_slotPointsFromHullMods(variant);
 
 		for (WeaponSlotAPI slot: variant.getHullSpec().getAllWeaponSlotsCopy()) {
 			if (!slot.isDecorative()) continue;	// since activated shunts become decorative, only need to check decorative
@@ -315,9 +329,9 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		if (ship == null) return;
 
 		if (!isApplicableToShip(ship)) {
-			tooltip.addSectionHeading(lyr_tooltip.header.notApplicable, lyr_tooltip.header.notApplicable_textColour, lyr_tooltip.header.notApplicable_bgColour, Alignment.MID, lyr_tooltip.header.padding);
+			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
-			if (!ehm_hasRetrofitBaseBuiltIn(ship.getVariant())) tooltip.addPara(lyr_tooltip.text.lacksBase, lyr_tooltip.text.padding);
+			if (!ehm_hasRetrofitBaseBuiltIn(ship.getVariant())) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
