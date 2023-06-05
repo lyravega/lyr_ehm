@@ -49,20 +49,20 @@ ehm_cec_redEngines_glowAlternateColour,Alternate Glow Colour,Color,#ff9696,,Colo
 ehm_cec_redEngines_glowAlternateAlpha,Alternate Glow Alpha,Int,75,,Alpha value of the [engine glow],0,255,Custom Engine I
 ehm_cec_redEngines_contrailAdvanced,Contrail Advanced,Header,Advanced Contrail,,,,,Custom Engine I
 ehm_cec_redEngines_mode,Mode,Radio,Particles,"Particles, Plasma, Disabled","Sets the contrail mode
-[Particles]: Smoke clouds
-[Plasma]: Plasma trail
+[Particles]: Smoke clouds. Usually coupled with dim contrail
+[Plasma]: Plasma trail. Usually coupled with bright contrail
 [Disabled]: No contrail, disables most contrail related settings",,,Custom Engine I
 ehm_cec_redEngines_type,Type,Radio,Additive,"Additive, Regular","Determines the blend mode
 [Additive]: Usually coupled with [Plasma] and bright contrail
 [Regular]: Usually coupled with [Particles] and dim contrail",,,Custom Engine I
-ehm_cec_redEngines_contrailParticleDuration,Particle Contrail Duration,Double,3,Particles,"[Particles] duration, in seconds",0,5,Custom Engine I
-ehm_cec_redEngines_contrailParticleSizeMult,Particle Contrail Size Multiplier,Double,2,Particles,[Particles] initial size multiplier,0,5,Custom Engine I
-ehm_cec_redEngines_contrailParticleFinalSizeMult,Particle Contrail Final Size Multiplier,Double,2.5,Particles,"[Particles] final size multiplier. Optional, game default: '0.5'",0,5,Custom Engine I
-ehm_cec_redEngines_contrailDuration,Quad Contrail Duration,Double,1.5,Plasma,"[Plasma] duration, in seconds",0,5,Custom Engine I
-ehm_cec_redEngines_contrailMinSeg,Quad Contrail Minimum Segment Length,Int,5,Plasma,"[Plasma] segment minimum pixel length. Optional, game default: '5'",1,20,Custom Engine I
-ehm_cec_redEngines_contrailSpawnDistMult,Quad Contrail Spawn Distance Multiplier,Double,0.7,Plasma,"[Plasma] spawn distance multiplier. Optional, game default: '0.7'",0,5,Custom Engine I
-ehm_cec_redEngines_contrailWidthMult,Quad Contrail Width Multiplier,Double,0.67,Plasma,[Plasma] width multiplier,0,5,Custom Engine I
-ehm_cec_redEngines_contrailWidthAddedFractionAtEnd,Quad Contrail Width Added Fraction At End,Double,-1,Plasma,"[Plasma] extra width at the end. Optional, game default: '0.5'",-2,2,Custom Engine I
+ehm_cec_redEngines_contrailParticleDuration,Particle Duration,Double,3,Particles,"[Particles] duration, in seconds",0,5,Custom Engine I
+ehm_cec_redEngines_contrailParticleSizeMult,Particle Size Multiplier,Double,2,Particles,[Particles] initial size multiplier,0,5,Custom Engine I
+ehm_cec_redEngines_contrailParticleFinalSizeMult,Particle Final Size Multiplier,Double,2.5,Particles,"[Particles] final size multiplier. Optional, game default: '0.5'",0,5,Custom Engine I
+ehm_cec_redEngines_contrailDuration,Plasma Duration,Double,1.5,Plasma,"[Plasma] duration, in seconds",0,5,Custom Engine I
+ehm_cec_redEngines_contrailMinSeg,Plasma Minimum Segment Length,Int,5,Plasma,"[Plasma] segment minimum pixel length. Optional, game default: '5'",1,20,Custom Engine I
+ehm_cec_redEngines_contrailSpawnDistMult,Plasma Spawn Distance Multiplier,Double,0.1,Plasma,"[Plasma] spawn distance multiplier. Optional, game default: '0.7'",0,5,Custom Engine I
+ehm_cec_redEngines_contrailWidthMult,Plasma Width Multiplier,Double,0.67,Plasma,[Plasma] width multiplier,0,5,Custom Engine I
+ehm_cec_redEngines_contrailWidthAddedFractionAtEnd,Plasma Width Added Fraction At End,Double,-1,Plasma,"[Plasma] extra width at the end. Optional, game default: '0.5'",-2,2,Custom Engine I
 ehm_cec_redEngines_contrailMaxSpeedMult,Contrail Max Speed Multiplier,Double,0.5,,Max speed multiplier of the [contrail],0,2,Custom Engine I
 ehm_cec_redEngines_contrailAngularVelocityMult,Contrail Angular Velocity Multiplier,Double,0.5,,Angular velocity multiplier of the [contrail]. Mostly for [Particles],0,2,Custom Engine I
 ehm_cec_redEngines_otherHeader,Other Header,Header,Other Settings,,,,,Custom Engine I
@@ -99,20 +99,20 @@ ehm_cec_greenEngines_glowAlternateColour,Alternate Glow Colour,Color,#96ff96,,Co
 ehm_cec_greenEngines_glowAlternateAlpha,Alternate Glow Alpha,Int,75,,Alpha value of the [engine glow],0,255,Custom Engine II
 ehm_cec_greenEngines_contrailAdvanced,Contrail Advanced,Header,Advanced Contrail,,,,,Custom Engine II
 ehm_cec_greenEngines_mode,Mode,Radio,Particles,"Particles, Plasma, Disabled","Sets the contrail mode
-[Particles]: Smoke clouds
-[Plasma]: Plasma trail
+[Particles]: Smoke clouds. Usually coupled with dim contrail
+[Plasma]: Plasma trail. Usually coupled with bright contrail
 [Disabled]: No contrail, disables most contrail related settings",,,Custom Engine II
 ehm_cec_greenEngines_type,Type,Radio,Additive,"Additive, Regular","Determines the blend mode
 [Additive]: Usually coupled with [Plasma] and bright contrail
 [Regular]: Usually coupled with [Particles] and dim contrail",,,Custom Engine II
-ehm_cec_greenEngines_contrailParticleDuration,Particle Contrail Duration,Double,3,Particles,"[Particles] duration, in seconds",0,5,Custom Engine II
-ehm_cec_greenEngines_contrailParticleSizeMult,Particle Contrail Size Multiplier,Double,2,Particles,[Particles] initial size multiplier,0,5,Custom Engine II
-ehm_cec_greenEngines_contrailParticleFinalSizeMult,Particle Contrail Final Size Multiplier,Double,2.5,Particles,"[Particles] final size multiplier. Optional, game default: '0.5'",0,5,Custom Engine II
-ehm_cec_greenEngines_contrailDuration,Quad Contrail Duration,Double,1.5,Plasma,"[Plasma] duration, in seconds",0,5,Custom Engine II
-ehm_cec_greenEngines_contrailMinSeg,Quad Contrail Minimum Segment Length,Int,5,Plasma,"[Plasma] segment minimum pixel length. Optional, game default: '5'",1,20,Custom Engine II
-ehm_cec_greenEngines_contrailSpawnDistMult,Quad Contrail Spawn Distance Multiplier,Double,0.7,Plasma,"[Plasma] spawn distance multiplier. Optional, game default: '0.7'",0,5,Custom Engine II
-ehm_cec_greenEngines_contrailWidthMult,Quad Contrail Width Multiplier,Double,0.67,Plasma,[Plasma] width multiplier,0,5,Custom Engine II
-ehm_cec_greenEngines_contrailWidthAddedFractionAtEnd,Quad Contrail Width Added Fraction At End,Double,-1,Plasma,"[Plasma] extra width at the end. Optional, game default: '0.5'",-2,2,Custom Engine II
+ehm_cec_greenEngines_contrailParticleDuration,Particle Duration,Double,3,Particles,"[Particles] duration, in seconds",0,5,Custom Engine II
+ehm_cec_greenEngines_contrailParticleSizeMult,Particle Size Multiplier,Double,2,Particles,[Particles] initial size multiplier,0,5,Custom Engine II
+ehm_cec_greenEngines_contrailParticleFinalSizeMult,Particle Final Size Multiplier,Double,2.5,Particles,"[Particles] final size multiplier. Optional, game default: '0.5'",0,5,Custom Engine II
+ehm_cec_greenEngines_contrailDuration,Plasma Duration,Double,1.5,Plasma,"[Plasma] duration, in seconds",0,5,Custom Engine II
+ehm_cec_greenEngines_contrailMinSeg,Plasma Minimum Segment Length,Int,5,Plasma,"[Plasma] segment minimum pixel length. Optional, game default: '5'",1,20,Custom Engine II
+ehm_cec_greenEngines_contrailSpawnDistMult,Plasma Spawn Distance Multiplier,Double,0.1,Plasma,"[Plasma] spawn distance multiplier. Optional, game default: '0.7'",0,5,Custom Engine II
+ehm_cec_greenEngines_contrailWidthMult,Plasma Width Multiplier,Double,0.67,Plasma,[Plasma] width multiplier,0,5,Custom Engine II
+ehm_cec_greenEngines_contrailWidthAddedFractionAtEnd,Plasma Width Added Fraction At End,Double,-1,Plasma,"[Plasma] extra width at the end. Optional, game default: '0.5'",-2,2,Custom Engine II
 ehm_cec_greenEngines_contrailMaxSpeedMult,Contrail Max Speed Multiplier,Double,0.5,,Max speed multiplier of the [contrail],0,2,Custom Engine II
 ehm_cec_greenEngines_contrailAngularVelocityMult,Contrail Angular Velocity Multiplier,Double,0.5,,Angular velocity multiplier of the [contrail]. Mostly for [Particles],0,2,Custom Engine II
 ehm_cec_greenEngines_otherHeader,Other Header,Header,Other Settings,,,,,Custom Engine II
@@ -149,20 +149,20 @@ ehm_cec_blueEngines_glowAlternateColour,Alternate Glow Colour,Color,#9696ff,,Col
 ehm_cec_blueEngines_glowAlternateAlpha,Alternate Glow Alpha,Int,75,,Alpha value of the [engine glow],0,255,Custom Engine III
 ehm_cec_blueEngines_contrailAdvanced,Contrail Advanced,Header,Advanced Contrail,,,,,Custom Engine III
 ehm_cec_blueEngines_mode,Mode,Radio,Particles,"Particles, Plasma, Disabled","Sets the contrail mode
-[Particles]: Smoke clouds
-[Plasma]: Plasma trail
+[Particles]: Smoke clouds. Usually coupled with dim contrail
+[Plasma]: Plasma trail. Usually coupled with bright contrail
 [Disabled]: No contrail, disables most contrail related settings",,,Custom Engine III
 ehm_cec_blueEngines_type,Type,Radio,Additive,"Additive, Regular","Determines the blend mode
 [Additive]: Usually coupled with [Plasma] and bright contrail
 [Regular]: Usually coupled with [Particles] and dim contrail",,,Custom Engine III
-ehm_cec_blueEngines_contrailParticleDuration,Particle Contrail Duration,Double,3,Particles,"[Particles] duration, in seconds",0,5,Custom Engine III
-ehm_cec_blueEngines_contrailParticleSizeMult,Particle Contrail Size Multiplier,Double,2,Particles,[Particles] initial size multiplier,0,5,Custom Engine III
-ehm_cec_blueEngines_contrailParticleFinalSizeMult,Particle Contrail Final Size Multiplier,Double,2.5,Particles,"[Particles] final size multiplier. Optional, game default: '0.5'",0,5,Custom Engine III
-ehm_cec_blueEngines_contrailDuration,Quad Contrail Duration,Double,1.5,Plasma,"[Plasma] duration, in seconds",0,5,Custom Engine III
-ehm_cec_blueEngines_contrailMinSeg,Quad Contrail Minimum Segment Length,Int,5,Plasma,"[Plasma] segment minimum pixel length. Optional, game default: '5'",1,20,Custom Engine III
-ehm_cec_blueEngines_contrailSpawnDistMult,Quad Contrail Spawn Distance Multiplier,Double,0.7,Plasma,"[Plasma] spawn distance multiplier. Optional, game default: '0.7'",0,5,Custom Engine III
-ehm_cec_blueEngines_contrailWidthMult,Quad Contrail Width Multiplier,Double,0.67,Plasma,[Plasma] width multiplier,0,5,Custom Engine III
-ehm_cec_blueEngines_contrailWidthAddedFractionAtEnd,Quad Contrail Width Added Fraction At End,Double,-1,Plasma,"[Plasma] extra width at the end. Optional, game default: '0.5'",-2,2,Custom Engine III
+ehm_cec_blueEngines_contrailParticleDuration,Particle Duration,Double,3,Particles,"[Particles] duration, in seconds",0,5,Custom Engine III
+ehm_cec_blueEngines_contrailParticleSizeMult,Particle Size Multiplier,Double,2,Particles,[Particles] initial size multiplier,0,5,Custom Engine III
+ehm_cec_blueEngines_contrailParticleFinalSizeMult,Particle Final Size Multiplier,Double,2.5,Particles,"[Particles] final size multiplier. Optional, game default: '0.5'",0,5,Custom Engine III
+ehm_cec_blueEngines_contrailDuration,Plasma Duration,Double,1.5,Plasma,"[Plasma] duration, in seconds",0,5,Custom Engine III
+ehm_cec_blueEngines_contrailMinSeg,Plasma Minimum Segment Length,Int,5,Plasma,"[Plasma] segment minimum pixel length. Optional, game default: '5'",1,20,Custom Engine III
+ehm_cec_blueEngines_contrailSpawnDistMult,Plasma Spawn Distance Multiplier,Double,0.1,Plasma,"[Plasma] spawn distance multiplier. Optional, game default: '0.7'",0,5,Custom Engine III
+ehm_cec_blueEngines_contrailWidthMult,Plasma Width Multiplier,Double,0.67,Plasma,[Plasma] width multiplier,0,5,Custom Engine III
+ehm_cec_blueEngines_contrailWidthAddedFractionAtEnd,Plasma Width Added Fraction At End,Double,-1,Plasma,"[Plasma] extra width at the end. Optional, game default: '0.5'",-2,2,Custom Engine III
 ehm_cec_blueEngines_contrailMaxSpeedMult,Contrail Max Speed Multiplier,Double,0.5,,Max speed multiplier of the [contrail],0,2,Custom Engine III
 ehm_cec_blueEngines_contrailAngularVelocityMult,Contrail Angular Velocity Multiplier,Double,0.5,,Angular velocity multiplier of the [contrail]. Mostly for [Particles],0,2,Custom Engine III
 ehm_cec_blueEngines_otherHeader,Other Header,Header,Other Settings,,,,,Custom Engine III
