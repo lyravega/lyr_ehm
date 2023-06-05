@@ -7,9 +7,9 @@ import static data.hullmods.ehm_ar.ehm_ar_mutableshunt.capacitorMap;
 import static data.hullmods.ehm_ar.ehm_ar_mutableshunt.dissipatorMap;
 import static data.hullmods.ehm_ar.ehm_ar_mutableshunt.launchTubeMap;
 import static data.hullmods.ehm_ar.ehm_ar_stepdownadapter.adapterMap;
-import static lyr.misc.lyr_utilities.generateChildLocation;
-import static lyr.tools._lyr_uiTools.commitChanges;
-import static lyr.tools._lyr_uiTools.playSound;
+import static lyravega.misc.lyr_utilities.generateChildLocation;
+import static lyravega.tools._lyr_uiTools.commitChanges;
+import static lyravega.tools._lyr_uiTools.playSound;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -38,18 +38,18 @@ import data.hullmods._ehm_base;
 import data.hullmods.ehm.events.normalEvents;
 import data.hullmods.ehm_ar.ehm_ar_diverterandconverter.childParameters;
 import data.hullmods.ehm_ar.ehm_ar_stepdownadapter.childrenParameters;
-import lyr.misc.lyr_externals;
-import lyr.misc.lyr_internals;
-import lyr.misc.lyr_internals.id.hullmods;
-import lyr.misc.lyr_internals.id.shunts.adapters;
-import lyr.misc.lyr_internals.id.shunts.capacitors;
-import lyr.misc.lyr_internals.id.shunts.converters;
-import lyr.misc.lyr_internals.id.shunts.dissipators;
-import lyr.misc.lyr_internals.id.shunts.diverters;
-import lyr.misc.lyr_internals.id.shunts.launchTubes;
-import lyr.misc.lyr_tooltip;
-import lyr.proxies.lyr_hullSpec;
-import lyr.proxies.lyr_weaponSlot;
+import lyravega.misc.lyr_internals;
+import lyravega.misc.lyr_tooltip.header;
+import lyravega.misc.lyr_tooltip.text;
+import lyravega.misc.lyr_internals.id.hullmods;
+import lyravega.misc.lyr_internals.id.shunts.adapters;
+import lyravega.misc.lyr_internals.id.shunts.capacitors;
+import lyravega.misc.lyr_internals.id.shunts.converters;
+import lyravega.misc.lyr_internals.id.shunts.dissipators;
+import lyravega.misc.lyr_internals.id.shunts.diverters;
+import lyravega.misc.lyr_internals.id.shunts.launchTubes;
+import lyravega.proxies.lyr_hullSpec;
+import lyravega.proxies.lyr_weaponSlot;
 
 
 /**
@@ -77,13 +77,10 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 	//#endregion
 	// END OF CUSTOM EVENTS
 
-	protected static final boolean extraActiveInfoInHullMods = lyr_externals.extraActiveInfoInHullMods;
-	protected static final boolean extraInactiveInfoInHullMods = lyr_externals.extraInactiveInfoInHullMods;
-
 	private static final Pattern pattern = Pattern.compile("WS[ 0-9]{4}");
 	private static Matcher matcher;
 
-	public static final void ehm_processShunts(MutableShipStatsAPI stats, int slotPoints, boolean isGettingRestored) {
+	public static final void ehm_processShunts(MutableShipStatsAPI stats, boolean isGettingRestored) {
 		ShipVariantAPI variant = stats.getVariant(); 
 		boolean hasAdapterActivator = variant.hasHullMod(hullmods.stepdownadapter);
 		boolean hasMutableActivator = variant.hasHullMod(hullmods.mutableshunt);
@@ -91,10 +88,13 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		if (!hasAdapterActivator && !hasMutableActivator && !hasConverterActivator) return;
 
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
+		List<WeaponSlotAPI> shunts = hullSpec.getAllWeaponSlotsCopy();
+
 		boolean refreshRefit = false;
 		float[] totalFluxCapacityBonus = {1.0f, 0.0f};	// 0 mult, 1 flat
 		float[] totalFluxDissipationBonus = {1.0f, 0.0f};	// 0 mult, 1 flat
 		int fighterBayFlat = 0;
+		int slotPoints = hasConverterActivator ? ehm_slotPointsFromHullMods(variant) : 0;
 
 		// primarily to deal with stuff on load
 		for (Iterator<String> iterator = variant.getFittedWeaponSlots().iterator(); iterator.hasNext();) {
@@ -113,8 +113,6 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 			if (adapterMap.containsKey(shuntId)) refreshRefit = ehm_adaptSlot(hullSpec, shuntId, slotId);
 			else if (converterMap.containsKey(shuntId)) refreshRefit = ehm_convertSlot(hullSpec, shuntId, slotId);
 		}
-
-		List<WeaponSlotAPI> shunts = hullSpec.retrieve().getAllWeaponSlotsCopy();
 		
 		for (Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
 			WeaponSlotAPI slot = iterator.next();
@@ -211,14 +209,14 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		for (String childId: childrenParameters.getChildren()) { // childId and childSlotId are not the same, be aware
 			lyr_weaponSlot childSlot = parentSlot.clone();
 			String childSlotId = lyr_internals.affix.adaptedSlot + slotId + childId; // also used as nodeId because nodeId isn't visible
-			Vector2f childSlotLocation = generateChildLocation(parentSlot.retrieve().getLocation(), parentSlot.retrieve().getAngle(), childrenParameters.getChildOffset(childId));
+			Vector2f childSlotLocation = generateChildLocation(parentSlot.getLocation(), parentSlot.getAngle(), childrenParameters.getChildOffset(childId));
 			WeaponSize childSlotSize = childrenParameters.getChildSize(childId);
 
 			childSlot.setId(childSlotId);
 			childSlot.setNode(childSlotId, childSlotLocation);
 			childSlot.setSlotSize(childSlotSize);
 
-		 	hullSpec.addWeaponSlot(childSlot.retrieve());
+		 	hullSpec.addWeaponSlot(childSlot);
 		}
 
 		hullSpec.addBuiltInWeapon(slotId, shuntId);
@@ -238,10 +236,10 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		String childSlotId = lyr_internals.affix.convertedSlot + slotId + childParameters.getChildSuffix(); // also used as nodeId because nodeId isn't visible
 
 		childSlot.setId(childSlotId);
-		childSlot.setNode(childSlotId, parentSlot.retrieve().getLocation());
+		childSlot.setNode(childSlotId, parentSlot.getLocation());
 		childSlot.setSlotSize(childParameters.getChildSize());
 
-		hullSpec.addWeaponSlot(childSlot.retrieve());
+		hullSpec.addWeaponSlot(childSlot);
 
 		// if (slotPoints != null) slotPoints -= converters.get(shuntId).getChildCost();	// needs to be subtracted from here on initial install to avoid infinite installs
 		hullSpec.addBuiltInWeapon(slotId, shuntId);
@@ -255,15 +253,27 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		return true;
 	}
 
+	protected static final int ehm_slotPointsFromHullMods(ShipVariantAPI variant) {
+		int slotPoints = 0;
+
+		if (variant.getSMods().contains(lyr_internals.id.hullmods.overengineered))
+			slotPoints += data.hullmods.ehm_mr.ehm_mr_overengineered.slotPointBonus.get(variant.getHullSize());
+		if (variant.hasHullMod(lyr_internals.id.hullmods.auxilarygenerators))
+			slotPoints += data.hullmods.ehm_mr.ehm_mr_auxilarygenerators.slotPointBonus.get(variant.getHullSize());
+
+		return slotPoints;
+	}
+
 	/**
 	 * Calculates slot point relevant stats, only to be used in the tooltips.
 	 * @param variant of the ship
 	 * @param initialBonus if the ship has any initial bonus slot points
 	 * @return int array, 0=total, 1=misc, 2=diverters, 3=converters
 	 */
-	protected static final int[] ehm_slotPointCalculation(ShipVariantAPI variant, int initialBonus) {
+	protected static final int[] ehm_slotPointCalculation(ShipVariantAPI variant) {
 		int diverterBonus = 0;
 		int converterMalus = 0;
+		int initialBonus = ehm_slotPointsFromHullMods(variant);
 
 		for (WeaponSlotAPI slot: variant.getHullSpec().getAllWeaponSlotsCopy()) {
 			if (!slot.isDecorative()) continue;	// since activated shunts become decorative, only need to check decorative
@@ -319,9 +329,9 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		if (ship == null) return;
 
 		if (!isApplicableToShip(ship)) {
-			tooltip.addSectionHeading(lyr_tooltip.header.notApplicable, lyr_tooltip.header.notApplicable_textColour, lyr_tooltip.header.notApplicable_bgColour, Alignment.MID, lyr_tooltip.header.padding);
+			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
-			if (!ehm_hasRetrofitBaseBuiltIn(ship.getVariant())) tooltip.addPara(lyr_tooltip.text.lacksBase, lyr_tooltip.text.padding);
+			if (!ehm_hasRetrofitBaseBuiltIn(ship.getVariant())) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);

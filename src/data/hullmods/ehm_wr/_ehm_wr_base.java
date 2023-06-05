@@ -1,7 +1,7 @@
 package data.hullmods.ehm_wr;
 
-import static lyr.tools._lyr_uiTools.commitChanges;
-import static lyr.tools._lyr_uiTools.playSound;
+import static lyravega.tools._lyr_uiTools.commitChanges;
+import static lyravega.tools._lyr_uiTools.playSound;
 
 import java.util.Map;
 
@@ -19,10 +19,11 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import data.hullmods._ehm_base;
 import data.hullmods.ehm.events.normalEvents;
-import lyr.misc.lyr_internals;
-import lyr.misc.lyr_tooltip;
-import lyr.proxies.lyr_hullSpec;
-import lyr.proxies.lyr_weaponSlot;
+import lyravega.misc.lyr_internals;
+import lyravega.misc.lyr_tooltip.header;
+import lyravega.misc.lyr_tooltip.text;
+import lyravega.proxies.lyr_hullSpec;
+import lyravega.proxies.lyr_weaponSlot;
 
 /**
  * This class is used by weapon retrofit hullmods. They are pretty 
@@ -61,7 +62,7 @@ public class _ehm_wr_base extends _ehm_base implements normalEvents {
 	protected static final ShipHullSpecAPI ehm_weaponSlotRetrofit(ShipVariantAPI variant, Map<WeaponType, WeaponType> conversions, WeaponSize slotSize) {	
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 
-		for (WeaponSlotAPI slot: hullSpec.retrieve().getAllWeaponSlotsCopy()) {
+		for (WeaponSlotAPI slot: hullSpec.getAllWeaponSlotsCopy()) {
 			String slotId = slot.getId();
 			WeaponType convertFrom = slot.getWeaponType();
 
@@ -82,6 +83,7 @@ public class _ehm_wr_base extends _ehm_base implements normalEvents {
 	 * @param variant whose hullSpec will have its weaponSlots restored
 	 * @return an altered hullSpec with restored weaponSlots
 	 */
+	@Deprecated
 	public static final ShipHullSpecAPI ehm_weaponSlotRestore(ShipVariantAPI variant) {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 		ShipHullSpecAPI hullSpecReference = ehm_hullSpecReference(variant);
@@ -92,8 +94,7 @@ public class _ehm_wr_base extends _ehm_base implements normalEvents {
 			lyr_weaponSlot slot = hullSpec.getWeaponSlot(slotId);
 			WeaponType stockSlotWeaponType = stockSlot.getWeaponType();
 			
-			// TODO take a look at strings, move them to base
-			// TODO doesn't support new additions most probably; diverters/converters/etc...
+			// doesn't support new additions
 			if (slot.retrieve().isDecorative() && lyr_internals.id.shunts.adapters.set.contains(weaponId)) {
 				hullSpec.getWeaponSlot(lyr_internals.affix.adaptedSlot+slotId+"L").setWeaponType(stockSlotWeaponType);
 				hullSpec.getWeaponSlot(lyr_internals.affix.adaptedSlot+slotId+"R").setWeaponType(stockSlotWeaponType);
@@ -123,18 +124,18 @@ public class _ehm_wr_base extends _ehm_base implements normalEvents {
 		if (ship == null) return;
 
 		if (!isApplicableToShip(ship)) {
-			tooltip.addSectionHeading(lyr_tooltip.header.notApplicable, lyr_tooltip.header.notApplicable_textColour, lyr_tooltip.header.notApplicable_bgColour, Alignment.MID, lyr_tooltip.header.padding);
+			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
-			if (!ehm_hasRetrofitBaseBuiltIn(ship.getVariant())) tooltip.addPara(lyr_tooltip.text.lacksBase, lyr_tooltip.text.padding);
-			if (ehm_hasRetrofitTag(ship, lyr_internals.tag.weaponRetrofit, hullModSpecId)) tooltip.addPara(lyr_tooltip.text.hasWeaponRetrofit, lyr_tooltip.text.padding);
+			if (!ehm_hasRetrofitBaseBuiltIn(ship.getVariant())) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
+			if (ehm_hasRetrofitTag(ship, lyr_internals.tag.weaponRetrofit, hullModSpecId)) tooltip.addPara(text.hasWeaponRetrofit[0], text.padding).setHighlight(text.hasWeaponRetrofit[1]);
 		}
 
 		if (!canBeAddedOrRemovedNow(ship, null, null)) {
-			String inOrOut = ship.getVariant().hasHullMod(hullModSpecId) ? lyr_tooltip.header.lockedIn : lyr_tooltip.header.lockedOut;
+			String inOrOut = ship.getVariant().hasHullMod(hullModSpecId) ? header.lockedIn : header.lockedOut;
 
-			tooltip.addSectionHeading(inOrOut, lyr_tooltip.header.locked_textColour, lyr_tooltip.header.locked_bgColour, Alignment.MID, lyr_tooltip.header.padding);
+			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.locked_bgColour, Alignment.MID, header.padding);
 
-			if (ehm_hasWeapons(ship, lyr_internals.id.shunts.set)) tooltip.addPara(lyr_tooltip.text.hasWeapons, lyr_tooltip.text.padding);
+			if (ehm_hasWeapons(ship, lyr_internals.id.shunts.set)) tooltip.addPara(text.hasWeapons[0], text.padding).setHighlight(text.hasWeapons[1]);
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);

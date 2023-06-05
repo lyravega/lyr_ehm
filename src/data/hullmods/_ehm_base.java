@@ -1,5 +1,7 @@
 package data.hullmods;
 
+import static lyravega.misc.lyr_lunaSettings.showExperimentalFlavour;
+
 import java.awt.Color;
 import java.util.HashMap;
 import java.util.List;
@@ -27,11 +29,11 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
 import data.hullmods.ehm.ehm_base;
-import lyr.misc.lyr_externals;
-import lyr.misc.lyr_internals;
-import lyr.misc.lyr_tooltip;
-import lyr.proxies.lyr_hullSpec;
-import lyr.tools._lyr_logger;
+import lyravega.misc.lyr_internals;
+import lyravega.misc.lyr_tooltip.header;
+import lyravega.misc.lyr_tooltip.text;
+import lyravega.proxies.lyr_hullSpec;
+import lyravega.tools._lyr_logger;
 
 /**
  * This is the master base class for all experimental hullmods. Stores the most 
@@ -122,8 +124,8 @@ public class _ehm_base extends BaseHullMod implements _lyr_logger {
 		if (ship.getVariant().getSMods().contains(this.hullModSpecId)) return;
 
 		if (isApplicableToShip(ship) && canBeAddedOrRemovedNow(ship, null, null)) {
-			tooltip.addSectionHeading(lyr_tooltip.header.warning, lyr_tooltip.header.warning_textColour, lyr_tooltip.header.warning_bgColour, Alignment.MID, lyr_tooltip.header.padding);
-			tooltip.addPara(lyr_tooltip.text.warning, lyr_tooltip.text.padding);
+			tooltip.addSectionHeading(header.warning, header.warning_textColour, header.warning_bgColour, Alignment.MID, header.padding);
+			tooltip.addPara(text.warning[0], text.padding).setHighlight(text.warning[1]);
 		}
 	}
 
@@ -295,9 +297,11 @@ public class _ehm_base extends BaseHullMod implements _lyr_logger {
 	 * the case forever. Maybe Alex will add them as a field someday, after the update winds are calmed down.
 	 * @param variant to be used as a template
 	 * @return a cloned hullSpec
+	 * @see {@link com.fs.starfarer.loading.ShipHullSpecLoader Hull Spec Loader} for d-hulls
 	 */
 	protected static final ShipHullSpecAPI ehm_hullSpecClone(ShipVariantAPI variant) {
 		ShipHullSpecAPI hullSpecToClone = variant.getHullSpec();
+		ShipHullSpecAPI originalHullSpec;
 		lyr_hullSpec hullSpec;
 
 		if (hullSpecToClone.isRestoreToBase() && hullSpecToClone.getBaseHullId() != null ) {
@@ -307,26 +311,16 @@ public class _ehm_base extends BaseHullMod implements _lyr_logger {
 				variant.removeSuppressedMod(hullModId);
 				variant.addPermaMod(hullModId, false);
 			}
-			hullSpec = new lyr_hullSpec(settings.getHullSpec(Misc.getDHullId(hullSpecToClone.getBaseHull())), true);
+			hullSpecToClone = hullSpecToClone.getBaseHull();
+
+			hullSpec = new lyr_hullSpec(settings.getHullSpec(Misc.getDHullId(hullSpecToClone)), true);
+			originalHullSpec = settings.getHullSpec(hullSpecToClone.getHullId().replace(Misc.D_HULL_SUFFIX, ""));
 		} else {
 			hullSpec = new lyr_hullSpec(settings.getHullSpec(Misc.getDHullId(hullSpecToClone)), true);
+			originalHullSpec = settings.getHullSpec(hullSpecToClone.getHullId().replace(Misc.D_HULL_SUFFIX, ""));
 		}
 
-		// if ((variant.isDHull() || hullSpecToClone.isDHull()) && hullSpecToClone.getDParentHullId() != null) {
-		// 	hullSpecToClone = hullSpecToClone.getDParentHull();
-		// }
-
-		// lyr_hullSpec hullSpec = new lyr_hullSpec(hullSpecToClone, true);
-
-		hullSpec.addBuiltInMod(lyr_internals.id.baseModification);
-		// hullSpec.setDParentHullId(null);
-		// hullSpec.setBaseHullId(null);
-		// hullSpec.setRestoreToBase(false);
-		hullSpec.setBaseValue(settings.getHullSpec(hullSpec.retrieve().getHullId().replace(Misc.D_HULL_SUFFIX, "")).getBaseValue());
-		if (lyr_externals.showExperimentalFlavour) {
-			hullSpec.setManufacturer(lyr_tooltip.text.flavourManufacturer);
-			hullSpec.setDescriptionPrefix(lyr_tooltip.text.flavourDescription);
-		}
+		ehm_hullSpecAlteration(hullSpec, originalHullSpec);
 
 		return hullSpec.retrieve();
 	}
@@ -345,34 +339,42 @@ public class _ehm_base extends BaseHullMod implements _lyr_logger {
 	 * @return a 'fresh' hullSpec from the SpecStore
 	 */
 	protected static final ShipHullSpecAPI ehm_hullSpecRefresh(ShipVariantAPI variant) {
-		lyr_hullSpec stockHullSpec = new lyr_hullSpec(settings.getHullSpec(variant.getHullSpec().getHullId()), true);
+		lyr_hullSpec hullSpec = new lyr_hullSpec(settings.getHullSpec(variant.getHullSpec().getHullId()), true);
+		ShipHullSpecAPI originalHullSpec = settings.getHullSpec(variant.getHullSpec().getHullId().replace(Misc.D_HULL_SUFFIX, ""));
 
-		ShipHullSpecAPI hullSpec = variant.getHullSpec();
-		ShipHullSpecAPI stockHullSpecAPI = stockHullSpec.retrieve();
-
-		for (String hullSpecTag : hullSpec.getTags()) // this is a set, so there cannot be any duplicates, but still
-		if (!stockHullSpecAPI.getTags().contains(hullSpecTag))
-		stockHullSpecAPI.addTag(hullSpecTag);
-
-		for (String builtInHullModSpecId : hullSpec.getBuiltInMods()) // this is a list, there can be duplicates so check first
-		if (!stockHullSpecAPI.getBuiltInMods().contains(builtInHullModSpecId))
-		stockHullSpecAPI.addBuiltInMod(builtInHullModSpecId);
-
-		// for (String builtInWeaponSlot : hullSpec.getBuiltInWeapons().keySet()) // this is a map; slotId, weaponSpecId
-		// if (!stockHullSpecAPI.getBuiltInWeapons().keySet().contains(builtInWeaponSlot))
-		// stockHullSpecAPI.addBuiltInWeapon(builtInWeaponSlot, hullSpec.getBuiltInWeapons().get(builtInWeaponSlot));
-
-		// for (String builtInWing : hullSpec.getBuiltInWings()) // this is a list, there can be duplicates so check first
-		// if (!stockHullSpecAPI.getBuiltInWings().contains(builtInWing))
-		// stockHullSpec.addBuiltInWing(builtInWing);
-
-		// hullSpec.addBuiltInMod(ehm.id.baseRetrofit);
-		if (lyr_externals.showExperimentalFlavour) {
-			stockHullSpec.setManufacturer(lyr_tooltip.text.flavourManufacturer);
-			stockHullSpec.setDescriptionPrefix(lyr_tooltip.text.flavourDescription);
-		}
+		ehm_hullSpecAlteration(hullSpec, originalHullSpec);
 		
-		return stockHullSpec.retrieve();
+		return hullSpec.retrieve();
+	}
+
+	/**
+	 * As the hull specs use (D) versions to avoid a couple of issues, a method is necessary
+	 * to make some alterations and restore some fields to their original, non (D) versions.
+	 * @param hullSpec proxy with a cloned hull spec in it
+	 * @param originalHullSpec to be used as a reference; not a (D) version
+	 */
+	private static final void ehm_hullSpecAlteration(lyr_hullSpec hullSpec, ShipHullSpecAPI originalHullSpec) {
+		for (String hullSpecTag : originalHullSpec.getTags()) // this is a set, so there cannot be any duplicates, but still
+		if (!hullSpec.getTags().contains(hullSpecTag))
+		hullSpec.addTag(hullSpecTag);
+
+		for (String builtInHullModSpecId : originalHullSpec.getBuiltInMods()) // this is a list, there can be duplicates so check first
+		if (!hullSpec.getBuiltInMods().contains(builtInHullModSpecId))
+		hullSpec.addBuiltInMod(builtInHullModSpecId);
+
+		// hullSpec.setDParentHullId(null);
+		// hullSpec.setBaseHullId(null);
+		// hullSpec.setRestoreToBase(false);
+		hullSpec.setBaseValue(originalHullSpec.getBaseValue());	// because d-hulls lose 25% in value immediately
+		if (showExperimentalFlavour) {
+			hullSpec.setManufacturer(text.flavourManufacturer);
+			hullSpec.setDescriptionPrefix(text.flavourDescription);
+			hullSpec.setHullName(originalHullSpec.getHullName() + " (E)");	// restore to base hull name, replacing "(D)" with "(E)"
+		} else {
+			hullSpec.setDescriptionPrefix(hullSpec.getDescriptionPrefix());	// restore with base prefix, if any
+			hullSpec.setHullName(originalHullSpec.getHullName());	// restore to base hull name, removing "(D)"
+		}
+		hullSpec.addBuiltInMod(lyr_internals.id.baseModification);
 	}
 
 	/**

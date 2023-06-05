@@ -4,8 +4,7 @@ $stuffToPack =  ("LICENSE.md"),
                 ("EHM.version"),
                 ("changelog.txt"),
                 ("jars"),
-                ("data"),
-                ("customization")
+                ("data")
 
 foreach($line in Get-Content ".\mod_info.json") {
     if($line -match '"version"') {
@@ -14,12 +13,12 @@ foreach($line in Get-Content ".\mod_info.json") {
     }
 }
 
-$null = New-Item "$PSScriptRoot\lyr_ehm\" -ItemType Directory
+$null = New-Item "$PSScriptRoot\Experimental Hull Modifications\" -ItemType Directory
 foreach($path in $stuffToPack)
 {
     Write-Host $path -ForegroundColor Blue
-    Copy-Item -Path ".\$path" -Destination "$PSScriptRoot\lyr_ehm\" -Recurse
+    Copy-Item -Path ".\$path" -Destination "$PSScriptRoot\Experimental Hull Modifications\" -Recurse
 }
-Compress-Archive -Path "$PSScriptRoot\lyr_ehm\" -DestinationPath "$PSScriptRoot\lyr_ehm $version.zip" -Update
-Remove-Item "$PSScriptRoot\lyr_ehm\" -Force -Recurse
+Compress-Archive -Path "$PSScriptRoot\Experimental Hull Modifications\" -DestinationPath "$PSScriptRoot\ExperimentalHullModifications $version.zip" -Update
+Remove-Item "$PSScriptRoot\Experimental Hull Modifications\" -Force -Recurse
 Write-Host "Mod packed!" -ForegroundColor Green

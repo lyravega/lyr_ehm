@@ -1,14 +1,14 @@
 package data.hullmods;
 
-import static lyr.tools._lyr_uiTools.commitChanges;
-import static lyr.tools._lyr_uiTools.playSound;
+import static lyravega.tools._lyr_uiTools.commitChanges;
+import static lyravega.tools._lyr_uiTools.playSound;
 
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
-import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
+import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;

@@ -1,7 +1,7 @@
 package data.hullmods.ehm;
 
-import static lyr.tools._lyr_uiTools.commitChanges;
-import static lyr.tools._lyr_uiTools.playSound;
+import static lyravega.tools._lyr_uiTools.commitChanges;
+import static lyravega.tools._lyr_uiTools.playSound;
 
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
@@ -10,8 +10,9 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
-import lyr.misc.lyr_internals;
-import lyr.misc.lyr_tooltip;
+import lyravega.misc.lyr_internals;
+import lyravega.misc.lyr_tooltip.header;
+import lyravega.misc.lyr_tooltip.text;
 
 /**
  * Removes the base hull modification that all other experimental ones require
@@ -38,13 +39,13 @@ public class ehm_undo extends _ehm_basetracker {
 		if (ship == null) return;
 
 		if (!isApplicableToShip(ship)) {
-			tooltip.addSectionHeading(lyr_tooltip.header.notApplicable, lyr_tooltip.header.notApplicable_textColour, lyr_tooltip.header.notApplicable_bgColour, Alignment.MID, lyr_tooltip.header.padding);
+			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
-			if (!ehm_hasRetrofitBaseBuiltIn(ship.getVariant())) tooltip.addPara(lyr_tooltip.text.lacksBase, lyr_tooltip.text.padding);
-			if (ehm_hasExperimentalSMod(ship.getVariant())) tooltip.addPara(lyr_tooltip.text.hasAnyExperimentalBuiltIn, lyr_tooltip.text.padding); 
+			if (!ehm_hasRetrofitBaseBuiltIn(ship.getVariant())) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
+			if (ehm_hasExperimentalSMod(ship.getVariant())) tooltip.addPara(text.hasAnyExperimentalBuiltIn[0], text.padding).setHighlight(text.hasAnyExperimentalBuiltIn[1]); 
 			else {
-				if (ehm_hasRetrofitTag(ship, lyr_internals.tag.experimental, hullModSpecId)) tooltip.addPara(lyr_tooltip.text.hasAnyExperimental, lyr_tooltip.text.padding);
-				if (ehm_hasWeapons(ship)) tooltip.addPara(lyr_tooltip.text.hasWeapons, lyr_tooltip.text.padding);
+				if (ehm_hasRetrofitTag(ship, lyr_internals.tag.experimental, hullModSpecId)) tooltip.addPara(text.hasAnyExperimental[0], text.padding).setHighlight(text.hasAnyExperimental[1]);
+				if (ehm_hasWeapons(ship)) tooltip.addPara(text.hasWeapons[0], text.padding).setHighlight(text.hasWeapons[1]);
 			}
 		}
 

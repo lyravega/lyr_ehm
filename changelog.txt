@@ -1,3 +1,37 @@
+Version 0.8.0
+
+Big version bump due to accomplishing another milestone; implementing fully customizable engines, and
+as a bonus, implementing LunaLib and taking advantage of its options menu for mods.
+
+Make sure to delete the old mod folder as a different folder will be used from now on. Also, EHM now
+requires LunaLib (and LazyLib) to function. Old IDs are still in use for savegame compatibility.
+
+Changes/Fixes:
+- LunaLib integration; removed old .json files and moved necessary stuff to the new options menu
+- Renamed some shield cosmetic hullmods to "Low-Tech", "High-Tech", "Midline" and "Crimson" shields
+- Converted remaining shield hullmods to fully customizable* "Red", "Green" and "Blue" shields
+- Added 3 fully customizable* engine cosmetic hullmods; "Red", "Green" and "Blue" engines
+- Added full shield and engine customization options through the new options menu
+- Added "Auxilary Generators" hullmod; provides 1/1/2/2 slot points at the cost of 10/10/20/20 OP
+- (D) is removed, or if 'showExperimentalFlavour' is enabled, replaced with (E) from hull class names 
+- Fixed shunt market ability toggle not properly persisting through reloads
+- Fixed value reduction on ships that persisted till a reload
+- Hid the removal tool from .csv for now
+
+* Shield customization is rather simple, however engine customization offers a lot with flexibility.
+All three customizable engines are tweaked like "Low-Tech" engines by default, however you can
+customize them like [REDACTED] ones as well if you so desire. Experiment as you wish!
+
+Customizable cosmetic hullmods have a yellow triangle in the upper right corner of their icons, and
+their names can be changed within game as well. Most settings are self-explanatory, but some might
+require some experimentation to have an idea what they do.
+
+To start customizing your shields/engines, simply open LunaLib's settings menu by pressing "F2" on the
+campaign layer. After that all you need to do is install the hullmod on a ship. When you save the new
+values, (most) changes will be reflected in the game immediately.
+
+
+
 Version 0.7.3
 
 - Added automatic clean-up for the slot shunts remaining in cargo holds after the shunt market interaction

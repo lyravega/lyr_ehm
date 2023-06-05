@@ -13,17 +13,26 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
 import data.submarkets.ehm_submarket;
-import lyr.misc.lyr_internals;
-import lyr.tools._lyr_logger;
+import lyravega.misc.lyr_internals;
+import lyravega.tools._lyr_logger;
 
 /**
- * A toggle ability that works in conjunction with {@link lyr.lyr_plugin.ehm_interactionListener
- * interactionListener} to determine whether to display the {@link data.submarkets.ehm_submarket
- * shunt submarket} or not.
+ * A toggle ability that works in conjunction with {@link ehm_interactionListener interactionListener}
+ * to determine whether to display the {@link data.submarkets.ehm_submarket shunt submarket} or not.
  * <p> Submarket will only be attached/detached if this ability is toggled to prevent clutter.
  * @author lyravega
  */
 public class ehm_ability extends BaseToggleAbility implements _lyr_logger {
+	public static void attachListener() {	// used in plugin's onLoad()
+		if (!Global.getSector().getPlayerFleet().getAbility(lyr_internals.id.ability).isActive()) return;
+
+		if (!Global.getSector().getListenerManager().hasListenerOfClass(ehm_interactionListener.class)) {
+			Global.getSector().getListenerManager().addListener(new ehm_interactionListener(), true);
+
+			logger.info(lyr_internals.logPrefix + "Attached colony interaction listener");
+		}
+	}
+
 	/**
 	 * An inner listener class whose sole purpose is to attach/detach the
 	 * {@link data.submarkets.ehm_submarket experimental submarket}
@@ -106,7 +115,7 @@ public class ehm_ability extends BaseToggleAbility implements _lyr_logger {
 	public boolean showActiveIndicator() {
 		return isActive();
 	}
-	
+
 	@Override
 	public void createTooltip(TooltipMakerAPI tooltip, boolean expanded) {
         Color highlightColor = Misc.getHighlightColor();
@@ -119,5 +128,10 @@ public class ehm_ability extends BaseToggleAbility implements _lyr_logger {
 
 	public boolean hasTooltip() {
 		return true;
+	}
+
+	@Override
+	public Color getActiveColor() {
+		return Global.getSector().getFaction(lyr_internals.id.faction).getBrightUIColor();
 	}
 }

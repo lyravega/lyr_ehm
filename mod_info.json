@@ -2,9 +2,20 @@
 	"id":"lyr_ehm",
 	"name":"Experimental Hull Modifications",
 	"author":"lyravega",
-	"version":"0.7.3",
+	"version":"0.8.0",
+	"gameVersion":"0.96a-RC10",
 	"description":"Adds experimental hull modifications",
 	"jars":["jars/lyr_ehm.jar"],
-	"modPlugin": "lyr.lyr_plugin",
-	"gameVersion":"0.96a-RC10"
+	"modPlugin": "lyravega.plugin.experimentalHullModifications",
+	"dependencies": 
+	[
+		{
+			"id": "lw_lazylib",
+			"name": "LazyLib",
+		},
+		{
+			"id": "lunalib",
+			"name": "LunaLib",
+		},
+	]
 }
