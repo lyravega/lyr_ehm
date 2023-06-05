@@ -301,7 +301,7 @@ public class _ehm_base extends BaseHullMod implements _lyr_logger {
 	 */
 	protected static final ShipHullSpecAPI ehm_hullSpecClone(ShipVariantAPI variant) {
 		ShipHullSpecAPI hullSpecToClone = variant.getHullSpec();
-		ShipHullSpecAPI originalSpec;
+		ShipHullSpecAPI originalHullSpec;
 		lyr_hullSpec hullSpec;
 
 		if (hullSpecToClone.isRestoreToBase() && hullSpecToClone.getBaseHullId() != null ) {
@@ -312,28 +312,15 @@ public class _ehm_base extends BaseHullMod implements _lyr_logger {
 				variant.addPermaMod(hullModId, false);
 			}
 			hullSpecToClone = hullSpecToClone.getBaseHull();
+
 			hullSpec = new lyr_hullSpec(settings.getHullSpec(Misc.getDHullId(hullSpecToClone)), true);
-			originalSpec = settings.getHullSpec(hullSpecToClone.getHullId().replace(Misc.D_HULL_SUFFIX, ""));
+			originalHullSpec = settings.getHullSpec(hullSpecToClone.getHullId().replace(Misc.D_HULL_SUFFIX, ""));
 		} else {
 			hullSpec = new lyr_hullSpec(settings.getHullSpec(Misc.getDHullId(hullSpecToClone)), true);
-			originalSpec = settings.getHullSpec(hullSpecToClone.getHullId().replace(Misc.D_HULL_SUFFIX, ""));
+			originalHullSpec = settings.getHullSpec(hullSpecToClone.getHullId().replace(Misc.D_HULL_SUFFIX, ""));
 		}
 
-		// hullSpec.setDParentHullId(null);
-		// hullSpec.setBaseHullId(null);
-		// hullSpec.setRestoreToBase(false);
-		hullSpec.setBaseValue(hullSpecToClone.getBaseValue());	// because d-hulls lose 25% in value immediately
-		if (showExperimentalFlavour) {
-			hullSpec.setManufacturer(text.flavourManufacturer);
-			hullSpec.setDescriptionPrefix(text.flavourDescription);
-			hullSpec.setHullName(originalSpec.getHullName() + " (E)");	// restore to base hull name, replacing "(D)" with "(E)"
-		} else {
-			hullSpec.setDescriptionPrefix(originalSpec.getDescriptionPrefix());	// restore with base prefix, if any
-			hullSpec.setHullName(originalSpec.getHullName());	// restore to base hull name, removing "(D)"
-		}
-		// hullSpec.getTags().clear();
-		// hullSpec.getTags().addAll(hullSpecToClone.getTags());
-		hullSpec.addBuiltInMod(lyr_internals.id.baseModification);
+		ehm_hullSpecAlteration(hullSpec, originalHullSpec);
 
 		return hullSpec.retrieve();
 	}
@@ -352,34 +339,42 @@ public class _ehm_base extends BaseHullMod implements _lyr_logger {
 	 * @return a 'fresh' hullSpec from the SpecStore
 	 */
 	protected static final ShipHullSpecAPI ehm_hullSpecRefresh(ShipVariantAPI variant) {
-		lyr_hullSpec stockHullSpec = new lyr_hullSpec(settings.getHullSpec(variant.getHullSpec().getHullId()), true);
+		lyr_hullSpec hullSpec = new lyr_hullSpec(settings.getHullSpec(variant.getHullSpec().getHullId()), true);
+		ShipHullSpecAPI originalHullSpec = settings.getHullSpec(variant.getHullSpec().getHullId().replace(Misc.D_HULL_SUFFIX, ""));
 
-		ShipHullSpecAPI hullSpec = variant.getHullSpec();
-		ShipHullSpecAPI stockHullSpecAPI = stockHullSpec.retrieve();
-
-		for (String hullSpecTag : hullSpec.getTags()) // this is a set, so there cannot be any duplicates, but still
-		if (!stockHullSpecAPI.getTags().contains(hullSpecTag))
-		stockHullSpecAPI.addTag(hullSpecTag);
-
-		for (String builtInHullModSpecId : hullSpec.getBuiltInMods()) // this is a list, there can be duplicates so check first
-		if (!stockHullSpecAPI.getBuiltInMods().contains(builtInHullModSpecId))
-		stockHullSpecAPI.addBuiltInMod(builtInHullModSpecId);
-
-		// for (String builtInWeaponSlot : hullSpec.getBuiltInWeapons().keySet()) // this is a map; slotId, weaponSpecId
-		// if (!stockHullSpecAPI.getBuiltInWeapons().keySet().contains(builtInWeaponSlot))
-		// stockHullSpecAPI.addBuiltInWeapon(builtInWeaponSlot, hullSpec.getBuiltInWeapons().get(builtInWeaponSlot));
-
-		// for (String builtInWing : hullSpec.getBuiltInWings()) // this is a list, there can be duplicates so check first
-		// if (!stockHullSpecAPI.getBuiltInWings().contains(builtInWing))
-		// stockHullSpec.addBuiltInWing(builtInWing);
-
-		// hullSpec.addBuiltInMod(ehm.id.baseRetrofit);
-		if (showExperimentalFlavour) {
-			stockHullSpec.setManufacturer(text.flavourManufacturer);	// TODO check if this block is needed
-			stockHullSpec.setDescriptionPrefix(text.flavourDescription);
-		}
+		ehm_hullSpecAlteration(hullSpec, originalHullSpec);
 		
-		return stockHullSpec.retrieve();
+		return hullSpec.retrieve();
+	}
+
+	/**
+	 * As the hull specs use (D) versions to avoid a couple of issues, a method is necessary
+	 * to make some alterations and restore some fields to their original, non (D) versions.
+	 * @param hullSpec proxy with a cloned hull spec in it
+	 * @param originalHullSpec to be used as a reference; not a (D) version
+	 */
+	private static final void ehm_hullSpecAlteration(lyr_hullSpec hullSpec, ShipHullSpecAPI originalHullSpec) {
+		for (String hullSpecTag : originalHullSpec.getTags()) // this is a set, so there cannot be any duplicates, but still
+		if (!hullSpec.getTags().contains(hullSpecTag))
+		hullSpec.addTag(hullSpecTag);
+
+		for (String builtInHullModSpecId : originalHullSpec.getBuiltInMods()) // this is a list, there can be duplicates so check first
+		if (!hullSpec.getBuiltInMods().contains(builtInHullModSpecId))
+		hullSpec.addBuiltInMod(builtInHullModSpecId);
+
+		// hullSpec.setDParentHullId(null);
+		// hullSpec.setBaseHullId(null);
+		// hullSpec.setRestoreToBase(false);
+		hullSpec.setBaseValue(originalHullSpec.getBaseValue());	// because d-hulls lose 25% in value immediately
+		if (showExperimentalFlavour) {
+			hullSpec.setManufacturer(text.flavourManufacturer);
+			hullSpec.setDescriptionPrefix(text.flavourDescription);
+			hullSpec.setHullName(originalHullSpec.getHullName() + " (E)");	// restore to base hull name, replacing "(D)" with "(E)"
+		} else {
+			hullSpec.setDescriptionPrefix(hullSpec.getDescriptionPrefix());	// restore with base prefix, if any
+			hullSpec.setHullName(originalHullSpec.getHullName());	// restore to base hull name, removing "(D)"
+		}
+		hullSpec.addBuiltInMod(lyr_internals.id.baseModification);
 	}
 
 	/**

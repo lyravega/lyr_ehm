@@ -14,6 +14,7 @@ Changes/Fixes:
 - Added full shield and engine customization options through the new options menu
 - (D) is removed, or if 'showExperimentalFlavour' is enabled, replaced with (E) from hull class names 
 - Fixed shunt market ability toggle not properly persisting through reloads
+- Fixed value reduction on ships that persisted till a reload
 - Hid the removal tool from .csv for now
 
 * Shield customization is rather simple, however engine customization offers a lot with flexibility.

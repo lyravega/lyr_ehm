@@ -210,6 +210,15 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	}
 
 	/**
+	 * @return list of built-in mods
+	 * @category Bridge method
+	 * @see {@link ShipHullSpecAPI#getBuiltInMods(String) getBuiltInMods()}
+	 */
+	public List<String> getBuiltInMods() { 
+		return hullSpec.getBuiltInMods();
+	}
+
+	/**
 	 * @param hullModSpecId
 	 * @category Bridge method
 	 * @see {@link ShipHullSpecAPI#addBuiltInMod(String) addBuiltInMod(String)}
@@ -233,6 +242,14 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	 */
 	public void setDescriptionPrefix(String destriptionPrefix) {
 		hullSpec.setDescriptionPrefix(destriptionPrefix);
+	}
+
+	/**
+	 * @return Description prefix of the hull
+	 * @category Bridge method
+	 */
+	public String getDescriptionPrefix() {
+		return hullSpec.getDescriptionPrefix();
 	}
 
 	/**
@@ -384,6 +401,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	}
 
 	/**
+	 * @param hullName
 	 * @category Bridge method
 	 * @see {@link ShipHullSpecAPI#setHullName(String) setHullName()}
 	 */
@@ -398,6 +416,15 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 	 */
 	public Set<String> getTags() {
 		return hullSpec.getTags();
+	}
+
+	/**
+	 * @param tag
+	 * @category Bridge method
+	 * @see {@link ShipHullSpecAPI#addTag(String) addTag(tag)}
+	 */
+	public void addTag(String tag) {
+		hullSpec.addTag(tag);
 	}
 
 	/**
