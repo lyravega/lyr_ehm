@@ -8,7 +8,7 @@ import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
 import lyravega.misc.lyr_internals;
-import lyravega.tools._lyr_proxyTools;
+import lyravega.tools.lyr_proxyTools;
 
 import org.lwjgl.util.vector.Vector2f;
 
@@ -22,7 +22,7 @@ import org.lwjgl.util.vector.Vector2f;
  * <p> Use {@link #retrieve()} to grab the stored {@link WeaponSlotAPI}.
  * @author lyravega
  */
-public final class lyr_weaponSlot extends _lyr_proxyTools {
+public final class lyr_weaponSlot extends lyr_proxyTools {
 	private WeaponSlotAPI weaponSlot;
 	private static MethodHandle clone = null;
 	private static MethodHandle setWeaponType = null; 

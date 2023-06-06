@@ -8,7 +8,7 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import lyravega.misc.lyr_internals;
-import lyravega.tools._lyr_proxyTools;
+import lyravega.tools.lyr_proxyTools;
 
 /**
  * A proxy-like class for... engine builder? When {@code getEngineSlots()}
@@ -20,7 +20,7 @@ import lyravega.tools._lyr_proxyTools;
  * javadocs to hopefully properly describe what they do.
  * @author lyravega
  */
-public final class lyr_engineBuilder extends _lyr_proxyTools {
+public final class lyr_engineBuilder extends lyr_proxyTools {
 	private Object engineBuilder;
 	private static MethodHandle clone = null;
 	private static MethodHandle setEngineStyle = null;

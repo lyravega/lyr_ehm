@@ -6,7 +6,7 @@
 	"gameVersion":"0.96a-RC10",
 	"description":"Adds experimental hull modifications",
 	"jars":["jars/lyr_ehm.jar"],
-	"modPlugin": "lyravega.plugin.experimentalHullModifications",
+	"modPlugin": "lyravega.plugin.lyr_ehm",
 	"dependencies": 
 	[
 		{

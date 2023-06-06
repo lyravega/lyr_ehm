@@ -7,12 +7,12 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.HullModEffect;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 
-import data.hullmods._ehm_customizable;
+import experimentalHullModifications.hullmods._ehm_customizable;
 import lunalib.lunaSettings.LunaSettings;
 import lunalib.lunaSettings.LunaSettingsListener;
-import lyravega.tools._lyr_logger;
+import lyravega.tools.lyr_logger;
 
-public class lyr_lunaSettings implements LunaSettingsListener, _lyr_logger {
+public class lyr_lunaSettings implements LunaSettingsListener, lyr_logger {
 	private static final Set<_ehm_customizable> lunaMods = new HashSet<_ehm_customizable>();
 	public static boolean showExperimentalFlavour;
 	public static boolean playDrillSound;

@@ -7,7 +7,7 @@ import com.fs.starfarer.api.combat.ShieldAPI.ShieldType;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
 
 import lyravega.misc.lyr_internals;
-import lyravega.tools._lyr_proxyTools;
+import lyravega.tools.lyr_proxyTools;
 
 /**
  * A proxy-like class for {@link ShieldSpecAPI} that utilizes obfuscated 
@@ -19,7 +19,7 @@ import lyravega.tools._lyr_proxyTools;
  * <p> Use {@link #retrieve()} to grab the stored {@link ShieldSpecAPI}.
  * @author lyravega
  */
-public final class lyr_shieldSpec extends _lyr_proxyTools {
+public final class lyr_shieldSpec extends lyr_proxyTools {
 	private ShieldSpecAPI shieldSpec;
 	private static MethodHandle clone = null;
 	// private static MethodHandle setRingColor = null;
