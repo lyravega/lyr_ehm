@@ -7,14 +7,14 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 
-import experimentalHullModifications.hullmods.ehm.interfaces.customizable;
+import experimentalHullModifications.hullmods.ehm.interfaces.customizableHullMod;
 
 /**
  * NOTE: id of this shield in the .csv remains "ehm_sc_blueShields" for save compatibility
  * @category Custom Shield Cosmetic 
  * @author lyravega
  */
-public class ehm_csc_blueShields extends _ehm_sc_base implements customizable {
+public class ehm_csc_blueShields extends _ehm_sc_base implements customizableHullMod {
 	private Color innerColour;
 	private Color ringColour;
 
