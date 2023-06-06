@@ -43,7 +43,7 @@ public class ehm_submarket extends BaseSubmarketPlugin {
             this.cargo.addWeapons(shuntId, 1000);
         }
 		this.cargo.addMothballedShip(FleetMemberType.SHIP, "crig_Standard", "EHM Lab");
-		this.cargo.getMothballedShips().getMembersListCopy().iterator().next().getVariant().addMod(lyr_internals.id.baseModification);
+		this.cargo.getMothballedShips().getMembersListCopy().iterator().next().getVariant().addMod(lyr_internals.id.hullmods.base);
 	}
 
 	@Override

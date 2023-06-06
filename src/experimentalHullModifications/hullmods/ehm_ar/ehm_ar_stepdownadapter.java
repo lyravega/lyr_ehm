@@ -110,7 +110,7 @@ public class ehm_ar_stepdownadapter extends _ehm_ar_base {
 			boolean showFullInfo = extraInfoInHullMods.equals("Full");
 
 			if (showInfo) {
-				Map<String, Integer> adapters = ehm_shuntCount(variant, lyr_internals.tag.adapterShunt);
+				Map<String, Integer> adapters = ehm_shuntCount(ship, lyr_internals.tag.adapterShunt);
 
 				if (!adapters.isEmpty()) {
 					tooltip.addSectionHeading("ACTIVE ADAPTERS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);

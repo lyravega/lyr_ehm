@@ -52,7 +52,11 @@ public class _ehm_tracker extends _ehm_base {
 	 * @param ship to track
 	 */
 	protected static void ehm_trackShip(ShipAPI ship) {
-		if (isRefitTab()) shipTrackerScript(ship).setVariant(ship.getVariant());
+		if (!isRefitTab()) return;
+
+		shipTrackerScript shipTrackerScript = shipTrackerScript(ship);
+
+		if (shipTrackerScript != null) shipTrackerScript.setVariant(ship.getVariant());
 	}
 
 	protected static void ehm_trackShip(MutableShipStatsAPI stats) {
@@ -60,13 +64,18 @@ public class _ehm_tracker extends _ehm_base {
 
 		if (stats.getEntity() instanceof ShipAPI) {
 			ShipAPI ship = (ShipAPI) stats.getEntity();
-
-			shipTrackerScript(ship).setVariant(stats.getVariant());
+			shipTrackerScript shipTrackerScript = shipTrackerScript(ship);
+	
+			if (shipTrackerScript != null) shipTrackerScript.setVariant(ship.getVariant());
 		}
 	}
 
 	protected static void ehm_stopTracking(ShipAPI ship) {
-		if (isRefitTab()) shipTrackerScript(ship).cleanup();
+		if (!isRefitTab()) return;
+
+		shipTrackerScript shipTrackerScript = shipTrackerScript(ship);
+
+		if (shipTrackerScript != null) shipTrackerScript.cleanup();
 	}
 	
 	protected static void ehm_stopTracking(MutableShipStatsAPI stats) {
@@ -74,8 +83,9 @@ public class _ehm_tracker extends _ehm_base {
 
 		if (stats.getEntity() instanceof ShipAPI) {
 			ShipAPI ship = (ShipAPI) stats.getEntity();
-
-			shipTrackerScript(ship).cleanup();
+			shipTrackerScript shipTrackerScript = shipTrackerScript(ship);
+	
+			if (shipTrackerScript != null) shipTrackerScript.cleanup();
 		}
 	}
 
@@ -191,6 +201,8 @@ public class _ehm_tracker extends _ehm_base {
 		shipTrackerScript shipTracker = null;
 		ShipVariantAPI variant = ship.getVariant();
 		String memberId = ship.getFleetMemberId();
+
+		if (memberId.startsWith("-")) return null;	// autofit goal variants have member ids that start with "-"
 
 		for(shipTrackerScript script : getTransientScriptsOfClass(shipTrackerScript.class)) {
 			if (!script.getMemberId().equals(memberId)) continue;

@@ -33,7 +33,7 @@ public class ehm_base extends _ehm_tracker {
 		ShipVariantAPI variant = stats.getVariant();
 		ShipHullSpecAPI hullSpec = variant.getHullSpec();
 		
-		boolean isBasePerma = variant.getPermaMods().contains(lyr_internals.id.baseModification);
+		boolean isBasePerma = variant.getPermaMods().contains(lyr_internals.id.hullmods.base);
 		boolean isBaseBuiltIn = ehm_hasRetrofitBaseBuiltIn(variant);
 		boolean isGettingRestored = !(isBasePerma && isBaseBuiltIn);	// when the ship is getting restored, hull spec won't have the base, but variant will
 
@@ -42,7 +42,7 @@ public class ehm_base extends _ehm_tracker {
 			variant.setHullSpecAPI(ehm_hullSpecClone(variant)); 
 			
 			if (!isBasePerma) {	// to make this a one-time commit, and to avoid re-committing if/when the ship is getting restored
-				variant.addPermaMod(lyr_internals.id.baseModification, false);
+				variant.addPermaMod(lyr_internals.id.hullmods.base, false);
 				commitChanges(); playSound();
 			}
 		}

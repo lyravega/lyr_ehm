@@ -12,9 +12,7 @@ public final class lyr_internals {
 			ability = "ehm_ability", // must match ability id in .csv
 			faction = "experimental", // must match faction id in .csv and .faction
 			drillSound = "drill", // must match .json
-			mod = "lyr_ehm", // must match .json
-			baseModification = "ehm_base", // must match hullmod id in .csv
-			undoModification = "ehm_undo"; // must match hullmod id in .csv
+			mod = "lyr_ehm"; // must match .json
 		public static final class hullmods {
 			public static final String
 				base = "ehm_base",

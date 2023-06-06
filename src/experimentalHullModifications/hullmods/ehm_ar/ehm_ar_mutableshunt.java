@@ -67,7 +67,7 @@ public class ehm_ar_mutableshunt extends _ehm_ar_base {
 			boolean showFullInfo = extraInfoInHullMods.equals("Full");
 
 			if (showInfo) {
-				Map<String, Integer> capacitors = ehm_shuntCount(variant, lyr_internals.tag.capacitorShunt);
+				Map<String, Integer> capacitors = ehm_shuntCount(ship, lyr_internals.tag.capacitorShunt);
 	
 				if (!capacitors.isEmpty()) {
 					tooltip.addSectionHeading("ACTIVE CAPACITORS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
@@ -79,7 +79,7 @@ public class ehm_ar_mutableshunt extends _ehm_ar_base {
 					tooltip.addPara("No capacitors are installed. Capacitors increase the total flux capacity of the ship, and affect built-in capacitors.", 2f);
 				}
 
-				Map<String, Integer> dissipators = ehm_shuntCount(variant, lyr_internals.tag.dissipatorShunt);
+				Map<String, Integer> dissipators = ehm_shuntCount(ship, lyr_internals.tag.dissipatorShunt);
 	
 				if (!dissipators.isEmpty()) {
 					tooltip.addSectionHeading("ACTIVE DISSIPATORS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
@@ -91,7 +91,7 @@ public class ehm_ar_mutableshunt extends _ehm_ar_base {
 					tooltip.addPara("No dissipators are installed. Dissipators increase the total flux dissipation of the ship, and affect built-in vents.", 2f);
 				}
 	
-				Map<String, Integer> launchTubes = ehm_shuntCount(variant, lyr_internals.tag.tubeShunt);
+				Map<String, Integer> launchTubes = ehm_shuntCount(ship, lyr_internals.tag.tubeShunt);
 	
 				if (!launchTubes.isEmpty()) {
 					tooltip.addSectionHeading("EXTRA HANGARS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);

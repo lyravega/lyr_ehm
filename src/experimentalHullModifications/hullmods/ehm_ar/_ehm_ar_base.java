@@ -27,6 +27,7 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.api.combat.WeaponAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
@@ -85,7 +86,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		boolean hasAdapterActivator = variant.hasHullMod(hullmods.stepdownadapter);
 		boolean hasMutableActivator = variant.hasHullMod(hullmods.mutableshunt);
 		boolean hasConverterActivator = variant.hasHullMod(hullmods.diverterandconverter);
-		if (!hasAdapterActivator && !hasMutableActivator && !hasConverterActivator) return;
+		// if (!hasAdapterActivator && !hasMutableActivator && !hasConverterActivator) return;
 
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 		List<WeaponSlotAPI> shunts = hullSpec.getAllWeaponSlotsCopy();
@@ -270,21 +271,19 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 	 * @param initialBonus if the ship has any initial bonus slot points
 	 * @return int array, 0=total, 1=misc, 2=diverters, 3=converters
 	 */
-	protected static final int[] ehm_slotPointCalculation(ShipVariantAPI variant) {
+	protected static final int[] ehm_slotPointCalculation(ShipAPI ship) {
 		int diverterBonus = 0;
 		int converterMalus = 0;
-		int initialBonus = ehm_slotPointsFromHullMods(variant);
+		int initialBonus = ehm_slotPointsFromHullMods(ship.getVariant());
 
-		for (WeaponSlotAPI slot: variant.getHullSpec().getAllWeaponSlotsCopy()) {
-			if (!slot.isDecorative()) continue;	// since activated shunts become decorative, only need to check decorative
-			String slotId = slot.getId();
-			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId); if (shuntSpec == null) continue;	// skip empty slots
-			String shuntId = shuntSpec.getWeaponId();
-			if (!diverterConverterSet.contains(shuntId)) continue;	// only care about these shunts
-			if (!shuntSpec.getSize().equals(variant.getSlot(slotId).getSlotSize())) continue; // requires matching slot size
+		for (WeaponAPI weapon: ship.getAllWeapons()) {
+			if (!weapon.getSlot().isDecorative()) continue;
+			if (!diverterConverterSet.contains(weapon.getId())) continue;
 
-			if (diverterMap.containsKey(shuntId)) diverterBonus += diverterMap.get(shuntId);
-			else if (converterMap.containsKey(shuntId)) converterMalus -= converterMap.get(shuntId).getChildCost();
+			String weaponId = weapon.getId();
+
+			if (diverterMap.containsKey(weaponId)) diverterBonus += diverterMap.get(weaponId);
+			else if (converterMap.containsKey(weaponId)) converterMalus -= converterMap.get(weaponId).getChildCost();
 		}
 
 		int[] pointArray = {initialBonus+converterMalus+diverterBonus, initialBonus, diverterBonus, converterMalus};
@@ -293,18 +292,18 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 
 	/**
 	 * Checks and reports any shunt and shunt counts, only to be used in the tooltips.
-	 * @param variant of the ship
-	 * @param tag of the shunts to be counted
+	 * @param ship
+	 * @param groupTag of the shunts to be counted
 	 * @return a map with shuntId:count entries
 	 */
-	protected static final Map<String, Integer> ehm_shuntCount(ShipVariantAPI variant, String tag) {
+	protected static final Map<String, Integer> ehm_shuntCount(ShipAPI ship, String groupTag) {
 		Map<String, Integer> shuntMap = new HashMap<String, Integer>();
 
-		for (WeaponSlotAPI slot : variant.getHullSpec().getAllWeaponSlotsCopy()) {
-			if (!slot.isDecorative()) continue;
-			WeaponSpecAPI weaponSpec = variant.getWeaponSpec(slot.getId()); if (weaponSpec == null) continue;
-			if (!weaponSpec.hasTag(tag)) continue;
-			String weaponId = weaponSpec.getWeaponId();
+		for (WeaponAPI weapon : ship.getAllWeapons()) {
+			if (!weapon.getSlot().isDecorative()) continue;
+			if (!weapon.getSpec().getWeaponGroupTag().equals(groupTag)) continue;
+
+			String weaponId = weapon.getId();
 
 			shuntMap.put(weaponId, shuntMap.containsKey(weaponId) ? shuntMap.get(weaponId) + 1 : 1);
 		}

@@ -135,7 +135,7 @@ public class _ehm_wr_base extends _ehm_base implements normalEvents {
 
 			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.locked_bgColour, Alignment.MID, header.padding);
 
-			if (ehm_hasWeapons(ship, lyr_internals.id.shunts.set)) tooltip.addPara(text.hasWeapons[0], text.padding).setHighlight(text.hasWeapons[1]);
+			if (ehm_hasWeapons(ship, WeaponType.UNIVERSAL)) tooltip.addPara(text.hasWeapons[0], text.padding).setHighlight(text.hasWeapons[1]);
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
@@ -155,7 +155,7 @@ public class _ehm_wr_base extends _ehm_base implements normalEvents {
 	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
 		if (ship == null) return false;
 
-		if (ehm_hasWeapons(ship, lyr_internals.id.shunts.set)) return false;
+		if (ehm_hasWeapons(ship, WeaponType.UNIVERSAL)) return false;
 
 		return true;
 	}

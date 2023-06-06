@@ -16,6 +16,7 @@ import com.fs.starfarer.api.combat.BaseHullMod;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
+import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI;
@@ -162,7 +163,7 @@ public class _ehm_base extends BaseHullMod implements lyr_logger {
 	 * @return true if ship has it, false otherwise (duh)
 	 */
 	protected static final boolean ehm_hasRetrofitBaseBuiltIn(ShipVariantAPI variant) {
-		return variant.getHullSpec().isBuiltInMod(lyr_internals.id.baseModification);
+		return variant.getHullSpec().isBuiltInMod(lyr_internals.id.hullmods.base);
 	}
 
 	/**
@@ -190,12 +191,8 @@ public class _ehm_base extends BaseHullMod implements lyr_logger {
 	}
 
 	/**
-	 * Checks if the ship has any weapons installed. Decorative slots are ignored 
-	 * through {@code getNonBuiltInWeaponSlots()}, and as such the activated adapters
-	 * are ignored as the adapters turn the slots into decorative ones after 
-	 * activation. Evolved into its overloads for more specific checks.
 	 * @param ship to check
-	 * @return true if the ship has weapons on weapon slots
+	 * @return true if the ship has weapons on weapon slots; will ignore shunts
 	 */
 	protected static final boolean ehm_hasWeapons(ShipAPI ship) {
 		for (WeaponAPI weapon: ship.getAllWeapons()) {
@@ -209,20 +206,17 @@ public class _ehm_base extends BaseHullMod implements lyr_logger {
 	}
 
 	/**
-	 * Checks if the ship has any weapons installed on slots with specific slot ids
-	 * that start with the passed slotAffix.
-	 * <p> Example: If the slotAffix is "AS", then only the slots with the slot ids
-	 * starting with "AS" are considered, and the rest are ignored.
 	 * @param ship to check
-	 * @param slotAffix for checking the slotId
+	 * @param slotPrefix only slots with this prefix will be cared about
 	 * @return true if the ship has weapons on specific slots
 	 */
-	protected static final boolean ehm_hasWeapons(ShipAPI ship, String slotAffix) {
+	protected static final boolean ehm_hasWeapons(ShipAPI ship, String slotPrefix) {
 		for (WeaponAPI weapon: ship.getAllWeapons()) {
 			WeaponSlotAPI slot = weapon.getSlot();
 
+			if (!slot.getId().startsWith(slotPrefix)) continue;
+			else if (slot.isDecorative()) return true;	// in this case, it is an activated shunt on a spawned slot
 			if (!slot.isWeaponSlot()) continue;
-			if (!slot.getId().startsWith(slotAffix)) continue;
 			return true;
 		}
 
@@ -230,20 +224,34 @@ public class _ehm_base extends BaseHullMod implements lyr_logger {
 	}
 
 	/**
-	 * Checks if the ship has any weapons with ids that do not match the weapon ids
-	 * contained in the passed ignore set.
-	 * <p> Example: If the passed set contains a weapon id like "adapter", then
-	 * any slot having this weapon installed on them are ignored.
 	 * @param ship to check
-	 * @param weaponIdsToIgnore while checking the weapon slots
+	 * @param ignoredWeaponIds set that contains weapon ids to be ignored
 	 * @return true if the ship has weapons with non-matching weapon ids
 	 */
-	protected static final boolean ehm_hasWeapons(ShipAPI ship, Set<String> weaponIdsToIgnore) {
+	@Deprecated
+	protected static final boolean ehm_hasWeapons(ShipAPI ship, Set<String> ignoredWeaponIds) {
 		for (WeaponAPI weapon: ship.getAllWeapons()) {
 			WeaponSlotAPI slot = weapon.getSlot();
 
+			if (ignoredWeaponIds.contains(weapon.getId())) continue;
 			if (!slot.isWeaponSlot()) continue;
-			if (weaponIdsToIgnore.contains(weapon.getId())) continue;
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param ship to check
+	 * @param weaponType of the weapons that will be ignored
+	 * @return true if the ship has weapons with type other than the specified type
+	 */
+	protected static final boolean ehm_hasWeapons(ShipAPI ship, WeaponType weaponType) {
+		for (WeaponAPI weapon: ship.getAllWeapons()) {
+			WeaponSlotAPI slot = weapon.getSlot();
+
+			if (weapon.getType().equals(weaponType)) continue;
+			if (!slot.isWeaponSlot()) continue;
 			return true;
 		}
 
@@ -373,7 +381,7 @@ public class _ehm_base extends BaseHullMod implements lyr_logger {
 			hullSpec.setDescriptionPrefix(hullSpec.getDescriptionPrefix());	// restore with base prefix, if any
 			hullSpec.setHullName(originalHullSpec.getHullName());	// restore to base hull name, removing "(D)"
 		}
-		hullSpec.addBuiltInMod(lyr_internals.id.baseModification);
+		hullSpec.addBuiltInMod(lyr_internals.id.hullmods.base);
 	}
 
 	/**

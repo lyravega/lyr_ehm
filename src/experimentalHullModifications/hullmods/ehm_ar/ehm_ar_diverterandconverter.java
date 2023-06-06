@@ -100,7 +100,7 @@ public class ehm_ar_diverterandconverter extends _ehm_ar_base {
 			boolean showInfo = !extraInfoInHullMods.equals("None");
 			boolean showFullInfo = extraInfoInHullMods.equals("Full");
 
-			int[] pointArray = ehm_slotPointCalculation(variant);
+			int[] pointArray = ehm_slotPointCalculation(ship);
 
 			if (pointArray[0] > 0) {
 				tooltip.addSectionHeading(pointArray[0] + " UNUSED SLOT POINTS", header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
@@ -112,7 +112,7 @@ public class ehm_ar_diverterandconverter extends _ehm_ar_base {
 			if (pointArray[3] < 0) tooltip.addPara("Converter shunts are consuming " + pointArray[3] + " slot points", 2f, header.notApplicable_textColour, pointArray[3] + " slot points");
 
 			if (showInfo) {
-				Map<String, Integer> converters = ehm_shuntCount(variant, lyr_internals.tag.converterShunt);
+				Map<String, Integer> converters = ehm_shuntCount(ship, lyr_internals.tag.converterShunt);
 
 				if (!converters.isEmpty()) {
 					tooltip.addSectionHeading("ACTIVE CONVERTERS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
@@ -124,7 +124,7 @@ public class ehm_ar_diverterandconverter extends _ehm_ar_base {
 					tooltip.addPara("No converters are installed. Converters are used to make a smaller slot a bigger one, if there are enough slot points.", 2f);
 				}
 
-				Map<String, Integer> diverters = ehm_shuntCount(variant, lyr_internals.tag.diverterShunt);
+				Map<String, Integer> diverters = ehm_shuntCount(ship, lyr_internals.tag.diverterShunt);
 
 				if (!diverters.isEmpty()) {
 					tooltip.addSectionHeading("ACTIVE DIVERTERS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
