@@ -27,7 +27,7 @@ import lyravega.misc.lyr_tooltip.text;
  * @category Base Hull Modification 
  * @author lyravega
  */
-public class ehm_base extends _ehm_basetracker {
+public class ehm_base extends _ehm_tracker {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();

@@ -7,13 +7,13 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 
-import experimentalHullModifications.hullmods._ehm_customizable;
+import experimentalHullModifications.hullmods.ehm.interfaces.customizable;
 import lyravega.proxies.lyr_engineBuilder.engineStyle;
 
 /**@category Engine Cosmetic 
  * @author lyravega
  */
-public class ehm_cec_redEngines extends _ehm_ec_base implements _ehm_customizable {
+public class ehm_cec_redEngines extends _ehm_ec_base implements customizable {
 	private static final String customEngineDataId = ehm_cec_redEngines.class.getSimpleName().toUpperCase();
 	private static final int style = engineStyle.custom;
 	private static Object engineData;

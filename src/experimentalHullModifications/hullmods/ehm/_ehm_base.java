@@ -1,4 +1,4 @@
-package experimentalHullModifications.hullmods;
+package experimentalHullModifications.hullmods.ehm;
 
 import static lyravega.misc.lyr_lunaSettings.showExperimentalFlavour;
 
@@ -28,7 +28,6 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
-import experimentalHullModifications.hullmods.ehm.ehm_base;
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_tooltip.header;
 import lyravega.misc.lyr_tooltip.text;

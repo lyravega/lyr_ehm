@@ -14,7 +14,8 @@ import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
-import experimentalHullModifications.hullmods.ehm.events.normalEvents;
+import experimentalHullModifications.hullmods.ehm._ehm_base;
+import experimentalHullModifications.hullmods.ehm.interfaces.normalEvents;
 
 public class _ehm_test extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS

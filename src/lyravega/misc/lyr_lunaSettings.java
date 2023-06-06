@@ -7,13 +7,13 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.HullModEffect;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 
-import experimentalHullModifications.hullmods._ehm_customizable;
+import experimentalHullModifications.hullmods.ehm.interfaces.customizable;
 import lunalib.lunaSettings.LunaSettings;
 import lunalib.lunaSettings.LunaSettingsListener;
 import lyravega.tools.lyr_logger;
 
 public class lyr_lunaSettings implements LunaSettingsListener, lyr_logger {
-	private static final Set<_ehm_customizable> lunaMods = new HashSet<_ehm_customizable>();
+	private static final Set<customizable> lunaMods = new HashSet<customizable>();
 	public static boolean showExperimentalFlavour;
 	public static boolean playDrillSound;
 	public static boolean showFluff;
@@ -36,7 +36,7 @@ public class lyr_lunaSettings implements LunaSettingsListener, lyr_logger {
 
 			HullModEffect hullModEffect = hullModSpec.getEffect();
 
-			if (_ehm_customizable.class.isInstance(hullModEffect)) lunaMods.add((_ehm_customizable) hullModEffect);
+			if (customizable.class.isInstance(hullModEffect)) lunaMods.add((customizable) hullModEffect);
 		}
 	}
 
@@ -53,7 +53,7 @@ public class lyr_lunaSettings implements LunaSettingsListener, lyr_logger {
 		
 		cacheBasicSettings();	
 
-		for (_ehm_customizable customizableMod: lunaMods) {
+		for (customizable customizableMod: lunaMods) {
 			customizableMod.ehm_applyCustomization();
 		}
 

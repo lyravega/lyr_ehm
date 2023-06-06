@@ -1,9 +1,9 @@
 package lyravega.plugin;
 
 import static experimentalHullModifications.abilities.ehm_ability.attachListener;
-import static experimentalHullModifications.hullmods.ehm._ehm_basetracker.enhancedEvents;
-import static experimentalHullModifications.hullmods.ehm._ehm_basetracker.normalEvents;
-import static experimentalHullModifications.hullmods.ehm._ehm_basetracker.suppressedEvents;
+import static experimentalHullModifications.hullmods.ehm._ehm_tracker.enhancedEvents;
+import static experimentalHullModifications.hullmods.ehm._ehm_tracker.normalEvents;
+import static experimentalHullModifications.hullmods.ehm._ehm_tracker.suppressedEvents;
 import static lyravega.misc.lyr_lunaSettings.attachLunaListener;
 import static lyravega.tools.lyr_uiTools.findUIClasses;
 
@@ -16,9 +16,9 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.thoughtworks.xstream.XStream;
 
-import experimentalHullModifications.hullmods.ehm.events.enhancedEvents;
-import experimentalHullModifications.hullmods.ehm.events.normalEvents;
-import experimentalHullModifications.hullmods.ehm.events.suppressedEvents;
+import experimentalHullModifications.hullmods.ehm.interfaces.enhancedEvents;
+import experimentalHullModifications.hullmods.ehm.interfaces.normalEvents;
+import experimentalHullModifications.hullmods.ehm.interfaces.suppressedEvents;
 import lyravega.misc.lyr_internals;
 import lyravega.scripts.lyr_fieldRepairsScript;
 import lyravega.tools.lyr_logger;

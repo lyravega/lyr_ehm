@@ -1,6 +1,6 @@
-package experimentalHullModifications.hullmods;
+package experimentalHullModifications.hullmods.ehm.interfaces;
 
-public interface _ehm_customizable {
+public interface customizable {
     /**
      * Called whenever the listener detects a change in settings.
      * <p>Is executed remotely and allows re-applying settings on relevant

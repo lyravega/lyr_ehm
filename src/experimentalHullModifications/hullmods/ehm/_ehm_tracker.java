@@ -23,10 +23,9 @@ import com.fs.starfarer.api.combat.ShipAPI;
 // import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 
-import experimentalHullModifications.hullmods._ehm_base;
-import experimentalHullModifications.hullmods.ehm.events.enhancedEvents;
-import experimentalHullModifications.hullmods.ehm.events.normalEvents;
-import experimentalHullModifications.hullmods.ehm.events.suppressedEvents;
+import experimentalHullModifications.hullmods.ehm.interfaces.enhancedEvents;
+import experimentalHullModifications.hullmods.ehm.interfaces.normalEvents;
+import experimentalHullModifications.hullmods.ehm.interfaces.suppressedEvents;
 
 /**
  * Provides tools to track any change on a ship, mainly the hull modifications. When a change is
@@ -47,7 +46,7 @@ import experimentalHullModifications.hullmods.ehm.events.suppressedEvents;
  * @see {@link suppressedEvents} onSuppress / onRestore events for hullmods
  * @author lyravega
  */
-public class _ehm_basetracker extends _ehm_base {
+public class _ehm_tracker extends _ehm_base {
 	/**
 	 * Initializes ship tracking in refit tab to detects hullmod changes
 	 * @param ship to track

@@ -15,8 +15,8 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
-import experimentalHullModifications.hullmods._ehm_base;
-import experimentalHullModifications.hullmods.ehm.events.normalEvents;
+import experimentalHullModifications.hullmods.ehm._ehm_base;
+import experimentalHullModifications.hullmods.ehm.interfaces.normalEvents;
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_tooltip.header;
 import lyravega.misc.lyr_tooltip.text;

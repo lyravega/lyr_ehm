@@ -34,8 +34,8 @@ import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
-import experimentalHullModifications.hullmods._ehm_base;
-import experimentalHullModifications.hullmods.ehm.events.normalEvents;
+import experimentalHullModifications.hullmods.ehm._ehm_base;
+import experimentalHullModifications.hullmods.ehm.interfaces.normalEvents;
 import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_diverterandconverter.childParameters;
 import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.childrenParameters;
 import lyravega.misc.lyr_internals;
