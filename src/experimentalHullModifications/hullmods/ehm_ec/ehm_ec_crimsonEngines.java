@@ -1,10 +1,9 @@
 package experimentalHullModifications.hullmods.ehm_ec;
 
+import static lyravega.proxies.lyr_engineBuilder.engineStyleIds.torpedo;
+
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
-
-import lyravega.proxies.lyr_engineBuilder.engineStyle;
-
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 
 /**
@@ -13,12 +12,12 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
  * @author lyravega
  */
 public class ehm_ec_crimsonEngines extends _ehm_ec_base {
-	private static final int style = engineStyle.torpedo;
+	private static final int engineStyleId = torpedo;
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
 		
-		variant.setHullSpecAPI(ehm_pimpMyEngineSlots(variant, style));
+		variant.setHullSpecAPI(ehm_applyEngineCosmetics(variant, engineStyleId));
 	}
 }

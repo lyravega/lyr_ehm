@@ -14,8 +14,8 @@ public class lyr_proxyTools extends lyr_reflectionTools {
 	protected static final Class<?> weaponSlotClass;
 	protected static final Class<?> nodeClass;
 	protected static final Class<?> engineBuilderClass;
-	protected static final Class<?> engineStyleEnum;
-	protected static final Class<?> engineDataClass;
+	protected static final Class<?> engineStyleIdEnum;
+	protected static final Class<?> engineStyleSpecClass;
 
 	static {
 		hullSpecClass = lyr_findHullSpecClass();
@@ -23,8 +23,8 @@ public class lyr_proxyTools extends lyr_reflectionTools {
 		weaponSlotClass = lyr_findWeaponSlotClass();
 		nodeClass = lyr_findNodeClass();
 		engineBuilderClass = lyr_findEngineBuilderClass();
-		engineStyleEnum = lyr_findEngineStyleEnum();
-		engineDataClass = lyr_findEngineDataClass();
+		engineStyleIdEnum = lyr_findEngineStyleIdEnum();
+		engineStyleSpecClass = lyr_findEngineStyleSpecClass();
 	}
 
 	private static Class<?> lyr_findHullSpecClass() {
@@ -67,15 +67,15 @@ public class lyr_proxyTools extends lyr_reflectionTools {
 		}
 	}
 
-	private static Class<?> lyr_findEngineStyleEnum() {
+	private static Class<?> lyr_findEngineStyleIdEnum() {
 		for (Class<?> clazz : engineBuilderClass.getDeclaredClasses()) {
 			if (clazz.isEnum()) return clazz;
-		} logger.fatal(lyr_internals.logPrefix+"'engineStyleEnum' not found in '_lyr_proxyTools'"); return null;
+		} logger.fatal(lyr_internals.logPrefix+"'engineStyleIdEnum' not found in '_lyr_proxyTools'"); return null;
 	}
 
-	private static Class<?> lyr_findEngineDataClass() {
+	private static Class<?> lyr_findEngineStyleSpecClass() {
 		for (Class<?> clazz : engineBuilderClass.getDeclaredClasses()) {
 			if (!clazz.isEnum()) return clazz;
-		} logger.fatal(lyr_internals.logPrefix+"'engineDataClass' not found in '_lyr_proxyTools'"); return null;
+		} logger.fatal(lyr_internals.logPrefix+"'engineStyleSpecClass' not found in '_lyr_proxyTools'"); return null;
 	}
 }

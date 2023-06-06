@@ -16,15 +16,15 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
  * @author lyravega
  */
 public class ehm_csc_redShields extends _ehm_sc_base implements customizableHullMod {
-	private Color innerColour;
-	private Color ringColour;
+	private static Color innerColour;
+	private static Color ringColour;
 
 	@Override
 	public void ehm_applyCustomization() {
 		String settingIdPrefix = this.getClass().getSimpleName()+"_";
 
-		this.innerColour = getLunaRGBAColour(settingIdPrefix+"inner");
-		this.ringColour = getLunaRGBAColour(settingIdPrefix+"ring");
+		innerColour = getLunaRGBAColour(settingIdPrefix+"inner");
+		ringColour = getLunaRGBAColour(settingIdPrefix+"ring");
 		this.hullModSpec.setDisplayName(getLunaName(settingIdPrefix));
 	}
 
@@ -39,6 +39,6 @@ public class ehm_csc_redShields extends _ehm_sc_base implements customizableHull
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
 
-		variant.setHullSpecAPI(ehm_pimpMyShield(variant, this.innerColour, this.ringColour));
+		variant.setHullSpecAPI(ehm_applyShieldCosmetics(variant, innerColour, ringColour));
 	}
 }

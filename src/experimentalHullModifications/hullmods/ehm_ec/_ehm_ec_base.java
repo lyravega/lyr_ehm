@@ -1,6 +1,6 @@
 package experimentalHullModifications.hullmods.ehm_ec;
 
-import static lyravega.proxies.lyr_engineBuilder.addEngineData;
+import static lyravega.proxies.lyr_engineBuilder.addEngineStyleSpec;
 import static lyravega.tools.lyr_uiTools.commitChanges;
 import static lyravega.tools.lyr_uiTools.playSound;
 
@@ -52,15 +52,15 @@ public class _ehm_ec_base extends _ehm_base implements normalEvents {
 	/**
 	 * Alters the engine visuals of the ship. Uses the vanilla engine styles
 	 * @param variant whose hullSpec will be altered
-	 * @param styleEnum {@link lyravega.proxies.lyr_engineBuilder.engineStyle engineStyle}
+	 * @param styleEnum {@link lyravega.proxies.lyr_engineBuilder.engineStyleIds engineStyle}
 	 * @return a hullSpec with the altered engine visuals
 	 */
-	protected static final ShipHullSpecAPI ehm_pimpMyEngineSlots(ShipVariantAPI variant, int styleEnum) {
+	protected static final ShipHullSpecAPI ehm_applyEngineCosmetics(ShipVariantAPI variant, int styleEnum) {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 		lyr_engineBuilder engineSlot = new lyr_engineBuilder(null, false);
 
 		for (Object temp : hullSpec.getEngineSlots()) {
-			engineSlot.recycle(temp).setEngineStyle(styleEnum);
+			engineSlot.recycle(temp).setEngineStyleId(styleEnum);
 		}
 
 		return hullSpec.retrieve();
@@ -69,8 +69,8 @@ public class _ehm_ec_base extends _ehm_base implements normalEvents {
 	/**
 	 * Alters the engine visuals of the ship, with custom engine data
 	 * @param variant whose hullSpec will be altered
-	 * @param styleEnum {@link lyravega.proxies.lyr_engineBuilder.engineStyle engineStyle}
-	 * @param engineData {@link #generateEngineData(String, String) generateEngineData}
+	 * @param styleEnum {@link lyravega.proxies.lyr_engineBuilder.engineStyleIds engineStyle}
+	 * @param engineData {@link #newCustomEngineSpec(String, String) generateEngineData}
 	 * @return a hullSpec with the altered engine visuals
 	 */
 	protected static final ShipHullSpecAPI ehm_pimpMyEngineSlots(ShipVariantAPI variant, int styleEnum, Object engineData) {
@@ -78,8 +78,8 @@ public class _ehm_ec_base extends _ehm_base implements normalEvents {
 		lyr_engineBuilder engineSlot = new lyr_engineBuilder(null, false);
 
 		for (Object temp : hullSpec.getEngineSlots()) {
-			engineSlot.recycle(temp).setEngineStyle(styleEnum);
-			engineSlot.setEngineData(engineData);
+			engineSlot.recycle(temp).setEngineStyleId(styleEnum);
+			engineSlot.setEngineStyleSpec(engineData);
 		}
 
 		return hullSpec.retrieve();
@@ -89,7 +89,7 @@ public class _ehm_ec_base extends _ehm_base implements normalEvents {
 	 * Restores the engine visuals of the ship by applying a stock hullSpec
 	 * on the variant.
 	 * @param variant whose hullSpec will be altered
-	 * @param styleEnum somewhat hardcoded {@link lyravega.proxies.lyr_engineBuilder.engineStyle engineStyle}
+	 * @param styleEnum somewhat hardcoded {@link lyravega.proxies.lyr_engineBuilder.engineStyleIds engineStyle}
 	 * @return a hullSpec with restored engine visuals
 	 */
 	public static final ShipHullSpecAPI ehm_restoreEngineSlots_lazy(ShipVariantAPI variant) {
@@ -104,85 +104,85 @@ public class _ehm_ec_base extends _ehm_base implements normalEvents {
 	 * data is converted into an JSON object and passed to the static method {@link
 	 * lyravega.proxies.lyr_engineBuilder#addEngineData addEngineData()}, which generates
 	 * a game-usable engine data object and stores it in a map there which can be used
-	 * afterwards {@link lyravega.proxies.lyr_engineBuilder#customEngineData customEngineData}.
+	 * afterwards {@link lyravega.proxies.lyr_engineBuilder#customEngineStyleSpecs customEngineData}.
 	 * <p> Directly returning this object and using is possible, but not done that way.
 	 * @param settingIdPrefix class name is used as prefix in LunaLib setting ID's
-	 * @param customEngineDataId as the mapId to retrieve it from the map later
+	 * @param customEngineSpecName as the mapId to retrieve it from the map later
 	 */
-	protected static void generateEngineData(String settingIdPrefix, String customEngineDataId) {
+	protected static void newCustomEngineSpec(String settingIdPrefix, String customEngineSpecName) {
 		final String modId = lyr_internals.id.mod;
 
-		Map<String, Object> engineData = new HashMap<String, Object>();
+		Map<String, Object> customEngineSpecData = new HashMap<String, Object>();
 
-		engineData.put("engineColor", getLunaRGBAColourArray(settingIdPrefix+"engine"));
-		engineData.put("contrailColor", getLunaRGBAColourArray(settingIdPrefix+"contrail"));
+		customEngineSpecData.put("engineColor", getLunaRGBAColourArray(settingIdPrefix+"engine"));
+		customEngineSpecData.put("contrailColor", getLunaRGBAColourArray(settingIdPrefix+"contrail"));
 		if (LunaSettings.getBoolean(modId, settingIdPrefix+"hasDifferentCampaignEngine")) {
-			engineData.put("engineCampaignColor", getLunaRGBAColourArray(settingIdPrefix+"engineCampaign"));
+			customEngineSpecData.put("engineCampaignColor", getLunaRGBAColourArray(settingIdPrefix+"engineCampaign"));
 		}
 		if (LunaSettings.getBoolean(modId, settingIdPrefix+"hasDifferentCampaignContrail")) {
-			engineData.put("contrailCampaignColor", getLunaRGBAColourArray(settingIdPrefix+"contrailCampaign"));
+			customEngineSpecData.put("contrailCampaignColor", getLunaRGBAColourArray(settingIdPrefix+"contrailCampaign"));
 		}
-		engineData.put("glowSizeMult", LunaSettings.getDouble(modId, settingIdPrefix+"glowSizeMult"));
+		customEngineSpecData.put("glowSizeMult", LunaSettings.getDouble(modId, settingIdPrefix+"glowSizeMult"));
 		if (LunaSettings.getBoolean(modId, settingIdPrefix+"hasAlternateGlow")) {
-			engineData.put("glowAlternateColor", getLunaRGBAColourArray(settingIdPrefix+"glowAlternate"));
+			customEngineSpecData.put("glowAlternateColor", getLunaRGBAColourArray(settingIdPrefix+"glowAlternate"));
 		}
-		engineData.put("contrailMaxSpeedMult", LunaSettings.getDouble(modId, settingIdPrefix+"contrailMaxSpeedMult"));
-		engineData.put("contrailAngularVelocityMult", LunaSettings.getDouble(modId, settingIdPrefix+"contrailAngularVelocityMult"));
+		customEngineSpecData.put("contrailMaxSpeedMult", LunaSettings.getDouble(modId, settingIdPrefix+"contrailMaxSpeedMult"));
+		customEngineSpecData.put("contrailAngularVelocityMult", LunaSettings.getDouble(modId, settingIdPrefix+"contrailAngularVelocityMult"));
 		switch (LunaSettings.getString(modId, settingIdPrefix+"mode")) {
 			case "Particles": default: {
-				engineData.put("mode", "PARTICLES");
-				engineData.put("contrailParticleDuration", LunaSettings.getDouble(modId, settingIdPrefix+"contrailParticleDuration"));
-				engineData.put("contrailParticleSizeMult", LunaSettings.getDouble(modId, settingIdPrefix+"contrailParticleSizeMult"));
-				engineData.put("contrailParticleFinalSizeMult", LunaSettings.getDouble(modId, settingIdPrefix+"contrailParticleFinalSizeMult"));
+				customEngineSpecData.put("mode", "PARTICLES");
+				customEngineSpecData.put("contrailParticleDuration", LunaSettings.getDouble(modId, settingIdPrefix+"contrailParticleDuration"));
+				customEngineSpecData.put("contrailParticleSizeMult", LunaSettings.getDouble(modId, settingIdPrefix+"contrailParticleSizeMult"));
+				customEngineSpecData.put("contrailParticleFinalSizeMult", LunaSettings.getDouble(modId, settingIdPrefix+"contrailParticleFinalSizeMult"));
 			} break;
 			case "Plasma": {
-				engineData.put("mode", "QUAD_STRIP");
-				engineData.put("contrailDuration", LunaSettings.getDouble(modId, settingIdPrefix+"contrailDuration"));
-				engineData.put("contrailMinSeg", LunaSettings.getDouble(modId, settingIdPrefix+"contrailMinSeg"));
-				engineData.put("contrailSpawnDistMult", LunaSettings.getDouble(modId, settingIdPrefix+"contrailSpawnDistMult"));
-				engineData.put("contrailWidthMult", LunaSettings.getDouble(modId, settingIdPrefix+"contrailWidthMult"));
-				engineData.put("contrailWidthAddedFractionAtEnd", LunaSettings.getDouble(modId, settingIdPrefix+"contrailWidthAddedFractionAtEnd"));
+				customEngineSpecData.put("mode", "QUAD_STRIP");
+				customEngineSpecData.put("contrailDuration", LunaSettings.getDouble(modId, settingIdPrefix+"contrailDuration"));
+				customEngineSpecData.put("contrailMinSeg", LunaSettings.getDouble(modId, settingIdPrefix+"contrailMinSeg"));
+				customEngineSpecData.put("contrailSpawnDistMult", LunaSettings.getDouble(modId, settingIdPrefix+"contrailSpawnDistMult"));
+				customEngineSpecData.put("contrailWidthMult", LunaSettings.getDouble(modId, settingIdPrefix+"contrailWidthMult"));
+				customEngineSpecData.put("contrailWidthAddedFractionAtEnd", LunaSettings.getDouble(modId, settingIdPrefix+"contrailWidthAddedFractionAtEnd"));
 			} break;
 			case "Disabled": {
-				engineData.put("mode", "NONE");
+				customEngineSpecData.put("mode", "NONE");
 			} break;
 		}
 		if (LunaSettings.getString(modId, settingIdPrefix+"type").equals("Additive")) {
-			engineData.put("type", "GLOW");
+			customEngineSpecData.put("type", "GLOW");
 		} else /*if (LunaSettings.getString(modId, settingIdPrefix+"type").equals("Regular"))*/ {
-			engineData.put("type", "SMOKE");
+			customEngineSpecData.put("type", "SMOKE");
 		}
-		engineData.put("omegaMode", LunaSettings.getBoolean(modId, settingIdPrefix+"omegaMode"));
+		customEngineSpecData.put("omegaMode", LunaSettings.getBoolean(modId, settingIdPrefix+"omegaMode"));
 		switch (LunaSettings.getString(modId, settingIdPrefix+"glowSprite")) {
 			case "I": {
-				engineData.put("glowSprite", "graphics/fx/engineglow32.png");
+				customEngineSpecData.put("glowSprite", "graphics/fx/engineglow32.png");
 			} break;
 			case "II": {
-				engineData.put("glowSprite", "graphics/fx/engineglow32b.png");
+				customEngineSpecData.put("glowSprite", "graphics/fx/engineglow32b.png");
 			} break;
 			case "III": {
-				engineData.put("glowSprite", "graphics/fx/engineglow32s.png");
+				customEngineSpecData.put("glowSprite", "graphics/fx/engineglow32s.png");
 			} break;
 			case "Default": default: {
-				engineData.put("glowSprite", "");
+				customEngineSpecData.put("glowSprite", "");
 			} break;
 		}
 		switch (LunaSettings.getString(modId, settingIdPrefix+"glowOutline")) {
 			case "I": {
-				engineData.put("glowOutline", "graphics/fx/engineflame32.png");
+				customEngineSpecData.put("glowOutline", "graphics/fx/engineflame32.png");
 			} break;
 			case "II": {
-				engineData.put("glowOutline", "graphics/fx/engineflame32b.png");
+				customEngineSpecData.put("glowOutline", "graphics/fx/engineflame32b.png");
 			} break;
 			case "III": {
-				engineData.put("glowOutline", "graphics/fx/engineflame32-orig.png");	// causes a NPE, nothing loads this so "ehm_test" does it
+				customEngineSpecData.put("glowOutline", "graphics/fx/engineflame32-orig.png");	// causes a NPE, nothing loads this so "ehm_test" does it
 			} break;
 			case "Default": default: {
-				engineData.put("glowOutline", "");
+				customEngineSpecData.put("glowOutline", "");
 			} break;
 		}
 
-		addEngineData(new JSONObject(engineData), customEngineDataId);
+		addEngineStyleSpec(new JSONObject(customEngineSpecData), customEngineSpecName);
 	}
 
 	protected static int[] getLunaRGBAColourArray(String settingIdPrefix) {

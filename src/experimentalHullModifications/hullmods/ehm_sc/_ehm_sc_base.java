@@ -54,7 +54,7 @@ public class _ehm_sc_base extends _ehm_base implements normalEvents {
 	 * @param variant whose shieldSpec will be altered
 	 * @return an altered hullSpec with altered shieldSpec colours
 	 */
-	protected static final ShipHullSpecAPI ehm_pimpMyShield(ShipVariantAPI variant, Color inner, Color ring) {
+	protected static final ShipHullSpecAPI ehm_applyShieldCosmetics(ShipVariantAPI variant, Color inner, Color ring) {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 		lyr_shieldSpec shieldSpec = hullSpec.getShieldSpec();
 		
