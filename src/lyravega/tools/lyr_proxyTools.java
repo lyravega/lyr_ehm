@@ -2,8 +2,6 @@ package lyravega.tools;
 
 import com.fs.starfarer.api.Global;
 
-import lyravega.misc.lyr_internals;
-
 /**
  * Provides methods to seek and capture the obfuscated classes 
  * @author lyravega
@@ -31,7 +29,7 @@ public class lyr_proxyTools extends lyr_reflectionTools {
 		try {
 			return Global.getSettings().getAllShipHullSpecs().iterator().next().getClass();
 		} catch (Exception e) { // this doesn't throw jack shit, but 'MUH GAEMUR OCD' (TM)
-			logger.fatal(lyr_internals.logPrefix+"'hullSpecClass' not found in '_lyr_proxyTools'", e); return null;
+			logger.fatal(logPrefix+"'hullSpecClass' not found in '_lyr_proxyTools'", e); return null;
 		}
 	}
 
@@ -39,7 +37,7 @@ public class lyr_proxyTools extends lyr_reflectionTools {
 		try {
 			return inspectMethod("getShieldSpec", hullSpecClass).getReturnType();
 		} catch (Throwable t) {
-			logger.fatal(lyr_internals.logPrefix+"'shieldSpecClass' not found in '_lyr_proxyTools'", t); return null;
+			logger.fatal(logPrefix+"'shieldSpecClass' not found in '_lyr_proxyTools'", t); return null;
 		}
 	}
 
@@ -47,7 +45,7 @@ public class lyr_proxyTools extends lyr_reflectionTools {
 		try {	// special case: there also is a public synthetic bridge method for this and as such the class has two of the same methods
 			return inspectMethod(true, "getWeaponSlot", 1, hullSpecClass).getReturnType();
 		} catch (Throwable t) {
-			logger.fatal(lyr_internals.logPrefix+"'weaponSlotClass' not found in '_lyr_proxyTools'", t); return null;
+			logger.fatal(logPrefix+"'weaponSlotClass' not found in '_lyr_proxyTools'", t); return null;
 		}
 	}
 
@@ -55,7 +53,7 @@ public class lyr_proxyTools extends lyr_reflectionTools {
 		try {
 			return inspectMethod("getNode", weaponSlotClass).getReturnType();
 		} catch (Throwable t) {
-			logger.fatal(lyr_internals.logPrefix+"'nodeClass' not found in '_lyr_proxyTools'", t); return null;
+			logger.fatal(logPrefix+"'nodeClass' not found in '_lyr_proxyTools'", t); return null;
 		}
 	}
 
@@ -63,19 +61,19 @@ public class lyr_proxyTools extends lyr_reflectionTools {
 		try {
 			return inspectMethod("addEngineSlot", hullSpecClass).getParameterTypes()[0];
 		} catch (Throwable t) {
-			logger.fatal(lyr_internals.logPrefix+"'engineBuilderClass' not found in '_lyr_proxyTools'", t); return null;
+			logger.fatal(logPrefix+"'engineBuilderClass' not found in '_lyr_proxyTools'", t); return null;
 		}
 	}
 
 	private static Class<?> lyr_findEngineStyleIdEnum() {
 		for (Class<?> clazz : engineBuilderClass.getDeclaredClasses()) {
 			if (clazz.isEnum()) return clazz;
-		} logger.fatal(lyr_internals.logPrefix+"'engineStyleIdEnum' not found in '_lyr_proxyTools'"); return null;
+		} logger.fatal(logPrefix+"'engineStyleIdEnum' not found in '_lyr_proxyTools'"); return null;
 	}
 
 	private static Class<?> lyr_findEngineStyleSpecClass() {
 		for (Class<?> clazz : engineBuilderClass.getDeclaredClasses()) {
 			if (!clazz.isEnum()) return clazz;
-		} logger.fatal(lyr_internals.logPrefix+"'engineStyleSpecClass' not found in '_lyr_proxyTools'"); return null;
+		} logger.fatal(logPrefix+"'engineStyleSpecClass' not found in '_lyr_proxyTools'"); return null;
 	}
 }

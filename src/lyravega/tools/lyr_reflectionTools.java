@@ -6,8 +6,6 @@ import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.invoke.MethodType;
 import java.util.Arrays;
 
-import lyravega.misc.lyr_internals;
-
 
 /**
  * Reflective operation tools for all such reflection-related classes as 
@@ -49,7 +47,7 @@ public class lyr_reflectionTools implements lyr_logger {
 			getMethod = lookup.findVirtual(Class.class, "getMethod", MethodType.methodType(methodClass, String.class, Class[].class));
 			unreflect = lookup.findVirtual(lookupClass, "unreflect", MethodType.methodType(MethodHandle.class, methodClass));
 		} catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException e) {
-			logger.fatal(lyr_internals.logPrefix+"Failed to initialize reflection tools", e);
+			logger.fatal(logPrefix+"Failed to initialize reflection tools", e);
 		}
 	}
 

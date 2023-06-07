@@ -4,8 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public final class lyr_internals {
-	public static final String logName = "EHM";
-	public static final String logPrefix = "(Experimental Hull Modifications) - ";
 	public static final class id {
 		public static final String
 			submarket = "ehm_submarket", // must match submarket id in .csv

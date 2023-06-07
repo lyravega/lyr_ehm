@@ -6,7 +6,6 @@ import java.lang.invoke.MethodHandle;
 import com.fs.starfarer.api.combat.ShieldAPI.ShieldType;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
 
-import lyravega.misc.lyr_internals;
 import lyravega.tools.lyr_proxyTools;
 
 /**
@@ -43,7 +42,7 @@ public final class lyr_shieldSpec extends lyr_proxyTools {
 			setPhaseCost = inspectMethod("setPhaseCost", shieldSpecClass).getMethodHandle();
 			setPhaseUpkeep = inspectMethod("setPhaseUpkeep", shieldSpecClass).getMethodHandle();
 		} catch (Throwable t) {
-			logger.fatal(lyr_internals.logPrefix+"Failed to find a method in 'lyr_shieldSpec'", t);
+			logger.fatal(logPrefix+"Failed to find a method in 'lyr_shieldSpec'", t);
 		}
 	}
 
@@ -91,7 +90,7 @@ public final class lyr_shieldSpec extends lyr_proxyTools {
 		try {
 			return (ShieldSpecAPI) clone.invoke(shieldSpec);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'duplicate()' in 'lyr_shieldSpec'", t);
+			logger.error(logPrefix+"Failed to use 'duplicate()' in 'lyr_shieldSpec'", t);
 		} return shieldSpec; // java, pls...
 	}
 	
@@ -130,7 +129,7 @@ public final class lyr_shieldSpec extends lyr_proxyTools {
 		try {
 			setType.invoke(shieldSpec, shieldType);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'setType()' in 'lyr_shieldSpec'", t);
+			logger.error(logPrefix+"Failed to use 'setType()' in 'lyr_shieldSpec'", t);
 		}
 	}
 
@@ -142,7 +141,7 @@ public final class lyr_shieldSpec extends lyr_proxyTools {
 		try {
 			setFluxPerDamageAbsorbed.invoke(shieldSpec, absorbtionRatio);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'setFluxPerDamageAbsorbed()' in 'lyr_shieldSpec'", t);
+			logger.error(logPrefix+"Failed to use 'setFluxPerDamageAbsorbed()' in 'lyr_shieldSpec'", t);
 		}
 	}
 
@@ -154,7 +153,7 @@ public final class lyr_shieldSpec extends lyr_proxyTools {
 		try {
 			setUpkeepCost.invoke(shieldSpec, upkeepCost);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'setUpkeepCost()' in 'lyr_shieldSpec'", t);
+			logger.error(logPrefix+"Failed to use 'setUpkeepCost()' in 'lyr_shieldSpec'", t);
 		}
 	}
 
@@ -166,7 +165,7 @@ public final class lyr_shieldSpec extends lyr_proxyTools {
 		try {
 			setArc.invoke(shieldSpec, arcSize);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'setArc()' in 'lyr_shieldSpec'", t);
+			logger.error(logPrefix+"Failed to use 'setArc()' in 'lyr_shieldSpec'", t);
 		}
 	}
 
@@ -178,7 +177,7 @@ public final class lyr_shieldSpec extends lyr_proxyTools {
 		try {
 			setPhaseCost.invoke(shieldSpec, phaseCost);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'setPhaseCost()' in 'lyr_shieldSpec'", t);
+			logger.error(logPrefix+"Failed to use 'setPhaseCost()' in 'lyr_shieldSpec'", t);
 		}
 	}
 
@@ -190,7 +189,7 @@ public final class lyr_shieldSpec extends lyr_proxyTools {
 		try {
 			setPhaseUpkeep.invoke(shieldSpec, phaseUpkeep);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'setPhaseUpkeep()' in 'lyr_shieldSpec'", t);
+			logger.error(logPrefix+"Failed to use 'setPhaseUpkeep()' in 'lyr_shieldSpec'", t);
 		}
 	}
 	//#endregion 

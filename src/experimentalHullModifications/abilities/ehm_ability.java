@@ -29,7 +29,7 @@ public class ehm_ability extends BaseToggleAbility implements lyr_logger {
 		if (!Global.getSector().getListenerManager().hasListenerOfClass(ehm_interactionListener.class)) {
 			Global.getSector().getListenerManager().addListener(new ehm_interactionListener(), true);
 
-			logger.info(lyr_internals.logPrefix + "Attached colony interaction listener");
+			logger.info(logPrefix + "Attached colony interaction listener");
 		}
 	}
 
@@ -46,7 +46,7 @@ public class ehm_ability extends BaseToggleAbility implements lyr_logger {
 
 			market.addSubmarket(lyr_internals.id.submarket);
 
-			logger.info(lyr_internals.logPrefix + "Attached experimental submarket");
+			logger.info(logPrefix + "Attached experimental submarket");
 		}
 
 		@Override
@@ -62,7 +62,7 @@ public class ehm_ability extends BaseToggleAbility implements lyr_logger {
 				if (ehm_submarket.shunts.contains(weaponCargo.getItem())) playerCargo.removeWeapons(weaponCargo.getItem(), weaponCargo.getCount());
 			}
 
-			logger.info(lyr_internals.logPrefix + "Detached experimental submarket");
+			logger.info(logPrefix + "Detached experimental submarket");
 		}
 
 		@Override
@@ -90,7 +90,7 @@ public class ehm_ability extends BaseToggleAbility implements lyr_logger {
 		if (!Global.getSector().getListenerManager().hasListenerOfClass(ehm_interactionListener.class)) {
 			Global.getSector().getListenerManager().addListener(new ehm_interactionListener(), true);
 
-			logger.info(lyr_internals.logPrefix + "Attached colony interaction listener");
+			logger.info(logPrefix + "Attached colony interaction listener");
 		}
 	}
 	
@@ -99,7 +99,7 @@ public class ehm_ability extends BaseToggleAbility implements lyr_logger {
 		if (Global.getSector().getListenerManager().hasListenerOfClass(ehm_interactionListener.class)) {
 			Global.getSector().getListenerManager().removeListenerOfClass(ehm_interactionListener.class);
 
-			logger.info(lyr_internals.logPrefix + "Detached colony interaction listener");
+			logger.info(logPrefix + "Detached colony interaction listener");
 		}
 	}
 	

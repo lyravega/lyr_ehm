@@ -1,4 +1,4 @@
-package experimentalHullModifications.hullmods.ehm.interfaces;
+package lyravega.listeners.events;
 
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 
@@ -12,18 +12,16 @@ import experimentalHullModifications.hullmods.ehm._ehm_tracker;
  * @see {@link _ehm_tracker Tracker Base} Provides tracking features for the fleet/ship
  * @author lyravega
  */
-public interface suppressedEvents {
+public interface normalEvents {
 	/**
-	 * Fired if this hull modification is suppressed on the refit ship.
-	 * <p> Will also be detected as a removed hull modification (!)
+	 * Fired if this hull modification is installed on the refit ship.
 	 * @param variant
 	 */
-	public void onSuppress(ShipVariantAPI variant);
+	public void onInstall(ShipVariantAPI variant);
 
 	/**
-	 * Fired if this hull modification is no longer suppressed on the refit ship.
-	 * <p> Will also be detected as an installed hull modification (!)
+	 * Fired if this hull modification is removed from the refit ship.
 	 * @param variant
 	 */
-	public void onRestore(ShipVariantAPI variant);
+	public void onRemove(ShipVariantAPI variant);
 }

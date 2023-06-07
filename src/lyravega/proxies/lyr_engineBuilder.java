@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
-import lyravega.misc.lyr_internals;
 import lyravega.tools.lyr_proxyTools;
 
 /**
@@ -54,7 +53,7 @@ public final class lyr_engineBuilder extends lyr_proxyTools {
 			newEngineStyleSpec = lookup.findConstructor(engineStyleSpecClass, MethodType.methodType(void.class, JSONObject.class, String.class));
 			setEngineStyleSpec = inspectMethod(engineBuilderClass, void.class, engineStyleSpecClass).getMethodHandle();
 		} catch (Throwable t) {
-			logger.fatal(lyr_internals.logPrefix+"Failed to find a method in 'lyr_engineBuilder'", t);
+			logger.fatal(logPrefix+"Failed to find a method in 'lyr_engineBuilder'", t);
 		}
 	}
 	
@@ -101,7 +100,7 @@ public final class lyr_engineBuilder extends lyr_proxyTools {
 		try {
 			return (Object) clone.invoke(enginebuilder);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'duplicate()' in 'lyr_engineBuilder'", t); return engineBuilder;
+			logger.error(logPrefix+"Failed to use 'duplicate()' in 'lyr_engineBuilder'", t); return engineBuilder;
 		}
 	}
 	
@@ -128,7 +127,7 @@ public final class lyr_engineBuilder extends lyr_proxyTools {
 		try {
 			setEngineStyleId.invoke(engineBuilderClass.cast(engineBuilder), engineStyleIdEnum.getEnumConstants()[engineStyleId]);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'setEngineStyle()' in 'lyr_engineBuilder'", t);
+			logger.error(logPrefix+"Failed to use 'setEngineStyle()' in 'lyr_engineBuilder'", t);
 		}
 	}
 
@@ -150,7 +149,7 @@ public final class lyr_engineBuilder extends lyr_proxyTools {
 		try {
 			setEngineStyleSpecFromJSON.invoke(engineBuilderClass.cast(engineBuilder), engineStyleSpecJSON, engineStyleSpecName);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'setEngineDataFromJson()' in 'lyr_engineBuilder'", t);
+			logger.error(logPrefix+"Failed to use 'setEngineDataFromJson()' in 'lyr_engineBuilder'", t);
 		}
 	}
 
@@ -167,7 +166,7 @@ public final class lyr_engineBuilder extends lyr_proxyTools {
 		try {
 			setEngineStyleSpec.invoke(engineBuilderClass.cast(engineBuilder), engineStyleSpecClass.cast(engineStyleSpec));
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'setEngineStyleSpec()' in 'lyr_engineBuilder'", t);
+			logger.error(logPrefix+"Failed to use 'setEngineStyleSpec()' in 'lyr_engineBuilder'", t);
 		}
 	}
 
@@ -185,7 +184,7 @@ public final class lyr_engineBuilder extends lyr_proxyTools {
 		try {
 			return newEngineStyleSpec.invoke(engineStyleSpecJSON, engineStyleSpecName);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'newEngineStyleSpec()' in 'lyr_engineBuilder'", t); return null;
+			logger.error(logPrefix+"Failed to use 'newEngineStyleSpec()' in 'lyr_engineBuilder'", t); return null;
 		}
 	}
 

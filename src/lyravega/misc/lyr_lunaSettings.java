@@ -23,7 +23,7 @@ public class lyr_lunaSettings implements LunaSettingsListener, lyr_logger {
 		if (!LunaSettings.hasSettingsListenerOfClass(lyr_lunaSettings.class)) {
 			LunaSettings.addSettingsListener(new lyr_lunaSettings());
 
-			logger.info(lyr_internals.logPrefix + "Attached LunaLib settings listener");
+			logger.info(logPrefix + "Attached LunaLib settings listener");
 		}
 
 		cacheBasicSettings();
@@ -57,6 +57,6 @@ public class lyr_lunaSettings implements LunaSettingsListener, lyr_logger {
 			customizableMod.ehm_applyCustomization();
 		}
 
-		logger.info(lyr_internals.logPrefix + "Settings changed, reapplying");
+		logger.info(logPrefix + "Settings changed, reapplying");
 	}
 }

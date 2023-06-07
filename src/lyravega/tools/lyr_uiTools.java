@@ -59,7 +59,7 @@ public class lyr_uiTools extends lyr_reflectionTools {
 	 * till the relevant UI parts are available and can be fished for classes
 	 */
 	public static void findUIClasses() {
-		logger.info(lyr_internals.logPrefix + "Initializing UI class finder");
+		logger.info(logPrefix + "Initializing UI class finder");
 
 		new _lyr_delayedFinder();
 	}
@@ -81,7 +81,7 @@ public class lyr_uiTools extends lyr_reflectionTools {
 			if (!Global.getSector().hasTransientScript(this.getClass())) {
 				Global.getSector().addTransientScript(this);
 			
-				logger.info(lyr_internals.logPrefix+"Waiting to find the UI classes");
+				logger.info(logPrefix+"Waiting to find the UI classes");
 			}
 		}
 
@@ -141,10 +141,10 @@ public class lyr_uiTools extends lyr_reflectionTools {
 				// designDisplayClass = designDisplay.getClass();			// com.fs.starfarer.coreui.refit.oOOo;
 				// shipDisplayClass = shipDisplay.getClass();				// com.fs.starfarer.coreui.refit.oOOO;
 
-				logger.info(lyr_internals.logPrefix+"Found the UI classes");
+				logger.info(logPrefix+"Found the UI classes");
 				isDone = true; return;
 			} catch (Throwable t) {
-				logger.fatal(lyr_internals.logPrefix+"Failed to find the UI classes"); t.printStackTrace();
+				logger.fatal(logPrefix+"Failed to find the UI classes"); t.printStackTrace();
 				isDone = true; return;
 			}
 		}
@@ -306,7 +306,7 @@ public class lyr_uiTools extends lyr_reflectionTools {
 			refitPanel_setEditedSinceSave.invoke(refitPanel, false);
 		} catch (Throwable t) {
 			refreshRefit();
-			logger.error(lyr_internals.logPrefix+"Failure in 'commitChanges()', possible hull restoration");
+			logger.error(logPrefix+"Failure in 'commitChanges()', possible hull restoration");
 		}
 	}
 
@@ -349,7 +349,7 @@ public class lyr_uiTools extends lyr_reflectionTools {
 			refitPanel_setEditedSinceLoad.invoke(refitPanel, false);
 			refitPanel_setEditedSinceSave.invoke(refitPanel, false);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failure in 'clearUndo()'"); t.printStackTrace();
+			logger.error(logPrefix+"Failure in 'clearUndo()'"); t.printStackTrace();
 		}
 	}
 }

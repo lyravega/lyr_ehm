@@ -1,4 +1,4 @@
-package experimentalHullModifications.hullmods.ehm.interfaces;
+package lyravega.listeners.events;
 
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 
@@ -12,17 +12,18 @@ import experimentalHullModifications.hullmods.ehm._ehm_tracker;
  * @see {@link _ehm_tracker Tracker Base} Provides tracking features for the fleet/ship
  * @author lyravega
  */
-public interface enhancedEvents {
+public interface suppressedEvents {
 	/**
-	 * Fired if this hull modification is enhanced with a story point on the refit ship.
+	 * Fired if this hull modification is suppressed on the refit ship.
+	 * <p> Will also be detected as a removed hull modification (!)
 	 * @param variant
 	 */
-	public void onEnhance(ShipVariantAPI variant);
+	public void onSuppress(ShipVariantAPI variant);
 
 	/**
-	 * Fired if this hull modification is no longer enhanced on the refit ship.
-	 * <p> Is primarily used to remove any lasting effects that the s-mod effect may introduce
+	 * Fired if this hull modification is no longer suppressed on the refit ship.
+	 * <p> Will also be detected as an installed hull modification (!)
 	 * @param variant
 	 */
-	public void onNormalize(ShipVariantAPI variant);
+	public void onRestore(ShipVariantAPI variant);
 }

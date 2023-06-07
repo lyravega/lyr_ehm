@@ -7,7 +7,6 @@ import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
-import lyravega.misc.lyr_internals;
 import lyravega.tools.lyr_proxyTools;
 
 import org.lwjgl.util.vector.Vector2f;
@@ -44,7 +43,7 @@ public final class lyr_weaponSlot extends lyr_proxyTools {
 			setNode = inspectMethod("setNode", weaponSlotClass, String.class, Vector2f.class).getMethodHandle();
 			// setNode_alt = inspectMethod("setNode", weaponSlotClass, nodeClass).getMethodHandle();
 		} catch (Throwable t) {
-			logger.fatal(lyr_internals.logPrefix+"Failed to find a method in 'lyr_weaponSlot'", t);
+			logger.fatal(logPrefix+"Failed to find a method in 'lyr_weaponSlot'", t);
 		}
 	}
 
@@ -91,7 +90,7 @@ public final class lyr_weaponSlot extends lyr_proxyTools {
 		try {
 			return (WeaponSlotAPI) clone.invoke(weaponSlot);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'duplicate()' in 'lyr_weaponSlot'", t);
+			logger.error(logPrefix+"Failed to use 'duplicate()' in 'lyr_weaponSlot'", t);
 		} return weaponSlot; // java, pls...
 	}
 	
@@ -114,7 +113,7 @@ public final class lyr_weaponSlot extends lyr_proxyTools {
 		try {
 			setWeaponType.invoke(weaponSlot, weaponType);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'setWeaponType()' in 'lyr_weaponSlot'", t);
+			logger.error(logPrefix+"Failed to use 'setWeaponType()' in 'lyr_weaponSlot'", t);
 		}
 	}
 
@@ -134,7 +133,7 @@ public final class lyr_weaponSlot extends lyr_proxyTools {
 		try {
 			setId.invoke(weaponSlot, weaponSlotId);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'setId()' in 'lyr_weaponSlot'", t);
+			logger.error(logPrefix+"Failed to use 'setId()' in 'lyr_weaponSlot'", t);
 		}
 	}
 
@@ -146,7 +145,7 @@ public final class lyr_weaponSlot extends lyr_proxyTools {
 		try {
 			setSlotSize.invoke(weaponSlot, slotSize);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'setSlotSize()' in 'lyr_weaponSlot'", t);
+			logger.error(logPrefix+"Failed to use 'setSlotSize()' in 'lyr_weaponSlot'", t);
 		}
 	}
 
@@ -162,7 +161,7 @@ public final class lyr_weaponSlot extends lyr_proxyTools {
 			// setNode_alt.invoke(weaponSlot, nodeClass.cast(newNode.invoke(nodeId, location)));
 			setNode.invoke(weaponSlot, nodeId, location);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'setNode()' in 'lyr_weaponSlot'", t);
+			logger.error(logPrefix+"Failed to use 'setNode()' in 'lyr_weaponSlot'", t);
 		}
 	}
 

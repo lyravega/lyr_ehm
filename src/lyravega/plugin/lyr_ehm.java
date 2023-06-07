@@ -1,9 +1,9 @@
 package lyravega.plugin;
 
 import static experimentalHullModifications.abilities.ehm_ability.attachListener;
-import static experimentalHullModifications.hullmods.ehm._ehm_tracker.enhancedEvents;
-import static experimentalHullModifications.hullmods.ehm._ehm_tracker.normalEvents;
-import static experimentalHullModifications.hullmods.ehm._ehm_tracker.suppressedEvents;
+import static lyravega.listeners.lyr_shipTracker.enhancedEvents;
+import static lyravega.listeners.lyr_shipTracker.normalEvents;
+import static lyravega.listeners.lyr_shipTracker.suppressedEvents;
 import static lyravega.misc.lyr_lunaSettings.attachLunaListener;
 import static lyravega.tools.lyr_uiTools.findUIClasses;
 
@@ -16,9 +16,9 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.thoughtworks.xstream.XStream;
 
-import experimentalHullModifications.hullmods.ehm.interfaces.enhancedEvents;
-import experimentalHullModifications.hullmods.ehm.interfaces.normalEvents;
-import experimentalHullModifications.hullmods.ehm.interfaces.suppressedEvents;
+import lyravega.listeners.events.enhancedEvents;
+import lyravega.listeners.events.normalEvents;
+import lyravega.listeners.events.suppressedEvents;
 import lyravega.misc.lyr_internals;
 import lyravega.scripts.lyr_fieldRepairsScript;
 import lyravega.tools.lyr_logger;
@@ -55,8 +55,9 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 	private static void teachBlueprints() {
 		FactionAPI playerFaction = Global.getSector().getPlayerPerson().getFaction();
 
-		playerFaction.addKnownHullMod(lyr_internals.id.baseModification);
-		playerFaction.addKnownHullMod(lyr_internals.id.undoModification);
+		playerFaction.addKnownHullMod(lyr_internals.id.hullmods.base);
+		playerFaction.addKnownHullMod(lyr_internals.id.hullmods.undo);
+		playerFaction.addKnownHullMod(lyr_internals.id.hullmods.test);
 
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
 			String hullModSpecId = hullModSpec.getId();
@@ -69,7 +70,9 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 			else if (weaponSpec.hasTag(lyr_internals.tag.restricted) && playerFaction.knowsWeapon(weaponSpec.getWeaponId())) playerFaction.removeKnownWeapon(weaponSpec.getWeaponId());
 		}
 
-		logger.info(lyr_internals.logPrefix + "Player faction blueprints are updated");
+		playerFaction.addKnownHullMod(lyr_internals.id.hullmods.test);	// TODO remove this debug shit
+
+		logger.info(logPrefix + "Player faction blueprints are updated");
 	}
 
 	/**
@@ -92,14 +95,16 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 			if (suppressedEvents.class.isInstance(hullModEffect)) suppressedEvents.put(hullModSpec.getId(), (suppressedEvents) hullModEffect);
 		}
 
-		logger.info(lyr_internals.logPrefix + "Experimental hull modifications are registered");
+		normalEvents.put(lyr_internals.id.hullmods.test, (normalEvents) Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.test).getEffect());	// TODO remove this debug shit
+
+		logger.info(logPrefix + "Experimental hull modifications are registered");
 	}
 
 	private static void teachAbility() {
 		if (!Global.getSector().getCharacterData().getAbilities().contains(lyr_internals.id.ability)) {
 			Global.getSector().getCharacterData().addAbility(lyr_internals.id.ability);	// add ability to ongoing games if not present
 
-			logger.info(lyr_internals.logPrefix + "Shunt market control ability taught");
+			logger.info(logPrefix + "Shunt market control ability taught");
 		}
 	}
 
@@ -112,6 +117,6 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 			Global.getSector().addScript(new lyr_fieldRepairsScript());
 		}
 
-		logger.info(lyr_internals.logPrefix + "Replaced 'FieldRepairsScript' with modified one");
+		logger.info(logPrefix + "Replaced 'FieldRepairsScript' with modified one");
 	}
 }
