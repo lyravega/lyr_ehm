@@ -31,7 +31,7 @@ public class ehm_undo extends _ehm_tracker {
 
 		variant.getHullMods().remove(this.hullModSpecId);
 		variant.getHullMods().remove(lyr_internals.id.hullmods.base);
-		variant.setHullSpecAPI(ehm_hullSpecReference(variant)); commitChanges(); playSound(); 
+		variant.setHullSpecAPI(ehm_hullSpecOriginal(variant)); commitChanges(); playSound(); 
 	}
 
 	@Override

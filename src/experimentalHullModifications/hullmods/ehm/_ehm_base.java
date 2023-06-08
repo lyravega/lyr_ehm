@@ -279,32 +279,17 @@ public class _ehm_base extends BaseHullMod implements lyr_logger {
 
 	/**
 	 * Called from the {@link ehm_base retrofit base} only. If the hull does not have the base built-in, clones
-	 * the hullSpec, adds flavour, builds the retrofit base in the hull, and refreshes the screen. Otherwise,
-	 * just returns the same hullSpec. Re-adds itself if the hullSpec is replaced with something else.
+	 * the hullSpec, alters it, and returns it so that it can be applied on a variant.
 	 * <p> There are two problems with replacing the hull specs. From what I can tell, game replaces the hull
 	 * specs of the ships after a combat, and after repairs. The latter is handled through the vanilla script
 	 * {@link com.fs.starfarer.api.impl.campaign.skills.FieldRepairsScript#restoreToNonDHull FieldRepairsScript}
 	 * which gets active if the player has the hull restoration skill. The former happens when a ship suffers
 	 * damage, through {@link com.fs.starfarer.api.impl.campaign.DModManager#setDHull DModManager}.
-	 * <p> Both of these linked methods have certain conditions, and check for things like if the hull spec in
-	 * question is a d-hull, or a default d-hull, or has a base hull, etc... there are no easy ways to avoid
-	 * those checks. The main problem is, these checked hull specs aren't fields; they're grabbed from the
-	 * script store directly, and only the hull spec id's are stored.
-	 * <p> As a workaround, the script is replaced with a custom one that ignores any hull spec that has the
-	 * base variant installed on them. However, avoiding the other one requires an ugly hack; applying a
-	 * damaged hull spec instead of anything else so that the check returns false and the hull spec stays
-	 * the same.
-	 * <p> Also, as a necessary evil, some variant hull specs that can be restored to a base hull spec needs
-	 * to be restored immediately or they'll stay as they are with double (D) markers. Replacing them with
-	 * their base skin right away fucks their d-mods up so they're added to the variant first. So this specific
-	 * swap only affects them visually, and nothing more.
-	 * <p> This is certainly not ideal. If hull specs for the damaged & base versions were stored in fields
-	 * instead of just their hull ids, the solution would've been easier; clone and adjust up to three hull
-	 * specs. But as long as they refer to the spec store, this workaround has to be in place. This has been
-	 * the case forever. Maybe Alex will add them as a field someday, after the update winds are calmed down.
+	 * <p> The first problem is suppressed by replacing the script. The second problem is avoided by using
+	 * d-hulls instead of normal ones at all times. In addition, any ship that can be restored to another
+	 * hull spec is visually restored immediately as it creates another issue.
 	 * @param variant to be used as a template
 	 * @return a cloned hullSpec
-	 * @see {@link com.fs.starfarer.loading.ShipHullSpecLoader Hull Spec Loader} for d-hulls
 	 */
 	protected static final ShipHullSpecAPI ehm_hullSpecClone(ShipVariantAPI variant) {
 		ShipHullSpecAPI hullSpecToClone = variant.getHullSpec();
@@ -385,12 +370,21 @@ public class _ehm_base extends BaseHullMod implements lyr_logger {
 	}
 
 	/**
-	 * Simply returns a stock hullSpec, with no changes or whatsoever. Should ONLY
-	 * be used as a reference, or when the base is removed.
+	 * Returns an unmodified hull spec from the spec store.
 	 * @param variant to be used as a template
 	 * @return a stock hullSpec from the SpecStore
 	 */
 	protected static final ShipHullSpecAPI ehm_hullSpecReference(ShipVariantAPI variant) {
 		return settings.getHullSpec(variant.getHullSpec().getHullId());
+	}
+
+	/**
+	 * Returns the original hull spec, or the d-hull version if there are d-mods.
+	 * @param variant to be used as a template
+	 * @return a stock hullSpec from the SpecStore
+	 */
+	protected static final ShipHullSpecAPI ehm_hullSpecOriginal(ShipVariantAPI variant) {
+		if (variant.hasDMods()) return settings.getHullSpec(variant.getHullSpec().getHullId());
+		return settings.getHullSpec(variant.getHullSpec().getHullId().replaceAll(Misc.D_HULL_SUFFIX, ""));
 	}
 }

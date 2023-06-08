@@ -77,7 +77,6 @@ public class _ehm_tracker extends _ehm_base {
 	private static class fleetTrackerScript implements EveryFrameScriptWithCleanup {
 		private Map<String, lyr_shipTracker> shipTrackers = new HashMap<String, lyr_shipTracker>();
 		private boolean isDone = false;
-		private float runTime = 0f;
 		
 		//#region CONSTRUCTORS & ACCESSORS
 		public fleetTrackerScript() {
@@ -108,11 +107,6 @@ public class _ehm_tracker extends _ehm_base {
 		@Override
 		public void advance(float amount) {	
 			if (!isRefitTab() || shipTrackers.size() == 0) { cleanup(); return; }
-	
-			if (runTime > 30f) {
-				runTime = 0f;
-				if (log) logger.info(logPrefix+"FT: Tracking "+shipTrackers.size()+" ships");
-			} runTime += amount;
 		}
 	
 		@Override
@@ -127,12 +121,12 @@ public class _ehm_tracker extends _ehm_base {
 	
 		@Override
 		public void cleanup() {
-			if (log) logger.info(logPrefix+"FT: Fleet Tracker terminated");
-			shipTrackers.clear();
-			shipTrackers = null;
 			fleetTracker = null;
-			
-			isDone = true;
+			this.shipTrackers.clear();
+			this.shipTrackers = null;
+			this.isDone = true;
+
+			if (log) logger.info(logPrefix+"FT: Fleet Tracker terminated");
 		}
 	}
 	//#endregion
