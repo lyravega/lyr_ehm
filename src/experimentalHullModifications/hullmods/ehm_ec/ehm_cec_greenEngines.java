@@ -8,7 +8,7 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 
-import experimentalHullModifications.hullmods.ehm.interfaces.customizableHullMod;
+import lyravega.listeners.events.customizableHullMod;
 
 /**@category Engine Cosmetic 
  * @author lyravega
@@ -19,7 +19,7 @@ public class ehm_cec_greenEngines extends _ehm_ec_base implements customizableHu
 	private static Object engineData;
 
 	@Override
-	public void ehm_applyCustomization() {
+	public void applyCustomization() {
 		String settingIdPrefix = this.getClass().getSimpleName()+"_";
 
 		newCustomEngineSpec(settingIdPrefix, customEngineSpecId);
@@ -31,7 +31,7 @@ public class ehm_cec_greenEngines extends _ehm_ec_base implements customizableHu
 	public void init(HullModSpecAPI hullModSpec) {
 		super.init(hullModSpec);
 
-		ehm_applyCustomization();
+		applyCustomization();
 	}
 
 	@Override

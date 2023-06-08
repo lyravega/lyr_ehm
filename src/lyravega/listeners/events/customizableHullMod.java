@@ -1,4 +1,4 @@
-package experimentalHullModifications.hullmods.ehm.interfaces;
+package lyravega.listeners.events;
 
 public interface customizableHullMod {
     /**
@@ -6,5 +6,5 @@ public interface customizableHullMod {
      * <p>Is executed remotely and allows re-applying settings on relevant
      * things.
      */
-    public void ehm_applyCustomization();
+    public void applyCustomization();
 }

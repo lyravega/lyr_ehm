@@ -1,6 +1,6 @@
 package experimentalHullModifications.hullmods.ehm_ar;
 
-import static lyravega.misc.lyr_lunaSettings.extraInfoInHullMods;
+import static lyravega.listeners.lyr_lunaSettings.extraInfoInHullMods;
 
 import java.util.HashMap;
 import java.util.HashSet;

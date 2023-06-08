@@ -23,7 +23,7 @@ import lyravega.tools.lyr_logger;
 
 /**
  * A class that acts like a listener in a way. Constructor takes a 
- * ship, and relevant fields are saved, which are then compared later on
+ * ship and saves the relevant fields. They are compared later on
  * through updates to see if there are any changes.
  * @see {@link normalEvents} onInstall / onRemove events for hullmods
  * @see {@link enhancedEvents} onEnhance / onNormalize events for sMods

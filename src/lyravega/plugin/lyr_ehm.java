@@ -1,11 +1,13 @@
 package lyravega.plugin;
 
 import static experimentalHullModifications.abilities.ehm_ability.attachListener;
+import static lyravega.listeners.lyr_lunaSettings.attachLunaListener;
 import static lyravega.listeners.lyr_shipTracker.enhancedEvents;
 import static lyravega.listeners.lyr_shipTracker.normalEvents;
 import static lyravega.listeners.lyr_shipTracker.suppressedEvents;
-import static lyravega.misc.lyr_lunaSettings.attachLunaListener;
 import static lyravega.tools.lyr_uiTools.findUIClasses;
+
+import org.apache.log4j.Level;
 
 import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
@@ -24,6 +26,10 @@ import lyravega.scripts.lyr_fieldRepairsScript;
 import lyravega.tools.lyr_logger;
 
 public class lyr_ehm extends BaseModPlugin implements lyr_logger {
+	static {
+		logger.setLevel(Level.ALL);
+	}
+
 	@Override
 	public void onGameLoad(boolean newGame) {
 		findUIClasses();

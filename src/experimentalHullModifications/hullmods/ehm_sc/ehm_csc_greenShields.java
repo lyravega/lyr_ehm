@@ -7,7 +7,7 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 
-import experimentalHullModifications.hullmods.ehm.interfaces.customizableHullMod;
+import lyravega.listeners.events.customizableHullMod;
 
 /**
  * NOTE: id of this shield in the .csv remains "ehm_sc_greenShields" for save compatibility
@@ -19,7 +19,7 @@ public class ehm_csc_greenShields extends _ehm_sc_base implements customizableHu
 	private static Color ringColour;
 
 	@Override
-	public void ehm_applyCustomization() {
+	public void applyCustomization() {
 		String settingIdPrefix = this.getClass().getSimpleName()+"_";
 
 		innerColour = getLunaRGBAColour(settingIdPrefix+"inner");
@@ -31,7 +31,7 @@ public class ehm_csc_greenShields extends _ehm_sc_base implements customizableHu
 	public void init(HullModSpecAPI hullModSpec) {
 		super.init(hullModSpec);
 
-		ehm_applyCustomization();
+		applyCustomization();
 	}
 
 	@Override

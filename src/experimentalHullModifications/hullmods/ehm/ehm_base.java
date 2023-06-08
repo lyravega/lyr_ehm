@@ -1,7 +1,7 @@
 package experimentalHullModifications.hullmods.ehm;
 
 import static experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base.ehm_processShunts;
-import static lyravega.misc.lyr_lunaSettings.showFluff;
+import static lyravega.listeners.lyr_lunaSettings.showFluff;
 import static lyravega.tools.lyr_uiTools.commitChanges;
 import static lyravega.tools.lyr_uiTools.playSound;
 

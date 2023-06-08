@@ -1,4 +1,4 @@
-package lyravega.misc;
+package lyravega.listeners;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -7,9 +7,11 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.HullModEffect;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 
-import experimentalHullModifications.hullmods.ehm.interfaces.customizableHullMod;
 import lunalib.lunaSettings.LunaSettings;
 import lunalib.lunaSettings.LunaSettingsListener;
+import lyravega.listeners.events.customizableHullMod;
+import lyravega.misc.lyr_internals.id;
+import lyravega.misc.lyr_internals.tag;
 import lyravega.tools.lyr_logger;
 
 public class lyr_lunaSettings implements LunaSettingsListener, lyr_logger {
@@ -32,7 +34,7 @@ public class lyr_lunaSettings implements LunaSettingsListener, lyr_logger {
 
 	private static void registerCustomizableMods() {
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
-			if (!hullModSpec.hasTag(lyr_internals.tag.customizable)) continue;
+			if (!hullModSpec.hasTag(tag.customizable)) continue;
 
 			HullModEffect hullModEffect = hullModSpec.getEffect();
 
@@ -41,20 +43,20 @@ public class lyr_lunaSettings implements LunaSettingsListener, lyr_logger {
 	}
 
 	private static void cacheBasicSettings() {
-		showExperimentalFlavour = LunaSettings.getBoolean(lyr_internals.id.mod, "ehm_showExperimentalFlavour");
-		playDrillSound = LunaSettings.getBoolean(lyr_internals.id.mod, "ehm_playDrillSound");
-		showFluff = LunaSettings.getBoolean(lyr_internals.id.mod, "ehm_showFluff");
-		extraInfoInHullMods = LunaSettings.getString(lyr_internals.id.mod, "ehm_extraInfoInHullMods");
+		showExperimentalFlavour = LunaSettings.getBoolean(id.mod, "ehm_showExperimentalFlavour");
+		playDrillSound = LunaSettings.getBoolean(id.mod, "ehm_playDrillSound");
+		showFluff = LunaSettings.getBoolean(id.mod, "ehm_showFluff");
+		extraInfoInHullMods = LunaSettings.getString(id.mod, "ehm_extraInfoInHullMods");
 	}
 
 	@Override
 	public void settingsChanged(String modId) {
-		if (!modId.equals(lyr_internals.id.mod)) return;
+		if (!modId.equals(id.mod)) return;
 		
 		cacheBasicSettings();	
 
 		for (customizableHullMod customizableMod: lunaMods) {
-			customizableMod.ehm_applyCustomization();
+			customizableMod.applyCustomization();
 		}
 
 		logger.info(logPrefix + "Settings changed, reapplying");
