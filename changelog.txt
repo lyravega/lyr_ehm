@@ -1,7 +1,6 @@
 Version 0.8.1
 
 - Fixed some incorrect text in the settings
-- Fixed ship trackers also getting initialized for goal variants
 - Fixed weapon checks ignoring activated shunts on the adapted slots, allowing adapter activator removal
 
 

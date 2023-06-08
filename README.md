@@ -4,12 +4,13 @@ Just some hull modifications. By some, I mean 40+ or something. However, most ar
 **Hull Modifications**:
 - Experimental Hull Modifications: Provides a base to all other hull modifications in this mod. Also has a removal tool
 - Over-Engineered: Provides 20% OP bonus and some slot-points to the ship when built-in. Resides under "Retrofit" category
+- Auxiliary Generators: Provides few slot-points in exchange for ordnance points
 
 **Hull Modification Categories**:
-- Systems: All vanilla systems are turned into hull modifications. Some are hidden as they are designed for [REDACTED] or used by stations. All use flat costs. Some have tiny adjustments that make them reusable if they didn't have that capability
-- Retrofits: Alters the weapon slots of a ship all together. Straightforward modifications for the ship, each with a cost
-- Cosmetics: Cosmetic hull modification that change the shield and engine colours. Shield colours can be fully customized by altering the external settings file
-- Activators: Uses the slot shunts to provide the ship with various enhancements by altering the slot they're installed on
+- Systems: Most vanilla systems are turned into hull modifications
+- Retrofits: Alters the weapon slots of a ship all together
+- Cosmetics: Fully customizable hull modifications to change shield and engine colours. Customization is done through the mod settings menu
+- Activators: Uses slot shunts to provide the ship with various enhancements by altering the slot they're installed on
 
 **Slot Shunt Categories**: These are utilities that can be equipped on weapon slots. Each require its own activator to do what it's supposed to do
 - Adapters: Turns a bigger slot into smaller versions (3 large, 1 medium types)
