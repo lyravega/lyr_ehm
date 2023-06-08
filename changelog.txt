@@ -1,5 +1,7 @@
 Version 0.8.1
 
+- Increased mass missile retrofit OP cost by 25%
+- Added a new hullmod "AI Switch"; turns automated ships into normal, and normal into automated
 - Fixed some incorrect text in the settings
 - Fixed weapon checks ignoring activated shunts on the adapted slots, allowing adapter activator removal
 
