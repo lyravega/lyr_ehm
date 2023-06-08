@@ -31,7 +31,10 @@ public class lyr_tooltip {
 			hasWeaponsOnAdaptedSlots = {"Cannot be removed as there are weapons or shunts installed on the adapted slots", "adapted slots"},
 			hasWeaponsOnConvertedSlots = {"Cannot be removed as there are weapons or shunts installed on the converted slots", "converted slots"},
 			customizable = {"This hull modification can be customized through LunaLib's settings menu. Press F2 in the campaign screen to open the settings menu and adjust them", "F2"},
-			customizableEngine = {"Campaign contrails require an update to be displayed properly. Reloading the game will trigger such an update", "require"};
+			customizableEngine = {"Campaign contrails require an update to be displayed properly. Reloading the game will trigger such an update", "require"},
+			integratedAICore = {"The ship has an integrated AI Core which prevents this hull modification from being installed", "integrated AI Core"},
+			hasCaptain = {"Cannot be installed or removed while the ship has a Captain assigned", "Captain"},
+			hasAICore = {"Cannot be installed or removed while the ship has an AI Core installed", "AI Core"};
 	}
 
 	public static class header {
