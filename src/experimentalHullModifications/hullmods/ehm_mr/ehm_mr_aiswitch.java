@@ -56,6 +56,7 @@ public class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 	}
 	//#endregion
 	// END OF CUSTOM EVENTS
+
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();

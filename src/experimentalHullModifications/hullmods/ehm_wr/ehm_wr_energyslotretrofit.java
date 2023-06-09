@@ -8,10 +8,36 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 
+import lyravega.misc.lyr_internals;
+
 /**@category Weapon Retrofit 
  * @author lyravega
  */
 public class ehm_wr_energyslotretrofit extends _ehm_wr_base {
+	private static final String hbi = "hbi";
+	private static final String hei = lyr_internals.id.hullmods.hei;
+
+	//#region CUSTOM EVENTS
+	@Override
+	public void onInstall(ShipVariantAPI variant) {
+		if (variant.getHullSpec().getBuiltInMods().contains(hbi) || variant.getPermaMods().contains(hbi)) {
+			variant.addSuppressedMod(hbi);
+			variant.addPermaMod(hei, false);
+		}
+		super.onInstall(variant);
+	}
+
+	@Override
+	public void onRemove(ShipVariantAPI variant) {
+		if (variant.getSuppressedMods().contains(hbi)) {
+			variant.removeSuppressedMod(hbi);
+			variant.removePermaMod(hei);
+		}
+		super.onRemove(variant);
+	}
+	//#endregion
+	// END OF CUSTOM EVENTS
+
 	private static final Map<WeaponType,WeaponType> conversion = new HashMap<WeaponType,WeaponType>();
 	static {
 		conversion.put(WeaponType.BALLISTIC, WeaponType.ENERGY);

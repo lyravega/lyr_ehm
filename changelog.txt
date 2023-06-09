@@ -5,11 +5,12 @@ A new hull modification which turns automated ships to normal, or normal ships t
 Other than that, there are a few "balance" changes, and fixes. First thing that's thrown out of the window with this mod is balance but I'll still try to achieve some semblance of "balance" whenever I can. Even though it's probably impossible!
 
 - Added a new hullmod "AI Switch"; turns automated ships into normal, and normal into automated
+- Added energy version of HBI; built-in HBI is replaced with HEI when Mass Energy Retrofit is installed
 - Over-Engineered slot point bonus changed to 1/2/3/5* (from 1/2/4/6), OP bonus lowered to 15% (from 20%)
 - Slot points gained through Over-Engineered and Auxillary Generators increase DP by 1 per slot point
 - Increased Mass Missile Retrofit OP cost to 10/20/30/50 (from 8/16/24/40)
-- Fixed some incorrect text in the settings
 - Fixed weapon checks ignoring activated shunts on the adapted slots which allowed adapter activator removal
+- Fixed some incorrect text in the settings
 - Restored the unmodification
 
 * The game will load fine, but you may be in a slot point deficit. No penalties for this state, just a heads-up!

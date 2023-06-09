@@ -26,8 +26,10 @@ public final class lyr_internals {
 				highTechEngines = "ehm_ec_highTechEngines",
 				lowTechEngines = "ehm_ec_lowTechEngines",
 				midlineEngines = "ehm_ec_midlineEngines",
+				aiswitch = "ehm_mr_aiswitch",
 				auxilarygenerators = "ehm_mr_auxilarygenerators",
 				overengineered = "ehm_mr_overengineered",
+				hei = "ehm_mr_heavyenergyintegration",
 				blueShields = "ehm_sc_blueShields",	// id & class mismatch
 				greenShields = "ehm_sc_greenShields",	// id & class mismatch
 				redShields = "ehm_sc_redShields",	// id & class mismatch
