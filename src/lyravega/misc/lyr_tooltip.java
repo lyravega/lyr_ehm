@@ -27,12 +27,14 @@ public class lyr_tooltip {
 			noShields = {"Cannot function without shields", "shields"},
 			hasPhase = {"Cannot function with a phase cloak", "a phase cloak"},
 			noWings = {"Cannot function without wings", "wings"},
-			hasWeapons = {"Cannot be added or removed as long as there are installed weapons on the ship", "installed weapons"},
+			hasWings = {"Cannot be installed or removed as long as there are wings present in the fighter bays", "wings"},
+			hasWeapons = {"Cannot be installed or removed as long as there are installed weapons on the ship", "installed weapons"},
 			hasWeaponsOnAdaptedSlots = {"Cannot be removed as there are weapons or shunts installed on the adapted slots", "adapted slots"},
 			hasWeaponsOnConvertedSlots = {"Cannot be removed as there are weapons or shunts installed on the converted slots", "converted slots"},
 			customizable = {"This hull modification can be customized through LunaLib's settings menu. Press F2 in the campaign screen to open the settings menu and adjust them", "F2"},
 			customizableEngine = {"Campaign contrails require an update to be displayed properly. Reloading the game will trigger such an update", "require"},
 			integratedAICore = {"The ship has an integrated AI Core which prevents this hull modification from being installed", "integrated AI Core"},
+			noAutomatedShipsSkill = {"Cannot be installed without the Automated Ships skill", "Automated Ships"},
 			hasCaptain = {"Cannot be installed or removed while the ship has a Captain assigned", "Captain"},
 			hasAICore = {"Cannot be installed or removed while the ship has an AI Core installed", "AI Core"};
 	}

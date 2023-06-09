@@ -12,6 +12,7 @@ import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
@@ -56,7 +57,7 @@ public class ehm_mr_auxilarygenerators extends _ehm_base implements normalEvents
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-
+		stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullModSpecId, slotPointBonus.get(hullSize));
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION
@@ -65,6 +66,7 @@ public class ehm_mr_auxilarygenerators extends _ehm_base implements normalEvents
 		switch (index) {
 			case 0: return "10/10/20/20";
 			case 1: return "1/1/2/2";
+			case 2: return "1";
 			default: return null;
 		}
 	}

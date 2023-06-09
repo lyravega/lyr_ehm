@@ -82,20 +82,10 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 	private static Matcher matcher;
 
 	public static final void ehm_processShunts(MutableShipStatsAPI stats, boolean isGettingRestored) {
-		ShipVariantAPI variant = stats.getVariant(); 
-		boolean hasAdapterActivator = variant.hasHullMod(hullmods.stepdownadapter);
-		boolean hasMutableActivator = variant.hasHullMod(hullmods.mutableshunt);
-		boolean hasConverterActivator = variant.hasHullMod(hullmods.diverterandconverter);
-		// if (!hasAdapterActivator && !hasMutableActivator && !hasConverterActivator) return;
-
+		ShipVariantAPI variant = stats.getVariant();
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
-		List<WeaponSlotAPI> shunts = hullSpec.getAllWeaponSlotsCopy();
 
 		boolean refreshRefit = false;
-		float[] totalFluxCapacityBonus = {1.0f, 0.0f};	// 0 mult, 1 flat
-		float[] totalFluxDissipationBonus = {1.0f, 0.0f};	// 0 mult, 1 flat
-		int fighterBayFlat = 0;
-		int slotPoints = hasConverterActivator ? ehm_slotPointsFromHullMods(variant) : 0;
 
 		// primarily to deal with stuff on load
 		for (Iterator<String> iterator = variant.getFittedWeaponSlots().iterator(); iterator.hasNext();) {
@@ -114,6 +104,18 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 			if (adapterMap.containsKey(shuntId)) refreshRefit = ehm_adaptSlot(hullSpec, shuntId, slotId);
 			else if (converterMap.containsKey(shuntId)) refreshRefit = ehm_convertSlot(hullSpec, shuntId, slotId);
 		}
+
+		boolean hasAdapterActivator = variant.hasHullMod(hullmods.stepdownadapter);
+		boolean hasMutableActivator = variant.hasHullMod(hullmods.mutableshunt);
+		boolean hasConverterActivator = variant.hasHullMod(hullmods.diverterandconverter);
+		if (!hasAdapterActivator && !hasMutableActivator && !hasConverterActivator) return;
+
+		List<WeaponSlotAPI> shunts = hullSpec.getAllWeaponSlotsCopy();
+
+		float[] totalFluxCapacityBonus = {1.0f, 0.0f};	// 0 mult, 1 flat
+		float[] totalFluxDissipationBonus = {1.0f, 0.0f};	// 0 mult, 1 flat
+		int fighterBayFlat = 0;
+		int slotPoints = hasConverterActivator ? ehm_slotPointsFromHullMods(variant) : 0;
 		
 		for (Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
 			WeaponSlotAPI slot = iterator.next();

@@ -1,10 +1,14 @@
 Version 0.8.1
 
-- Increased mass missile retrofit OP cost by 25%
 - Added a new hullmod "AI Switch"; turns automated ships into normal, and normal into automated
+- Over-Engineered slot point bonus changed to 1/2/3/5* (from 1/2/4/6), OP bonus lowered to 15% (from 20%)
+- Slot points gained through Over-Engineered and Auxillary Generators increase DP by 1 per slot point
+- Increased Mass Missile Retrofit OP cost to 10/20/30/50 (from 8/16/24/40)
 - Fixed some incorrect text in the settings
 - Fixed weapon checks ignoring activated shunts on the adapted slots, allowing adapter activator removal
+- Restored the unmodification
 
+* The game will load fine, but you may be in a slot point deficit. No penalties for this state, just a heads-up!
 
 
 Version 0.8.0

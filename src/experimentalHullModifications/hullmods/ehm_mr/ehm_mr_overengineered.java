@@ -10,6 +10,7 @@ import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
@@ -58,8 +59,8 @@ public class ehm_mr_overengineered extends _ehm_base implements normalEvents, en
 		slotPointBonus.put(HullSize.DEFAULT, 0);
 		slotPointBonus.put(HullSize.FRIGATE, 1);
 		slotPointBonus.put(HullSize.DESTROYER, 2);
-		slotPointBonus.put(HullSize.CRUISER, 4);
-		slotPointBonus.put(HullSize.CAPITAL_SHIP, 6);
+		slotPointBonus.put(HullSize.CRUISER, 3);
+		slotPointBonus.put(HullSize.CAPITAL_SHIP, 5);
 	}
 
 	@Override
@@ -68,9 +69,11 @@ public class ehm_mr_overengineered extends _ehm_base implements normalEvents, en
 
 		if (variant.getSMods().contains(this.hullModSpecId)) {
 			lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
-			lyr_hullSpec.setOrdnancePoints((int) Math.round(ehm_hullSpecReference(variant).getOrdnancePoints(null)*1.2));
+			lyr_hullSpec.setOrdnancePoints((int) Math.round(ehm_hullSpecReference(variant).getOrdnancePoints(null)*1.15));
 			variant.setHullSpecAPI(lyr_hullSpec.retrieve());
 		}
+
+		stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullModSpecId, slotPointBonus.get(hullSize));
 	}
 
 	@Override
@@ -88,10 +91,11 @@ public class ehm_mr_overengineered extends _ehm_base implements normalEvents, en
 	public String getDescriptionParam(int index, HullSize hullSize) {
 		switch (index) {
 			case 0: return "story point";
-			case 1: return "" + 20 + "%";
-			case 2: return "1/2/4/6 slot points";
+			case 1: return "15%";
+			case 2: return "1/2/3/5 slot points";
 			case 3: return "slot point";
 			case 4: return "converter shunts";
+			case 5: return "1";
 			default: return null;
 		}
 	}

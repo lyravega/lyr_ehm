@@ -102,11 +102,10 @@ public class ehm_ar_diverterandconverter extends _ehm_ar_base {
 
 			int[] pointArray = ehm_slotPointCalculation(ship);
 
-			if (pointArray[0] > 0) {
-				tooltip.addSectionHeading(pointArray[0] + " UNUSED SLOT POINTS", header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
-			} else {
-				tooltip.addSectionHeading("NO SLOT POINTS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
-			}
+			if (pointArray[0] > 0) tooltip.addSectionHeading(pointArray[0] + " UNUSED SLOT POINTS", header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
+			else if (pointArray[0] == 0) tooltip.addSectionHeading("NO SLOT POINTS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
+			else tooltip.addSectionHeading("SLOT POINT DEFICIT", header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
+
 			if (pointArray[1] > 0) tooltip.addPara("Hull modifications are providing " + pointArray[1] + " slot points", 2f, header.sEffect_textColour, pointArray[1] + " slot points");
 			if (pointArray[2] > 0) tooltip.addPara("Diverter shunts are providing " + pointArray[2] + " slot points", 2f, header.sEffect_textColour, pointArray[2] + " slot points");
 			if (pointArray[3] < 0) tooltip.addPara("Converter shunts are consuming " + pointArray[3] + " slot points", 2f, header.notApplicable_textColour, pointArray[3] + " slot points");

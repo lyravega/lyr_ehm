@@ -63,7 +63,6 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 
 		playerFaction.addKnownHullMod(lyr_internals.id.hullmods.base);
 		playerFaction.addKnownHullMod(lyr_internals.id.hullmods.undo);
-		playerFaction.addKnownHullMod(lyr_internals.id.hullmods.test);
 
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
 			String hullModSpecId = hullModSpec.getId();
@@ -75,8 +74,6 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 			if (weaponSpec.hasTag(lyr_internals.tag.experimental) && !playerFaction.knowsWeapon(weaponSpec.getWeaponId())) playerFaction.addKnownWeapon(weaponSpec.getWeaponId(), false);
 			else if (weaponSpec.hasTag(lyr_internals.tag.restricted) && playerFaction.knowsWeapon(weaponSpec.getWeaponId())) playerFaction.removeKnownWeapon(weaponSpec.getWeaponId());
 		}
-
-		playerFaction.addKnownHullMod(lyr_internals.id.hullmods.test);	// TODO remove this debug shit
 
 		logger.info(logPrefix + "Player faction blueprints are updated");
 	}
@@ -100,8 +97,6 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 			if (enhancedEvents.class.isInstance(hullModEffect)) enhancedEvents.put(hullModSpec.getId(), (enhancedEvents) hullModEffect);
 			if (suppressedEvents.class.isInstance(hullModEffect)) suppressedEvents.put(hullModSpec.getId(), (suppressedEvents) hullModEffect);
 		}
-
-		normalEvents.put(lyr_internals.id.hullmods.test, (normalEvents) Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.test).getEffect());	// TODO remove this debug shit
 
 		logger.info(logPrefix + "Experimental hull modifications are registered");
 	}
