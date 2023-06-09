@@ -51,4 +51,17 @@ public class ehm_wr_energyslotretrofit extends _ehm_wr_base {
 
 		variant.setHullSpecAPI(ehm_weaponSlotRetrofit(variant, conversion, null));
 	}
+
+	@Override
+	public String getDescriptionParam(int index, HullSize hullSize) {
+		switch (index) {
+			case 0: return "ballistic";
+			case 1: return "energy";
+			case 2: return "missile";
+			case 3: return "composite";
+			case 4: return "synergy";
+			case 5: return "Heavy Ballistics Integration";
+			default: return null;
+		}
+	}
 }

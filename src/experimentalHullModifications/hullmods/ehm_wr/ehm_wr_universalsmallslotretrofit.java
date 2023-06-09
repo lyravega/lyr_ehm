@@ -31,4 +31,13 @@ public class ehm_wr_universalsmallslotretrofit extends _ehm_wr_base {
 
 		variant.setHullSpecAPI(ehm_weaponSlotRetrofit(variant, conversion, applicableSlotSize));
 	}
+
+	@Override
+	public String getDescriptionParam(int index, HullSize hullSize) {
+		switch (index) {
+			case 0: return "small";
+			case 1: return "universal";
+			default: return null;
+		}
+	}
 }

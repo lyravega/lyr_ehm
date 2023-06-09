@@ -8,9 +8,10 @@ Other than that, there are a few "balance" changes, and fixes. First thing that'
 - Added energy version of HBI; built-in HBI is replaced with HEI when Mass Energy Retrofit is installed
 - Over-Engineered slot point bonus changed to 1/2/3/5* (from 1/2/4/6), OP bonus lowered to 15% (from 20%)
 - Slot points gained through Over-Engineered and Auxillary Generators increase DP by 1 per slot point
-- Increased Mass Missile Retrofit OP cost to 10/20/30/50 (from 8/16/24/40)
+- Mass Missile Retrofit OP cost reduced to 6/12/18/30 (from 8/16/24/40). It now raises missile weapon OP cost by 2/4/8
 - Fixed weapon checks ignoring activated shunts on the adapted slots which allowed adapter activator removal
 - Fixed some incorrect text in the settings
+- Updated some tooltips
 - Restored the unmodification
 
 * The game will load fine, but you may be in a slot point deficit. No penalties for this state, just a heads-up!
