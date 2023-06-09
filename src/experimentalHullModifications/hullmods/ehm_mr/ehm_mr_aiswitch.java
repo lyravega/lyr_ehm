@@ -93,17 +93,15 @@ public class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 	@Override
 	public String getDescriptionParam(int index, HullSize hullSize) {
 		switch (index) {
-			case 0: return "automated ships";
-			case 1: return "crew";
-			case 2: return "captain";
-			case 3: return "no longer subjected to";
-			case 5: return "25% more expensive";
-			case 4: return "other ships";
-			case 6: return "AI Core";
-			case 7: return "no crew";
-			case 8: return "become subjected to";
-			case 9: return "10% cheaper";
-			case 10: return "Automated Ships";
+			case 0: return "crew";
+			case 1: return "captain";
+			case 2: return "no longer subjected to";
+			case 3: return "25% more expensive";
+			case 4: return "AI Core";
+			case 5: return "no crew";
+			case 6: return "become subjected to";
+			case 7: return "10% cheaper";
+			case 8: return "Automated Ships";
 			default: return null;
 		}
 	}
