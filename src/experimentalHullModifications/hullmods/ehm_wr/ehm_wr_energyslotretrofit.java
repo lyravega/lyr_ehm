@@ -8,21 +8,23 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 
+import experimentalHullModifications.hullmods.ehm_mr.ehm_mr_heavyenergyintegration;
 import lyravega.misc.lyr_internals;
 
-/**@category Weapon Retrofit 
+/**@category Weapon Retrofit
+ * @see Slave: {@link ehm_mr_heavyenergyintegration}
  * @author lyravega
  */
 public class ehm_wr_energyslotretrofit extends _ehm_wr_base {
+	private static final String extension = lyr_internals.id.hullmods.extensions.heavyenergyintegration;
 	private static final String hbi = "hbi";
-	private static final String hei = lyr_internals.id.hullmods.hei;
 
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstall(ShipVariantAPI variant) {
 		if (variant.getHullSpec().getBuiltInMods().contains(hbi) || variant.getPermaMods().contains(hbi)) {
 			variant.addSuppressedMod(hbi);
-			variant.addPermaMod(hei, false);
+			variant.addPermaMod(extension, false);
 		}
 		super.onInstall(variant);
 	}
@@ -31,7 +33,7 @@ public class ehm_wr_energyslotretrofit extends _ehm_wr_base {
 	public void onRemove(ShipVariantAPI variant) {
 		if (variant.getSuppressedMods().contains(hbi)) {
 			variant.removeSuppressedMod(hbi);
-			variant.removePermaMod(hei);
+			variant.removePermaMod(extension);
 		}
 		super.onRemove(variant);
 	}

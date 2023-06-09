@@ -29,7 +29,6 @@ public final class lyr_internals {
 				aiswitch = "ehm_mr_aiswitch",
 				auxilarygenerators = "ehm_mr_auxilarygenerators",
 				overengineered = "ehm_mr_overengineered",
-				hei = "ehm_mr_heavyenergyintegration",
 				blueShields = "ehm_sc_blueShields",	// id & class mismatch
 				greenShields = "ehm_sc_greenShields",	// id & class mismatch
 				redShields = "ehm_sc_redShields",	// id & class mismatch
@@ -94,6 +93,11 @@ public final class lyr_internals {
 				missileslotretrofit = "ehm_wr_missileslotretrofit",
 				universalslotretrofit = "ehm_wr_universalslotretrofit",
 				universalsmallslotretrofit = "ehm_wr_universalsmallslotretrofit";
+			public static final class extensions {
+				public static final String
+					heavyenergyintegration = "ehm_mr_heavyenergyintegration",
+					expensivemissiles = "ehm_mr_expensivemissiles";
+			}
 		}
 		public static final class shunts {
 			public static final class adapters {

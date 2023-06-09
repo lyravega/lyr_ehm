@@ -29,6 +29,11 @@ import lyravega.listeners.events.normalEvents;
 import lyravega.misc.lyr_tooltip.header;
 import lyravega.misc.lyr_tooltip.text;
 
+/**
+ * Turns normal ships into automated, and automated ones into normal ones.
+ * @category Miscellaneous Retrofit 
+ * @author lyravega
+ */
 public class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 	private static final Map<HullSize, int[]> crewMultipliers = new HashMap<HullSize, int[]>();
 	static {

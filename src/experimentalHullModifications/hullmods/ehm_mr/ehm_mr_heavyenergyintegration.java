@@ -7,6 +7,13 @@ import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.impl.campaign.ids.Stats;
 
+import experimentalHullModifications.hullmods.ehm_wr.ehm_wr_energyslotretrofit;
+
+/**
+ * @category Effect Extension 
+ * @see Master: {@link ehm_wr_energyslotretrofit}
+ * @author lyravega
+ */
 public class ehm_mr_heavyenergyintegration extends BaseHullMod {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String id) {

@@ -7,12 +7,32 @@ import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
-import com.fs.starfarer.api.impl.campaign.ids.Stats;
+
+import experimentalHullModifications.hullmods.ehm_mr.ehm_mr_expensivemissiles;
+import lyravega.misc.lyr_internals;
 
 /**@category Weapon Retrofit 
+ * @see Slave: {@link ehm_mr_expensivemissiles}
  * @author lyravega
  */
 public class ehm_wr_missileslotretrofit extends _ehm_wr_base {
+	private static final String extension = lyr_internals.id.hullmods.extensions.expensivemissiles;
+
+	//#region CUSTOM EVENTS
+	@Override
+	public void onInstall(ShipVariantAPI variant) {
+		variant.addPermaMod(extension, false);
+		super.onInstall(variant);
+	}
+
+	@Override
+	public void onRemove(ShipVariantAPI variant) {
+		variant.removePermaMod(extension);
+		super.onRemove(variant);
+	}
+	//#endregion
+	// END OF CUSTOM EVENTS
+
 	private static final Map<WeaponType,WeaponType> conversion = new HashMap<WeaponType,WeaponType>();
 	static {
 		conversion.put(WeaponType.HYBRID, WeaponType.UNIVERSAL);
@@ -24,16 +44,7 @@ public class ehm_wr_missileslotretrofit extends _ehm_wr_base {
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
 
-		stats.getDynamic().getMod(Stats.SMALL_MISSILE_MOD).modifyFlat(hullModSpecId, 2);
-		stats.getDynamic().getMod(Stats.MEDIUM_MISSILE_MOD).modifyFlat(hullModSpecId, 4);
-		stats.getDynamic().getMod(Stats.LARGE_MISSILE_MOD).modifyFlat(hullModSpecId, 8);
-
 		variant.setHullSpecAPI(ehm_weaponSlotRetrofit(variant, conversion, null));
-	}
-
-	@Override
-	public boolean affectsOPCosts() {
-		return true;
 	}
 
 	@Override
