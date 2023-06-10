@@ -1,10 +1,27 @@
+Version 0.8.1
+
+A new hull modification which turns automated ships to normal, or normal ships to automated. Its tooltip is dynamic and will tell you about bonuses / penalties. Having the skill "Automated Ships" is required.
+
+Other than that, there are a few "balance" changes, and fixes. First thing that's thrown out of the window with this mod is balance but I'll still try to achieve some semblance of "balance" whenever I can. Even though it's probably impossible!
+
+- Added a new hullmod "AI Switch"; turns automated ships into normal, and normal into automated
+- Added energy version of HBI; built-in HBI is replaced with HEI when Mass Energy Retrofit is installed
+- Over-Engineered slot point bonus changed to 1/2/3/5* (from 1/2/4/6), OP bonus lowered to 15% (from 20%)
+- Slot points gained through Over-Engineered and Auxillary Generators increase DP by 1 per slot point
+- Mass Missile Retrofit OP cost reduced to 6/12/18/30 (from 8/16/24/40). It now raises missile weapon OP cost by 2/4/8
+- Fixed weapon checks ignoring activated shunts on the adapted slots which allowed adapter activator removal
+- Fixed some incorrect text in the settings
+- Updated some tooltips
+- Restored the unmodification
+
+* The game will load fine, but you may be in a slot point deficit. No penalties for this state, just a heads-up!
+
+
 Version 0.8.0
 
-Big version bump due to accomplishing another milestone; implementing fully customizable engines, and
-as a bonus, implementing LunaLib and taking advantage of its options menu for mods.
+Big version bump due to accomplishing another milestone; implementing fully customizable engines, and as a bonus, implementing LunaLib and taking advantage of its options menu for mods.
 
-Make sure to delete the old mod folder as a different folder will be used from now on. Also, EHM now
-requires LunaLib (and LazyLib) to function. Old IDs are still in use for savegame compatibility.
+Make sure to delete the old mod folder as a different folder will be used from now on. Also, EHM now requires LunaLib (and LazyLib) to function. Old IDs are still in use for savegame compatibility.
 
 Changes/Fixes:
 - LunaLib integration; removed old .json files and moved necessary stuff to the new options menu
@@ -18,17 +35,11 @@ Changes/Fixes:
 - Fixed value reduction on ships that persisted till a reload
 - Hid the removal tool from .csv for now
 
-* Shield customization is rather simple, however engine customization offers a lot with flexibility.
-All three customizable engines are tweaked like "Low-Tech" engines by default, however you can
-customize them like [REDACTED] ones as well if you so desire. Experiment as you wish!
+* Shield customization is rather simple, however engine customization offers a lot with flexibility. All three customizable engines are tweaked like "Low-Tech" engines by default, however you can customize them like [REDACTED] ones as well if you so desire. Experiment as you wish!
 
-Customizable cosmetic hullmods have a yellow triangle in the upper right corner of their icons, and
-their names can be changed within game as well. Most settings are self-explanatory, but some might
-require some experimentation to have an idea what they do.
+Customizable cosmetic hullmods have a yellow triangle in the upper right corner of their icons, and their names can be changed within game as well. Most settings are self-explanatory, but some might require some experimentation to have an idea what they do.
 
-To start customizing your shields/engines, simply open LunaLib's settings menu by pressing "F2" on the
-campaign layer. After that all you need to do is install the hullmod on a ship. When you save the new
-values, (most) changes will be reflected in the game immediately.
+To start customizing your shields/engines, simply open LunaLib's settings menu by pressing "F2" on the campaign layer. After that all you need to do is install the hullmod on a ship. When you save the new values, (most) changes will be reflected in the game immediately.
 
 
 

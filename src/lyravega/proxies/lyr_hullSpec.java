@@ -9,8 +9,7 @@ import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
-import lyravega.misc.lyr_internals;
-import lyravega.tools._lyr_proxyTools;
+import lyravega.tools.lyr_proxyTools;
 
 /**
  * A proxy-like class for {@link ShipHullSpecAPI} that utilizes obfuscated 
@@ -22,7 +21,7 @@ import lyravega.tools._lyr_proxyTools;
  * <p> Use {@link #retrieve()} to grab the stored {@link ShipHullSpecAPI}.
  * @author lyravega
  */
-public final class lyr_hullSpec extends _lyr_proxyTools {
+public final class lyr_hullSpec extends lyr_proxyTools {
 	private ShipHullSpecAPI hullSpec;
 	private lyr_weaponSlot weaponSlot = null;
 	private lyr_shieldSpec shieldSpec = null;
@@ -67,7 +66,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 			// getBaseValue = inspectMethod("getBaseValue", hullSpecClass).getMethodHandle();
 			setBaseValue = inspectMethod("setBaseValue", hullSpecClass).getMethodHandle();
 		} catch (Throwable t) {
-			logger.fatal(lyr_internals.logPrefix+"Failed to find a method in 'lyr_hullSpec'", t);
+			logger.fatal(logPrefix+"Failed to find a method in 'lyr_hullSpec'", t);
 		}
 	}
 
@@ -118,7 +117,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		try {
 			return (ShipHullSpecAPI) clone.invoke(hullSpec);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'duplicate()' in 'lyr_hullSpec'", t);
+			logger.error(logPrefix+"Failed to use 'duplicate()' in 'lyr_hullSpec'", t);
 		} return hullSpec; // java, pls...
 	}
 
@@ -191,7 +190,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		try {
 			this.engineSlots = (List<Object>) getEngineSlots.invoke(hullSpec);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'getEngineSlots()' in 'lyr_hullSpec'", t);
+			logger.error(logPrefix+"Failed to use 'getEngineSlots()' in 'lyr_hullSpec'", t);
 		} 
 
 		return this.engineSlots; 
@@ -205,7 +204,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		try {
 			setShieldSpec.invoke(hullSpec, shieldSpec);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'setShieldSpec()' in 'lyr_hullSpec'", t);
+			logger.error(logPrefix+"Failed to use 'setShieldSpec()' in 'lyr_hullSpec'", t);
 		}
 	}
 
@@ -271,7 +270,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		try {
 			addWeaponSlot.invoke(hullSpec, weaponSlotClass.cast(weaponSlot));
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'addWeaponSlot()' in 'lyr_hullSpec'", t);
+			logger.error(logPrefix+"Failed to use 'addWeaponSlot()' in 'lyr_hullSpec'", t);
 		}
 	}
 
@@ -283,7 +282,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		try {
 			addWeaponSlot.invoke(hullSpec, weaponSlotClass.cast(weaponSlot.retrieve()));
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'addWeaponSlot()' in 'lyr_hullSpec'", t);
+			logger.error(logPrefix+"Failed to use 'addWeaponSlot()' in 'lyr_hullSpec'", t);
 		}
 	}
 
@@ -305,7 +304,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		try { 
 			addBuiltInWing.invoke(hullSpec, wingId);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'addBuiltInWing()' in 'lyr_hullSpec'", t);
+			logger.error(logPrefix+"Failed to use 'addBuiltInWing()' in 'lyr_hullSpec'", t);
 		}
 	}
 
@@ -336,7 +335,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		try { 
 			setOrdnancePoints.invoke(hullSpec, ordnancePoints);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'setOrdnancePoints()' in 'lyr_hullSpec'", t);
+			logger.error(logPrefix+"Failed to use 'setOrdnancePoints()' in 'lyr_hullSpec'", t);
 		}
 	}
 
@@ -357,7 +356,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		try { 
 			setBaseHullId.invoke(hullSpec, baseHullId);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'setBaseHullId()' in 'lyr_hullSpec'", t);
+			logger.error(logPrefix+"Failed to use 'setBaseHullId()' in 'lyr_hullSpec'", t);
 		}
 	}
 
@@ -387,7 +386,7 @@ public final class lyr_hullSpec extends _lyr_proxyTools {
 		try {
 			setBaseValue.invoke(hullSpec, value);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'setBaseValue()' in 'lyr_hullSpec'", t);
+			logger.error(logPrefix+"Failed to use 'setBaseValue()' in 'lyr_hullSpec'", t);
 		}
 	}
 

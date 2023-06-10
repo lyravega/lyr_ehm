@@ -7,8 +7,7 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
-import lyravega.misc.lyr_internals;
-import lyravega.tools._lyr_proxyTools;
+import lyravega.tools.lyr_proxyTools;
 
 /**
  * A proxy-like class for... engine builder? When {@code getEngineSlots()}
@@ -20,15 +19,15 @@ import lyravega.tools._lyr_proxyTools;
  * javadocs to hopefully properly describe what they do.
  * @author lyravega
  */
-public final class lyr_engineBuilder extends _lyr_proxyTools {
+public final class lyr_engineBuilder extends lyr_proxyTools {
 	private Object engineBuilder;
 	private static MethodHandle clone = null;
-	private static MethodHandle setEngineStyle = null;
-	private static MethodHandle setEngineDataFromJson = null;	// I'm making names up
-	private static MethodHandle newEngineData = null;
-	private static MethodHandle setEngineData = null;
+	private static MethodHandle setEngineStyleId = null;
+	private static MethodHandle setEngineStyleSpecFromJSON = null;
+	private static MethodHandle newEngineStyleSpec = null;
+	private static MethodHandle setEngineStyleSpec = null;
 
-	public static enum engineStyle { ;
+	public static enum engineStyleIds { ;
 		public static final int lowTech = 0;
 		public static final int midline = 1;
 		public static final int highTech = 2;
@@ -41,20 +40,20 @@ public final class lyr_engineBuilder extends _lyr_proxyTools {
 		// public static final int torpedoAtropos = 9; // ugly
 		// public static final int lowTechRocket = 10; // weird cut-off
 		// public static final int doritos = 11; // nothing
-		public static final int custom = 12;
+		public static final int custom = 12;	// with this, custom engine style specs can be utilized
 	}
 
-	public static final Map<String, Object> customEngineData = new HashMap<String, Object>();
+	public static final Map<String, Object> customEngineStyleSpecs = new HashMap<String, Object>();
 
 	static {
 		try {
 			clone = inspectMethod("clone", engineBuilderClass).getMethodHandle();
-			setEngineStyle = inspectMethod(engineBuilderClass, void.class, engineStyleEnum).getMethodHandle();
-			setEngineDataFromJson = inspectMethod(engineBuilderClass, void.class, JSONObject.class, String.class).getMethodHandle();
-			newEngineData = lookup.findConstructor(engineDataClass, MethodType.methodType(void.class, JSONObject.class, String.class));
-			setEngineData = inspectMethod(engineBuilderClass, void.class, engineDataClass).getMethodHandle();
+			setEngineStyleId = inspectMethod(engineBuilderClass, void.class, engineStyleIdEnum).getMethodHandle();
+			setEngineStyleSpecFromJSON = inspectMethod(engineBuilderClass, void.class, JSONObject.class, String.class).getMethodHandle();
+			newEngineStyleSpec = lookup.findConstructor(engineStyleSpecClass, MethodType.methodType(void.class, JSONObject.class, String.class));
+			setEngineStyleSpec = inspectMethod(engineBuilderClass, void.class, engineStyleSpecClass).getMethodHandle();
 		} catch (Throwable t) {
-			logger.fatal(lyr_internals.logPrefix+"Failed to find a method in 'lyr_engineBuilder'", t);
+			logger.fatal(logPrefix+"Failed to find a method in 'lyr_engineBuilder'", t);
 		}
 	}
 	
@@ -101,7 +100,7 @@ public final class lyr_engineBuilder extends _lyr_proxyTools {
 		try {
 			return (Object) clone.invoke(enginebuilder);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'duplicate()' in 'lyr_engineBuilder'", t); return engineBuilder;
+			logger.error(logPrefix+"Failed to use 'duplicate()' in 'lyr_engineBuilder'", t); return engineBuilder;
 		}
 	}
 	
@@ -120,15 +119,15 @@ public final class lyr_engineBuilder extends _lyr_proxyTools {
 	 * Uses the passed enumNumber to grab an engine style from the
 	 * obfuscated code, and invoke the obfuscated engineBuilder 
 	 * method with it. 
-	 * @param enumNumber
+	 * @param engineStyleId
 	 * @category Proxy method
-	 * @see engineStyle
+	 * @see engineStyleIds
 	 */
-	public void setEngineStyle(int enumNumber) {
+	public void setEngineStyleId(int engineStyleId) {
 		try {
-			setEngineStyle.invoke(engineBuilderClass.cast(engineBuilder), engineStyleEnum.getEnumConstants()[enumNumber]);
+			setEngineStyleId.invoke(engineBuilderClass.cast(engineBuilder), engineStyleIdEnum.getEnumConstants()[engineStyleId]);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'setEngineStyle()' in 'lyr_engineBuilder'", t);
+			logger.error(logPrefix+"Failed to use 'setEngineStyle()' in 'lyr_engineBuilder'", t);
 		}
 	}
 
@@ -139,35 +138,35 @@ public final class lyr_engineBuilder extends _lyr_proxyTools {
 	 * directly, making it safer to use as this might leak somewhere without proper
 	 * supervision. Creating the engine data beforehand, storing it somewhere and then
 	 * using those stored ones is much safer in theory.
-	 * @param jsonObject must have relevant stuff found in the "engine_styles.json"!
-	 * @param name
+	 * @param engineStyleSpecJSON must have relevant stuff found in the "engine_styles.json"!
+	 * @param engineStyleSpecName
 	 * @category Proxy method
-	 * @see #newEngineData(JSONObject, String)
-	 * @see #setEngineData(Object)
+	 * @see #newEngineStyleSpec(JSONObject, String)
+	 * @see #setEngineStyleSpec(Object)
 	 */
 	@Deprecated
-	public void setEngineDataFromJson(JSONObject jsonObject, String name) {
+	public void setEngineStyleSpecFromJSON(JSONObject engineStyleSpecJSON, String engineStyleSpecName) {
 		try {
-			setEngineDataFromJson.invoke(engineBuilderClass.cast(engineBuilder), jsonObject, name);
+			setEngineStyleSpecFromJSON.invoke(engineBuilderClass.cast(engineBuilder), engineStyleSpecJSON, engineStyleSpecName);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'setEngineDataFromJson()' in 'lyr_engineBuilder'", t);
+			logger.error(logPrefix+"Failed to use 'setEngineDataFromJson()' in 'lyr_engineBuilder'", t);
 		}
 	}
 
 	/**
 	 * Tosses an existing engine data object to the engine builder, and makes the engine
 	 * builder use it.
-	 * <p> Should be used in conjunction with {@link #newEngineData(JSONObject, String)},
+	 * <p> Should be used in conjunction with {@link #newEngineStyleSpec(JSONObject, String)},
 	 * which would create the objects required by this method, and ideally stored in the
-	 * public map {@link #customEngineData} for later use.
-	 * @param engineDataObject
+	 * public map {@link #customEngineStyleSpecs} for later use.
+	 * @param engineStyleSpec
 	 * @category Proxy method
 	 */
-	public void setEngineData(Object engineDataObject) {
+	public void setEngineStyleSpec(Object engineStyleSpec) {
 		try {
-			setEngineData.invoke(engineBuilderClass.cast(engineBuilder), engineDataClass.cast(engineDataObject));
+			setEngineStyleSpec.invoke(engineBuilderClass.cast(engineBuilder), engineStyleSpecClass.cast(engineStyleSpec));
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'setEngineData()' in 'lyr_engineBuilder'", t);
+			logger.error(logPrefix+"Failed to use 'setEngineStyleSpec()' in 'lyr_engineBuilder'", t);
 		}
 	}
 
@@ -175,31 +174,31 @@ public final class lyr_engineBuilder extends _lyr_proxyTools {
 	 * Constructs a new engine data from a JSON object, with relevant fields found in
 	 * "engine_styles.json" file.
 	 * <p> Visibility is set to private as this should NOT be used directly since there
-	 * is another method {@link #addEngineData(JSONObject, String)} which adds the new
-	 * engine style data to the {@link #customEngineData} map; storing it for later use.
-	 * @param jsonObject must have relevant stuff found in the "engine_styles.json"!
-	 * @param name
+	 * is another method {@link #addEngineStyleSpec(JSONObject, String)} which adds the new
+	 * engine style data to the {@link #customEngineStyleSpecs} map; storing it for later use.
+	 * @param engineStyleSpecJSON must have relevant stuff found in the "engine_styles.json"!
+	 * @param engineStyleSpecName
 	 * @category Proxy constructor
 	 */
-	private static Object newEngineData(JSONObject jsonObject, String name) {
+	private static Object newEngineStyleSpec(JSONObject engineStyleSpecJSON, String engineStyleSpecName) {
 		try {
-			return newEngineData.invoke(jsonObject, name);
+			return newEngineStyleSpec.invoke(engineStyleSpecJSON, engineStyleSpecName);
 		} catch (Throwable t) {
-			logger.error(lyr_internals.logPrefix+"Failed to use 'newEngineData()' in 'lyr_engineBuilder'", t); return null;
+			logger.error(logPrefix+"Failed to use 'newEngineStyleSpec()' in 'lyr_engineBuilder'", t); return null;
 		}
 	}
 
 	/**
-	 * Uses {@link #newEngineData(JSONObject, String)} to construct a new engine style
+	 * Uses {@link #newEngineStyleSpec(JSONObject, String)} to construct a new engine style
 	 * data object from the JSON object. Returns it after adding it to the {@link
-	 * #customEngineData}. {@link #setEngineData(Object)} should be utilized to use
+	 * #customEngineStyleSpecs}. {@link #setEngineStyleSpec(Object)} should be utilized to use
 	 * these stored custom engine styles.
-	 * @param jsonObject must have relevant stuff found in the "engine_styles.json"!
-	 * @param name
+	 * @param engineStyleSpecJSON must have relevant stuff found in the "engine_styles.json"!
+	 * @param engineStyleSpecName
 	 * @category Utility
 	 */
-	public static void addEngineData(JSONObject jsonObject, String name) {
-		customEngineData.put(name, newEngineData(jsonObject, name));
+	public static void addEngineStyleSpec(JSONObject engineStyleSpecJSON, String engineStyleSpecName) {
+		customEngineStyleSpecs.put(engineStyleSpecName, newEngineStyleSpec(engineStyleSpecJSON, engineStyleSpecName));
 	}
 	//#endregion 
 	// END OF BRIDGE / PROXY METHODS

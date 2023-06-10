@@ -2,4 +2,4 @@ id,name,faction,desc,script,icon,order
 ehm_submarket,"Experimental
 Engineering",experimental,"Grants access to weapon slot shunts that can be used along with their activators.
 
-Unused shunts that take up the cargo space will be automatically salvaged.",data.submarkets.ehm_submarket,,10000
+Unused shunts that take up the cargo space will be automatically salvaged.",experimentalHullModifications.submarkets.ehm_submarket,,10000

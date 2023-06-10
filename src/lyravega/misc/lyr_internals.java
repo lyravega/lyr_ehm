@@ -4,17 +4,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 public final class lyr_internals {
-	public static final String logName = "EHM";
-	public static final String logPrefix = "(Experimental Hull Modifications) - ";
 	public static final class id {
 		public static final String
 			submarket = "ehm_submarket", // must match submarket id in .csv
 			ability = "ehm_ability", // must match ability id in .csv
 			faction = "experimental", // must match faction id in .csv and .faction
 			drillSound = "drill", // must match .json
-			mod = "lyr_ehm", // must match .json
-			baseModification = "ehm_base", // must match hullmod id in .csv
-			undoModification = "ehm_undo"; // must match hullmod id in .csv
+			mod = "lyr_ehm"; // must match .json
 		public static final class hullmods {
 			public static final String
 				base = "ehm_base",
@@ -30,6 +26,7 @@ public final class lyr_internals {
 				highTechEngines = "ehm_ec_highTechEngines",
 				lowTechEngines = "ehm_ec_lowTechEngines",
 				midlineEngines = "ehm_ec_midlineEngines",
+				aiswitch = "ehm_mr_aiswitch",
 				auxilarygenerators = "ehm_mr_auxilarygenerators",
 				overengineered = "ehm_mr_overengineered",
 				blueShields = "ehm_sc_blueShields",	// id & class mismatch
@@ -96,6 +93,11 @@ public final class lyr_internals {
 				missileslotretrofit = "ehm_wr_missileslotretrofit",
 				universalslotretrofit = "ehm_wr_universalslotretrofit",
 				universalsmallslotretrofit = "ehm_wr_universalsmallslotretrofit";
+			public static final class extensions {
+				public static final String
+					heavyenergyintegration = "ehm_mr_heavyenergyintegration",
+					expensivemissiles = "ehm_mr_expensivemissiles";
+			}
 		}
 		public static final class shunts {
 			public static final class adapters {
