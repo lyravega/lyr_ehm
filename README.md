@@ -2,13 +2,13 @@
 Just some hull modifications. By some, I mean 40+ or something. However, most are mutually exclusive, so the usable list is rather short actually. On a new game or a load, all hull modifications and slot shunts will be added to player's known list. Any port you visit will have a new submarket where you can grab slot shunts from.
 
 **Hull Modifications**:
-- Experimental Hull Modifications: Provides a base to all other hull modifications in this mod. Also has a removal tool
-- Over-Engineered: Provides 20% OP bonus and some slot-points to the ship when built-in. Resides under "Retrofit" category
+- Experimental Hull Modifications: Provides a base to all other hull modifications in this mod
+- Over-Engineered: Provides 15% OP bonus and some slot-points to the ship when built-in
 - Auxiliary Generators: Provides few slot-points in exchange for ordnance points
 - AI Switch: Turns automated ships into normal, or normal ships into automated ones
 
 **Hull Modification Categories**:
-- Systems: Most vanilla systems in hull modification form
+- Systems: Most vanilla systems are turned into hull modifications
 - Retrofits: Alters the weapon slots of a ship all together
 - Cosmetics: Fully customizable hull modifications to change shield and engine colours. Customization is done through the mod settings menu
 - Activators: Uses slot shunts to provide the ship with various enhancements by altering the slot they're installed on
