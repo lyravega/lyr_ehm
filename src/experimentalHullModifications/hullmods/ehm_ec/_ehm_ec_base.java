@@ -73,7 +73,7 @@ public class _ehm_ec_base extends _ehm_base implements normalEvents {
 	 * @param engineData {@link #newCustomEngineSpec(String, String) generateEngineData}
 	 * @return a hullSpec with the altered engine visuals
 	 */
-	protected static final ShipHullSpecAPI ehm_pimpMyEngineSlots(ShipVariantAPI variant, int styleEnum, Object engineData) {
+	protected static final ShipHullSpecAPI ehm_applyEngineCosmetics(ShipVariantAPI variant, int styleEnum, Object engineData) {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 		lyr_engineBuilder engineSlot = new lyr_engineBuilder(null, false);
 

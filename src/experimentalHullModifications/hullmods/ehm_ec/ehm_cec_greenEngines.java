@@ -38,6 +38,6 @@ public class ehm_cec_greenEngines extends _ehm_ec_base implements customizableHu
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
 
-		variant.setHullSpecAPI(ehm_pimpMyEngineSlots(variant, engineStyleId, engineData));
+		variant.setHullSpecAPI(ehm_applyEngineCosmetics(variant, engineStyleId, engineData));
 	}
 }
