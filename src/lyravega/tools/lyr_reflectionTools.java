@@ -129,7 +129,7 @@ public class lyr_reflectionTools implements lyr_logger {
 			}
 		}
 
-		if (method == null) throw new Throwable("Method with the name '"+methodName+"' was not found in the class '"+clazz.getName()+"'");
+		if (method == null) throw new Throwable(logPrefix+"Method with the name '"+methodName+"' was not found in the class '"+clazz.getName()+"'");
 
 		/* original way to build a methodMap that uses method methods to gather relevant fields */
 		// Class<?> returnType = (Class<?>) getReturnType.invoke(method);
@@ -169,35 +169,15 @@ public class lyr_reflectionTools implements lyr_logger {
 		Object method = null; // as long as methods are stored as objects and not as methods, game is okay with it
 		String methodName = null;
 
-		if (returnType == null) {
-			for (Object currMethod : (declaredOnly) ? clazz.getDeclaredMethods() : clazz.getMethods()) {
-				if (!Arrays.equals((Class<?>[]) getParameterTypes.invoke(currMethod), parameterTypes)) continue;
-				
-				methodName = (String) getName.invoke(currMethod);
-				method = currMethod; break;
-			}
+		for (Object currMethod : (declaredOnly) ? clazz.getDeclaredMethods() : clazz.getMethods()) {
+			if (returnType != null && !returnType.equals(getReturnType.invoke(currMethod))) continue;
+			if (parameterTypes.length > 0 && !Arrays.equals((Class<?>[]) getParameterTypes.invoke(currMethod), parameterTypes)) continue;
 
-			if (method == null) throw new Throwable("Method with the parameter types '"+parameterTypes.toString()+"' was not found in the class '"+clazz.getName()+"'");
-		} else if (parameterTypes.length == 0) {
-			for (Object currMethod : (declaredOnly) ? clazz.getDeclaredMethods() : clazz.getMethods()) {
-				if (!returnType.equals(getReturnType.invoke(currMethod))) continue;
-
-				methodName = (String) getName.invoke(currMethod);
-				method = currMethod; break;
-			}
-
-			if (method == null) throw new Throwable("Method with the return type'"+returnType.toString()+"' was not found in the class '"+clazz.getName()+"'");
-		} else if (parameterTypes.length > 0 && returnType != null) {
-			for (Object currMethod : (declaredOnly) ? clazz.getDeclaredMethods() : clazz.getMethods()) {
-				if (!returnType.equals(getReturnType.invoke(currMethod))) continue;
-				if (!Arrays.equals((Class<?>[]) getParameterTypes.invoke(currMethod), parameterTypes)) continue;
-
-				methodName = (String) getName.invoke(currMethod);
-				method = currMethod; break;
-			}
-
-			if (method == null) throw new Throwable("Method with the return type'"+returnType.toString()+"' and parameter types '"+parameterTypes.toString()+"' was not found in the class '"+clazz.getName()+"'");
+			methodName = (String) getName.invoke(currMethod);
+			method = currMethod; break;
 		}
+
+		if (method == null) throw new Throwable(logPrefix+"Method with the return type'"+returnType.toString()+"' and parameter types '"+parameterTypes.toString()+"' was not found in the class '"+clazz.getName()+"'");
 
 		/* alternative way to build a methodMap that involves using unreflect and use the methodHandle */
 		int methodModifiers = (int) getModifiers.invoke(method);
