@@ -177,7 +177,10 @@ public class lyr_reflectionTools implements lyr_logger {
 			method = currMethod; break;
 		}
 
-		if (method == null) throw new Throwable(logPrefix+"Method with the return type'"+returnType.toString()+"' and parameter types '"+parameterTypes.toString()+"' was not found in the class '"+clazz.getName()+"'");
+		if (method == null) throw new Throwable(logPrefix+"Method"
+												+(returnType != null ? " with the return type'"+returnType.toString()+"'" : "")
+												+(parameterTypes.length > 0 ? " parameter types '"+parameterTypes.toString()+"'" : "")
+												+"was not found in the class '"+clazz.getName()+"'");
 
 		/* alternative way to build a methodMap that involves using unreflect and use the methodHandle */
 		int methodModifiers = (int) getModifiers.invoke(method);
