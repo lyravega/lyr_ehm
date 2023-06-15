@@ -58,7 +58,6 @@ import lyravega.tools.lyr_logger;
  * @author lyravega
  */
 public class _ehm_base extends BaseHullMod implements lyr_logger {
-	protected static final boolean log = true;
 	public static final SettingsAPI settings = Global.getSettings();
 
 	protected HullModSpecAPI hullModSpec;

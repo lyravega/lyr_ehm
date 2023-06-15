@@ -80,7 +80,7 @@ public class _ehm_tracker extends _ehm_base {
 		
 		//#region CONSTRUCTORS & ACCESSORS
 		public fleetTrackerScript() {
-			if (log) logger.info(logPrefix+"FT: Fleet Tracker initialized");
+			if (trackerInfo) logger.info(logPrefix+"FT: Fleet Tracker initialized");
 
 			Global.getSector().addTransientScript(this);
 		}
@@ -126,7 +126,7 @@ public class _ehm_tracker extends _ehm_base {
 			this.shipTrackers = null;
 			this.isDone = true;
 
-			if (log) logger.info(logPrefix+"FT: Fleet Tracker terminated");
+			if (trackerInfo) logger.info(logPrefix+"FT: Fleet Tracker terminated");
 		}
 	}
 	//#endregion

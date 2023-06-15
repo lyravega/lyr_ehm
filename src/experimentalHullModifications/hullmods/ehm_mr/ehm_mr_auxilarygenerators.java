@@ -45,6 +45,7 @@ public class ehm_mr_auxilarygenerators extends _ehm_base implements normalEvents
 	//#endregion
 	// END OF CUSTOM EVENTS
 
+	public static final int deploymentPointMalusPerSlotPoint = 1;
 	public static final Map<HullSize, Integer> slotPointBonus = new HashMap<HullSize, Integer>();
 	static {
 		slotPointBonus.put(HullSize.FIGHTER, 0);
@@ -57,7 +58,7 @@ public class ehm_mr_auxilarygenerators extends _ehm_base implements normalEvents
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullModSpecId, slotPointBonus.get(hullSize));
+		stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullModSpecId, deploymentPointMalusPerSlotPoint*slotPointBonus.get(hullSize));
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION
@@ -65,8 +66,8 @@ public class ehm_mr_auxilarygenerators extends _ehm_base implements normalEvents
 	public String getDescriptionParam(int index, HullSize hullSize) {
 		switch (index) {
 			case 0: return "10/10/20/20";
-			case 1: return "1/1/2/2";
-			case 2: return "1";
+			case 1: return slotPointBonus.get(HullSize.FRIGATE)+"/"+slotPointBonus.get(HullSize.DESTROYER)+"/"+slotPointBonus.get(HullSize.CRUISER)+"/"+slotPointBonus.get(HullSize.CAPITAL_SHIP)+"/ slot points";
+			case 2: return deploymentPointMalusPerSlotPoint+"";
 			default: return null;
 		}
 	}

@@ -72,7 +72,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 
 	@Override
 	public void onRemove(ShipVariantAPI variant) {
-		variant.setHullSpecAPI(ehm_adapterRemoval_lazy(variant));
+		variant.setHullSpecAPI(ehm_activatorRemoval_lazy(variant));
 		commitChanges(); playSound();
 	}
 	//#endregion
@@ -318,7 +318,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 	 * @param variant whose hullSpec will be restored
 	 * @return a restored hullSpec
 	 */
-	public static final ShipHullSpecAPI ehm_adapterRemoval_lazy(ShipVariantAPI variant) {
+	public static final ShipHullSpecAPI ehm_activatorRemoval_lazy(ShipVariantAPI variant) {
 		ShipHullSpecAPI hullSpec = ehm_hullSpecRefresh(variant);
 
 		return hullSpec;

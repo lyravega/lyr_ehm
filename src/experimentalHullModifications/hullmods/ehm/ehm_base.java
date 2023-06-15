@@ -34,7 +34,7 @@ public class ehm_base extends _ehm_tracker {
 		ShipHullSpecAPI hullSpec = variant.getHullSpec();
 		
 		boolean isBasePerma = variant.getPermaMods().contains(lyr_internals.id.hullmods.base);
-		boolean isBaseBuiltIn = ehm_hasRetrofitBaseBuiltIn(variant);
+		boolean isBaseBuiltIn = hullSpec.isBuiltInMod(lyr_internals.id.hullmods.base);
 		boolean isGettingRestored = !(isBasePerma && isBaseBuiltIn);	// when the ship is getting restored, hull spec won't have the base, but variant will
 
 		// if (!isBaseBuiltIn) {

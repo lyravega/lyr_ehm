@@ -53,6 +53,8 @@ public class ehm_mr_overengineered extends _ehm_base implements normalEvents, en
 	//#endregion
 	// END OF CUSTOM EVENTS
 
+	public static final float ordnancePointBonus = 0.15f;
+	public static final int deploymentPointMalusPerSlotPoint = 1;
 	public static final Map<HullSize, Integer> slotPointBonus = new HashMap<HullSize, Integer>();
 	static {
 		slotPointBonus.put(HullSize.FIGHTER, 0);
@@ -69,16 +71,11 @@ public class ehm_mr_overengineered extends _ehm_base implements normalEvents, en
 
 		if (variant.getSMods().contains(this.hullModSpecId)) {
 			lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
-			lyr_hullSpec.setOrdnancePoints((int) Math.round(ehm_hullSpecReference(variant).getOrdnancePoints(null)*1.15));
+			lyr_hullSpec.setOrdnancePoints((int) Math.round(ehm_hullSpecReference(variant).getOrdnancePoints(null)*(1+ordnancePointBonus)));
 			variant.setHullSpecAPI(lyr_hullSpec.retrieve());
 		}
 
-		stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullModSpecId, slotPointBonus.get(hullSize));
-	}
-
-	@Override
-	public boolean affectsOPCosts() {
-		return false;
+		stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullModSpecId, deploymentPointMalusPerSlotPoint*slotPointBonus.get(hullSize));
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION
@@ -91,11 +88,11 @@ public class ehm_mr_overengineered extends _ehm_base implements normalEvents, en
 	public String getDescriptionParam(int index, HullSize hullSize) {
 		switch (index) {
 			case 0: return "story point";
-			case 1: return "15%";
-			case 2: return "1/2/3/5 slot points";
+			case 1: return ordnancePointBonus*100+"%";
+			case 2: return slotPointBonus.get(HullSize.FRIGATE)+"/"+slotPointBonus.get(HullSize.DESTROYER)+"/"+slotPointBonus.get(HullSize.CRUISER)+"/"+slotPointBonus.get(HullSize.CAPITAL_SHIP)+"/ slot points";
 			case 3: return "slot point";
 			case 4: return "converter shunts";
-			case 5: return "1";
+			case 5: return deploymentPointMalusPerSlotPoint+"";
 			default: return null;
 		}
 	}
@@ -119,8 +116,8 @@ public class ehm_mr_overengineered extends _ehm_base implements normalEvents, en
 	@Override
 	public String getSModDescriptionParam(int index, HullSize hullSize) {
 		switch (index) {
-			case 0: return "+" + 20 + "% OP";
-			case 1: return "" + slotPointBonus.get(hullSize) + " slot points";
+			case 0: return ordnancePointBonus*100+"% OP";
+			case 1: return slotPointBonus.get(hullSize) + " slot points";
 			default: return null;
 		}
 	}
