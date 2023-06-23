@@ -66,7 +66,7 @@ public class ehm_mr_auxilarygenerators extends _ehm_base implements normalEvents
 	public String getDescriptionParam(int index, HullSize hullSize) {
 		switch (index) {
 			case 0: return "10/10/20/20";
-			case 1: return slotPointBonus.get(HullSize.FRIGATE)+"/"+slotPointBonus.get(HullSize.DESTROYER)+"/"+slotPointBonus.get(HullSize.CRUISER)+"/"+slotPointBonus.get(HullSize.CAPITAL_SHIP)+"/ slot points";
+			case 1: return slotPointBonus.get(HullSize.FRIGATE)+"/"+slotPointBonus.get(HullSize.DESTROYER)+"/"+slotPointBonus.get(HullSize.CRUISER)+"/"+slotPointBonus.get(HullSize.CAPITAL_SHIP);
 			case 2: return deploymentPointMalusPerSlotPoint+"";
 			default: return null;
 		}
