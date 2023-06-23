@@ -3,6 +3,7 @@ package experimentalHullModifications.hullmods.ehm;
 import static lyravega.listeners.lyr_lunaSettings.showExperimentalFlavour;
 
 import java.awt.Color;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -270,13 +271,15 @@ public class _ehm_base extends BaseHullMod implements lyr_logger {
 	 */
 	protected static final void ehm_cleanWeaponGroupsUp(ShipVariantAPI variant) {
 		List<WeaponGroupSpec> weaponGroups = variant.getWeaponGroups();
+		Collection<String> groupKeepTargets = variant.getFittedWeaponSlots();	// this is to fix an (vanilla) issue where groups have incorrect entries
 		Map<String, String> groupCleanupTargets = new HashMap<String, String>(variant.getHullSpec().getBuiltInWeapons());
-		groupCleanupTargets.values().retainAll(lyr_internals.id.shunts.set); if (groupCleanupTargets.isEmpty()) return;
+		groupCleanupTargets.values().retainAll(lyr_internals.id.shunts.set);
 
 		for (Iterator<WeaponGroupSpec> iterator = weaponGroups.iterator(); iterator.hasNext();) {
 			WeaponGroupSpec weaponGroup = iterator.next();
 
 			weaponGroup.getSlots().removeAll(groupCleanupTargets.keySet());
+			weaponGroup.getSlots().retainAll(groupKeepTargets);
 			if (weaponGroup.getSlots().isEmpty()) iterator.remove();
 		}
 	}
