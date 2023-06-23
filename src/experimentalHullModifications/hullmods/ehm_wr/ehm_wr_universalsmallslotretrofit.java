@@ -30,6 +30,7 @@ public class ehm_wr_universalsmallslotretrofit extends _ehm_wr_base {
 		ShipVariantAPI variant = stats.getVariant();
 
 		variant.setHullSpecAPI(ehm_weaponSlotRetrofit(variant, conversion, applicableSlotSize));
+		// TODO this causes a crash if a converter is used on these slots which revert to the original type after combat and weapon doesn't fit, make it so that converter inherits slot type
 	}
 
 	@Override
