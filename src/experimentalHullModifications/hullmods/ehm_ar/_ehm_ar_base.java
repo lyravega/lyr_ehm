@@ -54,7 +54,7 @@ import lyravega.proxies.lyr_weaponSlot;
 
 
 /**
- * This class is used by slot adapter hullmods. Slot adapters are designed 
+ * This class is used by slot activator hullmods. Slot activators are designed 
  * to search the ship for specific weapons, and perform operations on the 
  * hullSpec to yield interesting results, such as creating a new weapon slot. 
  * @see {@link experimentalHullModifications.hullmods.ehm_sr._ehm_sr_base _ehm_sr_base} for system retrofit base
@@ -112,8 +112,8 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 
 		List<WeaponSlotAPI> shunts = hullSpec.getAllWeaponSlotsCopy();
 
-		float[] totalFluxCapacityBonus = {1.0f, 0.0f};	// 0 mult, 1 flat
-		float[] totalFluxDissipationBonus = {1.0f, 0.0f};	// 0 mult, 1 flat
+		float[] totalFluxCapacityBonus = {1.0f, 0.0f};	// [0] mult, [1] flat
+		float[] totalFluxDissipationBonus = {1.0f, 0.0f};	// [0] mult, [1] flat
 		int fighterBayFlat = 0;
 		int slotPoints = hasConverterActivator ? ehm_slotPointsFromHullMods(variant) : 0;
 		

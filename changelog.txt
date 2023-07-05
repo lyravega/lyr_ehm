@@ -1,3 +1,9 @@
+Version 0.8.2
+
+- Fixed a vanilla issue with the weapon groups
+- Fixed a few tooltips
+
+
 Version 0.8.1
 
 A new hull modification which turns automated ships to normal, or normal ships to automated. Its tooltip is dynamic and will tell you about bonuses / penalties. Having the skill "Automated Ships" is required.
