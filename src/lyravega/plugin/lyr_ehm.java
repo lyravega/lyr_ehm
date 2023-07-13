@@ -1,11 +1,8 @@
 package lyravega.plugin;
 
-import static lyravega.listeners.lyr_colonyInteractionListener.attachColonyInteractionListener;
-import static lyravega.listeners.lyr_lunaSettingsListener.attachLunaListener;
 import static lyravega.listeners.lyr_shipTracker.enhancedEvents;
 import static lyravega.listeners.lyr_shipTracker.normalEvents;
 import static lyravega.listeners.lyr_shipTracker.suppressedEvents;
-import static lyravega.tools.lyr_uiTools.findUIClasses;
 
 import org.apache.log4j.Level;
 
@@ -18,12 +15,16 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.thoughtworks.xstream.XStream;
 
+import lyravega.listeners.lyr_colonyInteractionListener;
+import lyravega.listeners.lyr_lunaSettingsListener;
+import lyravega.listeners.lyr_tabListener;
 import lyravega.listeners.events.enhancedEvents;
 import lyravega.listeners.events.normalEvents;
 import lyravega.listeners.events.suppressedEvents;
 import lyravega.misc.lyr_internals;
 import lyravega.scripts.lyr_fieldRepairsScript;
 import lyravega.tools.lyr_logger;
+import lyravega.tools.lyr_uiTools;
 
 public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 	static {
@@ -32,17 +33,17 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 
 	@Override
 	public void onGameLoad(boolean newGame) {
-		findUIClasses();
+		lyr_uiTools.findUIClasses();
 		teachAbility();
 		teachBlueprints();
 		replaceFieldRepairsScript(false);
-		attachColonyInteractionListener(true);
+		attachShuntAccessListener();
 	}
 
 	@Override
 	public void onApplicationLoad() throws Exception {
 		registerHullMods();
-		attachLunaListener();
+		lyr_lunaSettingsListener.attachLunaSettingsListener();
 	}
 
 	@Override
@@ -50,6 +51,8 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 		x.alias("FieldRepairsScript", lyr_fieldRepairsScript.class);
 		// remember to use this for serialized shit
 		x.alias("data.abilities.ehm_ability", experimentalHullModifications.abilities.ehm_ability.class);
+		x.alias("lyr_tabListener", lyravega.listeners.lyr_tabListener.class);	// added transient, but just in case
+		x.alias("lyr_colonyInteractionListener", lyravega.listeners.lyr_colonyInteractionListener.class);	// added transient, but just in case
 	}
 
 	/**
@@ -120,5 +123,16 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 		}
 
 		logger.info(logPrefix + "Replaced 'FieldRepairsScript' with modified one");
+	}
+
+	public static void attachShuntAccessListener() {
+		lyr_tabListener.detach();
+		lyr_colonyInteractionListener.detach();
+
+		switch (lyr_lunaSettingsListener.shuntAvailability) {
+			case "Always": lyr_tabListener.attach(true); break;
+			case "Submarket": lyr_colonyInteractionListener.attach(true); break;
+			default: break;
+		}		
 	}
 }

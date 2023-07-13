@@ -182,4 +182,6 @@ ehm_settingsHeader,EHM,Header,EHM,,,,,
 ehm_showExperimentalFlavour,Add Flavour Text,Boolean,true,,"If enabled, adds ""(E)"" to ship's class text, changes the manufacturer of the ship to ""Experimental"" and adds a fluff paragraph about the manufacturer",,,
 ehm_playDrillSound,Play Drill Sound,Boolean,true,,Controls the drill sounds that plays when an experimental hull modification is installed/uninstalled,,,
 ehm_showFluff,Show Fluff Messages,Boolean,true,,"If enabled, the base hull modification will have randomized messages about the state of the ship and its upgrades",,,
-ehm_extraInfoInHullMods,Show Extra Information,Radio,Full,"Full, Partial, None","Activators can display extra information on their tooltips. [Full] displays extra fields even if there isn't any activated slot shunt. [Partial] limits it to the activated slot shunts. [None] disables these extra fields",,,
+ehm_extraInfoInHullMods,Show Extra Information,Radio,Full,"Full, Partial, None",Activators can display extra information on their tooltips. [Full] displays extra fields even if there isn't any activated slot shunt. [Partial] limits it to the activated slot shunts. [None] disables these extra fields,,,
+ehm_shuntAvailability,Shunt Availability,Radio,Always,"Always, Submarket","[Always]: Shunts are always available in the refit tab.
+[Submarket]: Shunts are only available when docked at a port.",,,

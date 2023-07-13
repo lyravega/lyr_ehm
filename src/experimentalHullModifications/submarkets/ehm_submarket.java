@@ -24,24 +24,24 @@ import lyravega.misc.lyr_internals;
  * @author lyravega
  */
 public class ehm_submarket extends BaseSubmarketPlugin {
-    public static final Set<String> shunts = new HashSet<String>();    // doing this here separately as there can be disabled/unused shunts
-    static {
-        for (WeaponSpecAPI weaponSpec : Global.getSettings().getAllWeaponSpecs()) {	// doing this here might be problematic, OK so far
-            if (!weaponSpec.hasTag(lyr_internals.tag.experimental)) continue;
+	public static final Set<String> shunts = new HashSet<String>();	// doing this here separately as there can be disabled/unused shunts
+	static {
+		for (WeaponSpecAPI weaponSpec : Global.getSettings().getAllWeaponSpecs()) {	// doing this here might be problematic, OK so far
+			if (!weaponSpec.hasTag(lyr_internals.tag.experimental)) continue;
 
-            shunts.add(weaponSpec.getWeaponId());
-        }
-    }
+			shunts.add(weaponSpec.getWeaponId());
+		}
+	}
 
 	@Override
 	public void init(SubmarketAPI submarket) {
 		this.submarket = submarket;
 		this.market = submarket.getMarket();
-        this.cargo = Global.getFactory().createCargo(true);
+		this.cargo = Global.getFactory().createCargo(true);
 
-        for (String shuntId : shunts) {
-            this.cargo.addWeapons(shuntId, 1000);
-        }
+		for (String shuntId : shunts) {
+			this.cargo.addWeapons(shuntId, 1000);
+		}
 		this.cargo.addMothballedShip(FleetMemberType.SHIP, "crig_Standard", "EHM Lab");
 		this.cargo.getMothballedShips().getMembersListCopy().iterator().next().getVariant().addMod(lyr_internals.id.hullmods.base);
 	}

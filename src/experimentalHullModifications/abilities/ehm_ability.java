@@ -8,19 +8,26 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
 import lyravega.listeners.lyr_colonyInteractionListener;
+import lyravega.listeners.lyr_lunaSettingsListener;
+import lyravega.listeners.lyr_tabListener;
 import lyravega.misc.lyr_internals;
 import lyravega.tools.lyr_logger;
 
 /**
  * A toggle ability that works in conjunction with {@link lyr_colonyInteractionListener interactionListener}
- * to determine whether to display the {@link experimentalHullModifications.submarkets.ehm_submarket shunt submarket} or not.
+ * or with (@link lyr_tabListener tabListener) to determine whether to display the
+ * {@link experimentalHullModifications.submarkets.ehm_submarket shunt submarket} or not.
  * <p> Submarket will only be attached/detached if this ability is toggled to prevent clutter.
  * @author lyravega
  */
 public class ehm_ability extends BaseToggleAbility implements lyr_logger {
 	@Override
 	protected String getActivationText() {
-		return "Looking for a port";
+		switch (lyr_lunaSettingsListener.shuntAvailability) {
+			case "Always": return "Ready to experiment";
+			case "Submarket": return "Looking for a port";
+			default: return null;
+		}
 	}
 	
 	@Override
@@ -33,19 +40,19 @@ public class ehm_ability extends BaseToggleAbility implements lyr_logger {
 
 	@Override
 	protected void activateImpl() {
-		if (!Global.getSector().getListenerManager().hasListenerOfClass(lyr_colonyInteractionListener.class)) {
-			Global.getSector().getListenerManager().addListener(new lyr_colonyInteractionListener(), true);
-
-			if (listenerInfo) logger.info(logPrefix + "Attached colony interaction listener");
+		switch (lyr_lunaSettingsListener.shuntAvailability) {
+			case "Always": lyr_tabListener.attach(true); break;
+			case "Submarket": lyr_colonyInteractionListener.attach(true); break;
+			default: break;
 		}
 	}
 	
 	@Override
 	protected void deactivateImpl() {
-		if (Global.getSector().getListenerManager().hasListenerOfClass(lyr_colonyInteractionListener.class)) {
-			Global.getSector().getListenerManager().removeListenerOfClass(lyr_colonyInteractionListener.class);
-
-			if (listenerInfo) logger.info(logPrefix + "Detached colony interaction listener");
+		switch (lyr_lunaSettingsListener.shuntAvailability) {
+			case "Always": lyr_tabListener.detach(); break;
+			case "Submarket": lyr_colonyInteractionListener.detach(); break;
+			default: break;
 		}
 	}
 	
@@ -65,11 +72,16 @@ public class ehm_ability extends BaseToggleAbility implements lyr_logger {
 	@Override
 	public void createTooltip(TooltipMakerAPI tooltip, boolean expanded) {
         Color highlightColor = Misc.getHighlightColor();
+		String desc;
+
+		switch (lyr_lunaSettingsListener.shuntAvailability) {
+			case "Always": desc = "While this ability is turned on, an excess amount of slot shunts will be made available in the refit tab. Unused ones will be cleaned-up."; break;
+			case "Submarket": desc = "While this ability is turned on, a submarket called Experimental Engineering will be visible on any docked port, and slot shunts will be available in the refit tab. Unused ones will be cleaned-up."; break;
+			default: desc = ""; break;
+		}
 
 		tooltip.addTitle(spec.getName(), highlightColor);
-		tooltip.addPara("While this mode is turned on, a submarket called %s where slot shunts can be found will be visible on any port.", 10f,
-        highlightColor,
-        "Experimental Engineering");
+		tooltip.addPara(desc, 10f);
 	}
 
 	public boolean hasTooltip() {

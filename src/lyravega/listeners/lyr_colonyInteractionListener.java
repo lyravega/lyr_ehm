@@ -17,13 +17,21 @@ import lyravega.tools.lyr_logger;
  * {@link experimentalHullModifications.submarkets.ehm_submarket experimental submarket}
  */
 public class lyr_colonyInteractionListener implements ColonyInteractionListener, lyr_logger {
-	public static void attachColonyInteractionListener(boolean isTransient) {	// used in plugin's onLoad()
+	public static void attach(boolean isTransient) {	// used in plugin's onLoad()
 		if (!Global.getSector().getPlayerFleet().getAbility(lyr_internals.id.ability).isActive()) return;
 	
 		if (!Global.getSector().getListenerManager().hasListenerOfClass(lyr_colonyInteractionListener.class)) {
 			Global.getSector().getListenerManager().addListener(new lyr_colonyInteractionListener(), isTransient);
 	
 			if (listenerInfo) logger.info(logPrefix + "Attached colony interaction listener");
+		}
+	}
+
+	public static void detach() {
+		if (Global.getSector().getListenerManager().hasListenerOfClass(lyr_colonyInteractionListener.class)) {
+			Global.getSector().getListenerManager().removeListenerOfClass(lyr_colonyInteractionListener.class);
+
+			if (listenerInfo) logger.info(logPrefix + "Detached colony interaction listener");
 		}
 	}
 

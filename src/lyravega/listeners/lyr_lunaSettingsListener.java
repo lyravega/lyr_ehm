@@ -13,6 +13,7 @@ import lyravega.listeners.events.customizableHullMod;
 import lyravega.misc.lyr_internals.id;
 import lyravega.misc.lyr_internals.tag;
 import lyravega.tools.lyr_logger;
+import lyravega.plugin.lyr_ehm;
 
 public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logger {
 	private static final Set<customizableHullMod> lunaMods = new HashSet<customizableHullMod>();
@@ -20,8 +21,9 @@ public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logge
 	public static boolean playDrillSound;
 	public static boolean showFluff;
 	public static String extraInfoInHullMods;
+	public static String shuntAvailability;
 
-	public static void attachLunaListener() {
+	public static void attachLunaSettingsListener() {
 		if (!LunaSettings.hasSettingsListenerOfClass(lyr_lunaSettingsListener.class)) {
 			LunaSettings.addSettingsListener(new lyr_lunaSettingsListener());
 
@@ -47,18 +49,20 @@ public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logge
 		playDrillSound = LunaSettings.getBoolean(id.mod, "ehm_playDrillSound");
 		showFluff = LunaSettings.getBoolean(id.mod, "ehm_showFluff");
 		extraInfoInHullMods = LunaSettings.getString(id.mod, "ehm_extraInfoInHullMods");
+		shuntAvailability = LunaSettings.getString(id.mod, "ehm_shuntAvailability");
 	}
 
 	@Override
 	public void settingsChanged(String modId) {
 		if (!modId.equals(id.mod)) return;
 		
-		cacheBasicSettings();	
+		cacheBasicSettings();
+		lyr_ehm.attachShuntAccessListener();	// to reset any possible changes on the shuntAvailability setting
 
 		for (customizableHullMod customizableMod: lunaMods) {
 			customizableMod.applyCustomization();
 		}
 
-		logger.info(logPrefix + "Settings changed, reapplying");
+		logger.info(logPrefix + "Settings reapplied");
 	}
 }
