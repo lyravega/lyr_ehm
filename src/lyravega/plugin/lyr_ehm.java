@@ -44,7 +44,7 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 	@Override
 	public void onApplicationLoad() throws Exception {
 		registerHullMods();
-		lyr_lunaSettingsListener.attachLunaSettingsListener();
+		lyr_lunaSettingsListener.attach();
 	}
 
 	@Override
@@ -136,6 +136,6 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 			case "Always": lyr_tabListener.attach(true); break;
 			case "Submarket": lyr_colonyInteractionListener.attach(true); break;
 			default: break;
-		}		
+		}
 	}
 }

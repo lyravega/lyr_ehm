@@ -23,7 +23,7 @@ public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logge
 	public static String extraInfoInHullMods;
 	public static String shuntAvailability, _shuntAvailability;
 
-	public static void attachLunaSettingsListener() {
+	public static void attach() {
 		if (!LunaSettings.hasSettingsListenerOfClass(lyr_lunaSettingsListener.class)) {
 			LunaSettings.addSettingsListener(new lyr_lunaSettingsListener());
 
@@ -31,6 +31,7 @@ public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logge
 		}
 
 		cacheBasicSettings();
+		checkShuntAvailability();
 		registerCustomizableMods();
 	}
 
@@ -55,7 +56,7 @@ public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logge
 		_shuntAvailability = shuntAvailability;
 		shuntAvailability = LunaSettings.getString(id.mod, "ehm_shuntAvailability");
 
-		if (_shuntAvailability.equals(shuntAvailability)) return;
+		if (_shuntAvailability == null || _shuntAvailability.equals(shuntAvailability)) return;
 
 		_shuntAvailability = shuntAvailability;
 		lyr_ehm.attachShuntAccessListener();
