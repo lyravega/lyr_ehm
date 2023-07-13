@@ -62,7 +62,7 @@ public class lyr_tabListener implements CoreUITabListener, CoreInteractionListen
 
 	//#region CoreInteractionListener
 	@Override
-	public void coreUIDismissed() {
+	public void coreUIDismissed() {	// this listener is actually not used at all but in case it works in the future, this block is ready to roll
 		// if (!tab.equals(targetTab)) return;
 
 		onClose();
@@ -82,10 +82,7 @@ public class lyr_tabListener implements CoreUITabListener, CoreInteractionListen
 	// END OF CoreInteractionListener
 
 	//#region EveryFrameScriptWithCleanup
-	private boolean isPaused = false;
-
 	protected void attachTabScript() {
-		this.isPaused = false;
 		if (lyr_scriptTools.getTransientScriptsOfClass(this.getClass()).isEmpty()) Global.getSector().addTransientScript(this);
 	}
 
@@ -102,13 +99,12 @@ public class lyr_tabListener implements CoreUITabListener, CoreInteractionListen
 		this.cleanup();
 	}
 
-	@Override public boolean isDone() { return isPaused; }
+	@Override public boolean isDone() { return false; }	// as the script is removed at the end, isDone never returns true
 
 	@Override public boolean runWhilePaused() { return true; }
 
 	@Override
 	public void cleanup() {
-		this.isPaused = true;
 		this.coreUIDismissed();
 	}
 	//#endregion
