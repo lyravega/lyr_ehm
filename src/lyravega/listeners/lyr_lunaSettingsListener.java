@@ -14,7 +14,7 @@ import lyravega.misc.lyr_internals.id;
 import lyravega.misc.lyr_internals.tag;
 import lyravega.tools.lyr_logger;
 
-public class lyr_lunaSettings implements LunaSettingsListener, lyr_logger {
+public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logger {
 	private static final Set<customizableHullMod> lunaMods = new HashSet<customizableHullMod>();
 	public static boolean showExperimentalFlavour;
 	public static boolean playDrillSound;
@@ -22,8 +22,8 @@ public class lyr_lunaSettings implements LunaSettingsListener, lyr_logger {
 	public static String extraInfoInHullMods;
 
 	public static void attachLunaListener() {
-		if (!LunaSettings.hasSettingsListenerOfClass(lyr_lunaSettings.class)) {
-			LunaSettings.addSettingsListener(new lyr_lunaSettings());
+		if (!LunaSettings.hasSettingsListenerOfClass(lyr_lunaSettingsListener.class)) {
+			LunaSettings.addSettingsListener(new lyr_lunaSettingsListener());
 
 			logger.info(logPrefix + "Attached LunaLib settings listener");
 		}

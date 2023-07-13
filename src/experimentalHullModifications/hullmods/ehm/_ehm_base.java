@@ -1,6 +1,6 @@
 package experimentalHullModifications.hullmods.ehm;
 
-import static lyravega.listeners.lyr_lunaSettings.showExperimentalFlavour;
+import static lyravega.listeners.lyr_lunaSettingsListener.showExperimentalFlavour;
 
 import java.awt.Color;
 import java.util.Collection;

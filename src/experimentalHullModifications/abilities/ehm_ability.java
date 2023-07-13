@@ -3,75 +3,21 @@ package experimentalHullModifications.abilities;
 import java.awt.Color;
 
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.campaign.CargoAPI;
-import com.fs.starfarer.api.campaign.CargoAPI.CargoItemQuantity;
-import com.fs.starfarer.api.campaign.PlayerMarketTransaction;
-import com.fs.starfarer.api.campaign.econ.MarketAPI;
-import com.fs.starfarer.api.campaign.listeners.ColonyInteractionListener;
 import com.fs.starfarer.api.impl.campaign.abilities.BaseToggleAbility;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
-import experimentalHullModifications.submarkets.ehm_submarket;
+import lyravega.listeners.lyr_colonyInteractionListener;
 import lyravega.misc.lyr_internals;
 import lyravega.tools.lyr_logger;
 
 /**
- * A toggle ability that works in conjunction with {@link ehm_interactionListener interactionListener}
+ * A toggle ability that works in conjunction with {@link lyr_colonyInteractionListener interactionListener}
  * to determine whether to display the {@link experimentalHullModifications.submarkets.ehm_submarket shunt submarket} or not.
  * <p> Submarket will only be attached/detached if this ability is toggled to prevent clutter.
  * @author lyravega
  */
 public class ehm_ability extends BaseToggleAbility implements lyr_logger {
-	public static void attachListener() {	// used in plugin's onLoad()
-		if (!Global.getSector().getPlayerFleet().getAbility(lyr_internals.id.ability).isActive()) return;
-
-		if (!Global.getSector().getListenerManager().hasListenerOfClass(ehm_interactionListener.class)) {
-			Global.getSector().getListenerManager().addListener(new ehm_interactionListener(), true);
-
-			if (marketInfo) logger.info(logPrefix + "Attached colony interaction listener");
-		}
-	}
-
-	/**
-	 * An inner listener class whose sole purpose is to attach/detach the
-	 * {@link experimentalHullModifications.submarkets.ehm_submarket experimental submarket}
-	 */
-	private static class ehm_interactionListener implements ColonyInteractionListener {
-		@Override
-		public void reportPlayerOpenedMarket(MarketAPI market) {
-			if (market == null) return;
-			if (!Global.getSector().getPlayerFleet().getAbility(lyr_internals.id.ability).isActive()) return;	// show submarket only if this ability is active
-			if (market.hasSubmarket(lyr_internals.id.submarket)) return;
-
-			market.addSubmarket(lyr_internals.id.submarket);
-
-			if (marketInfo) logger.info(logPrefix + "Attached experimental submarket");
-		}
-
-		@Override
-		public void reportPlayerClosedMarket(MarketAPI market) {
-			if (market == null) return;
-			if (!Global.getSector().getPlayerFleet().getAbility(lyr_internals.id.ability).isActive()) return;
-			if (!market.hasSubmarket(lyr_internals.id.submarket)) return;
-
-			market.removeSubmarket(lyr_internals.id.submarket);
-
-			CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
-			for (CargoItemQuantity<String> weaponCargo : playerCargo.getWeapons()) {
-				if (ehm_submarket.shunts.contains(weaponCargo.getItem())) playerCargo.removeWeapons(weaponCargo.getItem(), weaponCargo.getCount());
-			}
-
-			if (marketInfo) logger.info(logPrefix + "Detached experimental submarket");
-		}
-
-		@Override
-		public void reportPlayerMarketTransaction(PlayerMarketTransaction transaction) {}
-
-		@Override
-		public void reportPlayerOpenedMarketAndCargoUpdated(MarketAPI market) {}
-	}
-	
 	@Override
 	protected String getActivationText() {
 		return "Looking for a port";
@@ -87,19 +33,19 @@ public class ehm_ability extends BaseToggleAbility implements lyr_logger {
 
 	@Override
 	protected void activateImpl() {
-		if (!Global.getSector().getListenerManager().hasListenerOfClass(ehm_interactionListener.class)) {
-			Global.getSector().getListenerManager().addListener(new ehm_interactionListener(), true);
+		if (!Global.getSector().getListenerManager().hasListenerOfClass(lyr_colonyInteractionListener.class)) {
+			Global.getSector().getListenerManager().addListener(new lyr_colonyInteractionListener(), true);
 
-			if (marketInfo) logger.info(logPrefix + "Attached colony interaction listener");
+			if (listenerInfo) logger.info(logPrefix + "Attached colony interaction listener");
 		}
 	}
 	
 	@Override
 	protected void deactivateImpl() {
-		if (Global.getSector().getListenerManager().hasListenerOfClass(ehm_interactionListener.class)) {
-			Global.getSector().getListenerManager().removeListenerOfClass(ehm_interactionListener.class);
+		if (Global.getSector().getListenerManager().hasListenerOfClass(lyr_colonyInteractionListener.class)) {
+			Global.getSector().getListenerManager().removeListenerOfClass(lyr_colonyInteractionListener.class);
 
-			if (marketInfo) logger.info(logPrefix + "Detached colony interaction listener");
+			if (listenerInfo) logger.info(logPrefix + "Detached colony interaction listener");
 		}
 	}
 	

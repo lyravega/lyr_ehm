@@ -1,7 +1,7 @@
 package lyravega.plugin;
 
-import static experimentalHullModifications.abilities.ehm_ability.attachListener;
-import static lyravega.listeners.lyr_lunaSettings.attachLunaListener;
+import static lyravega.listeners.lyr_colonyInteractionListener.attachColonyInteractionListener;
+import static lyravega.listeners.lyr_lunaSettingsListener.attachLunaListener;
 import static lyravega.listeners.lyr_shipTracker.enhancedEvents;
 import static lyravega.listeners.lyr_shipTracker.normalEvents;
 import static lyravega.listeners.lyr_shipTracker.suppressedEvents;
@@ -35,8 +35,8 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 		findUIClasses();
 		teachAbility();
 		teachBlueprints();
-		replaceScript();
-		attachListener();
+		replaceFieldRepairsScript(false);
+		attachColonyInteractionListener(true);
 	}
 
 	@Override
@@ -109,13 +109,14 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 		} else logger.info(logPrefix + "Shunt market control was already known");
 	}
 
-	private static void replaceScript() {
+	private static void replaceFieldRepairsScript(boolean isTransient) {
 		if (Global.getSector().hasScript(FieldRepairsScript.class)) {
 			Global.getSector().removeScriptsOfClass(FieldRepairsScript.class);
 		}
 
 		if (!Global.getSector().hasScript(lyr_fieldRepairsScript.class)) {
-			Global.getSector().addScript(new lyr_fieldRepairsScript());
+			if (isTransient) Global.getSector().addTransientScript(new lyr_fieldRepairsScript());
+			else Global.getSector().addScript(new lyr_fieldRepairsScript());
 		}
 
 		logger.info(logPrefix + "Replaced 'FieldRepairsScript' with modified one");

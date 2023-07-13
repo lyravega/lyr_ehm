@@ -7,5 +7,5 @@ public interface lyr_logger {
 	public static final String logPrefix = "(Experimental Hull Modifications) - ";
 	public static final boolean eventInfo = false;
 	public static final boolean trackerInfo = false;
-	public static final boolean marketInfo = true;
+	public static final boolean listenerInfo = true;
 }
