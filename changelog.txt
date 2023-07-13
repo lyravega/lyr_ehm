@@ -1,7 +1,11 @@
 Version 0.8.2
 
+- Added a new setting for slot shunt availability, both options* rely on the ability
 - Fixed a vanilla issue with the weapon groups
 - Fixed a few tooltips
+
+* "Always" (new, default) option makes slot shunts available whenever refit tab is opened
+* "Submarket" (old) option makes slot shunts available only when docked at a port
 
 
 Version 0.8.1
