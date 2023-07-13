@@ -63,13 +63,13 @@ public class _ehm_wr_base extends _ehm_base implements normalEvents {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 
 		for (WeaponSlotAPI slot: hullSpec.getAllWeaponSlotsCopy()) {
+			if (slotSize != null && !slot.getSlotSize().equals(slotSize)) continue;
+
 			String slotId = slot.getId();
 			WeaponType convertFrom = slot.getWeaponType();
 
-			if (slotSize != null && !slot.getSlotSize().equals(slotSize)) continue;
-
 			if (conversions.containsKey(convertFrom)) {
-				WeaponType convertTo = (WeaponType) conversions.get(convertFrom); // Why is the typecast necessary here? Doesn't '.get()' return a 'WeaponType'?!?
+				WeaponType convertTo = conversions.get(convertFrom);
 				hullSpec.getWeaponSlot(slotId).setWeaponType(convertTo);
 			} 
 		}
