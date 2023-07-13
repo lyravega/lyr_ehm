@@ -7,6 +7,7 @@ import static lyravega.listeners.lyr_shipTracker.suppressedEvents;
 import org.apache.log4j.Level;
 
 import com.fs.starfarer.api.BaseModPlugin;
+import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.combat.HullModEffect;
@@ -126,6 +127,8 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 	}
 
 	public static void attachShuntAccessListener() {
+		if (Global.getCurrentState().equals(GameState.TITLE)) return;
+
 		lyr_tabListener.detach();
 		lyr_colonyInteractionListener.detach();
 

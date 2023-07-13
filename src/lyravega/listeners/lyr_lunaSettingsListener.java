@@ -21,7 +21,7 @@ public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logge
 	public static boolean playDrillSound;
 	public static boolean showFluff;
 	public static String extraInfoInHullMods;
-	public static String shuntAvailability;
+	public static String shuntAvailability, _shuntAvailability;
 
 	public static void attachLunaSettingsListener() {
 		if (!LunaSettings.hasSettingsListenerOfClass(lyr_lunaSettingsListener.class)) {
@@ -49,7 +49,16 @@ public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logge
 		playDrillSound = LunaSettings.getBoolean(id.mod, "ehm_playDrillSound");
 		showFluff = LunaSettings.getBoolean(id.mod, "ehm_showFluff");
 		extraInfoInHullMods = LunaSettings.getString(id.mod, "ehm_extraInfoInHullMods");
+	}
+
+	private static void checkShuntAvailability() {
+		_shuntAvailability = shuntAvailability;
 		shuntAvailability = LunaSettings.getString(id.mod, "ehm_shuntAvailability");
+
+		if (_shuntAvailability.equals(shuntAvailability)) return;
+
+		_shuntAvailability = shuntAvailability;
+		lyr_ehm.attachShuntAccessListener();
 	}
 
 	@Override
@@ -57,7 +66,7 @@ public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logge
 		if (!modId.equals(id.mod)) return;
 		
 		cacheBasicSettings();
-		lyr_ehm.attachShuntAccessListener();	// to reset any possible changes on the shuntAvailability setting
+		checkShuntAvailability();	// to reset any possible changes on the shuntAvailability setting
 
 		for (customizableHullMod customizableMod: lunaMods) {
 			customizableMod.applyCustomization();
