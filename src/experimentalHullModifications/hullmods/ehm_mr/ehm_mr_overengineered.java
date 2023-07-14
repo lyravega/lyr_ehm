@@ -75,7 +75,7 @@ public class ehm_mr_overengineered extends _ehm_base implements normalEvents, en
 			variant.setHullSpecAPI(lyr_hullSpec.retrieve());
 		}
 
-		stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullModSpecId, deploymentPointMalusPerSlotPoint*slotPointBonus.get(hullSize));
+		// stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullModSpecId, deploymentPointMalusPerSlotPoint*slotPointBonus.get(hullSize));
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION
@@ -92,7 +92,7 @@ public class ehm_mr_overengineered extends _ehm_base implements normalEvents, en
 			case 2: return slotPointBonus.get(HullSize.FRIGATE)+"/"+slotPointBonus.get(HullSize.DESTROYER)+"/"+slotPointBonus.get(HullSize.CRUISER)+"/"+slotPointBonus.get(HullSize.CAPITAL_SHIP)+"/ slot points";
 			case 3: return "slot point";
 			case 4: return "converter shunts";
-			case 5: return deploymentPointMalusPerSlotPoint+"";
+			case 5: return deploymentPointMalusPerSlotPoint+"";	// TODO move the variable to setting
 			default: return null;
 		}
 	}

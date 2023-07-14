@@ -30,6 +30,7 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
+import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
@@ -115,7 +116,8 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		float[] totalFluxCapacityBonus = {1.0f, 0.0f};	// [0] mult, [1] flat
 		float[] totalFluxDissipationBonus = {1.0f, 0.0f};	// [0] mult, [1] flat
 		int fighterBayFlat = 0;
-		int slotPoints = hasConverterActivator ? ehm_slotPointsFromHullMods(variant) : 0;
+		int slotPointsFromMods = hasConverterActivator ? ehm_slotPointsFromHullMods(variant) : 0;
+		int slotPoints = slotPointsFromMods;
 		
 		for (Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
 			WeaponSlotAPI slot = iterator.next();
@@ -166,14 +168,6 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 			}
 		}
 
-		// if (hasMutableActivator) {
-			stats.getFluxCapacity().modifyMult(hullmods.mutableshunt, totalFluxCapacityBonus[0]);
-			stats.getFluxCapacity().modifyFlat(hullmods.mutableshunt, totalFluxCapacityBonus[1]);
-			stats.getFluxDissipation().modifyMult(hullmods.mutableshunt, totalFluxDissipationBonus[0]);
-			stats.getFluxDissipation().modifyFlat(hullmods.mutableshunt, totalFluxDissipationBonus[1]);
-			stats.getNumFighterBays().modifyFlat(hullmods.mutableshunt, fighterBayFlat);
-		// }
-
 		for (Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
 			WeaponSlotAPI slot = iterator.next();
 			if (slot.isDecorative()) continue;
@@ -192,6 +186,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 					refreshRefit = ehm_convertSlot(hullSpec, shuntId, slotId);
 					break;
 				case diverters.large: case diverters.medium: case diverters.small:
+					slotPoints += diverterMap.get(shuntId);
 				case capacitors.large: case capacitors.medium: case capacitors.small:
 				case dissipators.large: case dissipators.medium: case dissipators.small:
 				case launchTubes.large:
@@ -200,6 +195,15 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 				default: break;
 			}
 		}
+
+		// if (hasMutableActivator) {
+			stats.getFluxCapacity().modifyMult(hullmods.mutableshunt, totalFluxCapacityBonus[0]);
+			stats.getFluxCapacity().modifyFlat(hullmods.mutableshunt, totalFluxCapacityBonus[1]);
+			stats.getFluxDissipation().modifyMult(hullmods.mutableshunt, totalFluxDissipationBonus[0]);
+			stats.getFluxDissipation().modifyFlat(hullmods.mutableshunt, totalFluxDissipationBonus[1]);
+			stats.getNumFighterBays().modifyFlat(hullmods.mutableshunt, fighterBayFlat);
+		// }
+		stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullmods.diverterandconverter, Math.max(0, Math.min(slotPointsFromMods, slotPointsFromMods - slotPoints)));
 
 		variant.setHullSpecAPI(hullSpec.retrieve()); 
 		if (refreshRefit && !isGettingRestored) { refreshRefit = false; commitChanges(); }

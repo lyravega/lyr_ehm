@@ -58,7 +58,7 @@ public class ehm_mr_auxilarygenerators extends _ehm_base implements normalEvents
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullModSpecId, deploymentPointMalusPerSlotPoint*slotPointBonus.get(hullSize));
+		// stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullModSpecId, deploymentPointMalusPerSlotPoint*slotPointBonus.get(hullSize));
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION
@@ -67,7 +67,7 @@ public class ehm_mr_auxilarygenerators extends _ehm_base implements normalEvents
 		switch (index) {
 			case 0: return "10/10/20/20";
 			case 1: return slotPointBonus.get(HullSize.FRIGATE)+"/"+slotPointBonus.get(HullSize.DESTROYER)+"/"+slotPointBonus.get(HullSize.CRUISER)+"/"+slotPointBonus.get(HullSize.CAPITAL_SHIP);
-			case 2: return deploymentPointMalusPerSlotPoint+"";
+			case 2: return deploymentPointMalusPerSlotPoint+"";	// TODO move the variable to setting
 			default: return null;
 		}
 	}
