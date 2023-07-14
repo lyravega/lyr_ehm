@@ -16,14 +16,14 @@ import lyravega.listeners.events.customizableHullMod;
 public class ehm_cec_greenEngines extends _ehm_ec_base implements customizableHullMod {
 	private static final String customEngineSpecId = ehm_cec_greenEngines.class.getSimpleName().toUpperCase();
 	private static final int engineStyleId = custom;
-	private static Object engineData;
+	private static Object engineStyleSpec;
 
 	@Override
 	public void applyCustomization() {
 		String settingIdPrefix = this.getClass().getSimpleName()+"_";
 
 		newCustomEngineSpec(settingIdPrefix, customEngineSpecId);
-		engineData = customEngineStyleSpecs.get(customEngineSpecId);
+		engineStyleSpec = customEngineStyleSpecs.get(customEngineSpecId);
 		this.hullModSpec.setDisplayName(getLunaName(settingIdPrefix));
 	}
 
@@ -38,6 +38,6 @@ public class ehm_cec_greenEngines extends _ehm_ec_base implements customizableHu
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
 
-		variant.setHullSpecAPI(ehm_applyEngineCosmetics(variant, engineStyleId, engineData));
+		variant.setHullSpecAPI(ehm_applyEngineCosmetics(variant, engineStyleId, engineStyleSpec));
 	}
 }

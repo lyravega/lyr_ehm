@@ -1,9 +1,9 @@
 {
 	id:"experimental",
-	"color":[255, 255, 0, 255],
-	"baseUIColor":[255, 255, 0, 255],
+	"color":[255, 238, 0, 255],
+	"baseUIColor":[255, 238, 0, 255],
 	"darkUIColor":[0, 0, 0, 255],
-	"gridUIColor":[192, 192, 0, 255],
+	"gridUIColor":[192, 179, 0, 255],
 	"displayName":"Experimental",
 	"displayNameWithArticle":"Experimental",
 	"logo":"data/graphics/experimental_logo.png",

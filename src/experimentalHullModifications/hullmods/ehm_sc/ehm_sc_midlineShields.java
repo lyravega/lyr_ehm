@@ -12,8 +12,8 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
  * @author lyravega
  */
 public class ehm_sc_midlineShields extends _ehm_sc_base {
-	private static Color innerColour = new Color(255,185,75,75);
-	private static Color ringColour = new Color(255,255,255,255);
+	private static final Color innerColour = new Color(255,185,75,75);
+	private static final Color ringColour = new Color(255,255,255,255);
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
