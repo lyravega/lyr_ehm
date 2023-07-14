@@ -1,5 +1,6 @@
 package experimentalHullModifications.hullmods.ehm_mr;
 
+import static lyravega.listeners.lyr_lunaSettingsListener.baseSlotPointPenalty;
 import static lyravega.tools.lyr_uiTools.commitChanges;
 import static lyravega.tools.lyr_uiTools.playSound;
 
@@ -10,7 +11,6 @@ import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
-import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
@@ -54,7 +54,6 @@ public class ehm_mr_overengineered extends _ehm_base implements normalEvents, en
 	// END OF CUSTOM EVENTS
 
 	public static final float ordnancePointBonus = 0.15f;
-	public static final int deploymentPointMalusPerSlotPoint = 1;
 	public static final Map<HullSize, Integer> slotPointBonus = new HashMap<HullSize, Integer>();
 	static {
 		slotPointBonus.put(HullSize.FIGHTER, 0);
@@ -74,8 +73,6 @@ public class ehm_mr_overengineered extends _ehm_base implements normalEvents, en
 			lyr_hullSpec.setOrdnancePoints((int) Math.round(ehm_hullSpecReference(variant).getOrdnancePoints(null)*(1+ordnancePointBonus)));
 			variant.setHullSpecAPI(lyr_hullSpec.retrieve());
 		}
-
-		// stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullModSpecId, deploymentPointMalusPerSlotPoint*slotPointBonus.get(hullSize));
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION
@@ -92,7 +89,9 @@ public class ehm_mr_overengineered extends _ehm_base implements normalEvents, en
 			case 2: return slotPointBonus.get(HullSize.FRIGATE)+"/"+slotPointBonus.get(HullSize.DESTROYER)+"/"+slotPointBonus.get(HullSize.CRUISER)+"/"+slotPointBonus.get(HullSize.CAPITAL_SHIP)+"/ slot points";
 			case 3: return "slot point";
 			case 4: return "converter shunts";
-			case 5: return deploymentPointMalusPerSlotPoint+"";	// TODO move the variable to setting
+			case 5: return "gained and utilized";
+			case 6: return "deployment point";
+			case 7: return baseSlotPointPenalty+"";
 			default: return null;
 		}
 	}

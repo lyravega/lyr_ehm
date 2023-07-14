@@ -7,7 +7,6 @@ import static lyravega.listeners.lyr_shipTracker.suppressedEvents;
 import org.apache.log4j.Level;
 
 import com.fs.starfarer.api.BaseModPlugin;
-import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.combat.HullModEffect;

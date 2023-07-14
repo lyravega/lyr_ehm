@@ -7,6 +7,7 @@ import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.
 import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.dissipatorMap;
 import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.launchTubeMap;
 import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.adapterMap;
+import static lyravega.listeners.lyr_lunaSettingsListener.baseSlotPointPenalty;
 import static lyravega.misc.lyr_utilities.generateChildLocation;
 import static lyravega.tools.lyr_uiTools.commitChanges;
 import static lyravega.tools.lyr_uiTools.playSound;
@@ -41,8 +42,6 @@ import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_diverterandconverter
 import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.childrenParameters;
 import lyravega.listeners.events.normalEvents;
 import lyravega.misc.lyr_internals;
-import lyravega.misc.lyr_tooltip.header;
-import lyravega.misc.lyr_tooltip.text;
 import lyravega.misc.lyr_internals.id.hullmods;
 import lyravega.misc.lyr_internals.id.shunts.adapters;
 import lyravega.misc.lyr_internals.id.shunts.capacitors;
@@ -50,6 +49,8 @@ import lyravega.misc.lyr_internals.id.shunts.converters;
 import lyravega.misc.lyr_internals.id.shunts.dissipators;
 import lyravega.misc.lyr_internals.id.shunts.diverters;
 import lyravega.misc.lyr_internals.id.shunts.launchTubes;
+import lyravega.misc.lyr_tooltip.header;
+import lyravega.misc.lyr_tooltip.text;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.proxies.lyr_weaponSlot;
 
@@ -203,7 +204,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 			stats.getFluxDissipation().modifyFlat(hullmods.mutableshunt, totalFluxDissipationBonus[1]);
 			stats.getNumFighterBays().modifyFlat(hullmods.mutableshunt, fighterBayFlat);
 		// }
-		stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullmods.diverterandconverter, Math.max(0, Math.min(slotPointsFromMods, slotPointsFromMods - slotPoints)));
+		stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullmods.diverterandconverter, Math.max(0, baseSlotPointPenalty*Math.min(slotPointsFromMods, slotPointsFromMods - slotPoints)));
 
 		variant.setHullSpecAPI(hullSpec.retrieve()); 
 		if (refreshRefit && !isGettingRestored) { refreshRefit = false; commitChanges(); }
@@ -275,12 +276,12 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 	 * Calculates slot point relevant stats, only to be used in the tooltips.
 	 * @param variant of the ship
 	 * @param initialBonus if the ship has any initial bonus slot points
-	 * @return int array, 0=total, 1=misc, 2=diverters, 3=converters
+	 * @return int array: 0=total, 1=fromHullMods, 2=fromDiverters, 3=forConverters, 4=deploymentPenalty
 	 */
 	protected static final int[] ehm_slotPointCalculation(ShipAPI ship) {
-		int diverterBonus = 0;
-		int converterMalus = 0;
-		int initialBonus = ehm_slotPointsFromHullMods(ship.getVariant());
+		int fromDiverters = 0;
+		int forConverters = 0;
+		int fromHullMods = ehm_slotPointsFromHullMods(ship.getVariant());
 
 		for (WeaponAPI weapon: ship.getAllWeapons()) {
 			if (!weapon.getSlot().isDecorative()) continue;
@@ -288,12 +289,14 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 
 			String weaponId = weapon.getId();
 
-			if (diverterMap.containsKey(weaponId)) diverterBonus += diverterMap.get(weaponId);
-			else if (converterMap.containsKey(weaponId)) converterMalus -= converterMap.get(weaponId).getChildCost();
+			if (diverterMap.containsKey(weaponId)) fromDiverters += diverterMap.get(weaponId);
+			else if (converterMap.containsKey(weaponId)) forConverters += converterMap.get(weaponId).getChildCost();
 		}
 
-		int[] pointArray = {initialBonus+converterMalus+diverterBonus, initialBonus, diverterBonus, converterMalus};
-		return pointArray;
+		int slotPointsTotal = fromHullMods+fromDiverters-forConverters;
+		int deploymentPenalty = Math.max(0, baseSlotPointPenalty*Math.min(fromHullMods, fromHullMods - slotPointsTotal));
+		int[] slotPointArray = {slotPointsTotal, fromHullMods, fromDiverters, forConverters, deploymentPenalty};
+		return slotPointArray;
 	}
 
 	/**

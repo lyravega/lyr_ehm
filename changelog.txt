@@ -1,6 +1,7 @@
 Version 0.8.2
 
 - Added a new setting for slot shunt availability, both options* rely on the ability
+- Added a new setting to control deployment point penalty for the hull modifications 
 - Fixed a vanilla issue with the weapon groups
 - Fixed a few tooltips
 

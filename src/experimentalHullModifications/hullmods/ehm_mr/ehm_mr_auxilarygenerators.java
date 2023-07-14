@@ -1,5 +1,6 @@
 package experimentalHullModifications.hullmods.ehm_mr;
 
+import static lyravega.listeners.lyr_lunaSettingsListener.baseSlotPointPenalty;
 import static lyravega.tools.lyr_uiTools.commitChanges;
 import static lyravega.tools.lyr_uiTools.playSound;
 
@@ -12,7 +13,6 @@ import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
-import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
@@ -45,7 +45,6 @@ public class ehm_mr_auxilarygenerators extends _ehm_base implements normalEvents
 	//#endregion
 	// END OF CUSTOM EVENTS
 
-	public static final int deploymentPointMalusPerSlotPoint = 1;
 	public static final Map<HullSize, Integer> slotPointBonus = new HashMap<HullSize, Integer>();
 	static {
 		slotPointBonus.put(HullSize.FIGHTER, 0);
@@ -58,7 +57,7 @@ public class ehm_mr_auxilarygenerators extends _ehm_base implements normalEvents
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		// stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullModSpecId, deploymentPointMalusPerSlotPoint*slotPointBonus.get(hullSize));
+		// DUMMY MOD / DATA CLASS, ACTIONS ARE HANDLED THROUGH ITS BASE
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION
@@ -67,7 +66,9 @@ public class ehm_mr_auxilarygenerators extends _ehm_base implements normalEvents
 		switch (index) {
 			case 0: return "10/10/20/20";
 			case 1: return slotPointBonus.get(HullSize.FRIGATE)+"/"+slotPointBonus.get(HullSize.DESTROYER)+"/"+slotPointBonus.get(HullSize.CRUISER)+"/"+slotPointBonus.get(HullSize.CAPITAL_SHIP);
-			case 2: return deploymentPointMalusPerSlotPoint+"";	// TODO move the variable to setting
+			case 2: return "gained and utilized";
+			case 3: return "deployment point";
+			case 4: return baseSlotPointPenalty+"";
 			default: return null;
 		}
 	}
