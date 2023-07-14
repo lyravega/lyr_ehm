@@ -3,6 +3,7 @@ package lyravega.listeners;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.HullModEffect;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
@@ -59,7 +60,7 @@ public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logge
 		if (_shuntAvailability == null || _shuntAvailability.equals(shuntAvailability)) return;
 
 		_shuntAvailability = shuntAvailability;
-		lyr_ehm.attachShuntAccessListener();
+		if (!Global.getCurrentState().equals(GameState.TITLE)) lyr_ehm.attachShuntAccessListener();
 	}
 
 	@Override

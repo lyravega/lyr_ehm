@@ -127,8 +127,6 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 	}
 
 	public static void attachShuntAccessListener() {
-		if (Global.getCurrentState().equals(GameState.TITLE)) return;
-
 		lyr_tabListener.detach();
 		lyr_colonyInteractionListener.detach();
 
