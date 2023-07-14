@@ -32,6 +32,7 @@ import lyravega.tools.lyr_logger;
  * @see {@link normalEvents} onInstall / onRemove events for hullmods
  * @see {@link enhancedEvents} onEnhance / onNormalize events for sMods
  * @see {@link suppressedEvents} onSuppress / onRestore events for hullmods
+ * @author lyravega
  */
 public class lyr_shipTracker implements lyr_logger {
 	private ShipVariantAPI variant = null;

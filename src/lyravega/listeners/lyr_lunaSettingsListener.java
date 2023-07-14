@@ -16,6 +16,15 @@ import lyravega.misc.lyr_internals.tag;
 import lyravega.tools.lyr_logger;
 import lyravega.plugin.lyr_ehm;
 
+/**
+ * Luna settings listener to utilize anything LunaLib offers for settings
+ * management. All settings are registered {@code onApplicationLoad()}.
+ * <p> Any hull modification bearing the tag {@link tag#customizable} that
+ * also implements the {@link customizableHullMod} interface are registered
+ * as such, and any changes will be applied on them without a reload or a
+ * restart.
+ * @author lyravega
+ */
 public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logger {
 	private static final Set<customizableHullMod> lunaMods = new HashSet<customizableHullMod>();
 	public static boolean showExperimentalFlavour;

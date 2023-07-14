@@ -16,12 +16,11 @@ import lyravega.tools.lyr_logger;
 /**
  * A toggle ability that works in conjunction with {@link lyr_colonyInteractionListener
  * interactionListener} or with {@link lyr_tabListener tabListener} to determine how to
- * display the slot shunts.
- * <p> The option {@link lyr_lunaSettingsListener#shuntAvailability shuntAvailability}
- * controls the display mode.
+ * display the slot shunts. The option {@link lyr_lunaSettingsListener#shuntAvailability
+ * shuntAvailability} controls the display mode.
  * <p> {@link experimentalHullModifications.submarkets.ehm_submarket Slot shunt submarket}
- * will only be displayed if relevant option is selected, and both settings' listeners
- * and the submarket are all transient.
+ * will only be displayed if relevant option is selected. Both settings' listeners and
+ * the submarket are all transient.
  * @author lyravega
  */
 public class ehm_ability extends BaseToggleAbility implements lyr_logger {

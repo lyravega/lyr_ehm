@@ -14,10 +14,9 @@ import org.lwjgl.util.vector.Vector2f;
 /**
  * A proxy-like class for {@link WeaponSlotAPI} that utilizes obfuscated 
  * methods without referring to them. 
- * <p> Some of the methods in the proxy may have API variants, but they're 
- * also implemented here simply to get suggestions. In addition, such 
- * methods avoid using the API variants even when their arguments and/or
- * return types aren't from an obfuscated class.
+ * <p> There are many bridge methods here that simply call the API methods
+ * as long as there is one. Proxied methods are implemented on a use-case
+ * basis.
  * <p> Use {@link #retrieve()} to grab the stored {@link WeaponSlotAPI}.
  * @author lyravega
  */

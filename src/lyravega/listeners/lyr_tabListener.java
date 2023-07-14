@@ -13,6 +13,13 @@ import lyravega.misc.lyr_internals;
 import lyravega.tools.lyr_logger;
 import lyravega.tools.lyr_scriptTools;
 
+/**
+ * A tab listener class that implements several interfaces. There is a
+ * method that triggers when the tabs are opened, but not when they are
+ * closed so a script is initialized when a tab is opened to determine
+ * when it is closed.
+ * @author lyravega
+ */
 public class lyr_tabListener implements CoreUITabListener, CoreInteractionListener, EveryFrameScriptWithCleanup, lyr_logger {
 	protected static final boolean useScript = true;	// CoreInteractionListener doesn't fire so a script keeps checking the tab
 	protected static final CoreUITabId targetTab = CoreUITabId.REFIT;
