@@ -118,7 +118,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		float[] totalFluxDissipationBonus = {1.0f, 0.0f};	// [0] mult, [1] flat
 		int fighterBayFlat = 0;
 		int slotPointsFromMods = hasConverterActivator ? ehm_slotPointsFromHullMods(variant) : 0;
-		int slotPoints = slotPointsFromMods;
+		int slotPoints = slotPointsFromMods;	// as hullMod methods are called several times, slotPoints accumulate correctly on subsequent call(s)
 		
 		for (Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
 			WeaponSlotAPI slot = iterator.next();
