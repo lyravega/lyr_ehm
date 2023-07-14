@@ -113,7 +113,7 @@ public class ehm_ar_diverterandconverter extends _ehm_ar_base {
 			if (pointArray[1] > 0) tooltip.addPara("Hull modifications are providing " + pointArray[1] + " slot points", 2f, header.sEffect_textColour, pointArray[1] + " slot points");
 			if (pointArray[2] > 0) tooltip.addPara("Diverter shunts are providing " + pointArray[2] + " slot points", 2f, header.sEffect_textColour, pointArray[2] + " slot points");
 			if (pointArray[3] > 0) tooltip.addPara("Converter shunts are utilizing " + pointArray[3] + " slot points", 2f, header.notApplicable_textColour, pointArray[3] + " slot points");
-			if (pointArray[4] > 0) tooltip.addPara("Ship will require an additional " + pointArray[4] + " deployment points", 2f, header.notApplicable_textColour, pointArray[4] + " deployment points");
+			if (baseSlotPointPenalty > 0 && pointArray[4] > 0) tooltip.addPara("Ship will require an additional " + pointArray[4] + " deployment points", 2f, header.notApplicable_textColour, pointArray[4] + " deployment points");
 
 			if (showInfo) {
 				Map<String, Integer> converters = ehm_shuntCount(ship, lyr_internals.tag.converterShunt);
