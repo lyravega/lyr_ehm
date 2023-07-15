@@ -16,7 +16,7 @@ import lyravega.misc.lyr_internals;
  * @author lyravega
  */
 public class ehm_wr_energyslotretrofit extends _ehm_wr_base {
-	private static final String extension = lyr_internals.id.hullmods.extensions.heavyenergyintegration;
+	private static final String extensionHullModId = lyr_internals.id.hullmods.extensions.heavyenergyintegration;
 	private static final String hbi = "hbi";
 
 	//#region CUSTOM EVENTS
@@ -24,7 +24,7 @@ public class ehm_wr_energyslotretrofit extends _ehm_wr_base {
 	public void onInstall(ShipVariantAPI variant) {
 		if (variant.getHullSpec().getBuiltInMods().contains(hbi) || variant.getPermaMods().contains(hbi)) {
 			variant.addSuppressedMod(hbi);
-			variant.addPermaMod(extension, false);
+			variant.addPermaMod(extensionHullModId, false);
 		}
 		super.onInstall(variant);
 	}
@@ -33,7 +33,7 @@ public class ehm_wr_energyslotretrofit extends _ehm_wr_base {
 	public void onRemove(ShipVariantAPI variant) {
 		if (variant.getSuppressedMods().contains(hbi)) {
 			variant.removeSuppressedMod(hbi);
-			variant.removePermaMod(extension);
+			variant.removePermaMod(extensionHullModId);
 		}
 		super.onRemove(variant);
 	}

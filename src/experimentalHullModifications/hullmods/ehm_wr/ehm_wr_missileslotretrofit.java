@@ -16,18 +16,25 @@ import lyravega.misc.lyr_internals;
  * @author lyravega
  */
 public class ehm_wr_missileslotretrofit extends _ehm_wr_base {
-	private static final String extension = lyr_internals.id.hullmods.extensions.expensivemissiles;
+	private static final String extensionHullModId = lyr_internals.id.hullmods.extensions.expensivemissiles;
+	private static final String hbi = "hbi";
 
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstall(ShipVariantAPI variant) {
-		variant.addPermaMod(extension, false);
+		if (variant.getHullSpec().getBuiltInMods().contains(hbi) || variant.getPermaMods().contains(hbi)) {
+			variant.addSuppressedMod(hbi);
+		}
+		variant.addPermaMod(extensionHullModId, false);
 		super.onInstall(variant);
 	}
 
 	@Override
 	public void onRemove(ShipVariantAPI variant) {
-		variant.removePermaMod(extension);
+		if (variant.getSuppressedMods().contains(hbi)) {
+			variant.removeSuppressedMod(hbi);
+		}
+		variant.removePermaMod(extensionHullModId);
 		super.onRemove(variant);
 	}
 	//#endregion
@@ -58,6 +65,7 @@ public class ehm_wr_missileslotretrofit extends _ehm_wr_base {
 			case 5: return "hybrid";
 			case 6: return "universal";
 			case 7: return "2/4/8 OP";
+			case 8: return "Heavy Ballistics Integration";
 			default: return null;
 		}
 	}

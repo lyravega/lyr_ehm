@@ -80,7 +80,9 @@ If the ship has a built-in %s hull modification, replaces it with an energy vers
 Mass Ballistic Retrofit,ehm_wr_ballisticslotretrofit,1,,Experimental,"special, ehm, ehm_wr, no_build_in, no_drop, no_drop_salvage",Retrofits,25000,,,,3,6,9,15,experimentalHullModifications.hullmods.ehm_wr.ehm_wr_ballisticslotretrofit,"Changes all of the %s slots to %s, %s and %s slots to %s types.","Changes all Energy slots to Ballistic slots, and all Missile slots to Composite slots.",,graphics/icons/skills/ranged_specialization.png
 Mass Missile Retrofit,ehm_wr_missileslotretrofit,1,,Experimental,"special, ehm, ehm_wr, no_build_in, no_drop, no_drop_salvage",Retrofits,25000,,,,6,12,18,30,experimentalHullModifications.hullmods.ehm_wr.ehm_wr_missileslotretrofit,"Adds %s support to every slot; %s slots become %s, %s slots become %s and %s slots become %s.
 
-Increases OP cost of all missile weapons by %s depending on the weapon size.","Changes all Energy slots to Ballistic slots, and all Missile slots to Composite slots.",,graphics/icons/skills/missile_specialization.png
+Increases OP cost of all missile weapons by %s depending on the weapon size.
+
+If the ship has a built-in %s hull modification, suppresses it.","Changes all Energy slots to Ballistic slots, and all Missile slots to Composite slots.",,graphics/icons/skills/missile_specialization.png
 Mass Universal Retrofit,ehm_wr_universalslotretrofit,1,,Experimental,"special, ehm, ehm_wr, no_build_in, no_drop, no_drop_salvage",Retrofits,25000,,TRUE,TRUE,8,16,24,40,experimentalHullModifications.hullmods.ehm_wr.ehm_wr_universalslotretrofit,Changes all slots to %s type.,Changes all slots to Universal ones.,,
 Mass Small Universal Retrofit,ehm_wr_universalsmallslotretrofit,1,,Experimental,"special, ehm, ehm_wr, no_build_in, no_drop, no_drop_salvage",Retrofits,25000,,,,1,2,3,5,experimentalHullModifications.hullmods.ehm_wr.ehm_wr_universalsmallslotretrofit,Changes all %s slots to %s type. Cheaper than other retrofits as this only affects small slots.,Changes all small slots to Universal ones.,,graphics/icons/skills/target_analysis.png
 ,,,,,,,,,,,,,,,,,,,
@@ -104,7 +106,7 @@ On other ships, provides automation. An %s can be installed, and the ship will r
 
 No matter the ship's new state, %s skill is necessary to properly utilize this hull modification.",Add/Remove ship automation.,,data/graphics/icons/aiswitch.png
 ,,,,,,,,,,,,,,,,,,,
-Heavy Energy Integration,ehm_mr_heavyenergyintegration,,,Experimental,,,,,TRUE,,0,0,0,0,experimentalHullModifications.hullmods.ehm_mr.ehm_mr_heavyenergyintegration,Reduces the ordnance point cost of large energy weapons by %s.,Reduces ordnance point cost of large energy weapons.,,graphics/hullmods/ballistics_integration.png
+Heavy Energy Integration,ehm_mr_heavyenergyintegration,,,Experimental,,,,,TRUE,,0,0,0,0,experimentalHullModifications.hullmods.ehm_mr.ehm_mr_heavyenergyintegration,Reduces the ordnance point cost of large energy weapons by %s.,Reduces ordnance point cost of large energy weapons.,,data/graphics/icons/energy_integration.png
 Mass Missile Retrofit Extension,ehm_mr_expensivemissiles,,,Experimental,,,,,TRUE,TRUE,0,0,0,0,experimentalHullModifications.hullmods.ehm_mr.ehm_mr_expensivemissiles,,,,
 ,,,,,,,,,,,,,,,,,,,
 Red Shields,ehm_sc_redShields,1,,Experimental,"special, ehm, ehm_sc, ehm_customizable, ehm_sr_require_shields, no_build_in, no_drop, no_drop_salvage",Cosmetics,25000,,,,0,0,0,0,experimentalHullModifications.hullmods.ehm_sc.ehm_csc_redShields,Customizable shield cosmetic that replaces shield colours with custom ones. Default colour is red.,"Customizable shield colours, default red.",,data/graphics/icons/redShields.png
