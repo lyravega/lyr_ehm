@@ -37,7 +37,7 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 		teachAbility();
 		teachBlueprints();
 		replaceFieldRepairsScript(false);
-		attachShuntAccessListener();
+		if (!newGame) attachShuntAccessListener();
 	}
 
 	@Override
