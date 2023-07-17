@@ -1,12 +1,14 @@
 package lyravega.proxies;
 
+import static lyravega.tools.lyr_reflectionTools.inspectMethod;
+
 import java.awt.Color;
 import java.lang.invoke.MethodHandle;
 
 import com.fs.starfarer.api.combat.ShieldAPI.ShieldType;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
 
-import lyravega.tools.lyr_proxyTools;
+import lyravega.tools.lyr_logger;
 
 /**
  * A proxy-like class for {@link ShieldSpecAPI} that utilizes obfuscated 
@@ -17,20 +19,23 @@ import lyravega.tools.lyr_proxyTools;
  * <p> Use {@link #retrieve()} to grab the stored {@link ShieldSpecAPI}.
  * @author lyravega
  */
-public final class lyr_shieldSpec extends lyr_proxyTools {
+public final class lyr_shieldSpec implements lyr_logger {
 	private ShieldSpecAPI shieldSpec;
-	private static MethodHandle clone = null;
-	// private static MethodHandle setRingColor = null;
-	// private static MethodHandle setInnerColor = null;
-	private static MethodHandle setType = null;
-	private static MethodHandle setFluxPerDamageAbsorbed = null;
-	private static MethodHandle setUpkeepCost = null;
-	private static MethodHandle setArc = null;
-	private static MethodHandle setPhaseCost = null;
-	private static MethodHandle setPhaseUpkeep = null;
+	static Class<?> shieldSpecClass;
+	private static MethodHandle clone;
+	// private static MethodHandle setRingColor;
+	// private static MethodHandle setInnerColor;
+	private static MethodHandle setType;
+	private static MethodHandle setFluxPerDamageAbsorbed;
+	private static MethodHandle setUpkeepCost;
+	private static MethodHandle setArc;
+	private static MethodHandle setPhaseCost;
+	private static MethodHandle setPhaseUpkeep;
 	
 	static {
 		try {
+			shieldSpecClass = inspectMethod("getShieldSpec", lyr_hullSpec.hullSpecClass).getReturnType();
+
 			clone = inspectMethod("clone", shieldSpecClass).getMethodHandle();
 			// setRingColor = inspectMethod("setRingColor", shieldSpecClass).getMethodHandle();
 			// setInnerColor = inspectMethod("setInnerColor", shieldSpecClass).getMethodHandle();

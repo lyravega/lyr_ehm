@@ -1,5 +1,7 @@
 package lyravega.proxies;
 
+import static lyravega.tools.lyr_reflectionTools.inspectMethod;
+
 import java.lang.invoke.MethodHandle;
 // import java.lang.invoke.MethodType;
 
@@ -7,7 +9,7 @@ import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
-import lyravega.tools.lyr_proxyTools;
+import lyravega.tools.lyr_logger;
 
 import org.lwjgl.util.vector.Vector2f;
 
@@ -20,19 +22,24 @@ import org.lwjgl.util.vector.Vector2f;
  * <p> Use {@link #retrieve()} to grab the stored {@link WeaponSlotAPI}.
  * @author lyravega
  */
-public final class lyr_weaponSlot extends lyr_proxyTools {
+public final class lyr_weaponSlot implements lyr_logger {
 	private WeaponSlotAPI weaponSlot;
-	private static MethodHandle clone = null;
-	private static MethodHandle setWeaponType = null; 
-	// private static MethodHandle isWeaponSlot = null;
-	private static MethodHandle setId = null;
-	private static MethodHandle setSlotSize = null;
-	// private static MethodHandle newNode = null;
-	private static MethodHandle setNode = null;
-	// private static MethodHandle setNode_alt = null;
+	static Class<?> weaponSlotClass;
+	static Class<?> nodeClass;
+	private static MethodHandle clone;
+	private static MethodHandle setWeaponType; 
+	// private static MethodHandle isWeaponSlot;
+	private static MethodHandle setId;
+	private static MethodHandle setSlotSize;
+	// private static MethodHandle newNode;
+	private static MethodHandle setNode;
+	// private static MethodHandle setNode_alt;
 
 	static {
 		try {
+			weaponSlotClass = inspectMethod(true, "getWeaponSlot", 1, lyr_hullSpec.hullSpecClass).getReturnType();
+			nodeClass = inspectMethod("getNode", weaponSlotClass).getReturnType();
+
 			clone = inspectMethod("clone", weaponSlotClass).getMethodHandle();
 			setWeaponType = inspectMethod("setWeaponType", weaponSlotClass, WeaponType.class).getMethodHandle();
 			// isWeaponSlot = inspectMethod("isWeaponSlot", weaponSlotClass).getMethodHandle();

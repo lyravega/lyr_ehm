@@ -1,15 +1,18 @@
 package lyravega.proxies;
 
+import static lyravega.tools.lyr_reflectionTools.inspectMethod;
+
 import java.lang.invoke.MethodHandle;
 import java.util.List;
 import java.util.Set;
 
+import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.characters.MutableCharacterStatsAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
-import lyravega.tools.lyr_proxyTools;
+import lyravega.tools.lyr_logger;
 
 /**
  * A proxy-like class for {@link ShipHullSpecAPI} that utilizes obfuscated 
@@ -20,32 +23,35 @@ import lyravega.tools.lyr_proxyTools;
  * <p> Use {@link #retrieve()} to grab the stored {@link ShipHullSpecAPI}.
  * @author lyravega
  */
-public final class lyr_hullSpec extends lyr_proxyTools {
+public final class lyr_hullSpec implements lyr_logger {
 	private ShipHullSpecAPI hullSpec;
-	private lyr_weaponSlot weaponSlot = null;
-	private lyr_shieldSpec shieldSpec = null;
-	private List<Object> engineSlots = null;
-	private static MethodHandle clone = null;
-	private static MethodHandle getEngineSlots = null;
-	private static MethodHandle setShieldSpec = null;
-	// private static MethodHandle addBuiltInMod = null;
-	// private static MethodHandle setManufacturer = null;
-	// private static MethodHandle setDescriptionPrefix = null;
-	// private static MethodHandle setShipSystemId = null;
-	private static MethodHandle addWeaponSlot = null;
-	// private static MethodHandle addBuiltInWeapon = null;
-	private static MethodHandle addBuiltInWing = null;
-	// private static MethodHandle setShipDefenseId = null;
-	// private static MethodHandle getOrdnancePoints = null;
-	private static MethodHandle setOrdnancePoints = null;
-	// private static MethodHandle setDParentHullId = null;
-	private static MethodHandle setBaseHullId = null;
-	// private static MethodHandle setRestoreToBase = null;
-	// private static MethodHandle getBaseValue = null;
-	private static MethodHandle setBaseValue = null;
+	private lyr_weaponSlot weaponSlot;
+	private lyr_shieldSpec shieldSpec;
+	private List<Object> engineSlots;
+	static Class<?> hullSpecClass;
+	private static MethodHandle clone;
+	private static MethodHandle getEngineSlots;
+	private static MethodHandle setShieldSpec;
+	// private static MethodHandle addBuiltInMod;
+	// private static MethodHandle setManufacturer;
+	// private static MethodHandle setDescriptionPrefix;
+	// private static MethodHandle setShipSystemId;
+	private static MethodHandle addWeaponSlot;
+	// private static MethodHandle addBuiltInWeapon;
+	private static MethodHandle addBuiltInWing;
+	// private static MethodHandle setShipDefenseId;
+	// private static MethodHandle getOrdnancePoints;
+	private static MethodHandle setOrdnancePoints;
+	// private static MethodHandle setDParentHullId;
+	private static MethodHandle setBaseHullId;
+	// private static MethodHandle setRestoreToBase;
+	// private static MethodHandle getBaseValue;
+	private static MethodHandle setBaseValue;
 
 	static {
 		try {
+			hullSpecClass = Global.getSettings().getAllShipHullSpecs().iterator().next().getClass();
+
 			clone = inspectMethod("clone", hullSpecClass).getMethodHandle();
 			getEngineSlots = inspectMethod("getEngineSlots", hullSpecClass).getMethodHandle();
 			setShieldSpec = inspectMethod("setShieldSpec", hullSpecClass).getMethodHandle();
@@ -267,7 +273,7 @@ public final class lyr_hullSpec extends lyr_proxyTools {
 	@Deprecated
 	public void addWeaponSlot(WeaponSlotAPI weaponSlot) {
 		try {
-			addWeaponSlot.invoke(hullSpec, weaponSlotClass.cast(weaponSlot));
+			addWeaponSlot.invoke(hullSpec, lyr_weaponSlot.weaponSlotClass.cast(weaponSlot));
 		} catch (Throwable t) {
 			logger.error(logPrefix+"Failed to use 'addWeaponSlot()' in 'lyr_hullSpec'", t);
 		}
@@ -279,7 +285,7 @@ public final class lyr_hullSpec extends lyr_proxyTools {
 	 */
 	public void addWeaponSlot(lyr_weaponSlot weaponSlot) {
 		try {
-			addWeaponSlot.invoke(hullSpec, weaponSlotClass.cast(weaponSlot.retrieve()));
+			addWeaponSlot.invoke(hullSpec, lyr_weaponSlot.weaponSlotClass.cast(weaponSlot.retrieve()));
 		} catch (Throwable t) {
 			logger.error(logPrefix+"Failed to use 'addWeaponSlot()' in 'lyr_hullSpec'", t);
 		}

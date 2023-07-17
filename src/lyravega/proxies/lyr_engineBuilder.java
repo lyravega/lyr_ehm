@@ -1,13 +1,16 @@
 package lyravega.proxies;
 
+import static lyravega.tools.lyr_reflectionTools.inspectMethod;
+
 import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.json.JSONObject;
 
-import lyravega.tools.lyr_proxyTools;
+import lyravega.tools.lyr_logger;
 
 /**
  * A proxy-like class for... engine builder? When {@code getEngineSlots()}
@@ -19,13 +22,33 @@ import lyravega.tools.lyr_proxyTools;
  * javadocs to hopefully properly describe what they do.
  * @author lyravega
  */
-public final class lyr_engineBuilder extends lyr_proxyTools {
+public final class lyr_engineBuilder implements lyr_logger {
 	private Object engineBuilder;
-	private static MethodHandle clone = null;
-	private static MethodHandle setEngineStyleId = null;
-	private static MethodHandle setEngineStyleSpecFromJSON = null;
-	private static MethodHandle newEngineStyleSpec = null;
-	private static MethodHandle setEngineStyleSpec = null;
+	static Class<?> engineBuilderClass;
+	static Class<?> engineStyleIdEnum;
+	static Class<?> engineStyleSpecClass;
+	private static MethodHandle clone;
+	private static MethodHandle setEngineStyleId;
+	private static MethodHandle setEngineStyleSpecFromJSON;
+	private static MethodHandle newEngineStyleSpec;
+	private static MethodHandle setEngineStyleSpec;
+
+	static {
+		try {
+			engineBuilderClass = inspectMethod("addEngineSlot", lyr_hullSpec.hullSpecClass).getParameterTypes()[0];
+			for (Class<?> clazz : engineBuilderClass.getDeclaredClasses()) {
+				if (clazz.isEnum()) engineStyleIdEnum = clazz; else engineStyleSpecClass = clazz;
+			}
+
+			clone = inspectMethod("clone", engineBuilderClass).getMethodHandle();
+			setEngineStyleId = inspectMethod(engineBuilderClass, void.class, engineStyleIdEnum).getMethodHandle();
+			setEngineStyleSpecFromJSON = inspectMethod(engineBuilderClass, void.class, JSONObject.class, String.class).getMethodHandle();
+			newEngineStyleSpec = MethodHandles.lookup().findConstructor(engineStyleSpecClass, MethodType.methodType(void.class, JSONObject.class, String.class));
+			setEngineStyleSpec = inspectMethod(engineBuilderClass, void.class, engineStyleSpecClass).getMethodHandle();
+		} catch (Throwable t) {
+			logger.fatal(logPrefix+"Failed to find a method in 'lyr_engineBuilder'", t);
+		}
+	}
 
 	public static enum engineStyleIds { ;
 		public static final int lowTech = 0;
@@ -45,17 +68,6 @@ public final class lyr_engineBuilder extends lyr_proxyTools {
 
 	public static final Map<String, Object> customEngineStyleSpecs = new HashMap<String, Object>();
 
-	static {
-		try {
-			clone = inspectMethod("clone", engineBuilderClass).getMethodHandle();
-			setEngineStyleId = inspectMethod(engineBuilderClass, void.class, engineStyleIdEnum).getMethodHandle();
-			setEngineStyleSpecFromJSON = inspectMethod(engineBuilderClass, void.class, JSONObject.class, String.class).getMethodHandle();
-			newEngineStyleSpec = lookup.findConstructor(engineStyleSpecClass, MethodType.methodType(void.class, JSONObject.class, String.class));
-			setEngineStyleSpec = inspectMethod(engineBuilderClass, void.class, engineStyleSpecClass).getMethodHandle();
-		} catch (Throwable t) {
-			logger.fatal(logPrefix+"Failed to find a method in 'lyr_engineBuilder'", t);
-		}
-	}
 	
 	/**
 	 * Creates a new instance for the passed {@link Object}, and 
