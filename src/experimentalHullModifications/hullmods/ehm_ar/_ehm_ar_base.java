@@ -8,7 +8,6 @@ import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.
 import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.launchTubeMap;
 import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.adapterMap;
 import static lyravega.listeners.lyr_lunaSettingsListener.baseSlotPointPenalty;
-import static lyravega.misc.lyr_utilities.generateChildLocation;
 import static lyravega.tools.lyr_uiTools.commitVariantChanges;
 import static lyravega.tools.lyr_uiTools.playDrillSound;
 
@@ -51,6 +50,7 @@ import lyravega.misc.lyr_internals.id.shunts.diverters;
 import lyravega.misc.lyr_internals.id.shunts.launchTubes;
 import lyravega.misc.lyr_tooltip.header;
 import lyravega.misc.lyr_tooltip.text;
+import lyravega.misc.lyr_vectorUtility;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.proxies.lyr_weaponSlot;
 
@@ -217,7 +217,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		for (String childId: childrenParameters.getChildren()) { // childId and childSlotId are not the same, be aware
 			lyr_weaponSlot childSlot = parentSlot.clone();
 			String childSlotId = lyr_internals.affix.adaptedSlot + slotId + childId; // also used as nodeId because nodeId isn't visible
-			Vector2f childSlotLocation = generateChildLocation(parentSlot.getLocation(), parentSlot.getAngle(), childrenParameters.getChildOffset(childId));
+			Vector2f childSlotLocation = lyr_vectorUtility.generateChildLocation(parentSlot.getLocation(), parentSlot.getAngle(), childrenParameters.getChildOffset(childId));
 			WeaponSize childSlotSize = childrenParameters.getChildSize(childId);
 
 			childSlot.setId(childSlotId);

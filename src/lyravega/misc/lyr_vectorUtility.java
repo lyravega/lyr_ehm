@@ -7,7 +7,7 @@ import org.lwjgl.util.vector.Vector2f;
  * calculate the new locations of child slots.
  * @author lyravega
  */
-public class lyr_utilities {
+public class lyr_vectorUtility {
 	private static final double PI = Math.PI;
 
 	private static double reduceSinAngle(double radians)
