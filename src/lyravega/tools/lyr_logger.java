@@ -8,4 +8,5 @@ public interface lyr_logger {
 	public static final boolean eventInfo = false;
 	public static final boolean trackerInfo = false;
 	public static final boolean listenerInfo = true;
+	public static final boolean debug = true;
 }

@@ -9,8 +9,8 @@ import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.
 import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.adapterMap;
 import static lyravega.listeners.lyr_lunaSettingsListener.baseSlotPointPenalty;
 import static lyravega.misc.lyr_utilities.generateChildLocation;
-import static lyravega.tools.lyr_uiTools.commitChanges;
-import static lyravega.tools.lyr_uiTools.playSound;
+import static lyravega.tools.lyr_uiTools.commitVariantChanges;
+import static lyravega.tools.lyr_uiTools.playDrillSound;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -69,13 +69,13 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstall(ShipVariantAPI variant) {
-		commitChanges(); playSound();
+		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
 	public void onRemove(ShipVariantAPI variant) {
 		variant.setHullSpecAPI(ehm_activatorRemoval_lazy(variant));
-		commitChanges(); playSound();
+		commitVariantChanges(); playDrillSound();
 	}
 	//#endregion
 	// END OF CUSTOM EVENTS
@@ -207,7 +207,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullmods.diverterandconverter, Math.max(0, baseSlotPointPenalty*Math.min(slotPointsFromMods, slotPointsFromMods - slotPoints)));
 
 		variant.setHullSpecAPI(hullSpec.retrieve()); 
-		if (refreshRefit && !isGettingRestored) { refreshRefit = false; commitChanges(); }
+		if (refreshRefit && !isGettingRestored) { refreshRefit = false; commitVariantChanges(); }
 	}
 
 	private static final boolean ehm_adaptSlot(lyr_hullSpec hullSpec, String shuntId, String slotId) {

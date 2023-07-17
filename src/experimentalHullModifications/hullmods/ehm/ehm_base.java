@@ -2,8 +2,8 @@ package experimentalHullModifications.hullmods.ehm;
 
 import static experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base.ehm_processShunts;
 import static lyravega.listeners.lyr_lunaSettingsListener.showFluff;
-import static lyravega.tools.lyr_uiTools.commitChanges;
-import static lyravega.tools.lyr_uiTools.playSound;
+import static lyravega.tools.lyr_uiTools.commitVariantChanges;
+import static lyravega.tools.lyr_uiTools.playDrillSound;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
@@ -43,7 +43,7 @@ public class ehm_base extends _ehm_tracker {
 			
 			if (!isBasePerma) {	// to make this a one-time commit, and to avoid re-committing if/when the ship is getting restored
 				variant.addPermaMod(lyr_internals.id.hullmods.base, false);
-				commitChanges(); playSound();
+				commitVariantChanges(); playDrillSound();
 			}
 		}
 

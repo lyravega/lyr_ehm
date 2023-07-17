@@ -1,19 +1,18 @@
 package lyravega.tools;
 
 import static lyravega.listeners.lyr_lunaSettingsListener.playDrillSound;
-import static lyravega.tools.lyr_scriptTools.refreshRefit;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodType;
 import java.util.List;
 
-import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.campaign.CampaignUIAPI;
 import com.fs.starfarer.api.campaign.CoreUITabId;
-import com.fs.starfarer.api.campaign.InteractionDialogAPI;
 
 import lyravega.misc.lyr_internals;
+import lyravega.proxies.ui.lyr_campaignUI;
+import lyravega.proxies.ui.lyr_refitPanel;
+import lyravega.proxies.ui.lyr_shipDisplay;
 
 /**
  * Provides specialized MethodHandles and a few methods that are 
@@ -24,126 +23,83 @@ import lyravega.misc.lyr_internals;
  * too, as the relevant classes are known here. 
  * @author lyravega
  */
-@SuppressWarnings("unused")
 public class lyr_uiTools extends lyr_reflectionTools {
-	private static Class<?> campaignUIClass;
-	private static Class<?> screenPanelClass;
-	private static Class<?> encounterDialogueClass;
-	private static Class<?> coreClass;
-	private static Class<?> wrapperClass;
-	private static Class<?> refitTabClass;
-	private static Class<?> refitPanelClass;
-	private static Class<?> designDisplayClass;
-	private static Class<?> shipDisplayClass;
-
-	private static MethodHandle campaignUI_getScreenPanel;
-	private static MethodHandle campaignUI_getEncounterDialog;
-	private static MethodHandle campaignUI_getCore;
-	private static MethodHandle encounterDialog_getCoreUI;
-	private static MethodHandle refitTab_getRefitPanel;
-	private static MethodHandle refitPanel_getDesignDisplay;
-	private static MethodHandle refitPanel_getShipDisplay;
-	
-	private static MethodHandle refitPanel_saveCurrentVariant;
-	private static MethodHandle refitPanel_getMember;
-	private static MethodHandle refitPanel_syncWithCurrentVariant;
-	private static MethodHandle shipDisplay_setFleetMember;
-	private static MethodHandle designDisplay_undo;
-
-	private static MethodHandle shipDisplay_getCurrentVariant;
-	private static MethodHandle refitPanel_addAllWeaponsFromVariantToCargo;
-
-	private static MethodHandle refitPanel_setEditedSinceLoad;
-	private static MethodHandle refitPanel_setEditedSinceSave;
-
-	private static MethodHandle core_getCurrentTab;
-
 	/**
-	 * A simple method that initializes an every frame script that waits
-	 * till the relevant UI parts are available and can be fished for classes
+	 * Just a simple check to see if it is the refit tab or not.
+	 * @return true if it is refit tab, false otherwise
 	 */
-	public static void findUIClasses() {
-		logger.info(logPrefix + "Initializing UI class finder");
-
-		new _lyr_delayedFinder();
+	public static boolean isRefitTab() {
+		CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
+		return (tab != null && tab.equals(CoreUITabId.REFIT));
 	}
 
 	/**
-	 * An everyFrameScript to delay the process of finding the obfuscated
-	 * classes and providing methodHandles for them. Normally, it is not
-	 * needed, however one class I call as 'wrapper' has no easy way to
-	 * get access to, so need to delay the process till there is an 
-	 * object instance of the class. 
-	 * <p> Alternatively, a recursive search can be done to skip that
-	 * class and find a grandchild directly from a known class, but that
-	 * is sub-optimal. 
+	 * Plays a hardcoded UI sound effect, used in {@code onRemove()}
+	 * and {@code onInstall()}
 	 */
-	private static class _lyr_delayedFinder implements EveryFrameScript {
-		private boolean isDone = false;
+	public static void playDrillSound() {
+		if (!isRefitTab() || !playDrillSound) return;
+		Global.getSoundPlayer().playUISound(lyr_internals.id.drillSound, 1.0f, 0.75f);
+	}
 
-		public _lyr_delayedFinder() {
-			if (!Global.getSector().hasTransientScript(this.getClass())) {
-				Global.getSector().addTransientScript(this);
-			
-				logger.info(logPrefix+"Waiting to find the UI classes");
-			}
+	/**
+	 * This method will immediately save the refit variant and refresh the 
+	 * UI by utilizing the available UI methods. Used to be called as 
+	 * {@code refreshRefit()}, however the new name suits it more.
+	 * <p> Refresh is achieved by executing an 'undo-like' method. Before,
+	 * it was using the 'undo' function directly, however ships with
+	 * officers were acting weirdly. Now, the 'undo-like' method is
+	 * utilized, however ships with officers do not clear the undo button
+	 * properly for some reason. 
+	 * <p> By committing changes immediately and using 'undo' up and thus 
+	 * disabling it, some odd unwanted behaviour and problems are dealt 
+	 * with as a side effect. Even with problematic ships where 'undo' is
+	 * not cleared properly, it'll have no effect, so it should be safe.
+	 */
+	public static void commitVariantChanges() {
+		if (!isRefitTab()) return; // necessary for calls that are not from 'onInstalled()' or 'onRemoved()'; that originate due to 'onGameLoad()'
+		try {
+			lyr_refitPanel refitPanel = new lyr_campaignUI().getCore().getCurrentTab().getRefitPanel(); 
+			lyr_shipDisplay shipDisplay = refitPanel.getShipDisplay();
+
+			refitPanel.saveCurrentVariant();
+			shipDisplay.setFleetMember(null, null);
+			refitPanel.syncWithCurrentVariant();
+			shipDisplay.setFleetMember(refitPanel.getMember(), null);
+			refitPanel.syncWithCurrentVariant();
+			refitPanel.setEditedSinceLoad(false);
+			refitPanel.setEditedSinceSave(false);
+		} catch (Throwable t) {
+			// refreshRefit();
+			logger.error(logPrefix+"Failure in 'commitChanges()'");
 		}
+	}
 
-		@Override
-		public void advance(float amount) {
-			try {
-				// due to 'wrapperClass' not being extractable, need to wait for the refit tab
-				if (!isRefitTab()) return;
+	/**
+	 * Sets the 'undo' button as inactive. It is necessary for any commits
+	 * that were done remotely and not from the {@code onRemove()} and 
+	 * {@code onInstalled()} methods.
+	 * <p> Ideally, the external commit call should also set the 'undo' 
+	 * button as inactive, however if the hullSpecs of the variants are
+	 * set after the commit call is being made, then the 'undo' button 
+	 * will not be set as inactive. 
+	 * <p> In essence, this method serves as a supplement for that issue, 
+	 * to be used from {@code onRemove()} and {@code onInstalled()} methods 
+	 * if {@code commitChanges()} is not called from those two.
+	 * 
+	 * @deprecated - if the hullmod menu is open, will not clear the undo
+	 * properly, so it is somewhat redundant
+	 */
+	@Deprecated
+	public static void clearUndo() {
+		if (!isRefitTab()) return; // just in case
+		try {
+			lyr_refitPanel refitPanel = new lyr_campaignUI().getCore().getCurrentTab().getRefitPanel();
 
-				campaignUIClass = Global.getSector().getCampaignUI().getClass();
-				encounterDialogueClass = inspectMethod("getEncounterDialog", campaignUIClass).getReturnType();
-				screenPanelClass = inspectMethod("getScreenPanel", campaignUIClass).getReturnType();
-				coreClass = inspectMethod("getCore", campaignUIClass).getReturnType();
-				refitPanelClass = inspectMethod("notifyFleetMemberChanged", campaignUIClass).getParameterTypes()[0];
-				refitTabClass = inspectMethod("getRefitTab", refitPanelClass).getReturnType();
-				designDisplayClass = inspectMethod("getDesignDisplay", refitPanelClass).getReturnType();
-				shipDisplayClass = inspectMethod("getShipDisplay", refitPanelClass).getReturnType();
-
-				campaignUI_getScreenPanel = inspectMethod("getScreenPanel", campaignUIClass).getMethodHandle();
-				campaignUI_getEncounterDialog = inspectMethod("getEncounterDialog", campaignUIClass).getMethodHandle(); // same as 'Global.getSector().getCampaignUI().getCurrentInteractionDialog();'
-				campaignUI_getCore = inspectMethod("getCore", campaignUIClass).getMethodHandle();
-
-				core_getCurrentTab = inspectMethod("getCurrentTab", coreClass).getMethodHandle();
-
-				encounterDialog_getCoreUI = inspectMethod("getCoreUI", encounterDialogueClass).getMethodHandle();
-
-				refitPanel_getDesignDisplay = inspectMethod("getDesignDisplay", refitPanelClass).getMethodHandle();
-				refitPanel_getShipDisplay = inspectMethod("getShipDisplay", refitPanelClass).getMethodHandle();
-				refitPanel_saveCurrentVariant = inspectMethod("saveCurrentVariant", refitPanelClass).getMethodHandle(); // there is an overload for this, beware
-				refitPanel_getMember = inspectMethod("getMember", refitPanelClass).getMethodHandle();
-				refitPanel_syncWithCurrentVariant = inspectMethod("syncWithCurrentVariant", refitPanelClass).getMethodHandle();
-				refitPanel_setEditedSinceLoad = inspectMethod("setEditedSinceLoad", refitPanelClass).getMethodHandle();
-				refitPanel_setEditedSinceSave = inspectMethod("setEditedSinceSave", refitPanelClass).getMethodHandle();
-				refitPanel_addAllWeaponsFromVariantToCargo = inspectMethod("addAllWeaponsFromVariantToCargo", refitPanelClass).getMethodHandle();
-
-				refitTab_getRefitPanel = inspectMethod("getRefitPanel", refitTabClass).getMethodHandle();
-
-				designDisplay_undo = inspectMethod("undo", designDisplayClass).getMethodHandle(); // not used anymore because fucks up for ships with officers
-
-				shipDisplay_setFleetMember = inspectMethod("setFleetMember", shipDisplayClass).getMethodHandle();
-				shipDisplay_getCurrentVariant = inspectMethod("getCurrentVariant", shipDisplayClass).getMethodHandle();
-
-				logger.info(logPrefix+"Found the UI classes");
-				isDone = true; return;
-			} catch (Throwable t) {
-				logger.fatal(logPrefix+"Failed to find the UI classes"); t.printStackTrace();
-				isDone = true; return;
-			}
-		}
-	
-		@Override
-		public boolean runWhilePaused() {
-			return true;
-		}
-	
-		@Override
-		public boolean isDone() {
-			return isDone;
+			refitPanel.setEditedSinceLoad(false);
+			refitPanel.setEditedSinceSave(false);
+		} catch (Throwable t) {
+			logger.error(logPrefix+"Failure in 'clearUndo()'"); t.printStackTrace();
 		}
 	}
 
@@ -165,18 +121,18 @@ public class lyr_uiTools extends lyr_reflectionTools {
 	 * @param maxDepth to limit the recursive search to a certain depth, minimum 0
 	 * @return the child object having a declared method with methodName
 	 */
-	private static Object adaptiveSearch_findChildObjectWithDeclaredMethod(Object parent, String methodName, int maxDepth) {
+	public static Object adaptiveSearch_findChildObjectWithDeclaredMethod(Object parent, String methodName, int maxDepth) {
 		maxDepth = (maxDepth < 0) ? 0 : maxDepth;
 		return adaptiveSearch_findChildObjectWithDeclaredMethod(parent, methodName, 0, maxDepth);
 	}
-	private static Object adaptiveSearch_findChildObjectWithDeclaredMethod(Object parent, String methodName, int depth, int maxDepth) {
+	public static Object adaptiveSearch_findChildObjectWithDeclaredMethod(Object parent, String methodName, int depth, int maxDepth) {
 		try {
 			MethodHandle getChildrenNonCopy = lookup.findVirtual(parent.getClass(), "getChildrenNonCopy", MethodType.methodType(List.class));
 			List<?> children = List.class.cast(getChildrenNonCopy.invoke(parent));
 
 			for (Object child : children) {
 				try {
-					if (getDeclaredMethod.invoke(child.getClass(), methodName) != null) return child;
+					if (inspectMethod(methodName, child.getClass()) != null) return child;
 				} catch (Exception e) {
 					// no catch on purpose
 				}
@@ -209,11 +165,11 @@ public class lyr_uiTools extends lyr_reflectionTools {
 	 * @param maxDepth to limit the recursive search to a certain depth, minimum 0
 	 * @return the child object with the given childClass, or its parent object
 	 */
-	private static Object adaptiveSearch_findObjectWithChildClass(Object object, Class<?> childClass, boolean getChild, int maxDepth) {
+	public static Object adaptiveSearch_findObjectWithChildClass(Object object, Class<?> childClass, boolean getChild, int maxDepth) {
 		maxDepth = (maxDepth < 0) ? 0 : maxDepth;
 		return adaptiveSearch_findObjectWithChildClass(object, childClass, getChild, 0, maxDepth);
 	}
-	private static Object adaptiveSearch_findObjectWithChildClass(Object object, Class<?> childClass, boolean getChild, int depth, int maxDepth) {
+	public static Object adaptiveSearch_findObjectWithChildClass(Object object, Class<?> childClass, boolean getChild, int depth, int maxDepth) {
 		try {
 			MethodHandle getChildrenNonCopy = lookup.findVirtual(object.getClass(), "getChildrenNonCopy", MethodType.methodType(List.class));
 			List<?> children = List.class.cast(getChildrenNonCopy.invoke(object));
@@ -235,107 +191,4 @@ public class lyr_uiTools extends lyr_reflectionTools {
 	}
 	//#endregion
 	// END OF SEARCH TOOLS
-	
-	/**
-	 * Just a simple check to see if it is the refit tab or not.
-	 * @return true if it is refit tab, false otherwise
-	 */
-	public static boolean isRefitTab() {
-		CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
-		return (tab != null && tab.equals(CoreUITabId.REFIT));
-	}
-
-	/**
-	 * Plays a hardcoded UI sound effect, used in {@code onRemove()}
-	 * and {@code onInstall()}
-	 */
-	public static void playSound() {
-		if (!isRefitTab() || !playDrillSound) return;
-		Global.getSoundPlayer().playUISound(lyr_internals.id.drillSound, 1.0f, 0.75f);
-	}
-
-	/**
-	 * This method will immediately save the refit variant and refresh the 
-	 * UI by utilizing the available UI methods. Used to be called as 
-	 * {@code refreshRefit()}, however the new name suits it more.
-	 * <p> Refresh is achieved by executing an 'undo-like' method. Before,
-	 * it was using the 'undo' function directly, however ships with
-	 * officers were acting weirdly. Now, the 'undo-like' method is
-	 * utilized, however ships with officers do not clear the undo button
-	 * properly for some reason. 
-	 * <p> By committing changes immediately and using 'undo' up and thus 
-	 * disabling it, some odd unwanted behaviour and problems are dealt 
-	 * with as a side effect. Even with problematic ships where 'undo' is
-	 * not cleared properly, it'll have no effect, so it should be safe.
-	 */
-	public static void commitChanges() {
-		if (!isRefitTab()) return; // necessary for calls that are not from 'onInstalled()' or 'onRemoved()'; that originate due to 'onGameLoad()'
-		try {
-			CampaignUIAPI campaignUI = Global.getSector().getCampaignUI();
-			// Object screenPanel = campaignUI_getScreenPanel.invoke(campaignUI);
-			// Object encounterDialogue = campaignUI_getEncounterDialog.invoke(campaignUI);
-			InteractionDialogAPI encounterDialogue = campaignUI.getCurrentInteractionDialog();
-			Object core = (encounterDialogue != null) ? encounterDialog_getCoreUI.invoke(encounterDialogue) : campaignUI_getCore.invoke(campaignUI);
-			Object refitTab = core_getCurrentTab.invoke(core);
-			Object refitPanel = refitTab_getRefitPanel.invoke(refitTab);
-			// Object designDisplay = refitPanel_getDesignDisplay.invoke(refitPanel);
-			Object shipDisplay = refitPanel_getShipDisplay.invoke(refitPanel);
-			Object member = refitPanel_getMember.invoke(refitPanel);
-
-			refitPanel_saveCurrentVariant.invoke(refitPanel);	// this will fail on ship restoration
-			// designDisplay_undo.invoke(designDisplay); // commented for posterity; below is gutted version of 'undo'
-			shipDisplay_setFleetMember.invoke(shipDisplay, null, null);
-			refitPanel_syncWithCurrentVariant.invoke(refitPanel);
-			shipDisplay_setFleetMember.invoke(shipDisplay, member, null);
-			refitPanel_syncWithCurrentVariant.invoke(refitPanel);
-			refitPanel_setEditedSinceLoad.invoke(refitPanel, false);
-			refitPanel_setEditedSinceSave.invoke(refitPanel, false);
-		} catch (Throwable t) {
-			// refreshRefit();
-			logger.error(logPrefix+"Failure in 'commitChanges()'");
-		}
-	}
-
-	/**
-	 * Sets the 'undo' button as inactive. It is necessary for any commits
-	 * that were done remotely and not from the {@code onRemove()} and 
-	 * {@code onInstalled()} methods.
-	 * <p> Ideally, the external commit call should also set the 'undo' 
-	 * button as inactive, however if the hullSpecs of the variants are
-	 * set after the commit call is being made, then the 'undo' button 
-	 * will not be set as inactive. 
-	 * <p> In essence, this method serves as a supplement for that issue, 
-	 * to be used from {@code onRemove()} and {@code onInstalled()} methods 
-	 * if {@code commitChanges()} is not called from those two.
-	 * 
-	 * @deprecated - {@code commitChanges()} is used instead to do the same. 
-	 * <p> This is/was supposed to clean the undo button by resetting the last
-	 * save and load, executing a purely visual function.
-	 * <p> However, if a different ship is selected right after this is used,
-	 * going back to the former ship effectively does the real undo. In other
-	 * words, had an issue that caused this to malfunction. Probable cause
-	 * is lack of {@code syncWithCurrentVariant()}. Added it for now.
-	 * <p> Removal of this function all together is also a valid solution,
-	 * since this effectively does only a visual function, and the undo
-	 * button doesn't really do anything in cases where/when this is needed.
-	 */
-	@Deprecated
-	public static void clearUndo() {
-		if (!isRefitTab()) return; // just in case
-		try {
-			Object campaignUI = Global.getSector().getCampaignUI();
-			// Object screenPanel = campaignUI_getScreenPanel.invoke(campaignUI);
-			Object encounterDialogue = campaignUI_getEncounterDialog.invoke(campaignUI);
-			Object core = (encounterDialogue != null) ? encounterDialog_getCoreUI.invoke(encounterDialogue) : campaignUI_getCore.invoke(campaignUI);
-			Object wrapper = adaptiveSearch_findObjectWithChildClass(core, wrapperClass, true, 0);
-			Object refitTab = adaptiveSearch_findObjectWithChildClass(wrapper, refitTabClass, true, 0);
-			Object refitPanel = refitTab_getRefitPanel.invoke(refitTab);
-			
-			refitPanel_syncWithCurrentVariant.invoke(refitPanel);	// added line for a potential fix; works if it activates something, fails otherwise
-			refitPanel_setEditedSinceLoad.invoke(refitPanel, false);
-			refitPanel_setEditedSinceSave.invoke(refitPanel, false);
-		} catch (Throwable t) {
-			logger.error(logPrefix+"Failure in 'clearUndo()'"); t.printStackTrace();
-		}
-	}
 }

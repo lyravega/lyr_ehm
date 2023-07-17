@@ -24,7 +24,6 @@ import lyravega.listeners.events.suppressedEvents;
 import lyravega.misc.lyr_internals;
 import lyravega.scripts.lyr_fieldRepairsScript;
 import lyravega.tools.lyr_logger;
-import lyravega.tools.lyr_uiTools;
 
 public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 	static {
@@ -33,7 +32,6 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 
 	@Override
 	public void onGameLoad(boolean newGame) {
-		lyr_uiTools.findUIClasses();
 		teachAbility();
 		teachBlueprints();
 		replaceFieldRepairsScript(false);

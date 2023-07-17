@@ -1,7 +1,7 @@
 package experimentalHullModifications.hullmods.ehm;
 
-import static lyravega.tools.lyr_uiTools.commitChanges;
-import static lyravega.tools.lyr_uiTools.playSound;
+import static lyravega.tools.lyr_uiTools.commitVariantChanges;
+import static lyravega.tools.lyr_uiTools.playDrillSound;
 
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
@@ -31,7 +31,7 @@ public class ehm_undo extends _ehm_tracker {
 
 		variant.getHullMods().remove(this.hullModSpecId);
 		variant.getHullMods().remove(lyr_internals.id.hullmods.base);
-		variant.setHullSpecAPI(ehm_hullSpecOriginal(variant)); commitChanges(); playSound(); 
+		variant.setHullSpecAPI(ehm_hullSpecOriginal(variant)); commitVariantChanges(); playDrillSound(); 
 	}
 
 	@Override

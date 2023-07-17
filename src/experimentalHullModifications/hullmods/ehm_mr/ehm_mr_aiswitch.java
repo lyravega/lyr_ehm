@@ -1,7 +1,7 @@
 package experimentalHullModifications.hullmods.ehm_mr;
 
-import static lyravega.tools.lyr_uiTools.commitChanges;
-import static lyravega.tools.lyr_uiTools.playSound;
+import static lyravega.tools.lyr_uiTools.commitVariantChanges;
+import static lyravega.tools.lyr_uiTools.playDrillSound;
 import static com.fs.starfarer.api.impl.hullmods.Automated.isAutomatedNoPenalty;
 import static com.fs.starfarer.api.impl.hullmods.Automated.MAX_CR_PENALTY;
 
@@ -50,14 +50,14 @@ public class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 	public void onInstall(ShipVariantAPI variant) {
 		if (!variant.getHullSpec().getBuiltInMods().contains(HullMods.AUTOMATED)) variant.addPermaMod(HullMods.AUTOMATED, false);
 		else variant.addSuppressedMod(HullMods.AUTOMATED);	// if this hullmod is suppressed, relevant calculations that look for it won't work properly
-		commitChanges(); playSound();
+		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
 	public void onRemove(ShipVariantAPI variant) {
 		if (!variant.getSuppressedMods().contains(HullMods.AUTOMATED)) variant.removePermaMod(HullMods.AUTOMATED);
 		else variant.removeSuppressedMod(HullMods.AUTOMATED);
-		commitChanges(); playSound();
+		commitVariantChanges(); playDrillSound();
 	}
 	//#endregion
 	// END OF CUSTOM EVENTS

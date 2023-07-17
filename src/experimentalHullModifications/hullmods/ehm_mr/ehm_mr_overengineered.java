@@ -1,8 +1,8 @@
 package experimentalHullModifications.hullmods.ehm_mr;
 
 import static lyravega.listeners.lyr_lunaSettingsListener.baseSlotPointPenalty;
-import static lyravega.tools.lyr_uiTools.commitChanges;
-import static lyravega.tools.lyr_uiTools.playSound;
+import static lyravega.tools.lyr_uiTools.commitVariantChanges;
+import static lyravega.tools.lyr_uiTools.playDrillSound;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,12 +34,12 @@ public class ehm_mr_overengineered extends _ehm_base implements normalEvents, en
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstall(ShipVariantAPI variant) {
-		playSound();
+		playDrillSound();
 	}
 
 	@Override
 	public void onRemove(ShipVariantAPI variant) {
-		playSound();
+		playDrillSound();
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class ehm_mr_overengineered extends _ehm_base implements normalEvents, en
 	@Override
 	public void onNormalize(ShipVariantAPI variant) {
 		variant.setHullSpecAPI(ehm_hullSpecRefresh(variant));
-		commitChanges();
+		commitVariantChanges();
 	}
 	//#endregion
 	// END OF CUSTOM EVENTS

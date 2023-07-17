@@ -1,7 +1,7 @@
 package experimentalHullModifications.hullmods.ehm_wr;
 
-import static lyravega.tools.lyr_uiTools.commitChanges;
-import static lyravega.tools.lyr_uiTools.playSound;
+import static lyravega.tools.lyr_uiTools.commitVariantChanges;
+import static lyravega.tools.lyr_uiTools.playDrillSound;
 
 import java.util.Map;
 
@@ -39,14 +39,14 @@ public class _ehm_wr_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstall(ShipVariantAPI variant) {
-		commitChanges(); playSound();
+		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
 	public void onRemove(ShipVariantAPI variant) {
 		// variant.setHullSpecAPI(ehm_weaponSlotRestore(variant));
 		variant.setHullSpecAPI(ehm_weaponSlotRestore_lazy(variant));
-		commitChanges(); playSound();
+		commitVariantChanges(); playDrillSound();
 	}
 	//#endregion
 	// END OF CUSTOM EVENTS

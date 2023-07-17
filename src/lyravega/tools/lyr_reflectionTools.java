@@ -4,6 +4,7 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.invoke.MethodType;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 
 
@@ -18,20 +19,21 @@ import java.util.Arrays;
  * for this information.
  * @author lyravega
  */
+@SuppressWarnings("unused")
 public class lyr_reflectionTools implements lyr_logger {
 	protected static final Lookup lookup = MethodHandles.lookup();
 	protected static final Class<?> lookupClass = lookup.getClass();
-	public static Class<?> fieldClass;
-	public static MethodHandle setAccessible;
-	public static MethodHandle get;
-	public static Class<?> methodClass;
-	public static MethodHandle getName;
-	public static MethodHandle getParameterTypes;
-	public static MethodHandle getReturnType;
-	public static MethodHandle getModifiers;
-	public static MethodHandle getDeclaredMethod;
-	public static MethodHandle getMethod;
-	public static MethodHandle unreflect;
+	private static Class<?> fieldClass;
+	private static MethodHandle setAccessible;	// unused
+	private static MethodHandle get;	// unused
+	private static Class<?> methodClass;
+	private static MethodHandle getName;
+	private static MethodHandle getParameterTypes;
+	private static MethodHandle getReturnType;
+	private static MethodHandle getModifiers;
+	// private static MethodHandle getDeclaredMethod;
+	// private static MethodHandle getMethod;
+	private static MethodHandle unreflect;
 
 	static {
 		try {
@@ -43,8 +45,8 @@ public class lyr_reflectionTools implements lyr_logger {
 			getParameterTypes = lookup.findVirtual(methodClass, "getParameterTypes", MethodType.methodType(Class[].class));
 			getReturnType = lookup.findVirtual(methodClass, "getReturnType", MethodType.methodType(Class.class));
 			getModifiers = lookup.findVirtual(methodClass, "getModifiers", MethodType.methodType(int.class));
-			getDeclaredMethod = lookup.findVirtual(Class.class, "getDeclaredMethod", MethodType.methodType(methodClass, String.class, Class[].class));
-			getMethod = lookup.findVirtual(Class.class, "getMethod", MethodType.methodType(methodClass, String.class, Class[].class));
+			// getDeclaredMethod = lookup.findVirtual(Class.class, "getDeclaredMethod", MethodType.methodType(methodClass, String.class, Class[].class));
+			// getMethod = lookup.findVirtual(Class.class, "getMethod", MethodType.methodType(methodClass, String.class, Class[].class));
 			unreflect = lookup.findVirtual(lookupClass, "unreflect", MethodType.methodType(MethodHandle.class, methodClass));
 		} catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException e) {
 			logger.fatal(logPrefix+"Failed to initialize reflection tools", e);
