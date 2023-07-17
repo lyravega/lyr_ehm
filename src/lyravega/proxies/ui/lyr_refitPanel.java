@@ -4,6 +4,8 @@ import static lyravega.tools.lyr_reflectionTools.inspectMethod;
 
 import java.lang.invoke.MethodHandle;
 
+import com.fs.starfarer.api.fleet.FleetMemberAPI;
+
 import lyravega.tools.lyr_logger;
 
 public class lyr_refitPanel implements lyr_logger {
@@ -92,9 +94,9 @@ public class lyr_refitPanel implements lyr_logger {
 		}
 	}
 
-	public Object getMember() {
+	public FleetMemberAPI getMember() {
 		try {
-			return getMember.invoke(refitPanel);
+			return (FleetMemberAPI) getMember.invoke(refitPanel);
 		} catch (Throwable t) {
 			logger.error(logPrefix+"Failed to use 'getMember()' in 'lyr_refitPanel'", t);
 		}	return null;
