@@ -34,15 +34,6 @@ public class lyr_coreUI implements lyr_logger {
 		this.coreUI = coreUI;
 	}
 
-	@Deprecated
-	public Object getCurrentTab(boolean isDeprecated) {
-		try {
-			return (Object) getCurrentTab.invoke(coreUI);
-		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'getCurrentTab()' in 'lyr_coreUI'", t);
-		}	return null;
-	}
-
 	// this is currently only utilized for the refit tab
 	public lyr_refitTab getCurrentTab() {
 		try {

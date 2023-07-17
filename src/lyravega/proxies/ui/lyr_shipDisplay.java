@@ -4,6 +4,8 @@ import static lyravega.tools.lyr_reflectionTools.inspectMethod;
 
 import java.lang.invoke.MethodHandle;
 
+import com.fs.starfarer.api.combat.ShipVariantAPI;
+
 import lyravega.tools.lyr_logger;
 
 public class lyr_shipDisplay implements lyr_logger {
@@ -43,9 +45,9 @@ public class lyr_shipDisplay implements lyr_logger {
 		}
 	}
 
-	public Object getCurrentVariant() {
+	public ShipVariantAPI getCurrentVariant() {
 		try {
-			return getCurrentVariant.invoke(shipDisplay);
+			return (ShipVariantAPI) getCurrentVariant.invoke(shipDisplay);
 		} catch (Throwable t) {
 			logger.error(logPrefix+"Failed to use 'getCurrentVariant()' in 'lyr_shipDisplay'", t);
 		}	return null;

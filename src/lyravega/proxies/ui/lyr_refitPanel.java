@@ -52,29 +52,11 @@ public class lyr_refitPanel implements lyr_logger {
 		this.refitPanel = refitPanel;
 	}
 
-	@Deprecated
-	public Object getDesignDisplay(boolean isDeprecated) {
-		try {
-			return (Object) getDesignDisplay.invoke(refitPanel);
-		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'getDesignDisplay()' in 'lyr_refitPanel'", t);
-		}	return null;
-	}
-
 	public lyr_designDisplay getDesignDisplay() {
 		try {
 			return new lyr_designDisplay(getDesignDisplay.invoke(refitPanel));
 		} catch (Throwable t) {
 			logger.error(logPrefix+"Failed to use 'getDesignDisplay()' in 'lyr_refitPanel'", t);
-		}	return null;
-	}
-
-	@Deprecated
-	public Object getShipDisplay(boolean isDeprecated) {
-		try {
-			return (Object) getShipDisplay.invoke(refitPanel);
-		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'getShipDisplay()' in 'lyr_refitPanel'", t);
 		}	return null;
 	}
 

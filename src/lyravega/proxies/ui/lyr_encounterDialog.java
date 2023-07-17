@@ -4,10 +4,13 @@ import static lyravega.tools.lyr_reflectionTools.inspectMethod;
 
 import java.lang.invoke.MethodHandle;
 
+import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.campaign.InteractionDialogAPI;
+
 import lyravega.tools.lyr_logger;
 
 public class lyr_encounterDialog implements lyr_logger {
-	private Object encounterDialog;	// InteractionDialogAPI, VisualPanelAPI, UIPanelAPI, UIComponentAPI
+	private InteractionDialogAPI encounterDialog;	// InteractionDialogAPI, VisualPanelAPI, UIPanelAPI, UIComponentAPI
 	// private lyr_campaignUI campaignUI;
 	// private lyr_coreUI coreUI;
 	static Class<?> clazz;
@@ -23,25 +26,16 @@ public class lyr_encounterDialog implements lyr_logger {
 		}
 	}
 
-	public lyr_encounterDialog(Object encounterDialog) {
-		this.encounterDialog = encounterDialog;
+	public lyr_encounterDialog() {
+		this.encounterDialog = Global.getSector().getCampaignUI().getCurrentInteractionDialog();
 	}
 
-	public Object retrieve() {
+	public InteractionDialogAPI retrieve() {
 		return encounterDialog;
 	}
 
-	public void recycle(Object encounterDialog) {
+	public void recycle(InteractionDialogAPI encounterDialog) {
 		this.encounterDialog = encounterDialog;
-	}
-
-	@Deprecated
-	public Object getCoreUI(boolean isDeprecated) {
-		try {
-			return (Object) getCoreUI.invoke(encounterDialog);
-		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'getCoreUI()' in 'lyr_encounterDialog'", t);
-		}	return null;
 	}
 
 	public lyr_coreUI getCoreUI() {

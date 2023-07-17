@@ -34,15 +34,6 @@ public class lyr_refitTab implements lyr_logger {
 		this.refitTab = refitTab;
 	}
 
-	@Deprecated
-	public Object getRefitPanel(boolean isDeprecated) {
-		try {
-			return (Object) getRefitPanel.invoke(refitTab);
-		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'getRefitPanel()' in 'lyr_refitTab'", t);
-		}	return null;
-	}
-
 	public lyr_refitPanel getRefitPanel() {
 		try {
 			return new lyr_refitPanel(getRefitPanel.invoke(refitTab));

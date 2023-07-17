@@ -152,7 +152,7 @@ public final class lyr_weaponSlot extends lyr_proxyTools {
 	 * @param nodeId an id to assign to the node (using slotId is fine)
 	 * @param location a ship-relative vector to create the node at
 	 * @category Proxy method
-	 * @see {@link lyravega.misc.lyr_utilities#generateChildLocation} that
+	 * @see {@link lyravega.misc.lyr_vectorUtility#generateChildLocation} that
 	 * calculates new node positions through passed offsets
 	 */
 	public void setNode(String nodeId, Vector2f location) {
