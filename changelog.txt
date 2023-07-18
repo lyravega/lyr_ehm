@@ -1,3 +1,8 @@
+Version 0.8.3
+
+- Fixed a problem with a listener
+
+
 Version 0.8.2
 
 - Added a new setting for slot shunt availability, both options* rely on the ability
@@ -5,7 +10,6 @@ Version 0.8.2
 - Missile Slot Retrofit suppresses built-in HBI if present
 - Adjusted some icons and text colours, fixed a few tooltips
 - Fixed a vanilla issue with the weapon groups
-- Prevented a potential problem with a listener
 
 * "Always" (new, default) option makes slot shunts available whenever refit tab is opened
 * "Submarket" (old) option makes slot shunts available only when docked at a port
