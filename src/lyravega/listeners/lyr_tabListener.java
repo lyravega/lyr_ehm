@@ -25,7 +25,7 @@ public class lyr_tabListener implements CoreUITabListener, CoreInteractionListen
 	protected static final CoreUITabId targetTab = CoreUITabId.REFIT;
 	private static final String targetTabString = targetTab.toString().toLowerCase();
 	
-	public static void attach(boolean isTransient) {	// used in plugin's onLoad()	
+	public static void attach(boolean isTransient) {	// used in plugin's onLoad()
 		if (!Global.getSector().getPlayerFleet().getAbility(lyr_internals.id.ability).isActive()) return;
 
 		if (!Global.getSector().getListenerManager().hasListenerOfClass(lyr_tabListener.class)) {

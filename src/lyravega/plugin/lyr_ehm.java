@@ -106,8 +106,8 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 		if (!Global.getSector().getCharacterData().getAbilities().contains(lyr_internals.id.ability)) {
 			Global.getSector().getCharacterData().addAbility(lyr_internals.id.ability);	// add ability to ongoing games if not present
 
-			logger.info(logPrefix + "Shunt market control ability taught");
-		} else logger.info(logPrefix + "Shunt market control was already known");
+			logger.info(logPrefix + "Slot shunt visibility control ability taught");
+		} else logger.info(logPrefix + "Slot shunt visibility control ability was already known");
 	}
 
 	private static void replaceFieldRepairsScript(boolean isTransient) {
