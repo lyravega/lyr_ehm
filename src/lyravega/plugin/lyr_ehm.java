@@ -35,7 +35,7 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 		teachAbility();
 		teachBlueprints();
 		replaceFieldRepairsScript(false);
-		if (!newGame) attachShuntAccessListener();
+		attachShuntAccessListener();
 	}
 
 	@Override
@@ -102,9 +102,11 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 		logger.info(logPrefix + "Experimental hull modifications are registered");
 	}
 
-	private static void teachAbility() {
-		if (!Global.getSector().getCharacterData().getAbilities().contains(lyr_internals.id.ability)) {
-			Global.getSector().getCharacterData().addAbility(lyr_internals.id.ability);	// add ability to ongoing games if not present
+	private static void teachAbility() {	// add ability to ongoing games if not present
+		if (!Global.getSector().getCharacterData().getAbilities().contains(lyr_internals.id.ability)
+		 || !Global.getSector().getPlayerFleet().hasAbility(lyr_internals.id.ability)) {
+			Global.getSector().getCharacterData().addAbility(lyr_internals.id.ability);	
+			Global.getSector().getPlayerFleet().addAbility(lyr_internals.id.ability);
 
 			logger.info(logPrefix + "Slot shunt visibility control ability taught");
 		} else logger.info(logPrefix + "Slot shunt visibility control ability was already known");
