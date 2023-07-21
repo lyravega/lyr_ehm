@@ -1,9 +1,11 @@
 Version 0.8.3
 
-- Mutable Shunt Activator cannot be removed while any extra wing slots* are occupied
-- Fixed a rare crash on load that related to a listener
+- Blocked Mutable Shunt Activator removal if any extra wing slots are occupied to prevent two issues*
+- Blocked slot retrofit installation and removal if there are wings or inert slot shunts present to prevent a crash**
+- Fixed a rare crash happened on load related to a listener
 
-* This change prevents two issues; wings not returning to cargo or disappearing completely
+* The issues were wings not returning to cargo or disappearing completely in exclusive cases
+** The crash was caused by some of these retrofits affecting the OP costs
 
 
 Version 0.8.2

@@ -280,6 +280,15 @@ public class _ehm_base extends BaseHullMod implements lyr_logger {
 	
 		return false;
 	}
+
+	/**
+	 * @param ship to check
+	 * @param hullModSpecId of the hull modification that grant extra fighter slots
+	 * @return true if the extra slots (newly & last added ones) have fighters in them
+	 */
+	protected static boolean ehm_hasAnyFittedWings(ShipAPI ship) {
+		return !ship.getVariant().getNonBuiltInWings().isEmpty();
+	}
 	//#endregion
 	// END OF CHECK HELPERS
 
