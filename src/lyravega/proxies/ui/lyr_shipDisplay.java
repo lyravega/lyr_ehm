@@ -13,6 +13,7 @@ public class lyr_shipDisplay implements lyr_logger {
 	static Class<?> clazz;
 	private static MethodHandle setFleetMember;
 	private static MethodHandle getCurrentVariant;
+	private static MethodHandle clearFighterSlot;
 
 	static {
 		try {
@@ -20,6 +21,7 @@ public class lyr_shipDisplay implements lyr_logger {
 
 			setFleetMember = inspectMethod("setFleetMember", clazz).getMethodHandle();
 			getCurrentVariant = inspectMethod("getCurrentVariant", clazz).getMethodHandle();
+			clearFighterSlot = inspectMethod("clearFighterSlot", clazz).getMethodHandle();
 		} catch (Throwable t) {
 			logger.fatal(logPrefix+"Failed to find a method in 'lyr_shipDisplay'", t);
 		}
@@ -51,5 +53,13 @@ public class lyr_shipDisplay implements lyr_logger {
 		} catch (Throwable t) {
 			logger.error(logPrefix+"Failed to use 'getCurrentVariant()' in 'lyr_shipDisplay'", t);
 		}	return null;
+	}
+
+	public void clearFighterSlot(int fighterSlot, ShipVariantAPI variant) {
+		try {
+			clearFighterSlot.invoke(shipDisplay, fighterSlot, variant);
+		} catch (Throwable t) {
+			logger.error(logPrefix+"Failed to use 'clearFighterSlot()' in 'lyr_shipDisplay'", t);
+		}
 	}
 }
