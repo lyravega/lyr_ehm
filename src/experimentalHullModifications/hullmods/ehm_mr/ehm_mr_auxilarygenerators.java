@@ -30,7 +30,7 @@ import lyravega.misc.lyr_tooltip.text;
  * @category Miscellaneous Retrofit 
  * @author lyravega
  */
-public class ehm_mr_auxilarygenerators extends _ehm_base implements normalEvents {
+public final class ehm_mr_auxilarygenerators extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstall(ShipVariantAPI variant) {

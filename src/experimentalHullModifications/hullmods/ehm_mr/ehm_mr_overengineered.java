@@ -30,7 +30,7 @@ import lyravega.proxies.lyr_hullSpec;
  * @category Miscellaneous Retrofit 
  * @author lyravega
  */
-public class ehm_mr_overengineered extends _ehm_base implements normalEvents, enhancedEvents {
+public final class ehm_mr_overengineered extends _ehm_base implements normalEvents, enhancedEvents {
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstall(ShipVariantAPI variant) {

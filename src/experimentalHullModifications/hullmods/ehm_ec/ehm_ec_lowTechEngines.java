@@ -9,7 +9,7 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 /**@category Engine Cosmetic 
  * @author lyravega
  */
-public class ehm_ec_lowTechEngines extends _ehm_ec_base {
+public final class ehm_ec_lowTechEngines extends _ehm_ec_base {
 	private static final int engineStyleId = lowTech;
 
 	@Override

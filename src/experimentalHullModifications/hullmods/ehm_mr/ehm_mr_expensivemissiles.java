@@ -17,7 +17,7 @@ import lyravega.misc.lyr_internals;
  * @see Master: {@link ehm_wr_missileslotretrofit}
  * @author lyravega
  */
-public class ehm_mr_expensivemissiles extends BaseHullMod {
+public final class ehm_mr_expensivemissiles extends BaseHullMod {
 	private static final String masterHullModId = lyr_internals.id.hullmods.missileslotretrofit;
 
 	@Override

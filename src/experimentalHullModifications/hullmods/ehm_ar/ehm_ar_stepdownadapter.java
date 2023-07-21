@@ -26,7 +26,7 @@ import lyravega.misc.lyr_tooltip.text;
 /**@category Adapter Retrofit 
  * @author lyravega
  */
-public class ehm_ar_stepdownadapter extends _ehm_ar_base {
+public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 	/**
 	 * An inner class to supply the adapters with relevant child data
 	 */

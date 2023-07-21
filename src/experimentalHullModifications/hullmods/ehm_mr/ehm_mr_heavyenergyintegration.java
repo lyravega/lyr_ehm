@@ -18,7 +18,7 @@ import lyravega.misc.lyr_internals;
  * @see Master: {@link ehm_wr_energyslotretrofit}
  * @author lyravega
  */
-public class ehm_mr_heavyenergyintegration extends BaseHullMod {
+public final class ehm_mr_heavyenergyintegration extends BaseHullMod {
 	private static final String masterHullModId = lyr_internals.id.hullmods.energyslotretrofit;
 
 	@Override

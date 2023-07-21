@@ -7,7 +7,7 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 /**@category System Retrofit 
  * @author lyravega
  */
-public class ehm_sr_canister_flak extends _ehm_sr_base {
+public final class ehm_sr_canister_flak extends _ehm_sr_base {
 	private static final String systemId = "canister_flak";
 
 	@Override

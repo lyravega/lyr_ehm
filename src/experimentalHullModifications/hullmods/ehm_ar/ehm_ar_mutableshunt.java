@@ -21,7 +21,7 @@ import lyravega.misc.lyr_tooltip;
 /**@category Adapter Retrofit 
  * @author lyravega
  */
-public class ehm_ar_mutableshunt extends _ehm_ar_base {
+public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 	static final Set<String> mutableStatBonus = new HashSet<String>();
 	static final Map<String, Float[]> capacitorMap = new HashMap<String, Float[]>();
 	static final Map<String, Float[]> dissipatorMap = new HashMap<String, Float[]>();

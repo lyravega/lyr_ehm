@@ -14,7 +14,7 @@ import lyravega.listeners.events.customizableHullMod;
  * @category Custom Shield Cosmetic 
  * @author lyravega
  */
-public class ehm_csc_greenShields extends _ehm_sc_base implements customizableHullMod {
+public final class ehm_csc_greenShields extends _ehm_sc_base implements customizableHullMod {
 	private static Color innerColour;
 	private static Color ringColour;
 

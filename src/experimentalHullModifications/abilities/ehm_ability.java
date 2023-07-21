@@ -23,7 +23,7 @@ import lyravega.tools.lyr_logger;
  * the submarket are all transient.
  * @author lyravega
  */
-public class ehm_ability extends BaseToggleAbility implements lyr_logger {
+public final class ehm_ability extends BaseToggleAbility implements lyr_logger {
 	@Override
 	protected String getActivationText() {
 		switch (lyr_lunaSettingsListener.shuntAvailability) {

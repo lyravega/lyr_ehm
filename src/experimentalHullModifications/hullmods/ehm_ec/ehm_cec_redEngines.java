@@ -13,7 +13,7 @@ import lyravega.listeners.events.customizableHullMod;
 /**@category Engine Cosmetic 
  * @author lyravega
  */
-public class ehm_cec_redEngines extends _ehm_ec_base implements customizableHullMod {
+public final class ehm_cec_redEngines extends _ehm_ec_base implements customizableHullMod {
 	private static final String customEngineSpecId = ehm_cec_redEngines.class.getSimpleName().toUpperCase();
 	private static final int engineStyleId = custom;
 	private static Object engineStyleSpec;

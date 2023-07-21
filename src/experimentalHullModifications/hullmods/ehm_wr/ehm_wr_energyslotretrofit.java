@@ -15,7 +15,7 @@ import lyravega.misc.lyr_internals;
  * @see Slave: {@link ehm_mr_heavyenergyintegration}
  * @author lyravega
  */
-public class ehm_wr_energyslotretrofit extends _ehm_wr_base {
+public final class ehm_wr_energyslotretrofit extends _ehm_wr_base {
 	private static final String extensionHullModId = lyr_internals.id.hullmods.extensions.heavyenergyintegration;
 	private static final String hbi = "hbi";
 

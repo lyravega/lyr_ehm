@@ -11,7 +11,7 @@ import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 /**@category Weapon Retrofit 
  * @author lyravega
  */
-public class ehm_wr_ballisticslotretrofit extends _ehm_wr_base {
+public final class ehm_wr_ballisticslotretrofit extends _ehm_wr_base {
 	private static final Map<WeaponType,WeaponType> conversion = new HashMap<WeaponType,WeaponType>();
 	static {
 		conversion.put(WeaponType.ENERGY, WeaponType.BALLISTIC);

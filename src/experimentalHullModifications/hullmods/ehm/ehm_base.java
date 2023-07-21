@@ -1,6 +1,5 @@
 package experimentalHullModifications.hullmods.ehm;
 
-import static experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base.ehm_processShunts;
 import static lyravega.listeners.lyr_lunaSettingsListener.showFluff;
 import static lyravega.tools.lyr_uiTools.commitVariantChanges;
 import static lyravega.tools.lyr_uiTools.playDrillSound;
@@ -16,6 +15,7 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
+import experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base;
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_tooltip.header;
 import lyravega.misc.lyr_tooltip.text;
@@ -28,7 +28,7 @@ import lyravega.misc.lyr_tooltip.text;
  * @category Base Hull Modification 
  * @author lyravega
  */
-public class ehm_base extends _ehm_tracker {
+public final class ehm_base extends _ehm_tracker {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
@@ -48,7 +48,7 @@ public class ehm_base extends _ehm_tracker {
 			}
 		}
 
-		ehm_processShunts(stats, isGettingRestored);
+		_ehm_ar_base.ehm_processShunts(stats, isGettingRestored);
 		ehm_cleanWeaponGroupsUp(variant);
 	}
 
@@ -101,13 +101,13 @@ public class ehm_base extends _ehm_tracker {
 					break;
 				case 5:
 					if (!ehm_hasExperimentalModWithTag(variant, lyr_internals.tag.shieldCosmetic))
-						tooltip.addPara("If you'd like, I can modify the shield emitters to project a shield with different colours, " + playerSalutation, text.padding);
+						tooltip.addPara("The shield emitters may be modified to project a shield with different colours, " + playerSalutation + ". The effect is purely cosmetic", text.padding);
 					else tooltip.addPara("The shield emitters are modified to project colours of your choice, " + playerSalutation, text.padding);
 					break;
 				case 6: 
 					if (!variant.hasHullMod(lyr_internals.id.hullmods.diverterandconverter))
-						tooltip.addPara("I can divert power from a weapon slot using a diverter to power a converter on another slot, " + playerSalutation + "! The trade-off is necessary to make such modifications.", text.padding);
-					else tooltip.addPara("Converters use the power diverted by diverters. If I cannot activate a converter, that means we lack enough diverters!", text.padding);
+						tooltip.addPara("Power may be diverted from a weapon slot to another with a diverter slot shunt, " + playerSalutation + ". The trade-off is necessary to make such modifications.", text.padding);
+					else tooltip.addPara("If a converter remains idle, we might be lacking the necessary power diverted to it " + playerSalutation, text.padding);
 					break;
 				case 7: 
 					if (!variant.hasHullMod(lyr_internals.id.hullmods.mutableshunt))

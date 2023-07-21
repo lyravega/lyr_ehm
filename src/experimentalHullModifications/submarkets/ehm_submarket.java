@@ -26,7 +26,7 @@ import lyravega.misc.lyr_internals;
  * @see {@link experimentalHullModifications.abilities.ehm_ability.ehm_interactionListener interactionListener} that reports when player opens/closes a market
  * @author lyravega
  */
-public class ehm_submarket extends BaseSubmarketPlugin {
+public final class ehm_submarket extends BaseSubmarketPlugin {
 	public static final Set<String> shunts = new HashSet<String>();	// doing this here separately as there can be disabled/unused shunts
 	static {
 		for (WeaponSpecAPI weaponSpec : Global.getSettings().getAllWeaponSpecs()) {	// doing this here might be problematic, OK so far

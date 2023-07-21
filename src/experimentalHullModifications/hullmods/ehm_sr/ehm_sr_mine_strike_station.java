@@ -7,7 +7,7 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 /**@category System Retrofit 
  * @author lyravega
  */
-public class ehm_sr_mine_strike_station extends _ehm_sr_base {
+public final class ehm_sr_mine_strike_station extends _ehm_sr_base {
 	private static final String systemId = "mine_strike_station";
 
 	@Override

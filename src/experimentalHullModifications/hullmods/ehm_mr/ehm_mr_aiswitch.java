@@ -34,7 +34,7 @@ import lyravega.misc.lyr_tooltip.text;
  * @category Miscellaneous Retrofit 
  * @author lyravega
  */
-public class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
+public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 	private static final Map<HullSize, int[]> crewMultipliers = new HashMap<HullSize, int[]>();
 	static {
 		crewMultipliers.put(HullSize.FIGHTER, new int[]{0,0});

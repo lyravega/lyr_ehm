@@ -20,7 +20,7 @@ import lyravega.misc.lyr_tooltip.text;
  * @category Base Hull Un-Modification
  * @author lyravega
  */
-public class ehm_undo extends _ehm_tracker {
+public final class ehm_undo extends _ehm_tracker {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
