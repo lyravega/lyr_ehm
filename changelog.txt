@@ -1,6 +1,9 @@
 Version 0.8.3
 
-- Fixed a problem with a listener
+- Mutable Shunt Activator cannot be removed while any extra wing slots* are occupied
+- Fixed a rare crash on load that related to a listener
+
+* This change prevents two issues; wings not returning to cargo or disappearing completely
 
 
 Version 0.8.2
