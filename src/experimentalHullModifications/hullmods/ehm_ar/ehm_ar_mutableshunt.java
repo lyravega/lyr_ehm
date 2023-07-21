@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
+import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
@@ -16,7 +18,8 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
 import lyravega.misc.lyr_internals;
-import lyravega.misc.lyr_tooltip;
+import lyravega.misc.lyr_tooltip.header;
+import lyravega.misc.lyr_tooltip.text;
 
 /**@category Adapter Retrofit 
  * @author lyravega
@@ -70,42 +73,59 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 				Map<String, Integer> capacitors = ehm_shuntCount(ship, lyr_internals.tag.capacitorShunt);
 	
 				if (!capacitors.isEmpty()) {
-					tooltip.addSectionHeading("ACTIVE CAPACITORS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
+					tooltip.addSectionHeading("ACTIVE CAPACITORS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 					for (String shuntId: capacitors.keySet()) {
 						tooltip.addPara(capacitors.get(shuntId) + "x " + settings.getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
 				} else if (showFullInfo) {
-					tooltip.addSectionHeading("NO CAPACITORS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
+					tooltip.addSectionHeading("NO CAPACITORS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No capacitors are installed. Capacitors increase the total flux capacity of the ship, and affect built-in capacitors.", 2f);
 				}
 
 				Map<String, Integer> dissipators = ehm_shuntCount(ship, lyr_internals.tag.dissipatorShunt);
 	
 				if (!dissipators.isEmpty()) {
-					tooltip.addSectionHeading("ACTIVE DISSIPATORS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
+					tooltip.addSectionHeading("ACTIVE DISSIPATORS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 					for (String shuntId: dissipators.keySet()) {
 						tooltip.addPara(dissipators.get(shuntId) + "x " + settings.getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
 				} else if (showFullInfo) {
-					tooltip.addSectionHeading("NO DISSIPATORS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
+					tooltip.addSectionHeading("NO DISSIPATORS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No dissipators are installed. Dissipators increase the total flux dissipation of the ship, and affect built-in vents.", 2f);
 				}
 	
 				Map<String, Integer> launchTubes = ehm_shuntCount(ship, lyr_internals.tag.tubeShunt);
 	
 				if (!launchTubes.isEmpty()) {
-					tooltip.addSectionHeading("EXTRA HANGARS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
+					tooltip.addSectionHeading("EXTRA HANGARS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 					for (String shuntId: launchTubes.keySet()) {
 						tooltip.addPara(launchTubes.get(shuntId) + "x " + settings.getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
 				} else if (showFullInfo) {
-					tooltip.addSectionHeading("NO EXTRA HANGARS", lyr_tooltip.header.info_textColour, lyr_tooltip.header.info_bgColour, Alignment.MID, lyr_tooltip.header.padding);
+					tooltip.addSectionHeading("NO EXTRA HANGARS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No large weapon slots are turned into hangars. Each large slot is turned into a single fighter bay with a launch tube.", 2f);
 				}
 			}	
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
+
+		if (!canBeAddedOrRemovedNow(ship, null, null)) {
+			String inOrOut = ship.getVariant().hasHullMod(hullModSpecId) ? header.lockedIn : header.lockedOut;
+
+			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.locked_bgColour, Alignment.MID, header.padding);
+
+			if (ehm_hasExtraWings(ship, this.hullModSpecId)) tooltip.addPara(text.hasExtraWings[0], text.padding).setHighlight(text.hasExtraWings[1]);
+		}
+	}
+	
+	@Override
+	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
+		if (ship == null) return false;
+
+		if (ship.getVariant().hasHullMod(hullModSpecId) && ehm_hasExtraWings(ship, this.hullModSpecId)) return false;
+
+		return true;
 	}
 	//#endregion
 }

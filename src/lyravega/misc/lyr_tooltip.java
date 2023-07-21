@@ -28,6 +28,7 @@ public class lyr_tooltip {
 			hasPhase = {"Cannot function with a phase cloak", "a phase cloak"},
 			noWings = {"Cannot function without wings", "wings"},
 			hasWings = {"Cannot be installed or removed as long as there are wings present in the fighter bays", "wings"},
+			hasExtraWings = {"Cannot be removed as long as there are extra wings present in the fighter bays added through hull modifications", "extra wings"},
 			hasWeapons = {"Cannot be installed or removed as long as there are installed weapons on the ship", "installed weapons"},
 			hasWeaponsOnAdaptedSlots = {"Cannot be removed as there are weapons or shunts installed on the adapted slots", "adapted slots"},
 			hasWeaponsOnConvertedSlots = {"Cannot be removed as there are weapons or shunts installed on the converted slots", "converted slots"},

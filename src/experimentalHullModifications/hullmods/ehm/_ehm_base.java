@@ -16,6 +16,7 @@ import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.BaseHullMod;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
+import com.fs.starfarer.api.combat.MutableStat.StatMod;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
@@ -257,6 +258,26 @@ public class _ehm_base extends BaseHullMod implements lyr_logger {
 			return true;
 		}
 
+		return false;
+	}
+
+	/**
+	 * @param ship to check
+	 * @param hullModSpecId of the hull modification that grant extra fighter slots
+	 * @return true if the extra slots (newly & last added ones) have fighters in them
+	 */
+	protected static boolean ehm_hasExtraWings(ShipAPI ship, String hullModSpecId) {
+		int wingsSize = ship.getVariant().getWings().size();
+		StatMod flatStatMod = ship.getMutableStats().getNumFighterBays().getFlatStatMod(hullModSpecId);
+	
+		if (flatStatMod != null) {
+			float fighterBayFlat = flatStatMod.getValue();
+	
+			for (int i = (int) (ship.getMutableStats().getNumFighterBays().getModifiedValue() - fighterBayFlat); i < wingsSize; i++) {
+				if (ship.getVariant().getWingId(i) != null) return true;
+			}
+		}
+	
 		return false;
 	}
 	//#endregion
