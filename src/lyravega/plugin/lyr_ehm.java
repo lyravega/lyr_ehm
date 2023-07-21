@@ -32,8 +32,8 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 
 	@Override
 	public void onGameLoad(boolean newGame) {
-		teachAbility();
-		teachBlueprints();
+		teachAbility(lyr_internals.id.ability);
+		teachBlueprints(lyr_internals.tag.experimental, lyr_internals.tag.restricted);
 		replaceFieldRepairsScript(false);
 		attachShuntAccessListener();
 	}
@@ -54,26 +54,23 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 	}
 
 	/**
-	 * Adds all mod weapons and hull modifications that have the {@link
-	 * lyr_internals.tag#experimental "ehm"} tag to the player's faction.
-	 * Removes any known with the {@link lyr_internals.tag#restricted
-	 * "ehm_restricted"} ones.
+	 * Adds all mod weapons and hull modifications that have the passed
+	 * tagToLearn, and removes any known ones with the tagToForget
+	 * @param tagToLearn
+	 * @param tagToForget
 	 */
-	private static void teachBlueprints() {
+	private static void teachBlueprints(String tagToLearn, String tagToForget) {
 		FactionAPI playerFaction = Global.getSector().getPlayerPerson().getFaction();
-
-		playerFaction.addKnownHullMod(lyr_internals.id.hullmods.base);
-		playerFaction.addKnownHullMod(lyr_internals.id.hullmods.undo);
 
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
 			String hullModSpecId = hullModSpec.getId();
-			if (hullModSpec.hasTag(lyr_internals.tag.experimental) && !playerFaction.knowsHullMod(hullModSpecId)) playerFaction.addKnownHullMod(hullModSpecId);
-			else if (hullModSpec.hasTag(lyr_internals.tag.restricted) && playerFaction.knowsHullMod(hullModSpecId)) playerFaction.removeKnownHullMod(hullModSpecId);
+			if (hullModSpec.hasTag(tagToLearn) && !playerFaction.knowsHullMod(hullModSpecId)) playerFaction.addKnownHullMod(hullModSpecId);
+			else if (hullModSpec.hasTag(tagToForget) && playerFaction.knowsHullMod(hullModSpecId)) playerFaction.removeKnownHullMod(hullModSpecId);
 		}
 
 		for (WeaponSpecAPI weaponSpec : Global.getSettings().getAllWeaponSpecs()) {
-			if (weaponSpec.hasTag(lyr_internals.tag.experimental) && !playerFaction.knowsWeapon(weaponSpec.getWeaponId())) playerFaction.addKnownWeapon(weaponSpec.getWeaponId(), false);
-			else if (weaponSpec.hasTag(lyr_internals.tag.restricted) && playerFaction.knowsWeapon(weaponSpec.getWeaponId())) playerFaction.removeKnownWeapon(weaponSpec.getWeaponId());
+			if (weaponSpec.hasTag(tagToLearn) && !playerFaction.knowsWeapon(weaponSpec.getWeaponId())) playerFaction.addKnownWeapon(weaponSpec.getWeaponId(), false);
+			else if (weaponSpec.hasTag(tagToForget) && playerFaction.knowsWeapon(weaponSpec.getWeaponId())) playerFaction.removeKnownWeapon(weaponSpec.getWeaponId());
 		}
 
 		logger.info(logPrefix + "Player faction blueprints are updated");
@@ -102,14 +99,14 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 		logger.info(logPrefix + "Experimental hull modifications are registered");
 	}
 
-	private static void teachAbility() {	// add ability to ongoing games if not present
-		if (!Global.getSector().getCharacterData().getAbilities().contains(lyr_internals.id.ability)
-		 || !Global.getSector().getPlayerFleet().hasAbility(lyr_internals.id.ability)) {
-			Global.getSector().getCharacterData().addAbility(lyr_internals.id.ability);	
-			Global.getSector().getPlayerFleet().addAbility(lyr_internals.id.ability);
+	private static void teachAbility(String abilityId) {	// add ability to ongoing games if not present
+		if (!Global.getSector().getCharacterData().getAbilities().contains(abilityId)
+		 || !Global.getSector().getPlayerFleet().hasAbility(abilityId)) {
+			Global.getSector().getCharacterData().addAbility(abilityId);	
+			Global.getSector().getPlayerFleet().addAbility(abilityId);
 
-			logger.info(logPrefix + "Slot shunt visibility control ability taught");
-		} else logger.info(logPrefix + "Slot shunt visibility control ability was already known");
+			logger.info(logPrefix + "Ability with the id '"+abilityId+"' taught");
+		} else logger.info(logPrefix + "Ability with the id '"+abilityId+"' was already known");
 	}
 
 	private static void replaceFieldRepairsScript(boolean isTransient) {

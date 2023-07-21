@@ -147,11 +147,12 @@ public class _ehm_base extends BaseHullMod implements lyr_logger {
 	 * Checks the ship if it has another hull modification using the passed tag
 	 * @param ship to check the installed hullmods
 	 * @param retrofitTag to check if the ship has one already
+	 * @param excludeThisId to exclude from the check
 	 * @return true if there is another mod with the searched tag, false otherwise
 	 */
-	protected static final boolean ehm_hasRetrofitTag(ShipAPI ship, String retrofitTag, String thisHullModId) {
+	protected static final boolean ehm_hasRetrofitTag(ShipAPI ship, String retrofitTag, String excludeThisId) {
 		for (String hullModId : ship.getVariant().getHullMods()) {
-			if (hullModId.equals(thisHullModId)) continue;
+			if (hullModId.equals(excludeThisId)) continue;
 			if (settings.getHullModSpec(hullModId).hasTag(retrofitTag)) return true;
 		}
 

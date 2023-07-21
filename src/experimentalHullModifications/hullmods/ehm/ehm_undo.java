@@ -44,7 +44,7 @@ public class ehm_undo extends _ehm_tracker {
 			if (!ehm_hasRetrofitBaseBuiltIn(ship.getVariant())) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
 			if (ehm_hasExperimentalSMod(ship.getVariant())) tooltip.addPara(text.hasAnyExperimentalBuiltIn[0], text.padding).setHighlight(text.hasAnyExperimentalBuiltIn[1]); 
 			else {
-				if (ehm_hasRetrofitTag(ship, lyr_internals.tag.experimental, hullModSpecId)) tooltip.addPara(text.hasAnyExperimental[0], text.padding).setHighlight(text.hasAnyExperimental[1]);
+				if (ehm_hasRetrofitTag(ship, lyr_internals.tag.experimental, lyr_internals.id.hullmods.base)) tooltip.addPara(text.hasAnyExperimental[0], text.padding).setHighlight(text.hasAnyExperimental[1]);
 				if (ehm_hasWeapons(ship)) tooltip.addPara(text.hasWeapons[0], text.padding).setHighlight(text.hasWeapons[1]);
 			}
 		}
@@ -57,7 +57,7 @@ public class ehm_undo extends _ehm_tracker {
 		if (ship == null) return false;
 
 		if (!ehm_hasRetrofitBaseBuiltIn(ship.getVariant())) return false;
-		if (ehm_hasRetrofitTag(ship, lyr_internals.tag.experimental, hullModSpecId)) return false;
+		if (ehm_hasRetrofitTag(ship, lyr_internals.tag.experimental, lyr_internals.id.hullmods.base)) return false;
 		if (ehm_hasWeapons(ship)) return false; 
 
 		return true; 
