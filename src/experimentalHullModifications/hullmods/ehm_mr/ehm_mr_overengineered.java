@@ -85,8 +85,8 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 	public String getDescriptionParam(int index, HullSize hullSize) {
 		switch (index) {
 			case 0: return "story point";
-			case 1: return ordnancePointBonus*100+"%";
-			case 2: return slotPointBonus.get(HullSize.FRIGATE)+"/"+slotPointBonus.get(HullSize.DESTROYER)+"/"+slotPointBonus.get(HullSize.CRUISER)+"/"+slotPointBonus.get(HullSize.CAPITAL_SHIP)+"/ slot points";
+			case 1: return Math.round(ordnancePointBonus*100)+"%";
+			case 2: return slotPointBonus.get(HullSize.FRIGATE)+"/"+slotPointBonus.get(HullSize.DESTROYER)+"/"+slotPointBonus.get(HullSize.CRUISER)+"/"+slotPointBonus.get(HullSize.CAPITAL_SHIP)+" slot points";
 			case 3: return "slot point";
 			case 4: return "converter shunts";
 			case 5: return "gained and utilized";
@@ -115,7 +115,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 	@Override
 	public String getSModDescriptionParam(int index, HullSize hullSize) {
 		switch (index) {
-			case 0: return ordnancePointBonus*100+"% OP";
+			case 0: return Math.round(ordnancePointBonus*100)+"% OP";
 			case 1: return slotPointBonus.get(hullSize) + " slot points";
 			default: return null;
 		}
