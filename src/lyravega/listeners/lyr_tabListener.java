@@ -4,7 +4,6 @@ import com.fs.starfarer.api.EveryFrameScriptWithCleanup;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CargoAPI;
 import com.fs.starfarer.api.campaign.CargoAPI.CargoItemQuantity;
-import com.fs.starfarer.api.campaign.CoreInteractionListener;
 import com.fs.starfarer.api.campaign.CoreUITabId;
 import com.fs.starfarer.api.campaign.listeners.CoreUITabListener;
 
@@ -20,8 +19,7 @@ import lyravega.tools.lyr_scriptTools;
  * when it is closed.
  * @author lyravega
  */
-public class lyr_tabListener implements CoreUITabListener, CoreInteractionListener, EveryFrameScriptWithCleanup, lyr_logger {
-	protected static final boolean useScript = true;	// CoreInteractionListener doesn't fire so a script keeps checking the tab
+public class lyr_tabListener implements CoreUITabListener, EveryFrameScriptWithCleanup, lyr_logger {
 	protected static final CoreUITabId targetTab = CoreUITabId.REFIT;
 	private static final String targetTabString = targetTab.toString().toLowerCase();
 	
@@ -43,6 +41,22 @@ public class lyr_tabListener implements CoreUITabListener, CoreInteractionListen
 		}
 	}
 
+	protected void onOpen() {
+		CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
+
+		for (String shuntId : ehm_submarket.shunts) {
+			playerCargo.addWeapons(shuntId, 1000);
+		}
+	}
+
+	protected void onClose() {
+		CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
+
+		for (CargoItemQuantity<String> weaponCargo : playerCargo.getWeapons()) {
+			if (ehm_submarket.shunts.contains(weaponCargo.getItem())) playerCargo.removeWeapons(weaponCargo.getItem(), weaponCargo.getCount());
+		}
+	}
+
 	//#region CoreUITabListener
 	protected boolean executeOnOpenOnce = true;
 	protected boolean onOpenExecuted = false;
@@ -51,42 +65,14 @@ public class lyr_tabListener implements CoreUITabListener, CoreInteractionListen
 	public void reportAboutToOpenCoreTab(CoreUITabId tab, Object param) {
 		if (!tab.equals(targetTab)) return;
 
-		if (!executeOnOpenOnce || !onOpenExecuted) onOpen();
-	}
-
-	protected void onOpen() {
-		if (useScript) attachTabScript();
-		onOpenExecuted = true;
-
-		CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
-
-		for (String shuntId : ehm_submarket.shunts) {
-			playerCargo.addWeapons(shuntId, 1000);
+		if (!executeOnOpenOnce || !onOpenExecuted) {
+			onOpenExecuted = true;
+			attachTabScript();
+			onOpen();
 		}
 	}
 	//#endregion
 	// END OF CoreUITabListener
-
-	//#region CoreInteractionListener
-	@Override
-	public void coreUIDismissed() {	// this listener is actually not used at all but in case it works in the future, this block is ready to roll
-		// if (!tab.equals(targetTab)) return;
-
-		onClose();
-	}
-
-	protected void onClose() {
-		if (useScript) removeTabScript();
-		onOpenExecuted = false;
-
-		CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
-
-		for (CargoItemQuantity<String> weaponCargo : playerCargo.getWeapons()) {
-			if (ehm_submarket.shunts.contains(weaponCargo.getItem())) playerCargo.removeWeapons(weaponCargo.getItem(), weaponCargo.getCount());
-		}
-	}
-	//#endregion
-	// END OF CoreInteractionListener
 
 	//#region EveryFrameScriptWithCleanup
 	protected void attachTabScript() {
@@ -112,7 +98,9 @@ public class lyr_tabListener implements CoreUITabListener, CoreInteractionListen
 
 	@Override
 	public void cleanup() {
-		this.coreUIDismissed();
+		onOpenExecuted = false;
+		removeTabScript();
+		onClose();
 	}
 	//#endregion
 	// END OF EveryFrameScriptWithCleanup

@@ -37,13 +37,12 @@ import lyravega.tools.lyr_logger;
 public class lyr_shipTracker implements lyr_logger {
 	private ShipVariantAPI variant = null;
 	// private ShipHullSpecAPI hullSpec = null;
-	private String memberId = null;
-	private Set<String> hullMods = new HashSet<String>();
-	private Set<String> enhancedMods = new HashSet<String>();
-	private Set<String> suppressedMods = new HashSet<String>();
-	// private Set<String> weapons = new HashSet<String>();
+	private final String memberId;
+	private final Set<String> hullMods = new HashSet<String>();
+	private final Set<String> enhancedMods = new HashSet<String>();
+	private final Set<String> suppressedMods = new HashSet<String>();
+	// private final Set<String> weapons = new HashSet<String>();
 	// private Map<String, ShipVariantAPI> moduleVariants = null;
-	private Iterator<String> iterator;
 	
 	//#region CONSTRUCTORS & ACCESSORS
 
@@ -92,15 +91,18 @@ public class lyr_shipTracker implements lyr_logger {
 	// 	}
 	// }
 
+	private Iterator<String> iterator;
+	private String hullModId;
+
 	private void checkHullMods() {
-		for (String hullModId : variant.getHullMods()) {
+		for (iterator = variant.getHullMods().iterator(); iterator.hasNext(); hullModId = iterator.next()) { 	// due to the "ehm_tracker" getting re-added, not using iterator here causes concurrent modification blah blah
 			if (hullMods.contains(hullModId)) continue;
 
 			if (eventInfo) logger.info(logPrefix+"ST-"+memberId+": Installed '"+hullModId+"'");
 			hullMods.add(hullModId); onEvent(onInstall, variant, hullModId);
 		}
 
-		for (iterator = hullMods.iterator(); iterator.hasNext();) { String hullModId = iterator.next();
+		for (iterator = hullMods.iterator(); iterator.hasNext(); hullModId = iterator.next()) {
 			if (variant.hasHullMod(hullModId)) continue;
 
 			if (eventInfo) logger.info(logPrefix+"ST-"+memberId+": Removed '"+hullModId+"'");
@@ -109,14 +111,14 @@ public class lyr_shipTracker implements lyr_logger {
 	}
 
 	private void checkEnhancedMods() {
-		for (String hullModId : variant.getSMods()) {
+		for (iterator = variant.getSMods().iterator(); iterator.hasNext(); hullModId = iterator.next()) {
 			if (enhancedMods.contains(hullModId)) continue;
 
 			if (eventInfo) logger.info(logPrefix+"ST-"+memberId+": Enhanced '"+hullModId+"'");
 			enhancedMods.add(hullModId); onEvent(onEnhance, variant, hullModId);
 		}
 
-		for (iterator = enhancedMods.iterator(); iterator.hasNext();) { String hullModId = iterator.next();
+		for (iterator = enhancedMods.iterator(); iterator.hasNext(); hullModId = iterator.next()) {
 			if (variant.getSMods().contains(hullModId)) continue;
 
 			if (eventInfo) logger.info(logPrefix+"ST-"+memberId+": Normalized '"+hullModId+"'");
@@ -125,14 +127,14 @@ public class lyr_shipTracker implements lyr_logger {
 	}
 
 	private void checkSuppressedMods() {
-		for (String hullModId : variant.getSuppressedMods()) {
+		for (iterator = variant.getSuppressedMods().iterator(); iterator.hasNext(); hullModId = iterator.next()) {
 			if (suppressedMods.contains(hullModId)) continue;
 
 			if (eventInfo) logger.info(logPrefix+"ST-"+memberId+": Suppressed '"+hullModId+"'");
 			suppressedMods.add(hullModId); onEvent(onSuppress, variant, hullModId);
 		}
 
-		for (iterator = suppressedMods.iterator(); iterator.hasNext();) { String hullModId = iterator.next();
+		for (iterator = suppressedMods.iterator(); iterator.hasNext(); hullModId = iterator.next()) {
 			if (variant.getSuppressedMods().contains(hullModId)) continue;
 
 			if (eventInfo) logger.info(logPrefix+"ST-"+memberId+": Restored '"+hullModId+"'");
