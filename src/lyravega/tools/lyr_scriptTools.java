@@ -78,6 +78,7 @@ public class lyr_scriptTools extends lyr_reflectionTools {
 				robot.keyRelease(KeyEvent.VK_R);
 				robot.keyRelease(KeyEvent.VK_ENTER);
 				isDone = true;
+				refreshRefitScript = null; // clean the parent
 				return;
 			}
 		}
@@ -89,7 +90,6 @@ public class lyr_scriptTools extends lyr_reflectionTools {
 
 		@Override
 		public boolean isDone() {
-			refreshRefitScript = null; // clean the parent
 			return isDone;
 		}
 	}
