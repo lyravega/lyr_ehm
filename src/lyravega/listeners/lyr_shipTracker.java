@@ -41,12 +41,13 @@ public class lyr_shipTracker implements lyr_logger {
 	private final Set<String> hullMods = new HashSet<String>();
 	private final Set<String> enhancedMods = new HashSet<String>();
 	private final Set<String> suppressedMods = new HashSet<String>();
-	// private final Set<String> weapons = new HashSet<String>();
+	// private Set<String> weapons = new HashSet<String>();
 	// private Map<String, ShipVariantAPI> moduleVariants = null;
+	private Iterator<String> iterator;
 	
 	//#region CONSTRUCTORS & ACCESSORS
 
-	public lyr_shipTracker(ShipAPI ship) {
+	public lyr_shipTracker(final ShipAPI ship) {
 		this.variant = ship.getVariant();
 		// this.hullSpec = variant.getHullSpec();
 		this.memberId = ship.getFleetMemberId();
@@ -56,7 +57,7 @@ public class lyr_shipTracker implements lyr_logger {
 		// this.weapons.addAll(variant.getFittedWeaponSlots());
 	}
 
-	public void updateVariant(ShipVariantAPI variant) {
+	public void updateVariant(final ShipVariantAPI variant) {
 		this.variant = variant;
 
 		checkHullMods();
@@ -71,7 +72,7 @@ public class lyr_shipTracker implements lyr_logger {
 	public static final Map<String, enhancedEvents> enhancedEvents = new HashMap<String, enhancedEvents>();
 	public static final Map<String, suppressedEvents> suppressedEvents = new HashMap<String, suppressedEvents>();
 
-	private static void onEvent(String eventName, ShipVariantAPI variant, String hullModId) {
+	private static void onEvent(final String eventName, final ShipVariantAPI variant, final String hullModId) {
 		switch (eventName) {
 			case onInstall:		if (normalEvents.containsKey(hullModId)) normalEvents.get(hullModId).onInstall(variant); return;
 			case onRemove:		if (normalEvents.containsKey(hullModId)) normalEvents.get(hullModId).onRemove(variant); return;
@@ -91,18 +92,15 @@ public class lyr_shipTracker implements lyr_logger {
 	// 	}
 	// }
 
-	private Iterator<String> iterator;
-	private String hullModId;
-
 	private void checkHullMods() {
-		for (iterator = variant.getHullMods().iterator(); iterator.hasNext(); hullModId = iterator.next()) { 	// due to the "ehm_tracker" getting re-added, not using iterator here causes concurrent modification blah blah
+		for (final String hullModId : variant.getHullMods()) {
 			if (hullMods.contains(hullModId)) continue;
 
 			if (eventInfo) logger.info(logPrefix+"ST-"+memberId+": Installed '"+hullModId+"'");
 			hullMods.add(hullModId); onEvent(onInstall, variant, hullModId);
 		}
 
-		for (iterator = hullMods.iterator(); iterator.hasNext(); hullModId = iterator.next()) {
+		for (iterator = hullMods.iterator(); iterator.hasNext();) { final String hullModId = iterator.next();
 			if (variant.hasHullMod(hullModId)) continue;
 
 			if (eventInfo) logger.info(logPrefix+"ST-"+memberId+": Removed '"+hullModId+"'");
@@ -111,14 +109,14 @@ public class lyr_shipTracker implements lyr_logger {
 	}
 
 	private void checkEnhancedMods() {
-		for (iterator = variant.getSMods().iterator(); iterator.hasNext(); hullModId = iterator.next()) {
+		for (final String hullModId : variant.getSMods()) {
 			if (enhancedMods.contains(hullModId)) continue;
 
 			if (eventInfo) logger.info(logPrefix+"ST-"+memberId+": Enhanced '"+hullModId+"'");
 			enhancedMods.add(hullModId); onEvent(onEnhance, variant, hullModId);
 		}
 
-		for (iterator = enhancedMods.iterator(); iterator.hasNext(); hullModId = iterator.next()) {
+		for (iterator = enhancedMods.iterator(); iterator.hasNext();) { final String hullModId = iterator.next();
 			if (variant.getSMods().contains(hullModId)) continue;
 
 			if (eventInfo) logger.info(logPrefix+"ST-"+memberId+": Normalized '"+hullModId+"'");
@@ -127,14 +125,14 @@ public class lyr_shipTracker implements lyr_logger {
 	}
 
 	private void checkSuppressedMods() {
-		for (iterator = variant.getSuppressedMods().iterator(); iterator.hasNext(); hullModId = iterator.next()) {
+		for (final String hullModId : variant.getSuppressedMods()) {
 			if (suppressedMods.contains(hullModId)) continue;
 
 			if (eventInfo) logger.info(logPrefix+"ST-"+memberId+": Suppressed '"+hullModId+"'");
 			suppressedMods.add(hullModId); onEvent(onSuppress, variant, hullModId);
 		}
 
-		for (iterator = suppressedMods.iterator(); iterator.hasNext(); hullModId = iterator.next()) {
+		for (iterator = suppressedMods.iterator(); iterator.hasNext();) { final String hullModId = iterator.next();
 			if (variant.getSuppressedMods().contains(hullModId)) continue;
 
 			if (eventInfo) logger.info(logPrefix+"ST-"+memberId+": Restored '"+hullModId+"'");

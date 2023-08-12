@@ -1,10 +1,16 @@
 package experimentalHullModifications.hullmods.ehm_ar;
 
+import static experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base.ehm_adaptSlot;
+import static experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base.ehm_convertSlot;
+import static experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base.ehm_deactivateSlot;
 import static lyravega.listeners.lyr_lunaSettingsListener.baseSlotPointPenalty;
 import static lyravega.listeners.lyr_lunaSettingsListener.extraInfoInHullMods;
+import static lyravega.tools.lyr_uiTools.commitVariantChanges;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,12 +21,23 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
+import com.fs.starfarer.api.impl.campaign.ids.Stats;
+import com.fs.starfarer.api.loading.WeaponSlotAPI;
+import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_tooltip.header;
 import lyravega.misc.lyr_tooltip.text;
+import lyravega.proxies.lyr_hullSpec;
+import lyravega.misc.lyr_internals.id.hullmods;
+import lyravega.misc.lyr_internals.id.shunts.adapters;
+import lyravega.misc.lyr_internals.id.shunts.capacitors;
+import lyravega.misc.lyr_internals.id.shunts.converters;
+import lyravega.misc.lyr_internals.id.shunts.dissipators;
+import lyravega.misc.lyr_internals.id.shunts.diverters;
+import lyravega.misc.lyr_internals.id.shunts.launchTubes;
 
 /**@category Adapter Retrofit 
  * @author lyravega
@@ -78,7 +95,67 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		// DUMMY MOD / DATA CLASS, ACTIONS ARE HANDLED THROUGH BASE
+		ShipVariantAPI variant = stats.getVariant();
+		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
+		List<WeaponSlotAPI> shunts = hullSpec.getAllWeaponSlotsCopy();
+		boolean commitVariantChanges = false;
+
+		int slotPointsFromMods = ehm_slotPointsFromHullMods(variant);
+		int slotPoints = slotPointsFromMods;	// as hullMod methods are called several times, slotPoints accumulate correctly on subsequent call(s)
+
+		for (Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
+			WeaponSlotAPI slot = iterator.next();
+			// if (slot.isDecorative()) continue;
+
+			String slotId = slot.getId();
+			if (variant.getWeaponSpec(slotId) == null) { iterator.remove(); continue; }
+
+			// if (!slotId.startsWith(lyr_internals.affix.normalSlot)) continue;
+			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
+			if (!shuntSpec.getSize().equals(variant.getSlot(slotId).getSlotSize())) { iterator.remove(); continue; }
+			if (!shuntSpec.hasTag(lyr_internals.tag.experimental)) { iterator.remove(); continue; }
+
+			String shuntId = shuntSpec.getWeaponId();
+			switch (shuntId) {
+				case converters.mediumToLarge: case converters.smallToLarge: case converters.smallToMedium:
+					if (!slotId.startsWith(lyr_internals.affix.normalSlot)) { iterator.remove(); break; }
+					if (slot.isDecorative()) slotPoints -= converterMap.get(shuntId).getChildCost();
+					// hullSpec.addBuiltInWeapon(slotId, shuntId);
+					break;
+				case diverters.large: case diverters.medium: case diverters.small:
+					if (slotId.startsWith(lyr_internals.affix.convertedSlot)) { iterator.remove(); break; }
+					if (slot.isDecorative()) slotPoints += diverterMap.get(shuntId);
+					// hullSpec.addBuiltInWeapon(slotId, shuntId);
+					break;
+				default: { iterator.remove(); break; }
+			}
+		}
+
+		for (WeaponSlotAPI slot : shunts) {
+			if (slot.isDecorative()) continue;
+
+			String slotId = slot.getId();
+			String shuntId = variant.getWeaponSpec(slotId).getWeaponId();
+
+			switch (shuntId) {
+				case converters.mediumToLarge: case converters.smallToLarge: case converters.smallToMedium:
+					int cost = converterMap.get(shuntId).getChildCost();
+					if (slotPoints - cost < 0) break;
+					slotPoints -= cost;
+					commitVariantChanges = ehm_convertSlot(hullSpec, shuntId, slotId);
+					break;
+				case diverters.large: case diverters.medium: case diverters.small:
+					slotPoints += diverterMap.get(shuntId);
+					commitVariantChanges = ehm_deactivateSlot(hullSpec, shuntId, slotId);
+					break;
+				default: break;
+			}
+		}
+
+		stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullmods.diverterandconverter, Math.max(0, baseSlotPointPenalty*Math.min(slotPointsFromMods, slotPointsFromMods - slotPoints)));
+
+		variant.setHullSpecAPI(hullSpec.retrieve());
+		if (commitVariantChanges && !isGettingRestored(variant)) { commitVariantChanges = false; commitVariantChanges(); }
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION

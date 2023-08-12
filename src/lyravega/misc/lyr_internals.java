@@ -14,6 +14,7 @@ public final class lyr_internals {
 		public static final class hullmods {
 			public static final String
 				base = "ehm_base",
+				tracker = "ehm_tracker",
 				undo = "ehm_undo",
 				test = "ehm_test",
 				diverterandconverter = "ehm_ar_diverterandconverter",

@@ -1,6 +1,7 @@
 package experimentalHullModifications.hullmods.ehm;
 
 import static lyravega.tools.lyr_uiTools.isRefitTab;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import com.fs.starfarer.api.EveryFrameScriptWithCleanup;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
+
 import lyravega.listeners.lyr_shipTracker;
 
 /**
@@ -22,7 +24,7 @@ import lyravega.listeners.lyr_shipTracker;
  * @author lyravega
  */
 public class _ehm_tracker extends _ehm_base {
-	protected static void ehm_trackShip(ShipAPI ship) {
+	static void ehm_trackShip(ShipAPI ship) {
 		if (!isRefitTab()) return;
 
 		lyr_shipTracker shipTracker = findShipTracker(ship);
@@ -30,7 +32,7 @@ public class _ehm_tracker extends _ehm_base {
 		if (shipTracker != null) shipTracker.updateVariant(ship.getVariant());
 	}
 
-	protected static void ehm_trackShip(MutableShipStatsAPI stats) {
+	static void ehm_trackShip(MutableShipStatsAPI stats) {
 		if (!isRefitTab()) return;
 
 		if (stats.getEntity() instanceof ShipAPI) {
@@ -41,13 +43,13 @@ public class _ehm_tracker extends _ehm_base {
 		}
 	}
 
-	protected static void ehm_stopTracking(ShipAPI ship) {
+	static void ehm_stopTracking(ShipAPI ship) {
 		if (!isRefitTab()) return;
 
 		stopShipTracker(ship);
 	}
 	
-	protected static void ehm_stopTracking(MutableShipStatsAPI stats) {
+	static void ehm_stopTracking(MutableShipStatsAPI stats) {
 		if (!isRefitTab()) return;
 
 		if (stats.getEntity() instanceof ShipAPI) {

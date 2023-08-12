@@ -3,9 +3,9 @@ package experimentalHullModifications.hullmods.ehm_ar;
 import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_diverterandconverter.converterMap;
 import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_diverterandconverter.diverterConverterSet;
 import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_diverterandconverter.diverterMap;
+import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_launchtube.launchTubeMap;
 import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.capacitorMap;
 import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.dissipatorMap;
-import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.launchTubeMap;
 import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.adapterMap;
 import static lyravega.listeners.lyr_lunaSettingsListener.baseSlotPointPenalty;
 import static lyravega.tools.lyr_uiTools.commitVariantChanges;
@@ -83,6 +83,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 	private static final Pattern pattern = Pattern.compile("WS[ 0-9]{4}");
 	private static Matcher matcher;
 
+	@Deprecated
 	public static final void ehm_processShunts(MutableShipStatsAPI stats, boolean isGettingRestored) {
 		ShipVariantAPI variant = stats.getVariant();
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
@@ -210,7 +211,32 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		if (refreshRefit && !isGettingRestored) { refreshRefit = false; commitVariantChanges(); }
 	}
 
-	private static final boolean ehm_adaptSlot(lyr_hullSpec hullSpec, String shuntId, String slotId) {
+	public static final void ehm_preProcessShunts(MutableShipStatsAPI stats) {
+		ShipVariantAPI variant = stats.getVariant();
+		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
+		boolean commitVariantChanges = false;
+
+		// primarily to deal with stuff on load
+		for (String slotId : variant.getFittedWeaponSlots()) {
+			if (variant.getSlot(slotId) != null) continue;
+			matcher = pattern.matcher(slotId);
+			if (matcher.find()) slotId = matcher.group();
+			else continue;	// this should never happen
+
+			if (!slotId.startsWith(lyr_internals.affix.normalSlot)) continue;
+			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
+			if (!shuntSpec.getSize().equals(variant.getSlot(slotId).getSlotSize())) continue;
+
+			String shuntId = shuntSpec.getWeaponId();
+			if (adapterMap.containsKey(shuntId)) commitVariantChanges = ehm_adaptSlot(hullSpec, shuntId, slotId);
+			else if (converterMap.containsKey(shuntId)) commitVariantChanges = ehm_convertSlot(hullSpec, shuntId, slotId);
+		}
+
+		variant.setHullSpecAPI(hullSpec.retrieve());
+		if (commitVariantChanges && !isGettingRestored(variant)) { commitVariantChanges = false; commitVariantChanges(); }
+	}
+
+	protected static final boolean ehm_adaptSlot(lyr_hullSpec hullSpec, String shuntId, String slotId) {
 		childrenParameters childrenParameters = adapterMap.get(shuntId);
 		lyr_weaponSlot parentSlot = hullSpec.getWeaponSlot(slotId);
 
@@ -232,7 +258,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		return true;
 	}
 
-	private static final boolean ehm_convertSlot(lyr_hullSpec hullSpec, String shuntId, String slotId) {
+	protected static final boolean ehm_convertSlot(lyr_hullSpec hullSpec, String shuntId, String slotId) {
 		// childParameters childParameters = converters.get(shuntId);
 		// int childCost = childParameters.getChildCost();
 		// if (slotPoints != null && slotPoints - childCost < 0) return slotPoints - childCost;
@@ -255,7 +281,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		return true;
 	}
 
-	private static final boolean ehm_deactivateSlot(lyr_hullSpec hullSpec, String shuntId, String slotId) {
+	protected static final boolean ehm_deactivateSlot(lyr_hullSpec hullSpec, String shuntId, String slotId) {
 		hullSpec.addBuiltInWeapon(slotId, shuntId);
 		hullSpec.getWeaponSlot(slotId).setWeaponType(WeaponType.DECORATIVE);
 		return true;

@@ -13,6 +13,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
+import com.fs.starfarer.api.campaign.econ.MarketAPI;
+import com.fs.starfarer.api.combat.HullModEffect;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
@@ -21,10 +25,10 @@ import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
-import com.fs.starfarer.api.util.Misc;
 
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_tooltip.header;
+import lyravega.misc.lyr_tooltip.text;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.misc.lyr_internals.id.hullmods;
 import lyravega.misc.lyr_internals.id.shunts.adapters;
@@ -37,21 +41,18 @@ import lyravega.misc.lyr_internals.id.shunts.launchTubes;
 /**@category Adapter Retrofit 
  * @author lyravega
  */
-public final class ehm_ar_mutableshunt extends _ehm_ar_base {
-	static final Set<String> fluxShuntSet = new HashSet<String>();
-	static final Map<String, Float[]> capacitorMap = new HashMap<String, Float[]>();
-	static final Map<String, Float[]> dissipatorMap = new HashMap<String, Float[]>();
+public final class ehm_ar_launchtube extends _ehm_ar_base {
+	static final Set<String> mutableStatBonus = new HashSet<String>();
+	static final Map<String, Float> launchTubeMap = new HashMap<String, Float>();
 	static {
-		capacitorMap.put(lyr_internals.id.shunts.capacitors.large, new Float[] {0.04f, 6f * Misc.FLUX_PER_CAPACITOR});
-		capacitorMap.put(lyr_internals.id.shunts.capacitors.medium, new Float[] {0.02f, 3f * Misc.FLUX_PER_CAPACITOR});
-		capacitorMap.put(lyr_internals.id.shunts.capacitors.small, new Float[] {0.01f, 1.5f * Misc.FLUX_PER_CAPACITOR});
-		fluxShuntSet.addAll(capacitorMap.keySet());
-
-		dissipatorMap.put(lyr_internals.id.shunts.dissipators.large, new Float[] {0.04f, 6f * Misc.DISSIPATION_PER_VENT});
-		dissipatorMap.put(lyr_internals.id.shunts.dissipators.medium, new Float[] {0.02f, 3f * Misc.DISSIPATION_PER_VENT});
-		dissipatorMap.put(lyr_internals.id.shunts.dissipators.small, new Float[] {0.01f, 1.5f * Misc.DISSIPATION_PER_VENT});
-		fluxShuntSet.addAll(dissipatorMap.keySet());
+		launchTubeMap.put(lyr_internals.id.shunts.launchTubes.large, 1.0f);
+		mutableStatBonus.addAll(launchTubeMap.keySet());
 	}
+	
+	// com.fs.starfarer.api.impl.hullmods.ConvertedHangar
+	private static final HullModEffect convertedHangarEffect = Global.getSettings().getHullModSpec("converted_hangar").getEffect();
+	// com.fs.starfarer.api.impl.hullmods.VastHangar
+	private static final HullModEffect vastHangarEffect = Global.getSettings().getHullModSpec("vast_hangar").getEffect();
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
@@ -60,8 +61,14 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 		List<WeaponSlotAPI> shunts = hullSpec.getAllWeaponSlotsCopy();
 		boolean commitVariantChanges = false;
 
-		float[] totalFluxCapacityBonus = {1.0f, 0.0f};	// [0] mult, [1] flat
-		float[] totalFluxDissipationBonus = {1.0f, 0.0f};	// [0] mult, [1] flat
+		int fighterBayFlat = 0;
+
+		// if (stats.getNumFighterBays().getBaseValue() <= 0) {
+		// 	convertedHangarEffect.applyEffectsBeforeShipCreation(hullSize, stats, "converted_hangar");
+		// } else {
+		// 	vastHangarEffect.applyEffectsBeforeShipCreation(hullSize, stats, "vast_hangar");
+		// 	convertedHangarEffect.applyEffectsBeforeShipCreation(hullSize, stats, "converted_hangar");
+		// }
 		
 		for (Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
 			WeaponSlotAPI slot = iterator.next();
@@ -77,16 +84,9 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 
 			String shuntId = shuntSpec.getWeaponId();
 			switch (shuntId) {
-				case capacitors.large: case capacitors.medium: case capacitors.small:
+				case launchTubes.large:
 					if (slotId.startsWith(lyr_internals.affix.convertedSlot)) { iterator.remove(); break; }
-					totalFluxCapacityBonus[0] += capacitorMap.get(shuntId)[0];
-					totalFluxCapacityBonus[1] += capacitorMap.get(shuntId)[1];
-					// hullSpec.addBuiltInWeapon(slotId, shuntId);
-					break;
-				case dissipators.large: case dissipators.medium: case dissipators.small:
-					if (slotId.startsWith(lyr_internals.affix.convertedSlot)) { iterator.remove(); break; }
-					totalFluxDissipationBonus[0] += dissipatorMap.get(shuntId)[0];
-					totalFluxDissipationBonus[1] += dissipatorMap.get(shuntId)[1];
+					fighterBayFlat += launchTubeMap.get(shuntId);
 					// hullSpec.addBuiltInWeapon(slotId, shuntId);
 					break;
 				default: { iterator.remove(); break; }
@@ -100,18 +100,14 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 			String shuntId = variant.getWeaponSpec(slotId).getWeaponId();
 
 			switch (shuntId) {
-				case capacitors.large: case capacitors.medium: case capacitors.small:
-				case dissipators.large: case dissipators.medium: case dissipators.small:
+				case launchTubes.large:
 					commitVariantChanges = ehm_deactivateSlot(hullSpec, shuntId, slotId);
 					break;
 				default: break;
 			}
 		}
 
-		stats.getFluxCapacity().modifyMult(hullmods.mutableshunt, totalFluxCapacityBonus[0]);
-		stats.getFluxCapacity().modifyFlat(hullmods.mutableshunt, totalFluxCapacityBonus[1]);
-		stats.getFluxDissipation().modifyMult(hullmods.mutableshunt, totalFluxDissipationBonus[0]);
-		stats.getFluxDissipation().modifyFlat(hullmods.mutableshunt, totalFluxDissipationBonus[1]);
+		stats.getNumFighterBays().modifyFlat(hullmods.mutableshunt, fighterBayFlat);
 
 		variant.setHullSpecAPI(hullSpec.retrieve());
 		if (commitVariantChanges && !isGettingRestored(variant)) { commitVariantChanges = false; commitVariantChanges(); }
@@ -137,29 +133,17 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 			boolean showInfo = !extraInfoInHullMods.equals("None");
 			boolean showFullInfo = extraInfoInHullMods.equals("Full");
 
-			if (showInfo) {
-				Map<String, Integer> capacitors = ehm_shuntCount(ship, lyr_internals.tag.capacitorShunt);
+			if (showInfo) {	
+				Map<String, Integer> launchTubes = ehm_shuntCount(ship, lyr_internals.tag.tubeShunt);
 	
-				if (!capacitors.isEmpty()) {
-					tooltip.addSectionHeading("ACTIVE CAPACITORS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
-					for (String shuntId: capacitors.keySet()) {
-						tooltip.addPara(capacitors.get(shuntId) + "x " + settings.getWeaponSpec(shuntId).getWeaponName(), 2f);
+				if (!launchTubes.isEmpty()) {
+					tooltip.addSectionHeading("EXTRA HANGARS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
+					for (String shuntId: launchTubes.keySet()) {
+						tooltip.addPara(launchTubes.get(shuntId) + "x " + settings.getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
 				} else if (showFullInfo) {
-					tooltip.addSectionHeading("NO CAPACITORS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
-					tooltip.addPara("No capacitors are installed. Capacitors increase the total flux capacity of the ship, and affect built-in capacitors.", 2f);
-				}
-
-				Map<String, Integer> dissipators = ehm_shuntCount(ship, lyr_internals.tag.dissipatorShunt);
-	
-				if (!dissipators.isEmpty()) {
-					tooltip.addSectionHeading("ACTIVE DISSIPATORS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
-					for (String shuntId: dissipators.keySet()) {
-						tooltip.addPara(dissipators.get(shuntId) + "x " + settings.getWeaponSpec(shuntId).getWeaponName(), 2f);
-					}
-				} else if (showFullInfo) {
-					tooltip.addSectionHeading("NO DISSIPATORS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
-					tooltip.addPara("No dissipators are installed. Dissipators increase the total flux dissipation of the ship, and affect built-in vents.", 2f);
+					tooltip.addSectionHeading("NO EXTRA HANGARS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
+					tooltip.addPara("No large weapon slots are turned into hangars. Each large slot is turned into a single fighter bay with a launch tube.", 2f);
 				}
 			}	
 		}
@@ -170,7 +154,18 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 			String inOrOut = ship.getVariant().hasHullMod(hullModSpecId) ? header.lockedIn : header.lockedOut;
 
 			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.locked_bgColour, Alignment.MID, header.padding);
+
+			if (ehm_hasExtraWings(ship, this.hullModSpecId)) tooltip.addPara(text.hasExtraWings[0], text.padding).setHighlight(text.hasExtraWings[1]);
 		}
+	}
+	
+	@Override
+	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
+		if (ship == null) return false;
+
+		if (ship.getVariant().hasHullMod(hullModSpecId) && ehm_hasExtraWings(ship, this.hullModSpecId)) return false;
+
+		return true;
 	}
 	//#endregion
 }

@@ -289,6 +289,12 @@ public class _ehm_base extends BaseHullMod implements lyr_logger {
 	protected static boolean ehm_hasAnyFittedWings(ShipAPI ship) {
 		return !ship.getVariant().getNonBuiltInWings().isEmpty();
 	}
+
+	protected static boolean isGettingRestored(ShipVariantAPI variant) {
+		boolean isBasePerma = variant.getPermaMods().contains(lyr_internals.id.hullmods.base);
+		boolean isBaseBuiltIn = variant.getHullSpec().isBuiltInMod(lyr_internals.id.hullmods.base);
+		return !(isBasePerma && isBaseBuiltIn);	// when the ship is getting restored, hull spec won't have the base, but variant will
+	}
 	//#endregion
 	// END OF CHECK HELPERS
 
