@@ -1,8 +1,5 @@
 package experimentalHullModifications.hullmods.ehm_ar;
 
-import static experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base.ehm_adaptSlot;
-import static experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base.ehm_convertSlot;
-import static experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base.ehm_deactivateSlot;
 import static lyravega.listeners.lyr_lunaSettingsListener.extraInfoInHullMods;
 import static lyravega.tools.lyr_uiTools.commitVariantChanges;
 
@@ -28,16 +25,10 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import lyravega.misc.lyr_internals;
+import lyravega.misc.lyr_internals.id.shunts.adapters;
 import lyravega.misc.lyr_tooltip.header;
 import lyravega.misc.lyr_tooltip.text;
 import lyravega.proxies.lyr_hullSpec;
-import lyravega.misc.lyr_internals.id.hullmods;
-import lyravega.misc.lyr_internals.id.shunts.adapters;
-import lyravega.misc.lyr_internals.id.shunts.capacitors;
-import lyravega.misc.lyr_internals.id.shunts.converters;
-import lyravega.misc.lyr_internals.id.shunts.dissipators;
-import lyravega.misc.lyr_internals.id.shunts.diverters;
-import lyravega.misc.lyr_internals.id.shunts.launchTubes;
 
 /**@category Adapter Retrofit 
  * @author lyravega

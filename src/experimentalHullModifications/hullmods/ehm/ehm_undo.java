@@ -29,10 +29,8 @@ public final class ehm_undo extends _ehm_tracker {
 		
 		ehm_stopTracking(stats);
 
-		// TODO undo is broken again
-
-		variant.getHullMods().remove(lyr_internals.id.hullmods.tracker);
 		variant.getHullMods().remove(lyr_internals.id.hullmods.base);
+		variant.getPermaMods().remove(lyr_internals.id.hullmods.base);
 		variant.getHullMods().remove(this.hullModSpecId);
 		variant.setHullSpecAPI(ehm_hullSpecOriginal(variant)); commitVariantChanges(); playDrillSound(); 
 	}

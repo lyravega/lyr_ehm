@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -89,7 +88,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		ShipVariantAPI variant = stats.getVariant();
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 
-		boolean refreshRefit = false;
+		boolean commitVariantChanges = false;
 
 		// primarily to deal with stuff on load
 		for (Iterator<String> iterator = variant.getFittedWeaponSlots().iterator(); iterator.hasNext();) {
@@ -105,8 +104,8 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 			if (!shuntSpec.getSize().equals(variant.getSlot(slotId).getSlotSize())) continue;
 
 			String shuntId = shuntSpec.getWeaponId();
-			if (adapterMap.containsKey(shuntId)) refreshRefit = ehm_adaptSlot(hullSpec, shuntId, slotId);
-			else if (converterMap.containsKey(shuntId)) refreshRefit = ehm_convertSlot(hullSpec, shuntId, slotId);
+			if (adapterMap.containsKey(shuntId)) commitVariantChanges = ehm_adaptSlot(hullSpec, shuntId, slotId);
+			else if (converterMap.containsKey(shuntId)) commitVariantChanges = ehm_convertSlot(hullSpec, shuntId, slotId);
 		}
 
 		boolean hasAdapterActivator = variant.hasHullMod(hullmods.stepdownadapter);
@@ -180,20 +179,20 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 
 			switch (shuntId) {
 				case adapters.largeDual: case adapters.largeQuad: case adapters.largeTriple: case adapters.mediumDual:
-					refreshRefit = ehm_adaptSlot(hullSpec, shuntId, slotId);
+					commitVariantChanges = ehm_adaptSlot(hullSpec, shuntId, slotId);
 					break;
 				case converters.mediumToLarge: case converters.smallToLarge: case converters.smallToMedium:
 					int cost = converterMap.get(shuntId).getChildCost();
 					if (slotPoints - cost < 0) break;
 					slotPoints -= cost;
-					refreshRefit = ehm_convertSlot(hullSpec, shuntId, slotId);
+					commitVariantChanges = ehm_convertSlot(hullSpec, shuntId, slotId);
 					break;
 				case diverters.large: case diverters.medium: case diverters.small:
 					slotPoints += diverterMap.get(shuntId);
 				case capacitors.large: case capacitors.medium: case capacitors.small:
 				case dissipators.large: case dissipators.medium: case dissipators.small:
 				case launchTubes.large:
-					refreshRefit = ehm_deactivateSlot(hullSpec, shuntId, slotId);
+					commitVariantChanges = ehm_deactivateSlot(hullSpec, shuntId, slotId);
 					break;
 				default: break;
 			}
@@ -209,7 +208,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullmods.diverterandconverter, Math.max(0, baseSlotPointPenalty*Math.min(slotPointsFromMods, slotPointsFromMods - slotPoints)));
 
 		variant.setHullSpecAPI(hullSpec.retrieve()); 
-		if (refreshRefit && !isGettingRestored) { refreshRefit = false; commitVariantChanges(); }
+		if (commitVariantChanges && !isGettingRestored(variant)) { commitVariantChanges = false; commitVariantChanges(); }
 	}
 
 	public static final void ehm_preProcessShunts(MutableShipStatsAPI stats) {

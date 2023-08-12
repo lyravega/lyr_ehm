@@ -1,8 +1,5 @@
 package experimentalHullModifications.hullmods.ehm_ar;
 
-import static experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base.ehm_adaptSlot;
-import static experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base.ehm_convertSlot;
-import static experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base.ehm_deactivateSlot;
 import static lyravega.listeners.lyr_lunaSettingsListener.extraInfoInHullMods;
 import static lyravega.tools.lyr_uiTools.commitVariantChanges;
 
@@ -13,10 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
-import com.fs.starfarer.api.combat.HullModEffect;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
@@ -27,16 +22,11 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import lyravega.misc.lyr_internals;
+import lyravega.misc.lyr_internals.id.hullmods;
+import lyravega.misc.lyr_internals.id.shunts.launchTubes;
 import lyravega.misc.lyr_tooltip.header;
 import lyravega.misc.lyr_tooltip.text;
 import lyravega.proxies.lyr_hullSpec;
-import lyravega.misc.lyr_internals.id.hullmods;
-import lyravega.misc.lyr_internals.id.shunts.adapters;
-import lyravega.misc.lyr_internals.id.shunts.capacitors;
-import lyravega.misc.lyr_internals.id.shunts.converters;
-import lyravega.misc.lyr_internals.id.shunts.dissipators;
-import lyravega.misc.lyr_internals.id.shunts.diverters;
-import lyravega.misc.lyr_internals.id.shunts.launchTubes;
 
 /**@category Adapter Retrofit 
  * @author lyravega
@@ -50,9 +40,9 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 	}
 	
 	// com.fs.starfarer.api.impl.hullmods.ConvertedHangar
-	private static final HullModEffect convertedHangarEffect = Global.getSettings().getHullModSpec("converted_hangar").getEffect();
+	// private static final HullModEffect convertedHangarEffect = Global.getSettings().getHullModSpec("converted_hangar").getEffect();
 	// com.fs.starfarer.api.impl.hullmods.VastHangar
-	private static final HullModEffect vastHangarEffect = Global.getSettings().getHullModSpec("vast_hangar").getEffect();
+	// private static final HullModEffect vastHangarEffect = Global.getSettings().getHullModSpec("vast_hangar").getEffect();
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
