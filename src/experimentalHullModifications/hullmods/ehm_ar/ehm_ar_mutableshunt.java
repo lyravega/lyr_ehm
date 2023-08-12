@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
+import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
@@ -68,9 +70,9 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 			// if (slot.isDecorative()) continue;
 
 			String slotId = slot.getId();
+			if (slotId.startsWith(lyr_internals.affix.convertedSlot)) { iterator.remove(); continue; }
 			if (variant.getWeaponSpec(slotId) == null) { iterator.remove(); continue; }
 
-			// if (!slotId.startsWith(lyr_internals.affix.normalSlot)) continue;
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
 			if (!shuntSpec.getSize().equals(variant.getSlot(slotId).getSlotSize())) { iterator.remove(); continue; }
 			if (!shuntSpec.hasTag(lyr_internals.tag.experimental)) { iterator.remove(); continue; }
@@ -78,16 +80,12 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 			String shuntId = shuntSpec.getWeaponId();
 			switch (shuntId) {
 				case capacitors.large: case capacitors.medium: case capacitors.small:
-					if (slotId.startsWith(lyr_internals.affix.convertedSlot)) { iterator.remove(); break; }
 					totalFluxCapacityBonus[0] += capacitorMap.get(shuntId)[0];
 					totalFluxCapacityBonus[1] += capacitorMap.get(shuntId)[1];
-					// hullSpec.addBuiltInWeapon(slotId, shuntId);
 					break;
 				case dissipators.large: case dissipators.medium: case dissipators.small:
-					if (slotId.startsWith(lyr_internals.affix.convertedSlot)) { iterator.remove(); break; }
 					totalFluxDissipationBonus[0] += dissipatorMap.get(shuntId)[0];
 					totalFluxDissipationBonus[1] += dissipatorMap.get(shuntId)[1];
-					// hullSpec.addBuiltInWeapon(slotId, shuntId);
 					break;
 				default: { iterator.remove(); break; }
 			}
@@ -123,7 +121,6 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 		switch (index) {
 			case 0: return "dissipators";
 			case 1: return "capacitors";
-			case 2: return "launch tubes";
 			default: return null;
 		}
 	}
@@ -161,7 +158,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 					tooltip.addSectionHeading("NO DISSIPATORS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No dissipators are installed. Dissipators increase the total flux dissipation of the ship, and affect built-in vents.", 2f);
 				}
-			}	
+			}
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
@@ -171,6 +168,13 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 
 			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.locked_bgColour, Alignment.MID, header.padding);
 		}
+	}
+
+	@Override
+	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
+		if (ship == null) return false; 
+
+		return true;
 	}
 	//#endregion
 }

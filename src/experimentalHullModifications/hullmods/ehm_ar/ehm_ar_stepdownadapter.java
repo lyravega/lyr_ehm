@@ -114,9 +114,9 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 			// if (slot.isDecorative()) continue;
 
 			String slotId = slot.getId();
+			if (!slotId.startsWith(lyr_internals.affix.normalSlot)) { iterator.remove(); continue; }
 			if (variant.getWeaponSpec(slotId) == null) { iterator.remove(); continue; }
 
-			// if (!slotId.startsWith(lyr_internals.affix.normalSlot)) continue;
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
 			if (!shuntSpec.getSize().equals(variant.getSlot(slotId).getSlotSize())) { iterator.remove(); continue; }
 			if (!shuntSpec.hasTag(lyr_internals.tag.experimental)) { iterator.remove(); continue; }
@@ -124,8 +124,6 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 			String shuntId = shuntSpec.getWeaponId();
 			switch (shuntId) {
 				case adapters.largeDual: case adapters.largeQuad: case adapters.largeTriple: case adapters.mediumDual:
-					if (!slotId.startsWith(lyr_internals.affix.normalSlot)) { iterator.remove(); break; }
-					// hullSpec.addBuiltInWeapon(slotId, shuntId);
 					break;
 				default: { iterator.remove(); break; }
 			}

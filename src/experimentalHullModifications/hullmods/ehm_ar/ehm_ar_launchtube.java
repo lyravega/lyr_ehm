@@ -75,9 +75,9 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 			// if (slot.isDecorative()) continue;
 
 			String slotId = slot.getId();
+			if (slotId.startsWith(lyr_internals.affix.convertedSlot)) { iterator.remove(); continue; }
 			if (variant.getWeaponSpec(slotId) == null) { iterator.remove(); continue; }
 
-			// if (!slotId.startsWith(lyr_internals.affix.normalSlot)) continue;
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
 			if (!shuntSpec.getSize().equals(variant.getSlot(slotId).getSlotSize())) { iterator.remove(); continue; }
 			if (!shuntSpec.hasTag(lyr_internals.tag.experimental)) { iterator.remove(); continue; }
@@ -85,9 +85,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 			String shuntId = shuntSpec.getWeaponId();
 			switch (shuntId) {
 				case launchTubes.large:
-					if (slotId.startsWith(lyr_internals.affix.convertedSlot)) { iterator.remove(); break; }
 					fighterBayFlat += launchTubeMap.get(shuntId);
-					// hullSpec.addBuiltInWeapon(slotId, shuntId);
 					break;
 				default: { iterator.remove(); break; }
 			}
@@ -117,9 +115,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 	@Override
 	public String getDescriptionParam(int index, HullSize hullSize) {
 		switch (index) {
-			case 0: return "dissipators";
-			case 1: return "capacitors";
-			case 2: return "launch tubes";
+			case 0: return "launch tubes";
 			default: return null;
 		}
 	}
@@ -145,7 +141,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 					tooltip.addSectionHeading("NO EXTRA HANGARS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No large weapon slots are turned into hangars. Each large slot is turned into a single fighter bay with a launch tube.", 2f);
 				}
-			}	
+			}
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);

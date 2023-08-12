@@ -65,11 +65,13 @@ public class _ehm_base extends BaseHullMod implements lyr_logger {
 
 	protected HullModSpecAPI hullModSpec;
 	protected String hullModSpecId;
+	protected Set<String> hullModSpecTags;
 
 	@Override 
 	public void init(HullModSpecAPI hullModSpec) {
 		this.hullModSpec = hullModSpec;
 		this.hullModSpecId = hullModSpec.getId();
+		this.hullModSpecTags = hullModSpec.getTags();
 	}
 
 	//#region IMPLEMENTATION

@@ -198,9 +198,9 @@ public final class lyr_internals {
 			shieldCosmetic = "ehm_sc", // must match hullmod tag in .csv
 			engineCosmetic = "ehm_ec", // must match hullmod tag in .csv
 
-			reqShields = "ehm_sr_require_shields", // must match hullmod tag in .csv
-			reqNoPhase = "ehm_sr_require_no_phase", // must match hullmod tag in .csv
-			reqWings = "ehm_sr_require_wings", // must match hullmod tag in .csv
+			reqShields = "ehm_require_shields", // must match hullmod tag in .csv
+			reqNoPhase = "ehm_require_no_phase", // must match hullmod tag in .csv
+			reqWings = "ehm_require_wings", // must match hullmod tag in .csv
 
 			externalAccess = "ehm_externalAccess", // must match hullmod tag in .csv
 

@@ -3,8 +3,6 @@ package experimentalHullModifications.hullmods.ehm_sr;
 import static lyravega.tools.lyr_uiTools.commitVariantChanges;
 import static lyravega.tools.lyr_uiTools.playDrillSound;
 
-import java.util.Set;
-
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
@@ -80,10 +78,9 @@ public class _ehm_sr_base extends _ehm_base implements normalEvents {
 			if (!ehm_hasRetrofitBaseBuiltIn(ship.getVariant())) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
 			if (ehm_hasRetrofitTag(ship, lyr_internals.tag.systemRetrofit, hullModSpecId)) tooltip.addPara(text.hasSystemRetrofit[0], text.padding).setHighlight(text.hasSystemRetrofit[1]);
 
-			Set<String> hullModSpecTags = hullModSpec.getTags();
-			if (hullModSpecTags.contains(lyr_internals.tag.reqShields) && ship.getShield() == null) tooltip.addPara(text.noShields[0], text.padding).setHighlight(text.noShields[1]);
-			if (hullModSpecTags.contains(lyr_internals.tag.reqNoPhase) && ship.getPhaseCloak() != null) tooltip.addPara(text.hasPhase[0], text.padding).setHighlight(text.hasPhase[1]);
-			if (hullModSpecTags.contains(lyr_internals.tag.reqWings) && ship.getNumFighterBays() == 0) tooltip.addPara(text.noWings[0], text.padding).setHighlight(text.noWings[1]);
+			if (this.hullModSpecTags.contains(lyr_internals.tag.reqShields) && ship.getShield() == null) tooltip.addPara(text.noShields[0], text.padding).setHighlight(text.noShields[1]);
+			if (this.hullModSpecTags.contains(lyr_internals.tag.reqNoPhase) && ship.getPhaseCloak() != null) tooltip.addPara(text.hasPhase[0], text.padding).setHighlight(text.hasPhase[1]);
+			if (this.hullModSpecTags.contains(lyr_internals.tag.reqWings) && ship.getNumFighterBays() == 0) tooltip.addPara(text.noWings[0], text.padding).setHighlight(text.noWings[1]);
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
@@ -96,10 +93,9 @@ public class _ehm_sr_base extends _ehm_base implements normalEvents {
 		if (!ehm_hasRetrofitBaseBuiltIn(ship.getVariant())) return false; 
 		if (ehm_hasRetrofitTag(ship, lyr_internals.tag.systemRetrofit, hullModSpecId)) return false; 
 
-		Set<String> hullModSpecTags = hullModSpec.getTags();
-		if (hullModSpecTags.contains(lyr_internals.tag.reqShields) && ship.getShield() == null) return false; 
-		if (hullModSpecTags.contains(lyr_internals.tag.reqNoPhase) && ship.getPhaseCloak() != null) return false; 
-		if (hullModSpecTags.contains(lyr_internals.tag.reqWings) && ship.getNumFighterBays() == 0) return false; 
+		if (this.hullModSpecTags.contains(lyr_internals.tag.reqShields) && ship.getShield() == null) return false; 
+		if (this.hullModSpecTags.contains(lyr_internals.tag.reqNoPhase) && ship.getPhaseCloak() != null) return false; 
+		if (this.hullModSpecTags.contains(lyr_internals.tag.reqWings) && ship.getNumFighterBays() == 0) return false; 
 		
 		return true; 
 	}

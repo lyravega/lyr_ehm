@@ -108,9 +108,9 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 			// if (slot.isDecorative()) continue;
 
 			String slotId = slot.getId();
+			if (!slotId.startsWith(lyr_internals.affix.normalSlot)) { iterator.remove(); continue; }
 			if (variant.getWeaponSpec(slotId) == null) { iterator.remove(); continue; }
 
-			// if (!slotId.startsWith(lyr_internals.affix.normalSlot)) continue;
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
 			if (!shuntSpec.getSize().equals(variant.getSlot(slotId).getSlotSize())) { iterator.remove(); continue; }
 			if (!shuntSpec.hasTag(lyr_internals.tag.experimental)) { iterator.remove(); continue; }
@@ -118,14 +118,10 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 			String shuntId = shuntSpec.getWeaponId();
 			switch (shuntId) {
 				case converters.mediumToLarge: case converters.smallToLarge: case converters.smallToMedium:
-					if (!slotId.startsWith(lyr_internals.affix.normalSlot)) { iterator.remove(); break; }
 					if (slot.isDecorative()) slotPoints -= converterMap.get(shuntId).getChildCost();
-					// hullSpec.addBuiltInWeapon(slotId, shuntId);
 					break;
 				case diverters.large: case diverters.medium: case diverters.small:
-					if (slotId.startsWith(lyr_internals.affix.convertedSlot)) { iterator.remove(); break; }
 					if (slot.isDecorative()) slotPoints += diverterMap.get(shuntId);
-					// hullSpec.addBuiltInWeapon(slotId, shuntId);
 					break;
 				default: { iterator.remove(); break; }
 			}
