@@ -43,7 +43,9 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 	}
 
 	@Override
-	public void onEnhance(ShipVariantAPI variant) {}
+	public void onEnhance(ShipVariantAPI variant) {
+		commitVariantChanges();
+	}
 
 	@Override
 	public void onNormalize(ShipVariantAPI variant) {

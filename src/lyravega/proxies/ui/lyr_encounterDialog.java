@@ -45,4 +45,12 @@ public class lyr_encounterDialog implements lyr_logger {
 			logger.error(logPrefix+"Failed to use 'getCoreUI()' in 'lyr_encounterDialog'", t);
 		}	return null;
 	}
+
+	// public void openLunaSettings() {
+	// 	try {
+	// 		lunalib.lunaExtensions.DialogExtensionsKt.openLunaCustomPanel(encounterDialog, new LunaSettingsUIMainPanel(false));
+	// 	} catch (Throwable t) {
+	// 		logger.error(logPrefix+"Failed to use 'openLunaSettings()' in 'lyr_encounterDialog'", t);
+	// 	}
+	// }
 }

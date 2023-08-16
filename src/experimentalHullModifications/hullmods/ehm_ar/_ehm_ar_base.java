@@ -282,7 +282,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 	}
 
 	protected static final boolean ehm_deactivateSlot(lyr_hullSpec hullSpec, String shuntId, String slotId) {
-		hullSpec.addBuiltInWeapon(slotId, shuntId);
+		if (shuntId != null) hullSpec.addBuiltInWeapon(slotId, shuntId);
 		hullSpec.getWeaponSlot(slotId).setWeaponType(WeaponType.DECORATIVE);
 		return true;
 	}

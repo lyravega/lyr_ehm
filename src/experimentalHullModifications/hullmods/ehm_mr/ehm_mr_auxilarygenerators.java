@@ -57,7 +57,7 @@ public final class ehm_mr_auxilarygenerators extends _ehm_base implements normal
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		// DUMMY MOD / DATA CLASS, ACTIONS ARE HANDLED THROUGH ITS BASE
+		// DUMMY MOD / DATA CLASS, ACTIONS ARE HANDLED THROUGH ACTIVATOR
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION
