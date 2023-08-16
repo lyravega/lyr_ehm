@@ -50,6 +50,11 @@ public final class lyr_engineBuilder implements lyr_logger {
 		}
 	}
 
+	/**
+	 * A loose enum class to hold the constant ordinals of the obfuscated enum class.
+	 * Note that the constants aren't in enum format; they're used as integers.
+	 * @see #setEngineStyleId(int) for the method that utilizes this.
+	 */
 	public static enum engineStyleIds { ;
 		public static final int lowTech = 0;
 		public static final int midline = 1;
@@ -126,7 +131,7 @@ public final class lyr_engineBuilder implements lyr_logger {
 		return new lyr_engineBuilder(engineBuilder, true);
 	}
 	
-	//#region BRIDGE / PROXY METHODS
+	//#region PROXY METHODS
 	/**
 	 * Uses the passed enumNumber to grab an engine style from the
 	 * obfuscated code, and invoke the obfuscated engineBuilder 
@@ -213,5 +218,5 @@ public final class lyr_engineBuilder implements lyr_logger {
 		customEngineStyleSpecs.put(engineStyleSpecName, newEngineStyleSpec(engineStyleSpecJSON, engineStyleSpecName));
 	}
 	//#endregion 
-	// END OF BRIDGE / PROXY METHODS
+	// END OF PROXY METHODS
 }

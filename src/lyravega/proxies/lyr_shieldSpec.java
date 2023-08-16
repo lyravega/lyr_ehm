@@ -108,23 +108,7 @@ public final class lyr_shieldSpec implements lyr_logger {
 		return new lyr_shieldSpec(shieldSpec, true);
 	}
 
-	//#region BRIDGE / PROXY METHODS
-	/**
-	 * @param colour
-	 * @category Bridge method
-	 */
-	public void setRingColor(Color colour) {
-		shieldSpec.setRingColor(colour);
-	}
-
-	/**
-	 * @param colour
-	 * @category Bridge method
-	 */
-	public void setInnerColor(Color colour) {
-		shieldSpec.setInnerColor(colour);
-	}
-
+	//#region PROXY METHODS
 	/**
 	 * @param shieldType
 	 * @category Proxy method
@@ -197,5 +181,16 @@ public final class lyr_shieldSpec implements lyr_logger {
 		}
 	}
 	//#endregion 
-	// END OF BRIDGE / PROXY METHODS
+	// END OF PROXY METHODS
+
+	//#region BRIDGE METHODS
+	public void setRingColor(Color colour) {
+		shieldSpec.setRingColor(colour);
+	}
+
+	public void setInnerColor(Color colour) {
+		shieldSpec.setInnerColor(colour);
+	}
+	//#endregion
+	// END OF BRIDGE METHODS
 }

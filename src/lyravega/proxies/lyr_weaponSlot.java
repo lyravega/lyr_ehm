@@ -26,6 +26,7 @@ public final class lyr_weaponSlot implements lyr_logger {
 	private WeaponSlotAPI weaponSlot;
 	static Class<?> weaponSlotClass;
 	static Class<?> nodeClass;
+	static Class<?> slotTypeEnum;
 	private static MethodHandle clone;
 	private static MethodHandle setWeaponType; 
 	// private static MethodHandle isWeaponSlot;
@@ -34,11 +35,14 @@ public final class lyr_weaponSlot implements lyr_logger {
 	// private static MethodHandle newNode;
 	private static MethodHandle setNode;
 	// private static MethodHandle setNode_alt;
+	private static MethodHandle getSlotType;
+	private static MethodHandle setSlotType;
 
 	static {
 		try {
 			weaponSlotClass = inspectMethod(true, "getWeaponSlot", 1, lyr_hullSpec.hullSpecClass).getReturnType();
 			nodeClass = inspectMethod("getNode", weaponSlotClass).getReturnType();
+			slotTypeEnum = inspectMethod("getSlotType", weaponSlotClass).getReturnType();
 
 			clone = inspectMethod("clone", weaponSlotClass).getMethodHandle();
 			setWeaponType = inspectMethod("setWeaponType", weaponSlotClass, WeaponType.class).getMethodHandle();
@@ -48,9 +52,22 @@ public final class lyr_weaponSlot implements lyr_logger {
 			// newNode = lookup.findConstructor(nodeClass, MethodType.methodType(void.class, String.class, Vector2f.class));
 			setNode = inspectMethod("setNode", weaponSlotClass, String.class, Vector2f.class).getMethodHandle();
 			// setNode_alt = inspectMethod("setNode", weaponSlotClass, nodeClass).getMethodHandle();
+			getSlotType = inspectMethod("getSlotType", weaponSlotClass).getMethodHandle();
+			setSlotType = inspectMethod("setSlotType", weaponSlotClass, slotTypeEnum).getMethodHandle();
 		} catch (Throwable t) {
 			logger.fatal(logPrefix+"Failed to find a method in 'lyr_weaponSlot'", t);
 		}
+	}
+
+	/**
+	 * An enum class to hold the constants of the obfuscated enum class.
+	 * Note that the constants are in enum format; they're used as such.
+	 * @see #setSlotType(slotTypeConstants) for the method that utilizes this.
+	 */
+	public static enum slotTypeConstants { 
+		turret,
+		hardpoint,
+		hidden;
 	}
 
 	/**
@@ -110,7 +127,7 @@ public final class lyr_weaponSlot implements lyr_logger {
 		return new lyr_weaponSlot(weaponSlot, true);
 	}
 
-	//#region BRIDGE / PROXY METHODS
+	//#region PROXY METHODS
 	/**
 	 * @param weaponType to be set on the slot
 	 * @category Proxy method
@@ -121,14 +138,6 @@ public final class lyr_weaponSlot implements lyr_logger {
 		} catch (Throwable t) {
 			logger.error(logPrefix+"Failed to use 'setWeaponType()' in 'lyr_weaponSlot'", t);
 		}
-	}
-
-	/**
-	 * @return is it a weapon slot?
-	 * @category Bridge method
-	 */
-	public boolean isWeaponSlot() {
-		return weaponSlot.isWeaponSlot();
 	}
 
 	/**
@@ -172,44 +181,55 @@ public final class lyr_weaponSlot implements lyr_logger {
 	}
 
 	/**
-	 * @return Location of slot
-	 * @category Bridge method
+	 * Gets the type of the slot; it's different from the weapon type of the slot.
+	 * @return an enum entry for turret, hardpoint or hidden
 	 */
+	public Enum<?> getSlotType() {
+		try {
+			return (Enum<?>) getSlotType.invoke(weaponSlot);
+		} catch (Throwable t) {
+			logger.error(logPrefix+"Failed to use 'getSlotType()' in 'lyr_weaponSlot'", t);
+		}	return null;
+	}
+
+	/**
+	 * Sets the type of the slot; it's different from the weapon type of the slot.
+	 * @param slotType an enum constant to set; 0=turret, 1=hardpoint, 2=hidden
+	 */
+	public void setSlotType(slotTypeConstants slotType) {
+		try {
+			setSlotType.invoke(weaponSlot, slotTypeEnum.getEnumConstants()[slotType.ordinal()]);
+		} catch (Throwable t) {
+			logger.error(logPrefix+"Failed to use 'setSlotType()' in 'lyr_weaponSlot'", t);
+		}
+	}
+	//#endregion 
+	// END OF PROXY METHODS
+
+	//#region BRIDGE METHODS
+	public boolean isWeaponSlot() {
+		return weaponSlot.isWeaponSlot();
+	}
+
 	public Vector2f getLocation() {
 		return weaponSlot.getLocation();
 	}
 
-	/**
-	 * @return Angle of slot
-	 * @category Bridge method
-	 */
 	public float getAngle() {
 		return weaponSlot.getAngle();
 	}
 
-	/**
-	 * @param angle
-	 * @category Bridge method
-	 */
 	public void setAngle(float angle) {
 		weaponSlot.setAngle(angle);
 	}
 
-	/**
-	 * @return Arc of slot
-	 * @category Bridge method
-	 */
 	public float getArc() {
 		return weaponSlot.getArc();
 	}
 
-	/**
-	 * @param angle
-	 * @category Bridge method
-	 */
 	public void setArc(float angle) {
 		weaponSlot.setArc(angle);
 	}
-	//#endregion 
-	// END OF BRIDGE / PROXY METHODS
+	//#endregion
+	// END OF BRIDGE METHODS
 }

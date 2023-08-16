@@ -136,7 +136,7 @@ public final class lyr_hullSpec implements lyr_logger {
 		return new lyr_hullSpec(hullSpec, true);
 	}
 
-	//#region BRIDGE / PROXY METHODS
+	//#region PROXY METHODS
 	/**
 	 * Gets the weapon slot with the matching id, and creates a {@link lyr_weaponSlot} 
 	 * proxy for it. The created proxy is returned, which is necessary to access the 
@@ -214,58 +214,6 @@ public final class lyr_hullSpec implements lyr_logger {
 	}
 
 	/**
-	 * @return list of built-in mods
-	 * @category Bridge method
-	 * @see {@link ShipHullSpecAPI#getBuiltInMods(String) getBuiltInMods()}
-	 */
-	public List<String> getBuiltInMods() { 
-		return hullSpec.getBuiltInMods();
-	}
-
-	/**
-	 * @param hullModSpecId
-	 * @category Bridge method
-	 * @see {@link ShipHullSpecAPI#addBuiltInMod(String) addBuiltInMod(String)}
-	 */
-	public void addBuiltInMod(String hullModSpecId) { 
-		hullSpec.addBuiltInMod(hullModSpecId);
-	}
-
-	/**
-	 * @param manufacturer
-	 * @category Bridge method
-	 * @see {@link ShipHullSpecAPI#setManufacturer(String) setManufacturer(String)}
-	 */
-	public void setManufacturer(String manufacturer) {
-		hullSpec.setManufacturer(manufacturer);
-	}
-
-	/**
-	 * @param destriptionPrefix (overwrites any existing)
-	 * @category Bridge method
-	 */
-	public void setDescriptionPrefix(String destriptionPrefix) {
-		hullSpec.setDescriptionPrefix(destriptionPrefix);
-	}
-
-	/**
-	 * @return Description prefix of the hull
-	 * @category Bridge method
-	 */
-	public String getDescriptionPrefix() {
-		return hullSpec.getDescriptionPrefix();
-	}
-
-	/**
-	 * @param shipSystemId
-	 * @category Bridge method
-	 * @see {@link ShipHullSpecAPI#setShipSystemId(String) setShipSystemId(String)}
-	 */
-	public void setShipSystemId(String shipSystemId) {
-		hullSpec.setShipSystemId(shipSystemId);
-	}
-
-	/**
 	 * @param weaponSlot
 	 * @category Proxy method
 	 * @see #addWeaponSlot(lyr_weaponSlot)
@@ -292,16 +240,6 @@ public final class lyr_hullSpec implements lyr_logger {
 	}
 
 	/**
-	 * @param slotId of the slot that will have the weapon installed as built-in
-	 * @param weaponSpecId of the weapon that will be installed on the slot
-	 * @category Bridge method
-	 * @see {@link ShipHullSpecAPI#addBuiltInWeapon(String, String) addBuiltInWeapon(String, String)}
-	 */
-	public void addBuiltInWeapon(String slotId, String weaponSpecId) {
-		hullSpec.addBuiltInWeapon(slotId, weaponSpecId);
-	}
-
-	/**
 	 * @param wingId of the wing that will be added as built-in
 	 * @category Proxy method
 	 */
@@ -311,25 +249,6 @@ public final class lyr_hullSpec implements lyr_logger {
 		} catch (Throwable t) {
 			logger.error(logPrefix+"Failed to use 'addBuiltInWing()' in 'lyr_hullSpec'", t);
 		}
-	}
-
-	/**
-	 * @param defenseId
-	 * @category Bridge method
-	 * @see {@link ShipHullSpecAPI#setShipDefenseId(String) setShipDefenseId(String)}
-	 */
-	public void setShipDefenseId(String defenseId) {
-		hullSpec.setShipDefenseId(defenseId);
-	}
-
-	/**
-	 * @param characterStats (can be null)
-	 * @return Ordnance Points
-	 * @category Bridge method
-	 * @see {@link ShipHullSpecAPI#getOrdnancePoints(MutableCharacterStatsAPI) getOrdnancePoints(MutableCharacterStatsAPI)}
-	 */
-	public int getOrdnancePoints(MutableCharacterStatsAPI characterStats) {
-		return hullSpec.getOrdnancePoints(characterStats);
 	}
 
 	/**
@@ -345,15 +264,6 @@ public final class lyr_hullSpec implements lyr_logger {
 	}
 
 	/**
-	 * @param parentHullId
-	 * @category Bridge method
-	 * @see {@link ShipHullSpecAPI#setDParentHullId(String) setDParentHullId(String)}
-	 */
-	public void setDParentHullId(String parentHullId) {
-		hullSpec.setDParentHullId(parentHullId);
-	}
-
-	/**
 	 * @param baseHullId
 	 * @category Proxy method
 	 */
@@ -363,24 +273,6 @@ public final class lyr_hullSpec implements lyr_logger {
 		} catch (Throwable t) {
 			logger.error(logPrefix+"Failed to use 'setBaseHullId()' in 'lyr_hullSpec'", t);
 		}
-	}
-
-	/**
-	 * @param restoreToBase
-	 * @category Bridge method
-	 * @see {@link ShipHullSpecAPI#setRestoreToBase(boolean) setRestoreToBase(boolean)}
-	 */
-	public void setRestoreToBase(boolean restoreToBase) {
-		hullSpec.setRestoreToBase(restoreToBase);
-	}
-
-	/**
-	 * @return Value of the hull
-	 * @category Bridge method
-	 * @see {@link ShipHullSpecAPI#getBaseValue() getBaseValue()}
-	 */
-	public float getBaseValue() {
-		return hullSpec.getBaseValue();
 	}
 
 	/**
@@ -394,51 +286,77 @@ public final class lyr_hullSpec implements lyr_logger {
 			logger.error(logPrefix+"Failed to use 'setBaseValue()' in 'lyr_hullSpec'", t);
 		}
 	}
+	//#endregion 
+	// END OF PROXY METHODS
 
-	/**
-	 * @return Name of the hull
-	 * @category Bridge method
-	 * @see {@link ShipHullSpecAPI#getHullName() getHullName()}
-	 */
+	//#region BRIDGE METHODS
+	public List<String> getBuiltInMods() { 
+		return hullSpec.getBuiltInMods();
+	}
+
+	public void addBuiltInMod(String hullModSpecId) { 
+		hullSpec.addBuiltInMod(hullModSpecId);
+	}
+
+	public void setManufacturer(String manufacturer) {
+		hullSpec.setManufacturer(manufacturer);
+	}
+
+	public void setDescriptionPrefix(String destriptionPrefix) {
+		hullSpec.setDescriptionPrefix(destriptionPrefix);
+	}
+
+	public String getDescriptionPrefix() {
+		return hullSpec.getDescriptionPrefix();
+	}
+
+	public void setShipSystemId(String shipSystemId) {
+		hullSpec.setShipSystemId(shipSystemId);
+	}
+
+	public void addBuiltInWeapon(String slotId, String weaponSpecId) {
+		hullSpec.addBuiltInWeapon(slotId, weaponSpecId);
+	}
+
+	public void setShipDefenseId(String defenseId) {
+		hullSpec.setShipDefenseId(defenseId);
+	}
+
+	public int getOrdnancePoints(MutableCharacterStatsAPI characterStats) {
+		return hullSpec.getOrdnancePoints(characterStats);
+	}
+
+	public void setDParentHullId(String parentHullId) {
+		hullSpec.setDParentHullId(parentHullId);
+	}
+
+	public void setRestoreToBase(boolean restoreToBase) {
+		hullSpec.setRestoreToBase(restoreToBase);
+	}
+
+	public float getBaseValue() {
+		return hullSpec.getBaseValue();
+	}
+
 	public String getHullName() {
 		return hullSpec.getHullName();
 	}
 
-	/**
-	 * @param hullName
-	 * @category Bridge method
-	 * @see {@link ShipHullSpecAPI#setHullName(String) setHullName()}
-	 */
 	public void setHullName(String hullName) {
 		hullSpec.setHullName(hullName);
 	}
 
-	/**
-	 * @return Tags of the hull
-	 * @category Bridge method
-	 * @see {@link ShipHullSpecAPI#getTags() getTags()}
-	 */
 	public Set<String> getTags() {
 		return hullSpec.getTags();
 	}
 
-	/**
-	 * @param tag
-	 * @category Bridge method
-	 * @see {@link ShipHullSpecAPI#addTag(String) addTag(tag)}
-	 */
 	public void addTag(String tag) {
 		hullSpec.addTag(tag);
 	}
 
-	/**
-	 * @return Copied list of the all weapon slots
-	 * @category Bridge method
-	 * @see {@link ShipHullSpecAPI#getAllWeaponSlotsCopy() getAllWeaponSlotsCopy()}
-	 */
 	public List<WeaponSlotAPI> getAllWeaponSlotsCopy() {
 		return hullSpec.getAllWeaponSlotsCopy();
 	}
 	//#endregion 
-	// END OF BRIDGE / PROXY METHODS
+	// END OF BRIDGE METHODS
 }
