@@ -58,7 +58,7 @@ public final class ehm_base extends _ehm_tracker {
 
 		ShipVariantAPI variant = ship.getVariant();
 
-		if (!variant.hasHullMod(hullModSpecId)) {
+		if (!variant.hasHullMod(this.hullModSpecId)) {
 			tooltip.addSectionHeading(header.severeWarning, header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 			tooltip.addPara(text.baseRetrofitWarning[0], text.padding).setHighlight(text.baseRetrofitWarning[1]);
 

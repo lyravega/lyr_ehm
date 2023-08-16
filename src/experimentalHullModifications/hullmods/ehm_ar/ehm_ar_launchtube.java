@@ -95,7 +95,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 			}
 		}
 
-		stats.getNumFighterBays().modifyFlat(hullmods.mutableshunt, fighterBayFlat);
+		stats.getNumFighterBays().modifyFlat(this.hullModSpecId, fighterBayFlat);
 
 		variant.setHullSpecAPI(hullSpec.retrieve());
 		if (commitVariantChanges && !isGettingRestored(variant)) { commitVariantChanges = false; commitVariantChanges(); }
@@ -115,7 +115,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 		if (ship == null) return;
 		ShipVariantAPI variant = ship.getVariant();
 
-		if (variant.hasHullMod(hullModSpecId)) {
+		if (variant.hasHullMod(this.hullModSpecId)) {
 			boolean showInfo = !extraInfoInHullMods.equals("None");
 			boolean showFullInfo = extraInfoInHullMods.equals("Full");
 
@@ -137,11 +137,11 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
 
 		if (!canBeAddedOrRemovedNow(ship, null, null)) {
-			String inOrOut = ship.getVariant().hasHullMod(hullModSpecId) ? header.lockedIn : header.lockedOut;
+			String inOrOut = ship.getVariant().hasHullMod(this.hullModSpecId) ? header.lockedIn : header.lockedOut;
 
 			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.locked_bgColour, Alignment.MID, header.padding);
 
-			if (ehm_hasExtraWings(ship, this.hullModSpecId)) tooltip.addPara(text.hasExtraWings[0], text.padding).setHighlight(text.hasExtraWings[1]);
+			if (ehm_hasExtraWings(ship, hullmods.launchtube)) tooltip.addPara(text.hasExtraWings[0], text.padding).setHighlight(text.hasExtraWings[1]);
 		}
 	}
 	
@@ -149,7 +149,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
 		if (ship == null) return false;
 
-		if (ship.getVariant().hasHullMod(hullModSpecId) && ehm_hasExtraWings(ship, this.hullModSpecId)) return false;
+		if (ship.getVariant().hasHullMod(this.hullModSpecId) && ehm_hasExtraWings(ship, hullmods.launchtube)) return false;
 
 		return true;
 	}

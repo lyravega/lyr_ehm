@@ -69,17 +69,17 @@ public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 		boolean noAutomatedShipsSkill = Global.getSector().getPlayerStats().getSkillLevel(Skills.AUTOMATED_SHIPS) < 1;
 
 		if (variant.getHullSpec().getBuiltInMods().contains(HullMods.AUTOMATED) || variant.getSuppressedMods().contains(HullMods.AUTOMATED)) {
-			stats.getMinCrewMod().modifyFlat(hullModSpecId, dp*crewMultipliers.get(hullSize)[0]);	// after suppression, add crew complement
-			stats.getMaxCrewMod().modifyFlat(hullModSpecId, dp*crewMultipliers.get(hullSize)[1]);
-			stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullModSpecId, (int) (dp * 0.25));
+			stats.getMinCrewMod().modifyFlat(this.hullModSpecId, dp*crewMultipliers.get(hullSize)[0]);	// after suppression, add crew complement
+			stats.getMaxCrewMod().modifyFlat(this.hullModSpecId, dp*crewMultipliers.get(hullSize)[1]);
+			stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(this.hullModSpecId, (int) (dp * 0.25));
 
 			if (noAutomatedShipsSkill) {
 				if (isInPlayerFleet(stats) && !isAutomatedNoPenalty(stats)) {
-					stats.getMaxCombatReadiness().modifyFlat(hullModSpecId, -MAX_CR_PENALTY, "AI Switch Penalty");
+					stats.getMaxCombatReadiness().modifyFlat(this.hullModSpecId, -MAX_CR_PENALTY, "AI Switch Penalty");
 				}
 			}
 		} else {
-			stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullModSpecId, (int) (dp * -0.10));
+			stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(this.hullModSpecId, (int) (dp * -0.10));
 			// settings.getHullModSpec(HullMods.AUTOMATED).getEffect().applyEffectsBeforeShipCreation(hullSize, stats, HullMods.AUTOMATED);
 		}
 	}
@@ -155,7 +155,7 @@ public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 			boolean isFakeCaptain = captain.getNameString().isEmpty();	// as captain always returns something, checking the name to see if it's empty
 			boolean isAICore = captain.isAICore();
 
-			if (variant.hasHullMod(hullModSpecId)) {
+			if (variant.hasHullMod(this.hullModSpecId)) {
 				tooltip.addSectionHeading(header.lockedIn, header.locked_textColour, header.locked_bgColour, Alignment.MID, header.padding);
 
 				if (isAICore) tooltip.addPara(text.hasAICore[0], text.padding).setHighlight(text.hasAICore[1]);

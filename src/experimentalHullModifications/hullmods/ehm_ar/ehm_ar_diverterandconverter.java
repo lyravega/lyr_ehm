@@ -166,7 +166,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 
 		ShipVariantAPI variant = ship.getVariant();
 
-		if (variant.hasHullMod(hullModSpecId)) {
+		if (variant.hasHullMod(this.hullModSpecId)) {
 			boolean showInfo = !extraInfoInHullMods.equals("None");
 			boolean showFullInfo = extraInfoInHullMods.equals("Full");
 
@@ -211,7 +211,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
 
 		if (!canBeAddedOrRemovedNow(ship, null, null)) {
-			String inOrOut = ship.getVariant().hasHullMod(hullModSpecId) ? header.lockedIn : header.lockedOut;
+			String inOrOut = ship.getVariant().hasHullMod(this.hullModSpecId) ? header.lockedIn : header.lockedOut;
 
 			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.locked_bgColour, Alignment.MID, header.padding);
 

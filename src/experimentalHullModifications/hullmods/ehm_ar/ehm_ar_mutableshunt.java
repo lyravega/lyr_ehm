@@ -99,10 +99,10 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 			}
 		}
 
-		stats.getFluxCapacity().modifyMult(hullmods.mutableshunt, totalFluxCapacityBonus[0]);
-		stats.getFluxCapacity().modifyFlat(hullmods.mutableshunt, totalFluxCapacityBonus[1]);
-		stats.getFluxDissipation().modifyMult(hullmods.mutableshunt, totalFluxDissipationBonus[0]);
-		stats.getFluxDissipation().modifyFlat(hullmods.mutableshunt, totalFluxDissipationBonus[1]);
+		stats.getFluxCapacity().modifyMult(this.hullModSpecId, totalFluxCapacityBonus[0]);
+		stats.getFluxCapacity().modifyFlat(this.hullModSpecId, totalFluxCapacityBonus[1]);
+		stats.getFluxDissipation().modifyMult(this.hullModSpecId, totalFluxDissipationBonus[0]);
+		stats.getFluxDissipation().modifyFlat(this.hullModSpecId, totalFluxDissipationBonus[1]);
 
 		variant.setHullSpecAPI(hullSpec.retrieve());
 		if (commitVariantChanges && !isGettingRestored(variant)) { commitVariantChanges = false; commitVariantChanges(); }
@@ -123,7 +123,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 		if (ship == null) return;
 		ShipVariantAPI variant = ship.getVariant();
 
-		if (variant.hasHullMod(hullModSpecId)) {
+		if (variant.hasHullMod(this.hullModSpecId)) {
 			boolean showInfo = !extraInfoInHullMods.equals("None");
 			boolean showFullInfo = extraInfoInHullMods.equals("Full");
 
@@ -131,7 +131,10 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 				Map<String, Integer> capacitors = ehm_shuntCount(ship, lyr_internals.tag.capacitorShunt);
 	
 				if (!capacitors.isEmpty()) {
+					float totalBonus = ship.getMutableStats().getFluxCapacity().modified-(variant.getNumFluxCapacitors()*Misc.FLUX_PER_CAPACITOR+variant.getHullSpec().getFluxCapacity());
+
 					tooltip.addSectionHeading("ACTIVE CAPACITORS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
+					tooltip.addPara("Total capacity bonus: "+(int) totalBonus, 2f);
 					for (String shuntId: capacitors.keySet()) {
 						tooltip.addPara(capacitors.get(shuntId) + "x " + settings.getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
@@ -143,7 +146,10 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 				Map<String, Integer> dissipators = ehm_shuntCount(ship, lyr_internals.tag.dissipatorShunt);
 	
 				if (!dissipators.isEmpty()) {
+					float totalBonus = ship.getMutableStats().getFluxDissipation().modified-(variant.getNumFluxVents()*Misc.DISSIPATION_PER_VENT+variant.getHullSpec().getFluxDissipation());
+
 					tooltip.addSectionHeading("ACTIVE DISSIPATORS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
+					tooltip.addPara("Total dissipation bonus: "+(int) totalBonus, 2f);
 					for (String shuntId: dissipators.keySet()) {
 						tooltip.addPara(dissipators.get(shuntId) + "x " + settings.getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
@@ -157,7 +163,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
 
 		if (!canBeAddedOrRemovedNow(ship, null, null)) {
-			String inOrOut = ship.getVariant().hasHullMod(hullModSpecId) ? header.lockedIn : header.lockedOut;
+			String inOrOut = ship.getVariant().hasHullMod(this.hullModSpecId) ? header.lockedIn : header.lockedOut;
 
 			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.locked_bgColour, Alignment.MID, header.padding);
 		}

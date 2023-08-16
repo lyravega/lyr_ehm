@@ -152,7 +152,7 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 		if (ship == null) return;
 		ShipVariantAPI variant = ship.getVariant();
 
-		if (variant.hasHullMod(hullModSpecId)) {
+		if (variant.hasHullMod(this.hullModSpecId)) {
 			boolean showInfo = !extraInfoInHullMods.equals("None");
 			boolean showFullInfo = extraInfoInHullMods.equals("Full");
 
@@ -174,7 +174,7 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
 
 		if (!canBeAddedOrRemovedNow(ship, null, null)) {
-			String inOrOut = variant.hasHullMod(hullModSpecId) ? header.lockedIn : header.lockedOut;
+			String inOrOut = variant.hasHullMod(this.hullModSpecId) ? header.lockedIn : header.lockedOut;
 
 			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.locked_bgColour, Alignment.MID, header.padding);
 

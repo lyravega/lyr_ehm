@@ -18,6 +18,7 @@ public final class lyr_internals {
 				undo = "ehm_undo",
 				test = "ehm_test",
 				diverterandconverter = "ehm_ar_diverterandconverter",
+				launchtube = "ehm_ar_launchtube",
 				mutableshunt = "ehm_ar_mutableshunt",
 				stepdownadapter = "ehm_ar_stepdownadapter",
 				blueEngines = "ehm_cec_blueEngines",

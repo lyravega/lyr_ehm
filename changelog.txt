@@ -4,6 +4,7 @@ Version 0.8.3
 - Blocked slot retrofit installation and removal if there are wings or inert slot shunts present to prevent a crash**
 - While building Over-Engineered in, any existing converters that get activated will be displayed properly
 - Added OP cost to Over-Engineered (to make it cost something instead of being free when used with another mod)
+- Added total flux capacity and dissipation bonuses (if any) to Mutable Shunt Activator's tooltip
 - Fixed a rare crash happened on load related to a listener
 
 * The issues were wings not returning to cargo or disappearing completely in exclusive cases
