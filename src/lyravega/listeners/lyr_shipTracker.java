@@ -96,14 +96,14 @@ public class lyr_shipTracker implements lyr_logger {
 		for (final String hullModId : variant.getHullMods()) {
 			if (hullMods.contains(hullModId)) continue;
 
-			if (eventInfo) logger.info(logPrefix+"ST-"+memberId+": Installed '"+hullModId+"'");
+			if (lyr_lunaSettingsListener.logEventInfo) logger.info(logPrefix+"ST-"+memberId+": Installed '"+hullModId+"'");
 			hullMods.add(hullModId); onEvent(onInstall, variant, hullModId);
 		}
 
 		for (iterator = hullMods.iterator(); iterator.hasNext();) { final String hullModId = iterator.next();
 			if (variant.hasHullMod(hullModId)) continue;
 
-			if (eventInfo) logger.info(logPrefix+"ST-"+memberId+": Removed '"+hullModId+"'");
+			if (lyr_lunaSettingsListener.logEventInfo) logger.info(logPrefix+"ST-"+memberId+": Removed '"+hullModId+"'");
 			iterator.remove(); onEvent(onRemove, variant, hullModId);
 		}
 	}
@@ -112,14 +112,14 @@ public class lyr_shipTracker implements lyr_logger {
 		for (final String hullModId : variant.getSMods()) {
 			if (enhancedMods.contains(hullModId)) continue;
 
-			if (eventInfo) logger.info(logPrefix+"ST-"+memberId+": Enhanced '"+hullModId+"'");
+			if (lyr_lunaSettingsListener.logEventInfo) logger.info(logPrefix+"ST-"+memberId+": Enhanced '"+hullModId+"'");
 			enhancedMods.add(hullModId); onEvent(onEnhance, variant, hullModId);
 		}
 
 		for (iterator = enhancedMods.iterator(); iterator.hasNext();) { final String hullModId = iterator.next();
 			if (variant.getSMods().contains(hullModId)) continue;
 
-			if (eventInfo) logger.info(logPrefix+"ST-"+memberId+": Normalized '"+hullModId+"'");
+			if (lyr_lunaSettingsListener.logEventInfo) logger.info(logPrefix+"ST-"+memberId+": Normalized '"+hullModId+"'");
 			iterator.remove(); onEvent(onNormalize, variant, hullModId);
 		}
 	}
@@ -128,14 +128,14 @@ public class lyr_shipTracker implements lyr_logger {
 		for (final String hullModId : variant.getSuppressedMods()) {
 			if (suppressedMods.contains(hullModId)) continue;
 
-			if (eventInfo) logger.info(logPrefix+"ST-"+memberId+": Suppressed '"+hullModId+"'");
+			if (lyr_lunaSettingsListener.logEventInfo) logger.info(logPrefix+"ST-"+memberId+": Suppressed '"+hullModId+"'");
 			suppressedMods.add(hullModId); onEvent(onSuppress, variant, hullModId);
 		}
 
 		for (iterator = suppressedMods.iterator(); iterator.hasNext();) { final String hullModId = iterator.next();
 			if (variant.getSuppressedMods().contains(hullModId)) continue;
 
-			if (eventInfo) logger.info(logPrefix+"ST-"+memberId+": Restored '"+hullModId+"'");
+			if (lyr_lunaSettingsListener.logEventInfo) logger.info(logPrefix+"ST-"+memberId+": Restored '"+hullModId+"'");
 			iterator.remove(); onEvent(onRestore, variant, hullModId);
 		}
 	}

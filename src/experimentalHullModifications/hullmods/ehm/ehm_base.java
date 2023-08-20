@@ -1,9 +1,11 @@
 package experimentalHullModifications.hullmods.ehm;
 
 import static lyravega.listeners.lyr_lunaSettingsListener.showFluff;
+import static lyravega.listeners.lyr_lunaSettingsListener.debugTooltip;
 import static lyravega.tools.lyr_uiTools.commitVariantChanges;
 import static lyravega.tools.lyr_uiTools.playDrillSound;
 
+import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.characters.FullName.Gender;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
@@ -68,58 +70,74 @@ public final class ehm_base extends _ehm_tracker {
 			}
 
 			super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
-		} else if (showFluff) {
-			String playerSalutation = Global.getSector().getPlayerPerson().getGender().equals(Gender.MALE) ? Misc.SIR : Misc.MAAM;
+		} else {
+			if (debugTooltip) {
+				tooltip.addSectionHeading("DEBUG INFO", header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 
-			tooltip.addSectionHeading("FLUFF", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
-			switch ((int) Math.round(Math.random() * 10)) {
-				case 0: 
-					tooltip.addPara("For slot shunts, we may need to dock in a colony or a spaceport " + playerSalutation, text.padding);
-					break;
-				case 1: 
-					tooltip.addPara(playerSalutation + ", if you are unhappy with what I am offering you, I can get rid of the base hull modifications that I've made. Let me know!", text.padding);
-					break;
-				case 2: 
-					if (!ehm_hasExperimentalModWithTag(variant, lyr_internals.tag.weaponRetrofit))
-						tooltip.addPara(playerSalutation + ", with slot retrofits every weapon slot may be altered all together to make them compatible with other weapon types.", text.padding);
-					else tooltip.addPara("The slot retrofits come at a cost, but their main purpose is to allow flexibility, and of course letting you use your favourite weapons, "+ playerSalutation, text.padding);
-					break;
-				case 3: 
-					if (!ehm_hasExperimentalModWithTag(variant, lyr_internals.tag.systemRetrofit))
-						tooltip.addPara("The ships are designed along with their systems, however with system retrofits, I can change them anytime you want, "+ playerSalutation +".", text.padding);
-					else tooltip.addPara("Some system & ship combinations may be powerful. Some may not. No refunds! Just joking...", text.padding);
-					break;
-				case 4: 
-					if (!ehm_hasExperimentalModWithTag(variant, lyr_internals.tag.engineCosmetic))
-						tooltip.addPara(playerSalutation + ", let me know if you'd like to have this ship's engine exhaust colour get changed. I can even fully customize them to your exact specifications!", text.padding);
-					else tooltip.addPara("The engine exhaust cosmetics are looking great, " + playerSalutation, text.padding);
-					break;
-				case 5:
-					if (!ehm_hasExperimentalModWithTag(variant, lyr_internals.tag.shieldCosmetic))
-						tooltip.addPara("The shield emitters may be modified to project a shield with different colours, " + playerSalutation + ". The effect is purely cosmetic", text.padding);
-					else tooltip.addPara("The shield emitters are modified to project colours of your choice, " + playerSalutation, text.padding);
-					break;
-				case 6: 
-					if (!variant.hasHullMod(lyr_internals.id.hullmods.diverterandconverter))
-						tooltip.addPara("Power may be diverted from a weapon slot to another with a diverter slot shunt, " + playerSalutation + ". The trade-off is necessary to make such modifications.", text.padding);
-					else tooltip.addPara("If a converter remains idle, we might be lacking the necessary power diverted to it " + playerSalutation, text.padding);
-					break;
-				case 7: 
-					if (!variant.hasHullMod(lyr_internals.id.hullmods.mutableshunt))
-						tooltip.addPara(playerSalutation + ", slot housings may be replaced with extra flux capacitors or dissipators, or a fighter bay may be fit into a large slot with select slot shunts!", text.padding);
-					else tooltip.addPara("The capacitors and dissipators are designed to improve the built-in ones and also support other on-board systems indirectly. An additional fighter bay on the other hand...", text.padding);
-					break;
-				case 8: 
-					if (!variant.hasHullMod(lyr_internals.id.hullmods.stepdownadapter))
-						tooltip.addPara(playerSalutation + ", if you need more weapon slots of smaller sizes for any reason, bigger slots may be adapted into multiple smaller ones!", text.padding);
-					else tooltip.addPara("Any adapters will be activated, " + playerSalutation + ". The additional slots might be smaller, but sometimes having more of something is the answer.", text.padding);
-					break;
-				case 9: 
-					if (!variant.getSMods().contains(lyr_internals.id.hullmods.overengineered))
-						tooltip.addPara(playerSalutation + ", have you thought about letting me over-engineer the ship? You might find the benefits interesting!", text.padding);
-					else tooltip.addPara("This over-engineered ship is a beast, " + playerSalutation + "! Every internal system, even the bulkheads were replaced, while keeping the structural integrity intact! A mir... *cough* masterpiece!", text.padding);
-					break;
-				default: tooltip.addPara("All systems operational, " + playerSalutation, text.padding); break;
+				tooltip.addPara("Enabled Mods: "+Global.getSettings().getModManager().getEnabledModsCopy().toString(), 5f).setHighlight("Enabled Mods: ");
+				tooltip.addPara("Hullmods: "+ship.getVariant().getHullMods().toString(), 5f).setHighlight("Hullmods: ");
+				tooltip.addPara("Hull ID: "+ship.getVariant().getHullSpec().getHullId(), 5f).setHighlight("Hull ID: ");
+
+				for (EveryFrameScript script : Global.getSector().getScripts()) {
+					String scriptSimpleName = script.getClass().getSimpleName();
+
+					if (scriptSimpleName.equals("FieldRepairsScript")) tooltip.addPara("FieldRepairsScript (vanilla): Running", 5f).setHighlight("FieldRepairsScript (vanilla):");
+					if (scriptSimpleName.equals("lyr_fieldRepairsScript")) tooltip.addPara("FieldRepairsScript (EHM): Running", 5f).setHighlight("FieldRepairsScript (EHM):");
+					if (scriptSimpleName.equals("CaptainsFieldRepairsScript")) tooltip.addPara("FieldRepairsScript (QC): Running", 5f).setHighlight("FieldRepairsScript (QC):");
+				}
+			} else if (showFluff) {
+				String playerSalutation = Global.getSector().getPlayerPerson().getGender().equals(Gender.MALE) ? Misc.SIR : Misc.MAAM;
+
+				tooltip.addSectionHeading("FLUFF", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
+				switch ((int) Math.round(Math.random() * 10)) {
+					case 0: 
+						tooltip.addPara("For slot shunts, we may need to dock in a colony or a spaceport " + playerSalutation, text.padding);
+						break;
+					case 1: 
+						tooltip.addPara(playerSalutation + ", if you are unhappy with what I am offering you, I can get rid of the base hull modifications that I've made. Let me know!", text.padding);
+						break;
+					case 2: 
+						if (!ehm_hasExperimentalModWithTag(variant, lyr_internals.tag.weaponRetrofit))
+							tooltip.addPara(playerSalutation + ", with slot retrofits every weapon slot may be altered all together to make them compatible with other weapon types.", text.padding);
+						else tooltip.addPara("The slot retrofits come at a cost, but their main purpose is to allow flexibility, and of course letting you use your favourite weapons, "+ playerSalutation, text.padding);
+						break;
+					case 3: 
+						if (!ehm_hasExperimentalModWithTag(variant, lyr_internals.tag.systemRetrofit))
+							tooltip.addPara("The ships are designed along with their systems, however with system retrofits, I can change them anytime you want, "+ playerSalutation +".", text.padding);
+						else tooltip.addPara("Some system & ship combinations may be powerful. Some may not. No refunds! Just joking...", text.padding);
+						break;
+					case 4: 
+						if (!ehm_hasExperimentalModWithTag(variant, lyr_internals.tag.engineCosmetic))
+							tooltip.addPara(playerSalutation + ", let me know if you'd like to have this ship's engine exhaust colour get changed. I can even fully customize them to your exact specifications!", text.padding);
+						else tooltip.addPara("The engine exhaust cosmetics are looking great, " + playerSalutation, text.padding);
+						break;
+					case 5:
+						if (!ehm_hasExperimentalModWithTag(variant, lyr_internals.tag.shieldCosmetic))
+							tooltip.addPara("The shield emitters may be modified to project a shield with different colours, " + playerSalutation + ". The effect is purely cosmetic", text.padding);
+						else tooltip.addPara("The shield emitters are modified to project colours of your choice, " + playerSalutation, text.padding);
+						break;
+					case 6: 
+						if (!variant.hasHullMod(lyr_internals.id.hullmods.diverterandconverter))
+							tooltip.addPara("Power may be diverted from a weapon slot to another with a diverter slot shunt, " + playerSalutation + ". The trade-off is necessary to make such modifications.", text.padding);
+						else tooltip.addPara("If a converter remains idle, we might be lacking the necessary power diverted to it " + playerSalutation, text.padding);
+						break;
+					case 7: 
+						if (!variant.hasHullMod(lyr_internals.id.hullmods.mutableshunt))
+							tooltip.addPara(playerSalutation + ", slot housings may be replaced with extra flux capacitors or dissipators, or a fighter bay may be fit into a large slot with select slot shunts!", text.padding);
+						else tooltip.addPara("The capacitors and dissipators are designed to improve the built-in ones and also support other on-board systems indirectly. An additional fighter bay on the other hand...", text.padding);
+						break;
+					case 8: 
+						if (!variant.hasHullMod(lyr_internals.id.hullmods.stepdownadapter))
+							tooltip.addPara(playerSalutation + ", if you need more weapon slots of smaller sizes for any reason, bigger slots may be adapted into multiple smaller ones!", text.padding);
+						else tooltip.addPara("Any adapters will be activated, " + playerSalutation + ". The additional slots might be smaller, but sometimes having more of something is the answer.", text.padding);
+						break;
+					case 9: 
+						if (!variant.getSMods().contains(lyr_internals.id.hullmods.overengineered))
+							tooltip.addPara(playerSalutation + ", have you thought about letting me over-engineer the ship? You might find the benefits interesting!", text.padding);
+						else tooltip.addPara("This over-engineered ship is a beast, " + playerSalutation + "! Every internal system, even the bulkheads were replaced, while keeping the structural integrity intact! A mir... *cough* masterpiece!", text.padding);
+						break;
+					default: tooltip.addPara("All systems operational, " + playerSalutation, text.padding); break;
+				}
 			}
 		}
 	}

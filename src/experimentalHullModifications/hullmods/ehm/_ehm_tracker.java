@@ -10,6 +10,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 
+import lyravega.listeners.lyr_lunaSettingsListener;
 import lyravega.listeners.lyr_shipTracker;
 
 /**
@@ -82,7 +83,7 @@ public class _ehm_tracker extends _ehm_base {
 		
 		//#region CONSTRUCTORS & ACCESSORS
 		public fleetTrackerScript() {
-			if (trackerInfo) logger.info(logPrefix+"FT: Fleet Tracker initialized");
+			if (lyr_lunaSettingsListener.logTrackerInfo) logger.info(logPrefix+"FT: Fleet Tracker initialized");
 
 			Global.getSector().addTransientScript(this);
 		}
@@ -95,13 +96,17 @@ public class _ehm_tracker extends _ehm_base {
 				shipTracker = new lyr_shipTracker(ship);
 	
 				this.shipTrackers.put(memberId, shipTracker);
+				if (lyr_lunaSettingsListener.logTrackerInfo) logger.info(logPrefix+"ST-"+memberId+": Ship Tracker initialized");
 			}
 
 			return shipTracker;
 		}
 
 		private void removeShipTracker(ShipAPI ship) {
-			this.shipTrackers.remove(ship.getFleetMemberId());
+			String memberId = ship.getFleetMemberId();
+
+			this.shipTrackers.remove(memberId);
+			if (lyr_lunaSettingsListener.logTrackerInfo) logger.info(logPrefix+"ST-"+memberId+": Ship Tracker terminated");
 		}
 		//#endregion
 		// END OF CONSTRUCTORS & ACCESSORS
@@ -128,7 +133,7 @@ public class _ehm_tracker extends _ehm_base {
 			this.shipTrackers = null;
 			this.isDone = true;
 
-			if (trackerInfo) logger.info(logPrefix+"FT: Fleet Tracker terminated");
+			if (lyr_lunaSettingsListener.logTrackerInfo) logger.info(logPrefix+"FT: Fleet Tracker terminated");
 		}
 	}
 	//#endregion

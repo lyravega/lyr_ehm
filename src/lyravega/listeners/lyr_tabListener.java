@@ -29,7 +29,7 @@ public class lyr_tabListener implements CoreUITabListener, EveryFrameScriptWithC
 		if (!Global.getSector().getListenerManager().hasListenerOfClass(lyr_tabListener.class)) {
 			Global.getSector().getListenerManager().addListener(new lyr_tabListener(), isTransient);
 
-			if (listenerInfo) logger.info(logPrefix + "Attached "+targetTabString+" tab listener");
+			if (lyr_lunaSettingsListener.logListenerInfo) logger.info(logPrefix + "Attached "+targetTabString+" tab listener");
 		}
 	}
 
@@ -37,7 +37,7 @@ public class lyr_tabListener implements CoreUITabListener, EveryFrameScriptWithC
 		if (Global.getSector().getListenerManager().hasListenerOfClass(lyr_tabListener.class)) {
 			Global.getSector().getListenerManager().removeListenerOfClass(lyr_tabListener.class);
 
-			if (listenerInfo) logger.info(logPrefix + "Detached "+targetTabString+" tab listener");
+			if (lyr_lunaSettingsListener.logListenerInfo) logger.info(logPrefix + "Detached "+targetTabString+" tab listener");
 		}
 	}
 

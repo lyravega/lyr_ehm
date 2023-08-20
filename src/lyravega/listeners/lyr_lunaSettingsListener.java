@@ -30,6 +30,10 @@ public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logge
 	public static boolean showExperimentalFlavour;
 	public static boolean playDrillSound;
 	public static boolean showFluff;
+	public static boolean debugTooltip;
+	public static boolean logEventInfo = false;
+	public static boolean logListenerInfo = false;
+	public static boolean logTrackerInfo = false;
 	public static String extraInfoInHullMods;
 	public static String shuntAvailability, _shuntAvailability;
 	public static int baseSlotPointPenalty;
@@ -60,6 +64,10 @@ public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logge
 		showExperimentalFlavour = LunaSettings.getBoolean(id.mod, "ehm_showExperimentalFlavour");
 		playDrillSound = LunaSettings.getBoolean(id.mod, "ehm_playDrillSound");
 		showFluff = LunaSettings.getBoolean(id.mod, "ehm_showFluff");
+		debugTooltip = LunaSettings.getBoolean(id.mod, "ehm_debugTooltip");
+		logEventInfo = LunaSettings.getBoolean(id.mod, "ehm_logEventInfo");
+		logListenerInfo = LunaSettings.getBoolean(id.mod, "ehm_logListenerInfo");
+		logTrackerInfo = LunaSettings.getBoolean(id.mod, "ehm_logTrackerInfo");
 		extraInfoInHullMods = LunaSettings.getString(id.mod, "ehm_extraInfoInHullMods");
 		baseSlotPointPenalty = LunaSettings.getInt(id.mod, "ehm_baseSlotPointPenalty");
 	}

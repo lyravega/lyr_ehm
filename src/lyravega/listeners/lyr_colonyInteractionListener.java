@@ -23,7 +23,7 @@ public class lyr_colonyInteractionListener implements ColonyInteractionListener,
 		if (!Global.getSector().getListenerManager().hasListenerOfClass(lyr_colonyInteractionListener.class)) {
 			Global.getSector().getListenerManager().addListener(new lyr_colonyInteractionListener(), isTransient);
 	
-			if (listenerInfo) logger.info(logPrefix + "Attached colony interaction listener");
+			if (lyr_lunaSettingsListener.logListenerInfo) logger.info(logPrefix + "Attached colony interaction listener");
 		}
 	}
 
@@ -31,7 +31,7 @@ public class lyr_colonyInteractionListener implements ColonyInteractionListener,
 		if (Global.getSector().getListenerManager().hasListenerOfClass(lyr_colonyInteractionListener.class)) {
 			Global.getSector().getListenerManager().removeListenerOfClass(lyr_colonyInteractionListener.class);
 
-			if (listenerInfo) logger.info(logPrefix + "Detached colony interaction listener");
+			if (lyr_lunaSettingsListener.logListenerInfo) logger.info(logPrefix + "Detached colony interaction listener");
 		}
 	}
 
@@ -43,7 +43,7 @@ public class lyr_colonyInteractionListener implements ColonyInteractionListener,
 
 		market.addSubmarket(lyr_internals.id.submarket);
 
-		if (ehm_ability.listenerInfo) ehm_ability.logger.info(ehm_ability.logPrefix + "Attached experimental submarket");
+		if (lyr_lunaSettingsListener.logListenerInfo) ehm_ability.logger.info(ehm_ability.logPrefix + "Attached experimental submarket");
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class lyr_colonyInteractionListener implements ColonyInteractionListener,
 			if (ehm_submarket.shunts.contains(weaponCargo.getItem())) playerCargo.removeWeapons(weaponCargo.getItem(), weaponCargo.getCount());
 		}
 
-		if (ehm_ability.listenerInfo) ehm_ability.logger.info(ehm_ability.logPrefix + "Detached experimental submarket");
+		if (lyr_lunaSettingsListener.logListenerInfo) ehm_ability.logger.info(ehm_ability.logPrefix + "Detached experimental submarket");
 	}
 
 	@Override
