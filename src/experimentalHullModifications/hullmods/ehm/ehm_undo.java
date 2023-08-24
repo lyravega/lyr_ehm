@@ -40,11 +40,11 @@ public final class ehm_undo extends _ehm_tracker {
 		if (!isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
-			if (!ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
-			if (ehm_hasExperimentalSMod(ship)) tooltip.addPara(text.hasAnyExperimentalBuiltIn[0], text.padding).setHighlight(text.hasAnyExperimentalBuiltIn[1]); 
+			if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
+			if (_ehm_helpers.ehm_hasExperimentalSMod(ship)) tooltip.addPara(text.hasAnyExperimentalBuiltIn[0], text.padding).setHighlight(text.hasAnyExperimentalBuiltIn[1]); 
 			else {
-				if (ehm_hasRetrofitTag(ship, lyr_internals.tag.experimental, lyr_internals.id.hullmods.base)) tooltip.addPara(text.hasAnyExperimental[0], text.padding).setHighlight(text.hasAnyExperimental[1]);
-				if (ehm_hasWeapons(ship)) tooltip.addPara(text.hasWeapons[0], text.padding).setHighlight(text.hasWeapons[1]);
+				if (_ehm_helpers.ehm_hasRetrofitTag(ship, lyr_internals.tag.experimental, lyr_internals.id.hullmods.base)) tooltip.addPara(text.hasAnyExperimental[0], text.padding).setHighlight(text.hasAnyExperimental[1]);
+				if (_ehm_helpers.ehm_hasWeapons(ship)) tooltip.addPara(text.hasWeapons[0], text.padding).setHighlight(text.hasWeapons[1]);
 			}
 		}
 
@@ -55,15 +55,15 @@ public final class ehm_undo extends _ehm_tracker {
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false;
 
-		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return false;
-		if (ehm_hasRetrofitTag(ship, lyr_internals.tag.experimental, lyr_internals.id.hullmods.base)) return false;
-		if (ehm_hasWeapons(ship)) return false; 
+		if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) return false;
+		if (_ehm_helpers.ehm_hasRetrofitTag(ship, lyr_internals.tag.experimental, lyr_internals.id.hullmods.base)) return false;
+		if (_ehm_helpers.ehm_hasWeapons(ship)) return false; 
 
 		return true; 
 	}
 	
 	@Override
 	public boolean showInRefitScreenModPickerFor(ShipAPI ship) {
-		return (ehm_hasRetrofitBaseBuiltIn(ship)) ? true : false;
+		return (_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) ? true : false;
 	}
 }

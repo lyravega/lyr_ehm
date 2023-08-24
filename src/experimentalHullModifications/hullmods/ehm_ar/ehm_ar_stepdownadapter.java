@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
@@ -24,6 +25,7 @@ import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
+import experimentalHullModifications.hullmods.ehm._ehm_helpers;
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_internals.id.shunts.adapters;
 import lyravega.misc.lyr_tooltip.header;
@@ -135,7 +137,7 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 		}
 
 		variant.setHullSpecAPI(hullSpec.retrieve());
-		if (commitVariantChanges && !isGettingRestored(variant)) { commitVariantChanges = false; commitVariantChanges(); }
+		if (commitVariantChanges && !_ehm_helpers.ehm_isGettingRestored(variant)) { commitVariantChanges = false; commitVariantChanges(); }
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION
@@ -162,7 +164,7 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 				if (!adapters.isEmpty()) {
 					tooltip.addSectionHeading("ACTIVE ADAPTERS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 					for (String shuntId: adapters.keySet()) {
-						tooltip.addPara(adapters.get(shuntId) + "x " + settings.getWeaponSpec(shuntId).getWeaponName(), 2f);
+						tooltip.addPara(adapters.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
 				} else if (showFullInfo) {
 					tooltip.addSectionHeading("NO ADAPTERS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
@@ -178,7 +180,7 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 
 			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.locked_bgColour, Alignment.MID, header.padding);
 
-			if (ehm_hasWeapons(ship, lyr_internals.affix.adaptedSlot)) tooltip.addPara(text.hasWeaponsOnAdaptedSlots[0], text.padding).setHighlight(text.hasWeaponsOnAdaptedSlots[1]);
+			if (_ehm_helpers.ehm_hasWeapons(ship, lyr_internals.affix.adaptedSlot)) tooltip.addPara(text.hasWeaponsOnAdaptedSlots[0], text.padding).setHighlight(text.hasWeaponsOnAdaptedSlots[1]);
 		}
 	}
 	
@@ -186,7 +188,7 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
 		if (ship == null) return false; 
 
-		if (ehm_hasWeapons(ship, lyr_internals.affix.adaptedSlot)) return false;
+		if (_ehm_helpers.ehm_hasWeapons(ship, lyr_internals.affix.adaptedSlot)) return false;
 
 		return true;
 	}

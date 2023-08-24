@@ -15,6 +15,7 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
+import experimentalHullModifications.hullmods.ehm._ehm_helpers;
 import lyravega.listeners.events.enhancedEvents;
 import lyravega.listeners.events.normalEvents;
 import lyravega.misc.lyr_tooltip.header;
@@ -127,7 +128,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 		if (!isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
-			if (!ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
+			if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
 		} else if (!ship.getVariant().getSMods().contains(this.hullModSpecId)) {
 			tooltip.addSectionHeading(header.severeWarning, header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 			tooltip.addPara(text.overEngineeredWarning[0], text.padding).setHighlight(text.overEngineeredWarning[1]);
@@ -140,7 +141,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false; 
 
-		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return false; 
+		if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) return false; 
 
 		return true; 
 	}

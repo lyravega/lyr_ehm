@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
@@ -21,6 +22,7 @@ import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
+import experimentalHullModifications.hullmods.ehm._ehm_helpers;
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_internals.id.hullmods;
 import lyravega.misc.lyr_internals.id.shunts.launchTubes;
@@ -98,7 +100,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 		stats.getNumFighterBays().modifyFlat(this.hullModSpecId, fighterBayFlat);
 
 		variant.setHullSpecAPI(hullSpec.retrieve());
-		if (commitVariantChanges && !isGettingRestored(variant)) { commitVariantChanges = false; commitVariantChanges(); }
+		if (commitVariantChanges && !_ehm_helpers.ehm_isGettingRestored(variant)) { commitVariantChanges = false; commitVariantChanges(); }
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION
@@ -125,7 +127,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 				if (!launchTubes.isEmpty()) {
 					tooltip.addSectionHeading("EXTRA HANGARS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 					for (String shuntId: launchTubes.keySet()) {
-						tooltip.addPara(launchTubes.get(shuntId) + "x " + settings.getWeaponSpec(shuntId).getWeaponName(), 2f);
+						tooltip.addPara(launchTubes.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
 				} else if (showFullInfo) {
 					tooltip.addSectionHeading("NO EXTRA HANGARS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
@@ -141,7 +143,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 
 			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.locked_bgColour, Alignment.MID, header.padding);
 
-			if (ehm_hasExtraWings(ship, hullmods.launchtube)) tooltip.addPara(text.hasExtraWings[0], text.padding).setHighlight(text.hasExtraWings[1]);
+			if (_ehm_helpers.ehm_hasExtraWings(ship, hullmods.launchtube)) tooltip.addPara(text.hasExtraWings[0], text.padding).setHighlight(text.hasExtraWings[1]);
 		}
 	}
 	
@@ -149,7 +151,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
 		if (ship == null) return false;
 
-		if (ship.getVariant().hasHullMod(this.hullModSpecId) && ehm_hasExtraWings(ship, hullmods.launchtube)) return false;
+		if (ship.getVariant().hasHullMod(this.hullModSpecId) && _ehm_helpers.ehm_hasExtraWings(ship, hullmods.launchtube)) return false;
 
 		return true;
 	}

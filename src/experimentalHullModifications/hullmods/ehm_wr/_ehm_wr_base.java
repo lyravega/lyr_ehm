@@ -18,6 +18,7 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
+import experimentalHullModifications.hullmods.ehm._ehm_helpers;
 import lyravega.listeners.events.normalEvents;
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_tooltip.header;
@@ -126,8 +127,8 @@ public class _ehm_wr_base extends _ehm_base implements normalEvents {
 		if (!isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
-			if (!ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
-			if (ehm_hasRetrofitTag(ship, lyr_internals.tag.weaponRetrofit, hullModSpecId)) tooltip.addPara(text.hasWeaponRetrofit[0], text.padding).setHighlight(text.hasWeaponRetrofit[1]);
+			if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
+			if (_ehm_helpers.ehm_hasRetrofitTag(ship, lyr_internals.tag.weaponRetrofit, hullModSpecId)) tooltip.addPara(text.hasWeaponRetrofit[0], text.padding).setHighlight(text.hasWeaponRetrofit[1]);
 		}
 
 		if (!canBeAddedOrRemovedNow(ship, null, null)) {
@@ -135,8 +136,8 @@ public class _ehm_wr_base extends _ehm_base implements normalEvents {
 
 			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.locked_bgColour, Alignment.MID, header.padding);
 
-			if (ehm_hasWeapons(ship)) tooltip.addPara(text.hasWeapons[0], text.padding).setHighlight(text.hasWeapons[1]);
-			if (ehm_hasAnyFittedWings(ship)) tooltip.addPara(text.hasWings[0], text.padding).setHighlight(text.hasWings[1]);
+			if (_ehm_helpers.ehm_hasWeapons(ship)) tooltip.addPara(text.hasWeapons[0], text.padding).setHighlight(text.hasWeapons[1]);
+			if (_ehm_helpers.ehm_hasAnyFittedWings(ship)) tooltip.addPara(text.hasWings[0], text.padding).setHighlight(text.hasWings[1]);
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
@@ -146,8 +147,8 @@ public class _ehm_wr_base extends _ehm_base implements normalEvents {
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false;
 
-		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return false; 
-		if (ehm_hasRetrofitTag(ship, lyr_internals.tag.weaponRetrofit, hullModSpecId)) return false; 
+		if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) return false; 
+		if (_ehm_helpers.ehm_hasRetrofitTag(ship, lyr_internals.tag.weaponRetrofit, hullModSpecId)) return false; 
 
 		return true; 
 	}
@@ -156,8 +157,8 @@ public class _ehm_wr_base extends _ehm_base implements normalEvents {
 	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
 		if (ship == null) return false;
 
-		if (ehm_hasWeapons(ship)) return false;
-		if (ehm_hasAnyFittedWings(ship)) return false;
+		if (_ehm_helpers.ehm_hasWeapons(ship)) return false;
+		if (_ehm_helpers.ehm_hasAnyFittedWings(ship)) return false;
 
 		return true;
 	}

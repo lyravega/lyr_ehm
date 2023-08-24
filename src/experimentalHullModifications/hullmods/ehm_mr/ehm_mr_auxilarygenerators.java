@@ -17,6 +17,7 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
+import experimentalHullModifications.hullmods.ehm._ehm_helpers;
 import lyravega.listeners.events.normalEvents;
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_tooltip.header;
@@ -80,14 +81,14 @@ public final class ehm_mr_auxilarygenerators extends _ehm_base implements normal
 		if (!isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
-			if (!ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
+			if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
 			if (!ship.getVariant().hasHullMod(lyr_internals.id.hullmods.diverterandconverter)) tooltip.addPara(text.lacksActivator[0], text.padding).setHighlight(text.lacksActivator[1]);
 		}
 
 		if (!canBeAddedOrRemovedNow(ship, null, null)) {
 			tooltip.addSectionHeading(header.lockedIn, header.locked_textColour, header.locked_bgColour, Alignment.MID, header.padding);
 
-			if (ehm_hasWeapons(ship, lyr_internals.affix.convertedSlot)) tooltip.addPara(text.hasWeaponsOnConvertedSlots[0], text.padding).setHighlight(text.hasWeaponsOnConvertedSlots[1]);
+			if (_ehm_helpers.ehm_hasWeapons(ship, lyr_internals.affix.convertedSlot)) tooltip.addPara(text.hasWeaponsOnConvertedSlots[0], text.padding).setHighlight(text.hasWeaponsOnConvertedSlots[1]);
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
@@ -99,7 +100,7 @@ public final class ehm_mr_auxilarygenerators extends _ehm_base implements normal
 
 		ShipVariantAPI variant = ship.getVariant();
 
-		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return false; 
+		if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) return false; 
 		if (!variant.hasHullMod(lyr_internals.id.hullmods.diverterandconverter)) return false; 
 
 		return true; 
@@ -109,7 +110,7 @@ public final class ehm_mr_auxilarygenerators extends _ehm_base implements normal
 	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
 		if (ship == null) return false;
 
-		if (ship.getVariant().hasHullMod(this.hullModSpecId) && ehm_hasWeapons(ship, lyr_internals.affix.convertedSlot)) return false;	// initial check allows installation, but blocks removal
+		if (ship.getVariant().hasHullMod(this.hullModSpecId) && _ehm_helpers.ehm_hasWeapons(ship, lyr_internals.affix.convertedSlot)) return false;	// initial check allows installation, but blocks removal
 
 		return true;
 	}

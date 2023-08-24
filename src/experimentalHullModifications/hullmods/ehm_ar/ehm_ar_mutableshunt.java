@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
@@ -22,6 +23,7 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
+import experimentalHullModifications.hullmods.ehm._ehm_helpers;
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_internals.id.shunts.capacitors;
 import lyravega.misc.lyr_internals.id.shunts.dissipators;
@@ -104,7 +106,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 		stats.getFluxDissipation().modifyFlat(this.hullModSpecId, totalFluxDissipationBonus[1]);
 
 		variant.setHullSpecAPI(hullSpec.retrieve());
-		if (commitVariantChanges && !isGettingRestored(variant)) { commitVariantChanges = false; commitVariantChanges(); }
+		if (commitVariantChanges && !_ehm_helpers.ehm_isGettingRestored(variant)) { commitVariantChanges = false; commitVariantChanges(); }
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION
@@ -135,7 +137,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 					tooltip.addSectionHeading("ACTIVE CAPACITORS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("Total capacity bonus: "+(int) totalBonus, 2f);
 					for (String shuntId: capacitors.keySet()) {
-						tooltip.addPara(capacitors.get(shuntId) + "x " + settings.getWeaponSpec(shuntId).getWeaponName(), 2f);
+						tooltip.addPara(capacitors.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
 				} else if (showFullInfo) {
 					tooltip.addSectionHeading("NO CAPACITORS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
@@ -150,7 +152,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 					tooltip.addSectionHeading("ACTIVE DISSIPATORS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("Total dissipation bonus: "+(int) totalBonus, 2f);
 					for (String shuntId: dissipators.keySet()) {
-						tooltip.addPara(dissipators.get(shuntId) + "x " + settings.getWeaponSpec(shuntId).getWeaponName(), 2f);
+						tooltip.addPara(dissipators.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
 				} else if (showFullInfo) {
 					tooltip.addSectionHeading("NO DISSIPATORS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);

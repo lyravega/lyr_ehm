@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
@@ -24,6 +25,7 @@ import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
+import experimentalHullModifications.hullmods.ehm._ehm_helpers;
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_internals.id.hullmods;
 import lyravega.misc.lyr_internals.id.shunts.converters;
@@ -144,7 +146,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 		stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullmods.diverterandconverter, Math.max(0, baseSlotPointPenalty*Math.min(slotPointsFromMods, slotPointsFromMods - slotPoints)));
 
 		variant.setHullSpecAPI(hullSpec.retrieve());
-		if (commitVariantChanges && !isGettingRestored(variant)) { commitVariantChanges = false; commitVariantChanges(); }
+		if (commitVariantChanges && !_ehm_helpers.ehm_isGettingRestored(variant)) { commitVariantChanges = false; commitVariantChanges(); }
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION
@@ -187,7 +189,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 				if (!converters.isEmpty()) {
 					tooltip.addSectionHeading("ACTIVE CONVERTERS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 					for (String shuntId: converters.keySet()) {
-						tooltip.addPara(converters.get(shuntId) + "x " + settings.getWeaponSpec(shuntId).getWeaponName(), 2f);
+						tooltip.addPara(converters.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
 				} else if (showFullInfo) {
 					tooltip.addSectionHeading("NO CONVERTERS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
@@ -199,7 +201,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 				if (!diverters.isEmpty()) {
 					tooltip.addSectionHeading("ACTIVE DIVERTERS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 					for (String shuntId: diverters.keySet()) {
-						tooltip.addPara(diverters.get(shuntId) + "x " + settings.getWeaponSpec(shuntId).getWeaponName(), 2f);
+						tooltip.addPara(diverters.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
 				} else if (showFullInfo) {
 					tooltip.addSectionHeading("NO DIVERTERS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
@@ -215,7 +217,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 
 			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.locked_bgColour, Alignment.MID, header.padding);
 
-			if (ehm_hasWeapons(ship, lyr_internals.affix.convertedSlot)) tooltip.addPara(text.hasWeaponsOnConvertedSlots[0], text.padding).setHighlight(text.hasWeaponsOnConvertedSlots[1]);
+			if (_ehm_helpers.ehm_hasWeapons(ship, lyr_internals.affix.convertedSlot)) tooltip.addPara(text.hasWeaponsOnConvertedSlots[0], text.padding).setHighlight(text.hasWeaponsOnConvertedSlots[1]);
 		}
 	}
 
@@ -223,7 +225,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
 		if (ship == null) return false; 
 
-		if (ehm_hasWeapons(ship, lyr_internals.affix.convertedSlot)) return false;
+		if (_ehm_helpers.ehm_hasWeapons(ship, lyr_internals.affix.convertedSlot)) return false;
 
 		return true;
 	}

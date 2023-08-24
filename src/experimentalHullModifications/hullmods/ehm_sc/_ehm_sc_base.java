@@ -15,6 +15,7 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
+import experimentalHullModifications.hullmods.ehm._ehm_helpers;
 import lunalib.lunaSettings.LunaSettings;
 import lyravega.listeners.events.normalEvents;
 import lyravega.misc.lyr_internals;
@@ -107,8 +108,8 @@ public class _ehm_sc_base extends _ehm_base implements normalEvents {
 		if (!isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
-			if (!ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
-			if (ehm_hasRetrofitTag(ship, lyr_internals.tag.shieldCosmetic, hullModSpecId)) tooltip.addPara(text.hasShieldCosmetic[0], text.padding).setHighlight(text.hasShieldCosmetic[1]);
+			if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
+			if (_ehm_helpers.ehm_hasRetrofitTag(ship, lyr_internals.tag.shieldCosmetic, hullModSpecId)) tooltip.addPara(text.hasShieldCosmetic[0], text.padding).setHighlight(text.hasShieldCosmetic[1]);
 
 			if (hullModSpec.getTags().contains(lyr_internals.tag.reqShields) && ship.getShield() == null) tooltip.addPara(text.noShields[0], text.padding).setHighlight(text.noShields[1]);
 		}
@@ -120,8 +121,8 @@ public class _ehm_sc_base extends _ehm_base implements normalEvents {
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false;
 
-		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return false;
-		if (ehm_hasRetrofitTag(ship, lyr_internals.tag.shieldCosmetic, hullModSpecId)) return false;
+		if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) return false;
+		if (_ehm_helpers.ehm_hasRetrofitTag(ship, lyr_internals.tag.shieldCosmetic, hullModSpecId)) return false;
 
 		Set<String> hullModSpecTags = hullModSpec.getTags();
 		if (hullModSpecTags.contains(lyr_internals.tag.reqShields) && ship.getShield() == null) return false;
