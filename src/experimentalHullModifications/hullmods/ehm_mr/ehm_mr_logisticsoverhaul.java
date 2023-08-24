@@ -3,20 +3,16 @@ package experimentalHullModifications.hullmods.ehm_mr;
 import static lyravega.tools.lyr_uiTools.commitVariantChanges;
 import static lyravega.tools.lyr_uiTools.playDrillSound;
 
-import java.util.Collection;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
-import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShieldAPI.ShieldType;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
-import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShipTypeHints;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
@@ -25,13 +21,11 @@ import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
-import com.fs.starfarer.api.util.Misc;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
-import experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base;
+import experimentalHullModifications.hullmods.ehm._ehm_helpers;
 import lyravega.listeners.events.enhancedEvents;
 import lyravega.listeners.events.normalEvents;
-import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_tooltip.header;
 import lyravega.misc.lyr_tooltip.text;
 import lyravega.proxies.lyr_hullSpec;
@@ -85,21 +79,37 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		if (!stats.getVariant().getSMods().contains(this.hullModSpecId)) return;
-
 		ShipVariantAPI variant = stats.getVariant();
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 		// boolean commitVariantChanges = false;
 
-		float slotLogisticsBonus = 0;
+		// TODO: add compatibility for progressive s-mods; with that mod, the checks below may not be possible
+		if (!variant.getSMods().contains(this.hullModSpecId)) return;
+		if (!variant.getHullSpec().getBuiltInMods().contains(hullModSpecId)) lyr_hullSpec.addBuiltInMod(this.hullModSpecId);
+		if (!variant.getSModdedBuiltIns().contains(this.hullModSpecId)) return;
+
+		float logisticsBonus = 0;
 		
 		for (WeaponSlotAPI slot : lyr_hullSpec.getAllWeaponSlotsCopy()) {
-			slotLogisticsBonus += logisticsSlotBonus.get(slot.getSlotSize());
+			logisticsBonus += logisticsSlotBonus.get(slot.getSlotSize());
 			
 			// commitVariantChanges = ehm_deactivateSlot(hullSpec, null, slot.getId());
 			// _ehm_ar_base.ehm_deactivateSlot(lyr_hullSpec, null, slot.getId());
 			lyr_hullSpec.getWeaponSlot(slot.getId()).setWeaponType(WeaponType.DECORATIVE);
 		}
+
+		if (lyr_hullSpec.getShipSystemId() != null) {
+			lyr_hullSpec.setShipSystemId(null);
+			logisticsBonus += logisticsModBonus.get(hullSize);
+		}
+
+		if (!lyr_hullSpec.getShieldSpec().getType().equals(ShieldType.NONE)) {
+			lyr_hullSpec.getShieldSpec().setType(ShieldType.NONE);
+			logisticsBonus += logisticsModBonus.get(hullSize);
+		}
+
+		// TODO: Neuter wings, add logistics bonus per neutered wing slot
+		// TODO: Pay attention to built-in wings
 
 		if (variant.hasHullMod(HullMods.CIVGRADE)) {
 			LinkedHashSet<String> sMods = variant.getSMods();
@@ -114,12 +124,12 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 				stats.getMinCrewMod().modifyMult(hullModSpecId, 0.10f);
 				// stats.getMaxCrewMod().modifyMult(hullModSpecId, 0.50f);
 			}
-			stats.getCargoMod().modifyFlat(this.hullModSpecId, slotLogisticsBonus);
-			stats.getFuelMod().modifyFlat(this.hullModSpecId, slotLogisticsBonus);
+			stats.getCargoMod().modifyFlat(this.hullModSpecId, logisticsBonus);
+			stats.getFuelMod().modifyFlat(this.hullModSpecId, logisticsBonus);
 		}
 
 		stats.getDynamic().getMod(Stats.MAX_LOGISTICS_HULLMODS_MOD).modifyFlat(this.hullModSpecId, 1);
-		stats.getDynamic().getMod(Stats.MAX_PERMANENT_HULLMODS_MOD).modifyFlat(this.hullModSpecId, 2);
+		stats.getDynamic().getMod(Stats.MAX_PERMANENT_HULLMODS_MOD).modifyFlat(this.hullModSpecId, 1);
 
 		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
 		// if (commitVariantChanges && !isGettingRestored(variant)) { commitVariantChanges = false; commitVariantChanges(); }
@@ -127,7 +137,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 
 	@Override
 	public void applyEffectsAfterShipCreation(ShipAPI ship, String id) {
-		ship.setShield(ShieldType.NONE, 0.0F, 1.0F, 1.0F);
+		// ship.setShield(ShieldType.NONE, 0.0F, 1.0F, 1.0F);
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION
@@ -173,7 +183,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 		if (!isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
-			if (!ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
+			if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
 		}
 
 		if (!canBeAddedOrRemovedNow(ship, null, null)) {
@@ -185,12 +195,10 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 
 	@Override
 	public boolean isApplicableToShip(ShipAPI ship) {
-		if (ship == null) return false; 
+		if (ship == null) return false;
 
-		ShipVariantAPI variant = ship.getVariant();
-
-		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return false; 
-		if (ehm_hasModularHullmods(ship, this.hullModSpecId)) return false;
+		if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) return false; 
+		if (_ehm_helpers.ehm_hasModularHullmods(ship, this.hullModSpecId)) return false;
 
 		return true; 
 	}
