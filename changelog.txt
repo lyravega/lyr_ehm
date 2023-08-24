@@ -15,7 +15,7 @@ Version 0.8.3
 
 * The enhancements to the "Hull Restoration" skill from "Quality Captains" will be disabled by this mod only if that mod is not newer than "1.5.2". This fix will disable itself if a newer version is detected, and will be removed in the future.
 
-Author of "Quality Captains" mod is going to make / have already made a change to ensure compatibility between the mods. Thanks Dal!
+Author of "Quality Captains" mod, Dal, is going to make / have already made a change to ensure compatibility between the mods. Thanks Dal!
 
 
 Version 0.8.2
