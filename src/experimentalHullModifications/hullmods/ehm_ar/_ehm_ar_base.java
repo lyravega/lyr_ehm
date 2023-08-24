@@ -8,6 +8,8 @@ import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.
 import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.dissipatorMap;
 import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.adapterMap;
 import static lyravega.listeners.lyr_lunaSettingsListener.baseSlotPointPenalty;
+import static lyravega.listeners.lyr_lunaSettingsListener.hideAdapters;
+import static lyravega.listeners.lyr_lunaSettingsListener.hideConverters;
 import static lyravega.tools.lyr_uiTools.commitVariantChanges;
 import static lyravega.tools.lyr_uiTools.playDrillSound;
 
@@ -54,6 +56,7 @@ import lyravega.misc.lyr_tooltip.text;
 import lyravega.misc.lyr_vectorUtility;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.proxies.lyr_weaponSlot;
+import lyravega.proxies.lyr_weaponSlot.slotTypeConstants;
 
 
 /**
@@ -256,6 +259,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 
 		hullSpec.addBuiltInWeapon(slotId, shuntId);
 		parentSlot.setWeaponType(WeaponType.DECORATIVE);
+		if (hideAdapters) parentSlot.setSlotType(slotTypeConstants.hidden);
 		return true;
 	}
 
@@ -279,6 +283,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		// if (slotPoints != null) slotPoints -= converters.get(shuntId).getChildCost();	// needs to be subtracted from here on initial install to avoid infinite installs
 		hullSpec.addBuiltInWeapon(slotId, shuntId);
 		parentSlot.setWeaponType(WeaponType.DECORATIVE);
+		if (hideConverters) parentSlot.setSlotType(slotTypeConstants.hidden);
 		return true;
 	}
 

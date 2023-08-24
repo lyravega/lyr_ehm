@@ -38,6 +38,8 @@ public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logge
 	public static String extraInfoInHullMods;
 	public static String shuntAvailability, _shuntAvailability;
 	public static int baseSlotPointPenalty;
+	public static boolean hideAdapters;
+	public static boolean hideConverters;
 
 	public static void attach() {
 		if (!LunaSettings.hasSettingsListenerOfClass(lyr_lunaSettingsListener.class)) {
@@ -72,6 +74,8 @@ public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logge
 		logTrackerInfo = LunaSettings.getBoolean(id.mod, "ehm_logTrackerInfo");
 		extraInfoInHullMods = LunaSettings.getString(id.mod, "ehm_extraInfoInHullMods");
 		baseSlotPointPenalty = LunaSettings.getInt(id.mod, "ehm_baseSlotPointPenalty");
+		hideAdapters = LunaSettings.getBoolean(id.mod, "ehm_hideAdapters");
+		hideConverters = LunaSettings.getBoolean(id.mod, "ehm_hideConverters");
 	}
 
 	private static void checkShuntAvailability() {
