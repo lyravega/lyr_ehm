@@ -191,6 +191,10 @@ public final class lyr_shieldSpec implements lyr_logger {
 	public void setInnerColor(Color colour) {
 		shieldSpec.setInnerColor(colour);
 	}
+
+	public ShieldType getType() {
+		return shieldSpec.getType();
+	}
 	//#endregion
 	// END OF BRIDGE METHODS
 }

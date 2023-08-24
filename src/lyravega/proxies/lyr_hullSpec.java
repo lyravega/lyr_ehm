@@ -357,6 +357,10 @@ public final class lyr_hullSpec implements lyr_logger {
 	public List<WeaponSlotAPI> getAllWeaponSlotsCopy() {
 		return hullSpec.getAllWeaponSlotsCopy();
 	}
+
+	public String getShipSystemId() {
+		return hullSpec.getShipSystemId();
+	}
 	//#endregion 
 	// END OF BRIDGE METHODS
 }
