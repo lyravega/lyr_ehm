@@ -8,6 +8,7 @@ import org.apache.log4j.Level;
 
 import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.VersionInfoAPI;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.combat.HullModEffect;
 import com.fs.starfarer.api.impl.campaign.skills.FieldRepairsScript;
@@ -111,7 +112,16 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 
 	private static void replaceFieldRepairsScript() {
 		if (Global.getSettings().getModManager().isModEnabled("QualityCaptains")) {
-			if (lyr_lunaSettingsListener.qualityCaptainsTempFix) {
+			VersionInfoAPI version = Global.getSettings().getModManager().getModSpec("QualityCaptains").getVersionInfo();
+
+			boolean requiresFix;
+			try {
+				requiresFix = ((Integer.parseInt(version.getMajor()) << 16) + (Integer.parseInt(version.getMinor()) << 8) + Integer.parseInt(version.getPatch()) - 66818) <= 0;	// 66818 is shifted 1.5.2
+			} catch (Exception e) {	// will throw an exception if the version info has any letters in it
+				requiresFix = false;
+			}
+
+			if (!lyr_lunaSettingsListener.disableQualityCaptainsTempFix && requiresFix) {
 				if (!Global.getSector().hasTransientScript(lyr_qualityCaptainsTempFix.class)) {
 					Global.getSector().addTransientScript(new lyr_qualityCaptainsTempFix());
 					logger.info(logPrefix + "Suppressing 'FieldRepairScript' replacement from 'QualityCaptains' mod");

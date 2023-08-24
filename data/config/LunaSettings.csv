@@ -191,9 +191,11 @@ ehm_hideAdapters,Hide Adapters,Boolean,false,,"If enabled, all [adapters] will b
 ehm_hideConverters,Hide Converters,Boolean,false,,"If enabled, all [converters] will be hidden upon activation. Requires a reload",,,
 ehm_debugSettingsHeader,EHM Debug,Header,Debug Settings,,,,,
 ehm_debugSettingsText,EHM Debug Text,Text,"Some of these settings may be useful to identify a problem with this mod. Some of the logging features may bloat the game logs, and should be left disabled in normal conditions",,,,,
-ehm_tempFix,Quality Captains Temporary Fix,Boolean,false,,"If [Quality Captains] mod is installed and [Hull Restoration] skill is active, you may experience crashes stating [slot not found]; enable this temporary fix for those cases. 
+ehm_tempFix,Force Disable Quality Captains Temporary Fix,Boolean,false,,"This setting will be removed after some time as it'll be redundant. No effect if [Quality Captains] is not active or installed.
 
-NOTE: Most of the improvements to this skill will be disabled. QC will implement a fix for this issue in the future, making this fix redundant. Only use it if you are experiencing such a crash.",,,
+[Quality Captains] with a version newer than [1.5.2] is compatible with this mod, however the older versions trigger an automatic fix from this mod which disables [Elite Hull Restoration Skill]'s enhancements as they may eventually lead to a crash.
+
+The fix is implemented via a rather clunky version check, and may cause crashes in the future. This setting can be enabled to bypass the version check. If your [Quality Captains] is newer than [1.5.2], you may enable this just in case to avoid any potential issues.",,,
 ehm_debugTooltip,Show Debug Tooltip,Boolean,false,,"If enabled, the base hull modification will display [some debug info] on its tooltip",,,
 ehm_logEventInfo,Log Event Info,Boolean,false,,,,,
 ehm_logListenerInfo,Log Listener Info,Boolean,false,,,,,

@@ -31,7 +31,7 @@ public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logge
 	public static boolean playDrillSound;
 	public static boolean showFluff;
 	public static boolean debugTooltip;
-	public static boolean qualityCaptainsTempFix;
+	public static boolean disableQualityCaptainsTempFix;
 	public static boolean logEventInfo;
 	public static boolean logListenerInfo;
 	public static boolean logTrackerInfo;
@@ -68,7 +68,7 @@ public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logge
 		playDrillSound = LunaSettings.getBoolean(id.mod, "ehm_playDrillSound");
 		showFluff = LunaSettings.getBoolean(id.mod, "ehm_showFluff");
 		debugTooltip = LunaSettings.getBoolean(id.mod, "ehm_debugTooltip");
-		qualityCaptainsTempFix = LunaSettings.getBoolean(id.mod, "ehm_tempFix");
+		disableQualityCaptainsTempFix = LunaSettings.getBoolean(id.mod, "ehm_tempFix");
 		logEventInfo = LunaSettings.getBoolean(id.mod, "ehm_logEventInfo");
 		logListenerInfo = LunaSettings.getBoolean(id.mod, "ehm_logListenerInfo");
 		logTrackerInfo = LunaSettings.getBoolean(id.mod, "ehm_logTrackerInfo");
