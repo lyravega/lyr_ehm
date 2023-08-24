@@ -23,6 +23,7 @@ import lyravega.listeners.events.normalEvents;
 import lyravega.listeners.events.suppressedEvents;
 import lyravega.misc.lyr_internals;
 import lyravega.scripts.lyr_fieldRepairsScript;
+import lyravega.scripts.lyr_qualityCaptainsTempFix;
 import lyravega.tools.lyr_logger;
 
 public class lyr_ehm extends BaseModPlugin implements lyr_logger {
@@ -34,7 +35,7 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 	public void onGameLoad(boolean newGame) {
 		teachAbility(lyr_internals.id.ability);
 		teachBlueprints(lyr_internals.tag.experimental, lyr_internals.tag.restricted);
-		replaceFieldRepairsScript(false);
+		replaceFieldRepairsScript();
 		attachShuntAccessListener();
 	}
 
@@ -47,8 +48,7 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 	@Override
 	public void configureXStream(XStream x) {
 		x.alias("FieldRepairsScript", lyr_fieldRepairsScript.class);
-		// remember to use this for serialized shit
-		x.alias("data.abilities.ehm_ability", experimentalHullModifications.abilities.ehm_ability.class);
+		x.alias("data.abilities.ehm_ability", experimentalHullModifications.abilities.ehm_ability.class);	// remember to use this for serialized shit
 		x.alias("lyr_tabListener", lyravega.listeners.lyr_tabListener.class);	// added transient, but just in case
 		x.alias("lyr_colonyInteractionListener", lyravega.listeners.lyr_colonyInteractionListener.class);	// added transient, but just in case
 	}
@@ -109,17 +109,33 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 		} else logger.info(logPrefix + "Ability with the id '"+abilityId+"' was already known");
 	}
 
-	private static void replaceFieldRepairsScript(boolean isTransient) {
+	private static void replaceFieldRepairsScript() {
+		if (Global.getSettings().getModManager().isModEnabled("QualityCaptains")) {
+			if (lyr_lunaSettingsListener.qualityCaptainsTempFix) {
+				if (!Global.getSector().hasTransientScript(lyr_qualityCaptainsTempFix.class)) {
+					Global.getSector().addTransientScript(new lyr_qualityCaptainsTempFix());
+					logger.info(logPrefix + "Suppressing 'FieldRepairScript' replacement from 'QualityCaptains' mod");
+				}
+			} else {
+				if (Global.getSector().hasScript(lyr_fieldRepairsScript.class)) {
+					Global.getSector().removeScriptsOfClass(lyr_fieldRepairsScript.class);
+					logger.info(logPrefix + "Removing modified 'FieldRepairsScript' replacement from this mod");
+				}
+
+				logger.info(logPrefix + "Skipping 'FieldRepairsScript' replacement as 'QualityCaptains' mod is detected");
+				return;
+			}
+		}
+
 		if (Global.getSector().hasScript(FieldRepairsScript.class)) {
 			Global.getSector().removeScriptsOfClass(FieldRepairsScript.class);
-		}
 
-		if (!Global.getSector().hasScript(lyr_fieldRepairsScript.class)) {
-			if (isTransient) Global.getSector().addTransientScript(new lyr_fieldRepairsScript());
-			else Global.getSector().addScript(new lyr_fieldRepairsScript());
+			if (!Global.getSector().hasScript(lyr_fieldRepairsScript.class)) {
+				Global.getSector().addScript(new lyr_fieldRepairsScript());
+				
+				logger.info(logPrefix + "Replaced 'FieldRepairsScript' with modified one");
+			}
 		}
-
-		logger.info(logPrefix + "Replaced 'FieldRepairsScript' with modified one");
 	}
 
 	public static void attachShuntAccessListener() {

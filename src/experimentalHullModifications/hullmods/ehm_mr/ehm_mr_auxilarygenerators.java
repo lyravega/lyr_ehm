@@ -80,7 +80,7 @@ public final class ehm_mr_auxilarygenerators extends _ehm_base implements normal
 		if (!isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
-			if (!ehm_hasRetrofitBaseBuiltIn(ship.getVariant())) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
+			if (!ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
 			if (!ship.getVariant().hasHullMod(lyr_internals.id.hullmods.diverterandconverter)) tooltip.addPara(text.lacksActivator[0], text.padding).setHighlight(text.lacksActivator[1]);
 		}
 
@@ -99,7 +99,7 @@ public final class ehm_mr_auxilarygenerators extends _ehm_base implements normal
 
 		ShipVariantAPI variant = ship.getVariant();
 
-		if (!ehm_hasRetrofitBaseBuiltIn(variant)) return false; 
+		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return false; 
 		if (!variant.hasHullMod(lyr_internals.id.hullmods.diverterandconverter)) return false; 
 
 		return true; 

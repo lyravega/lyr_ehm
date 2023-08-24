@@ -189,6 +189,9 @@ ehm_hullModSettingsHeader,EHM Specific,Header,Hull Modification Settings,,,,,
 ehm_baseSlotPointPenalty,Slot Point Penalty,Int,1,,"Sets the [deployment point penalty] for the slot points [gained and utilized] through the hull modifications, which are utilized last. No effect on other sources.",0,3,
 ehm_debugSettingsHeader,EHM Debug,Header,Debug Settings,,,,,
 ehm_debugSettingsText,EHM Debug Text,Text,"Some of these settings may be useful to identify a problem with this mod. Some of the logging features may bloat the game logs, and should be left disabled in normal conditions",,,,,
+ehm_tempFix,Quality Captains Temporary Fix,Boolean,false,,"If [Quality Captains] mod is installed and [Hull Restoration] skill is active, you may experience crashes stating [slot not found]; enable this temporary fix for those cases. 
+
+NOTE: Most of the improvements to this skill will be disabled. QC will implement a fix for this issue in the future, making this fix redundant. Only use it if you are experiencing such a crash.",,,
 ehm_debugTooltip,Show Debug Tooltip,Boolean,false,,"If enabled, the base hull modification will display [some debug info] on its tooltip",,,
 ehm_logEventInfo,Log Event Info,Boolean,false,,,,,
 ehm_logListenerInfo,Log Listener Info,Boolean,false,,,,,

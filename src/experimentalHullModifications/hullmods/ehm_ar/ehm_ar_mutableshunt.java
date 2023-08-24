@@ -23,7 +23,6 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
 import lyravega.misc.lyr_internals;
-import lyravega.misc.lyr_internals.id.hullmods;
 import lyravega.misc.lyr_internals.id.shunts.capacitors;
 import lyravega.misc.lyr_internals.id.shunts.dissipators;
 import lyravega.misc.lyr_tooltip.header;

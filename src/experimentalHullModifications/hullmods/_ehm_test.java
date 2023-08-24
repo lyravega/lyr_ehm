@@ -3,6 +3,7 @@ package experimentalHullModifications.hullmods;
 import static lyravega.tools.lyr_uiTools.commitVariantChanges;
 import static lyravega.tools.lyr_uiTools.playDrillSound;
 
+import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
@@ -31,10 +32,6 @@ public class _ehm_test extends _ehm_base implements normalEvents {
 		commitVariantChanges(); playDrillSound();
 	}
 
-	@Override 
-	public void init(HullModSpecAPI hullModSpec) {
-		super.init(hullModSpec);
-	}
 	//#endregion
 	// END OF CUSTOM EVENTS
 
@@ -100,7 +97,7 @@ public class _ehm_test extends _ehm_base implements normalEvents {
 
 	@Override
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
-		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
+		// super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
 	}
 
 	@Override

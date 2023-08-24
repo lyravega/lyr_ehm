@@ -55,7 +55,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 	//#endregion
 	// END OF CUSTOM EVENTS
 
-	public static final float ordnancePointBonus = 0.15f;
+	public static final float ordnancePointBonus = 0.20f;
 	public static final Map<HullSize, Integer> slotPointBonus = new HashMap<HullSize, Integer>();
 	static {
 		slotPointBonus.put(HullSize.FIGHTER, 0);
@@ -68,50 +68,19 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		ShipVariantAPI variant = stats.getVariant();
+		if (!stats.getVariant().getSMods().contains(this.hullModSpecId)) return;
 
-		if (variant.getSMods().contains(this.hullModSpecId)) {
-			lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
-			lyr_hullSpec.setOrdnancePoints((int) Math.round(ehm_hullSpecReference(variant).getOrdnancePoints(null)*(1+ordnancePointBonus)));
-			variant.setHullSpecAPI(lyr_hullSpec.retrieve());
-		}
+		ShipVariantAPI variant = stats.getVariant();
+		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
+
+		lyr_hullSpec.setOrdnancePoints((int) Math.round(ehm_hullSpecReference(variant).getOrdnancePoints(null)*(1+ordnancePointBonus)));
+		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION
 	@Override
 	public boolean hasSModEffect() {
 		return true;
-	}
-
-	@Override
-	public String getDescriptionParam(int index, HullSize hullSize) {
-		switch (index) {
-			case 0: return "story point";
-			case 1: return Math.round(ordnancePointBonus*100)+"%";
-			case 2: return slotPointBonus.get(HullSize.FRIGATE)+"/"+slotPointBonus.get(HullSize.DESTROYER)+"/"+slotPointBonus.get(HullSize.CRUISER)+"/"+slotPointBonus.get(HullSize.CAPITAL_SHIP)+" slot points";
-			case 3: return "slot point";
-			case 4: return "converter shunts";
-			case 5: return "gained and utilized";
-			case 6: return "deployment point";
-			case 7: return baseSlotPointPenalty+"";
-			default: return null;
-		}
-	}
-
-	@Override
-	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
-		if (ship == null) return;
-
-		if (!isApplicableToShip(ship)) {
-			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
-
-			if (!ehm_hasRetrofitBaseBuiltIn(ship.getVariant())) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
-		} else if (!ship.getVariant().getSMods().contains(this.hullModSpecId)) {
-			tooltip.addSectionHeading(header.severeWarning, header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
-			tooltip.addPara(text.overEngineeredWarning[0], text.padding).setHighlight(text.overEngineeredWarning[1]);
-		}
-
-		// super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
 	}
 
 	@Override
@@ -137,10 +106,41 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 	}
 
 	@Override
+	public String getDescriptionParam(int index, HullSize hullSize) {
+		switch (index) {
+			case 0: return "story point";
+			case 1: return Math.round(ordnancePointBonus*100)+"%";
+			case 2: return slotPointBonus.get(HullSize.FRIGATE)+"/"+slotPointBonus.get(HullSize.DESTROYER)+"/"+slotPointBonus.get(HullSize.CRUISER)+"/"+slotPointBonus.get(HullSize.CAPITAL_SHIP)+" slot points";
+			case 3: return "slot point";
+			case 4: return "converter shunts";
+			case 5: return "gained and utilized";
+			case 6: return "deployment point";
+			case 7: return baseSlotPointPenalty+"";
+			default: return null;
+		}
+	}
+
+	@Override
+	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
+		if (ship == null) return;
+
+		if (!isApplicableToShip(ship)) {
+			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
+
+			if (!ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
+		} else if (!ship.getVariant().getSMods().contains(this.hullModSpecId)) {
+			tooltip.addSectionHeading(header.severeWarning, header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
+			tooltip.addPara(text.overEngineeredWarning[0], text.padding).setHighlight(text.overEngineeredWarning[1]);
+		}
+
+		// super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
+	}
+
+	@Override
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false; 
 
-		if (!ehm_hasRetrofitBaseBuiltIn(ship.getVariant())) return false; 
+		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return false; 
 
 		return true; 
 	}

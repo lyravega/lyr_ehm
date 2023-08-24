@@ -16,6 +16,8 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.util.IntervalUtil;
 import com.fs.starfarer.api.util.Misc;
 
+import lyravega.misc.lyr_internals;
+
 /**
  * {@link FieldRepairsScript} replacement with a dirty hack to avoid getting the cloned
  * hull specs replaced in {@link #restoreToNonDHull}, as it might result in a crash due
@@ -24,7 +26,7 @@ import com.fs.starfarer.api.util.Misc;
  * that it can be removed later on, leaving the original script pick the data up. 
  * @author Alex
  */
-public class lyr_fieldRepairsScript extends FieldRepairsScript {	
+public class lyr_fieldRepairsScript extends FieldRepairsScript {
 	// @Override
 	Object readResolve() {
 		if (seen == null) {
@@ -111,7 +113,7 @@ public class lyr_fieldRepairsScript extends FieldRepairsScript {
 	}
 	
 	public static void restoreToNonDHull(ShipVariantAPI v) {
-		if (v.getHullSpec().isBuiltInMod("ehm_base")) return;	// dirty hack to avoid getting the cloned hullSpec replaced
+		if (v.hasHullMod(lyr_internals.id.hullmods.base)) return;	// dirty hack to avoid getting the cloned hullSpec replaced
 
 		ShipHullSpecAPI base = v.getHullSpec().getDParentHull();
 		

@@ -214,7 +214,7 @@ public class _ehm_ec_base extends _ehm_base implements normalEvents {
 		if (!isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
-			if (!ehm_hasRetrofitBaseBuiltIn(ship.getVariant())) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
+			if (!ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
 			if (ehm_hasRetrofitTag(ship, lyr_internals.tag.engineCosmetic, hullModSpecId)) tooltip.addPara(text.hasEngineCosmetic[0], text.padding).setHighlight(text.hasEngineCosmetic[1]);
 		}
 
@@ -225,7 +225,7 @@ public class _ehm_ec_base extends _ehm_base implements normalEvents {
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false; 
 
-		if (!ehm_hasRetrofitBaseBuiltIn(ship.getVariant())) return false; 
+		if (!ehm_hasRetrofitBaseBuiltIn(ship)) return false; 
 		if (ehm_hasRetrofitTag(ship, lyr_internals.tag.engineCosmetic, hullModSpecId)) return false;
 
 		return true; 

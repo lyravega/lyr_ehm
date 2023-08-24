@@ -164,20 +164,20 @@ public class _ehm_base extends BaseHullMod implements lyr_logger {
 
 	/**
 	 * Checks the ship if it has retrofit base ({@link ehm_base}) installed
-	 * @param variant to check 
+	 * @param ship to check 
 	 * @return true if ship has it, false otherwise (duh)
 	 */
-	protected static final boolean ehm_hasRetrofitBaseBuiltIn(ShipVariantAPI variant) {
-		return variant.getHullSpec().isBuiltInMod(lyr_internals.id.hullmods.base);
+	protected static final boolean ehm_hasRetrofitBaseBuiltIn(ShipAPI ship) {
+		return ship.getVariant().getHullSpec().isBuiltInMod(lyr_internals.id.hullmods.base);
 	}
 
 	/**
 	 * Checks the ship if it has retrofit base ({@link ehm_base}) installed
-	 * @param variant to check 
+	 * @param ship to check 
 	 * @return true if ship has it, false otherwise (duh)
 	 */
-	protected static final boolean ehm_hasExperimentalSMod(ShipVariantAPI variant) {
-		for (String hullModId: variant.getSMods()) {
+	protected static final boolean ehm_hasExperimentalSMod(ShipAPI ship) {
+		for (String hullModId: ship.getVariant().getSMods()) {
 			if (settings.getHullModSpec(hullModId).hasTag(lyr_internals.tag.experimental)) return true;
 		}
 		return false;
@@ -185,11 +185,11 @@ public class _ehm_base extends BaseHullMod implements lyr_logger {
 
 	/**
 	 * Checks the ship if it has retrofit base ({@link ehm_base}) installed
-	 * @param variant to check 
+	 * @param ship to check 
 	 * @return true if ship has it, false otherwise (duh)
 	 */
-	protected static final boolean ehm_hasExperimentalModWithTag(ShipVariantAPI variant, String tag) {
-		for (String hullModId: variant.getHullMods()) {
+	protected static final boolean ehm_hasExperimentalModWithTag(ShipAPI ship, String tag) {
+		for (String hullModId: ship.getVariant().getHullMods()) {
 			if (settings.getHullModSpec(hullModId).hasTag(tag)) return true;
 		}
 		return false;
@@ -293,9 +293,12 @@ public class _ehm_base extends BaseHullMod implements lyr_logger {
 	}
 
 	protected static boolean isGettingRestored(ShipVariantAPI variant) {
-		boolean isBasePerma = variant.getPermaMods().contains(lyr_internals.id.hullmods.base);
-		boolean isBaseBuiltIn = variant.getHullSpec().isBuiltInMod(lyr_internals.id.hullmods.base);
-		return !(isBasePerma && isBaseBuiltIn);	// when the ship is getting restored, hull spec won't have the base, but variant will
+		return !(variant.getPermaMods().contains(lyr_internals.id.hullmods.base) && variant.getHullSpec().isBuiltInMod(lyr_internals.id.hullmods.base));	// when the ship is getting restored, hull spec won't have the base, but variant will
+	}
+
+	protected boolean ehm_hasModularHullmods(ShipAPI ship, String hullmodIdToIgnore) {
+		if (hullmodIdToIgnore == null) return !ship.getVariant().getNonBuiltInHullmods().isEmpty();
+		return !ship.getVariant().hasHullMod(hullmodIdToIgnore) && ship.getVariant().getNonBuiltInHullmods().size() > 0;
 	}
 	//#endregion
 	// END OF CHECK HELPERS

@@ -75,8 +75,13 @@ public final class ehm_base extends _ehm_tracker {
 				tooltip.addSectionHeading("DEBUG INFO", header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 
 				tooltip.addPara("Enabled Mods: "+Global.getSettings().getModManager().getEnabledModsCopy().toString(), 5f).setHighlight("Enabled Mods: ");
-				tooltip.addPara("Hullmods: "+ship.getVariant().getHullMods().toString(), 5f).setHighlight("Hullmods: ");
-				tooltip.addPara("Hull ID: "+ship.getVariant().getHullSpec().getHullId(), 5f).setHighlight("Hull ID: ");
+				tooltip.addPara("All Hullmods: "+variant.getHullMods().toString(), 5f).setHighlight("All Hullmods: ");
+				tooltip.addPara("Hullmods: "+variant.getNonBuiltInHullmods().toString(), 5f).setHighlight("Hullmods: ");
+				tooltip.addPara("SMods: "+variant.getSMods().toString(), 5f).setHighlight("SMods: ");
+				tooltip.addPara("Suppressed: "+variant.getSuppressedMods().toString(), 5f).setHighlight("Suppressed: ");
+				tooltip.addPara("Built-ins: "+variant.getHullSpec().getBuiltInMods().toString(), 5f).setHighlight("Built-ins: ");
+				tooltip.addPara("Built-in Smods: "+variant.getSModdedBuiltIns().toString(), 5f).setHighlight("Built-in Smods: ");
+				tooltip.addPara("Hull ID: "+variant.getHullSpec().getHullId(), 5f).setHighlight("Hull ID: ");
 
 				for (EveryFrameScript script : Global.getSector().getScripts()) {
 					String scriptSimpleName = script.getClass().getSimpleName();
@@ -97,22 +102,22 @@ public final class ehm_base extends _ehm_tracker {
 						tooltip.addPara(playerSalutation + ", if you are unhappy with what I am offering you, I can get rid of the base hull modifications that I've made. Let me know!", text.padding);
 						break;
 					case 2: 
-						if (!ehm_hasExperimentalModWithTag(variant, lyr_internals.tag.weaponRetrofit))
+						if (!ehm_hasExperimentalModWithTag(ship, lyr_internals.tag.weaponRetrofit))
 							tooltip.addPara(playerSalutation + ", with slot retrofits every weapon slot may be altered all together to make them compatible with other weapon types.", text.padding);
 						else tooltip.addPara("The slot retrofits come at a cost, but their main purpose is to allow flexibility, and of course letting you use your favourite weapons, "+ playerSalutation, text.padding);
 						break;
 					case 3: 
-						if (!ehm_hasExperimentalModWithTag(variant, lyr_internals.tag.systemRetrofit))
+						if (!ehm_hasExperimentalModWithTag(ship, lyr_internals.tag.systemRetrofit))
 							tooltip.addPara("The ships are designed along with their systems, however with system retrofits, I can change them anytime you want, "+ playerSalutation +".", text.padding);
 						else tooltip.addPara("Some system & ship combinations may be powerful. Some may not. No refunds! Just joking...", text.padding);
 						break;
 					case 4: 
-						if (!ehm_hasExperimentalModWithTag(variant, lyr_internals.tag.engineCosmetic))
+						if (!ehm_hasExperimentalModWithTag(ship, lyr_internals.tag.engineCosmetic))
 							tooltip.addPara(playerSalutation + ", let me know if you'd like to have this ship's engine exhaust colour get changed. I can even fully customize them to your exact specifications!", text.padding);
 						else tooltip.addPara("The engine exhaust cosmetics are looking great, " + playerSalutation, text.padding);
 						break;
 					case 5:
-						if (!ehm_hasExperimentalModWithTag(variant, lyr_internals.tag.shieldCosmetic))
+						if (!ehm_hasExperimentalModWithTag(ship, lyr_internals.tag.shieldCosmetic))
 							tooltip.addPara("The shield emitters may be modified to project a shield with different colours, " + playerSalutation + ". The effect is purely cosmetic", text.padding);
 						else tooltip.addPara("The shield emitters are modified to project colours of your choice, " + playerSalutation, text.padding);
 						break;
@@ -144,8 +149,6 @@ public final class ehm_base extends _ehm_tracker {
 
 	@Override
 	public boolean showInRefitScreenModPickerFor(ShipAPI ship) {
-		ShipVariantAPI variant = ship.getVariant();
-
-		return (ehm_hasRetrofitBaseBuiltIn(variant)) ? false : true;
+		return (ehm_hasRetrofitBaseBuiltIn(ship)) ? false : true;
 	}
 }
