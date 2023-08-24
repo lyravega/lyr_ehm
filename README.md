@@ -5,6 +5,7 @@ Just some hull modifications. By some, I mean 40+ or something. However, most ar
 - Experimental Hull Modifications: Provides a base to all other hull modifications in this mod
 - Over-Engineered: Provides 15% OP bonus and some slot-points to the ship when built-in
 - Auxiliary Generators: Provides few slot-points in exchange for ordnance points
+- Logistics Overhaul: Strips the ship of all combat capabilities in favour of logistics
 - AI Switch: Turns automated ships into normal, or normal ships into automated ones
 
 **Hull Modification Categories**:
