@@ -2,7 +2,7 @@ Version 0.8.3
 
 - Fixed a rare crash happened on load related to a listener
 - Fixed Over-Engineered failing to refresh the ship display for any existing inert converters that it activated
-- (TEMP) Fixed an issue that occured if "Quality Captains" mod was installed and "Hull Restoration" skill was in use
+- Fixed an issue that occured if "Quality Captains" mod was installed and elite "Hull Restoration" skill* was in use
 - Fixed an issue that caused "Hull Restoration" skill to be more effective when "Quality Captains" mod was active
 - Added OP cost to Over-Engineered (the OP cost matters only if "Progressive S-Mods" mod is installed)
 - Added total flux capacity and dissipation bonuses (if any) to Mutable Shunt Activator's tooltip
@@ -13,7 +13,9 @@ Version 0.8.3
 - Changed slot retrofits to prevent installation and removal if there are wings or inert slot shunts present on the ship to prevent an issue
 - Changed the OP bonus of Over-Engineered (back) to 20% (from 15%)
 
-About the issue with "Quality Captains", author of that mod also made a change to make both mods compatible with each other. Thanks Dal!
+* The enhancements to the "Hull Restoration" skill from "Quality Captains" will be disabled by this mod only if that mod is not newer than "1.5.2". This fix will disable itself if a newer version is detected, and will be removed in the future.
+
+Author of "Quality Captains" mod is going to make / have already made a change to ensure compatibility between the mods. Thanks Dal!
 
 
 Version 0.8.2
