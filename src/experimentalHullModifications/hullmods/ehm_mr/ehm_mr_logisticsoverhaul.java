@@ -4,7 +4,6 @@ import static lyravega.tools.lyr_uiTools.commitVariantChanges;
 import static lyravega.tools.lyr_uiTools.playDrillSound;
 
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
 
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
@@ -13,6 +12,7 @@ import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShieldAPI.ShieldType;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
+import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
@@ -52,11 +52,13 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 
 	@Override
 	public void onEnhance(ShipVariantAPI variant) {
+		variant.addPermaMod(HullMods.CIVGRADE, false);
 		commitVariantChanges();
 	}
 
 	@Override
 	public void onNormalize(ShipVariantAPI variant) {
+		variant.removePermaMod(HullMods.CIVGRADE);
 		variant.setHullSpecAPI(ehm_hullSpecRefresh(variant));
 		commitVariantChanges();
 	}
@@ -81,16 +83,15 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
+		ShipHullSpecAPI originalHullSpec = ehm_hullSpecReference(variant);
 		// boolean commitVariantChanges = false;
-
-		// TODO: add compatibility for progressive s-mods; with that mod, the checks below may not be possible
-		if (!variant.getSMods().contains(this.hullModSpecId)) return;
-		if (!variant.getHullSpec().getBuiltInMods().contains(hullModSpecId)) lyr_hullSpec.addBuiltInMod(this.hullModSpecId);
-		if (!variant.getSModdedBuiltIns().contains(this.hullModSpecId)) return;
 
 		float logisticsBonus = 0;
 		
-		for (WeaponSlotAPI slot : lyr_hullSpec.getAllWeaponSlotsCopy()) {
+		// bonus from weapon slots
+		for (WeaponSlotAPI slot : originalHullSpec.getAllWeaponSlotsCopy()) {
+			if (!slot.isWeaponSlot()) continue;	// TODO: built-in weapon slots & weapons are spared, need to check other stuff for them
+			
 			logisticsBonus += logisticsSlotBonus.get(slot.getSlotSize());
 			
 			// commitVariantChanges = ehm_deactivateSlot(hullSpec, null, slot.getId());
@@ -98,38 +99,51 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 			lyr_hullSpec.getWeaponSlot(slot.getId()).setWeaponType(WeaponType.DECORATIVE);
 		}
 
-		if (lyr_hullSpec.getShipSystemId() != null) {
+		// bonus from ship system
+		if (originalHullSpec.getShipSystemId() != null) {
+			logisticsBonus += logisticsModBonus.get(hullSize);
 			lyr_hullSpec.setShipSystemId(null);
-			logisticsBonus += logisticsModBonus.get(hullSize);
 		}
 
-		if (!lyr_hullSpec.getShieldSpec().getType().equals(ShieldType.NONE)) {
+		// bonus from defense system
+		if (!originalHullSpec.getShieldSpec().getType().equals(ShieldType.NONE)) {
+			logisticsBonus += logisticsModBonus.get(hullSize);
 			lyr_hullSpec.getShieldSpec().setType(ShieldType.NONE);
-			logisticsBonus += logisticsModBonus.get(hullSize);
+		}
+		
+		// bonus from fighter bays
+		float bays = stats.getNumFighterBays().getBaseValue(); if (bays > 0) {
+			logisticsBonus += bays * logisticsSlotBonus.get(WeaponSize.LARGE);
+			stats.getNumFighterBays().modifyFlat(this.hullModSpecId, -bays);	// game nukes the 
 		}
 
-		// TODO: Neuter wings, add logistics bonus per neutered wing slot
-		// TODO: Pay attention to built-in wings
+		if (!stats.getVariant().getSMods().contains(this.hullModSpecId)) return;
 
-		if (variant.hasHullMod(HullMods.CIVGRADE)) {
-			LinkedHashSet<String> sMods = variant.getSMods();
-
-			if (sMods.contains(HullMods.ADDITIONAL_BERTHING) && !variant.hasHullMod(HullMods.AUTOMATED)) stats.getMaxCrewMod().modifyFlat(this.hullModSpecId, logisticsModBonus.get(hullSize));
-			if (sMods.contains(HullMods.EXPANDED_CARGO_HOLDS)) stats.getCargoMod().modifyFlat(this.hullModSpecId, logisticsModBonus.get(hullSize));
-			if (sMods.contains(HullMods.AUXILIARY_FUEL_TANKS)) stats.getFuelMod().modifyFlat(this.hullModSpecId, logisticsModBonus.get(hullSize));
-		} else {
-			lyr_hullSpec.setOrdnancePoints((int) Math.round(ehm_hullSpecReference(variant).getOrdnancePoints(null)*0.25));
+		// if (!variant.hasHullMod(HullMods.CIVGRADE)) {
+		if (!originalHullSpec.getBuiltInMods().contains(HullMods.CIVGRADE)) {
+			lyr_hullSpec.setOrdnancePoints((int) Math.round(originalHullSpec.getOrdnancePoints(null)*0.25));
 
 			if (!variant.hasHullMod(HullMods.AUTOMATED)) {
-				stats.getMinCrewMod().modifyMult(hullModSpecId, 0.10f);
+				stats.getMinCrewMod().modifyMult(this.hullModSpecId, 0.10f);
 				// stats.getMaxCrewMod().modifyMult(hullModSpecId, 0.50f);
 			}
-			stats.getCargoMod().modifyFlat(this.hullModSpecId, logisticsBonus);
-			stats.getFuelMod().modifyFlat(this.hullModSpecId, logisticsBonus);
+
+			stats.getSuppliesPerMonth().modifyMult(this.hullModSpecId, 0.25f);
 		}
 
+		// if (variant.hasHullMod(HullMods.CIVGRADE)) {
+		// 	LinkedHashSet<String> sMods = variant.getSMods();
+
+		// 	if (sMods.contains(HullMods.ADDITIONAL_BERTHING) && !variant.hasHullMod(HullMods.AUTOMATED)) stats.getMaxCrewMod().modifyFlat(this.hullModSpecId, logisticsModBonus.get(hullSize));
+		// 	if (sMods.contains(HullMods.EXPANDED_CARGO_HOLDS)) stats.getCargoMod().modifyFlat(this.hullModSpecId, logisticsModBonus.get(hullSize));
+		// 	if (sMods.contains(HullMods.AUXILIARY_FUEL_TANKS)) stats.getFuelMod().modifyFlat(this.hullModSpecId, logisticsModBonus.get(hullSize));
+		// }
+		
+		stats.getCargoMod().modifyFlat(this.hullModSpecId, logisticsBonus);
+		stats.getFuelMod().modifyFlat(this.hullModSpecId, logisticsBonus);
+
 		stats.getDynamic().getMod(Stats.MAX_LOGISTICS_HULLMODS_MOD).modifyFlat(this.hullModSpecId, 1);
-		stats.getDynamic().getMod(Stats.MAX_PERMANENT_HULLMODS_MOD).modifyFlat(this.hullModSpecId, 1);
+		stats.getDynamic().getMod(Stats.MAX_PERMANENT_HULLMODS_MOD).modifyFlat(this.hullModSpecId, 2);
 
 		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
 		// if (commitVariantChanges && !isGettingRestored(variant)) { commitVariantChanges = false; commitVariantChanges(); }
@@ -149,29 +163,39 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 	@Override
 	public String getSModDescriptionParam(int index, HullSize hullSize) {
 		switch (index) {
-			case 0: return "Herp";
-			case 1: return "Derp";
+			case 0: return "logistical bonuses";
 			default: return null;
 		}
 	}
 
 	@Override
 	public void addSModSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec, boolean isForBuildInList) {
-		if (isApplicableToShip(ship)) {
-			if (!ship.getVariant().getSMods().contains(this.hullModSpecId)) {
-				tooltip.addSectionHeading(header.noEffect, header.noEffect_textColour, header.noEffect_bgColour, Alignment.MID, header.padding);
-				tooltip.addPara(text.overEngineeredNoEffect[0], text.padding).setHighlight(text.overEngineeredNoEffect[1]);
-			} else {
-				tooltip.addSectionHeading(header.sEffect, header.sEffect_textColour, header.sEffect_bgColour, Alignment.MID, header.padding);
-				tooltip.addPara(this.hullModSpec.getSModDescription(hullSize).replaceAll("\\%", "%%"), text.padding, header.sEffect_textColour, getSModDescriptionParam(0, hullSize), getSModDescriptionParam(1, hullSize)); 
-			}
+		if (!isApplicableToShip(ship)) return;
+		
+		if (!ship.getVariant().getSMods().contains(this.hullModSpecId)) {
+			tooltip.addSectionHeading(header.noEffect, header.noEffect_textColour, header.noEffect_bgColour, Alignment.MID, header.padding);
+			tooltip.addPara(text.overEngineeredNoEffect[0], text.padding).setHighlight(text.overEngineeredNoEffect[1]);
+		} else {
+			tooltip.addSectionHeading(header.sEffect, header.sEffect_textColour, header.sEffect_bgColour, Alignment.MID, header.padding);
+			tooltip.addPara(this.hullModSpec.getSModDescription(hullSize).replaceAll("\\%", "%%"), text.padding, header.sEffect_textColour, getSModDescriptionParam(0, hullSize), getSModDescriptionParam(1, hullSize)); 
+
+			tooltip.addPara("+1 Built-in & Logistics modification capacity", text.padding, header.sEffect_textColour, "+1");
+			String logisticsBonus = "+"+(int) ship.getMutableStats().getCargoMod().getFlatBonus(this.hullModSpecId).value;
+			tooltip.addPara(logisticsBonus+" Fuel & Cargo storage", text.padding, header.sEffect_textColour, logisticsBonus);
+			if (!ship.getVariant().getHullSpec().getBuiltInMods().contains(HullMods.CIVGRADE)) tooltip.addPara("x0.25 Skeleton Crew, Maintenance & Ordnance Points", text.padding, header.sEffect_textColour, "x0.25");
 		}
 	}
 
 	@Override
 	public String getDescriptionParam(int index, HullSize hullSize) {
 		switch (index) {
-			case 0: return "10/10/20/20";
+			case 0: return "story point";
+			case 1: return "an additional built-in and an additional logistics hull modifications";
+			case 2: return "5/10/20";
+			case 3: return "20";
+			case 4: return "15/30/60/100";
+			case 5: return "skeleton crew, monthly maintenance and ordnance points";
+			case 6: return "75%";
 			default: return null;
 		}
 	}
@@ -184,6 +208,11 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
 			if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
+			if (_ehm_helpers.ehm_isModule(ship)) tooltip.addPara(text.isModule[0], text.padding).setHighlight(text.isModule[1]);
+			if ((!ship.getVariant().getSMods().contains(this.hullModSpecId) && _ehm_helpers.ehm_hasModularHullmods(ship, this.hullModSpecId))
+			|| _ehm_helpers.ehm_hasWeapons(ship)
+			|| _ehm_helpers.ehm_hasAnyFittedWings(ship)
+			|| _ehm_helpers.ehm_hasCapacitorsOrVents(ship)) tooltip.addPara(text.notStripped[0], text.padding).setHighlight(text.notStripped[1]);
 		}
 
 		if (!canBeAddedOrRemovedNow(ship, null, null)) {
@@ -197,8 +226,12 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false;
 
-		if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) return false; 
-		if (_ehm_helpers.ehm_hasModularHullmods(ship, this.hullModSpecId)) return false;
+		if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) return false;
+		if (_ehm_helpers.ehm_isModule(ship)) return false;
+		if (!ship.getVariant().getSMods().contains(this.hullModSpecId) && _ehm_helpers.ehm_hasModularHullmods(ship, this.hullModSpecId)) return false;
+		if (_ehm_helpers.ehm_hasWeapons(ship)) return false;
+		if (_ehm_helpers.ehm_hasAnyFittedWings(ship)) return false;
+		if (_ehm_helpers.ehm_hasCapacitorsOrVents(ship)) return false;
 
 		return true; 
 	}

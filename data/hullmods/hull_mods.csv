@@ -98,9 +98,11 @@ Over-Engineered,ehm_mr_overengineered,1,,Experimental,"special, ehm, ehm_mr, no_
 The %s bonus is dependent on the size of the hull, and can be utilized by %s to increase size of a slot.
 
 Each slot point %s through this hull modification will increase the %s of the ship by %s.",Over-engineers the ship when it is built-in. Adds more OP and awards slot points to be used by converters.,Provides %s and %s to the ship.,graphics/hullmods/safety_overrides.png
-Logistics Overhaul,ehm_mr_logisticsoverhaul,1,,Experimental,"special, ehm, ehm_mr, no_drop, no_drop_salvage",Activators,25000,,,,10,20,30,50,experimentalHullModifications.hullmods.ehm_mr.ehm_mr_logisticsoverhaul,"When built-in to the hull by using a %s, optimizes the ship in favour of fleet logistics. Adjustments differ between military and civilian hulls.
+Logistics Overhaul,ehm_mr_logisticsoverhaul,1,,Experimental,"special, ehm, ehm_mr, no_drop, no_drop_salvage",Retrofits,25000,,,,6,12,18,30,experimentalHullModifications.hullmods.ehm_mr.ehm_mr_logisticsoverhaul,"An extreme modification that completely overhauls the ship for pure logistics usage. Strips the hull of any weapons, fighter bays, ship and defense systems upon installation. When built-in to the hull by using a %s, will provide bonuses to fleet logistics.
 
-",Over-engineers the ship when it is built-in. Adds more OP and awards slot points to be used by converters.,,
+The stripped parts opens up enough room which is reserved for %s. The remaining room is converted into fuel and cargo storage; weapon slots grant %s, fighter bays grant %s, ship and defense systems (if any) grant %s bonus.
+
+Military hulls are converted into civilian ones, and their %s are reduced by %s.",Extreme modification that strips the ship of any offensive and defensive capabilities in favour of fleet wide logistics capability.,Provides %s to the ship.,graphics/icons/skills/bulk_transport.png
 Auxiliary Generators,ehm_mr_auxilarygenerators,1,,Experimental,"special, ehm, ehm_mr, no_drop, no_drop_salvage",Activators,25000,,,,10,10,20,20,experimentalHullModifications.hullmods.ehm_mr.ehm_mr_auxilarygenerators,"Depending on the ship size, %s ordnance points are exchanged with %s slot points.
 
 Each slot point %s through this hull modification will increase the %s of the ship by %s.",Exchanges some ordnance points with slot points.,,graphics/icons/skills/bulk_transport.png

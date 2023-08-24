@@ -24,21 +24,22 @@ import lyravega.misc.lyr_internals;
  */
 public class _ehm_helpers {
 	/**
-	 * Checks if the ship has any modular hull modifications. Modular hull modifications
-	 * only include those that can be uninstalled; no built-ins, no s-modded.
 	 * @param ship to check
-	 * @param hullmodIdToIgnore can be null. If not, the check will only be done while this mod is not installed
-	 * @return true if the ship has modular hullmods
+	 * @param hullmodIdToIgnore can be null. If not, the hullmod with this id will be ignored
+	 * @return true if the ship has modular hullmods (except the ignored one if any)
 	 */
 	public static boolean ehm_hasModularHullmods(ShipAPI ship, String hullmodIdToIgnore) {
 		if (hullmodIdToIgnore == null) return !ship.getVariant().getNonBuiltInHullmods().isEmpty();
-		return !ship.getVariant().hasHullMod(hullmodIdToIgnore) && !ship.getVariant().getNonBuiltInHullmods().isEmpty();
+		for (String hullModId : ship.getVariant().getNonBuiltInHullmods()) {
+			if (hullModId.equals(hullmodIdToIgnore)) continue;
+
+			return true;
+		}; return false;
 	}
 
 	/**
 	 * @param ship to check
-	 * @param hullModSpecId of the hull modification that grant extra fighter slots
-	 * @return true if the extra slots (newly & last added ones) have fighters in them
+	 * @return true if the ship has any fitted (non-built-in) wings
 	 */
 	public static boolean ehm_hasAnyFittedWings(ShipAPI ship) {
 		return !ship.getVariant().getNonBuiltInWings().isEmpty();
@@ -63,6 +64,22 @@ public class _ehm_helpers {
 	
 		return false;
 	}
+
+	/**
+	 * @param ship to check
+	 * @return true if the ship is a module
+	 */
+	public static boolean ehm_isModule(ShipAPI ship) {
+		return !Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy().contains(ship.getFleetMember());
+	}
+
+	/**
+	 * @param ship to check
+	 * @return true if there are any capacitors or vents installed on the variant
+	 */
+	public static boolean ehm_hasCapacitorsOrVents(ShipAPI ship) {
+		return ship.getVariant().getNumFluxVents() > 0 || ship.getVariant().getNumFluxCapacitors() > 0;
+	}	
 
 	/**
 	 * @param ship to check
@@ -214,5 +231,5 @@ public class _ehm_helpers {
 			weaponGroup.getSlots().retainAll(groupKeepTargets);
 			if (weaponGroup.getSlots().isEmpty()) iterator.remove();
 		}
-	}	
+	}
 }
