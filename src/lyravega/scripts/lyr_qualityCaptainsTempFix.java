@@ -18,7 +18,7 @@ public class lyr_qualityCaptainsTempFix implements EveryFrameScript, lyr_logger 
 		for (EveryFrameScript script : scripts) {
 			if (!script.getClass().getSimpleName().equals("CaptainsFieldRepairsScript")) continue;
 			
-			logger.info(logPrefix + "Suppressed 'FieldRepairScript' replacement from 'QualityCaptains' mod");
+			logger.warn(logPrefix + "Suppressed 'FieldRepairScript' replacement from 'QualityCaptains' mod");
 			Global.getSector().removeScript(script);
 			isDone = true;
 		}

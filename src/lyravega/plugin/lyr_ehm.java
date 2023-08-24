@@ -118,13 +118,13 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 			try {
 				requiresFix = ((Integer.parseInt(version.getMajor()) << 16) + (Integer.parseInt(version.getMinor()) << 8) + Integer.parseInt(version.getPatch()) - 66818) <= 0;	// 66818 is shifted 1.5.2
 			} catch (Exception e) {	// will throw an exception if the version info has any letters in it
-				requiresFix = false;
+				requiresFix = true;
 			}
 
 			if (!lyr_lunaSettingsListener.disableQualityCaptainsTempFix && requiresFix) {
 				if (!Global.getSector().hasTransientScript(lyr_qualityCaptainsTempFix.class)) {
 					Global.getSector().addTransientScript(new lyr_qualityCaptainsTempFix());
-					logger.info(logPrefix + "Suppressing 'FieldRepairScript' replacement from 'QualityCaptains' mod");
+					logger.warn(logPrefix + "Suppressing 'FieldRepairScript' replacement from 'QualityCaptains' mod");
 				}
 			} else {
 				if (Global.getSector().hasScript(lyr_fieldRepairsScript.class)) {
