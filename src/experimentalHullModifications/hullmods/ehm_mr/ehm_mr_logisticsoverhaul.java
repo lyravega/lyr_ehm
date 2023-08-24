@@ -87,11 +87,13 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 		// boolean commitVariantChanges = false;
 
 		float logisticsBonus = 0;
-		
+
 		// bonus from weapon slots
 		for (WeaponSlotAPI slot : originalHullSpec.getAllWeaponSlotsCopy()) {
-			if (!slot.isWeaponSlot()) continue;	// TODO: built-in weapon slots & weapons are spared, need to check other stuff for them
-			
+			if (slot.isBuiltIn()) {
+				if (!slot.getWeaponType().equals(WeaponType.BUILT_IN)) continue;
+			} else if (!slot.isWeaponSlot()) continue;
+
 			logisticsBonus += logisticsSlotBonus.get(slot.getSlotSize());
 			
 			// commitVariantChanges = ehm_deactivateSlot(hullSpec, null, slot.getId());
@@ -110,7 +112,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 			logisticsBonus += logisticsModBonus.get(hullSize);
 			lyr_hullSpec.getShieldSpec().setType(ShieldType.NONE);
 		}
-		
+
 		// bonus from fighter bays
 		float bays = stats.getNumFighterBays().getBaseValue(); if (bays > 0) {
 			logisticsBonus += bays * logisticsSlotBonus.get(WeaponSize.LARGE);
@@ -124,11 +126,13 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 			lyr_hullSpec.setOrdnancePoints((int) Math.round(originalHullSpec.getOrdnancePoints(null)*0.25));
 
 			if (!variant.hasHullMod(HullMods.AUTOMATED)) {
-				stats.getMinCrewMod().modifyMult(this.hullModSpecId, 0.10f);
+				stats.getMinCrewMod().modifyMult(this.hullModSpecId, 0.25f);
 				// stats.getMaxCrewMod().modifyMult(hullModSpecId, 0.50f);
 			}
 
 			stats.getSuppliesPerMonth().modifyMult(this.hullModSpecId, 0.25f);
+			stats.getSuppliesToRecover().modifyMult(this.hullModSpecId, 0.25f);
+			stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyMult(this.hullModSpecId, 0.25f);
 		}
 
 		// if (variant.hasHullMod(HullMods.CIVGRADE)) {
@@ -138,7 +142,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 		// 	if (sMods.contains(HullMods.EXPANDED_CARGO_HOLDS)) stats.getCargoMod().modifyFlat(this.hullModSpecId, logisticsModBonus.get(hullSize));
 		// 	if (sMods.contains(HullMods.AUXILIARY_FUEL_TANKS)) stats.getFuelMod().modifyFlat(this.hullModSpecId, logisticsModBonus.get(hullSize));
 		// }
-		
+
 		stats.getCargoMod().modifyFlat(this.hullModSpecId, logisticsBonus);
 		stats.getFuelMod().modifyFlat(this.hullModSpecId, logisticsBonus);
 
@@ -194,7 +198,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 			case 2: return "5/10/20";
 			case 3: return "20";
 			case 4: return "15/30/60/100";
-			case 5: return "skeleton crew, monthly maintenance and ordnance points";
+			case 5: return "skeleton crew, maintenance costs and ordnance points";
 			case 6: return "75%";
 			default: return null;
 		}
