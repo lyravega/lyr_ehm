@@ -8,6 +8,7 @@ import org.apache.log4j.Level;
 
 import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.ModSpecAPI;
 import com.fs.starfarer.api.VersionInfoAPI;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.combat.HullModEffect;
@@ -114,17 +115,19 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 		if (Global.getSettings().getModManager().isModEnabled("QualityCaptains")) {
 			VersionInfoAPI version = Global.getSettings().getModManager().getModSpec("QualityCaptains").getVersionInfo();
 
+			boolean disableFix = lyr_lunaSettingsListener.disableQualityCaptainsTempFix;
 			boolean requiresFix;
+
 			try {
 				requiresFix = ((Integer.parseInt(version.getMajor()) << 16) + (Integer.parseInt(version.getMinor()) << 8) + Integer.parseInt(version.getPatch()) - 66818) <= 0;	// 66818 is shifted 1.5.2
 			} catch (Exception e) {	// will throw an exception if the version info has any letters in it
 				requiresFix = true;
 			}
 
-			if (!lyr_lunaSettingsListener.disableQualityCaptainsTempFix && requiresFix) {
+			if (!disableFix && requiresFix) {
 				if (!Global.getSector().hasTransientScript(lyr_qualityCaptainsTempFix.class)) {
 					Global.getSector().addTransientScript(new lyr_qualityCaptainsTempFix());
-					logger.warn(logPrefix + "Suppressing 'FieldRepairScript' replacement from 'QualityCaptains' mod");
+					logger.warn(logPrefix + "Suppressing 'FieldRepairScript' replacement from 'Quality Captains v"+version.getString()+"'. Version threshold is 'v1.5.2'");
 				}
 			} else {
 				if (Global.getSector().hasScript(lyr_fieldRepairsScript.class)) {
@@ -132,7 +135,7 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 					logger.info(logPrefix + "Removing modified 'FieldRepairsScript' replacement from this mod");
 				}
 
-				logger.info(logPrefix + "Skipping 'FieldRepairsScript' replacement as 'QualityCaptains' mod is detected");
+				logger.info(logPrefix + "Skipping 'FieldRepairsScript' replacement as 'Quality Captains v"+version.getString()+"' is detected" + (disableFix ? ". Skip is forced" : ""));
 				return;
 			}
 		}
