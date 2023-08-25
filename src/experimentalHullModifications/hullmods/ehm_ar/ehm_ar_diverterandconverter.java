@@ -103,7 +103,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 			// if (slot.isDecorative()) continue;
 
 			String slotId = slot.getId();
-			if (!slotId.startsWith(lyr_internals.affix.normalSlot)) { iterator.remove(); continue; }
+			if (slotId.startsWith(lyr_internals.affix.convertedSlot)) { iterator.remove(); continue; }
 			if (variant.getWeaponSpec(slotId) == null) { iterator.remove(); continue; }
 
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
