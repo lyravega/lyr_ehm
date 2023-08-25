@@ -13,16 +13,18 @@ foreach($line in Get-Content ".\mod_info.json") {
     if($line -match '"version"') {
         $null = $line -match ':"(.*?)",'
         $version = $Matches[1]
+        break
     }
 }
+
+Write-Host "Mod archiver" -ForegroundColor Green
 
 $sourceDir = "$PSScriptRoot\Experimental Hull Modifications\"
 $targetZip = "$PSScriptRoot\ExperimentalHullModifications $version.zip"
 
-$null = New-Item "$PSScriptRoot\Experimental Hull Modifications\" -ItemType Directory
-Write-Host "Copying items" -ForegroundColor Yellow
+$null = New-Item $sourceDir -ItemType Directory
+Write-Host "Copying items" -ForegroundColor Blue
 foreach ($path in $stuffToPack) {
-    Write-Host $path -ForegroundColor Blue
     Copy-Item -Path ".\$path" -Destination $sourceDir -Recurse
 }
 
@@ -31,12 +33,13 @@ if (Test-Path -Path $targetZip -PathType Leaf) {
     Remove-Item $targetZip -Force -Recurse
 }
 
-# Compress-Archive -Path "$PSScriptRoot\Experimental Hull Modifications\" -DestinationPath "$PSScriptRoot\ExperimentalHullModifications $version.zip" -Update
+Write-Host "Packing mod" -ForegroundColor Blue
+# Compress-Archive -Path $sourceDir -DestinationPath $targetZip -Update
 $null = Start-SevenZip a -mx=9 $targetZip $sourceDir
 
 Write-Host "Deleting copied items" -ForegroundColor Red
 Remove-Item $sourceDir -Force -Recurse
 
 if (Test-Path -Path $targetZip -PathType Leaf) {
-    Write-Host "Mod packed!" -ForegroundColor Green
+    Write-Host "Mod archived!" -ForegroundColor Green
 }
