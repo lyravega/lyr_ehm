@@ -91,7 +91,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 		// bonus from weapon slots
 		for (WeaponSlotAPI slot : originalHullSpec.getAllWeaponSlotsCopy()) {
 			if (slot.isBuiltIn()) {
-				if (!slot.getWeaponType().equals(WeaponType.BUILT_IN)) continue;
+				if (slot.getWeaponType() != WeaponType.BUILT_IN) continue;
 			} else if (!slot.isWeaponSlot()) continue;
 
 			logisticsBonus += logisticsSlotBonus.get(slot.getSlotSize());
@@ -108,7 +108,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 		}
 
 		// bonus from defense system
-		if (!originalHullSpec.getShieldSpec().getType().equals(ShieldType.NONE)) {
+		if (originalHullSpec.getShieldSpec().getType() != ShieldType.NONE) {
 			logisticsBonus += logisticsModBonus.get(hullSize);
 			lyr_hullSpec.getShieldSpec().setType(ShieldType.NONE);
 		}

@@ -29,8 +29,7 @@ public class lyr_uiTools extends lyr_reflectionTools {
 	 * @return true if it is refit tab, false otherwise
 	 */
 	public static boolean isRefitTab() {
-		CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
-		return (tab != null && tab.equals(CoreUITabId.REFIT));
+		return Global.getSector().getCampaignUI().getCurrentCoreTab() == CoreUITabId.REFIT;
 	}
 
 	/**
@@ -38,7 +37,7 @@ public class lyr_uiTools extends lyr_reflectionTools {
 	 * and {@code onInstall()}
 	 */
 	public static void playDrillSound() {
-		if (!isRefitTab() || !playDrillSound) return;
+		if (!playDrillSound || !isRefitTab()) return;
 		Global.getSoundPlayer().playUISound(lyr_internals.id.drillSound, 1.0f, 0.75f);
 	}
 

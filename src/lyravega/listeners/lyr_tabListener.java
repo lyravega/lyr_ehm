@@ -63,7 +63,7 @@ public class lyr_tabListener implements CoreUITabListener, EveryFrameScriptWithC
 
 	@Override
 	public void reportAboutToOpenCoreTab(CoreUITabId tab, Object param) {
-		if (!tab.equals(targetTab)) return;
+		if (tab != targetTab) return;
 
 		if (!executeOnOpenOnce || !onOpenExecuted) {
 			onOpenExecuted = true;
@@ -85,9 +85,7 @@ public class lyr_tabListener implements CoreUITabListener, EveryFrameScriptWithC
 
 	@Override
 	public void advance(float amount) {
-		CoreUITabId tab = Global.getSector().getCampaignUI().getCurrentCoreTab();
-
-		if (tab != null && tab.equals(targetTab)) return;
+		if (Global.getSector().getCampaignUI().getCurrentCoreTab() == targetTab) return;
 
 		this.cleanup();
 	}

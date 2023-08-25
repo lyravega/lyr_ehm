@@ -141,7 +141,7 @@ public class _ehm_helpers {
 		for (WeaponAPI weapon: ship.getAllWeapons()) {
 			WeaponSlotAPI slot = weapon.getSlot();
 	
-			if (weapon.getType().equals(weaponType)) continue;
+			if (weapon.getType() == weaponType) continue;
 			if (!slot.isWeaponSlot()) continue;
 			return true;
 		}

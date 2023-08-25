@@ -94,7 +94,7 @@ public final class ehm_base extends _ehm_tracker {
 					if (scriptSimpleName.equals("CaptainsFieldRepairsScript")) tooltip.addPara("FieldRepairsScript (QC): Running", 5f).setHighlight("FieldRepairsScript (QC):");
 				}
 			} else if (showFluff) {
-				String playerSalutation = Global.getSector().getPlayerPerson().getGender().equals(Gender.MALE) ? Misc.SIR : Misc.MAAM;
+				String playerSalutation = Global.getSector().getPlayerPerson().getGender() == Gender.MALE ? Misc.SIR : Misc.MAAM;
 
 				tooltip.addSectionHeading("FLUFF", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 				switch ((int) Math.round(Math.random() * 10)) {

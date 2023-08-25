@@ -64,7 +64,7 @@ public class _ehm_wr_base extends _ehm_base implements normalEvents {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 
 		for (WeaponSlotAPI slot: hullSpec.getAllWeaponSlotsCopy()) {
-			if (slotSize != null && !slot.getSlotSize().equals(slotSize)) continue;
+			if (slotSize != null && slot.getSlotSize() != slotSize) continue;
 
 			String slotId = slot.getId();
 			WeaponType convertFrom = slot.getWeaponType();

@@ -111,7 +111,7 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 			if (variant.getWeaponSpec(slotId) == null) { iterator.remove(); continue; }
 
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
-			if (!shuntSpec.getSize().equals(variant.getSlot(slotId).getSlotSize())) { iterator.remove(); continue; }
+			if (shuntSpec.getSize() != slot.getSlotSize()) { iterator.remove(); continue; }
 			if (!shuntSpec.hasTag(lyr_internals.tag.experimental)) { iterator.remove(); continue; }
 
 			String shuntId = shuntSpec.getWeaponId();

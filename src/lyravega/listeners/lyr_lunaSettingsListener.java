@@ -83,7 +83,7 @@ public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logge
 		shuntAvailability = LunaSettings.getString(id.mod, "ehm_shuntAvailability");
 
 		if (_shuntAvailability == null || _shuntAvailability.equals(shuntAvailability)) return;	// null check here ensures return during application load where/when there is no game state
-		if (!Global.getCurrentState().equals(GameState.TITLE)) lyr_ehm.attachShuntAccessListener();
+		if (Global.getCurrentState() != GameState.TITLE) lyr_ehm.attachShuntAccessListener();
 	}
 
 	@Override

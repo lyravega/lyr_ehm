@@ -105,7 +105,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 			if (!slotId.startsWith(lyr_internals.affix.normalSlot)) continue;
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
 			// if (!shuntSpec.hasTag(lyr_internals.tag.experimental)) { iterator.remove(); continue; }
-			if (!shuntSpec.getSize().equals(variant.getSlot(slotId).getSlotSize())) continue;
+			if (shuntSpec.getSize() != variant.getSlot(slotId).getSlotSize()) continue;
 
 			String shuntId = shuntSpec.getWeaponId();
 			if (adapterMap.containsKey(shuntId)) commitVariantChanges = ehm_adaptSlot(hullSpec, shuntId, slotId);
@@ -134,7 +134,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 
 			// if (!slotId.startsWith(lyr_internals.affix.normalSlot)) continue;
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
-			if (!shuntSpec.getSize().equals(variant.getSlot(slotId).getSlotSize())) { iterator.remove(); continue; }
+			if (shuntSpec.getSize() != slot.getSlotSize()) { iterator.remove(); continue; }
 			if (!shuntSpec.hasTag(lyr_internals.tag.experimental)) { iterator.remove(); continue; }
 
 			String shuntId = shuntSpec.getWeaponId();
@@ -229,7 +229,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 
 			if (!slotId.startsWith(lyr_internals.affix.normalSlot)) continue;
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
-			if (!shuntSpec.getSize().equals(variant.getSlot(slotId).getSlotSize())) continue;
+			if (shuntSpec.getSize() != variant.getSlot(slotId).getSlotSize()) continue;
 
 			String shuntId = shuntSpec.getWeaponId();
 			if (adapterMap.containsKey(shuntId)) commitVariantChanges = ehm_adaptSlot(hullSpec, shuntId, slotId);
