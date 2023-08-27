@@ -1,6 +1,7 @@
 package experimentalHullModifications.hullmods.ehm_ar;
 
-import static lyravega.listeners.lyr_lunaSettingsListener.extraInfoInHullMods;
+import static lyravega.listeners.lyr_lunaSettingsListener.showFullInfoForActivators;
+import static lyravega.listeners.lyr_lunaSettingsListener.showInfoForActivators;
 import static lyravega.tools.lyr_uiTools.commitVariantChanges;
 
 import java.util.HashMap;
@@ -155,10 +156,7 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 		ShipVariantAPI variant = ship.getVariant();
 
 		if (variant.hasHullMod(this.hullModSpecId)) {
-			boolean showInfo = !extraInfoInHullMods.equals("None");
-			boolean showFullInfo = extraInfoInHullMods.equals("Full");
-
-			if (showInfo) {
+			if (showInfoForActivators) {
 				Map<String, Integer> adapters = ehm_shuntCount(ship, lyr_internals.tag.adapterShunt);
 
 				if (!adapters.isEmpty()) {
@@ -166,7 +164,7 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 					for (String shuntId: adapters.keySet()) {
 						tooltip.addPara(adapters.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
-				} else if (showFullInfo) {
+				} else if (showFullInfoForActivators) {
 					tooltip.addSectionHeading("NO ADAPTERS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No adapters are installed. Adapters turn bigger slots into smaller ones.", 2f);
 				}

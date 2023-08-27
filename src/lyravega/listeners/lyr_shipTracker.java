@@ -7,6 +7,8 @@ import static lyravega.misc.lyr_internals.events.onRemove;
 import static lyravega.misc.lyr_internals.events.onRestore;
 import static lyravega.misc.lyr_internals.events.onSuppress;
 
+import static lyravega.listeners.lyr_lunaSettingsListener.playDrillSoundForAll;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -20,6 +22,7 @@ import lyravega.listeners.events.enhancedEvents;
 import lyravega.listeners.events.normalEvents;
 import lyravega.listeners.events.suppressedEvents;
 import lyravega.tools.lyr_logger;
+import lyravega.tools.lyr_uiTools;
 
 /**
  * A class that acts like a listener in a way. Constructor takes a 
@@ -73,15 +76,20 @@ public class lyr_shipTracker implements lyr_logger {
 	public static final Map<String, normalEvents> normalEvents = new HashMap<String, normalEvents>();
 	public static final Map<String, enhancedEvents> enhancedEvents = new HashMap<String, enhancedEvents>();
 	public static final Map<String, suppressedEvents> suppressedEvents = new HashMap<String, suppressedEvents>();
+	public static final Set<String> allRegistered = new HashSet<String>();
 
 	private static void onEvent(final String eventName, final ShipVariantAPI variant, final String hullModId) {
-		switch (eventName) {
+		if (allRegistered.contains(hullModId)) switch (eventName) {
 			case onInstall:		if (normalEvents.containsKey(hullModId)) normalEvents.get(hullModId).onInstall(variant); return;
 			case onRemove:		if (normalEvents.containsKey(hullModId)) normalEvents.get(hullModId).onRemove(variant); return;
 			case onEnhance:		if (enhancedEvents.containsKey(hullModId)) enhancedEvents.get(hullModId).onEnhance(variant); return;
 			case onNormalize:	if (enhancedEvents.containsKey(hullModId)) enhancedEvents.get(hullModId).onNormalize(variant); return;
 			case onSuppress:	if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onSuppress(variant); return;
 			case onRestore:		if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onRestore(variant); return;
+			default: return;
+		} else if (playDrillSoundForAll) switch (eventName) {
+			case onInstall:		
+			case onRemove:		lyr_uiTools.playDrillSound(); return;
 			default: return;
 		}
 	}

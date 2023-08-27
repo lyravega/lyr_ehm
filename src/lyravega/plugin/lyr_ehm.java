@@ -3,6 +3,7 @@ package lyravega.plugin;
 import static lyravega.listeners.lyr_shipTracker.enhancedEvents;
 import static lyravega.listeners.lyr_shipTracker.normalEvents;
 import static lyravega.listeners.lyr_shipTracker.suppressedEvents;
+import static lyravega.listeners.lyr_shipTracker.allRegistered;
 
 import org.apache.log4j.Level;
 
@@ -96,6 +97,10 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 			if (enhancedEvents.class.isInstance(hullModEffect)) enhancedEvents.put(hullModSpec.getId(), (enhancedEvents) hullModEffect);
 			if (suppressedEvents.class.isInstance(hullModEffect)) suppressedEvents.put(hullModSpec.getId(), (suppressedEvents) hullModEffect);
 		}
+
+		allRegistered.addAll(normalEvents.keySet());
+		allRegistered.addAll(enhancedEvents.keySet());
+		allRegistered.addAll(suppressedEvents.keySet());
 
 		logger.info(logPrefix + "Experimental hull modifications are registered");
 	}

@@ -27,19 +27,24 @@ import lyravega.plugin.lyr_ehm;
  */
 public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logger {
 	private static final Set<customizableHullMod> lunaMods = new HashSet<customizableHullMod>();
+
+	public static String shuntAvailability, _shuntAvailability;
+	// public static String extraInfoInHullMods;
+	public static boolean showInfoForActivators;
+	public static boolean showFullInfoForActivators;
+	public static boolean hideAdapters;
+	public static boolean hideConverters;
+	public static int baseSlotPointPenalty;
 	public static boolean showExperimentalFlavour;
+	// public static String drillSound;
 	public static boolean playDrillSound;
+	public static boolean playDrillSoundForAll;
 	public static boolean showFluff;
-	public static boolean debugTooltip;
 	public static boolean disableQualityCaptainsTempFix;
+	public static boolean debugTooltip;
 	public static boolean logEventInfo;
 	public static boolean logListenerInfo;
 	public static boolean logTrackerInfo;
-	public static String extraInfoInHullMods;
-	public static String shuntAvailability, _shuntAvailability;
-	public static int baseSlotPointPenalty;
-	public static boolean hideAdapters;
-	public static boolean hideConverters;
 
 	public static void attach() {
 		if (!LunaSettings.hasSettingsListenerOfClass(lyr_lunaSettingsListener.class)) {
@@ -48,8 +53,7 @@ public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logge
 			logger.info(logPrefix + "Attached LunaLib settings listener");
 		}
 
-		cacheBasicSettings();
-		checkShuntAvailability();
+		cacheSettings();
 		registerCustomizableMods();
 	}
 
@@ -63,19 +67,24 @@ public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logge
 		}
 	}
 
-	private static void cacheBasicSettings() {
+	private static void cacheSettings() {
+		checkShuntAvailability();	// separate from others as it needs to trigger a method to add/remove listeners only if there's a change
+		String extraInfo = LunaSettings.getString(id.mod, "ehm_extraInfoInHullMods");	// splitting radio into booleans
+		showInfoForActivators = !extraInfo.equals("None");
+		showFullInfoForActivators = extraInfo.equals("Full");
+		hideAdapters = LunaSettings.getBoolean(id.mod, "ehm_hideAdapters");
+		hideConverters = LunaSettings.getBoolean(id.mod, "ehm_hideConverters");
+		baseSlotPointPenalty = LunaSettings.getInt(id.mod, "ehm_baseSlotPointPenalty");
 		showExperimentalFlavour = LunaSettings.getBoolean(id.mod, "ehm_showExperimentalFlavour");
-		playDrillSound = LunaSettings.getBoolean(id.mod, "ehm_playDrillSound");
+		String drillSound = LunaSettings.getString(id.mod, "ehm_drillSound");	// splitting radio into booleans
+		playDrillSound = !drillSound.equals("None");
+		playDrillSoundForAll = drillSound.equals("All");
 		showFluff = LunaSettings.getBoolean(id.mod, "ehm_showFluff");
-		debugTooltip = LunaSettings.getBoolean(id.mod, "ehm_debugTooltip");
 		disableQualityCaptainsTempFix = LunaSettings.getBoolean(id.mod, "ehm_tempFix");
+		debugTooltip = LunaSettings.getBoolean(id.mod, "ehm_debugTooltip");
 		logEventInfo = LunaSettings.getBoolean(id.mod, "ehm_logEventInfo");
 		logListenerInfo = LunaSettings.getBoolean(id.mod, "ehm_logListenerInfo");
 		logTrackerInfo = LunaSettings.getBoolean(id.mod, "ehm_logTrackerInfo");
-		extraInfoInHullMods = LunaSettings.getString(id.mod, "ehm_extraInfoInHullMods");
-		baseSlotPointPenalty = LunaSettings.getInt(id.mod, "ehm_baseSlotPointPenalty");
-		hideAdapters = LunaSettings.getBoolean(id.mod, "ehm_hideAdapters");
-		hideConverters = LunaSettings.getBoolean(id.mod, "ehm_hideConverters");
 	}
 
 	private static void checkShuntAvailability() {
@@ -90,8 +99,7 @@ public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logge
 	public void settingsChanged(String modId) {
 		if (!modId.equals(id.mod)) return;
 		
-		cacheBasicSettings();
-		checkShuntAvailability();	// to reset any possible changes on the shuntAvailability setting
+		cacheSettings();
 
 		for (customizableHullMod customizableMod: lunaMods) {
 			customizableMod.applyCustomization();

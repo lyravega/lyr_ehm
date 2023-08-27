@@ -1,6 +1,7 @@
 package experimentalHullModifications.hullmods.ehm_ar;
 
-import static lyravega.listeners.lyr_lunaSettingsListener.extraInfoInHullMods;
+import static lyravega.listeners.lyr_lunaSettingsListener.showFullInfoForActivators;
+import static lyravega.listeners.lyr_lunaSettingsListener.showInfoForActivators;
 import static lyravega.tools.lyr_uiTools.commitVariantChanges;
 
 import java.util.HashMap;
@@ -125,10 +126,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 		ShipVariantAPI variant = ship.getVariant();
 
 		if (variant.hasHullMod(this.hullModSpecId)) {
-			boolean showInfo = !extraInfoInHullMods.equals("None");
-			boolean showFullInfo = extraInfoInHullMods.equals("Full");
-
-			if (showInfo) {
+			if (showInfoForActivators) {
 				Map<String, Integer> capacitors = ehm_shuntCount(ship, lyr_internals.tag.capacitorShunt);
 	
 				if (!capacitors.isEmpty()) {
@@ -139,7 +137,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 					for (String shuntId: capacitors.keySet()) {
 						tooltip.addPara(capacitors.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
-				} else if (showFullInfo) {
+				} else if (showFullInfoForActivators) {
 					tooltip.addSectionHeading("NO CAPACITORS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No capacitors are installed. Capacitors increase the total flux capacity of the ship, and affect built-in capacitors.", 2f);
 				}
@@ -154,7 +152,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 					for (String shuntId: dissipators.keySet()) {
 						tooltip.addPara(dissipators.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
-				} else if (showFullInfo) {
+				} else if (showFullInfoForActivators) {
 					tooltip.addSectionHeading("NO DISSIPATORS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No dissipators are installed. Dissipators increase the total flux dissipation of the ship, and affect built-in vents.", 2f);
 				}

@@ -6,6 +6,7 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodType;
 import java.util.List;
 
+import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CoreUITabId;
 
@@ -26,10 +27,18 @@ import lyravega.proxies.ui.lyr_shipDisplay;
 public class lyr_uiTools extends lyr_reflectionTools {
 	/**
 	 * Just a simple check to see if it is the refit tab or not.
-	 * @return true if it is refit tab, false otherwise
+	 * @return true if it is refit tab
 	 */
 	public static boolean isRefitTab() {
 		return Global.getSector().getCampaignUI().getCurrentCoreTab() == CoreUITabId.REFIT;
+	}
+
+	/**
+	 * Another simple check to see if it is the title screen or not
+	 * @return true if it is the title screen
+	 */
+	public static boolean isTitleScreen() {
+		return Global.getCurrentState() == GameState.TITLE;
 	}
 
 	/**
