@@ -28,19 +28,25 @@ import lyravega.plugin.lyr_ehm;
 public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logger {
 	private static final Set<customizableHullMod> lunaMods = new HashSet<customizableHullMod>();
 
+	// MAIN SETTINGS
 	public static String shuntAvailability, _shuntAvailability;
 	// public static String extraInfoInHullMods;
 	public static boolean showInfoForActivators;
 	public static boolean showFullInfoForActivators;
 	public static boolean hideAdapters;
 	public static boolean hideConverters;
+
+	// HULL MODIFICATION SETTINGS
 	public static int baseSlotPointPenalty;
+
+	// FLAVOUR SETTINGS
 	public static boolean showExperimentalFlavour;
 	// public static String drillSound;
 	public static boolean playDrillSound;
 	public static boolean playDrillSoundForAll;
 	public static boolean showFluff;
-	public static boolean disableQualityCaptainsTempFix;
+
+	// DEBUG SETTINGS
 	public static boolean debugTooltip;
 	public static boolean logEventInfo;
 	public static boolean logListenerInfo;
@@ -68,19 +74,25 @@ public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logge
 	}
 
 	private static void cacheSettings() {
+		// MAIN SETTINGS
 		checkShuntAvailability();	// separate from others as it needs to trigger a method to add/remove listeners only if there's a change
 		String extraInfo = LunaSettings.getString(id.mod, "ehm_extraInfoInHullMods");	// splitting radio into booleans
 		showInfoForActivators = !extraInfo.equals("None");
 		showFullInfoForActivators = extraInfo.equals("Full");
 		hideAdapters = LunaSettings.getBoolean(id.mod, "ehm_hideAdapters");
 		hideConverters = LunaSettings.getBoolean(id.mod, "ehm_hideConverters");
+
+		// HULL MODIFICATION SETTINGS
 		baseSlotPointPenalty = LunaSettings.getInt(id.mod, "ehm_baseSlotPointPenalty");
+
+		// FLAVOUR SETTINGS
 		showExperimentalFlavour = LunaSettings.getBoolean(id.mod, "ehm_showExperimentalFlavour");
 		String drillSound = LunaSettings.getString(id.mod, "ehm_drillSound");	// splitting radio into booleans
 		playDrillSound = !drillSound.equals("None");
 		playDrillSoundForAll = drillSound.equals("All");
 		showFluff = LunaSettings.getBoolean(id.mod, "ehm_showFluff");
-		disableQualityCaptainsTempFix = LunaSettings.getBoolean(id.mod, "ehm_tempFix");
+
+		// DEBUG SETTINGS
 		debugTooltip = LunaSettings.getBoolean(id.mod, "ehm_debugTooltip");
 		logEventInfo = LunaSettings.getBoolean(id.mod, "ehm_logEventInfo");
 		logListenerInfo = LunaSettings.getBoolean(id.mod, "ehm_logListenerInfo");

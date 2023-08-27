@@ -9,7 +9,6 @@ import org.apache.log4j.Level;
 
 import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.VersionInfoAPI;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.combat.HullModEffect;
 import com.fs.starfarer.api.impl.campaign.skills.FieldRepairsScript;
@@ -25,7 +24,6 @@ import lyravega.listeners.events.normalEvents;
 import lyravega.listeners.events.suppressedEvents;
 import lyravega.misc.lyr_internals;
 import lyravega.scripts.lyr_fieldRepairsScript;
-import lyravega.scripts.lyr_qualityCaptainsTempFix;
 import lyravega.tools.lyr_logger;
 
 public class lyr_ehm extends BaseModPlugin implements lyr_logger {
@@ -117,42 +115,18 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 
 	private static void replaceFieldRepairsScript() {
 		if (Global.getSettings().getModManager().isModEnabled("QualityCaptains")) {
-			VersionInfoAPI version = Global.getSettings().getModManager().getModSpec("QualityCaptains").getVersionInfo();
-
-			boolean disableFix = lyr_lunaSettingsListener.disableQualityCaptainsTempFix;
-			boolean requiresFix;
-
-			try {
-				requiresFix = ((Integer.parseInt(version.getMajor()) << 16) + (Integer.parseInt(version.getMinor()) << 8) + Integer.parseInt(version.getPatch()) - 66818) <= 0;	// 66818 is shifted 1.5.2
-			} catch (Exception e) {	// will throw an exception if the version info has any letters in it
-				requiresFix = true;
+			if (Global.getSector().hasScript(lyr_fieldRepairsScript.class)) {
+				Global.getSector().removeScriptsOfClass(lyr_fieldRepairsScript.class);
+				logger.info(logPrefix + "Removing modified 'FieldRepairsScript' replacement from this mod");
 			}
 
-			if (!disableFix && requiresFix) {
-				if (!Global.getSector().hasTransientScript(lyr_qualityCaptainsTempFix.class)) {
-					Global.getSector().addTransientScript(new lyr_qualityCaptainsTempFix());
-					logger.warn(logPrefix + "Suppressing 'FieldRepairScript' replacement from 'Quality Captains v"+version.getString()+"'. Version threshold is 'v1.5.2'");
-				}
-			} else {
-				if (Global.getSector().hasScript(lyr_fieldRepairsScript.class)) {
-					Global.getSector().removeScriptsOfClass(lyr_fieldRepairsScript.class);
-					logger.info(logPrefix + "Removing modified 'FieldRepairsScript' replacement from this mod");
-				}
-
-				logger.info(logPrefix + "Skipping 'FieldRepairsScript' replacement as 'Quality Captains v"+version.getString()+"' is detected" + (disableFix ? ". Skip is forced" : ""));
-				return;
-			}
+			logger.info(logPrefix + "Skipping 'FieldRepairsScript' replacement as 'Quality Captains' is detected");
+			return;
 		}
 
-		if (Global.getSector().hasScript(FieldRepairsScript.class)) {
-			Global.getSector().removeScriptsOfClass(FieldRepairsScript.class);
-
-			if (!Global.getSector().hasScript(lyr_fieldRepairsScript.class)) {
-				Global.getSector().addScript(new lyr_fieldRepairsScript());
-				
-				logger.info(logPrefix + "Replaced 'FieldRepairsScript' with modified one");
-			}
-		}
+		if (Global.getSector().hasScript(FieldRepairsScript.class)) Global.getSector().removeScriptsOfClass(FieldRepairsScript.class);
+		if (!Global.getSector().hasScript(lyr_fieldRepairsScript.class)) Global.getSector().addScript(new lyr_fieldRepairsScript());
+		logger.info(logPrefix + "Replaced 'FieldRepairsScript' with modified one");
 	}
 
 	public static void attachShuntAccessListener() {
