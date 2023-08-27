@@ -129,7 +129,7 @@ public class _ehm_base extends BaseHullMod implements lyr_logger {
 	@Override public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) { return true; }
 
 	@Override public String getCanNotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) { return null; }
-	
+
 	@Override
 	public boolean showInRefitScreenModPickerFor(ShipAPI ship) {
 		return Global.getCurrentState() != GameState.TITLE;
