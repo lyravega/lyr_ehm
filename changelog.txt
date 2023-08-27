@@ -12,6 +12,7 @@ Version 0.8.3
 - Added a "Debug Settings" section; enable/disable logging for certain items, display extra information on base hullmod's tooltip
 - Changed slot retrofits to prevent installation and removal if there are wings or inert slot shunts present on the ship to prevent an issue
 - Changed the OP bonus of Over-Engineered (back) to 20% (from 15%)
+- Removed all experimental hull modifications from Missions. Mission refit panel mod picker will no longer show any of these 
 
 * The enhancements to the "Hull Restoration" skill from "Quality Captains" with a version older than "1.5.3" will be disabled by this mod. This fix disables itself if a newer version is detected, and will be removed in the future.
 

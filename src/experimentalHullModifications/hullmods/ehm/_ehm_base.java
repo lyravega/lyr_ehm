@@ -5,6 +5,7 @@ import static lyravega.listeners.lyr_lunaSettingsListener.showExperimentalFlavou
 import java.awt.Color;
 import java.util.Set;
 
+import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.SettingsAPI;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
@@ -128,6 +129,11 @@ public class _ehm_base extends BaseHullMod implements lyr_logger {
 	@Override public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) { return true; }
 
 	@Override public String getCanNotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) { return null; }
+	
+	@Override
+	public boolean showInRefitScreenModPickerFor(ShipAPI ship) {
+		return Global.getCurrentState() != GameState.TITLE;
+	}
 	//#endregion
 	// END OF INSTALLATION CHECKS / DESCRIPTION
 	//#endregion
