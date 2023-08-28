@@ -89,9 +89,7 @@ public class lyr_shipTracker implements lyr_logger {
 			default: return;
 		} else if (playDrillSoundForAll) switch (eventName) {
 			case onInstall:		
-			case onRemove:		
-			case onEnhance:		
-			case onNormalize:	lyr_uiTools.playDrillSound(); return;
+			case onRemove:		lyr_uiTools.playDrillSound(); return;
 			default: return;
 		}
 	}
