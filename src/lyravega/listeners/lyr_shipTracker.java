@@ -107,6 +107,7 @@ public class lyr_shipTracker implements lyr_logger {
 	private void checkHullMods() {
 		for (final String hullModId : variant.getHullMods()) {
 			if (hullMods.contains(hullModId)) continue;
+			if (suppressedMods.contains(hullModId)) { hullMods.add(hullModId); continue; }
 
 			hullMods.add(hullModId); onEvent(onInstall, variant, hullModId);
 			if (lyr_lunaSettingsListener.logEventInfo) logger.info(logPrefix+"ST-"+memberId+": Installed '"+hullModId+"'");
@@ -114,6 +115,7 @@ public class lyr_shipTracker implements lyr_logger {
 
 		for (iterator = hullMods.iterator(); iterator.hasNext();) { final String hullModId = iterator.next();
 			if (variant.hasHullMod(hullModId)) continue;
+			if (variant.getSuppressedMods().contains(hullModId)) { iterator.remove(); continue; }
 
 			iterator.remove(); onEvent(onRemove, variant, hullModId);
 			if (lyr_lunaSettingsListener.logEventInfo) logger.info(logPrefix+"ST-"+memberId+": Removed '"+hullModId+"'");

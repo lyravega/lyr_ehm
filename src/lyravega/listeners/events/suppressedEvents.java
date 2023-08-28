@@ -15,14 +15,12 @@ import experimentalHullModifications.hullmods.ehm._ehm_tracker;
 public interface suppressedEvents {
 	/**
 	 * Fired if this hull modification is suppressed on the refit ship.
-	 * <p> Will also be detected as a removed hull modification (!)
 	 * @param variant
 	 */
 	public void onSuppress(ShipVariantAPI variant);
 
 	/**
 	 * Fired if this hull modification is no longer suppressed on the refit ship.
-	 * <p> Will also be detected as an installed hull modification (!)
 	 * @param variant
 	 */
 	public void onRestore(ShipVariantAPI variant);
