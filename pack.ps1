@@ -1,4 +1,4 @@
-$7zip = "$env:ProgramFiles\7-Zip\7z.exe"
+$7zip = "$env:ProgramFiles/7-Zip/7z.exe"
 Set-Alias Start-SevenZip $7zip
 
 $stuffToPack = ("LICENSE.md"),
@@ -9,7 +9,7 @@ $stuffToPack = ("LICENSE.md"),
                ("jars"),
                ("data")
 
-foreach($line in Get-Content ".\mod_info.json") {
+foreach($line in Get-Content "./mod_info.json") {
     if($line -match '"version"') {
         $null = $line -match ':"(.*?)",'
         $version = $Matches[1]
@@ -19,13 +19,13 @@ foreach($line in Get-Content ".\mod_info.json") {
 
 Write-Host "Mod archiver" -ForegroundColor Green
 
-$sourceDir = "$PSScriptRoot\Experimental Hull Modifications\"
-$targetZip = "$PSScriptRoot\ExperimentalHullModifications $version.zip"
+$sourceDir = "$PSScriptRoot/Experimental Hull Modifications/"
+$targetZip = "$PSScriptRoot/ExperimentalHullModifications $version.zip"
 
 $null = New-Item $sourceDir -ItemType Directory
 Write-Host "Copying items" -ForegroundColor Blue
 foreach ($path in $stuffToPack) {
-    Copy-Item -Path ".\$path" -Destination $sourceDir -Recurse
+    Copy-Item -Path "./$path" -Destination $sourceDir -Recurse
 }
 
 if (Test-Path -Path $targetZip -PathType Leaf) {
@@ -34,8 +34,8 @@ if (Test-Path -Path $targetZip -PathType Leaf) {
 }
 
 Write-Host "Packing mod" -ForegroundColor Blue
-# Compress-Archive -Path $sourceDir -DestinationPath $targetZip -Update
-$null = Start-SevenZip a -mx=9 $targetZip $sourceDir
+Compress-Archive -Path $sourceDir -DestinationPath $targetZip -Update
+# $null = Start-SevenZip u -mx=9 $targetZip $sourceDir
 
 Write-Host "Deleting copied items" -ForegroundColor Red
 Remove-Item $sourceDir -Force -Recurse

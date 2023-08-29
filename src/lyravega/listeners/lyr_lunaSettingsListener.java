@@ -33,6 +33,9 @@ public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logge
 	// public static String extraInfoInHullMods;
 	public static boolean showInfoForActivators;
 	public static boolean showFullInfoForActivators;
+	// public static String drillSound;
+	public static boolean playDrillSound;
+	public static boolean playDrillSoundForAll;
 	public static boolean hideAdapters;
 	public static boolean hideConverters;
 
@@ -41,9 +44,6 @@ public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logge
 
 	// FLAVOUR SETTINGS
 	public static boolean showExperimentalFlavour;
-	// public static String drillSound;
-	public static boolean playDrillSound;
-	public static boolean playDrillSoundForAll;
 	public static boolean showFluff;
 
 	// DEBUG SETTINGS
@@ -79,6 +79,9 @@ public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logge
 		String extraInfo = LunaSettings.getString(id.mod, "ehm_extraInfoInHullMods");	// splitting radio into booleans
 		showInfoForActivators = !extraInfo.equals("None");
 		showFullInfoForActivators = extraInfo.equals("Full");
+		String drillSound = LunaSettings.getString(id.mod, "ehm_drillSound");	// splitting radio into booleans
+		playDrillSound = !drillSound.equals("None");
+		playDrillSoundForAll = drillSound.equals("All");
 		hideAdapters = LunaSettings.getBoolean(id.mod, "ehm_hideAdapters");
 		hideConverters = LunaSettings.getBoolean(id.mod, "ehm_hideConverters");
 
@@ -87,9 +90,6 @@ public class lyr_lunaSettingsListener implements LunaSettingsListener, lyr_logge
 
 		// FLAVOUR SETTINGS
 		showExperimentalFlavour = LunaSettings.getBoolean(id.mod, "ehm_showExperimentalFlavour");
-		String drillSound = LunaSettings.getString(id.mod, "ehm_drillSound");	// splitting radio into booleans
-		playDrillSound = !drillSound.equals("None");
-		playDrillSoundForAll = drillSound.equals("All");
 		showFluff = LunaSettings.getBoolean(id.mod, "ehm_showFluff");
 
 		// DEBUG SETTINGS
