@@ -127,7 +127,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 
 			if (!variant.hasHullMod(HullMods.AUTOMATED)) {
 				stats.getMinCrewMod().modifyMult(this.hullModSpecId, 0.25f);
-				// stats.getMaxCrewMod().modifyMult(this.id, 0.50f);
+				// stats.getMaxCrewMod().modifyMult(this.hullModSpecId, 0.50f);
 			}
 
 			stats.getSuppliesPerMonth().modifyMult(this.hullModSpecId, 0.25f);
@@ -138,9 +138,9 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 		// if (variant.hasHullMod(HullMods.CIVGRADE)) {
 		// 	LinkedHashSet<String> sMods = variant.getSMods();
 
-		// 	if (sMods.contains(HullMods.ADDITIONAL_BERTHING) && !variant.hasHullMod(HullMods.AUTOMATED)) stats.getMaxCrewMod().modifyFlat(this.id, logisticsModBonus.get(hullSize));
-		// 	if (sMods.contains(HullMods.EXPANDED_CARGO_HOLDS)) stats.getCargoMod().modifyFlat(this.id, logisticsModBonus.get(hullSize));
-		// 	if (sMods.contains(HullMods.AUXILIARY_FUEL_TANKS)) stats.getFuelMod().modifyFlat(this.id, logisticsModBonus.get(hullSize));
+		// 	if (sMods.contains(HullMods.ADDITIONAL_BERTHING) && !variant.hasHullMod(HullMods.AUTOMATED)) stats.getMaxCrewMod().modifyFlat(this.hullModSpecId, logisticsModBonus.get(hullSize));
+		// 	if (sMods.contains(HullMods.EXPANDED_CARGO_HOLDS)) stats.getCargoMod().modifyFlat(this.hullModSpecId, logisticsModBonus.get(hullSize));
+		// 	if (sMods.contains(HullMods.AUXILIARY_FUEL_TANKS)) stats.getFuelMod().modifyFlat(this.hullModSpecId, logisticsModBonus.get(hullSize));
 		// }
 
 		stats.getCargoMod().modifyFlat(this.hullModSpecId, logisticsBonus);

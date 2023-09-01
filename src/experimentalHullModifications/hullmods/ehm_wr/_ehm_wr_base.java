@@ -131,7 +131,7 @@ public class _ehm_wr_base extends _ehm_base implements normalEvents {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
 			if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
-			// if (_ehm_helpers.ehm_hasHullmodWithTag(ship, lyr_internals.tag.weaponRetrofit, this.id)) tooltip.addPara(text.hasWeaponRetrofit[0], text.padding).setHighlight(text.hasWeaponRetrofit[1]);
+			// if (_ehm_helpers.ehm_hasHullmodWithTag(ship, lyr_internals.tag.weaponRetrofit, this.hullModSpecId)) tooltip.addPara(text.hasWeaponRetrofit[0], text.padding).setHighlight(text.hasWeaponRetrofit[1]);
 		}
 
 		if (!canBeAddedOrRemovedNow(ship, null, null)) {
@@ -151,7 +151,7 @@ public class _ehm_wr_base extends _ehm_base implements normalEvents {
 		if (ship == null) return false;
 
 		if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) return false; 
-		// if (_ehm_helpers.ehm_hasHullmodWithTag(ship, lyr_internals.tag.weaponRetrofit, this.id)) return false; 
+		// if (_ehm_helpers.ehm_hasHullmodWithTag(ship, lyr_internals.tag.weaponRetrofit, this.hullModSpecId)) return false; 
 
 		return true; 
 	}
