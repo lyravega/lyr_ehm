@@ -23,8 +23,8 @@ import lyravega.proxies.lyr_hullSpec;
  * straightforward in their operation; change the system of a hullSpec.
  * @see {@link experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base _ehm_ar_base} for slot adapter base
  * @see {@link experimentalHullModifications.hullmods.ehm_wr._ehm_wr_base _ehm_wr_base} for weapon retrofit base
- * @see {@link experimentalHullModifications.hullmods.ehm_ec._ehm_ec_customizable _ehm_ec_base} for engine cosmetic base
- * @see {@link experimentalHullModifications.hullmods.ehm_sc._ehm_sc_customizable _ehm_sc_base} for shield cosmetic base
+ * @see {@link experimentalHullModifications.hullmods.ehm_ec._ehm_ec_base _ehm_ec_base} for engine cosmetic base
+ * @see {@link experimentalHullModifications.hullmods.ehm_sc._ehm_sc_base _ehm_sc_base} for shield cosmetic base
  * @author lyravega
  */
 public class _ehm_sr_base extends _ehm_base implements normalEvents {

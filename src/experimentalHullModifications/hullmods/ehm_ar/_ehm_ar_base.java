@@ -63,8 +63,8 @@ import lyravega.proxies.lyr_weaponSlot.slotTypeConstants;
  * hullSpec to yield interesting results, such as creating a new weapon slot. 
  * @see {@link experimentalHullModifications.hullmods.ehm_sr._ehm_sr_base _ehm_sr_base} for system retrofit base
  * @see {@link experimentalHullModifications.hullmods.ehm_wr._ehm_wr_base _ehm_wr_base} for weapon retrofit base
- * @see {@link experimentalHullModifications.hullmods.ehm_ec._ehm_ec_customizable _ehm_ec_base} for engine cosmetic base
- * @see {@link experimentalHullModifications.hullmods.ehm_sc._ehm_sc_customizable _ehm_sc_base} for shield cosmetic base
+ * @see {@link experimentalHullModifications.hullmods.ehm_ec._ehm_ec_base _ehm_ec_base} for engine cosmetic base
+ * @see {@link experimentalHullModifications.hullmods.ehm_sc._ehm_sc_base _ehm_sc_base} for shield cosmetic base
  * @author lyravega
  */
 public class _ehm_ar_base extends _ehm_base implements normalEvents {
