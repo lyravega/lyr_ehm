@@ -71,12 +71,12 @@ public class _ehm_test extends _ehm_base implements normalEvents {
 	} catch (Throwable t ) { logger.warn("Test fail in 'applyEffectsBeforeShipCreation()'", t);	}}
 
 	@Override
-	public void applyEffectsAfterShipCreation(ShipAPI ship, String id) { try {
+	public void applyEffectsAfterShipCreation(ShipAPI ship, String hullModSpecId) { try {
 
 	} catch (Throwable t ) { logger.warn("Test fail in 'applyEffectsAfterShipCreation()'", t);	}}
 
 	@Override
-	public void applyEffectsToFighterSpawnedByShip(ShipAPI fighter, ShipAPI ship, String id) { try {
+	public void applyEffectsToFighterSpawnedByShip(ShipAPI fighter, ShipAPI ship, String hullModSpecId) { try {
 
 	} catch (Throwable t ) { logger.warn("Test fail in 'applyEffectsToFighterSpawnedByShip()'", t);	}}
 

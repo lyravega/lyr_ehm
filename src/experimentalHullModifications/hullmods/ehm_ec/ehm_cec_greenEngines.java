@@ -36,7 +36,7 @@ public final class ehm_cec_greenEngines extends _ehm_ec_base implements customiz
 	}
 
 	@Override
-	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String id) {
+	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
 
 		variant.setHullSpecAPI(ehm_applyEngineCosmetics(variant, engineStyleId, engineStyleSpec));

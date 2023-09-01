@@ -154,7 +154,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 	}
 
 	@Override
-	public void applyEffectsAfterShipCreation(ShipAPI ship, String id) {
+	public void applyEffectsAfterShipCreation(ShipAPI ship, String hullModSpecId) {
 		// ship.setShield(ShieldType.NONE, 0.0F, 1.0F, 1.0F);
 	}
 

@@ -86,13 +86,13 @@ public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 	}
 
 	@Override
-	public void applyEffectsAfterShipCreation(ShipAPI ship, String id) {
+	public void applyEffectsAfterShipCreation(ShipAPI ship, String hullModSpecId) {
 		ShipVariantAPI variant = ship.getVariant();
 
 		if (variant.getHullSpec().getBuiltInMods().contains(HullMods.AUTOMATED) || variant.getSuppressedMods().contains(HullMods.AUTOMATED)) {
 			ship.setInvalidTransferCommandTarget(false);
 		} else {
-			// settings.getHullModSpec(HullMods.AUTOMATED).getEffect().applyEffectsAfterShipCreation(ship, id);
+			// settings.getHullModSpec(HullMods.AUTOMATED).getEffect().applyEffectsAfterShipCreation(ship, hullModSpecId);
 		}
 	}
 

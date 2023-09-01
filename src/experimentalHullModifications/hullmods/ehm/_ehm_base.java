@@ -68,7 +68,7 @@ public class _ehm_base extends BaseHullMod implements lyr_logger {
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {}
 
 	@Override 
-	public void applyEffectsAfterShipCreation(ShipAPI ship, String id) {}
+	public void applyEffectsAfterShipCreation(ShipAPI ship, String hullModSpecId) {}
 
 	@Override 
 	public String getDescriptionParam(int index, HullSize hullSize) { return null; }
@@ -83,7 +83,7 @@ public class _ehm_base extends BaseHullMod implements lyr_logger {
 	public String getSModDescriptionParam(int index, HullSize hullSize, ShipAPI ship) { return getSModDescriptionParam(index, hullSize); }
 
 	@Override 
-	public void applyEffectsToFighterSpawnedByShip(ShipAPI fighter, ShipAPI ship, String id) {}
+	public void applyEffectsToFighterSpawnedByShip(ShipAPI fighter, ShipAPI ship, String hullModSpecId) {}
 	
 	@Override 
 	public void advanceInCampaign(FleetMemberAPI member, float amount) {}
