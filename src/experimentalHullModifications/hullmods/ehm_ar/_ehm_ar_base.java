@@ -7,9 +7,6 @@ import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_launchtube.la
 import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.capacitorMap;
 import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.dissipatorMap;
 import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.adapterMap;
-import static lyravega.listeners.lyr_lunaSettingsListener.baseSlotPointPenalty;
-import static lyravega.listeners.lyr_lunaSettingsListener.hideAdapters;
-import static lyravega.listeners.lyr_lunaSettingsListener.hideConverters;
 import static lyravega.tools.lyr_uiTools.commitVariantChanges;
 import static lyravega.tools.lyr_uiTools.playDrillSound;
 
@@ -54,6 +51,7 @@ import lyravega.misc.lyr_internals.id.shunts.launchTubes;
 import lyravega.misc.lyr_tooltip.header;
 import lyravega.misc.lyr_tooltip.text;
 import lyravega.misc.lyr_vectorUtility;
+import lyravega.plugin.lyr_ehm;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.proxies.lyr_weaponSlot;
 import lyravega.proxies.lyr_weaponSlot.slotTypeConstants;
@@ -65,8 +63,8 @@ import lyravega.proxies.lyr_weaponSlot.slotTypeConstants;
  * hullSpec to yield interesting results, such as creating a new weapon slot. 
  * @see {@link experimentalHullModifications.hullmods.ehm_sr._ehm_sr_base _ehm_sr_base} for system retrofit base
  * @see {@link experimentalHullModifications.hullmods.ehm_wr._ehm_wr_base _ehm_wr_base} for weapon retrofit base
- * @see {@link experimentalHullModifications.hullmods.ehm_ec._ehm_ec_base _ehm_ec_base} for engine cosmetic base
- * @see {@link experimentalHullModifications.hullmods.ehm_sc._ehm_sc_base _ehm_sc_base} for shield cosmetic base
+ * @see {@link experimentalHullModifications.hullmods.ehm_ec._ehm_ec_customizable _ehm_ec_base} for engine cosmetic base
+ * @see {@link experimentalHullModifications.hullmods.ehm_sc._ehm_sc_customizable _ehm_sc_base} for shield cosmetic base
  * @author lyravega
  */
 public class _ehm_ar_base extends _ehm_base implements normalEvents {
@@ -209,7 +207,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 			stats.getFluxDissipation().modifyFlat(hullmods.mutableshunt, totalFluxDissipationBonus[1]);
 			stats.getNumFighterBays().modifyFlat(hullmods.mutableshunt, fighterBayFlat);
 		// }
-		stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullmods.diverterandconverter, Math.max(0, baseSlotPointPenalty*Math.min(slotPointsFromMods, slotPointsFromMods - slotPoints)));
+		stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullmods.diverterandconverter, Math.max(0, lyr_ehm.settings.getBaseSlotPointPenalty()*Math.min(slotPointsFromMods, slotPointsFromMods - slotPoints)));
 
 		variant.setHullSpecAPI(hullSpec.retrieve()); 
 		if (commitVariantChanges && !_ehm_helpers.ehm_isGettingRestored(variant)) { commitVariantChanges = false; commitVariantChanges(); }
@@ -259,7 +257,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 
 		hullSpec.addBuiltInWeapon(slotId, shuntId);
 		parentSlot.setWeaponType(WeaponType.DECORATIVE);
-		if (hideAdapters) parentSlot.setSlotType(slotTypeConstants.hidden);
+		if (lyr_ehm.settings.getHideAdapters()) parentSlot.setSlotType(slotTypeConstants.hidden);
 		return true;
 	}
 
@@ -283,7 +281,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		// if (slotPoints != null) slotPoints -= converters.get(shuntId).getChildCost();	// needs to be subtracted from here on initial install to avoid infinite installs
 		hullSpec.addBuiltInWeapon(slotId, shuntId);
 		parentSlot.setWeaponType(WeaponType.DECORATIVE);
-		if (hideConverters) parentSlot.setSlotType(slotTypeConstants.hidden);
+		if (lyr_ehm.settings.getHideConverters()) parentSlot.setSlotType(slotTypeConstants.hidden);
 		return true;
 	}
 
@@ -326,7 +324,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		}
 
 		int slotPointsTotal = fromHullMods+fromDiverters-forConverters;
-		int deploymentPenalty = Math.max(0, baseSlotPointPenalty*Math.min(fromHullMods, fromHullMods - slotPointsTotal));
+		int deploymentPenalty = Math.max(0, lyr_ehm.settings.getBaseSlotPointPenalty()*Math.min(fromHullMods, fromHullMods - slotPointsTotal));
 		int[] slotPointArray = {slotPointsTotal, fromHullMods, fromDiverters, forConverters, deploymentPenalty};
 		return slotPointArray;
 	}

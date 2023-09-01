@@ -60,9 +60,7 @@ public class _ehm_helpers {
 			for (int i = (int) (ship.getMutableStats().getNumFighterBays().getModifiedValue() - fighterBayFlat); i < wingsSize; i++) {
 				if (ship.getVariant().getWingId(i) != null) return true;
 			}
-		}
-	
-		return false;
+		}; return false;
 	}
 
 	/**
@@ -91,9 +89,7 @@ public class _ehm_helpers {
 	
 			if (!slot.isWeaponSlot()) continue;
 			return true;
-		}
-	
-		return false;
+		}; return false;
 	}
 
 	/**
@@ -109,9 +105,7 @@ public class _ehm_helpers {
 			else if (slot.isDecorative()) return true;	// in this case, it is an activated shunt on a spawned slot
 			if (!slot.isWeaponSlot()) continue;
 			return true;
-		}
-	
-		return false;
+		}; return false;
 	}
 
 	/**
@@ -127,9 +121,7 @@ public class _ehm_helpers {
 			if (ignoredWeaponIds.contains(weapon.getId())) continue;
 			if (!slot.isWeaponSlot()) continue;
 			return true;
-		}
-	
-		return false;
+		}; return false;
 	}
 
 	/**
@@ -144,21 +136,7 @@ public class _ehm_helpers {
 			if (weapon.getType() == weaponType) continue;
 			if (!slot.isWeaponSlot()) continue;
 			return true;
-		}
-	
-		return false;
-	}
-
-	/**
-	 * Checks the ship if it has retrofit base ({@link ehm_base}) installed
-	 * @param ship to check 
-	 * @return true if ship has it, false otherwise (duh)
-	 */
-	public static final boolean ehm_hasExperimentalModWithTag(ShipAPI ship, String tag) {
-		for (String hullModId: ship.getVariant().getHullMods()) {
-			if (Global.getSettings().getHullModSpec(hullModId).hasTag(tag)) return true;
-		}
-		return false;
+		}; return false;
 	}
 
 	/**
@@ -169,8 +147,7 @@ public class _ehm_helpers {
 	public static final boolean ehm_hasExperimentalSMod(ShipAPI ship) {
 		for (String hullModId: ship.getVariant().getSMods()) {
 			if (Global.getSettings().getHullModSpec(hullModId).hasTag(lyr_internals.tag.experimental)) return true;
-		}
-		return false;
+		}; return false;
 	}
 
 	/**
@@ -182,21 +159,32 @@ public class _ehm_helpers {
 		return ship.getVariant().getHullSpec().isBuiltInMod(lyr_internals.id.hullmods.base);
 	}
 
-	//#region CHECK HELPERS
 	/**
 	 * Checks the ship if it has another hull modification using the passed tag
 	 * @param ship to check the installed hullmods
-	 * @param retrofitTag to check if the ship has one already
-	 * @param excludeThisId to exclude from the check
+	 * @param tag to check if the ship has one already
+	 * @param ignoredHullmodId to exclude from the check, can be {@code null}
 	 * @return true if there is another mod with the searched tag, false otherwise
 	 */
-	public static final boolean ehm_hasRetrofitTag(ShipAPI ship, String retrofitTag, String excludeThisId) {
+	public static final boolean ehm_hasHullModWithTag(ShipAPI ship, String tag, String ignoredHullmodId) {
 		for (String hullModId : ship.getVariant().getHullMods()) {
-			if (hullModId.equals(excludeThisId)) continue;
-			if (Global.getSettings().getHullModSpec(hullModId).hasTag(retrofitTag)) return true;
-		}
-	
-		return false;
+			if (hullModId.equals(ignoredHullmodId)) continue;
+			if (Global.getSettings().getHullModSpec(hullModId).hasTag(tag)) return true;
+		}; return false;
+	}
+
+	/**
+	 * Checks the variant if it has another hull modification using the passed tag
+	 * @param variant to check the installed hullmods
+	 * @param tag to check if the ship has one already
+	 * @param ignoredHullmodId to exclude from the check, can be {@code null}
+	 * @return true if there is another mod with the searched tag, false otherwise
+	 */
+	public static final boolean ehm_hasHullModWithTag(ShipVariantAPI variant, String tag, String ignoredHullmodId) {
+		for (String hullModId : variant.getHullMods()) {
+			if (hullModId.equals(ignoredHullmodId)) continue;
+			if (Global.getSettings().getHullModSpec(hullModId).hasTag(tag)) return true;
+		}; return false;
 	}
 
 	/**
@@ -230,6 +218,14 @@ public class _ehm_helpers {
 			weaponGroup.getSlots().removeAll(groupCleanupTargets.keySet());
 			weaponGroup.getSlots().retainAll(groupKeepTargets);
 			if (weaponGroup.getSlots().isEmpty()) iterator.remove();
+		}
+	}
+
+	public static final void ehm_removeHullModsWithSameTag(ShipVariantAPI variant, String tag, String ignoredHullmodId) {
+		for (String hullmodId : variant.getNonBuiltInHullmods()) {
+			if (hullmodId.equals(ignoredHullmodId)) continue;
+			if (!Global.getSettings().getHullModSpec(hullmodId).hasTag(tag)) continue;
+			variant.removeMod(hullmodId);
 		}
 	}
 }

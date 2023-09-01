@@ -9,6 +9,7 @@ import com.fs.starfarer.api.campaign.listeners.CoreUITabListener;
 
 import experimentalHullModifications.submarkets.ehm_submarket;
 import lyravega.misc.lyr_internals;
+import lyravega.plugin.lyr_ehm;
 import lyravega.tools.lyr_logger;
 import lyravega.tools.lyr_scriptTools;
 
@@ -29,7 +30,7 @@ public class lyr_tabListener implements CoreUITabListener, EveryFrameScriptWithC
 		if (!Global.getSector().getListenerManager().hasListenerOfClass(lyr_tabListener.class)) {
 			Global.getSector().getListenerManager().addListener(new lyr_tabListener(), isTransient);
 
-			if (lyr_lunaSettingsListener.logListenerInfo) logger.info(logPrefix + "Attached "+targetTabString+" tab listener");
+			if (lyr_ehm.settings.getLogListenerInfo()) logger.info(logPrefix + "Attached "+targetTabString+" tab listener");
 		}
 	}
 
@@ -37,7 +38,7 @@ public class lyr_tabListener implements CoreUITabListener, EveryFrameScriptWithC
 		if (Global.getSector().getListenerManager().hasListenerOfClass(lyr_tabListener.class)) {
 			Global.getSector().getListenerManager().removeListenerOfClass(lyr_tabListener.class);
 
-			if (lyr_lunaSettingsListener.logListenerInfo) logger.info(logPrefix + "Detached "+targetTabString+" tab listener");
+			if (lyr_ehm.settings.getLogListenerInfo()) logger.info(logPrefix + "Detached "+targetTabString+" tab listener");
 		}
 	}
 

@@ -10,6 +10,7 @@ import com.fs.starfarer.api.campaign.listeners.ColonyInteractionListener;
 import experimentalHullModifications.abilities.ehm_ability;
 import experimentalHullModifications.submarkets.ehm_submarket;
 import lyravega.misc.lyr_internals;
+import lyravega.plugin.lyr_ehm;
 import lyravega.tools.lyr_logger;
 
 /**
@@ -23,7 +24,7 @@ public class lyr_colonyInteractionListener implements ColonyInteractionListener,
 		if (!Global.getSector().getListenerManager().hasListenerOfClass(lyr_colonyInteractionListener.class)) {
 			Global.getSector().getListenerManager().addListener(new lyr_colonyInteractionListener(), isTransient);
 	
-			if (lyr_lunaSettingsListener.logListenerInfo) logger.info(logPrefix + "Attached colony interaction listener");
+			if (lyr_ehm.settings.getLogListenerInfo()) logger.info(logPrefix + "Attached colony interaction listener");
 		}
 	}
 
@@ -31,7 +32,7 @@ public class lyr_colonyInteractionListener implements ColonyInteractionListener,
 		if (Global.getSector().getListenerManager().hasListenerOfClass(lyr_colonyInteractionListener.class)) {
 			Global.getSector().getListenerManager().removeListenerOfClass(lyr_colonyInteractionListener.class);
 
-			if (lyr_lunaSettingsListener.logListenerInfo) logger.info(logPrefix + "Detached colony interaction listener");
+			if (lyr_ehm.settings.getLogListenerInfo()) logger.info(logPrefix + "Detached colony interaction listener");
 		}
 	}
 
@@ -43,7 +44,7 @@ public class lyr_colonyInteractionListener implements ColonyInteractionListener,
 
 		market.addSubmarket(lyr_internals.id.submarket);
 
-		if (lyr_lunaSettingsListener.logListenerInfo) ehm_ability.logger.info(ehm_ability.logPrefix + "Attached experimental submarket");
+		if (lyr_ehm.settings.getLogListenerInfo()) ehm_ability.logger.info(ehm_ability.logPrefix + "Attached experimental submarket");
 	}
 
 	@Override
@@ -59,7 +60,7 @@ public class lyr_colonyInteractionListener implements ColonyInteractionListener,
 			if (ehm_submarket.shunts.contains(weaponCargo.getItem())) playerCargo.removeWeapons(weaponCargo.getItem(), weaponCargo.getCount());
 		}
 
-		if (lyr_lunaSettingsListener.logListenerInfo) ehm_ability.logger.info(ehm_ability.logPrefix + "Detached experimental submarket");
+		if (lyr_ehm.settings.getLogListenerInfo()) ehm_ability.logger.info(ehm_ability.logPrefix + "Detached experimental submarket");
 	}
 
 	@Override

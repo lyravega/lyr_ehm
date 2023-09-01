@@ -6,11 +6,12 @@ import java.util.Set;
 public final class lyr_internals {
 	public static final class id {
 		public static final String
-			submarket = "ehm_submarket", // must match submarket id in .csv
-			ability = "ehm_ability", // must match ability id in .csv
-			faction = "experimental", // must match faction id in .csv and .faction
-			drillSound = "drill", // must match .json
-			mod = "lyr_ehm"; // must match .json
+			submarket = "ehm_submarket",	// must match submarket id in .csv
+			ability = "ehm_ability",	// must match ability id in .csv
+			faction = "experimental",	// must match faction id in .csv and .faction
+			manufacturer = "Experimental",	// must match the 'designTypeColors' in settings.json
+			drillSound = "drill",	// must match .json
+			mod = "lyr_ehm";	// must match .json
 		public static final class hullmods {
 			public static final String
 				base = "ehm_base",
@@ -104,10 +105,10 @@ public final class lyr_internals {
 		public static final class shunts {
 			public static final class adapters {
 				public static final String
-					mediumDual = "ehm_adapter_mediumDual", // must match weapon id in .csv and .wpn
-					largeDual = "ehm_adapter_largeDual", // must match weapon id in .csv and .wpn
-					largeTriple = "ehm_adapter_largeTriple", // must match weapon id in .csv and .wpn
-					largeQuad = "ehm_adapter_largeQuad"; // must match weapon id in .csv and .wpn
+					mediumDual = "ehm_adapter_mediumDual",	// must match weapon id in .csv and .wpn
+					largeDual = "ehm_adapter_largeDual",	// must match weapon id in .csv and .wpn
+					largeTriple = "ehm_adapter_largeTriple",	// must match weapon id in .csv and .wpn
+					largeQuad = "ehm_adapter_largeQuad";	// must match weapon id in .csv and .wpn
 				public static final Set<String> set = new HashSet<String>();
 				static {
 					set.add(mediumDual);
@@ -118,9 +119,9 @@ public final class lyr_internals {
 			}
 			public static final class capacitors {
 				public static final String
-					large = "ehm_capacitor_large", // must match weapon id in .csv and .wpn
-					medium = "ehm_capacitor_medium", // must match weapon id in .csv and .wpn
-					small = "ehm_capacitor_small"; // must match weapon id in .csv and .wpn
+					large = "ehm_capacitor_large",	// must match weapon id in .csv and .wpn
+					medium = "ehm_capacitor_medium",	// must match weapon id in .csv and .wpn
+					small = "ehm_capacitor_small";	// must match weapon id in .csv and .wpn
 				public static final Set<String> set = new HashSet<String>();
 				static {
 					set.add(large);
@@ -130,9 +131,9 @@ public final class lyr_internals {
 			}
 			public static final class dissipators {
 				public static final String
-					large = "ehm_dissipator_large", // must match weapon id in .csv and .wpn
-					medium = "ehm_dissipator_medium", // must match weapon id in .csv and .wpn
-					small = "ehm_dissipator_small"; // must match weapon id in .csv and .wpn
+					large = "ehm_dissipator_large",	// must match weapon id in .csv and .wpn
+					medium = "ehm_dissipator_medium",	// must match weapon id in .csv and .wpn
+					small = "ehm_dissipator_small";	// must match weapon id in .csv and .wpn
 				public static final Set<String> set = new HashSet<String>();
 				static {
 					set.add(large);
@@ -142,9 +143,9 @@ public final class lyr_internals {
 			}
 			public static final class converters {
 				public static final String
-					mediumToLarge = "ehm_converter_mediumToLarge", // must match weapon id in .csv and .wpn
-					smallToLarge = "ehm_converter_smallToLarge", // must match weapon id in .csv and .wpn
-					smallToMedium = "ehm_converter_smallToMedium"; // must match weapon id in .csv and .wpn
+					mediumToLarge = "ehm_converter_mediumToLarge",	// must match weapon id in .csv and .wpn
+					smallToLarge = "ehm_converter_smallToLarge",	// must match weapon id in .csv and .wpn
+					smallToMedium = "ehm_converter_smallToMedium";	// must match weapon id in .csv and .wpn
 				public static final Set<String> set = new HashSet<String>();
 				static {
 					set.add(mediumToLarge);
@@ -154,9 +155,9 @@ public final class lyr_internals {
 			}
 			public static final class diverters {
 				public static final String
-					large = "ehm_diverter_large", // must match weapon id in .csv and .wpn
-					medium = "ehm_diverter_medium", // must match weapon id in .csv and .wpn
-					small = "ehm_diverter_small"; // must match weapon id in .csv and .wpn
+					large = "ehm_diverter_large",	// must match weapon id in .csv and .wpn
+					medium = "ehm_diverter_medium",	// must match weapon id in .csv and .wpn
+					small = "ehm_diverter_small";	// must match weapon id in .csv and .wpn
 				public static final Set<String> set = new HashSet<String>();
 				static {
 					set.add(large);
@@ -166,7 +167,7 @@ public final class lyr_internals {
 			}
 			public static final class launchTubes {
 				public static final String
-					large = "ehm_tube_large"; // must match weapon id in .csv and .wpn
+					large = "ehm_tube_large";	// must match weapon id in .csv and .wpn
 				public static final Set<String> set = new HashSet<String>();
 				static {
 					set.add(large);
@@ -186,44 +187,58 @@ public final class lyr_internals {
 
 	public static final class tag {
 		public static final String
-			base = "ehm_base", // must match hullmod tag in .csv
+			experimental = "ehm",	// must match hullmod/weapon tag in .csv
+			cosmetic = "ehm_cosmetic",	// must match hullmod tag in .csv
+			restricted = "ehm_restricted",	// must match hullmod/weapon tag in .csv
+			extended = "ehm_extended",	// must match hullmod/weapon tag in .csv
+			customizable = "ehm_customizable",	// must match hullmod/weapon tag in .csv
 
-			experimental = "ehm", // must match hullmod/weapon tag in .csv
-			restricted = "ehm_restricted", // must match hullmod/weapon tag in .csv
-			extended = "ehm_extended", // must match hullmod/weapon tag in .csv
-			customizable = "ehm_customizable", // must match hullmod/weapon tag in .csv
+			systemRetrofit = "ehm_sr",	// must match hullmod tag in .csv
+			weaponRetrofit = "ehm_wr",	// must match hullmod tag in .csv
+			adapterRetrofit = "ehm_ar",	// must match hullmod tag in .csv
+			shieldCosmetic = "ehm_sc",	// must match hullmod tag in .csv
+			engineCosmetic = "ehm_ec",	// must match hullmod tag in .csv
 
-			systemRetrofit = "ehm_sr", // must match hullmod tag in .csv
-			weaponRetrofit = "ehm_wr", // must match hullmod tag in .csv
-			adapterRetrofit = "ehm_ar", // must match hullmod tag in .csv
-			shieldCosmetic = "ehm_sc", // must match hullmod tag in .csv
-			engineCosmetic = "ehm_ec", // must match hullmod tag in .csv
+			reqShields = "ehm_require_shields",	// must match hullmod tag in .csv
+			reqNoPhase = "ehm_require_no_phase",	// must match hullmod tag in .csv
+			reqWings = "ehm_require_wings",	// must match hullmod tag in .csv
 
-			reqShields = "ehm_require_shields", // must match hullmod tag in .csv
-			reqNoPhase = "ehm_require_no_phase", // must match hullmod tag in .csv
-			reqWings = "ehm_require_wings", // must match hullmod tag in .csv
+			externalAccess = "ehm_externalAccess",	// must match hullmod tag in .csv
 
-			externalAccess = "ehm_externalAccess", // must match hullmod tag in .csv
+			adapterShunt = "ehm_adapter",	// must match weapon tag in .csv
+			capacitorShunt = "ehm_capacitor",	// must match weapon tag in .csv
+			dissipatorShunt = "ehm_dissipator",	// must match weapon tag in .csv
+			converterShunt = "ehm_converter",	// must match weapon tag in .csv
+			diverterShunt = "ehm_diverter",	// must match weapon tag in .csv
+			tubeShunt = "ehm_tube";	// must match weapon tag in .csv
 
-			adapterShunt = "ehm_adapter", // must match weapon tag in .csv
-			capacitorShunt = "ehm_capacitor", // must match weapon tag in .csv
-			dissipatorShunt = "ehm_dissipator", // must match weapon tag in .csv
-			converterShunt = "ehm_converter", // must match weapon tag in .csv
-			diverterShunt = "ehm_diverter", // must match weapon tag in .csv
-			tubeShunt = "ehm_tube"; // must match weapon tag in .csv
+		public static final class ui {
+			public static final String
+				activators = "Activators",
+				cosmetics = "Cosmetics",
+				retrofits = "Retrofits",
+				systems = "Systems";
+			public static final Set<String> all = new HashSet<String>();
+			static {
+				all.add(activators);
+				all.add(cosmetics);
+				all.add(retrofits);
+				all.add(systems);
+			}
+		}
 	}
 
 	public static final class affix {
 		public static final String
-			normalSlot = "WS", // should NOT be altered in any update
-			adaptedSlot = "AS_", // should NOT be altered in any update
-			convertedSlot = "CS_", // should NOT be altered in any update
-			allRetrofit = "ehm_", // must match hullmod id in .csv
-			systemRetrofit = "ehm_sr_", // must match hullmod id in .csv
-			weaponRetrofit = "ehm_wr_", // must match hullmod id in .csv
-			adapterRetrofit = "ehm_ar_", // must match hullmod id in .csv
-			shieldCosmetic = "ehm_sc_", // must match hullmod id in .csv
-			engineCosmetic = "ehm_ec_"; // must match hullmod id in .csv
+			normalSlot = "WS",	// should NOT be altered in any update
+			adaptedSlot = "AS_",	// should NOT be altered in any update
+			convertedSlot = "CS_",	// should NOT be altered in any update
+			allRetrofit = "ehm_",	// must match hullmod id in .csv
+			systemRetrofit = "ehm_sr_",	// must match hullmod id in .csv
+			weaponRetrofit = "ehm_wr_",	// must match hullmod id in .csv
+			adapterRetrofit = "ehm_ar_",	// must match hullmod id in .csv
+			shieldCosmetic = "ehm_sc_",	// must match hullmod id in .csv
+			engineCosmetic = "ehm_ec_";	// must match hullmod id in .csv
 	}
 
 	public static final class events {

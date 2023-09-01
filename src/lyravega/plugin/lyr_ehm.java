@@ -1,14 +1,15 @@
 package lyravega.plugin;
 
+import static lyravega.listeners.lyr_shipTracker.allRegistered;
 import static lyravega.listeners.lyr_shipTracker.enhancedEvents;
 import static lyravega.listeners.lyr_shipTracker.normalEvents;
 import static lyravega.listeners.lyr_shipTracker.suppressedEvents;
-import static lyravega.listeners.lyr_shipTracker.allRegistered;
 
 import org.apache.log4j.Level;
 
 import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.campaign.CharacterDataAPI;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.combat.HullModEffect;
 import com.fs.starfarer.api.impl.campaign.skills.FieldRepairsScript;
@@ -16,8 +17,8 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.thoughtworks.xstream.XStream;
 
+import experimentalHullModifications.abilities.ehm_ability;
 import lyravega.listeners.lyr_colonyInteractionListener;
-import lyravega.listeners.lyr_lunaSettingsListener;
 import lyravega.listeners.lyr_tabListener;
 import lyravega.listeners.events.enhancedEvents;
 import lyravega.listeners.events.normalEvents;
@@ -27,6 +28,7 @@ import lyravega.scripts.lyr_fieldRepairsScript;
 import lyravega.tools.lyr_logger;
 
 public class lyr_ehm extends BaseModPlugin implements lyr_logger {
+	public static final lyr_settings settings = new lyr_settings();
 	static {
 		logger.setLevel(Level.ALL);
 	}
@@ -34,7 +36,7 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 	@Override
 	public void onGameLoad(boolean newGame) {
 		teachAbility(lyr_internals.id.ability);
-		teachBlueprints(lyr_internals.tag.experimental, lyr_internals.tag.restricted);
+		teachBlueprints();
 		replaceFieldRepairsScript();
 		attachShuntAccessListener();
 	}
@@ -42,15 +44,15 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 	@Override
 	public void onApplicationLoad() throws Exception {
 		registerHullMods();
-		lyr_lunaSettingsListener.attach();
+		lyr_settings.attach();
 	}
 
 	@Override
 	public void configureXStream(XStream x) {
 		x.alias("FieldRepairsScript", lyr_fieldRepairsScript.class);
-		x.alias("data.abilities.ehm_ability", experimentalHullModifications.abilities.ehm_ability.class);	// remember to use this for serialized shit
-		x.alias("lyr_tabListener", lyravega.listeners.lyr_tabListener.class);	// added transient, but just in case
-		x.alias("lyr_colonyInteractionListener", lyravega.listeners.lyr_colonyInteractionListener.class);	// added transient, but just in case
+		x.alias("data.abilities.ehm_ability", ehm_ability.class);	// remember to use this for serialized shit
+		x.alias("lyr_tabListener", lyr_tabListener.class);	// added transient, but just in case
+		x.alias("lyr_colonyInteractionListener", lyr_colonyInteractionListener.class);	// added transient, but just in case
 	}
 
 	/**
@@ -59,21 +61,35 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 	 * @param tagToLearn
 	 * @param tagToForget
 	 */
-	private static void teachBlueprints(String tagToLearn, String tagToForget) {
-		FactionAPI playerFaction = Global.getSector().getPlayerPerson().getFaction();
+	static void teachBlueprints() {
+		final String targetTag = settings.getCosmeticsOnly() ? lyr_internals.tag.cosmetic : lyr_internals.tag.experimental;
+		// FactionAPI playerFaction = Global.getSector().getPlayerPerson().getFaction();
+		CharacterDataAPI playerData = Global.getSector().getCharacterData();
+
+		// purge weapon blueprints
+		for (WeaponSpecAPI weaponSpec : Global.getSettings().getAllWeaponSpecs()) {
+			if (!weaponSpec.getManufacturer().equals(lyr_internals.id.manufacturer)) continue;
+
+			for (FactionAPI faction : Global.getSector().getAllFactions())
+				faction.removeKnownWeapon(weaponSpec.getWeaponId());
+		}
+
+		// purge hullmod blueprints
+		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
+			if (!hullModSpec.getManufacturer().equals(lyr_internals.id.manufacturer)) continue;
+
+			playerData.removeHullMod(hullModSpec.getId());
+			for (FactionAPI faction : Global.getSector().getAllFactions())
+				faction.removeKnownHullMod(hullModSpec.getId());
+		}
 
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
-			String hullModSpecId = hullModSpec.getId();
-			if (hullModSpec.hasTag(tagToLearn) && !playerFaction.knowsHullMod(hullModSpecId)) playerFaction.addKnownHullMod(hullModSpecId);
-			else if (hullModSpec.hasTag(tagToForget) && playerFaction.knowsHullMod(hullModSpecId)) playerFaction.removeKnownHullMod(hullModSpecId);
+			if (!hullModSpec.getManufacturer().equals(lyr_internals.id.manufacturer)) continue;
+
+			if (hullModSpec.hasTag(targetTag)) playerData.addHullMod(hullModSpec.getId());
 		}
 
-		for (WeaponSpecAPI weaponSpec : Global.getSettings().getAllWeaponSpecs()) {
-			if (weaponSpec.hasTag(tagToLearn) && !playerFaction.knowsWeapon(weaponSpec.getWeaponId())) playerFaction.addKnownWeapon(weaponSpec.getWeaponId(), false);
-			else if (weaponSpec.hasTag(tagToForget) && playerFaction.knowsWeapon(weaponSpec.getWeaponId())) playerFaction.removeKnownWeapon(weaponSpec.getWeaponId());
-		}
-
-		logger.info(logPrefix + "Player faction blueprints are updated");
+		logger.info(logPrefix + "Faction blueprints are updated");
 	}
 
 	/**
@@ -88,6 +104,7 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 	private static void registerHullMods() {
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
 			if (!hullModSpec.hasTag(lyr_internals.tag.experimental)) continue;
+			// if (cosmeticsOnly && !hullModSpec.hasUITag("Cosmetics")) continue;
 
 			HullModEffect hullModEffect = hullModSpec.getEffect();
 
@@ -129,11 +146,11 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 		logger.info(logPrefix + "Replaced 'FieldRepairsScript' with modified one");
 	}
 
-	public static void attachShuntAccessListener() {
+	static void attachShuntAccessListener() {
 		lyr_tabListener.detach();
 		lyr_colonyInteractionListener.detach();
 
-		switch (lyr_lunaSettingsListener.shuntAvailability) {
+		switch (settings.getShuntAvailability()) {
 			case "Always": lyr_tabListener.attach(true); break;
 			case "Submarket": lyr_colonyInteractionListener.attach(true); break;
 			default: break;

@@ -7,12 +7,15 @@ import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
+import lyravega.listeners.events.customizableHullMod;
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_tooltip.header;
 import lyravega.misc.lyr_tooltip.text;
+import lyravega.plugin.lyr_ehm;
 
 /**
  * Removes the base hull modification that all other experimental ones require
@@ -20,7 +23,25 @@ import lyravega.misc.lyr_tooltip.text;
  * @category Base Hull Un-Modification
  * @author lyravega
  */
-public final class ehm_undo extends _ehm_tracker {
+public final class ehm_undo extends _ehm_tracker implements customizableHullMod {
+	@Override
+	public void applyCustomization() {
+		if (lyr_ehm.settings.getCosmeticsOnly()) {
+			this.hullModSpec.getUITags().clear();
+			this.hullModSpec.addUITag(lyr_internals.tag.ui.cosmetics);
+		} else {
+			this.hullModSpec.getUITags().clear();
+			this.hullModSpec.getUITags().addAll(lyr_internals.tag.ui.all);
+		}
+	}
+
+	@Override
+	public void init(HullModSpecAPI hullModSpec) {
+		super.init(hullModSpec);
+
+		applyCustomization();
+	}
+
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
@@ -43,7 +64,7 @@ public final class ehm_undo extends _ehm_tracker {
 			if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
 			if (_ehm_helpers.ehm_hasExperimentalSMod(ship)) tooltip.addPara(text.hasAnyExperimentalBuiltIn[0], text.padding).setHighlight(text.hasAnyExperimentalBuiltIn[1]); 
 			else {
-				if (_ehm_helpers.ehm_hasRetrofitTag(ship, lyr_internals.tag.experimental, lyr_internals.id.hullmods.base)) tooltip.addPara(text.hasAnyExperimental[0], text.padding).setHighlight(text.hasAnyExperimental[1]);
+				if (_ehm_helpers.ehm_hasHullModWithTag(ship, lyr_internals.tag.experimental, lyr_internals.id.hullmods.base)) tooltip.addPara(text.hasAnyExperimental[0], text.padding).setHighlight(text.hasAnyExperimental[1]);
 				if (_ehm_helpers.ehm_hasWeapons(ship)) tooltip.addPara(text.hasWeapons[0], text.padding).setHighlight(text.hasWeapons[1]);
 			}
 		}
@@ -56,7 +77,7 @@ public final class ehm_undo extends _ehm_tracker {
 		if (ship == null) return false;
 
 		if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) return false;
-		if (_ehm_helpers.ehm_hasRetrofitTag(ship, lyr_internals.tag.experimental, lyr_internals.id.hullmods.base)) return false;
+		if (_ehm_helpers.ehm_hasHullModWithTag(ship, lyr_internals.tag.experimental, lyr_internals.id.hullmods.base)) return false;
 		if (_ehm_helpers.ehm_hasWeapons(ship)) return false; 
 
 		return true; 

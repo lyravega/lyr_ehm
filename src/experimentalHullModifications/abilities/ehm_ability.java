@@ -8,15 +8,16 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
 import lyravega.listeners.lyr_colonyInteractionListener;
-import lyravega.listeners.lyr_lunaSettingsListener;
 import lyravega.listeners.lyr_tabListener;
 import lyravega.misc.lyr_internals;
+import lyravega.plugin.lyr_ehm;
+import lyravega.plugin.lyr_settings;
 import lyravega.tools.lyr_logger;
 
 /**
  * A toggle ability that works in conjunction with {@link lyr_colonyInteractionListener
  * interactionListener} or with {@link lyr_tabListener tabListener} to determine how to
- * display the slot shunts. The option {@link lyr_lunaSettingsListener#shuntAvailability
+ * display the slot shunts. The option {@link lyr_settings#shuntAvailability
  * shuntAvailability} controls the display mode.
  * <p> {@link experimentalHullModifications.submarkets.ehm_submarket Slot shunt submarket}
  * will only be displayed if relevant option is selected. Both settings' listeners and
@@ -26,7 +27,7 @@ import lyravega.tools.lyr_logger;
 public final class ehm_ability extends BaseToggleAbility implements lyr_logger {
 	@Override
 	protected String getActivationText() {
-		switch (lyr_lunaSettingsListener.shuntAvailability) {
+		switch (lyr_ehm.settings.getShuntAvailability()) {
 			case "Always": return "Ready to experiment";
 			case "Submarket": return "Looking for a port";
 			default: return null;
@@ -43,7 +44,7 @@ public final class ehm_ability extends BaseToggleAbility implements lyr_logger {
 
 	@Override
 	protected void activateImpl() {
-		switch (lyr_lunaSettingsListener.shuntAvailability) {
+		switch (lyr_ehm.settings.getShuntAvailability()) {
 			case "Always": lyr_tabListener.attach(true); break;
 			case "Submarket": lyr_colonyInteractionListener.attach(true); break;
 			default: break;
@@ -52,7 +53,7 @@ public final class ehm_ability extends BaseToggleAbility implements lyr_logger {
 	
 	@Override
 	protected void deactivateImpl() {
-		switch (lyr_lunaSettingsListener.shuntAvailability) {
+		switch (lyr_ehm.settings.getShuntAvailability()) {
 			case "Always": lyr_tabListener.detach(); break;
 			case "Submarket": lyr_colonyInteractionListener.detach(); break;
 			default: break;
@@ -77,7 +78,7 @@ public final class ehm_ability extends BaseToggleAbility implements lyr_logger {
         Color highlightColor = Misc.getHighlightColor();
 		String desc;
 
-		switch (lyr_lunaSettingsListener.shuntAvailability) {
+		switch (lyr_ehm.settings.getShuntAvailability()) {
 			case "Always": desc = "While this ability is turned on, an excess amount of slot shunts will be made available in the refit tab. Unused ones will be cleaned-up."; break;
 			case "Submarket": desc = "While this ability is turned on, a submarket called Experimental Engineering will be visible on any docked port, and slot shunts will be available in the refit tab. Unused ones will be cleaned-up."; break;
 			default: desc = ""; break;

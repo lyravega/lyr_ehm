@@ -1,7 +1,5 @@
 package experimentalHullModifications.hullmods.ehm;
 
-import static lyravega.listeners.lyr_lunaSettingsListener.showExperimentalFlavour;
-
 import java.awt.Color;
 import java.util.Set;
 
@@ -26,6 +24,7 @@ import com.fs.starfarer.api.util.Misc;
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_tooltip.header;
 import lyravega.misc.lyr_tooltip.text;
+import lyravega.plugin.lyr_ehm;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.tools.lyr_logger;
 
@@ -47,14 +46,15 @@ import lyravega.tools.lyr_logger;
  * @see {@link experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base _ehm_ar_base} for slot adapter base
  * @see {@link experimentalHullModifications.hullmods.ehm_sr._ehm_sr_base _ehm_sr_base} for system retrofit base
  * @see {@link experimentalHullModifications.hullmods.ehm_wr._ehm_wr_base _ehm_wr_base} for weapon retrofit base
- * @see {@link experimentalHullModifications.hullmods.ehm_ec._ehm_ec_base _ehm_ec_base} for engine cosmetic base
- * @see {@link experimentalHullModifications.hullmods.ehm_sc._ehm_sc_base _ehm_sc_base} for shield cosmetic base
+ * @see {@link experimentalHullModifications.hullmods.ehm_ec._ehm_ec_customizable _ehm_ec_base} for engine cosmetic base
+ * @see {@link experimentalHullModifications.hullmods.ehm_sc._ehm_sc_customizable _ehm_sc_base} for shield cosmetic base
  * @author lyravega
  */
 public class _ehm_base extends BaseHullMod implements lyr_logger {
 	protected HullModSpecAPI hullModSpec;
 	protected String hullModSpecId;
 	protected Set<String> hullModSpecTags;
+	// protected String primaryTag;
 
 	@Override 
 	public void init(HullModSpecAPI hullModSpec) {
@@ -224,7 +224,7 @@ public class _ehm_base extends BaseHullMod implements lyr_logger {
 		// hullSpec.setBaseHullId(null);
 		// hullSpec.setRestoreToBase(false);
 		hullSpec.setBaseValue(originalHullSpec.getBaseValue());	// because d-hulls lose 25% in value immediately
-		if (showExperimentalFlavour) {
+		if (lyr_ehm.settings.getShowExperimentalFlavour()) {
 			hullSpec.setManufacturer(text.flavourManufacturer);
 			hullSpec.setDescriptionPrefix(text.flavourDescription);
 			hullSpec.setHullName(originalHullSpec.getHullName() + " (E)");	// restore to base hull name, replacing "(D)" with "(E)"

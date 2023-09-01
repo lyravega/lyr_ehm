@@ -4,7 +4,6 @@ import static lyravega.tools.lyr_uiTools.commitVariantChanges;
 import static lyravega.tools.lyr_uiTools.playDrillSound;
 
 import java.awt.Color;
-import java.util.Set;
 
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
@@ -16,7 +15,6 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.hullmods.ehm._ehm_helpers;
-import lunalib.lunaSettings.LunaSettings;
 import lyravega.listeners.events.normalEvents;
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_tooltip.header;
@@ -35,15 +33,19 @@ import lyravega.proxies.lyr_shieldSpec;
  * @author lyravega
  */
 public class _ehm_sc_base extends _ehm_base implements normalEvents {
+	protected final String primaryTag = lyr_internals.tag.shieldCosmetic;
+
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstall(ShipVariantAPI variant) {
+		_ehm_helpers.ehm_removeHullModsWithSameTag(variant, primaryTag, this.hullModSpecId);
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
 	public void onRemove(ShipVariantAPI variant) {
-		variant.setHullSpecAPI(ehm_restoreShield(variant));
+		if (!_ehm_helpers.ehm_hasHullModWithTag(variant, primaryTag, this.hullModSpecId))
+			variant.setHullSpecAPI(ehm_restoreShield(variant));
 		commitVariantChanges(); playDrillSound();
 	}
 	//#endregion
@@ -80,21 +82,6 @@ public class _ehm_sc_base extends _ehm_base implements normalEvents {
 		return hullSpec.retrieve();
 	}
 
-	protected static Color getLunaRGBAColour(String settingIdPrefix) {
-		String colourString = LunaSettings.getString(lyr_internals.id.mod, settingIdPrefix+"Colour");
-		int[] rgba = {0,0,0,0};
-		rgba[0] = Integer.parseInt(colourString.substring(1, 3), 16);
-		rgba[1] = Integer.parseInt(colourString.substring(3, 5), 16);
-		rgba[2] = Integer.parseInt(colourString.substring(5, 7), 16);
-		rgba[3] = LunaSettings.getInt(lyr_internals.id.mod, settingIdPrefix+"Alpha");
-
-		return new Color(rgba[0], rgba[1], rgba[2], rgba[3]);
-	}
-
-	protected static String getLunaName(String settingIdPrefix) {
-		return LunaSettings.getString(lyr_internals.id.mod, settingIdPrefix+"name");
-	}
-
 	//#region INSTALLATION CHECKS
 	@Override
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
@@ -109,9 +96,9 @@ public class _ehm_sc_base extends _ehm_base implements normalEvents {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
 			if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
-			if (_ehm_helpers.ehm_hasRetrofitTag(ship, lyr_internals.tag.shieldCosmetic, hullModSpecId)) tooltip.addPara(text.hasShieldCosmetic[0], text.padding).setHighlight(text.hasShieldCosmetic[1]);
+			// if (_ehm_helpers.ehm_hasHullModWithTag(ship, lyr_internals.tag.shieldCosmetic, id)) tooltip.addPara(text.hasShieldCosmetic[0], text.padding).setHighlight(text.hasShieldCosmetic[1]);
 
-			if (hullModSpec.getTags().contains(lyr_internals.tag.reqShields) && ship.getShield() == null) tooltip.addPara(text.noShields[0], text.padding).setHighlight(text.noShields[1]);
+			if (ship.getShield() == null) tooltip.addPara(text.noShields[0], text.padding).setHighlight(text.noShields[1]);
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
@@ -122,10 +109,9 @@ public class _ehm_sc_base extends _ehm_base implements normalEvents {
 		if (ship == null) return false;
 
 		if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) return false;
-		if (_ehm_helpers.ehm_hasRetrofitTag(ship, lyr_internals.tag.shieldCosmetic, hullModSpecId)) return false;
+		// if (_ehm_helpers.ehm_hasHullModWithTag(ship, lyr_internals.tag.shieldCosmetic, id)) return false;
 
-		Set<String> hullModSpecTags = hullModSpec.getTags();
-		if (hullModSpecTags.contains(lyr_internals.tag.reqShields) && ship.getShield() == null) return false;
+		if (ship.getShield() == null) return false;
 
 		return true;
 	}

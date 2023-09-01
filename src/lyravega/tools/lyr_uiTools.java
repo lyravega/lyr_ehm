@@ -1,7 +1,5 @@
 package lyravega.tools;
 
-import static lyravega.listeners.lyr_lunaSettingsListener.playDrillSound;
-
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodType;
 import java.util.List;
@@ -11,6 +9,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CoreUITabId;
 
 import lyravega.misc.lyr_internals;
+import lyravega.plugin.lyr_ehm;
 import lyravega.proxies.ui.lyr_campaignUI;
 import lyravega.proxies.ui.lyr_refitPanel;
 import lyravega.proxies.ui.lyr_shipDisplay;
@@ -46,7 +45,7 @@ public class lyr_uiTools extends lyr_reflectionTools {
 	 * and {@code onInstall()}
 	 */
 	public static void playDrillSound() {
-		if (!playDrillSound || !isRefitTab()) return;
+		if (!lyr_ehm.settings.getPlayDrillSound() || !isRefitTab()) return;
 		Global.getSoundPlayer().playUISound(lyr_internals.id.drillSound, 1.0f, 0.75f);
 	}
 

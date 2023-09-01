@@ -32,21 +32,24 @@ import lyravega.proxies.lyr_weaponSlot;
  * on a ship to a different type. 
  * @see {@link experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base _ehm_ar_base} for slot adapter base
  * @see {@link experimentalHullModifications.hullmods.ehm_sr._ehm_sr_base _ehm_sr_base} for system retrofit base
- * @see {@link experimentalHullModifications.hullmods.ehm_ec._ehm_ec_base _ehm_ec_base} for engine cosmetic base
- * @see {@link experimentalHullModifications.hullmods.ehm_sc._ehm_sc_base _ehm_sc_base} for shield cosmetic base
+ * @see {@link experimentalHullModifications.hullmods.ehm_ec._ehm_ec_customizable _ehm_ec_base} for engine cosmetic base
+ * @see {@link experimentalHullModifications.hullmods.ehm_sc._ehm_sc_customizable _ehm_sc_base} for shield cosmetic base
  * @author lyravega
  */
 public class _ehm_wr_base extends _ehm_base implements normalEvents {
+	protected final String primaryTag = lyr_internals.tag.weaponRetrofit;
+
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstall(ShipVariantAPI variant) {
+		_ehm_helpers.ehm_removeHullModsWithSameTag(variant, primaryTag, this.hullModSpecId);
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
 	public void onRemove(ShipVariantAPI variant) {
-		// variant.setHullSpecAPI(ehm_weaponSlotRestore(variant));
-		variant.setHullSpecAPI(ehm_weaponSlotRestore_lazy(variant));
+		if (!_ehm_helpers.ehm_hasHullModWithTag(variant, primaryTag, this.hullModSpecId))
+			variant.setHullSpecAPI(ehm_weaponSlotRestore_lazy(variant));
 		commitVariantChanges(); playDrillSound();
 	}
 	//#endregion
@@ -128,7 +131,7 @@ public class _ehm_wr_base extends _ehm_base implements normalEvents {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
 			if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
-			if (_ehm_helpers.ehm_hasRetrofitTag(ship, lyr_internals.tag.weaponRetrofit, hullModSpecId)) tooltip.addPara(text.hasWeaponRetrofit[0], text.padding).setHighlight(text.hasWeaponRetrofit[1]);
+			// if (_ehm_helpers.ehm_hasHullmodWithTag(ship, lyr_internals.tag.weaponRetrofit, this.id)) tooltip.addPara(text.hasWeaponRetrofit[0], text.padding).setHighlight(text.hasWeaponRetrofit[1]);
 		}
 
 		if (!canBeAddedOrRemovedNow(ship, null, null)) {
@@ -148,7 +151,7 @@ public class _ehm_wr_base extends _ehm_base implements normalEvents {
 		if (ship == null) return false;
 
 		if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) return false; 
-		if (_ehm_helpers.ehm_hasRetrofitTag(ship, lyr_internals.tag.weaponRetrofit, hullModSpecId)) return false; 
+		// if (_ehm_helpers.ehm_hasHullmodWithTag(ship, lyr_internals.tag.weaponRetrofit, this.id)) return false; 
 
 		return true; 
 	}

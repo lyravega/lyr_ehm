@@ -1,7 +1,5 @@
 package experimentalHullModifications.hullmods.ehm;
 
-import static lyravega.listeners.lyr_lunaSettingsListener.showFluff;
-import static lyravega.listeners.lyr_lunaSettingsListener.debugTooltip;
 import static lyravega.tools.lyr_uiTools.commitVariantChanges;
 import static lyravega.tools.lyr_uiTools.playDrillSound;
 
@@ -11,6 +9,7 @@ import com.fs.starfarer.api.characters.FullName.Gender;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
+import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.ui.Alignment;
@@ -18,9 +17,11 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
 import experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base;
+import lyravega.listeners.events.customizableHullMod;
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_tooltip.header;
 import lyravega.misc.lyr_tooltip.text;
+import lyravega.plugin.lyr_ehm;
 
 /**
  * Serves as a requirement for all experimental hull modifications, and enables tracking
@@ -30,7 +31,25 @@ import lyravega.misc.lyr_tooltip.text;
  * @category Base Hull Modification 
  * @author lyravega
  */
-public final class ehm_base extends _ehm_tracker {
+public final class ehm_base extends _ehm_tracker implements customizableHullMod {
+	@Override
+	public void applyCustomization() {
+		if (lyr_ehm.settings.getCosmeticsOnly()) {
+			this.hullModSpec.getUITags().clear();
+			this.hullModSpec.addUITag(lyr_internals.tag.ui.cosmetics);
+		} else {
+			this.hullModSpec.getUITags().clear();
+			this.hullModSpec.getUITags().addAll(lyr_internals.tag.ui.all);
+		}
+	}
+
+	@Override
+	public void init(HullModSpecAPI hullModSpec) {
+		super.init(hullModSpec);
+
+		applyCustomization();
+	}
+
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
@@ -72,7 +91,7 @@ public final class ehm_base extends _ehm_tracker {
 
 			super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
 		} else {
-			if (debugTooltip) {
+			if (lyr_ehm.settings.getDebugTooltip()) {
 				tooltip.addSectionHeading("DEBUG INFO", header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 
 				tooltip.addPara("Enabled Mods: "+Global.getSettings().getModManager().getEnabledModsCopy().toString(), 5f).setHighlight("Enabled Mods: ");
@@ -93,7 +112,7 @@ public final class ehm_base extends _ehm_tracker {
 					if (scriptSimpleName.equals("lyr_fieldRepairsScript")) tooltip.addPara("FieldRepairsScript (EHM): Running", 5f).setHighlight("FieldRepairsScript (EHM):");
 					if (scriptSimpleName.equals("CaptainsFieldRepairsScript")) tooltip.addPara("FieldRepairsScript (QC): Running", 5f).setHighlight("FieldRepairsScript (QC):");
 				}
-			} else if (showFluff) {
+			} else if (lyr_ehm.settings.getShowFluff()) {
 				String playerSalutation = Global.getSector().getPlayerPerson().getGender() == Gender.MALE ? Misc.SIR : Misc.MAAM;
 
 				tooltip.addSectionHeading("FLUFF", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
@@ -105,22 +124,22 @@ public final class ehm_base extends _ehm_tracker {
 						tooltip.addPara(playerSalutation + ", if you are unhappy with what I am offering you, I can get rid of the base hull modifications that I've made. Let me know!", text.padding);
 						break;
 					case 2: 
-						if (!_ehm_helpers.ehm_hasExperimentalModWithTag(ship, lyr_internals.tag.weaponRetrofit))
+						if (!_ehm_helpers.ehm_hasHullModWithTag(ship, lyr_internals.tag.weaponRetrofit, null))
 							tooltip.addPara(playerSalutation + ", with slot retrofits every weapon slot may be altered all together to make them compatible with other weapon types.", text.padding);
 						else tooltip.addPara("The slot retrofits come at a cost, but their main purpose is to allow flexibility, and of course letting you use your favourite weapons, "+ playerSalutation, text.padding);
 						break;
 					case 3: 
-						if (!_ehm_helpers.ehm_hasExperimentalModWithTag(ship, lyr_internals.tag.systemRetrofit))
+						if (!_ehm_helpers.ehm_hasHullModWithTag(ship, lyr_internals.tag.systemRetrofit, null))
 							tooltip.addPara("The ships are designed along with their systems, however with system retrofits, I can change them anytime you want, "+ playerSalutation +".", text.padding);
 						else tooltip.addPara("Some system & ship combinations may be powerful. Some may not. No refunds! Just joking...", text.padding);
 						break;
 					case 4: 
-						if (!_ehm_helpers.ehm_hasExperimentalModWithTag(ship, lyr_internals.tag.engineCosmetic))
+						if (!_ehm_helpers.ehm_hasHullModWithTag(ship, lyr_internals.tag.engineCosmetic, null))
 							tooltip.addPara(playerSalutation + ", let me know if you'd like to have this ship's engine exhaust colour get changed. I can even fully customize them to your exact specifications!", text.padding);
 						else tooltip.addPara("The engine exhaust cosmetics are looking great, " + playerSalutation, text.padding);
 						break;
 					case 5:
-						if (!_ehm_helpers.ehm_hasExperimentalModWithTag(ship, lyr_internals.tag.shieldCosmetic))
+						if (!_ehm_helpers.ehm_hasHullModWithTag(ship, lyr_internals.tag.shieldCosmetic, null))
 							tooltip.addPara("The shield emitters may be modified to project a shield with different colours, " + playerSalutation + ". The effect is purely cosmetic", text.padding);
 						else tooltip.addPara("The shield emitters are modified to project colours of your choice, " + playerSalutation, text.padding);
 						break;

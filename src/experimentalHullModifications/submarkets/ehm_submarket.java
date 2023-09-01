@@ -13,12 +13,12 @@ import com.fs.starfarer.api.fleet.FleetMemberType;
 import com.fs.starfarer.api.impl.campaign.submarkets.BaseSubmarketPlugin;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 
-import lyravega.listeners.lyr_lunaSettingsListener;
 import lyravega.misc.lyr_internals;
+import lyravega.plugin.lyr_settings;
 
 /**
  * A submarket for the experimental slot shunts. The submarket is attached/detached
- * if the relevant {@link lyr_lunaSettingsListener#shuntAvailability shuntAvailability}
+ * if the relevant {@link lyr_settings#shuntAvailability shuntAvailability}
  * setting is selected, and whenever the player interacts with a valid market. The
  * submarket is not persistent.
  * <p> Each time it is attached to a market, it will get re-initialized, at which

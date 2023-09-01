@@ -9,6 +9,7 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 
 import lyravega.listeners.events.customizableHullMod;
+import lyravega.plugin.lyr_settings.lyr_lunaAccessors;
 
 /**@category Engine Cosmetic 
  * @author lyravega
@@ -24,7 +25,7 @@ public final class ehm_cec_blueEngines extends _ehm_ec_base implements customiza
 
 		newCustomEngineSpec(settingIdPrefix, customEngineSpecId);
 		engineStyleSpec = customEngineStyleSpecs.get(customEngineSpecId);
-		this.hullModSpec.setDisplayName(getLunaName(settingIdPrefix));
+		this.hullModSpec.setDisplayName(lyr_lunaAccessors.getLunaName(settingIdPrefix));
 	}
 
 	@Override
@@ -35,7 +36,7 @@ public final class ehm_cec_blueEngines extends _ehm_ec_base implements customiza
 	}
 
 	@Override
-	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
+	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String id) {
 		ShipVariantAPI variant = stats.getVariant();
 
 		variant.setHullSpecAPI(ehm_applyEngineCosmetics(variant, engineStyleId, engineStyleSpec));
