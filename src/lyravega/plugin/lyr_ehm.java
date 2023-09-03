@@ -43,8 +43,8 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 
 	@Override
 	public void onApplicationLoad() throws Exception {
-		registerHullMods();
 		lyr_settings.attach();
+		registerHullMods();
 	}
 
 	@Override
@@ -89,6 +89,18 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 			if (hullModSpec.hasTag(targetTag)) playerData.addHullMod(hullModSpec.getId());
 		}
 
+		if (lyr_ehm.settings.getCosmeticsOnly()) {
+			Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.base).getUITags().clear();
+			Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.undo).getUITags().clear();
+			Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.base).addUITag(lyr_internals.tag.ui.cosmetics);
+			Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.undo).addUITag(lyr_internals.tag.ui.cosmetics);
+		} else {
+			Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.base).getUITags().clear();
+			Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.undo).getUITags().clear();
+			Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.base).getUITags().addAll(lyr_internals.tag.ui.all);
+			Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.undo).getUITags().addAll(lyr_internals.tag.ui.all);
+		}
+
 		logger.info(logPrefix + "Faction blueprints are updated");
 	}
 
@@ -104,7 +116,6 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 	private static void registerHullMods() {
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
 			if (!hullModSpec.hasTag(lyr_internals.tag.experimental)) continue;
-			// if (cosmeticsOnly && !hullModSpec.hasUITag("Cosmetics")) continue;
 
 			HullModEffect hullModEffect = hullModSpec.getEffect();
 

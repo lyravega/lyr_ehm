@@ -107,15 +107,15 @@ public class lyr_settings implements LunaSettingsListener, lyr_logger {
 		shuntAvailability = lyr_lunaAccessors.getString("ehm_shuntAvailability");
 
 		if (_shuntAvailability == null || _shuntAvailability.equals(shuntAvailability)) return;	// null check here ensures return during application load where/when there is no game state
-		if (Global.getCurrentState() != GameState.TITLE) lyr_ehm.attachShuntAccessListener();
+		if (Global.getCurrentState() == GameState.CAMPAIGN) lyr_ehm.attachShuntAccessListener();
 	}
 
 	private void checkCosmeticsOnly() {
 		_cosmeticsOnly = cosmeticsOnly;
 		cosmeticsOnly = lyr_lunaAccessors.getBoolean("ehm_cosmeticsOnly");
 
-		if (_cosmeticsOnly == cosmeticsOnly) return;	// null check here ensures return during application load where/when there is no game state
-		if (Global.getCurrentState() != GameState.TITLE) lyr_ehm.teachBlueprints();
+		if (_cosmeticsOnly == cosmeticsOnly) return;	// check here ensures return during application load where/when there is no game state
+		if (Global.getCurrentState() == GameState.CAMPAIGN) lyr_ehm.teachBlueprints();
 	}
 
 	@Override

@@ -15,7 +15,6 @@ public final class lyr_internals {
 		public static final class hullmods {
 			public static final String
 				base = "ehm_base",
-				tracker = "ehm_tracker",
 				undo = "ehm_undo",
 				test = "ehm_test",
 				diverterandconverter = "ehm_ar_diverterandconverter",
@@ -31,6 +30,7 @@ public final class lyr_internals {
 				midlineEngines = "ehm_ec_midlineEngines",
 				aiswitch = "ehm_mr_aiswitch",
 				auxilarygenerators = "ehm_mr_auxilarygenerators",
+				logisticsoverhaul = "ehm_mr_logisticsoverhaul",
 				overengineered = "ehm_mr_overengineered",
 				blueShields = "ehm_sc_blueShields",	// id & class mismatch
 				greenShields = "ehm_sc_greenShields",	// id & class mismatch

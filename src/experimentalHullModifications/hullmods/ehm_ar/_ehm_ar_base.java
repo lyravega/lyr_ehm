@@ -39,6 +39,8 @@ import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.hullmods.ehm._ehm_helpers;
 import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_diverterandconverter.childParameters;
 import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.childrenParameters;
+import experimentalHullModifications.hullmods.ehm_mr.ehm_mr_auxilarygenerators;
+import experimentalHullModifications.hullmods.ehm_mr.ehm_mr_overengineered;
 import lyravega.listeners.events.normalEvents;
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_internals.id.hullmods;
@@ -295,9 +297,9 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		int slotPoints = 0;
 
 		if (variant.getSMods().contains(lyr_internals.id.hullmods.overengineered))
-			slotPoints += experimentalHullModifications.hullmods.ehm_mr.ehm_mr_overengineered.slotPointBonus.get(variant.getHullSize());
+			slotPoints += ehm_mr_overengineered.slotPointBonus.get(variant.getHullSize());
 		if (variant.hasHullMod(lyr_internals.id.hullmods.auxilarygenerators))
-			slotPoints += experimentalHullModifications.hullmods.ehm_mr.ehm_mr_auxilarygenerators.slotPointBonus.get(variant.getHullSize());
+			slotPoints += ehm_mr_auxilarygenerators.slotPointBonus.get(variant.getHullSize());
 
 		return slotPoints;
 	}

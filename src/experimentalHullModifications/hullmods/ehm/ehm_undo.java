@@ -7,15 +7,12 @@ import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
-import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
-import lyravega.listeners.events.customizableHullMod;
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_tooltip.header;
 import lyravega.misc.lyr_tooltip.text;
-import lyravega.plugin.lyr_ehm;
 
 /**
  * Removes the base hull modification that all other experimental ones require
@@ -23,25 +20,7 @@ import lyravega.plugin.lyr_ehm;
  * @category Base Hull Un-Modification
  * @author lyravega
  */
-public final class ehm_undo extends _ehm_tracker implements customizableHullMod {
-	@Override
-	public void applyCustomization() {
-		if (lyr_ehm.settings.getCosmeticsOnly()) {
-			this.hullModSpec.getUITags().clear();
-			this.hullModSpec.addUITag(lyr_internals.tag.ui.cosmetics);
-		} else {
-			this.hullModSpec.getUITags().clear();
-			this.hullModSpec.getUITags().addAll(lyr_internals.tag.ui.all);
-		}
-	}
-
-	@Override
-	public void init(HullModSpecAPI hullModSpec) {
-		super.init(hullModSpec);
-
-		applyCustomization();
-	}
-
+public final class ehm_undo extends _ehm_tracker {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
