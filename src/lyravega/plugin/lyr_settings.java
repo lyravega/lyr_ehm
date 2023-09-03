@@ -30,14 +30,14 @@ public class lyr_settings implements LunaSettingsListener, lyr_logger {
 	private static final Set<customizableHullMod> lunaMods = new HashSet<customizableHullMod>();
 
 	// MAIN SETTINGS
-	private String shuntAvailability, _shuntAvailability; public String getShuntAvailability() { return shuntAvailability; }
+	private String shuntAvailability; public String getShuntAvailability() { return shuntAvailability; }
 	// private String extraInfoInHullMods; public String getExtraInfoInHullMods() { return extraInfoInHullMods; }
 	private boolean showInfoForActivators; public boolean getShowInfoForActivators() { return showInfoForActivators; }
 	private boolean showFullInfoForActivators; public boolean getShowFullInfoForActivators() { return showFullInfoForActivators; }
 	// private String drillSound; public String getDrillSound() { return drillSound; }
 	private boolean playDrillSound; public boolean getPlayDrillSound() { return playDrillSound; }
 	private boolean playDrillSoundForAll; public boolean getPlayDrillSoundForAll() { return playDrillSoundForAll; }
-	private boolean cosmeticsOnly, _cosmeticsOnly; public boolean getCosmeticsOnly() { return cosmeticsOnly; }
+	private boolean cosmeticsOnly; public boolean getCosmeticsOnly() { return cosmeticsOnly; }
 	private boolean hideAdapters; public boolean getHideAdapters() { return hideAdapters; }
 	private boolean hideConverters; public boolean getHideConverters() { return hideConverters; }
 
@@ -103,19 +103,19 @@ public class lyr_settings implements LunaSettingsListener, lyr_logger {
 	}
 
 	private void checkShuntAvailability() {
-		_shuntAvailability = shuntAvailability;
-		shuntAvailability = lyr_lunaAccessors.getString("ehm_shuntAvailability");
+		final String temp = lyr_lunaAccessors.getString("ehm_shuntAvailability");
 
-		if (_shuntAvailability == null || _shuntAvailability.equals(shuntAvailability)) return;	// null check here ensures return during application load where/when there is no game state
+		if (shuntAvailability == null || shuntAvailability.equals(temp)) return; else shuntAvailability = temp;
+
 		if (Global.getCurrentState() == GameState.CAMPAIGN) lyr_ehm.attachShuntAccessListener();
 	}
 
 	private void checkCosmeticsOnly() {
-		_cosmeticsOnly = cosmeticsOnly;
-		cosmeticsOnly = lyr_lunaAccessors.getBoolean("ehm_cosmeticsOnly");
+		final boolean temp = lyr_lunaAccessors.getBoolean("ehm_cosmeticsOnly");
 
-		if (_cosmeticsOnly == cosmeticsOnly) return;	// check here ensures return during application load where/when there is no game state
-		if (Global.getCurrentState() == GameState.CAMPAIGN) lyr_ehm.teachBlueprints();
+		if (cosmeticsOnly == temp) return; else cosmeticsOnly = temp;
+
+		if (Global.getCurrentState() == GameState.CAMPAIGN) lyr_ehm.updateBlueprints();
 	}
 
 	@Override

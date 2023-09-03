@@ -5,6 +5,8 @@ import static lyravega.listeners.lyr_shipTracker.enhancedEvents;
 import static lyravega.listeners.lyr_shipTracker.normalEvents;
 import static lyravega.listeners.lyr_shipTracker.suppressedEvents;
 
+import java.util.Set;
+
 import org.apache.log4j.Level;
 
 import com.fs.starfarer.api.BaseModPlugin;
@@ -36,7 +38,7 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 	@Override
 	public void onGameLoad(boolean newGame) {
 		teachAbility(lyr_internals.id.ability);
-		teachBlueprints();
+		updateBlueprints();
 		replaceFieldRepairsScript();
 		attachShuntAccessListener();
 	}
@@ -56,13 +58,10 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 	}
 
 	/**
-	 * Adds all mod weapons and hull modifications that have the passed
-	 * tagToLearn, and removes any known ones with the tagToForget
-	 * @param tagToLearn
-	 * @param tagToForget
+	 * Purges all of the experimental stuff from all factions' known lists,
+	 * then adds valid experimental hull modifications to player's faction
 	 */
-	static void teachBlueprints() {
-		final String targetTag = settings.getCosmeticsOnly() ? lyr_internals.tag.cosmetic : lyr_internals.tag.experimental;
+	static void updateBlueprints() {
 		// FactionAPI playerFaction = Global.getSector().getPlayerPerson().getFaction();
 		CharacterDataAPI playerData = Global.getSector().getCharacterData();
 
@@ -83,22 +82,31 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 				faction.removeKnownHullMod(hullModSpec.getId());
 		}
 
+		String targetTag;
+		Set<String> uiTags;
+
+		if (lyr_ehm.settings.getCosmeticsOnly()) {
+			targetTag = lyr_internals.tag.cosmetic;
+
+			uiTags = Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.base).getUITags();
+			uiTags.clear(); uiTags.add(lyr_internals.tag.ui.cosmetics);
+
+			uiTags = Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.undo).getUITags();
+			uiTags.clear(); uiTags.add(lyr_internals.tag.ui.cosmetics);
+		} else {
+			targetTag = lyr_internals.tag.experimental;
+
+			uiTags = Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.base).getUITags();
+			uiTags.clear(); uiTags.addAll(lyr_internals.tag.ui.all);
+
+			uiTags = Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.undo).getUITags();
+			uiTags.clear(); uiTags.addAll(lyr_internals.tag.ui.all);
+		}
+
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
 			if (!hullModSpec.getManufacturer().equals(lyr_internals.id.manufacturer)) continue;
 
 			if (hullModSpec.hasTag(targetTag)) playerData.addHullMod(hullModSpec.getId());
-		}
-
-		if (lyr_ehm.settings.getCosmeticsOnly()) {
-			Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.base).getUITags().clear();
-			Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.undo).getUITags().clear();
-			Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.base).addUITag(lyr_internals.tag.ui.cosmetics);
-			Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.undo).addUITag(lyr_internals.tag.ui.cosmetics);
-		} else {
-			Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.base).getUITags().clear();
-			Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.undo).getUITags().clear();
-			Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.base).getUITags().addAll(lyr_internals.tag.ui.all);
-			Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.undo).getUITags().addAll(lyr_internals.tag.ui.all);
 		}
 
 		logger.info(logPrefix + "Faction blueprints are updated");

@@ -15,6 +15,7 @@ Version 0.8.3
 - Changed slot retrofits to prevent installation and removal if there are wings or inert slot shunts present on the ship to prevent an issue
 - Changed the OP bonus of Over-Engineered (back) to 20% (from 15%)
 - Removed all experimental hull modifications from Missions; mission refit panel mod picker will no longer show any of these
+- Removed all experimental slot shunt blueprints from known lists as it is redundant due to the ability
 
 If you are using "Quality Captains", make sure it's up-to-date as there was an issue. Author of "Quality Captains" mod Dal has already made a change with "1.5.3" to ensure compatibility between the mods. Thanks Dal!
 
