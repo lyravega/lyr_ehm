@@ -46,6 +46,7 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 	@Override
 	public void onApplicationLoad() throws Exception {
 		lyr_settings.attach();
+		updateHullMods();
 		registerHullMods();
 	}
 
@@ -82,26 +83,7 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 				faction.removeKnownHullMod(hullModSpec.getId());
 		}
 
-		String targetTag;
-		Set<String> uiTags;
-
-		if (lyr_ehm.settings.getCosmeticsOnly()) {
-			targetTag = lyr_internals.tag.cosmetic;
-
-			uiTags = Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.base).getUITags();
-			uiTags.clear(); uiTags.add(lyr_internals.tag.ui.cosmetics);
-
-			uiTags = Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.undo).getUITags();
-			uiTags.clear(); uiTags.add(lyr_internals.tag.ui.cosmetics);
-		} else {
-			targetTag = lyr_internals.tag.experimental;
-
-			uiTags = Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.base).getUITags();
-			uiTags.clear(); uiTags.addAll(lyr_internals.tag.ui.all);
-
-			uiTags = Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.undo).getUITags();
-			uiTags.clear(); uiTags.addAll(lyr_internals.tag.ui.all);
-		}
+		final String targetTag = settings.getCosmeticsOnly() ? lyr_internals.tag.cosmetic : lyr_internals.tag.experimental;
 
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
 			if (!hullModSpec.getManufacturer().equals(lyr_internals.id.manufacturer)) continue;
@@ -112,12 +94,28 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 		logger.info(logPrefix + "Faction blueprints are updated");
 	}
 
+	static void updateHullMods() {
+		Set<String> uiTags;
+
+		if (lyr_ehm.settings.getCosmeticsOnly()) {
+			uiTags = Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.base).getUITags();
+			uiTags.clear(); uiTags.add(lyr_internals.tag.ui.cosmetics);
+
+			uiTags = Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.undo).getUITags();
+			uiTags.clear(); uiTags.add(lyr_internals.tag.ui.cosmetics);
+		} else {
+			uiTags = Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.base).getUITags();
+			uiTags.clear(); uiTags.addAll(lyr_internals.tag.ui.all);
+
+			uiTags = Global.getSettings().getHullModSpec(lyr_internals.id.hullmods.undo).getUITags();
+			uiTags.clear(); uiTags.addAll(lyr_internals.tag.ui.all);
+		}
+	}
+
 	/**
-	 * Searches all hull modification effect classes and their superclasses for any interfaces
-	 * they implement. If any one of them has implemented an event interface, adds them to
-	 * their respective sets; registers them in essence.
-	 * <p> During tracking, if any one of these events are detected, the relevant event methods
-	 * will be triggered as long as the hull mod's effect has implemented the interfaces.
+	 * Checks all of the hullmod effects and if they have implemented any events, registers them
+	 * in their map. During tracking, if any one of these events are detected, the relevant event
+	 * methods will be called
 	 * @see {@link lyr_ehm.hullmods.ehm.ehm_base ehm_base} base hull modification that enables tracking
 	 * @see {@link normalEvents} / {@link enhancedEvents} / {@link suppressedEvents}
 	 */

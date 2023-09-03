@@ -107,7 +107,9 @@ public class lyr_settings implements LunaSettingsListener, lyr_logger {
 
 		if (shuntAvailability == null || shuntAvailability.equals(temp)) return; else shuntAvailability = temp;
 
-		if (Global.getCurrentState() == GameState.CAMPAIGN) lyr_ehm.attachShuntAccessListener();
+		if (Global.getCurrentState() != GameState.CAMPAIGN) return;
+		
+		lyr_ehm.attachShuntAccessListener();
 	}
 
 	private void checkCosmeticsOnly() {
@@ -115,7 +117,9 @@ public class lyr_settings implements LunaSettingsListener, lyr_logger {
 
 		if (cosmeticsOnly == temp) return; else cosmeticsOnly = temp;
 
-		if (Global.getCurrentState() == GameState.CAMPAIGN) lyr_ehm.updateBlueprints();
+		if (Global.getCurrentState() != GameState.CAMPAIGN) return;
+		
+		lyr_ehm.updateBlueprints(); lyr_ehm.updateHullMods();
 	}
 
 	@Override
