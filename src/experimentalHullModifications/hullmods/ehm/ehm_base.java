@@ -74,7 +74,7 @@ public final class ehm_base extends _ehm_tracker {
 			if (lyr_ehm.settings.getDebugTooltip()) {
 				tooltip.addSectionHeading("DEBUG INFO", header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 
-				tooltip.addPara("Enabled Mods: "+Global.getSettings().getModManager().getEnabledModsCopy().toString(), 5f).setHighlight("Enabled Mods: ");
+				// tooltip.addPara("Enabled Mods: "+Global.getSettings().getModManager().getEnabledModsCopy().toString(), 5f).setHighlight("Enabled Mods: ");
 				tooltip.addPara("All Hullmods: "+variant.getHullMods().toString(), 5f).setHighlight("All Hullmods:");
 				tooltip.addPara("Hullmods: "+variant.getNonBuiltInHullmods().toString(), 5f).setHighlight("Hullmods:");
 				tooltip.addPara("SMods: "+variant.getSMods().toString(), 5f).setHighlight("SMods:");
@@ -84,6 +84,10 @@ public final class ehm_base extends _ehm_tracker {
 				tooltip.addPara("Hull ID: "+variant.getHullSpec().getHullId(), 5f).setHighlight("Hull ID:");
 				tooltip.addPara("Member ID: "+ship.getFleetMemberId(), 5f).setHighlight("Member ID:");
 				tooltip.addPara("isModule: "+!Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy().contains(ship.getFleetMember()), 5f).setHighlight("isModule:");
+				tooltip.addPara("HullHints: "+ship.getVariant().getHullSpec().getHints().toString(), 5f).setHighlight("HullHints:");
+				tooltip.addPara("HullTags: "+ship.getVariant().getHullSpec().getTags().toString(), 5f).setHighlight("HullTags:");
+				tooltip.addPara("VariantHints: "+ship.getVariant().getHints().toString(), 5f).setHighlight("VariantHints:");
+				tooltip.addPara("VariantTags: "+ship.getVariant().getTags().toString(), 5f).setHighlight("VariantTags:");
 
 				for (EveryFrameScript script : Global.getSector().getScripts()) {
 					String scriptSimpleName = script.getClass().getSimpleName();

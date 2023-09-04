@@ -105,7 +105,7 @@ public class lyr_settings implements LunaSettingsListener, lyr_logger {
 	private void checkShuntAvailability() {
 		final String temp = lyr_lunaAccessors.getString("ehm_shuntAvailability");
 
-		if (shuntAvailability == null || shuntAvailability.equals(temp)) return; else shuntAvailability = temp;
+		if (shuntAvailability != null && shuntAvailability.equals(temp)) return; else shuntAvailability = temp;
 
 		if (Global.getCurrentState() != GameState.CAMPAIGN) return;
 		
