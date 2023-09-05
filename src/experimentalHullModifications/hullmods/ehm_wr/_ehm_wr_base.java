@@ -132,6 +132,7 @@ public class _ehm_wr_base extends _ehm_base implements normalEvents {
 
 			if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
 			// if (_ehm_helpers.ehm_hasHullmodWithTag(ship, lyr_internals.tag.weaponRetrofit, this.hullModSpecId)) tooltip.addPara(text.hasWeaponRetrofit[0], text.padding).setHighlight(text.hasWeaponRetrofit[1]);
+			if (ship.getVariant().hasHullMod(lyr_internals.id.hullmods.logisticsoverhaul)) tooltip.addPara(text.hasLogisticsOverhaul[0], text.padding).setHighlight(text.hasLogisticsOverhaul[1]);
 		}
 
 		if (!canBeAddedOrRemovedNow(ship, null, null)) {
@@ -152,6 +153,7 @@ public class _ehm_wr_base extends _ehm_base implements normalEvents {
 
 		if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) return false; 
 		// if (_ehm_helpers.ehm_hasHullmodWithTag(ship, lyr_internals.tag.weaponRetrofit, this.hullModSpecId)) return false; 
+		if (ship.getVariant().hasHullMod(lyr_internals.id.hullmods.logisticsoverhaul)) return false;
 
 		return true; 
 	}

@@ -24,6 +24,7 @@ public class lyr_tooltip {
 			hasEngineCosmetic = {"Another engine cosmetic modification is already installed", "engine cosmetic modification"},
 			hasAnyExperimental = {"All experimental hull modifications needs to be removed from the ship first", "needs to be removed"},
 			hasAnyExperimentalBuiltIn = {"Cannot be used due to a built-in experimental hull modification", "built-in"},
+			hasLogisticsOverhaul = {"Cannot be installed due to ship having completely overhauled for logistics usage", "overhauled for logistics"},
 			isModule = {"Cannot be installed on modules", "modules"},
 			noShields = {"Cannot be installed on ships that do not utilize shields", "shields"},
 			hasPhase = {"Cannot be installed on ships equipped with a phase cloak", "phase cloak"},

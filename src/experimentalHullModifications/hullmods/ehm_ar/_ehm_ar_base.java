@@ -373,6 +373,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 
 			if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
 			if (this.hullModSpecTags.contains(lyr_internals.tag.reqNoPhase) && ship.getPhaseCloak() != null) tooltip.addPara(text.hasPhase[0], text.padding).setHighlight(text.hasPhase[1]);
+			if (ship.getVariant().hasHullMod(lyr_internals.id.hullmods.logisticsoverhaul)) tooltip.addPara(text.hasLogisticsOverhaul[0], text.padding).setHighlight(text.hasLogisticsOverhaul[1]);
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
@@ -384,6 +385,7 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 
 		if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) return false; 
 		if (this.hullModSpecTags.contains(lyr_internals.tag.reqNoPhase) && ship.getPhaseCloak() != null) return false; 
+		if (ship.getVariant().hasHullMod(lyr_internals.id.hullmods.logisticsoverhaul)) return false;
 		
 		return true; 
 	}

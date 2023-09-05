@@ -134,7 +134,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 			tooltip.addPara(text.overEngineeredWarning[0], text.padding).setHighlight(text.overEngineeredWarning[1]);
 		}
 
-		// super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
+		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
 	}
 
 	@Override

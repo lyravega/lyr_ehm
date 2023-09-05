@@ -217,6 +217,9 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 			|| _ehm_helpers.ehm_hasWeapons(ship)
 			|| _ehm_helpers.ehm_hasAnyFittedWings(ship)
 			|| _ehm_helpers.ehm_hasCapacitorsOrVents(ship)) tooltip.addPara(text.notStripped[0], text.padding).setHighlight(text.notStripped[1]);
+		} else if (!ship.getVariant().getSMods().contains(this.hullModSpecId)) {
+			tooltip.addSectionHeading(header.severeWarning, header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
+			tooltip.addPara(text.overEngineeredWarning[0], text.padding).setHighlight(text.overEngineeredWarning[1]);
 		}
 
 		if (!canBeAddedOrRemovedNow(ship, null, null)) {
