@@ -3,6 +3,7 @@ package experimentalHullModifications.hullmods.ehm_mr;
 import static lyravega.tools.lyr_uiTools.commitVariantChanges;
 import static lyravega.tools.lyr_uiTools.playDrillSound;
 
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShieldAPI.ShieldType;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
+import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShipTypeHints;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
@@ -65,6 +67,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 	//#endregion
 	// END OF CUSTOM EVENTS
 
+	private static final EnumSet<ShipTypeHints> hintsToRemove = EnumSet.of(ShipTypeHints.CARRIER, ShipTypeHints.COMBAT, ShipTypeHints.NO_AUTO_ESCORT);
 	public static final Map<HullSize, Float> logisticsModBonus = new HashMap<HullSize, Float>();
 	public static final Map<WeaponSize, Float> logisticsSlotBonus = new HashMap<WeaponSize, Float>();
 	static {
@@ -118,6 +121,10 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 			logisticsBonus += bays * logisticsSlotBonus.get(WeaponSize.LARGE);
 			stats.getNumFighterBays().modifyFlat(this.hullModSpecId, -bays);	// game nukes the 
 		}
+
+		// adjusting hints
+		EnumSet<ShipTypeHints> hints = lyr_hullSpec.getHints();
+		hints.removeAll(hintsToRemove); hints.add(ShipTypeHints.CIVILIAN);
 
 		if (!stats.getVariant().getSMods().contains(this.hullModSpecId)) return;
 

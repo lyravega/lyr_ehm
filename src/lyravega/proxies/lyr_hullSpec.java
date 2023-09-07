@@ -3,6 +3,7 @@ package lyravega.proxies;
 import static lyravega.tools.lyr_reflectionTools.inspectMethod;
 
 import java.lang.invoke.MethodHandle;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
@@ -10,6 +11,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.characters.MutableCharacterStatsAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
+import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShipTypeHints;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
 import lyravega.tools.lyr_logger;
@@ -360,6 +362,10 @@ public final class lyr_hullSpec implements lyr_logger {
 
 	public String getShipSystemId() {
 		return hullSpec.getShipSystemId();
+	}
+
+	public EnumSet<ShipTypeHints> getHints() {
+		return hullSpec.getHints();
 	}
 	//#endregion 
 	// END OF BRIDGE METHODS
