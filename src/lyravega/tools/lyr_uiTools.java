@@ -139,8 +139,8 @@ public class lyr_uiTools extends lyr_reflectionTools {
 
 			for (Object child : children) {
 				try {
-					if (inspectMethod(methodName, child.getClass()) != null) return child;
-				} catch (Exception e) {
+					if (inspectMethod(methodName, child.getClass(), false, null) != null) return child;
+				} catch (Throwable t) {
 					// no catch on purpose
 				}
 			}

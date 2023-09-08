@@ -40,7 +40,7 @@ public final class lyr_weaponSlot implements lyr_logger {
 
 	static {
 		try {
-			weaponSlotClass = inspectMethod(true, "getWeaponSlot", 1, lyr_hullSpec.hullSpecClass).getReturnType();
+			weaponSlotClass = inspectMethod("getWeaponSlot", lyr_hullSpec.hullSpecClass, true, 1).getReturnType();
 			nodeClass = inspectMethod("getNode", weaponSlotClass).getReturnType();
 			slotTypeEnum = inspectMethod("getSlotType", weaponSlotClass).getReturnType();
 

@@ -104,20 +104,19 @@ public class lyr_reflectionTools implements lyr_logger {
 	 * <p> {@code methodParameters} can be ignored, however if given alongside a 
 	 * {@code methodName}, they'll be used to perform a more specific search that
 	 * can also target overloaded methods.
-	 * @param declaredOnly (overload, default {@code true}) to search declared only or all methods
 	 * @param methodName as String, no "()"
 	 * @param clazz to search the methodName on
+	 * @param declaredOnly (overload, default {@code true}) to search declared only or all methods
 	 * @param methodModifier (overload, default {@code null}) to search a method with a specific modifier
-	 * @param parameterTypes (optional) full set of parameters, if available and
-	 * needed
+	 * @param parameterTypes (optional) full set of parameters, if available and needed
 	 * @return {@link methodMap}
 	 * @throws Throwable if such a method is cannot be found
 	 */
 	public static final methodMap inspectMethod(String methodName, Class<?> clazz, Class<?>... parameterTypes) throws Throwable {
-		return inspectMethod(true, methodName, null, clazz, parameterTypes);
+		return inspectMethod(methodName, clazz, true, null, parameterTypes);
 	}
 	/** @see #inspectMethod(String, Class, Class...) */
-	public static final methodMap inspectMethod(boolean declaredOnly, String methodName, Integer methodModifier, Class<?> clazz, Class<?>... parameterTypes) throws Throwable {
+	public static final methodMap inspectMethod(String methodName, Class<?> clazz, boolean declaredOnly, Integer methodModifier, Class<?>... parameterTypes) throws Throwable {
 		Object method = null; // as long as methods are stored as objects and not as methods, game is okay with it
 
 		try {
