@@ -8,7 +8,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.SettingsAPI;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
-import com.fs.starfarer.api.combat.BaseHullMod;
+import com.fs.starfarer.api.combat.HullModEffect;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
@@ -50,7 +50,7 @@ import lyravega.tools.lyr_logger;
  * @see {@link experimentalHullModifications.hullmods.ehm_sc._ehm_sc_base _ehm_sc_base} for shield cosmetic base
  * @author lyravega
  */
-public class _ehm_base extends BaseHullMod implements lyr_logger {
+public class _ehm_base implements HullModEffect, lyr_logger {
 	protected HullModSpecAPI hullModSpec;
 	protected String hullModSpecId;
 	protected Set<String> hullModSpecTags;
@@ -64,52 +64,37 @@ public class _ehm_base extends BaseHullMod implements lyr_logger {
 	}
 
 	//#region IMPLEMENTATION
-	@Override 
-	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {}
+	@Override public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {}
 
-	@Override 
-	public void applyEffectsAfterShipCreation(ShipAPI ship, String hullModSpecId) {}
+	@Override public void applyEffectsAfterShipCreation(ShipAPI ship, String hullModSpecId) {}
 
-	@Override 
-	public String getDescriptionParam(int index, HullSize hullSize) { return null; }
-
-	@Override 
-	public String getDescriptionParam(int index, HullSize hullSize, ShipAPI ship) { return getDescriptionParam(index, hullSize); }
-
-	@Override
-	public String getSModDescriptionParam(int index, HullSize hullSize) { return null; }
+	@Override public void applyEffectsToFighterSpawnedByShip(ShipAPI fighter, ShipAPI ship, String hullModSpecId) {}
 	
-	@Override
-	public String getSModDescriptionParam(int index, HullSize hullSize, ShipAPI ship) { return getSModDescriptionParam(index, hullSize); }
-
-	@Override 
-	public void applyEffectsToFighterSpawnedByShip(ShipAPI fighter, ShipAPI ship, String hullModSpecId) {}
+	@Override public void advanceInCampaign(FleetMemberAPI member, float amount) {}
 	
-	@Override 
-	public void advanceInCampaign(FleetMemberAPI member, float amount) {}
-	
-	@Override 
-	public void advanceInCombat(ShipAPI ship, float amount) {}
+	@Override public void advanceInCombat(ShipAPI ship, float amount) {}
 
-	@Override 
-	public boolean affectsOPCosts() { return false; }
+	@Override public boolean affectsOPCosts() { return false; }
 
-	@Override 
-	public boolean shouldAddDescriptionToTooltip(HullSize hullSize, ShipAPI ship, boolean isForModSpec) { return true; }
+	@Override public Color getBorderColor() { return null; }
 
-	@Override 
-	public Color getBorderColor() { return null; }
+	@Override public Color getNameColor() { return null; }
 
-	@Override 
-	public Color getNameColor() { return null; }
+	@Override public int getDisplaySortOrder() { return 100; }
 
-	@Override 
-	public int getDisplaySortOrder() { return 100; }
+	@Override public int getDisplayCategoryIndex() { return -1; }
 
-	@Override 
-	public int getDisplayCategoryIndex() { return -1; }
+	@Override public boolean hasSModEffect() { return false; }
 
-	//#region INSTALLATION CHECKS / DESCRIPTION
+	@Override public boolean isSModEffectAPenalty() { return false; }
+
+	@Override public boolean showInRefitScreenModPickerFor(ShipAPI ship) { return Global.getCurrentState() != GameState.TITLE; }	// hide stuff in missions
+
+	//#region TOOLTIP
+	@Override public float getTooltipWidth() { return 469f; }
+
+	@Override public boolean shouldAddDescriptionToTooltip(HullSize hullSize, ShipAPI ship, boolean isForModSpec) { return true; }
+
 	@Override 
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (ship == null) return;
@@ -122,20 +107,32 @@ public class _ehm_base extends BaseHullMod implements lyr_logger {
 		}
 	}
 
+	@Override public String getDescriptionParam(int index, HullSize hullSize) { return null; }
+
+	@Override public String getDescriptionParam(int index, HullSize hullSize, ShipAPI ship) { return getDescriptionParam(index, hullSize); }
+
+	@Override public boolean hasSModEffectSection(HullSize hullSize, ShipAPI ship, boolean isForModSpec) { return false; }
+
+	@Override public void addSModSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec, boolean isForBuildInList) {}
+
+	@Override public void addSModEffectSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec, boolean isForBuildInList) {}
+
+	@Override public String getSModDescriptionParam(int index, HullSize hullSize) { return null; }
+	
+	@Override public String getSModDescriptionParam(int index, HullSize hullSize, ShipAPI ship) { return getSModDescriptionParam(index, hullSize); }
+	//#endregion
+	// END OF TOOLTIP
+
+	//#region CHECKS
 	@Override public boolean isApplicableToShip(ShipAPI ship) { return true; }
 	
-	@Override public String getUnapplicableReason(ShipAPI ship) { return null; }
-	
 	@Override public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) { return true; }
+	
+	@Override public String getUnapplicableReason(ShipAPI ship) { return null; }	// handled with description instead
 
-	@Override public String getCanNotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) { return null; }
-
-	@Override
-	public boolean showInRefitScreenModPickerFor(ShipAPI ship) {
-		return Global.getCurrentState() != GameState.TITLE;
-	}
+	@Override public String getCanNotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) { return null; }	// handled with description instead
 	//#endregion
-	// END OF INSTALLATION CHECKS / DESCRIPTION
+	// END OF CHECKS
 	//#endregion
 	// END OF IMPLEMENTATION
 

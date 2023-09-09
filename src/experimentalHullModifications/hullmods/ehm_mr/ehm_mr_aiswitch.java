@@ -75,7 +75,7 @@ public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 			stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(this.hullModSpecId, (int) (dp * 0.25));
 
 			if (noAutomatedShipsSkill) {
-				if (isInPlayerFleet(stats) && !isAutomatedNoPenalty(stats)) {
+				if (!isAutomatedNoPenalty(stats)) {
 					stats.getMaxCombatReadiness().modifyFlat(this.hullModSpecId, -MAX_CR_PENALTY, "AI Switch Penalty");
 				}
 			}
@@ -150,8 +150,10 @@ public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
 			if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
-			else if (!variant.hasHullMod(this.hullModSpecId) && Misc.isUnremovable(captain)) tooltip.addPara(text.integratedAICore[0], text.padding).setHighlight(text.integratedAICore[1]);
-			else if (!variant.hasHullMod(this.hullModSpecId) && noAutomatedShipsSkill) tooltip.addPara(text.noAutomatedShipsSkill[0], text.padding).setHighlight(text.noAutomatedShipsSkill[1]);
+			if (!variant.hasHullMod(this.hullModSpecId)) {
+				if (Misc.isUnremovable(captain)) tooltip.addPara(text.integratedAICore[0], text.padding).setHighlight(text.integratedAICore[1]);
+				if (noAutomatedShipsSkill) tooltip.addPara(text.noAutomatedShipsSkill[0], text.padding).setHighlight(text.noAutomatedShipsSkill[1]);
+			}
 		} else if (!canBeAddedOrRemovedNow(ship, null, null)) {
 			boolean isFakeCaptain = captain.getNameString().isEmpty();	// as captain always returns something, checking the name to see if it's empty
 			boolean isAICore = captain.isAICore();
@@ -178,13 +180,11 @@ public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false;
 
-		ShipVariantAPI variant = ship.getVariant();
-		PersonAPI captain = ship.getCaptain();
-		boolean noAutomatedShipsSkill = Global.getSector().getPlayerStats().getSkillLevel(Skills.AUTOMATED_SHIPS) < 1;
-
 		if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) return false;
-		if (!variant.hasHullMod(this.hullModSpecId) && Misc.isUnremovable(captain)) return false;
-		if (!variant.hasHullMod(this.hullModSpecId) && noAutomatedShipsSkill) return false;
+		if (!ship.getVariant().hasHullMod(this.hullModSpecId)) {
+			if (Misc.isUnremovable(ship.getCaptain())) return false;
+			if (Global.getSector().getPlayerStats().getSkillLevel(Skills.AUTOMATED_SHIPS) < 1) return false;
+		}
 
 		return true; 
 	}

@@ -17,6 +17,7 @@ import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.hullmods.ehm._ehm_helpers;
 import lyravega.listeners.events.enhancedEvents;
 import lyravega.listeners.events.normalEvents;
+import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_tooltip.header;
 import lyravega.misc.lyr_tooltip.text;
 import lyravega.plugin.lyr_ehm;
@@ -69,6 +70,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
+		if (!stats.getVariant().getHullSpec().getBuiltInMods().contains(lyr_internals.id.hullmods.base)) return;
 		if (!stats.getVariant().getSMods().contains(this.hullModSpecId)) return;
 
 		ShipVariantAPI variant = stats.getVariant();
@@ -79,10 +81,9 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION
-	@Override
-	public boolean hasSModEffect() {
-		return true;
-	}
+	@Override public boolean hasSModEffect() { return true; }
+
+	@Override public boolean hasSModEffectSection(HullSize hullSize, ShipAPI ship, boolean isForModSpec) { return true; }
 
 	@Override
 	public String getSModDescriptionParam(int index, HullSize hullSize) {
@@ -96,6 +97,12 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 	@Override
 	public void addSModSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec, boolean isForBuildInList) {
 		if (!isApplicableToShip(ship)) return;
+
+		if (!ship.getVariant().getHullSpec().getBuiltInMods().contains(lyr_internals.id.hullmods.base)) {
+			tooltip.addSectionHeading(header.noEffect, header.noEffect_textColour, header.noEffect_bgColour, Alignment.MID, header.padding);
+			tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
+			return;
+		}
 
 		if (!ship.getVariant().getSMods().contains(this.hullModSpecId)) {
 			tooltip.addSectionHeading(header.noEffect, header.noEffect_textColour, header.noEffect_bgColour, Alignment.MID, header.padding);
