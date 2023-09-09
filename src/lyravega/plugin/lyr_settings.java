@@ -62,10 +62,10 @@ public class lyr_settings implements LunaSettingsListener, lyr_logger {
 		}
 
 		lyr_ehm.settings.cacheSettings();
-		registerCustomizableMods();
+		registerModsWithCustomization();
 	}
 
-	private static void registerCustomizableMods() {
+	private static void registerModsWithCustomization() {
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
 			if (!hullModSpec.hasTag(tag.customizable)) continue;
 

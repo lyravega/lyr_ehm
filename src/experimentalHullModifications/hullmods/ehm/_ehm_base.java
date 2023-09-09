@@ -76,10 +76,6 @@ public class _ehm_base implements HullModEffect, lyr_logger {
 
 	@Override public boolean affectsOPCosts() { return false; }
 
-	@Override public Color getBorderColor() { return null; }
-
-	@Override public Color getNameColor() { return null; }
-
 	@Override public int getDisplaySortOrder() { return 100; }
 
 	@Override public int getDisplayCategoryIndex() { return -1; }
@@ -91,7 +87,11 @@ public class _ehm_base implements HullModEffect, lyr_logger {
 	@Override public boolean showInRefitScreenModPickerFor(ShipAPI ship) { return Global.getCurrentState() != GameState.TITLE; }	// hide stuff in missions
 
 	//#region TOOLTIP
-	@Override public float getTooltipWidth() { return 469f; }
+	@Override public Color getBorderColor() { return null; }
+
+	@Override public Color getNameColor() { return null; }
+
+	@Override public float getTooltipWidth() { return 369f; }
 
 	@Override public boolean shouldAddDescriptionToTooltip(HullSize hullSize, ShipAPI ship, boolean isForModSpec) { return true; }
 

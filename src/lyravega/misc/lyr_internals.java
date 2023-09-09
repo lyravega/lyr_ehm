@@ -190,7 +190,7 @@ public final class lyr_internals {
 			experimental = "ehm",	// must match hullmod/weapon tag in .csv
 			cosmetic = "ehm_cosmetic",	// must match hullmod tag in .csv
 			restricted = "ehm_restricted",	// must match hullmod/weapon tag in .csv
-			extended = "ehm_extended",	// must match hullmod/weapon tag in .csv
+			// extended = "ehm_extended",	// must match hullmod/weapon tag in .csv
 			customizable = "ehm_customizable",	// must match hullmod/weapon tag in .csv
 
 			systemRetrofit = "ehm_sr",	// must match hullmod tag in .csv
