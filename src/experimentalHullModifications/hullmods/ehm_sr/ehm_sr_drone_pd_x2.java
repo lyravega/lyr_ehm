@@ -16,7 +16,7 @@ public final class ehm_sr_drone_pd_x2 extends _ehm_sr_base {
 
 		stats.getSystemRegenBonus().modifyFlat(this.hullModSpecId, 0.1f);
 
-		if(variant.getHullSpec().getShipSystemId().equals(systemId)) return;
+		if (systemId.equals(variant.getHullSpec().getShipSystemId())) return;
 
 		variant.setHullSpecAPI(ehm_systemRetrofit(variant, systemId));
 	}

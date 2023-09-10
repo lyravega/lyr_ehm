@@ -16,7 +16,7 @@ public final class ehm_sr_forgevats extends _ehm_sr_base {
 
 		stats.getSystemCooldownBonus().modifyFlat(this.hullModSpecId, 45.0f);
 
-		if(variant.getHullSpec().getShipSystemId().equals(systemId)) return;
+		if (systemId.equals(variant.getHullSpec().getShipSystemId())) return;
 
 		variant.setHullSpecAPI(ehm_systemRetrofit(variant, systemId));
 	}
