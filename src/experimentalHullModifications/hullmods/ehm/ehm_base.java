@@ -79,6 +79,7 @@ public final class ehm_base extends _ehm_tracker {
 				tooltip.addPara("All: "+variant.getHullMods().toString(), 5f).setHighlight("All:");
 				tooltip.addPara("Modular: "+variant.getNonBuiltInHullmods().toString(), 5f).setHighlight("Modular:");
 				tooltip.addPara("Modular (Enhanced): "+variant.getSMods().toString(), 5f).setHighlight("Modular (Enhanced):");
+				tooltip.addPara("Perma: "+variant.getPermaMods().toString(), 5f).setHighlight("Perma:");
 				tooltip.addPara("Built-in: "+variant.getHullSpec().getBuiltInMods().toString(), 5f).setHighlight("Built-in:");
 				tooltip.addPara("Built-in (Enhanced): "+variant.getSModdedBuiltIns().toString(), 5f).setHighlight("Built-in (Enhanced):");
 				tooltip.addPara("Suppressed: "+variant.getSuppressedMods().toString(), 5f).setHighlight("Suppressed:");

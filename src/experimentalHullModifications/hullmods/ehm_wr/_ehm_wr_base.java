@@ -37,18 +37,16 @@ import lyravega.proxies.lyr_weaponSlot;
  * @author lyravega
  */
 public class _ehm_wr_base extends _ehm_base implements normalEvents {
-	protected final String primaryTag = lyr_internals.tag.weaponRetrofit;
-
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstall(ShipVariantAPI variant) {
-		_ehm_helpers.ehm_removeHullModsWithSameTag(variant, primaryTag, this.hullModSpecId);
+		if (_ehm_helpers.ehm_removeHullModsWithSameTag(variant, lyr_internals.tag.weaponRetrofit, this.hullModSpecId)) return;	// if installing this removes another, skip
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
 	public void onRemove(ShipVariantAPI variant) {
-		if (!_ehm_helpers.ehm_hasHullModWithTag(variant, primaryTag, this.hullModSpecId))
+		// if (!_ehm_helpers.ehm_hasHullModWithTag(variant, lyr_internals.tag.weaponRetrofit, this.hullModSpecId))	// unlike other exclusive mods, this one needs to run to restore the slots to original first
 			variant.setHullSpecAPI(ehm_weaponSlotRestore_lazy(variant));
 		commitVariantChanges(); playDrillSound();
 	}

@@ -2,15 +2,15 @@ package experimentalHullModifications.hullmods.ehm_mr;
 
 import static com.fs.starfarer.api.impl.hullmods.HeavyBallisticsIntegration.COST_REDUCTION;
 
-import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.combat.BaseHullMod;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
+import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Stats;
+import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
+import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.hullmods.ehm_wr.ehm_wr_energyslotretrofit;
-import lyravega.listeners.events.normalEvents;
 import lyravega.misc.lyr_internals;
 
 /**
@@ -18,23 +18,26 @@ import lyravega.misc.lyr_internals;
  * @see Master: {@link ehm_wr_energyslotretrofit}
  * @author lyravega
  */
-public final class ehm_mr_heavyenergyintegration extends BaseHullMod {
-	private static final String masterHullModId = lyr_internals.id.hullmods.energyslotretrofit;
+public final class ehm_mr_heavyenergyintegration extends _ehm_base {
+	public static void installExtension(ShipVariantAPI variant) {
+		if (variant.getHullSpec().getBuiltInMods().contains("hbi") || variant.getPermaMods().contains("hbi")) {
+			variant.addSuppressedMod("hbi");
+			variant.addPermaMod(lyr_internals.id.hullmods.extensions.heavyenergyintegration, false);
+		}
+	}
+
+	public static void removeExtension(ShipVariantAPI variant) {
+		if (variant.getSuppressedMods().contains("hbi")) {
+			if (!variant.hasHullMod(lyr_internals.id.hullmods.missileslotretrofit)) variant.removeSuppressedMod("hbi");
+			variant.removePermaMod(lyr_internals.id.hullmods.extensions.heavyenergyintegration);
+		}
+	}
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String id) {
-		if (!checkSource(stats.getVariant(), masterHullModId)) return;
+		if (!stats.getVariant().hasHullMod(lyr_internals.id.hullmods.energyslotretrofit)) { removeExtension(stats.getVariant()); return; }
 
 		stats.getDynamic().getMod(Stats.LARGE_ENERGY_MOD).modifyFlat(id, -COST_REDUCTION);
-	}
-
-	private boolean checkSource(ShipVariantAPI variant, String sourceId) {
-		if (!variant.hasHullMod(sourceId)) {
-			normalEvents hullModEffect = (normalEvents) Global.getSettings().getHullModSpec(sourceId).getEffect();
-			hullModEffect.onRemove(variant);
-			return false;
-		}
-		return true;
 	}
 	
 	@Override
@@ -43,13 +46,9 @@ public final class ehm_mr_heavyenergyintegration extends BaseHullMod {
 		return null;
 	}
 
-	@Override
-	public boolean affectsOPCosts() {
-		return true;
-	}
+	@Override public boolean affectsOPCosts() { return true; }
 
-	@Override
-	public int getDisplayCategoryIndex() {
-		return 0;
-	}
+	@Override public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {}
+
+	@Override public int getDisplayCategoryIndex() { return 0; }	// to have the game treat this permaMod as a built-in
 }

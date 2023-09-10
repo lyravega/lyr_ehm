@@ -9,32 +9,22 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 
 import experimentalHullModifications.hullmods.ehm_mr.ehm_mr_expensivemissiles;
-import lyravega.misc.lyr_internals;
 
 /**@category Weapon Retrofit 
  * @see Slave: {@link ehm_mr_expensivemissiles}
  * @author lyravega
  */
 public final class ehm_wr_missileslotretrofit extends _ehm_wr_base {
-	private static final String extensionHullModId = lyr_internals.id.hullmods.extensions.expensivemissiles;
-	private static final String hbi = "hbi";
-
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstall(ShipVariantAPI variant) {
-		if (variant.getHullSpec().getBuiltInMods().contains(hbi) || variant.getPermaMods().contains(hbi)) {
-			variant.addSuppressedMod(hbi);
-		}
-		variant.addPermaMod(extensionHullModId, false);
+		ehm_mr_expensivemissiles.installExtension(variant);
 		super.onInstall(variant);
 	}
 
 	@Override
 	public void onRemove(ShipVariantAPI variant) {
-		if (variant.getSuppressedMods().contains(hbi)) {
-			variant.removeSuppressedMod(hbi);
-		}
-		variant.removePermaMod(extensionHullModId);
+		ehm_mr_expensivemissiles.removeExtension(variant);
 		super.onRemove(variant);
 	}
 	//#endregion

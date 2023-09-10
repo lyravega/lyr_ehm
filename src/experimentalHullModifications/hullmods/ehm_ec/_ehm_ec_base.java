@@ -36,18 +36,16 @@ import lyravega.proxies.lyr_hullSpec;
  * @author lyravega
  */
 public class _ehm_ec_base extends _ehm_base implements normalEvents {
-	protected final String primaryTag = lyr_internals.tag.engineCosmetic;
-
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstall(ShipVariantAPI variant) {
-		_ehm_helpers.ehm_removeHullModsWithSameTag(variant, primaryTag, this.hullModSpecId);
+		if (_ehm_helpers.ehm_removeHullModsWithSameTag(variant, lyr_internals.tag.engineCosmetic, this.hullModSpecId)) return;
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
 	public void onRemove(ShipVariantAPI variant) {
-		if (!_ehm_helpers.ehm_hasHullModWithTag(variant, primaryTag, this.hullModSpecId))
+		if (!_ehm_helpers.ehm_hasHullModWithTag(variant, lyr_internals.tag.engineCosmetic, this.hullModSpecId))
 			variant.setHullSpecAPI(ehm_restoreEngineSlots_lazy(variant));
 		commitVariantChanges(); playDrillSound();
 	}

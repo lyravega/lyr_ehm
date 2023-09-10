@@ -221,11 +221,12 @@ public class _ehm_helpers {
 		}
 	}
 
-	public static final void ehm_removeHullModsWithSameTag(ShipVariantAPI variant, String tag, String ignoredHullmodId) {
+	public static final boolean ehm_removeHullModsWithSameTag(ShipVariantAPI variant, String tag, String ignoredHullmodId) {
 		for (String hullmodId : variant.getNonBuiltInHullmods()) {
 			if (hullmodId.equals(ignoredHullmodId)) continue;
 			if (!Global.getSettings().getHullModSpec(hullmodId).hasTag(tag)) continue;
 			variant.removeMod(hullmodId);
-		}
+			return true;
+		}; return false;
 	}
 }

@@ -54,7 +54,6 @@ public class _ehm_base implements HullModEffect, lyr_logger {
 	protected HullModSpecAPI hullModSpec;
 	protected String hullModSpecId;
 	protected Set<String> hullModSpecTags;
-	// protected String primaryTag;
 
 	@Override 
 	public void init(HullModSpecAPI hullModSpec) {

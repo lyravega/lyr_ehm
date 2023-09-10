@@ -1,15 +1,15 @@
 package experimentalHullModifications.hullmods.ehm_mr;
 
-import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.combat.BaseHullMod;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
+import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Stats;
+import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.DynamicStatsAPI;
 
+import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.hullmods.ehm_wr.ehm_wr_missileslotretrofit;
-import lyravega.listeners.events.normalEvents;
 import lyravega.misc.lyr_internals;
 
 /**
@@ -17,12 +17,24 @@ import lyravega.misc.lyr_internals;
  * @see Master: {@link ehm_wr_missileslotretrofit}
  * @author lyravega
  */
-public final class ehm_mr_expensivemissiles extends BaseHullMod {
-	private static final String masterHullModId = lyr_internals.id.hullmods.missileslotretrofit;
+public final class ehm_mr_expensivemissiles extends _ehm_base {
+	public static void installExtension(ShipVariantAPI variant) {
+		if (variant.getHullSpec().getBuiltInMods().contains("hbi") || variant.getPermaMods().contains("hbi")) {
+			variant.addSuppressedMod("hbi");
+		}
+		variant.addPermaMod(lyr_internals.id.hullmods.extensions.expensivemissiles, false);
+	}
+
+	public static void removeExtension(ShipVariantAPI variant) {
+		if (variant.getSuppressedMods().contains("hbi")) {
+			if (!variant.hasHullMod(lyr_internals.id.hullmods.energyslotretrofit)) variant.removeSuppressedMod("hbi");
+		}
+		variant.removePermaMod(lyr_internals.id.hullmods.extensions.expensivemissiles);
+	}
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String id) {
-		if (!checkSource(stats.getVariant(), masterHullModId)) return;
+		if (!stats.getVariant().hasHullMod(lyr_internals.id.hullmods.missileslotretrofit)) { removeExtension(stats.getVariant()); return; }
 
 		DynamicStatsAPI dynamicStats = stats.getDynamic();
 		dynamicStats.getMod(Stats.SMALL_MISSILE_MOD).modifyFlat(id, 2);
@@ -30,17 +42,9 @@ public final class ehm_mr_expensivemissiles extends BaseHullMod {
 		dynamicStats.getMod(Stats.LARGE_MISSILE_MOD).modifyFlat(id, 8);
 	}
 
-	private boolean checkSource(ShipVariantAPI variant, String sourceId) {
-		if (!variant.hasHullMod(sourceId)) {
-			normalEvents hullModEffect = (normalEvents) Global.getSettings().getHullModSpec(sourceId).getEffect();
-			hullModEffect.onRemove(variant);
-			return false;
-		}
-		return true;
-	}
+	@Override public boolean affectsOPCosts() { return true; }
 
-	@Override
-	public boolean affectsOPCosts() {
-		return true;
-	}
+	@Override public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {}
+
+	@Override public int getDisplayCategoryIndex() { return 0; }	// to have the game treat this permaMod as a built-in
 }
