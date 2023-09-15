@@ -163,10 +163,10 @@ public class lyr_reflectionTools implements lyr_logger {
 	 * @throws Throwable if such a method is cannot be found
 	 */
 	public static final methodMap inspectMethod(Class<?> clazz, Class<?> returnType, Class<?>... parameterTypes) throws Throwable {
-		return inspectMethod(true, clazz, returnType, parameterTypes);
+		return inspectMethod(clazz, returnType, true, parameterTypes);
 	}
 	/** @see #inspectMethod(Class, Class, Class...) */
-	public static final methodMap inspectMethod(boolean declaredOnly, Class<?> clazz, Class<?> returnType, Class<?>... parameterTypes) throws Throwable {
+	public static final methodMap inspectMethod(Class<?> clazz, Class<?> returnType, boolean declaredOnly, Class<?>... parameterTypes) throws Throwable {
 		Object method = null; // as long as methods are stored as objects and not as methods, game is okay with it
 		String methodName = null;
 
