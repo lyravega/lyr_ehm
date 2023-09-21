@@ -195,7 +195,7 @@ public class _ehm_helpers {
 	 * @return true if the ship is getting restored
 	 */
 	public static boolean ehm_isGettingRestored(ShipVariantAPI variant) {
-		return !(variant.getPermaMods().contains(lyr_internals.id.hullmods.base) && variant.getHullSpec().isBuiltInMod(lyr_internals.id.hullmods.base));	// when the ship is getting restored, hull spec won't have the base, but variant will
+		return !(variant.getPermaMods().contains(lyr_internals.id.hullmods.base) && !variant.getHullSpec().isBuiltInMod(lyr_internals.id.hullmods.base));	// when the ship is getting restored, hull spec won't have the base, but variant will
 	}
 
 	/** 

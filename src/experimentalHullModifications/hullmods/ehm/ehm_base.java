@@ -59,12 +59,13 @@ public final class ehm_base extends _ehm_tracker {
 		if (ship == null) return;
 
 		ShipVariantAPI variant = ship.getVariant();
+		ShipHullSpecAPI hullSpec = variant.getHullSpec();
 
 		if (!variant.hasHullMod(this.hullModSpecId)) {
 			tooltip.addSectionHeading(header.severeWarning, header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 			tooltip.addPara(text.baseRetrofitWarning[0], text.padding).setHighlight(text.baseRetrofitWarning[1]);
 
-			if (variant.getHullSpec().isRestoreToBase()) {
+			if (hullSpec.isRestoreToBase()) {
 				tooltip.addSectionHeading(header.restoreWarning, header.warning_textColour, header.warning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 				tooltip.addPara(text.restoreWarning[0], text.padding).setHighlight(text.restoreWarning[1]);
 			}
@@ -80,18 +81,18 @@ public final class ehm_base extends _ehm_tracker {
 				tooltip.addPara("Modular: "+variant.getNonBuiltInHullmods().toString(), 5f).setHighlight("Modular:");
 				tooltip.addPara("Modular (Enhanced): "+variant.getSMods().toString(), 5f).setHighlight("Modular (Enhanced):");
 				tooltip.addPara("Perma: "+variant.getPermaMods().toString(), 5f).setHighlight("Perma:");
-				tooltip.addPara("Built-in: "+variant.getHullSpec().getBuiltInMods().toString(), 5f).setHighlight("Built-in:");
+				tooltip.addPara("Built-in: "+hullSpec.getBuiltInMods().toString(), 5f).setHighlight("Built-in:");
 				tooltip.addPara("Built-in (Enhanced): "+variant.getSModdedBuiltIns().toString(), 5f).setHighlight("Built-in (Enhanced):");
 				tooltip.addPara("Suppressed: "+variant.getSuppressedMods().toString(), 5f).setHighlight("Suppressed:");
 
 				tooltip.addSectionHeading("DEBUG INFO: SHIP DETAILS", header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
-				tooltip.addPara("Hull ID: "+variant.getHullSpec().getHullId(), 5f).setHighlight("Hull ID:");
+				tooltip.addPara("Hull ID: "+hullSpec.getHullId(), 5f).setHighlight("Hull ID:");
 				tooltip.addPara("Member ID: "+ship.getFleetMemberId(), 5f).setHighlight("Member ID:");
 				tooltip.addPara("isModule: "+!Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy().contains(ship.getFleetMember()), 5f).setHighlight("isModule:");
-				tooltip.addPara("HullHints: "+ship.getVariant().getHullSpec().getHints().toString(), 5f).setHighlight("HullHints:");
-				tooltip.addPara("VariantHints: "+ship.getVariant().getHints().toString(), 5f).setHighlight("VariantHints:");
-				tooltip.addPara("HullTags: "+ship.getVariant().getHullSpec().getTags().toString(), 5f).setHighlight("HullTags:");
-				tooltip.addPara("VariantTags: "+ship.getVariant().getTags().toString(), 5f).setHighlight("VariantTags:");
+				tooltip.addPara("HullHints: "+hullSpec.getHints().toString(), 5f).setHighlight("HullHints:");
+				tooltip.addPara("VariantHints: "+variant.getHints().toString(), 5f).setHighlight("VariantHints:");
+				tooltip.addPara("HullTags: "+hullSpec.getTags().toString(), 5f).setHighlight("HullTags:");
+				tooltip.addPara("VariantTags: "+variant.getTags().toString(), 5f).setHighlight("VariantTags:");
 
 				tooltip.addSectionHeading("DEBUG INFO: SCRIPTS", header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 				for (EveryFrameScript script : Global.getSector().getScripts()) {
