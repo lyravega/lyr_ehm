@@ -1,11 +1,6 @@
 package lyravega.listeners;
 
-import static lyravega.misc.lyr_internals.events.onEnhance;
-import static lyravega.misc.lyr_internals.events.onInstall;
-import static lyravega.misc.lyr_internals.events.onNormalize;
-import static lyravega.misc.lyr_internals.events.onRemove;
-import static lyravega.misc.lyr_internals.events.onRestore;
-import static lyravega.misc.lyr_internals.events.onSuppress;
+import static lyravega.misc.lyr_internals.events.*;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,10 +10,9 @@ import java.util.Set;
 
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
-import lyravega.listeners.events.enhancedEvents;
-import lyravega.listeners.events.normalEvents;
-import lyravega.listeners.events.suppressedEvents;
+import lyravega.listeners.events.*;
 import lyravega.plugin.lyr_ehm;
 import lyravega.tools.lyr_logger;
 import lyravega.tools.lyr_uiTools;
@@ -44,7 +38,7 @@ public class lyr_shipTracker implements lyr_logger {
 	private final Set<String> enhancedMods = new HashSet<String>();
 	private final Set<String> embeddedMods = new HashSet<String>();
 	private final Set<String> suppressedMods = new HashSet<String>();
-	// private Set<String> weapons = new HashSet<String>();
+	private final Map<String, String> weapons = new HashMap<String, String>();
 	// private Map<String, ShipVariantAPI> moduleVariants = null;
 	private Iterator<String> iterator;
 	
@@ -58,7 +52,10 @@ public class lyr_shipTracker implements lyr_logger {
 		this.enhancedMods.addAll(variant.getSMods());
 		this.embeddedMods.addAll(variant.getSModdedBuiltIns());
 		this.suppressedMods.addAll(variant.getSuppressedMods());
-		// this.weapons.addAll(variant.getFittedWeaponSlots());
+
+		for (WeaponSlotAPI slot : variant.getHullSpec().getAllWeaponSlotsCopy()) {
+			weapons.put(slot.getId(), variant.getWeaponId(slot.getId()));
+		}
 	}
 
 	public void updateVariant(final ShipVariantAPI variant) {
@@ -67,18 +64,29 @@ public class lyr_shipTracker implements lyr_logger {
 		checkHullMods();
 		checkEnhancedMods();
 		checkSuppressedMods();
+		checkWeapons();
 	}
 	//#endregion
 	// END OF CONSTRUCTORS & ACCESSORS
 
 	// hull modification effects that implement any of the event interfaces are stored in these maps
+	public static final Map<String, weaponEvents> weaponEvents = new HashMap<String, weaponEvents>();
 	public static final Map<String, normalEvents> normalEvents = new HashMap<String, normalEvents>();
 	public static final Map<String, enhancedEvents> enhancedEvents = new HashMap<String, enhancedEvents>();
 	public static final Map<String, suppressedEvents> suppressedEvents = new HashMap<String, suppressedEvents>();
-	public static final Set<String> allRegistered = new HashSet<String>();
+	public static final Set<String> allModEvents = new HashSet<String>();
 
-	private static void onEvent(final String eventName, final ShipVariantAPI variant, final String hullModId) {
-		if (allRegistered.contains(hullModId)) switch (eventName) {
+	/**
+	 * Executes the hull modification's event method if applicable. They need to implement
+	 * the relative interfaces and its methods first
+	 * <p> If the hull modification doesn't have any events attached to it, then depending
+	 * on the setting of the mod, a drill sound will be played
+	 * @param eventName type of the event
+	 * @param variant of the ship
+	 * @param hullModId of the hull modification
+	 */
+	private static void onHullModEvent(final String eventName, final ShipVariantAPI variant, final String hullModId) {
+		if (allModEvents.contains(hullModId)) switch (eventName) {
 			case onInstall:		if (normalEvents.containsKey(hullModId)) normalEvents.get(hullModId).onInstall(variant); return;
 			case onRemove:		if (normalEvents.containsKey(hullModId)) normalEvents.get(hullModId).onRemove(variant); return;
 			case onEnhance:		if (enhancedEvents.containsKey(hullModId)) enhancedEvents.get(hullModId).onEnhance(variant); return;
@@ -89,6 +97,23 @@ public class lyr_shipTracker implements lyr_logger {
 		} else if (lyr_ehm.settings.getPlayDrillSoundForAll()) switch (eventName) {
 			case onInstall:		
 			case onRemove:		lyr_uiTools.playDrillSound(); return;
+			default: return;
+		}
+	}
+
+	/**
+	 * Broadcasts a weapon event to all installed hull modifications. The hull modifications
+	 * need to implement the relative interfaces and methods first
+	 * <p> Filtering needs to be done in the event method as this is a global broadcast to
+	 * all installed hull modifications
+	 * @param eventName type of the event
+	 * @param variant of the ship
+	 * @param weaponId of the weapon
+	 */
+	private static void onWeaponEvent(final String eventName, final ShipVariantAPI variant, final String weaponId) {
+		switch (eventName) {
+			case onWeaponInstall:	for (String hullModId: weaponEvents.keySet()) if (variant.hasHullMod(hullModId)) weaponEvents.get(hullModId).onWeaponInstall(variant, weaponId); return;
+			case onWeaponRemove:	for (String hullModId: weaponEvents.keySet()) if (variant.hasHullMod(hullModId)) weaponEvents.get(hullModId).onWeaponRemove(variant, weaponId); return;
 			default: return;
 		}
 	}
@@ -106,7 +131,7 @@ public class lyr_shipTracker implements lyr_logger {
 			if (hullMods.contains(hullModId)) continue;
 			if (suppressedMods.contains(hullModId)) { hullMods.add(hullModId); continue; }
 
-			hullMods.add(hullModId); onEvent(onInstall, variant, hullModId);
+			hullMods.add(hullModId); onHullModEvent(onInstall, variant, hullModId);
 			if (lyr_ehm.settings.getLogEventInfo()) logger.info(logPrefix+"ST-"+memberId+": Installed '"+hullModId+"'");
 		}
 
@@ -114,7 +139,7 @@ public class lyr_shipTracker implements lyr_logger {
 			if (variant.hasHullMod(hullModId)) continue;
 			if (variant.getSuppressedMods().contains(hullModId)) { iterator.remove(); continue; }
 
-			iterator.remove(); onEvent(onRemove, variant, hullModId);
+			iterator.remove(); onHullModEvent(onRemove, variant, hullModId);
 			if (lyr_ehm.settings.getLogEventInfo()) logger.info(logPrefix+"ST-"+memberId+": Removed '"+hullModId+"'");
 		}
 	}
@@ -124,7 +149,7 @@ public class lyr_shipTracker implements lyr_logger {
 			if (enhancedMods.contains(hullModId)) continue;
 			if (embeddedMods.contains(hullModId)) continue;
 
-			enhancedMods.add(hullModId); onEvent(onEnhance, variant, hullModId);
+			enhancedMods.add(hullModId); onHullModEvent(onEnhance, variant, hullModId);
 			if (lyr_ehm.settings.getLogEventInfo()) logger.info(logPrefix+"ST-"+memberId+": Enhanced '"+hullModId+"'");
 		}
 
@@ -132,21 +157,21 @@ public class lyr_shipTracker implements lyr_logger {
 			if (embeddedMods.contains(hullModId)) continue;
 			if (enhancedMods.contains(hullModId)) enhancedMods.remove(hullModId);
 
-			embeddedMods.add(hullModId); onEvent(onEnhance, variant, hullModId);
+			embeddedMods.add(hullModId); onHullModEvent(onEnhance, variant, hullModId);
 			if (lyr_ehm.settings.getLogEventInfo()) logger.info(logPrefix+"ST-"+memberId+": Enhanced embedded '"+hullModId+"'");
 		}
 
 		for (iterator = enhancedMods.iterator(); iterator.hasNext();) { final String hullModId = iterator.next();
 			if (variant.getSMods().contains(hullModId)) continue;
 
-			iterator.remove(); onEvent(onNormalize, variant, hullModId);
+			iterator.remove(); onHullModEvent(onNormalize, variant, hullModId);
 			if (lyr_ehm.settings.getLogEventInfo()) logger.info(logPrefix+"ST-"+memberId+": Normalized '"+hullModId+"'");
 		}
 
 		for (iterator = embeddedMods.iterator(); iterator.hasNext();) { final String hullModId = iterator.next();
 			if (variant.getSModdedBuiltIns().contains(hullModId)) continue;
 
-			iterator.remove(); onEvent(onNormalize, variant, hullModId);
+			iterator.remove(); onHullModEvent(onNormalize, variant, hullModId);
 			if (lyr_ehm.settings.getLogEventInfo()) logger.info(logPrefix+"ST-"+memberId+": Normalized embedded '"+hullModId+"'");
 		}
 	}
@@ -155,15 +180,42 @@ public class lyr_shipTracker implements lyr_logger {
 		for (final String hullModId : variant.getSuppressedMods()) {
 			if (suppressedMods.contains(hullModId)) continue;
 
-			suppressedMods.add(hullModId); onEvent(onSuppress, variant, hullModId);
+			suppressedMods.add(hullModId); onHullModEvent(onSuppress, variant, hullModId);
 			if (lyr_ehm.settings.getLogEventInfo()) logger.info(logPrefix+"ST-"+memberId+": Suppressed '"+hullModId+"'");
 		}
 
 		for (iterator = suppressedMods.iterator(); iterator.hasNext();) { final String hullModId = iterator.next();
 			if (variant.getSuppressedMods().contains(hullModId)) continue;
 
-			iterator.remove(); onEvent(onRestore, variant, hullModId);
+			iterator.remove(); onHullModEvent(onRestore, variant, hullModId);
 			if (lyr_ehm.settings.getLogEventInfo()) logger.info(logPrefix+"ST-"+memberId+": Restored '"+hullModId+"'");
+		}
+	}
+
+	private void checkWeapons() {
+		for (WeaponSlotAPI slot : variant.getHullSpec().getAllWeaponSlotsCopy()) {
+			String slotId = slot.getId();
+			String newWeaponId = variant.getWeaponId(slotId);
+			String oldWeaponId = weapons.get(slotId);
+
+			if (oldWeaponId == null && newWeaponId == null) continue;
+			else if (oldWeaponId == null && newWeaponId != null) {	// weapon installed
+				weapons.put(slotId, newWeaponId);
+				onWeaponEvent(onWeaponInstall, variant, newWeaponId);
+
+				if (lyr_ehm.settings.getLogEventInfo()) logger.info(logPrefix+"ST-"+memberId+": Installed '"+newWeaponId+"' on '"+slotId+"'");
+			} else if (oldWeaponId != null && newWeaponId == null) {	// weapon removed
+				weapons.put(slotId, null);
+				onWeaponEvent(onWeaponRemove, variant, oldWeaponId);
+
+				if (lyr_ehm.settings.getLogEventInfo()) logger.info(logPrefix+"ST-"+memberId+": Removed '"+oldWeaponId+"' from '"+slotId+"'");
+			} else if (oldWeaponId != null && newWeaponId != null && !oldWeaponId.equals(newWeaponId)) {	// weapon changed
+				weapons.put(slotId, newWeaponId);
+				onWeaponEvent(onWeaponInstall, variant, newWeaponId);
+				onWeaponEvent(onWeaponRemove, variant, oldWeaponId);
+
+				if (lyr_ehm.settings.getLogEventInfo()) logger.info(logPrefix+"ST-"+memberId+": Changed '"+oldWeaponId+"' on '"+slotId+"' with '"+newWeaponId+"'");
+			}	
 		}
 	}
 }

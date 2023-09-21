@@ -36,6 +36,19 @@ import lyravega.proxies.lyr_hullSpec;
  * @author lyravega
  */
 public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
+	//#region CUSTOM EVENTS
+	@Override
+	public void onWeaponInstall(ShipVariantAPI variant, String weaponId) {
+		if (adapterMap.keySet().contains(weaponId)) commitVariantChanges();
+	}
+
+	@Override
+	public void onWeaponRemove(ShipVariantAPI variant, String weaponId) {
+		if (adapterMap.keySet().contains(weaponId)) commitVariantChanges();
+	}
+	//#endregion
+	// END OF CUSTOM EVENTS
+
 	/**
 	 * An inner class to supply the adapters with relevant child data
 	 */
@@ -100,7 +113,6 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 		ShipVariantAPI variant = stats.getVariant();
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 		List<WeaponSlotAPI> shunts = hullSpec.getAllWeaponSlotsCopy();
-		boolean commitVariantChanges = false;
 
 		for (Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
 			WeaponSlotAPI slot = iterator.next();
@@ -130,14 +142,13 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 
 			switch (shuntId) {
 				case adapters.largeDual: case adapters.largeQuad: case adapters.largeTriple: case adapters.mediumDual:
-					commitVariantChanges = ehm_adaptSlot(hullSpec, shuntId, slotId);
+					ehm_adaptSlot(hullSpec, shuntId, slotId);
 					break;
 				default: break;
 			}
 		}
 
 		variant.setHullSpecAPI(hullSpec.retrieve());
-		if (commitVariantChanges && !_ehm_helpers.ehm_isGettingRestored(variant)) { commitVariantChanges = false; commitVariantChanges(); }
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION

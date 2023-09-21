@@ -248,6 +248,8 @@ public final class lyr_internals {
 			onEnhance = "onEnhance",
 			onNormalize = "onNormalize",
 			onSuppress = "onSuppress",
-			onRestore = "onRestore";
+			onRestore = "onRestore",
+			onWeaponInstall = "onWeaponInstall",
+			onWeaponRemove = "onWeaponRemove";
 	}
 }

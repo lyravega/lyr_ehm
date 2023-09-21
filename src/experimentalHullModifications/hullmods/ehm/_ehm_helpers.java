@@ -187,17 +187,6 @@ public class _ehm_helpers {
 		}; return false;
 	}
 
-	/**
-	 * Ship restoration may interfere with the method that refreshes the
-	 * ship display by triggering it unnecessarily. This check is used to
-	 * avoid it.
-	 * @param variant to check
-	 * @return true if the ship is getting restored
-	 */
-	public static boolean ehm_isGettingRestored(ShipVariantAPI variant) {
-		return !(variant.getPermaMods().contains(lyr_internals.id.hullmods.base) && !variant.getHullSpec().isBuiltInMod(lyr_internals.id.hullmods.base));	// when the ship is getting restored, hull spec won't have the base, but variant will
-	}
-
 	/** 
 	 * Activated shunts (decorative, built-in ones) are added to the weapon
 	 * groups by the game in some cases, like when the hullSpec is replaced.

@@ -37,6 +37,19 @@ import lyravega.proxies.lyr_hullSpec;
  * @author lyravega
  */
 public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
+	//#region CUSTOM EVENTS
+	@Override
+	public void onWeaponInstall(ShipVariantAPI variant, String weaponId) {
+		if (diverterConverterSet.contains(weaponId)) commitVariantChanges();
+	}
+
+	@Override
+	public void onWeaponRemove(ShipVariantAPI variant, String weaponId) {
+		if (diverterConverterSet.contains(weaponId)) commitVariantChanges();
+	}
+	//#endregion
+	// END OF CUSTOM EVENTS
+
 	/**
 	 * An inner class to supply the converters with relevant child data
 	 */
@@ -92,7 +105,6 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 		ShipVariantAPI variant = stats.getVariant();
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 		List<WeaponSlotAPI> shunts = hullSpec.getAllWeaponSlotsCopy();
-		boolean commitVariantChanges = false;
 
 		int slotPointsFromMods = ehm_slotPointsFromHullMods(variant);
 		int slotPoints = slotPointsFromMods;	// as hullMod methods are called several times, slotPoints accumulate correctly on subsequent call(s)
@@ -132,11 +144,11 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 					int cost = converterMap.get(shuntId).getChildCost();
 					if (slotPoints - cost < 0) break;
 					slotPoints -= cost;
-					commitVariantChanges = ehm_convertSlot(hullSpec, shuntId, slotId);
+					ehm_convertSlot(hullSpec, shuntId, slotId);
 					break;
 				case diverters.large: case diverters.medium: case diverters.small:
 					slotPoints += diverterMap.get(shuntId);
-					commitVariantChanges = ehm_deactivateSlot(hullSpec, shuntId, slotId);
+					ehm_deactivateSlot(hullSpec, shuntId, slotId);
 					break;
 				default: break;
 			}
@@ -145,7 +157,6 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 		stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullmods.diverterandconverter, Math.max(0, lyr_ehm.settings.getBaseSlotPointPenalty()*Math.min(slotPointsFromMods, slotPointsFromMods - slotPoints)));
 
 		variant.setHullSpecAPI(hullSpec.retrieve());
-		if (commitVariantChanges && !_ehm_helpers.ehm_isGettingRestored(variant)) { commitVariantChanges = false; commitVariantChanges(); }
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION

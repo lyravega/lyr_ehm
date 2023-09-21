@@ -32,21 +32,23 @@ import lyravega.plugin.lyr_ehm;
 public final class ehm_base extends _ehm_tracker {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
+		ehm_trackShip(stats);
+
 		ShipVariantAPI variant = stats.getVariant();
 		ShipHullSpecAPI hullSpec = variant.getHullSpec();
 
 		if (!hullSpec.isBuiltInMod(lyr_internals.id.hullmods.base) || !Misc.getDHullId(hullSpec).equals(hullSpec.getHullId())) {
 			variant.setHullSpecAPI(ehm_hullSpecClone(variant)); 
-			
+
+			_ehm_ar_base.ehm_preProcessShunts(stats);
+
 			if (!variant.getPermaMods().contains(lyr_internals.id.hullmods.base)) {	// to make this a one-time commit, and to avoid re-committing if/when the ship is getting restored
 				variant.addPermaMod(lyr_internals.id.hullmods.base, false);
 				commitVariantChanges(); playDrillSound();
 			}
 		}
 
-		_ehm_ar_base.ehm_preProcessShunts(stats);
 		_ehm_helpers.ehm_cleanWeaponGroupsUp(variant);
-		ehm_trackShip(stats);
 	}
 
 	@Override 

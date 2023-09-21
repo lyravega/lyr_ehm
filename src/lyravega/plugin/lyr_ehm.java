@@ -1,9 +1,10 @@
 package lyravega.plugin;
 
-import static lyravega.listeners.lyr_shipTracker.allRegistered;
+import static lyravega.listeners.lyr_shipTracker.allModEvents;
 import static lyravega.listeners.lyr_shipTracker.enhancedEvents;
 import static lyravega.listeners.lyr_shipTracker.normalEvents;
 import static lyravega.listeners.lyr_shipTracker.suppressedEvents;
+import static lyravega.listeners.lyr_shipTracker.weaponEvents;
 
 import java.util.Set;
 
@@ -28,6 +29,7 @@ import lyravega.listeners.lyr_tabListener;
 import lyravega.listeners.events.enhancedEvents;
 import lyravega.listeners.events.normalEvents;
 import lyravega.listeners.events.suppressedEvents;
+import lyravega.listeners.events.weaponEvents;
 import lyravega.misc.lyr_internals;
 import lyravega.scripts.lyr_fieldRepairsScript;
 import lyravega.tools.lyr_logger;
@@ -129,14 +131,15 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 
 			HullModEffect hullModEffect = hullModSpec.getEffect();
 
+			if (weaponEvents.class.isInstance(hullModEffect)) weaponEvents.put(hullModSpec.getId(), (weaponEvents) hullModEffect);
 			if (normalEvents.class.isInstance(hullModEffect)) normalEvents.put(hullModSpec.getId(), (normalEvents) hullModEffect);
 			if (enhancedEvents.class.isInstance(hullModEffect)) enhancedEvents.put(hullModSpec.getId(), (enhancedEvents) hullModEffect);
 			if (suppressedEvents.class.isInstance(hullModEffect)) suppressedEvents.put(hullModSpec.getId(), (suppressedEvents) hullModEffect);
 		}
 
-		allRegistered.addAll(normalEvents.keySet());
-		allRegistered.addAll(enhancedEvents.keySet());
-		allRegistered.addAll(suppressedEvents.keySet());
+		allModEvents.addAll(normalEvents.keySet());
+		allModEvents.addAll(enhancedEvents.keySet());
+		allModEvents.addAll(suppressedEvents.keySet());
 
 		logger.info(logPrefix + "Experimental hull modifications are registered");
 	}

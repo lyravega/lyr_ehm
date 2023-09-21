@@ -3,11 +3,9 @@ package experimentalHullModifications.hullmods.ehm_ar;
 import static lyravega.tools.lyr_uiTools.commitVariantChanges;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
@@ -34,11 +32,22 @@ import lyravega.proxies.lyr_hullSpec;
  * @author lyravega
  */
 public final class ehm_ar_launchtube extends _ehm_ar_base {
-	static final Set<String> mutableStatBonus = new HashSet<String>();
+	//#region CUSTOM EVENTS
+	@Override
+	public void onWeaponInstall(ShipVariantAPI variant, String weaponId) {
+		if (launchTubeMap.keySet().contains(weaponId)) commitVariantChanges();
+	}
+
+	@Override
+	public void onWeaponRemove(ShipVariantAPI variant, String weaponId) {
+		if (launchTubeMap.keySet().contains(weaponId)) commitVariantChanges();
+	}
+	//#endregion
+	// END OF CUSTOM EVENTS
+
 	static final Map<String, Float> launchTubeMap = new HashMap<String, Float>();
 	static {
 		launchTubeMap.put(lyr_internals.id.shunts.launchTubes.large, 1.0f);
-		mutableStatBonus.addAll(launchTubeMap.keySet());
 	}
 	
 	// com.fs.starfarer.api.impl.hullmods.ConvertedHangar
@@ -51,7 +60,6 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 		ShipVariantAPI variant = stats.getVariant();
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 		List<WeaponSlotAPI> shunts = hullSpec.getAllWeaponSlotsCopy();
-		boolean commitVariantChanges = false;
 
 		int fighterBayFlat = 0;
 
@@ -91,7 +99,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 
 			switch (shuntId) {
 				case launchTubes.large:
-					commitVariantChanges = ehm_deactivateSlot(hullSpec, shuntId, slotId);
+					ehm_deactivateSlot(hullSpec, shuntId, slotId);
 					break;
 				default: break;
 			}
@@ -100,7 +108,6 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 		stats.getNumFighterBays().modifyFlat(this.hullModSpecId, fighterBayFlat);
 
 		variant.setHullSpecAPI(hullSpec.retrieve());
-		if (commitVariantChanges && !_ehm_helpers.ehm_isGettingRestored(variant)) { commitVariantChanges = false; commitVariantChanges(); }
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION

@@ -22,7 +22,6 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
-import experimentalHullModifications.hullmods.ehm._ehm_helpers;
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_internals.id.shunts.capacitors;
 import lyravega.misc.lyr_internals.id.shunts.dissipators;
@@ -34,6 +33,19 @@ import lyravega.proxies.lyr_hullSpec;
  * @author lyravega
  */
 public final class ehm_ar_mutableshunt extends _ehm_ar_base {
+	//#region CUSTOM EVENTS
+	@Override
+	public void onWeaponInstall(ShipVariantAPI variant, String weaponId) {
+		if (fluxShuntSet.contains(weaponId)) commitVariantChanges();
+	}
+
+	@Override
+	public void onWeaponRemove(ShipVariantAPI variant, String weaponId) {
+		if (fluxShuntSet.contains(weaponId)) commitVariantChanges();
+	}
+	//#endregion
+	// END OF CUSTOM EVENTS
+
 	static final Set<String> fluxShuntSet = new HashSet<String>();
 	static final Map<String, Float[]> capacitorMap = new HashMap<String, Float[]>();
 	static final Map<String, Float[]> dissipatorMap = new HashMap<String, Float[]>();
@@ -54,7 +66,6 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 		ShipVariantAPI variant = stats.getVariant();
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 		List<WeaponSlotAPI> shunts = hullSpec.getAllWeaponSlotsCopy();
-		boolean commitVariantChanges = false;
 
 		float[] totalFluxCapacityBonus = {1.0f, 0.0f};	// [0] mult, [1] flat
 		float[] totalFluxDissipationBonus = {1.0f, 0.0f};	// [0] mult, [1] flat
@@ -94,7 +105,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 			switch (shuntId) {
 				case capacitors.large: case capacitors.medium: case capacitors.small:
 				case dissipators.large: case dissipators.medium: case dissipators.small:
-					commitVariantChanges = ehm_deactivateSlot(hullSpec, shuntId, slotId);
+					ehm_deactivateSlot(hullSpec, shuntId, slotId);
 					break;
 				default: break;
 			}
@@ -106,7 +117,6 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 		stats.getFluxDissipation().modifyFlat(this.hullModSpecId, totalFluxDissipationBonus[1]);
 
 		variant.setHullSpecAPI(hullSpec.retrieve());
-		if (commitVariantChanges && !_ehm_helpers.ehm_isGettingRestored(variant)) { commitVariantChanges = false; commitVariantChanges(); }
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION

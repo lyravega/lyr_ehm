@@ -3,16 +3,14 @@ package experimentalHullModifications.hullmods.ehm_ar;
 import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_diverterandconverter.converterMap;
 import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_diverterandconverter.diverterConverterSet;
 import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_diverterandconverter.diverterMap;
-import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_launchtube.launchTubeMap;
-import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.capacitorMap;
-import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.dissipatorMap;
+// import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_launchtube.launchTubeMap;
+// import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.capacitorMap;
+// import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.dissipatorMap;
 import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.adapterMap;
 import static lyravega.tools.lyr_uiTools.commitVariantChanges;
 import static lyravega.tools.lyr_uiTools.playDrillSound;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,8 +27,6 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
-import com.fs.starfarer.api.impl.campaign.ids.Stats;
-import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
@@ -42,14 +38,8 @@ import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.chil
 import experimentalHullModifications.hullmods.ehm_mr.ehm_mr_auxilarygenerators;
 import experimentalHullModifications.hullmods.ehm_mr.ehm_mr_overengineered;
 import lyravega.listeners.events.normalEvents;
+import lyravega.listeners.events.weaponEvents;
 import lyravega.misc.lyr_internals;
-import lyravega.misc.lyr_internals.id.hullmods;
-import lyravega.misc.lyr_internals.id.shunts.adapters;
-import lyravega.misc.lyr_internals.id.shunts.capacitors;
-import lyravega.misc.lyr_internals.id.shunts.converters;
-import lyravega.misc.lyr_internals.id.shunts.dissipators;
-import lyravega.misc.lyr_internals.id.shunts.diverters;
-import lyravega.misc.lyr_internals.id.shunts.launchTubes;
 import lyravega.misc.lyr_tooltip.header;
 import lyravega.misc.lyr_tooltip.text;
 import lyravega.misc.lyr_vectorUtility;
@@ -69,7 +59,7 @@ import lyravega.proxies.lyr_weaponSlot.slotTypeConstants;
  * @see {@link experimentalHullModifications.hullmods.ehm_sc._ehm_sc_base _ehm_sc_base} for shield cosmetic base
  * @author lyravega
  */
-public class _ehm_ar_base extends _ehm_base implements normalEvents {
+public class _ehm_ar_base extends _ehm_base implements normalEvents, weaponEvents {
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstall(ShipVariantAPI variant) {
@@ -81,144 +71,19 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		variant.setHullSpecAPI(ehm_activatorRemoval_lazy(variant));
 		commitVariantChanges(); playDrillSound();
 	}
+
+	@Override public void onWeaponInstall(ShipVariantAPI variant, String weaponId) {}
+
+	@Override public void onWeaponRemove(ShipVariantAPI variant, String weaponId) {}
 	//#endregion
 	// END OF CUSTOM EVENTS
 
 	private static final Pattern pattern = Pattern.compile("WS[ 0-9]{4}");
 	private static Matcher matcher;
 
-	@Deprecated
-	public static final void ehm_processShunts(MutableShipStatsAPI stats, boolean isGettingRestored) {
-		ShipVariantAPI variant = stats.getVariant();
-		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
-
-		boolean commitVariantChanges = false;
-
-		// primarily to deal with stuff on load
-		for (Iterator<String> iterator = variant.getFittedWeaponSlots().iterator(); iterator.hasNext();) {
-			String slotId = iterator.next();
-			if (variant.getSlot(slotId) != null) continue;
-			matcher = pattern.matcher(slotId);
-			if (matcher.find()) slotId = matcher.group();
-			else continue;	// this should never happen
-
-			if (!slotId.startsWith(lyr_internals.affix.normalSlot)) continue;
-			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
-			// if (!shuntSpec.hasTag(lyr_internals.tag.experimental)) { iterator.remove(); continue; }
-			if (shuntSpec.getSize() != variant.getSlot(slotId).getSlotSize()) continue;
-
-			String shuntId = shuntSpec.getWeaponId();
-			if (adapterMap.containsKey(shuntId)) commitVariantChanges = ehm_adaptSlot(hullSpec, shuntId, slotId);
-			else if (converterMap.containsKey(shuntId)) commitVariantChanges = ehm_convertSlot(hullSpec, shuntId, slotId);
-		}
-
-		boolean hasAdapterActivator = variant.hasHullMod(hullmods.stepdownadapter);
-		boolean hasMutableActivator = variant.hasHullMod(hullmods.mutableshunt);
-		boolean hasConverterActivator = variant.hasHullMod(hullmods.diverterandconverter);
-		if (!hasAdapterActivator && !hasMutableActivator && !hasConverterActivator) return;
-
-		List<WeaponSlotAPI> shunts = hullSpec.getAllWeaponSlotsCopy();
-
-		float[] totalFluxCapacityBonus = {1.0f, 0.0f};	// [0] mult, [1] flat
-		float[] totalFluxDissipationBonus = {1.0f, 0.0f};	// [0] mult, [1] flat
-		int fighterBayFlat = 0;
-		int slotPointsFromMods = hasConverterActivator ? ehm_slotPointsFromHullMods(variant) : 0;
-		int slotPoints = slotPointsFromMods;	// as hullMod methods are called several times, slotPoints accumulate correctly on subsequent call(s)
-		
-		for (Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
-			WeaponSlotAPI slot = iterator.next();
-			// if (slot.isDecorative()) continue;
-
-			String slotId = slot.getId();
-			if (variant.getWeaponSpec(slotId) == null) { iterator.remove(); continue; }
-
-			// if (!slotId.startsWith(lyr_internals.affix.normalSlot)) continue;
-			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
-			if (shuntSpec.getSize() != slot.getSlotSize()) { iterator.remove(); continue; }
-			if (!shuntSpec.hasTag(lyr_internals.tag.experimental)) { iterator.remove(); continue; }
-
-			String shuntId = shuntSpec.getWeaponId();
-			switch (shuntId) {
-				case adapters.largeDual: case adapters.largeQuad: case adapters.largeTriple: case adapters.mediumDual:
-					if (!hasAdapterActivator || !slotId.startsWith(lyr_internals.affix.normalSlot)) { iterator.remove(); break; }
-					// hullSpec.addBuiltInWeapon(slotId, shuntId);
-					break;
-				case converters.mediumToLarge: case converters.smallToLarge: case converters.smallToMedium:
-					if (!hasConverterActivator || !slotId.startsWith(lyr_internals.affix.normalSlot)) { iterator.remove(); break; }
-					if (slot.isDecorative()) slotPoints -= converterMap.get(shuntId).getChildCost();
-					// hullSpec.addBuiltInWeapon(slotId, shuntId);
-					break;
-				case diverters.large: case diverters.medium: case diverters.small:
-					if (!hasConverterActivator || slotId.startsWith(lyr_internals.affix.convertedSlot)) { iterator.remove(); break; }
-					if (slot.isDecorative()) slotPoints += diverterMap.get(shuntId);
-					// hullSpec.addBuiltInWeapon(slotId, shuntId);
-					break;
-				case capacitors.large: case capacitors.medium: case capacitors.small:
-					if (!hasMutableActivator || slotId.startsWith(lyr_internals.affix.convertedSlot)) { iterator.remove(); break; }
-					totalFluxCapacityBonus[0] += capacitorMap.get(shuntId)[0];
-					totalFluxCapacityBonus[1] += capacitorMap.get(shuntId)[1];
-					// hullSpec.addBuiltInWeapon(slotId, shuntId);
-					break;
-				case dissipators.large: case dissipators.medium: case dissipators.small:
-					if (!hasMutableActivator || slotId.startsWith(lyr_internals.affix.convertedSlot)) { iterator.remove(); break; }
-					totalFluxDissipationBonus[0] += dissipatorMap.get(shuntId)[0];
-					totalFluxDissipationBonus[1] += dissipatorMap.get(shuntId)[1];
-					// hullSpec.addBuiltInWeapon(slotId, shuntId);
-					break;
-				case launchTubes.large:
-					if (!hasMutableActivator || slotId.startsWith(lyr_internals.affix.convertedSlot)) { iterator.remove(); break; }
-					fighterBayFlat += launchTubeMap.get(shuntId);
-					// hullSpec.addBuiltInWeapon(slotId, shuntId);
-					break;
-				default: break;
-			}
-		}
-
-		for (Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
-			WeaponSlotAPI slot = iterator.next();
-			if (slot.isDecorative()) continue;
-			
-			String slotId = slot.getId();
-			String shuntId = variant.getWeaponSpec(slotId).getWeaponId();
-
-			switch (shuntId) {
-				case adapters.largeDual: case adapters.largeQuad: case adapters.largeTriple: case adapters.mediumDual:
-					commitVariantChanges = ehm_adaptSlot(hullSpec, shuntId, slotId);
-					break;
-				case converters.mediumToLarge: case converters.smallToLarge: case converters.smallToMedium:
-					int cost = converterMap.get(shuntId).getChildCost();
-					if (slotPoints - cost < 0) break;
-					slotPoints -= cost;
-					commitVariantChanges = ehm_convertSlot(hullSpec, shuntId, slotId);
-					break;
-				case diverters.large: case diverters.medium: case diverters.small:
-					slotPoints += diverterMap.get(shuntId);
-				case capacitors.large: case capacitors.medium: case capacitors.small:
-				case dissipators.large: case dissipators.medium: case dissipators.small:
-				case launchTubes.large:
-					commitVariantChanges = ehm_deactivateSlot(hullSpec, shuntId, slotId);
-					break;
-				default: break;
-			}
-		}
-
-		// if (hasMutableActivator) {
-			stats.getFluxCapacity().modifyMult(hullmods.mutableshunt, totalFluxCapacityBonus[0]);
-			stats.getFluxCapacity().modifyFlat(hullmods.mutableshunt, totalFluxCapacityBonus[1]);
-			stats.getFluxDissipation().modifyMult(hullmods.mutableshunt, totalFluxDissipationBonus[0]);
-			stats.getFluxDissipation().modifyFlat(hullmods.mutableshunt, totalFluxDissipationBonus[1]);
-			stats.getNumFighterBays().modifyFlat(hullmods.mutableshunt, fighterBayFlat);
-		// }
-		stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullmods.diverterandconverter, Math.max(0, lyr_ehm.settings.getBaseSlotPointPenalty()*Math.min(slotPointsFromMods, slotPointsFromMods - slotPoints)));
-
-		variant.setHullSpecAPI(hullSpec.retrieve()); 
-		if (commitVariantChanges && !_ehm_helpers.ehm_isGettingRestored(variant)) { commitVariantChanges = false; commitVariantChanges(); }
-	}
-
 	public static final void ehm_preProcessShunts(MutableShipStatsAPI stats) {
 		ShipVariantAPI variant = stats.getVariant();
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
-		boolean commitVariantChanges = false;
 
 		// primarily to deal with stuff on load
 		for (String slotId : variant.getFittedWeaponSlots()) {
@@ -232,15 +97,14 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 			if (shuntSpec.getSize() != variant.getSlot(slotId).getSlotSize()) continue;
 
 			String shuntId = shuntSpec.getWeaponId();
-			if (adapterMap.containsKey(shuntId)) commitVariantChanges = ehm_adaptSlot(hullSpec, shuntId, slotId);
-			else if (converterMap.containsKey(shuntId)) commitVariantChanges = ehm_convertSlot(hullSpec, shuntId, slotId);
+			if (adapterMap.containsKey(shuntId)) ehm_adaptSlot(hullSpec, shuntId, slotId);
+			else if (converterMap.containsKey(shuntId)) ehm_convertSlot(hullSpec, shuntId, slotId);
 		}
 
 		variant.setHullSpecAPI(hullSpec.retrieve());
-		if (commitVariantChanges && !_ehm_helpers.ehm_isGettingRestored(variant)) { commitVariantChanges = false; commitVariantChanges(); }
 	}
 
-	protected static final boolean ehm_adaptSlot(lyr_hullSpec hullSpec, String shuntId, String slotId) {
+	protected static final void ehm_adaptSlot(lyr_hullSpec hullSpec, String shuntId, String slotId) {
 		childrenParameters childrenParameters = adapterMap.get(shuntId);
 		lyr_weaponSlot parentSlot = hullSpec.getWeaponSlot(slotId);
 
@@ -260,10 +124,9 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		hullSpec.addBuiltInWeapon(slotId, shuntId);
 		parentSlot.setWeaponType(WeaponType.DECORATIVE);
 		if (lyr_ehm.settings.getHideAdapters()) parentSlot.setSlotType(slotTypeConstants.hidden);
-		return true;
 	}
 
-	protected static final boolean ehm_convertSlot(lyr_hullSpec hullSpec, String shuntId, String slotId) {
+	protected static final void ehm_convertSlot(lyr_hullSpec hullSpec, String shuntId, String slotId) {
 		// childParameters childParameters = converters.get(shuntId);
 		// int childCost = childParameters.getChildCost();
 		// if (slotPoints != null && slotPoints - childCost < 0) return slotPoints - childCost;
@@ -284,13 +147,11 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents {
 		hullSpec.addBuiltInWeapon(slotId, shuntId);
 		parentSlot.setWeaponType(WeaponType.DECORATIVE);
 		if (lyr_ehm.settings.getHideConverters()) parentSlot.setSlotType(slotTypeConstants.hidden);
-		return true;
 	}
 
-	protected static final boolean ehm_deactivateSlot(lyr_hullSpec hullSpec, String shuntId, String slotId) {
+	protected static final void ehm_deactivateSlot(lyr_hullSpec hullSpec, String shuntId, String slotId) {
 		if (shuntId != null) hullSpec.addBuiltInWeapon(slotId, shuntId);
 		hullSpec.getWeaponSlot(slotId).setWeaponType(WeaponType.DECORATIVE);
-		return true;
 	}
 
 	protected static final int ehm_slotPointsFromHullMods(ShipVariantAPI variant) {
