@@ -1,4 +1,4 @@
-Version 0.8.3.1
+Version 0.8.4
 
 - Fixed an issue with ship restoration that lagged the game if the ship had any activated slot shunts
 - Fixed launch tube description
