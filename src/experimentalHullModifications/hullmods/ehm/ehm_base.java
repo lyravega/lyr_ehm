@@ -16,6 +16,7 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
 import experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base;
+import lyravega.listeners.lyr_fleetTracker;
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_tooltip.header;
 import lyravega.misc.lyr_tooltip.text;
@@ -29,20 +30,26 @@ import lyravega.plugin.lyr_ehm;
  * @category Base Hull Modification 
  * @author lyravega
  */
-public final class ehm_base extends _ehm_tracker {
+public final class ehm_base extends _ehm_base {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		ehm_trackShip(stats);
-
 		ShipVariantAPI variant = stats.getVariant();
 		ShipHullSpecAPI hullSpec = variant.getHullSpec();
 
+		lyr_fleetTracker.updateShipTracker(stats);	// if this is done after the block below, it'll create multiple trackers for ships with a captain
+
 		if (!hullSpec.isBuiltInMod(lyr_internals.id.hullmods.base) || !Misc.getDHullId(hullSpec).equals(hullSpec.getHullId())) {
-			variant.setHullSpecAPI(ehm_hullSpecClone(variant)); 
+			variant.setHullSpecAPI(ehm_hullSpecClone(variant));
 
 			_ehm_ar_base.ehm_preProcessShunts(stats);
 
 			if (!variant.getPermaMods().contains(lyr_internals.id.hullmods.base)) {	// to make this a one-time commit, and to avoid re-committing if/when the ship is getting restored
+				// for (String moduleSlot : variant.getStationModules().keySet()) {
+				// 	ShipVariantAPI moduleVariant = variant.getModuleVariant(moduleSlot);
+
+				// 	if (!moduleVariant.getPermaMods().contains(lyr_internals.id.hullmods.base)) moduleVariant.addPermaMod(lyr_internals.id.hullmods.base, false);
+				// }
+
 				variant.addPermaMod(lyr_internals.id.hullmods.base, false);
 				commitVariantChanges(); playDrillSound();
 			}
@@ -53,7 +60,7 @@ public final class ehm_base extends _ehm_tracker {
 
 	@Override 
 	public void applyEffectsAfterShipCreation(ShipAPI ship, String hullModSpecId) {
-		ehm_trackShip(ship);
+		lyr_fleetTracker.updateShipTracker(ship);
 	}
 
 	@Override
@@ -91,6 +98,7 @@ public final class ehm_base extends _ehm_tracker {
 				tooltip.addPara("Hull ID: "+hullSpec.getHullId(), 5f).setHighlight("Hull ID:");
 				tooltip.addPara("Member ID: "+ship.getFleetMemberId(), 5f).setHighlight("Member ID:");
 				tooltip.addPara("isModule: "+!Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy().contains(ship.getFleetMember()), 5f).setHighlight("isModule:");
+				tooltip.addPara("isParent: "+_ehm_helpers.isParent(ship), 5f).setHighlight("isParent:");
 				tooltip.addPara("HullHints: "+hullSpec.getHints().toString(), 5f).setHighlight("HullHints:");
 				tooltip.addPara("VariantHints: "+variant.getHints().toString(), 5f).setHighlight("VariantHints:");
 				tooltip.addPara("HullTags: "+hullSpec.getTags().toString(), 5f).setHighlight("HullTags:");

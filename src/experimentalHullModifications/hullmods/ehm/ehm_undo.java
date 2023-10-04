@@ -10,6 +10,7 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
+import lyravega.listeners.lyr_fleetTracker;
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_tooltip.header;
 import lyravega.misc.lyr_tooltip.text;
@@ -20,12 +21,12 @@ import lyravega.misc.lyr_tooltip.text;
  * @category Base Hull Un-Modification
  * @author lyravega
  */
-public final class ehm_undo extends _ehm_tracker {
+public final class ehm_undo extends _ehm_base {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
-		
-		ehm_stopTracking(stats);
+
+		lyr_fleetTracker.terminateShipTracker(stats);
 
 		variant.getHullMods().remove(lyr_internals.id.hullmods.base);
 		variant.getPermaMods().remove(lyr_internals.id.hullmods.base);

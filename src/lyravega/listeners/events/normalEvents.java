@@ -2,7 +2,6 @@ package lyravega.listeners.events;
 
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 
-import experimentalHullModifications.hullmods.ehm._ehm_tracker;
 import lyravega.listeners.lyr_shipTracker;
 
 /**
@@ -10,7 +9,6 @@ import lyravega.listeners.lyr_shipTracker;
  * in this interface will be called if the hull modification's effect implements it.
  * <p> The hull modifications are registered as having this interface implemented during
  * {@link lyravega.plugin.lyr_ehm#onApplicationLoad() onApplicationLoad()}
- * @see {@link _ehm_tracker Tracker Base} the hull modification base with ship tracking methods and fleet tracking
  * @see {@link lyr_shipTracker Ship Tracker} to cache the old variants and compare them with the newer ones
  * @author lyravega
  */
