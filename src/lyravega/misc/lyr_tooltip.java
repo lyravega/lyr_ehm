@@ -26,6 +26,7 @@ public class lyr_tooltip {
 			hasAnyExperimentalBuiltIn = {"Cannot be used due to a built-in experimental hull modification", "built-in"},
 			hasLogisticsOverhaul = {"Cannot be installed due to ship having completely overhauled for logistics usage", "overhauled for logistics"},
 			isModule = {"Cannot be installed on modules", "modules"},
+			isParent = {"Cannot be installed on module ships", "module ships"},
 			noShields = {"Cannot be installed on ships that do not utilize shields", "shields"},
 			hasPhase = {"Cannot be installed on ships equipped with a phase cloak", "phase cloak"},
 			noWings = {"Cannot be installed on ships with no fighter bays", "no fighter bays"},

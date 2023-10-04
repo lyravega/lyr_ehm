@@ -228,6 +228,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 
 			if (!_ehm_helpers.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
 			if (_ehm_helpers.isModule(ship)) tooltip.addPara(text.isModule[0], text.padding).setHighlight(text.isModule[1]);
+			if (_ehm_helpers.isParent(ship)) tooltip.addPara(text.isParent[0], text.padding).setHighlight(text.isParent[1]);
 			if ((!ship.getVariant().getSMods().contains(this.hullModSpecId) && _ehm_helpers.hasModularHullmods(ship, this.hullModSpecId))
 			|| _ehm_helpers.hasWeapons(ship)
 			|| _ehm_helpers.hasAnyFittedWings(ship)
@@ -250,6 +251,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 
 		if (!_ehm_helpers.hasRetrofitBaseBuiltIn(ship)) return false;
 		if (_ehm_helpers.isModule(ship)) return false;
+		if (_ehm_helpers.isParent(ship)) return false;
 		if (!ship.getVariant().getSMods().contains(this.hullModSpecId) && _ehm_helpers.hasModularHullmods(ship, this.hullModSpecId)) return false;
 		if (_ehm_helpers.hasWeapons(ship)) return false;
 		if (_ehm_helpers.hasAnyFittedWings(ship)) return false;

@@ -78,7 +78,7 @@ public class _ehm_helpers {
 	 * @return true if the ship is a parent; a ship with modules
 	 */
 	public static boolean isParent(ShipAPI ship) {
-		return ship.getVariant().getStationModules() != null;
+		return ship.getVariant().getStationModules().size() > 0;
 	}
 
 	/**

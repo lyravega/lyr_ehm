@@ -1,6 +1,6 @@
 Version 0.8.5
 
-- 
+- Changed "Logistics Overhaul" so that it cannot be installed on module-ships (for now)
 
 
 Version 0.8.4
