@@ -31,9 +31,26 @@ public abstract class _lyr_tabListener extends _lyr_sectorListener implements Co
 		this.executeOnOpenOnce = executeOnOpenOnce;
 	}
 
+	/**
+	 * Called when the target tab is opened
+	 */
 	public abstract void onOpen();
 
+	/**
+	 * Called when the target tab is closed
+	 */
 	public abstract void onClose();
+
+	/**
+	 * Alternative to {@code advance(amount)}, if such a method is necessary. Called
+	 * during {@code advance(amount)} is being executed, as long as the target tab
+	 * is the correct one. If not, the script terminates itself and calls {@code onClose()}
+	 * <p> Abstraction is required to ensure {@code onClose()} executes properly as
+	 * it is detected through the {@code advance(amount)}. Overriding it would break
+	 * the detection, hence the abstraction
+	 * @param amount
+	 */
+	public abstract void onAdvance(float amount);
 
 	//#region CoreUITabListener
 	@Override
@@ -60,7 +77,7 @@ public abstract class _lyr_tabListener extends _lyr_sectorListener implements Co
 
 	@Override
 	public final void advance(float amount) {
-		if (Global.getSector().getCampaignUI().getCurrentCoreTab() == targetTab) return;
+		if (Global.getSector().getCampaignUI().getCurrentCoreTab() == targetTab) { onAdvance(amount); return; }
 
 		this.cleanup();
 	}
