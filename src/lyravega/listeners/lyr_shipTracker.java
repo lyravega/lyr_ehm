@@ -56,6 +56,16 @@ public class lyr_shipTracker implements lyr_logger {
 
 	ShipVariantAPI getVariant() { return this.variant; }
 
+	/**
+	 * Updates the stored variant, and then compares the hullmods and weapons
+	 * cached from the old variant. If the relevant hullmods have any event
+	 * methods, they will be called upon. See below for details on those
+	 * @param variant to update and compare
+	 * @see {@link weaponEvents} for broadcasted weapon install/remove events
+	 * @see {@link normalEvents} for hullmod install/remove events
+	 * @see {@link enhancedEvents} for hullmod enhance/normalize events
+	 * @see {@link suppressedEvents} for hullmod suppressed/restored events
+	 */
 	public void updateVariant(final ShipVariantAPI variant) {
 		this.variant = variant;
 
