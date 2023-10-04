@@ -24,8 +24,9 @@ import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.thoughtworks.xstream.XStream;
 
 import experimentalHullModifications.abilities.ehm_ability;
-import lyravega.listeners.lyr_colonyInteractionListener;
-import lyravega.listeners.lyr_tabListener;
+import experimentalHullModifications.abilities.listeners.ehm_submarketInjector;
+import experimentalHullModifications.abilities.listeners.ehm_shuntInjector;
+import lyravega.listeners.lyr_fleetTracker;
 import lyravega.listeners.events.enhancedEvents;
 import lyravega.listeners.events.normalEvents;
 import lyravega.listeners.events.suppressedEvents;
@@ -46,6 +47,7 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 		updateBlueprints();
 		replaceFieldRepairsScript();
 		attachShuntAccessListener();
+		lyr_fleetTracker.get().attach(true);
 	}
 
 	@Override
@@ -59,8 +61,8 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 	public void configureXStream(XStream x) {
 		x.alias("FieldRepairsScript", lyr_fieldRepairsScript.class);
 		x.alias("data.abilities.ehm_ability", ehm_ability.class);	// remember to use this for serialized shit
-		x.alias("lyr_tabListener", lyr_tabListener.class);	// added transient, but just in case
-		x.alias("lyr_colonyInteractionListener", lyr_colonyInteractionListener.class);	// added transient, but just in case
+		x.alias("ehm_refitTabListener", ehm_shuntInjector.class);	// added transient, but just in case
+		x.alias("ehm_colonyInteractionListener", ehm_submarketInjector.class);	// added transient, but just in case
 	}
 
 	/**
@@ -176,12 +178,11 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 	}
 
 	static void attachShuntAccessListener() {
-		lyr_tabListener.detach();
-		lyr_colonyInteractionListener.detach();
+		if (!Global.getSector().getPlayerFleet().getAbility(lyr_internals.id.ability).isActive()) return;
 
 		switch (settings.getShuntAvailability()) {
-			case "Always": lyr_tabListener.attach(true); break;
-			case "Submarket": lyr_colonyInteractionListener.attach(true); break;
+			case "Always": ehm_submarketInjector.get().detach(); ehm_shuntInjector.get().attach(true); break;
+			case "Submarket": ehm_shuntInjector.get().detach(); ehm_submarketInjector.get().attach(true); break;
 			default: break;
 		}
 	}

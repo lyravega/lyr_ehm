@@ -13,6 +13,7 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
 import lyravega.listeners.events.*;
+import lyravega.misc.lyr_internals;
 import lyravega.plugin.lyr_ehm;
 import lyravega.tools.lyr_logger;
 import lyravega.tools.lyr_uiTools;
@@ -47,7 +48,7 @@ public class lyr_shipTracker implements lyr_logger {
 	public lyr_shipTracker(final ShipAPI ship) {
 		this.variant = ship.getVariant();
 		// this.hullSpec = variant.getHullSpec();
-		this.memberId = ship.getFleetMemberId();
+		this.memberId = getId();
 		this.hullMods.addAll(variant.getHullMods());
 		this.enhancedMods.addAll(variant.getSMods());
 		this.embeddedMods.addAll(variant.getSModdedBuiltIns());
@@ -56,6 +57,26 @@ public class lyr_shipTracker implements lyr_logger {
 		for (WeaponSlotAPI slot : variant.getHullSpec().getAllWeaponSlotsCopy()) {
 			weapons.put(slot.getId(), variant.getWeaponId(slot.getId()));
 		}
+	}
+
+	public lyr_shipTracker(final ShipVariantAPI variant) {
+		this.variant = variant;
+		// this.hullSpec = variant.getHullSpec();
+		this.memberId = getId();
+		this.hullMods.addAll(variant.getHullMods());
+		this.enhancedMods.addAll(variant.getSMods());
+		this.embeddedMods.addAll(variant.getSModdedBuiltIns());
+		this.suppressedMods.addAll(variant.getSuppressedMods());
+
+		for (WeaponSlotAPI slot : variant.getHullSpec().getAllWeaponSlotsCopy()) {
+			weapons.put(slot.getId(), variant.getWeaponId(slot.getId()));
+		}
+	}
+
+	public String getId() {
+		for (String tag : this.variant.getTags())
+			if (tag.startsWith(lyr_internals.uuid.shipPrefix)) return tag.substring(lyr_internals.uuid.shipPrefix.length());
+		return null;
 	}
 
 	public void updateVariant(final ShipVariantAPI variant) {

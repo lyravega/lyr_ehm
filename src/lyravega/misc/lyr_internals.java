@@ -241,6 +241,13 @@ public final class lyr_internals {
 			engineCosmetic = "ehm_ec_";	// must match hullmod id in .csv
 	}
 
+	public static final class uuid {
+		public static final String
+			prefix = "lyr_ID",
+			shipPrefix = "lyr_ID-",
+			parentPrefix = "lyr_ID+";
+	}
+
 	public static final class events {
 		public static final String 
 			onInstall = "onInstall",

@@ -7,16 +7,16 @@ import com.fs.starfarer.api.impl.campaign.abilities.BaseToggleAbility;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
-import lyravega.listeners.lyr_colonyInteractionListener;
-import lyravega.listeners.lyr_tabListener;
+import experimentalHullModifications.abilities.listeners.ehm_submarketInjector;
+import experimentalHullModifications.abilities.listeners.ehm_shuntInjector;
 import lyravega.misc.lyr_internals;
 import lyravega.plugin.lyr_ehm;
 import lyravega.plugin.lyr_settings;
 import lyravega.tools.lyr_logger;
 
 /**
- * A toggle ability that works in conjunction with {@link lyr_colonyInteractionListener
- * interactionListener} or with {@link lyr_tabListener tabListener} to determine how to
+ * A toggle ability that works in conjunction with {@link ehm_submarketInjector
+ * interactionListener} or with {@link ehm_shuntInjector tabListener} to determine how to
  * display the slot shunts. The option {@link lyr_settings#shuntAvailability
  * shuntAvailability} controls the display mode.
  * <p> {@link experimentalHullModifications.submarkets.ehm_submarket Slot shunt submarket}
@@ -33,7 +33,7 @@ public final class ehm_ability extends BaseToggleAbility implements lyr_logger {
 			default: return null;
 		}
 	}
-	
+
 	@Override
 	protected String getDeactivationText() {
 		return null;
@@ -45,21 +45,21 @@ public final class ehm_ability extends BaseToggleAbility implements lyr_logger {
 	@Override
 	protected void activateImpl() {
 		switch (lyr_ehm.settings.getShuntAvailability()) {
-			case "Always": lyr_tabListener.attach(true); break;
-			case "Submarket": lyr_colonyInteractionListener.attach(true); break;
+			case "Always": ehm_shuntInjector.get().attach(true); break;
+			case "Submarket": ehm_submarketInjector.get().attach(true); break;
 			default: break;
 		}
 	}
-	
+
 	@Override
 	protected void deactivateImpl() {
 		switch (lyr_ehm.settings.getShuntAvailability()) {
-			case "Always": lyr_tabListener.detach(); break;
-			case "Submarket": lyr_colonyInteractionListener.detach(); break;
+			case "Always": ehm_shuntInjector.get().detach(); break;
+			case "Submarket": ehm_submarketInjector.get().detach(); break;
 			default: break;
 		}
 	}
-	
+
 	@Override
 	protected void cleanupImpl() {}
 
@@ -67,7 +67,7 @@ public final class ehm_ability extends BaseToggleAbility implements lyr_logger {
 	public boolean showProgressIndicator() {
 		return false;
 	}
-	
+
 	@Override
 	public boolean showActiveIndicator() {
 		return isActive();
