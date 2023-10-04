@@ -24,9 +24,9 @@ import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.thoughtworks.xstream.XStream;
 
 import experimentalHullModifications.abilities.ehm_ability;
+import experimentalHullModifications.abilities.listeners.ehm_shuntInjector;
 import experimentalHullModifications.abilities.listeners.ehm_submarketInjector;
 import experimentalHullModifications.hullmods.ehm._ehm_helpers;
-import experimentalHullModifications.abilities.listeners.ehm_shuntInjector;
 import lyravega.listeners.lyr_fleetTracker;
 import lyravega.listeners.events.enhancedEvents;
 import lyravega.listeners.events.normalEvents;

@@ -49,4 +49,6 @@ public final class ehm_shuntInjector extends _lyr_tabListener {
 			if (ehm_submarket.shunts.contains(weaponCargo.getItem())) playerCargo.removeWeapons(weaponCargo.getItem(), weaponCargo.getCount());
 		}
 	}
+
+	@Override public void onAdvance(float amount) {}
 }
