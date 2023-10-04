@@ -226,12 +226,12 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 		if (!isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
-			if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
-			if (_ehm_helpers.ehm_isModule(ship)) tooltip.addPara(text.isModule[0], text.padding).setHighlight(text.isModule[1]);
-			if ((!ship.getVariant().getSMods().contains(this.hullModSpecId) && _ehm_helpers.ehm_hasModularHullmods(ship, this.hullModSpecId))
-			|| _ehm_helpers.ehm_hasWeapons(ship)
-			|| _ehm_helpers.ehm_hasAnyFittedWings(ship)
-			|| _ehm_helpers.ehm_hasCapacitorsOrVents(ship)) tooltip.addPara(text.notStripped[0], text.padding).setHighlight(text.notStripped[1]);
+			if (!_ehm_helpers.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
+			if (_ehm_helpers.isModule(ship)) tooltip.addPara(text.isModule[0], text.padding).setHighlight(text.isModule[1]);
+			if ((!ship.getVariant().getSMods().contains(this.hullModSpecId) && _ehm_helpers.hasModularHullmods(ship, this.hullModSpecId))
+			|| _ehm_helpers.hasWeapons(ship)
+			|| _ehm_helpers.hasAnyFittedWings(ship)
+			|| _ehm_helpers.hasCapacitorsOrVents(ship)) tooltip.addPara(text.notStripped[0], text.padding).setHighlight(text.notStripped[1]);
 		} else if (!ship.getVariant().getSMods().contains(this.hullModSpecId)) {
 			tooltip.addSectionHeading(header.severeWarning, header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 			tooltip.addPara(text.overEngineeredWarning[0], text.padding).setHighlight(text.overEngineeredWarning[1]);
@@ -248,12 +248,12 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false;
 
-		if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) return false;
-		if (_ehm_helpers.ehm_isModule(ship)) return false;
-		if (!ship.getVariant().getSMods().contains(this.hullModSpecId) && _ehm_helpers.ehm_hasModularHullmods(ship, this.hullModSpecId)) return false;
-		if (_ehm_helpers.ehm_hasWeapons(ship)) return false;
-		if (_ehm_helpers.ehm_hasAnyFittedWings(ship)) return false;
-		if (_ehm_helpers.ehm_hasCapacitorsOrVents(ship)) return false;
+		if (!_ehm_helpers.hasRetrofitBaseBuiltIn(ship)) return false;
+		if (_ehm_helpers.isModule(ship)) return false;
+		if (!ship.getVariant().getSMods().contains(this.hullModSpecId) && _ehm_helpers.hasModularHullmods(ship, this.hullModSpecId)) return false;
+		if (_ehm_helpers.hasWeapons(ship)) return false;
+		if (_ehm_helpers.hasAnyFittedWings(ship)) return false;
+		if (_ehm_helpers.hasCapacitorsOrVents(ship)) return false;
 
 		return true; 
 	}

@@ -13,8 +13,10 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
+import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.loading.WeaponGroupSpec;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
+import com.fs.starfarer.api.loading.WeaponSpecAPI;
 
 import lyravega.misc.lyr_internals;
 
@@ -28,7 +30,7 @@ public class _ehm_helpers {
 	 * @param hullmodIdToIgnore can be null. If not, the hullmod with this id will be ignored
 	 * @return true if the ship has modular hullmods (except the ignored one if any)
 	 */
-	public static boolean ehm_hasModularHullmods(ShipAPI ship, String hullmodIdToIgnore) {
+	public static boolean hasModularHullmods(ShipAPI ship, String hullmodIdToIgnore) {
 		if (hullmodIdToIgnore == null) return !ship.getVariant().getNonBuiltInHullmods().isEmpty();
 		for (String hullModId : ship.getVariant().getNonBuiltInHullmods()) {
 			if (hullModId.equals(hullmodIdToIgnore)) continue;
@@ -41,7 +43,7 @@ public class _ehm_helpers {
 	 * @param ship to check
 	 * @return true if the ship has any fitted (non-built-in) wings
 	 */
-	public static boolean ehm_hasAnyFittedWings(ShipAPI ship) {
+	public static boolean hasAnyFittedWings(ShipAPI ship) {
 		return !ship.getVariant().getNonBuiltInWings().isEmpty();
 	}
 
@@ -50,7 +52,7 @@ public class _ehm_helpers {
 	 * @param hullModSpecId of the hull modification that grant extra fighter slots
 	 * @return true if the extra slots (newly & last added ones) have fighters in them
 	 */
-	public static boolean ehm_hasExtraWings(ShipAPI ship, String hullModSpecId) {
+	public static boolean hasExtraWings(ShipAPI ship, String hullModSpecId) {
 		int wingsSize = ship.getVariant().getWings().size();
 		StatMod flatStatMod = ship.getMutableStats().getNumFighterBays().getFlatStatMod(hullModSpecId);
 	
@@ -67,15 +69,23 @@ public class _ehm_helpers {
 	 * @param ship to check
 	 * @return true if the ship is a module
 	 */
-	public static boolean ehm_isModule(ShipAPI ship) {
+	public static boolean isModule(ShipAPI ship) {
 		return !Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy().contains(ship.getFleetMember());
+	}
+
+	/**
+	 * @param ship to check
+	 * @return true if the ship is a parent; a ship with modules
+	 */
+	public static boolean isParent(ShipAPI ship) {
+		return ship.getVariant().getStationModules() != null;
 	}
 
 	/**
 	 * @param ship to check
 	 * @return true if there are any capacitors or vents installed on the variant
 	 */
-	public static boolean ehm_hasCapacitorsOrVents(ShipAPI ship) {
+	public static boolean hasCapacitorsOrVents(ShipAPI ship) {
 		return ship.getVariant().getNumFluxVents() > 0 || ship.getVariant().getNumFluxCapacitors() > 0;
 	}	
 
@@ -83,7 +93,7 @@ public class _ehm_helpers {
 	 * @param ship to check
 	 * @return true if the ship has weapons on weapon slots; will ignore shunts
 	 */
-	public static final boolean ehm_hasWeapons(ShipAPI ship) {
+	public static final boolean hasWeapons(ShipAPI ship) {
 		for (WeaponAPI weapon: ship.getAllWeapons()) {
 			WeaponSlotAPI slot = weapon.getSlot();
 	
@@ -97,7 +107,7 @@ public class _ehm_helpers {
 	 * @param slotPrefix only slots with this prefix will be cared about
 	 * @return true if the ship has weapons on specific slots
 	 */
-	public static final boolean ehm_hasWeapons(ShipAPI ship, String slotPrefix) {
+	public static final boolean hasWeapons(ShipAPI ship, String slotPrefix) {
 		for (WeaponAPI weapon: ship.getAllWeapons()) {
 			WeaponSlotAPI slot = weapon.getSlot();
 	
@@ -114,7 +124,7 @@ public class _ehm_helpers {
 	 * @return true if the ship has weapons with non-matching weapon ids
 	 */
 	@Deprecated
-	public static final boolean ehm_hasWeapons(ShipAPI ship, Set<String> ignoredWeaponIds) {
+	public static final boolean hasWeapons(ShipAPI ship, Set<String> ignoredWeaponIds) {
 		for (WeaponAPI weapon: ship.getAllWeapons()) {
 			WeaponSlotAPI slot = weapon.getSlot();
 	
@@ -129,7 +139,7 @@ public class _ehm_helpers {
 	 * @param weaponType of the weapons that will be ignored
 	 * @return true if the ship has weapons with type other than the specified type
 	 */
-	public static final boolean ehm_hasWeapons(ShipAPI ship, WeaponType weaponType) {
+	public static final boolean hasWeapons(ShipAPI ship, WeaponType weaponType) {
 		for (WeaponAPI weapon: ship.getAllWeapons()) {
 			WeaponSlotAPI slot = weapon.getSlot();
 	
@@ -144,7 +154,7 @@ public class _ehm_helpers {
 	 * @param ship to check 
 	 * @return true if ship has it, false otherwise (duh)
 	 */
-	public static final boolean ehm_hasExperimentalSMod(ShipAPI ship) {
+	public static final boolean hasExperimentalSMod(ShipAPI ship) {
 		for (String hullModId: ship.getVariant().getSMods()) {
 			if (Global.getSettings().getHullModSpec(hullModId).hasTag(lyr_internals.tag.experimental)) return true;
 		}; return false;
@@ -155,7 +165,7 @@ public class _ehm_helpers {
 	 * @param ship to check 
 	 * @return true if ship has it, false otherwise (duh)
 	 */
-	public static final boolean ehm_hasRetrofitBaseBuiltIn(ShipAPI ship) {
+	public static final boolean hasRetrofitBaseBuiltIn(ShipAPI ship) {
 		return ship.getVariant().getHullSpec().isBuiltInMod(lyr_internals.id.hullmods.base);
 	}
 
@@ -166,7 +176,7 @@ public class _ehm_helpers {
 	 * @param ignoredHullmodId to exclude from the check, can be {@code null}
 	 * @return true if there is another mod with the searched tag, false otherwise
 	 */
-	public static final boolean ehm_hasHullModWithTag(ShipAPI ship, String tag, String ignoredHullmodId) {
+	public static final boolean hasHullModWithTag(ShipAPI ship, String tag, String ignoredHullmodId) {
 		for (String hullModId : ship.getVariant().getHullMods()) {
 			if (hullModId.equals(ignoredHullmodId)) continue;
 			if (Global.getSettings().getHullModSpec(hullModId).hasTag(tag)) return true;
@@ -180,7 +190,7 @@ public class _ehm_helpers {
 	 * @param ignoredHullmodId to exclude from the check, can be {@code null}
 	 * @return true if there is another mod with the searched tag, false otherwise
 	 */
-	public static final boolean ehm_hasHullModWithTag(ShipVariantAPI variant, String tag, String ignoredHullmodId) {
+	public static final boolean hasHullModWithTag(ShipVariantAPI variant, String tag, String ignoredHullmodId) {
 		for (String hullModId : variant.getHullMods()) {
 			if (hullModId.equals(ignoredHullmodId)) continue;
 			if (Global.getSettings().getHullModSpec(hullModId).hasTag(tag)) return true;
@@ -195,7 +205,7 @@ public class _ehm_helpers {
 	 * root cause can be found, however.
 	 * @param variant whose weapon groups will be purged of activated shunts
 	 */
-	public static final void ehm_cleanWeaponGroupsUp(ShipVariantAPI variant) {
+	public static final void cleanWeaponGroupsUp(ShipVariantAPI variant) {
 		List<WeaponGroupSpec> weaponGroups = variant.getWeaponGroups();
 		Collection<String> groupKeepTargets = variant.getFittedWeaponSlots();	// this is to fix an (vanilla) issue where groups have incorrect entries
 		Map<String, String> groupCleanupTargets = new HashMap<String, String>(variant.getHullSpec().getBuiltInWeapons());
@@ -210,12 +220,26 @@ public class _ehm_helpers {
 		}
 	}
 
-	public static final boolean ehm_removeHullModsWithSameTag(ShipVariantAPI variant, String tag, String ignoredHullmodId) {
+	public static final boolean removeHullModsWithSameTag(ShipVariantAPI variant, String tag, String ignoredHullmodId) {
 		for (String hullmodId : variant.getNonBuiltInHullmods()) {
 			if (hullmodId.equals(ignoredHullmodId)) continue;
 			if (!Global.getSettings().getHullModSpec(hullmodId).hasTag(tag)) continue;
 			variant.removeMod(hullmodId);
 			return true;
 		}; return false;
+	}
+
+	public static boolean isExperimentalMod(HullModSpecAPI spec, boolean excludeRestricted) {
+		if (!spec.getManufacturer().equals(lyr_internals.id.manufacturer)) return false;
+		if (!spec.hasTag(lyr_internals.tag.experimental)) return false;
+		if (excludeRestricted && spec.hasTag(lyr_internals.tag.restricted)) return false;
+		return true;
+	}
+
+	public static boolean isExperimentalShunt(WeaponSpecAPI spec, boolean excludeRestricted) {
+		if (!spec.getManufacturer().equals(lyr_internals.id.manufacturer)) return false;
+		if (!spec.hasTag(lyr_internals.tag.experimental)) return false;
+		if (excludeRestricted && spec.hasTag(lyr_internals.tag.restricted)) return false;
+		return true;
 	}
 }

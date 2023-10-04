@@ -25,6 +25,7 @@ import com.thoughtworks.xstream.XStream;
 
 import experimentalHullModifications.abilities.ehm_ability;
 import experimentalHullModifications.abilities.listeners.ehm_submarketInjector;
+import experimentalHullModifications.hullmods.ehm._ehm_helpers;
 import experimentalHullModifications.abilities.listeners.ehm_shuntInjector;
 import lyravega.listeners.lyr_fleetTracker;
 import lyravega.listeners.events.enhancedEvents;
@@ -75,7 +76,7 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 
 		// purge experimental weapon blueprints
 		for (WeaponSpecAPI weaponSpec : Global.getSettings().getAllWeaponSpecs()) {
-			if (!isExperimental(weaponSpec, false)) continue;
+			if (!_ehm_helpers.isExperimentalShunt(weaponSpec, false)) continue;
 
 			for (FactionAPI faction : Global.getSector().getAllFactions())
 				faction.removeKnownWeapon(weaponSpec.getWeaponId());
@@ -83,7 +84,7 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 
 		// purge experimental hullmod blueprints
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
-			if (!isExperimental(hullModSpec, false)) continue;
+			if (!_ehm_helpers.isExperimentalMod(hullModSpec, false)) continue;
 
 			playerData.removeHullMod(hullModSpec.getId());
 			for (FactionAPI faction : Global.getSector().getAllFactions())
@@ -93,7 +94,7 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 		final String targetTag = settings.getCosmeticsOnly() ? lyr_internals.tag.cosmetic : lyr_internals.tag.experimental;
 
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
-			if (!isExperimental(hullModSpec, true)) continue;
+			if (!_ehm_helpers.isExperimentalMod(hullModSpec, true)) continue;
 
 			if (hullModSpec.hasTag(targetTag)) playerData.addHullMod(hullModSpec.getId());
 		}
@@ -129,7 +130,7 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 	 */
 	private static void registerModsWithEvents() {
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
-			if (!isExperimental(hullModSpec, true)) continue;
+			if (!_ehm_helpers.isExperimentalMod(hullModSpec, true)) continue;
 
 			HullModEffect hullModEffect = hullModSpec.getEffect();
 
@@ -185,19 +186,5 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 			case "Submarket": ehm_shuntInjector.get().detach(); ehm_submarketInjector.get().attach(true); break;
 			default: break;
 		}
-	}
-
-	private static boolean isExperimental(HullModSpecAPI spec, boolean excludeRestricted) {
-		if (!spec.getManufacturer().equals(lyr_internals.id.manufacturer)) return false;
-		if (!spec.hasTag(lyr_internals.tag.experimental)) return false;
-		if (excludeRestricted && spec.hasTag(lyr_internals.tag.restricted)) return false;
-		return true;
-	}
-
-	private static boolean isExperimental(WeaponSpecAPI spec, boolean excludeRestricted) {
-		if (!spec.getManufacturer().equals(lyr_internals.id.manufacturer)) return false;
-		if (!spec.hasTag(lyr_internals.tag.experimental)) return false;
-		if (excludeRestricted && spec.hasTag(lyr_internals.tag.restricted)) return false;
-		return true;
 	}
 }

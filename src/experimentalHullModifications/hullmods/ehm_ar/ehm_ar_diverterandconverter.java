@@ -224,7 +224,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 
 			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.locked_bgColour, Alignment.MID, header.padding);
 
-			if (_ehm_helpers.ehm_hasWeapons(ship, lyr_internals.affix.convertedSlot)) tooltip.addPara(text.hasWeaponsOnConvertedSlots[0], text.padding).setHighlight(text.hasWeaponsOnConvertedSlots[1]);
+			if (_ehm_helpers.hasWeapons(ship, lyr_internals.affix.convertedSlot)) tooltip.addPara(text.hasWeaponsOnConvertedSlots[0], text.padding).setHighlight(text.hasWeaponsOnConvertedSlots[1]);
 		}
 	}
 
@@ -232,7 +232,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
 		if (ship == null) return false; 
 
-		if (_ehm_helpers.ehm_hasWeapons(ship, lyr_internals.affix.convertedSlot)) return false;
+		if (_ehm_helpers.hasWeapons(ship, lyr_internals.affix.convertedSlot)) return false;
 
 		return true;
 	}

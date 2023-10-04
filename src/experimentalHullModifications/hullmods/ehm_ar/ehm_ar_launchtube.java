@@ -147,7 +147,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 
 			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.locked_bgColour, Alignment.MID, header.padding);
 
-			if (_ehm_helpers.ehm_hasExtraWings(ship, hullmods.launchtube)) tooltip.addPara(text.hasExtraWings[0], text.padding).setHighlight(text.hasExtraWings[1]);
+			if (_ehm_helpers.hasExtraWings(ship, hullmods.launchtube)) tooltip.addPara(text.hasExtraWings[0], text.padding).setHighlight(text.hasExtraWings[1]);
 		}
 	}
 	
@@ -155,7 +155,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
 		if (ship == null) return false;
 
-		if (ship.getVariant().hasHullMod(this.hullModSpecId) && _ehm_helpers.ehm_hasExtraWings(ship, hullmods.launchtube)) return false;
+		if (ship.getVariant().hasHullMod(this.hullModSpecId) && _ehm_helpers.hasExtraWings(ship, hullmods.launchtube)) return false;
 
 		return true;
 	}

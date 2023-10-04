@@ -31,13 +31,13 @@ public class _ehm_sr_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstall(ShipVariantAPI variant) {
-		if (_ehm_helpers.ehm_removeHullModsWithSameTag(variant, lyr_internals.tag.systemRetrofit, this.hullModSpecId)) return;
+		if (_ehm_helpers.removeHullModsWithSameTag(variant, lyr_internals.tag.systemRetrofit, this.hullModSpecId)) return;
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
 	public void onRemove(ShipVariantAPI variant) {
-		if (!_ehm_helpers.ehm_hasHullModWithTag(variant, lyr_internals.tag.systemRetrofit, this.hullModSpecId))
+		if (!_ehm_helpers.hasHullModWithTag(variant, lyr_internals.tag.systemRetrofit, this.hullModSpecId))
 			variant.setHullSpecAPI(ehm_systemRestore(variant));
 		commitVariantChanges(); playDrillSound();
 	}
@@ -78,7 +78,7 @@ public class _ehm_sr_base extends _ehm_base implements normalEvents {
 		if (!isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
-			if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
+			if (!_ehm_helpers.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
 			// if (_ehm_helpers.ehm_hasHullmodWithTag(ship, lyr_internals.tag.systemRetrofit, this.hullModSpecId)) tooltip.addPara(text.hasSystemRetrofit[0], text.padding).setHighlight(text.hasSystemRetrofit[1]);
 			if (ship.getVariant().hasHullMod(lyr_internals.id.hullmods.logisticsoverhaul)) tooltip.addPara(text.hasLogisticsOverhaul[0], text.padding).setHighlight(text.hasLogisticsOverhaul[1]);
 
@@ -94,7 +94,7 @@ public class _ehm_sr_base extends _ehm_base implements normalEvents {
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false; 
 
-		if (!_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) return false; 
+		if (!_ehm_helpers.hasRetrofitBaseBuiltIn(ship)) return false; 
 		// if (_ehm_helpers.ehm_hasHullmodWithTag(ship, lyr_internals.tag.systemRetrofit, this.hullModSpecId)) return false;
 		if (ship.getVariant().hasHullMod(lyr_internals.id.hullmods.logisticsoverhaul)) return false;
 

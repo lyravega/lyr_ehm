@@ -48,7 +48,7 @@ public final class ehm_base extends _ehm_tracker {
 			}
 		}
 
-		_ehm_helpers.ehm_cleanWeaponGroupsUp(variant);
+		_ehm_helpers.cleanWeaponGroupsUp(variant);
 	}
 
 	@Override 
@@ -116,22 +116,22 @@ public final class ehm_base extends _ehm_tracker {
 						tooltip.addPara(playerSalutation + ", if you are unhappy with what I am offering you, I can get rid of the base hull modifications that I've made. Let me know!", text.padding);
 						break;
 					case 2: 
-						if (!_ehm_helpers.ehm_hasHullModWithTag(ship, lyr_internals.tag.weaponRetrofit, null))
+						if (!_ehm_helpers.hasHullModWithTag(ship, lyr_internals.tag.weaponRetrofit, null))
 							tooltip.addPara(playerSalutation + ", with slot retrofits every weapon slot may be altered all together to make them compatible with other weapon types.", text.padding);
 						else tooltip.addPara("The slot retrofits come at a cost, but their main purpose is to allow flexibility, and of course letting you use your favourite weapons, "+ playerSalutation, text.padding);
 						break;
 					case 3: 
-						if (!_ehm_helpers.ehm_hasHullModWithTag(ship, lyr_internals.tag.systemRetrofit, null))
+						if (!_ehm_helpers.hasHullModWithTag(ship, lyr_internals.tag.systemRetrofit, null))
 							tooltip.addPara("The ships are designed along with their systems, however with system retrofits, I can change them anytime you want, "+ playerSalutation +".", text.padding);
 						else tooltip.addPara("Some system & ship combinations may be powerful. Some may not. No refunds! Just joking...", text.padding);
 						break;
 					case 4: 
-						if (!_ehm_helpers.ehm_hasHullModWithTag(ship, lyr_internals.tag.engineCosmetic, null))
+						if (!_ehm_helpers.hasHullModWithTag(ship, lyr_internals.tag.engineCosmetic, null))
 							tooltip.addPara(playerSalutation + ", let me know if you'd like to have this ship's engine exhaust colour get changed. I can even fully customize them to your exact specifications!", text.padding);
 						else tooltip.addPara("The engine exhaust cosmetics are looking great, " + playerSalutation, text.padding);
 						break;
 					case 5:
-						if (!_ehm_helpers.ehm_hasHullModWithTag(ship, lyr_internals.tag.shieldCosmetic, null))
+						if (!_ehm_helpers.hasHullModWithTag(ship, lyr_internals.tag.shieldCosmetic, null))
 							tooltip.addPara("The shield emitters may be modified to project a shield with different colours, " + playerSalutation + ". The effect is purely cosmetic", text.padding);
 						else tooltip.addPara("The shield emitters are modified to project colours of your choice, " + playerSalutation, text.padding);
 						break;
@@ -164,6 +164,6 @@ public final class ehm_base extends _ehm_tracker {
 	@Override
 	public boolean showInRefitScreenModPickerFor(ShipAPI ship) {
 		if (!super.showInRefitScreenModPickerFor(ship)) return false;
-		return (_ehm_helpers.ehm_hasRetrofitBaseBuiltIn(ship)) ? false : true;
+		return (_ehm_helpers.hasRetrofitBaseBuiltIn(ship)) ? false : true;
 	}
 }
