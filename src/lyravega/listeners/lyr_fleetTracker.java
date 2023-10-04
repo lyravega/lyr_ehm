@@ -1,12 +1,13 @@
 package lyravega.listeners;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.UUID;
+import static lyravega.tools.lyr_uiTools.isRefitTab;
+
+import java.util.*;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CoreUITabId;
+import com.fs.starfarer.api.combat.MutableShipStatsAPI;
+import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 
@@ -21,14 +22,14 @@ import lyravega.plugin.lyr_ehm;
  * @author lyravega
  */
 public class lyr_fleetTracker extends _lyr_tabListener {
-	private static _lyr_sectorListener instance = null;
+	private static final lyr_fleetTracker instance = new lyr_fleetTracker();	//  if this is null and not instantiated before onGameLoad(), will yield a NPE as hullmod effects load earlier
 
 	private lyr_fleetTracker() {
 		super(CoreUITabId.REFIT);
 	}
 
-	public static _lyr_sectorListener get() {
-		if (instance == null) instance = new lyr_fleetTracker();
+	public static lyr_fleetTracker get() {
+		// if (instance == null) instance = new lyr_fleetTracker();
 
 		return instance;
 	}
@@ -37,67 +38,112 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 
 	@Override
 	public void onOpen() {
-		addTrackers();
+		shipTrackers.clear();
+
+		for (FleetMemberAPI member : Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy())
+			addShipTrackerUUID(member.getVariant(), null);
 
 		if (lyr_ehm.settings.getLogTrackerInfo()) logger.info(logPrefix+"FT: Fleet Tracker initialized");
 	}
 
 	@Override
 	public void onClose() {
-		removeTrackers();
+		for (FleetMemberAPI member : Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy())
+			removeShipTrackerUUID(member.getVariant());	// to make the tags transient
+
+		shipTrackers.clear();
 
 		if (lyr_ehm.settings.getLogTrackerInfo()) logger.info(logPrefix+"FT: Fleet Tracker terminated");
 	}
 
-	public lyr_shipTracker getShipTracker(ShipVariantAPI variant) {
-		return shipTrackers.get(getTrackerId(variant));
+	@Override public void onAdvance(float amount) {}
+
+	public static void updateShipTracker(ShipAPI ship) {
+		if (!isRefitTab()) return;
+
+		getShipTracker(ship.getVariant()).updateVariant(ship.getVariant());
 	}
 
-	public String getTrackerId(ShipVariantAPI variant) {
-		for (String tag : variant.getTags())
+	public static void updateShipTracker(MutableShipStatsAPI stats) {
+		if (!isRefitTab() || !ShipAPI.class.isInstance(stats.getEntity())) return;
+
+		getShipTracker(stats.getVariant()).updateVariant(stats.getVariant());
+	}
+
+	private static lyr_shipTracker getShipTracker(ShipVariantAPI variant) {
+		String shipTrackerUUID = getShipTrackerUUID(variant);
+		lyr_shipTracker shipTracker = instance.shipTrackers.get(shipTrackerUUID);
+
+		if (shipTracker == null) {
+			shipTracker = new lyr_shipTracker(variant, shipTrackerUUID);
+			instance.shipTrackers.put(shipTrackerUUID, shipTracker);
+			
+			if (lyr_ehm.settings.getLogTrackerInfo()) logger.info(logPrefix+"ST-"+shipTrackerUUID+": Ship Tracker initialized");
+		}
+
+		return shipTracker;
+	}
+
+	public static void terminateShipTracker(ShipAPI ship) {
+		if (!isRefitTab()) return;
+
+		removeShipTracker(ship.getVariant());
+	}
+
+	public static void terminateShipTracker(MutableShipStatsAPI stats) {
+		if (!isRefitTab() || !ShipAPI.class.isInstance(stats.getEntity())) return;
+
+		removeShipTracker(stats.getVariant());
+	}
+
+	private static void removeShipTracker(ShipVariantAPI variant) {
+		String shipTrackerUUID = getShipTrackerUUID(variant);
+		lyr_shipTracker shipTracker = instance.shipTrackers.get(shipTrackerUUID);
+
+		if (shipTracker == null) return;
+		
+		instance.shipTrackers.remove(shipTrackerUUID);
+		
+		if (lyr_ehm.settings.getLogTrackerInfo()) logger.info(logPrefix+"ST-"+shipTrackerUUID+": Ship Tracker terminated");
+	}
+
+	static String getShipTrackerUUID(ShipVariantAPI variant) {
+		for (String tag : variant.getTags()) {
 			if (tag.startsWith(lyr_internals.uuid.shipPrefix)) return tag.substring(lyr_internals.uuid.shipPrefix.length());
-		return null;
+		}; return addShipTrackerUUID(variant, null);	// this here ensures the ship (and its modules) has tracker UUIDs
 	}
 
-	private void addTracker(ShipVariantAPI variant, String parentId) {
-		String trackerId = UUID.randomUUID().toString();
+	public static String addShipTrackerUUID(ShipVariantAPI variant, String parentTrackerUUID) {
+		boolean createNewUUID = true;
+		String shipTrackerUUID = null;
 
-		variant.addTag(lyr_internals.uuid.shipPrefix+trackerId);	// ship's own id
-		if (parentId != null) variant.addTag(lyr_internals.uuid.parentPrefix+parentId);	// parent's id
+		for (String tag : variant.getTags()) {
+			if (!tag.startsWith(lyr_internals.uuid.shipPrefix)) continue;
+			
+			createNewUUID = false; shipTrackerUUID = tag.substring(lyr_internals.uuid.shipPrefix.length());
+		}; if (createNewUUID) shipTrackerUUID = UUID.randomUUID().toString();
 
-		shipTrackers.put(trackerId, new lyr_shipTracker(variant));
-		// if (lyr_ehm.settings.getLogTrackerInfo()) logger.info(logPrefix+"ST-"+shipId+": Ship Tracker initialized");
+		if (shipTrackerUUID != null && !variant.hasTag(lyr_internals.uuid.shipPrefix+shipTrackerUUID))
+			variant.addTag(lyr_internals.uuid.shipPrefix+shipTrackerUUID);	// ship's uuid
 
-		for (String moduleSlotId : variant.getStationModules().keySet()) {
-			addTracker(variant.getModuleVariant(moduleSlotId), trackerId);
+		if (parentTrackerUUID != null && !variant.hasTag(lyr_internals.uuid.parentPrefix+parentTrackerUUID))
+			variant.addTag(lyr_internals.uuid.parentPrefix+parentTrackerUUID);	// parent's uuid
+		
+		for (String moduleSlot : variant.getStationModules().keySet()) {
+			ShipVariantAPI moduleVariant = variant.getModuleVariant(moduleSlot);
+
+			addShipTrackerUUID(moduleVariant, shipTrackerUUID);
 		}
+
+		return shipTrackerUUID;
 	}
 
-	private void addTrackers() {
-		for (FleetMemberAPI member : Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy()) {
-			addTracker(member.getVariant(), null);
-		}
-	}
-
-	private void removeTracker(ShipVariantAPI variant) {
-		String trackerId = getTrackerId(variant);
-
+	public static void removeShipTrackerUUID(ShipVariantAPI variant) {	// if UUIDs are added 'onOpen()', this needs to be called on 'onClose()' to properly clean the UUIDs up
 		for (Iterator<String> iterator = variant.getTags().iterator(); iterator.hasNext(); )
 			if (iterator.next().startsWith(lyr_internals.uuid.prefix)) iterator.remove();
-
-		shipTrackers.remove(trackerId);
-		// if (lyr_ehm.settings.getLogTrackerInfo()) logger.info(logPrefix+"ST-"+shipId+": Ship Tracker terminated");
-
+		
 		for (String moduleSlotId : variant.getStationModules().keySet()) {
-			removeTracker(variant.getModuleVariant(moduleSlotId));
+			removeShipTrackerUUID(variant.getModuleVariant(moduleSlotId));
 		}
-	}
-
-	private void removeTrackers() {
-		for (FleetMemberAPI member : Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy()) {
-			removeTracker(member.getVariant());
-		}
-
-		shipTrackers.clear();	// just in case
 	}
 }

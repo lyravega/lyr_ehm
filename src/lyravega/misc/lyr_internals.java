@@ -243,9 +243,9 @@ public final class lyr_internals {
 
 	public static final class uuid {
 		public static final String
-			prefix = "lyr_ID",
-			shipPrefix = "lyr_ID-",
-			parentPrefix = "lyr_ID+";
+			prefix = "UUID",
+			shipPrefix = "UUID-",
+			parentPrefix = "UUID+";
 	}
 
 	public static final class events {
