@@ -6,11 +6,8 @@ import static lyravega.tools.lyr_uiTools.playDrillSound;
 import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.characters.FullName.Gender;
-import com.fs.starfarer.api.combat.MutableShipStatsAPI;
-import com.fs.starfarer.api.combat.ShipAPI;
+import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
-import com.fs.starfarer.api.combat.ShipHullSpecAPI;
-import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
@@ -36,7 +33,7 @@ public final class ehm_base extends _ehm_base {
 		ShipVariantAPI variant = stats.getVariant();
 		ShipHullSpecAPI hullSpec = variant.getHullSpec();
 
-		lyr_fleetTracker.updateShipTracker(stats);	// if this is done after the block below, it'll create multiple trackers for ships with a captain
+		lyr_fleetTracker.updateShipTracker(variant);	// if this is done after the block below, it'll create multiple trackers for ships with a captain
 
 		if (!hullSpec.isBuiltInMod(lyr_internals.id.hullmods.base) || !Misc.getDHullId(hullSpec).equals(hullSpec.getHullId())) {
 			variant.setHullSpecAPI(ehm_hullSpecClone(variant));
@@ -60,7 +57,7 @@ public final class ehm_base extends _ehm_base {
 
 	@Override 
 	public void applyEffectsAfterShipCreation(ShipAPI ship, String hullModSpecId) {
-		lyr_fleetTracker.updateShipTracker(ship);
+		lyr_fleetTracker.updateShipTracker(ship.getVariant());
 	}
 
 	@Override

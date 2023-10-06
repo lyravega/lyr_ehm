@@ -6,8 +6,6 @@ import java.util.*;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CoreUITabId;
-import com.fs.starfarer.api.combat.MutableShipStatsAPI;
-import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 
@@ -41,7 +39,7 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 		shipTrackers.clear();
 
 		for (FleetMemberAPI member : Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy())
-			addShipTrackerUUID(member.getVariant(), null);
+			addTrackerUUIDs(member.getVariant(), null);
 
 		if (lyr_ehm.settings.getLogTrackerInfo()) logger.info(logPrefix+"FT: Fleet Tracker initialized");
 	}
@@ -49,7 +47,7 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 	@Override
 	public void onClose() {
 		for (FleetMemberAPI member : Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy())
-			removeShipTrackerUUID(member.getVariant());	// to make the tags transient
+			removeTrackerUUIDs(member.getVariant());	// to make the tags transient
 
 		shipTrackers.clear();
 
@@ -59,17 +57,10 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 	@Override public void onAdvance(float amount) {}
 
 	/** @see {@link lyr_shipTracker#updateVariant(ShipVariantAPI)} */ 
-	public static void updateShipTracker(ShipAPI ship) {
+	public static void updateShipTracker(ShipVariantAPI variant) {
 		if (!isRefitTab()) return;
 
-		getShipTracker(ship.getVariant()).updateVariant(ship.getVariant());
-	}
-
-	/** @see {@link lyr_shipTracker#updateVariant(ShipVariantAPI)} */ 
-	public static void updateShipTracker(MutableShipStatsAPI stats) {
-		if (!isRefitTab() || !ShipAPI.class.isInstance(stats.getEntity())) return;
-
-		getShipTracker(stats.getVariant()).updateVariant(stats.getVariant());
+		getShipTracker(variant).updateVariant(variant);
 	}
 
 	/**
@@ -93,23 +84,30 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 		return shipTracker;
 	}
 
-	/** @see {@link #removeShipTracker(ShipVariantAPI)} */ 
-	public static void terminateShipTracker(ShipAPI ship) {
-		if (!isRefitTab()) return;
+	/**
+	 * If the variant is a module and has its parent's UUID as a tag, returns
+	 * the parent's variant. Returns null otherwise
+	 * @param moduleVariant of the module
+	 * @return parent's variant
+	 */
+	public static ShipVariantAPI getParentVariant(ShipVariantAPI moduleVariant) {
+		lyr_shipTracker parentTracker = instance.shipTrackers.get(getParentTrackerUUID(moduleVariant));
 
-		removeShipTracker(ship.getVariant());
+		if (parentTracker != null) return parentTracker.getVariant();
+
+		return null;
 	}
 
 	/** @see {@link #removeShipTracker(ShipVariantAPI)} */ 
-	public static void terminateShipTracker(MutableShipStatsAPI stats) {
-		if (!isRefitTab() || !ShipAPI.class.isInstance(stats.getEntity())) return;
+	public static void terminateShipTracker(ShipVariantAPI variant) {
+		if (!isRefitTab()) return;
 
-		removeShipTracker(stats.getVariant());
+		removeShipTracker(variant);
 	}
 
 	/**
 	 * Removes a ship tracker. Does not touch UUID tags, they need to be removed
-	 * separately with its own method {@link #removeShipTrackerUUID(ShipVariantAPI)}
+	 * separately with its own method {@link #removeTrackerUUIDs(ShipVariantAPI)}
 	 * @param variant of the ship to remove from the tracker set
 	 */
 	private static void removeShipTracker(ShipVariantAPI variant) {
@@ -124,58 +122,64 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 	}
 
 	/**
-	 * Used by {@link #addShipTrackerUUID(ShipVariantAPI, String)} and {@link
+	 * Used by {@link #addTrackerUUIDs(ShipVariantAPI, String)} and {@link
 	 * #removeShipTracker(ShipVariantAPI)}. Goes over the variant tags, and extracts
 	 * the relevant ship UUID from the tags
 	 * <p> If the ship is missing such a tag, calls another method {@link
-	 * #addShipTrackerUUID(ShipVariantAPI, String)} to add UUID tags directly
+	 * #addTrackerUUIDs(ShipVariantAPI, String)} to add UUID tags directly
 	 * @param variant
 	 * @return
 	 */
 	public static String getShipTrackerUUID(ShipVariantAPI variant) {
 		for (String tag : variant.getTags()) {
 			if (tag.startsWith(lyr_internals.uuid.shipPrefix)) return tag.substring(lyr_internals.uuid.shipPrefix.length());
-		}; return addShipTrackerUUID(variant, null);	// this here ensures the ship (and its modules) has tracker UUIDs
+		}; return addTrackerUUIDs(variant, null);	// this here ensures the ship (and its modules) has tracker UUIDs
+	}
+
+	public static String getParentTrackerUUID(ShipVariantAPI variant) {
+		for (String tag : variant.getTags()) {
+			if (tag.startsWith(lyr_internals.uuid.parentPrefix)) return tag.substring(lyr_internals.uuid.parentPrefix.length());
+		}; return null;
 	}
 
 	/**
-	 * Adds a random UUID as a tag on the variant. Ships and modules get their own UUID,
-	 * while modules also get their parent's UUID in addition. These tags have prefixes
-	 * located at {@link lyravega.misc.lyr_internals.uuid}
-	 * <p> These tags are used instead of any other id to track changes on the variants.
-	 * While this is not necessary for fleet members, modules do not have proper members
-	 * and get a new, fake fleet member while making a new tracker spawn everytime. By
-	 * assigning an UUID to the variant, some resemblence of a persistent ID is achieved
-	 * <p> Is called from {@link #onOpen()}, and iterates over all fleet members (and
-	 * their modules) for simplicity. {@link #removeShipTrackerUUID(ShipVariantAPI)}
-	 * needs to be executed on {@link #onClose()} to clean the tags up afterwards
-	 * <p> In case a ship is missing such a tag, will also be called from {@link
-	 * #getShipTracker(ShipVariantAPI)} directly, which also allows removal of UUID
-	 * methods from both {@link #onOpen()} and {@link #onClose()} 
+	 * Adds a random UUID to a variant as a tag. These tags are used instead of any
+	 * other ID to spawn ship trackers and track the changes on the variants. These
+	 * tags have prefixes located at {@link lyravega.misc.lyr_internals.uuid} 
+	 * <p> If used on a variant that has child module variants, they will automatically
+	 * receive their own UUID tag, along with their parent's. Using this on a child
+	 * module variant is not recommended as the parent's UUID will not be assigned on
+	 * the child variant that way
+	 * <p> Modules do not have proper fleet members, and on the refit tab they get
+	 * assigned a new, fake one which demands a new tracker to be spawned every time,
+	 * which is not ideal. By assigning these UUIDs on module variants, tracking them
+	 * through a single tracker becomes possible
+	 * <p> {@link #removeTrackerUUIDs(ShipVariantAPI)} needs to be executed to clean the
+	 * tags up afterwards if transience is desired. In case a ship is missing such a tag,
+	 * will also be called from {@link #getShipTracker(ShipVariantAPI)} directly
 	 * @param variant of the ship or the module
 	 * @param parentTrackerUUID use {@code null}; automatically populated for children
 	 * @return Generated UUID for the variant as a string
 	 */
-	public static String addShipTrackerUUID(ShipVariantAPI variant, String parentTrackerUUID) {
-		boolean createNewUUID = true;
+	public static String addTrackerUUIDs(ShipVariantAPI variant, String parentTrackerUUID) {
 		String shipTrackerUUID = null;
 
 		for (String tag : variant.getTags()) {
 			if (!tag.startsWith(lyr_internals.uuid.shipPrefix)) continue;
 			
-			createNewUUID = false; shipTrackerUUID = tag.substring(lyr_internals.uuid.shipPrefix.length());
-		}; if (createNewUUID) shipTrackerUUID = UUID.randomUUID().toString();
+			shipTrackerUUID = tag.substring(lyr_internals.uuid.shipPrefix.length()); break;
+		}; if (shipTrackerUUID == null) shipTrackerUUID = UUID.randomUUID().toString();
 
 		if (shipTrackerUUID != null && !variant.hasTag(lyr_internals.uuid.shipPrefix+shipTrackerUUID))
 			variant.addTag(lyr_internals.uuid.shipPrefix+shipTrackerUUID);	// ship's uuid
 
-		if (parentTrackerUUID != null && !variant.hasTag(lyr_internals.uuid.parentPrefix+parentTrackerUUID))	// this won't check if there already is a parent UUID
+		if (parentTrackerUUID != null && !variant.hasTag(lyr_internals.uuid.parentPrefix+parentTrackerUUID))
 			variant.addTag(lyr_internals.uuid.parentPrefix+parentTrackerUUID);	// parent's uuid
 		
 		for (String moduleSlot : variant.getStationModules().keySet()) {
 			ShipVariantAPI moduleVariant = variant.getModuleVariant(moduleSlot);
 
-			addShipTrackerUUID(moduleVariant, shipTrackerUUID);
+			addTrackerUUIDs(moduleVariant, shipTrackerUUID);
 		}
 
 		return shipTrackerUUID;
@@ -183,17 +187,17 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 
 	/**
 	 * Removes the UUID tags from the variant, and from its module variants
-	 * <p> If {@link #addShipTrackerUUID(ShipVariantAPI, String)} is used in {@link
+	 * <p> If {@link #addTrackerUUIDs(ShipVariantAPI, String)} is used in {@link
 	 * #onOpen()}, this should be executed in {@link #onClose()} to have the tags
 	 * get properly cleaned up
 	 * @param variant of the ship to have its tags cleaned-up
 	 */
-	public static void removeShipTrackerUUID(ShipVariantAPI variant) {
+	public static void removeTrackerUUIDs(ShipVariantAPI variant) {
 		for (Iterator<String> iterator = variant.getTags().iterator(); iterator.hasNext(); )
 			if (iterator.next().startsWith(lyr_internals.uuid.prefix)) iterator.remove();
 		
 		for (String moduleSlotId : variant.getStationModules().keySet()) {
-			removeShipTrackerUUID(variant.getModuleVariant(moduleSlotId));
+			removeTrackerUUIDs(variant.getModuleVariant(moduleSlotId));
 		}
 	}
 }
