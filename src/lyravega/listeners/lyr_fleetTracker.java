@@ -6,6 +6,8 @@ import java.util.*;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CoreUITabId;
+import com.fs.starfarer.api.combat.MutableShipStatsAPI;
+import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 
@@ -57,10 +59,17 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 	@Override public void onAdvance(float amount) {}
 
 	/** @see {@link lyr_shipTracker#updateVariant(ShipVariantAPI)} */ 
-	public static void updateShipTracker(ShipVariantAPI variant) {
+	public static void updateShipTracker(ShipAPI ship) {
 		if (!isRefitTab()) return;
 
-		getShipTracker(variant).updateVariant(variant);
+		getShipTracker(ship.getVariant()).updateVariant(ship.getVariant());
+	}
+
+	/** @see {@link lyr_shipTracker#updateVariant(ShipVariantAPI)} */ 
+	public static void updateShipTracker(MutableShipStatsAPI stats) {
+		if (!isRefitTab() || !ShipAPI.class.isInstance(stats.getEntity())) return;	// the cast check needs to be done because parts of the UI has outdated variant data unless it is a ShipAPI
+
+		getShipTracker(stats.getVariant()).updateVariant(stats.getVariant());
 	}
 
 	/**
@@ -99,10 +108,17 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 	}
 
 	/** @see {@link #removeShipTracker(ShipVariantAPI)} */ 
-	public static void terminateShipTracker(ShipVariantAPI variant) {
+	public static void terminateShipTracker(ShipAPI ship) {
 		if (!isRefitTab()) return;
 
-		removeShipTracker(variant);
+		removeShipTracker(ship.getVariant());
+	}
+
+	/** @see {@link #removeShipTracker(ShipVariantAPI)} */ 
+	public static void terminateShipTracker(MutableShipStatsAPI stats) {
+		if (!isRefitTab() || !ShipAPI.class.isInstance(stats.getEntity())) return;	// the cast check needs to be done because parts of the UI has outdated variant data unless it is a ShipAPI
+
+		removeShipTracker(stats.getVariant());
 	}
 
 	/**

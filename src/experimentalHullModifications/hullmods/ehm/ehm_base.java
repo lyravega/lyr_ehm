@@ -33,7 +33,7 @@ public final class ehm_base extends _ehm_base {
 		ShipVariantAPI variant = stats.getVariant();
 		ShipHullSpecAPI hullSpec = variant.getHullSpec();
 
-		lyr_fleetTracker.updateShipTracker(variant);	// if this is done after the block below, it'll create multiple trackers for ships with a captain
+		lyr_fleetTracker.updateShipTracker(stats);	// if this is done after the block below, it'll create multiple trackers for ships with a captain
 
 		if (!hullSpec.isBuiltInMod(lyr_internals.id.hullmods.base) || !Misc.getDHullId(hullSpec).equals(hullSpec.getHullId())) {
 			variant.setHullSpecAPI(ehm_hullSpecClone(variant));
@@ -57,7 +57,7 @@ public final class ehm_base extends _ehm_base {
 
 	@Override 
 	public void applyEffectsAfterShipCreation(ShipAPI ship, String hullModSpecId) {
-		lyr_fleetTracker.updateShipTracker(ship.getVariant());
+		lyr_fleetTracker.updateShipTracker(ship);
 	}
 
 	@Override

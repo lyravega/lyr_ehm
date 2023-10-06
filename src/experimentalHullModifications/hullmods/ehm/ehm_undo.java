@@ -26,7 +26,7 @@ public final class ehm_undo extends _ehm_base {
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
 
-		lyr_fleetTracker.terminateShipTracker(variant);
+		lyr_fleetTracker.terminateShipTracker(stats);
 
 		variant.getHullMods().remove(lyr_internals.id.hullmods.base);
 		variant.getPermaMods().remove(lyr_internals.id.hullmods.base);
