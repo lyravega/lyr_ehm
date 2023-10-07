@@ -92,7 +92,7 @@ public class lyr_reflectionTools implements lyr_logger {
 		 * Constructs a method info object with a few getters to access information
 		 * about the method. Mostly used to retrieve methodHandles
 		 * <p> Uses unreflect to expose method's handle, which is then used to store
-		 * the relevant information about the on the object
+		 * the relevant information about the method
 		 * @param method as an object
 		 * @throws Throwable
 		 */
