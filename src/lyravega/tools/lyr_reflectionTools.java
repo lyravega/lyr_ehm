@@ -37,11 +37,11 @@ public class lyr_reflectionTools implements lyr_logger {
 		static {
 			try {
 				methodClass = Class.forName("java.lang.reflect.Method", false, Class.class.getClassLoader());
-				methodStuff.getName = lookup.findVirtual(methodClass, "getName", MethodType.methodType(String.class));
-				methodStuff.getParameterTypes = lookup.findVirtual(methodClass, "getParameterTypes", MethodType.methodType(Class[].class));
-				methodStuff.getReturnType = lookup.findVirtual(methodClass, "getReturnType", MethodType.methodType(Class.class));
-				methodStuff.getModifiers = lookup.findVirtual(methodClass, "getModifiers", MethodType.methodType(int.class));
-				methodStuff.unreflect = lookup.findVirtual(lookupClass, "unreflect", MethodType.methodType(MethodHandle.class, methodClass));
+				getName = lookup.findVirtual(methodClass, "getName", MethodType.methodType(String.class));
+				getParameterTypes = lookup.findVirtual(methodClass, "getParameterTypes", MethodType.methodType(Class[].class));
+				getReturnType = lookup.findVirtual(methodClass, "getReturnType", MethodType.methodType(Class.class));
+				getModifiers = lookup.findVirtual(methodClass, "getModifiers", MethodType.methodType(int.class));
+				unreflect = lookup.findVirtual(lookupClass, "unreflect", MethodType.methodType(MethodHandle.class, methodClass));
 			} catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException e) {
 				logger.fatal(logPrefix+"Failed to initialize reflection tools for methods", e);
 			}
@@ -61,13 +61,13 @@ public class lyr_reflectionTools implements lyr_logger {
 		static {
 			try {
 				fieldClass = Class.forName("java.lang.reflect.Field", false, Class.class.getClassLoader());
-				fieldStuff.isAccessible = lookup.findVirtual(fieldClass, "isAccessible", MethodType.methodType(boolean.class));
-				fieldStuff.setAccessible = lookup.findVirtual(fieldClass, "setAccessible", MethodType.methodType(void.class, boolean.class));
-				fieldStuff.getName = lookup.findVirtual(fieldClass, "getName", MethodType.methodType(String.class));
-				fieldStuff.getModifiers = lookup.findVirtual(fieldClass, "getModifiers", MethodType.methodType(int.class));
-				fieldStuff.getType = lookup.findVirtual(fieldClass, "getType", MethodType.methodType(Class.class));
-				fieldStuff.get = lookup.findVirtual(fieldClass, "get", MethodType.methodType(Object.class, Object.class));
-				fieldStuff.set = lookup.findVirtual(fieldClass, "set", MethodType.methodType(void.class, Object.class, Object.class));
+				isAccessible = lookup.findVirtual(fieldClass, "isAccessible", MethodType.methodType(boolean.class));
+				setAccessible = lookup.findVirtual(fieldClass, "setAccessible", MethodType.methodType(void.class, boolean.class));
+				getName = lookup.findVirtual(fieldClass, "getName", MethodType.methodType(String.class));
+				getModifiers = lookup.findVirtual(fieldClass, "getModifiers", MethodType.methodType(int.class));
+				getType = lookup.findVirtual(fieldClass, "getType", MethodType.methodType(Class.class));
+				get = lookup.findVirtual(fieldClass, "get", MethodType.methodType(Object.class, Object.class));
+				set = lookup.findVirtual(fieldClass, "set", MethodType.methodType(void.class, Object.class, Object.class));
 			} catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException e) {
 				logger.fatal(logPrefix+"Failed to initialize reflection tools for fields", e);
 			}
