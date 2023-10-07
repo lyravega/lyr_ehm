@@ -7,15 +7,18 @@ import java.lang.invoke.MethodType;
 import java.util.Arrays;
 
 /**
- * Reflective operation tools for all such reflection-related classes as 
- * uiTools and ProxyTools.
- * <p>This package is used indirectly and will not trigger the 
- * scriptClassLoader's restriction.
- * <p> The method {@link #findMethodByName} returns information about a
- * method a ready-to-use methodHandle to invoke it.
- * <p> The innerClass {@link methodReflection} stores and provides accessors
- * for this information.
+ * Hosts tools for reflection stuff. These tools are categorized under their
+ * own inner classes, and covers a few of the most useful things.
+ * <p> As the package uses reflection indirectly through the method handles,
+ * it will not trigger game's restriction. Notable methods are listed below,
+ * each having their own overloads to accomodate multiple scenarios.
  * @author lyravega
+ * @see {@link methodReflection}
+ * @see {@link methodReflection#findMethodByName(String, Object, Class...)}
+ * @see {@link methodReflection#findMethodByClass(Object, Class, Class...)}
+ * @see {@link fieldReflection}
+ * @see {@link fieldReflection#findFieldByName(String, Object)}
+ * @see {@link fieldReflection#findFieldByClass(Class, Object)}
  */
 @SuppressWarnings("unused")
 public class lyr_reflectionTools implements lyr_logger {
@@ -24,9 +27,15 @@ public class lyr_reflectionTools implements lyr_logger {
 
 	//#region METHOD STUFF
 	/**
-	 * Provides some accessors related to a method. Reflected information is stored 
-	 * locally during construction; accessors don't use any reflection to access the
-	 * relevant data unlike {@link fieldReflection}
+	 * Hosts static helper methods to find specific methods in a class/object. These
+	 * helpers attempt to instantiate a custom method object and return it to further
+	 * inspect the method, but it's mainly used to get a method handle.
+	 * <p> Unlike its sibling {@link fieldReflection}, the method is not stored in
+	 * the instance, instead the relevant fields that may be useful are cached in it.
+	 * Using the instance accessors is thereby safe.
+	 * @author lyravega
+	 * @see {@link methodReflection#findMethodByName(String, Object, Class...)}
+	 * @see {@link methodReflection#findMethodByClass(Object, Class, Class...)}
 	 */
 	public static final class methodReflection {
 		public static Class<?> methodClass;
@@ -61,7 +70,7 @@ public class lyr_reflectionTools implements lyr_logger {
 		 * {@code methodName}, they'll be used to perform a more specific search that
 		 * can also target overloaded methods.
 		 * @param methodName as String, no "()"
-		 * @param clazz to search the methodName on
+		 * @param instanceOrClass to search the method on. if an instance is passed, its class will be used
 		 * @param declaredOnly (overload, default {@code true}) to search declared only or all methods
 		 * @param methodModifier (overload, default {@code null}) to search a method with a specific modifier
 		 * @param parameterTypes (optional) full set of parameters, if available and needed
@@ -69,22 +78,23 @@ public class lyr_reflectionTools implements lyr_logger {
 		 * @see #findMethodByClass(Class, Class, Class...)
 		 * @throws Throwable if such a method is cannot be found
 		 */
-		public static final methodReflection findMethodByName(String methodName, Class<?> clazz, Class<?>... parameterTypes) throws Throwable {
-			return findMethodByName(methodName, clazz, true, null, parameterTypes);
+		public static final methodReflection findMethodByName(String methodName, Object instanceOrClass, Class<?>... parameterTypes) throws Throwable {
+			return findMethodByName(methodName, instanceOrClass, true, null, parameterTypes);
 		}
 
 		/** @see #findMethodByName(String, Class, Class...) */
-		public static final methodReflection findMethodByName(String methodName, Class<?> clazz, boolean declaredOnly, Class<?>... parameterTypes) throws Throwable {
-			return findMethodByName(methodName, clazz, declaredOnly, null, parameterTypes);
+		public static final methodReflection findMethodByName(String methodName, Object instanceOrClass, boolean declaredOnly, Class<?>... parameterTypes) throws Throwable {
+			return findMethodByName(methodName, instanceOrClass, declaredOnly, null, parameterTypes);
 		}
 
 		/** @see #findMethodByName(String, Class, Class...) */
-		public static final methodReflection findMethodByName(String methodName, Class<?> clazz, Integer methodModifier, Class<?>... parameterTypes) throws Throwable {
-			return findMethodByName(methodName, clazz, true, methodModifier, parameterTypes);
+		public static final methodReflection findMethodByName(String methodName, Object instanceOrClass, Integer methodModifier, Class<?>... parameterTypes) throws Throwable {
+			return findMethodByName(methodName, instanceOrClass, true, methodModifier, parameterTypes);
 		}
 
 		/** @see #findMethodByName(String, Class, Class...) */
-		public static final methodReflection findMethodByName(String methodName, Class<?> clazz, boolean declaredOnly, Integer methodModifier, Class<?>... parameterTypes) throws Throwable {
+		public static final methodReflection findMethodByName(String methodName, Object instanceOrClass, boolean declaredOnly, Integer methodModifier, Class<?>... parameterTypes) throws Throwable {
+			Class<?> clazz = instanceOrClass.getClass().equals(Class.class) ? (Class<?>) instanceOrClass : instanceOrClass.getClass();
 			Object method = null;
 
 			try {
@@ -107,10 +117,10 @@ public class lyr_reflectionTools implements lyr_logger {
 		/**
 		 * Search for a method in a class through the passed {@code returnType} and/or
 		 * {@code parameterTypes}. Used in cases where the method name is not available
-		 * (due to obfuscation for example).
+		 * (due to obfuscation for example), but its parameters could identify it.
 		 * <p> Like its sibling, returns a methodInfo. The only difference is whether
 		 * the search is done through its name, or classes of its parameters.
-		 * @param clazz to search the method in
+		 * @param instanceOrClass to search the method on. if an instance is passed, its class will be used
 		 * @param returnType of the method being searched for, can be null
 		 * @param declaredOnly (overload, default {@code true}) to search declared only or all methods
 		 * @param methodModifier (overload, default {@code null}) to search a method with a specific modifier
@@ -119,22 +129,23 @@ public class lyr_reflectionTools implements lyr_logger {
 		 * @see #findMethodByName(String, Class, Class...)
 		 * @throws Throwable if such a method is cannot be found
 		 */
-		public static final methodReflection findMethodByClass(Class<?> clazz, Class<?> returnType, Class<?>... parameterTypes) throws Throwable {
-			return findMethodByClass(clazz, returnType, true, null, parameterTypes);
+		public static final methodReflection findMethodByClass(Object instanceOrClass, Class<?> returnType, Class<?>... parameterTypes) throws Throwable {
+			return findMethodByClass(instanceOrClass, returnType, true, null, parameterTypes);
 		}
 
 		/** @see #findMethodByClass(Class, Class, Class...) */
-		public static final methodReflection findMethodByClass(Class<?> clazz, Class<?> returnType, boolean declaredOnly, Class<?>... parameterTypes) throws Throwable {
-			return findMethodByClass(clazz, returnType, declaredOnly, null, parameterTypes);
+		public static final methodReflection findMethodByClass(Object instanceOrClass, Class<?> returnType, boolean declaredOnly, Class<?>... parameterTypes) throws Throwable {
+			return findMethodByClass(instanceOrClass, returnType, declaredOnly, null, parameterTypes);
 		}
 
 		/** @see #findMethodByClass(Class, Class, Class...) */
-		public static final methodReflection findMethodByClass(Class<?> clazz, Class<?> returnType, Integer methodModifier, Class<?>... parameterTypes) throws Throwable {
-			return findMethodByClass(clazz, returnType, true, methodModifier, parameterTypes);
+		public static final methodReflection findMethodByClass(Object instanceOrClass, Class<?> returnType, Integer methodModifier, Class<?>... parameterTypes) throws Throwable {
+			return findMethodByClass(instanceOrClass, returnType, true, methodModifier, parameterTypes);
 		}
 
 		/** @see #findMethodByClass(Class, Class, Class...) */
-		public static final methodReflection findMethodByClass(Class<?> clazz, Class<?> returnType, boolean declaredOnly, Integer methodModifier, Class<?>... parameterTypes) throws Throwable {
+		public static final methodReflection findMethodByClass(Object instanceOrClass, Class<?> returnType, boolean declaredOnly, Integer methodModifier, Class<?>... parameterTypes) throws Throwable {
+			Class<?> clazz = instanceOrClass.getClass().equals(Class.class) ? (Class<?>) instanceOrClass : instanceOrClass.getClass();
 			Object method = null;
 			String methodName = null;
 
@@ -212,10 +223,16 @@ public class lyr_reflectionTools implements lyr_logger {
 
 	//#region FIELD STUFF
 	/**
-	 * Provides some accessors related to a field. Accessors use reflection to get
-	 * the job done, unlike {@link methodReflection}. This is somewhat necessary as
-	 * field manipulation is more prone to exceptions, and storing / changing the
-	 * field's value in an instance of this object would be pointless anyway
+	 * Hosts static helper methods to find specific fields in a class/object. These
+	 * helpers attempt to instantiate an object and return it to further manipulate
+	 * the field with a few accessor methods.
+	 * <p> Unlike its sibling {@link methodReflection}, the field is stored in
+	 * the instance, and most accessors use reflected methods on the stored field.
+	 * This is somewhat necessary as field manipulation is more prone to exceptions,
+	 * but more than that storing things like the field value would be pointless.
+	 * @author lyravega
+	 * @see {@link fieldReflection#findFieldByName(String, Object)}
+	 * @see {@link fieldReflection#findFieldByClass(Class, Object)}
 	 */
 	public static final class fieldReflection {
 		public static Class<?> fieldClass;
