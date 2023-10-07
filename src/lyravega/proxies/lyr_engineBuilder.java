@@ -9,7 +9,7 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import lyravega.tools.lyr_logger;
-import lyravega.tools.lyr_reflectionTools;
+import lyravega.tools.lyr_reflectionTools.methodReflection;
 
 /**
  * A proxy-like class for... engine builder? When {@code getEngineSlots()}
@@ -34,16 +34,16 @@ public final class lyr_engineBuilder implements lyr_logger {
 
 	static {
 		try {
-			engineBuilderClass = lyr_reflectionTools.findMethodByName("addEngineSlot", lyr_hullSpec.hullSpecClass).getParameterTypes()[0];
+			engineBuilderClass = methodReflection.findMethodByName("addEngineSlot", lyr_hullSpec.hullSpecClass).getParameterTypes()[0];
 			for (Class<?> clazz : engineBuilderClass.getDeclaredClasses()) {
 				if (clazz.isEnum()) engineStyleIdEnum = clazz; else engineStyleSpecClass = clazz;
 			}
 
-			clone = lyr_reflectionTools.findMethodByName("clone", engineBuilderClass).getMethodHandle();
-			setEngineStyleId = lyr_reflectionTools.findMethodByClass(engineBuilderClass, void.class, engineStyleIdEnum).getMethodHandle();
-			setEngineStyleSpecFromJSON = lyr_reflectionTools.findMethodByClass(engineBuilderClass, void.class, JSONObject.class, String.class).getMethodHandle();
+			clone = methodReflection.findMethodByName("clone", engineBuilderClass).getMethodHandle();
+			setEngineStyleId = methodReflection.findMethodByClass(engineBuilderClass, void.class, engineStyleIdEnum).getMethodHandle();
+			setEngineStyleSpecFromJSON = methodReflection.findMethodByClass(engineBuilderClass, void.class, JSONObject.class, String.class).getMethodHandle();
 			newEngineStyleSpec = MethodHandles.lookup().findConstructor(engineStyleSpecClass, MethodType.methodType(void.class, JSONObject.class, String.class));
-			setEngineStyleSpec = lyr_reflectionTools.findMethodByClass(engineBuilderClass, void.class, engineStyleSpecClass).getMethodHandle();
+			setEngineStyleSpec = methodReflection.findMethodByClass(engineBuilderClass, void.class, engineStyleSpecClass).getMethodHandle();
 		} catch (Throwable t) {
 			logger.fatal(logPrefix+"Failed to find a method in 'lyr_engineBuilder'", t);
 		}

@@ -3,7 +3,7 @@ package lyravega.proxies.ui;
 import java.lang.invoke.MethodHandle;
 
 import lyravega.tools.lyr_logger;
-import lyravega.tools.lyr_reflectionTools;
+import lyravega.tools.lyr_reflectionTools.methodReflection;
 
 public class lyr_coreUI implements lyr_logger {
 	private Object coreUI;	// CoreUIAPI, UIPanelAPI, UIComponentAPI
@@ -13,9 +13,9 @@ public class lyr_coreUI implements lyr_logger {
 
 	static {
 		try {
-			clazz = lyr_reflectionTools.findMethodByName("getCore", lyr_campaignUI.clazz).getReturnType();
+			clazz = methodReflection.findMethodByName("getCore", lyr_campaignUI.clazz).getReturnType();
 
-			getCurrentTab = lyr_reflectionTools.findMethodByName("getCurrentTab", clazz).getMethodHandle();	// aimed at refit tab
+			getCurrentTab = methodReflection.findMethodByName("getCurrentTab", clazz).getMethodHandle();	// aimed at refit tab
 		} catch (Throwable t) {
 			logger.fatal(logPrefix+"Failed to find a method in 'lyr_coreUI'", t);
 		}

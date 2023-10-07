@@ -8,7 +8,7 @@ import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
 import lyravega.tools.lyr_logger;
-import lyravega.tools.lyr_reflectionTools;
+import lyravega.tools.lyr_reflectionTools.methodReflection;
 
 import org.lwjgl.util.vector.Vector2f;
 
@@ -39,20 +39,20 @@ public final class lyr_weaponSlot implements lyr_logger {
 
 	static {
 		try {
-			weaponSlotClass = lyr_reflectionTools.findMethodByName("getWeaponSlot", lyr_hullSpec.hullSpecClass, 1).getReturnType();
-			nodeClass = lyr_reflectionTools.findMethodByName("getNode", weaponSlotClass).getReturnType();
-			slotTypeEnum = lyr_reflectionTools.findMethodByName("getSlotType", weaponSlotClass).getReturnType();
+			weaponSlotClass = methodReflection.findMethodByName("getWeaponSlot", lyr_hullSpec.hullSpecClass, 1).getReturnType();
+			nodeClass = methodReflection.findMethodByName("getNode", weaponSlotClass).getReturnType();
+			slotTypeEnum = methodReflection.findMethodByName("getSlotType", weaponSlotClass).getReturnType();
 
-			clone = lyr_reflectionTools.findMethodByName("clone", weaponSlotClass).getMethodHandle();
-			setWeaponType = lyr_reflectionTools.findMethodByName("setWeaponType", weaponSlotClass, WeaponType.class).getMethodHandle();
-			// isWeaponSlot = lyr_reflectionTools.findMethodByName("isWeaponSlot", weaponSlotClass).getMethodHandle();
-			setId = lyr_reflectionTools.findMethodByName("setId", weaponSlotClass, String.class).getMethodHandle();
-			setSlotSize = lyr_reflectionTools.findMethodByName("setSlotSize", weaponSlotClass).getMethodHandle();
+			clone = methodReflection.findMethodByName("clone", weaponSlotClass).getMethodHandle();
+			setWeaponType = methodReflection.findMethodByName("setWeaponType", weaponSlotClass, WeaponType.class).getMethodHandle();
+			// isWeaponSlot = methodReflection.findMethodByName("isWeaponSlot", weaponSlotClass).getMethodHandle();
+			setId = methodReflection.findMethodByName("setId", weaponSlotClass, String.class).getMethodHandle();
+			setSlotSize = methodReflection.findMethodByName("setSlotSize", weaponSlotClass).getMethodHandle();
 			// newNode = lookup.findConstructor(nodeClass, MethodType.methodType(void.class, String.class, Vector2f.class));
-			setNode = lyr_reflectionTools.findMethodByName("setNode", weaponSlotClass, String.class, Vector2f.class).getMethodHandle();
-			// setNode_alt = lyr_reflectionTools.findMethodByName("setNode", weaponSlotClass, nodeClass).getMethodHandle();
-			getSlotType = lyr_reflectionTools.findMethodByName("getSlotType", weaponSlotClass).getMethodHandle();
-			setSlotType = lyr_reflectionTools.findMethodByName("setSlotType", weaponSlotClass, slotTypeEnum).getMethodHandle();
+			setNode = methodReflection.findMethodByName("setNode", weaponSlotClass, String.class, Vector2f.class).getMethodHandle();
+			// setNode_alt = methodReflection.findMethodByName("setNode", weaponSlotClass, nodeClass).getMethodHandle();
+			getSlotType = methodReflection.findMethodByName("getSlotType", weaponSlotClass).getMethodHandle();
+			setSlotType = methodReflection.findMethodByName("setSlotType", weaponSlotClass, slotTypeEnum).getMethodHandle();
 		} catch (Throwable t) {
 			logger.fatal(logPrefix+"Failed to find a method in 'lyr_weaponSlot'", t);
 		}

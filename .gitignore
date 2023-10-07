@@ -1,6 +1,6 @@
-debug.ahk
 .vscode/*
 bin/*
 lib/*
 jars/*
 *.zip
+*.todo

@@ -6,7 +6,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI;
 
 import lyravega.tools.lyr_logger;
-import lyravega.tools.lyr_reflectionTools;
+import lyravega.tools.lyr_reflectionTools.methodReflection;
 
 public class lyr_campaignUI implements lyr_logger {
 	private CampaignUIAPI campaignUI;
@@ -21,9 +21,9 @@ public class lyr_campaignUI implements lyr_logger {
 		try {
 			clazz = Global.getSector().getCampaignUI().getClass();
 
-			getScreenPanel = lyr_reflectionTools.findMethodByName("getScreenPanel", clazz).getMethodHandle();
-			// getEncounterDialog = lyr_reflectionTools.findMethodByName("getEncounterDialog", clazz).getMethodHandle();
-			getCore = lyr_reflectionTools.findMethodByName("getCore", clazz).getMethodHandle();
+			getScreenPanel = methodReflection.findMethodByName("getScreenPanel", clazz).getMethodHandle();
+			// getEncounterDialog = methodReflection.findMethodByName("getEncounterDialog", clazz).getMethodHandle();
+			getCore = methodReflection.findMethodByName("getCore", clazz).getMethodHandle();
 		} catch (Throwable t) {
 			logger.fatal(logPrefix+"Failed to find a method in 'lyr_campaignUI'", t);
 		}

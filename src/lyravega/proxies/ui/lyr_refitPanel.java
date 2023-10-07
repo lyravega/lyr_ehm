@@ -5,7 +5,7 @@ import java.lang.invoke.MethodHandle;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 
 import lyravega.tools.lyr_logger;
-import lyravega.tools.lyr_reflectionTools;
+import lyravega.tools.lyr_reflectionTools.methodReflection;
 
 public class lyr_refitPanel implements lyr_logger {
 	private Object refitPanel;	// UIPanelAPI, UIComponentAPI
@@ -24,16 +24,16 @@ public class lyr_refitPanel implements lyr_logger {
 
 	static {
 		try {
-			clazz = lyr_reflectionTools.findMethodByName("notifyFleetMemberChanged", lyr_campaignUI.clazz).getParameterTypes()[0];
+			clazz = methodReflection.findMethodByName("notifyFleetMemberChanged", lyr_campaignUI.clazz).getParameterTypes()[0];
 
-			getDesignDisplay = lyr_reflectionTools.findMethodByName("getDesignDisplay", clazz).getMethodHandle();
-			getShipDisplay = lyr_reflectionTools.findMethodByName("getShipDisplay", clazz).getMethodHandle();
-			saveCurrentVariant = lyr_reflectionTools.findMethodByName("saveCurrentVariant", clazz, boolean.class).getMethodHandle();
-			getMember = lyr_reflectionTools.findMethodByName("getMember", clazz).getMethodHandle();
-			syncWithCurrentVariant = lyr_reflectionTools.findMethodByName("syncWithCurrentVariant", clazz, boolean.class).getMethodHandle();
-			setEditedSinceLoad = lyr_reflectionTools.findMethodByName("setEditedSinceLoad", clazz).getMethodHandle();
-			setEditedSinceSave = lyr_reflectionTools.findMethodByName("setEditedSinceSave", clazz).getMethodHandle();
-			addAllWeaponsFromVariantToCargo = lyr_reflectionTools.findMethodByName("addAllWeaponsFromVariantToCargo", clazz).getMethodHandle();
+			getDesignDisplay = methodReflection.findMethodByName("getDesignDisplay", clazz).getMethodHandle();
+			getShipDisplay = methodReflection.findMethodByName("getShipDisplay", clazz).getMethodHandle();
+			saveCurrentVariant = methodReflection.findMethodByName("saveCurrentVariant", clazz, boolean.class).getMethodHandle();
+			getMember = methodReflection.findMethodByName("getMember", clazz).getMethodHandle();
+			syncWithCurrentVariant = methodReflection.findMethodByName("syncWithCurrentVariant", clazz, boolean.class).getMethodHandle();
+			setEditedSinceLoad = methodReflection.findMethodByName("setEditedSinceLoad", clazz).getMethodHandle();
+			setEditedSinceSave = methodReflection.findMethodByName("setEditedSinceSave", clazz).getMethodHandle();
+			addAllWeaponsFromVariantToCargo = methodReflection.findMethodByName("addAllWeaponsFromVariantToCargo", clazz).getMethodHandle();
 		} catch (Throwable t) {
 			logger.fatal(logPrefix+"Failed to find a method in 'lyr_refitPanel'", t);
 		}

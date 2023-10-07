@@ -6,7 +6,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.InteractionDialogAPI;
 
 import lyravega.tools.lyr_logger;
-import lyravega.tools.lyr_reflectionTools;
+import lyravega.tools.lyr_reflectionTools.methodReflection;
 
 public class lyr_encounterDialog implements lyr_logger {
 	private InteractionDialogAPI encounterDialog;	// InteractionDialogAPI, VisualPanelAPI, UIPanelAPI, UIComponentAPI
@@ -17,9 +17,9 @@ public class lyr_encounterDialog implements lyr_logger {
 
 	static {
 		try {
-			clazz = lyr_reflectionTools.findMethodByName("getEncounterDialog", lyr_campaignUI.clazz).getReturnType();
+			clazz = methodReflection.findMethodByName("getEncounterDialog", lyr_campaignUI.clazz).getReturnType();
 
-			getCoreUI = lyr_reflectionTools.findMethodByName("getCoreUI", clazz).getMethodHandle();
+			getCoreUI = methodReflection.findMethodByName("getCoreUI", clazz).getMethodHandle();
 		} catch (Throwable t) {
 			logger.fatal(logPrefix+"Failed to find a method in 'lyr_encounterDialog'", t);
 		}
