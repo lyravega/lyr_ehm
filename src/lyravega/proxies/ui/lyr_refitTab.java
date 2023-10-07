@@ -1,22 +1,21 @@
 package lyravega.proxies.ui;
 
-import static lyravega.tools.lyr_reflectionTools.inspectMethod;
-
 import java.lang.invoke.MethodHandle;
 
 import lyravega.tools.lyr_logger;
+import lyravega.tools.lyr_reflectionTools;
 
 public class lyr_refitTab implements lyr_logger {
 	private Object refitTab;	// UIPanelAPI, UIComponentAPI
-	// private lyr_refitTab refitPanel;
+	// private lyr_refitPanel refitPanel;
 	static Class<?> clazz;
 	private static MethodHandle getRefitPanel;
 
 	static {
 		try {
-			clazz = inspectMethod("getRefitTab", lyr_refitPanel.clazz).getReturnType();
+			clazz = lyr_reflectionTools.findMethodByName("getRefitTab", lyr_refitPanel.clazz).getReturnType();
 
-			getRefitPanel = inspectMethod("getRefitPanel", clazz).getMethodHandle();
+			getRefitPanel = lyr_reflectionTools.findMethodByName("getRefitPanel", clazz).getMethodHandle();
 		} catch (Throwable t) {
 			logger.fatal(logPrefix+"Failed to find a method in 'lyr_refitTab'", t);
 		}

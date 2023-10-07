@@ -1,7 +1,5 @@
 package lyravega.proxies;
 
-import static lyravega.tools.lyr_reflectionTools.inspectMethod;
-
 import java.awt.Color;
 import java.lang.invoke.MethodHandle;
 
@@ -9,6 +7,7 @@ import com.fs.starfarer.api.combat.ShieldAPI.ShieldType;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
 
 import lyravega.tools.lyr_logger;
+import lyravega.tools.lyr_reflectionTools;
 
 /**
  * A proxy-like class for {@link ShieldSpecAPI} that utilizes obfuscated 
@@ -34,17 +33,17 @@ public final class lyr_shieldSpec implements lyr_logger {
 	
 	static {
 		try {
-			shieldSpecClass = inspectMethod("getShieldSpec", lyr_hullSpec.hullSpecClass).getReturnType();
+			shieldSpecClass = lyr_reflectionTools.findMethodByName("getShieldSpec", lyr_hullSpec.hullSpecClass).getReturnType();
 
-			clone = inspectMethod("clone", shieldSpecClass).getMethodHandle();
-			// setRingColor = inspectMethod("setRingColor", shieldSpecClass).getMethodHandle();
-			// setInnerColor = inspectMethod("setInnerColor", shieldSpecClass).getMethodHandle();
-			setType = inspectMethod("setType", shieldSpecClass).getMethodHandle();
-			setFluxPerDamageAbsorbed = inspectMethod("setFluxPerDamageAbsorbed", shieldSpecClass).getMethodHandle();
-			setUpkeepCost = inspectMethod("setUpkeepCost", shieldSpecClass).getMethodHandle();
-			setArc = inspectMethod("setArc", shieldSpecClass).getMethodHandle();
-			setPhaseCost = inspectMethod("setPhaseCost", shieldSpecClass).getMethodHandle();
-			setPhaseUpkeep = inspectMethod("setPhaseUpkeep", shieldSpecClass).getMethodHandle();
+			clone = lyr_reflectionTools.findMethodByName("clone", shieldSpecClass).getMethodHandle();
+			// setRingColor = lyr_reflectionTools.findMethodByName("setRingColor", shieldSpecClass).getMethodHandle();
+			// setInnerColor = lyr_reflectionTools.findMethodByName("setInnerColor", shieldSpecClass).getMethodHandle();
+			setType = lyr_reflectionTools.findMethodByName("setType", shieldSpecClass).getMethodHandle();
+			setFluxPerDamageAbsorbed = lyr_reflectionTools.findMethodByName("setFluxPerDamageAbsorbed", shieldSpecClass).getMethodHandle();
+			setUpkeepCost = lyr_reflectionTools.findMethodByName("setUpkeepCost", shieldSpecClass).getMethodHandle();
+			setArc = lyr_reflectionTools.findMethodByName("setArc", shieldSpecClass).getMethodHandle();
+			setPhaseCost = lyr_reflectionTools.findMethodByName("setPhaseCost", shieldSpecClass).getMethodHandle();
+			setPhaseUpkeep = lyr_reflectionTools.findMethodByName("setPhaseUpkeep", shieldSpecClass).getMethodHandle();
 		} catch (Throwable t) {
 			logger.fatal(logPrefix+"Failed to find a method in 'lyr_shieldSpec'", t);
 		}

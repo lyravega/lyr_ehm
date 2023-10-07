@@ -1,12 +1,11 @@
 package lyravega.proxies.ui;
 
-import static lyravega.tools.lyr_reflectionTools.inspectMethod;
-
 import java.lang.invoke.MethodHandle;
 
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 
 import lyravega.tools.lyr_logger;
+import lyravega.tools.lyr_reflectionTools;
 
 public class lyr_shipDisplay implements lyr_logger {
 	private Object shipDisplay;		// UIPanelAPI, UIComponentAPI
@@ -17,11 +16,11 @@ public class lyr_shipDisplay implements lyr_logger {
 
 	static {
 		try {
-			clazz = inspectMethod("getShipDisplay", lyr_refitPanel.clazz).getReturnType();
+			clazz = lyr_reflectionTools.findMethodByName("getShipDisplay", lyr_refitPanel.clazz).getReturnType();
 
-			setFleetMember = inspectMethod("setFleetMember", clazz).getMethodHandle();
-			getCurrentVariant = inspectMethod("getCurrentVariant", clazz).getMethodHandle();
-			clearFighterSlot = inspectMethod("clearFighterSlot", clazz).getMethodHandle();
+			setFleetMember = lyr_reflectionTools.findMethodByName("setFleetMember", clazz).getMethodHandle();
+			getCurrentVariant = lyr_reflectionTools.findMethodByName("getCurrentVariant", clazz).getMethodHandle();
+			clearFighterSlot = lyr_reflectionTools.findMethodByName("clearFighterSlot", clazz).getMethodHandle();
 		} catch (Throwable t) {
 			logger.fatal(logPrefix+"Failed to find a method in 'lyr_shipDisplay'", t);
 		}

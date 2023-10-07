@@ -31,7 +31,6 @@ public class _ehm_test extends _ehm_base implements normalEvents {
 	public void onRemove(ShipVariantAPI variant) {
 		commitVariantChanges(); playDrillSound();
 	}
-
 	//#endregion
 	// END OF CUSTOM EVENTS
 

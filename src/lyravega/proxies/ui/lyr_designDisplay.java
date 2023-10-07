@@ -1,10 +1,9 @@
 package lyravega.proxies.ui;
 
-import static lyravega.tools.lyr_reflectionTools.inspectMethod;
-
 import java.lang.invoke.MethodHandle;
 
 import lyravega.tools.lyr_logger;
+import lyravega.tools.lyr_reflectionTools;
 
 public class lyr_designDisplay implements lyr_logger {
 	private Object designDisplay;	// UIPanelAPI, UIComponentAPI
@@ -13,9 +12,9 @@ public class lyr_designDisplay implements lyr_logger {
 
 	static {
 		try {
-			clazz = inspectMethod("getDesignDisplay", lyr_designDisplay.clazz).getReturnType();
+			clazz = lyr_reflectionTools.findMethodByName("getDesignDisplay", lyr_designDisplay.clazz).getReturnType();
 
-			undo = inspectMethod("undo", clazz).getMethodHandle(); // not used anymore because fucks up for ships with officers
+			undo = lyr_reflectionTools.findMethodByName("undo", clazz).getMethodHandle(); // not used anymore because fucks up for ships with officers
 		} catch (Throwable t) {
 			logger.fatal(logPrefix+"Failed to find a method in 'lyr_designDisplay'", t);
 		}

@@ -1,7 +1,5 @@
 package lyravega.proxies;
 
-import static lyravega.tools.lyr_reflectionTools.inspectMethod;
-
 import java.lang.invoke.MethodHandle;
 import java.util.EnumSet;
 import java.util.List;
@@ -15,6 +13,7 @@ import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShipTypeHints;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
 import lyravega.tools.lyr_logger;
+import lyravega.tools.lyr_reflectionTools;
 
 /**
  * A proxy-like class for {@link ShipHullSpecAPI} that utilizes obfuscated 
@@ -54,24 +53,24 @@ public final class lyr_hullSpec implements lyr_logger {
 		try {
 			hullSpecClass = Global.getSettings().getAllShipHullSpecs().iterator().next().getClass();
 
-			clone = inspectMethod("clone", hullSpecClass).getMethodHandle();
-			getEngineSlots = inspectMethod("getEngineSlots", hullSpecClass).getMethodHandle();
-			setShieldSpec = inspectMethod("setShieldSpec", hullSpecClass).getMethodHandle();
-			// addBuiltInMod = inspectMethod("addBuiltInMod", hullSpecClass).getMethodHandle();
-			// setManufacturer = inspectMethod("setManufacturer", hullSpecClass).getMethodHandle();
-			// setDescriptionPrefix = inspectMethod("setDescriptionPrefix", hullSpecClass).getMethodHandle();
-			// setShipSystemId = inspectMethod("setShipSystemId", hullSpecClass).getMethodHandle();
-			addWeaponSlot = inspectMethod("addWeaponSlot", hullSpecClass).getMethodHandle();
-			// addBuiltInWeapon = inspectMethod("addBuiltInWeapon", hullSpecClass).getMethodHandle();
-			addBuiltInWing = inspectMethod("addBuiltInWing", hullSpecClass).getMethodHandle();
-			// setShipDefenseId = inspectMethod("setShipDefenseId", hullSpecClass).getMethodHandle();
-			// getOrdnancePoints = inspectMethod("getOrdnancePoints", hullSpecClass).getMethodHandle();
-			setOrdnancePoints = inspectMethod("setOrdnancePoints", hullSpecClass).getMethodHandle();
-			// setDParentHullId = inspectMethod("setDParentHullId", hullSpecClass).getMethodHandle();
-			setBaseHullId = inspectMethod("setBaseHullId", hullSpecClass).getMethodHandle();
-			// setRestoreToBase = inspectMethod("setRestoreToBase", hullSpecClass).getMethodHandle();
-			// getBaseValue = inspectMethod("getBaseValue", hullSpecClass).getMethodHandle();
-			setBaseValue = inspectMethod("setBaseValue", hullSpecClass).getMethodHandle();
+			clone = lyr_reflectionTools.findMethodByName("clone", hullSpecClass).getMethodHandle();
+			getEngineSlots = lyr_reflectionTools.findMethodByName("getEngineSlots", hullSpecClass).getMethodHandle();
+			setShieldSpec = lyr_reflectionTools.findMethodByName("setShieldSpec", hullSpecClass).getMethodHandle();
+			// addBuiltInMod = lyr_reflectionTools.findMethodByName("addBuiltInMod", hullSpecClass).getMethodHandle();
+			// setManufacturer = lyr_reflectionTools.findMethodByName("setManufacturer", hullSpecClass).getMethodHandle();
+			// setDescriptionPrefix = lyr_reflectionTools.findMethodByName("setDescriptionPrefix", hullSpecClass).getMethodHandle();
+			// setShipSystemId = lyr_reflectionTools.findMethodByName("setShipSystemId", hullSpecClass).getMethodHandle();
+			addWeaponSlot = lyr_reflectionTools.findMethodByName("addWeaponSlot", hullSpecClass).getMethodHandle();
+			// addBuiltInWeapon = lyr_reflectionTools.findMethodByName("addBuiltInWeapon", hullSpecClass).getMethodHandle();
+			addBuiltInWing = lyr_reflectionTools.findMethodByName("addBuiltInWing", hullSpecClass).getMethodHandle();
+			// setShipDefenseId = lyr_reflectionTools.findMethodByName("setShipDefenseId", hullSpecClass).getMethodHandle();
+			// getOrdnancePoints = lyr_reflectionTools.findMethodByName("getOrdnancePoints", hullSpecClass).getMethodHandle();
+			setOrdnancePoints = lyr_reflectionTools.findMethodByName("setOrdnancePoints", hullSpecClass).getMethodHandle();
+			// setDParentHullId = lyr_reflectionTools.findMethodByName("setDParentHullId", hullSpecClass).getMethodHandle();
+			setBaseHullId = lyr_reflectionTools.findMethodByName("setBaseHullId", hullSpecClass).getMethodHandle();
+			// setRestoreToBase = lyr_reflectionTools.findMethodByName("setRestoreToBase", hullSpecClass).getMethodHandle();
+			// getBaseValue = lyr_reflectionTools.findMethodByName("getBaseValue", hullSpecClass).getMethodHandle();
+			setBaseValue = lyr_reflectionTools.findMethodByName("setBaseValue", hullSpecClass).getMethodHandle();
 		} catch (Throwable t) {
 			logger.fatal(logPrefix+"Failed to find a method in 'lyr_hullSpec'", t);
 		}
