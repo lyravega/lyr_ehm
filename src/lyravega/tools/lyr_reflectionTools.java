@@ -59,21 +59,20 @@ public class lyr_reflectionTools implements lyr_logger {
 		}
 
 		/**
-		 * Search for a method in a class with the given {@code methodName} as a string,
-		 * and get a methodMap object that contains the returnType and parameterTypes of
-		 * the found method, alongside a MethodType and a ready-to-use MethodHandle to 
-		 * invoke it.
-		 * <p> If a method cannot be found easily, a brute-force search will be done
-		 * on all of the methods of the class. {@code declaredOnly} can be used to
-		 * expand the search on inherited methods as well.
-		 * <p> {@code parameterTypes} can be ignored, however if given alongside a 
-		 * {@code methodName}, they'll be used to perform a more specific search that
-		 * can also target overloaded methods.
-		 * @param methodName as String, no "()"
-		 * @param instanceOrClass to search the method on. if an instance is passed, its class will be used
-		 * @param declaredOnly (overload, default {@code true}) to search declared only or all methods
-		 * @param methodModifier (overload, default {@code null}) to search a method with a specific modifier
-		 * @param parameterTypes (optional) full set of parameters, if available and needed
+		 * Searches a class of an instance or a class for a given {@code methodName},
+		 * and returns a custom method object with a few accessors. This returned object
+		 * is mostly utilized to get the method handle of the method.
+		 * <p> {@code parameterTypes} is optional, however without it the search will
+		 * most likely done on every method of the class, till a result is found. With
+		 * this optional, specific overloads of the method may be targeted.
+		 * <p> {@code declaredOnly} and {@code methodModifier} are overload parameters
+		 * which may be utilized to broaden/narrow the search and/or target more specific
+		 * methods.
+		 * @param methodName as a {@code String}, without any brackets
+		 * @param instanceOrClass to search the method on, if an instance is passed, its class will be used
+		 * @param declaredOnly (overload, default {@code true}) to search all or declared methods
+		 * @param methodModifier (overload, default {@code null}) to search for a method with specific method modifier
+		 * @param parameterTypes (optional) full set of method parameter classes
 		 * @return {@link methodReflection}
 		 * @see #findMethodByClass(Class, Class, Class...)
 		 * @throws Throwable if such a method is cannot be found
@@ -115,16 +114,20 @@ public class lyr_reflectionTools implements lyr_logger {
 		}
 
 		/**
-		 * Search for a method in a class through the passed {@code returnType} and/or
-		 * {@code parameterTypes}. Used in cases where the method name is not available
-		 * (due to obfuscation for example), but its parameters could identify it.
-		 * <p> Like its sibling, returns a methodInfo. The only difference is whether
-		 * the search is done through its name, or classes of its parameters.
-		 * @param instanceOrClass to search the method on. if an instance is passed, its class will be used
-		 * @param returnType of the method being searched for, can be null
-		 * @param declaredOnly (overload, default {@code true}) to search declared only or all methods
-		 * @param methodModifier (overload, default {@code null}) to search a method with a specific modifier
-		 * @param parameterTypes (optional) full set of parameters, if available and needed
+		 * Searches a class of an instance or a class for a method with the passed
+		 * {@code returnType} and/or {@code parameterTypes}. Used in cases where
+		 * the method name is not available due to obfuscation for example.
+		 * <p> {@code parameterTypes} is optional, however without it the search will
+		 * most likely done on every method of the class, till a result is found. With
+		 * this optional, specific overloads of the method may be targeted.
+		 * <p> {@code declaredOnly} and {@code methodModifier} are overload parameters
+		 * which may be utilized to broaden/narrow the search and/or target more specific
+		 * methods.
+		 * @param instanceOrClass to search the method on, if an instance is passed, its class will be used
+		 * @param returnType (one or both) method's return type, can be null
+		 * @param declaredOnly (overload, default {@code true}) to search all or declared methods
+		 * @param methodModifier (overload, default {@code null}) to search for a method with specific method modifier
+		 * @param parameterTypes (one or both) full set of method parameter classes
 		 * @return {@link methodReflection}
 		 * @see #findMethodByName(String, Class, Class...)
 		 * @throws Throwable if such a method is cannot be found
