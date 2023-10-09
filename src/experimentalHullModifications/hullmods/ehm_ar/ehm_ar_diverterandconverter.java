@@ -39,12 +39,12 @@ import lyravega.proxies.lyr_hullSpec;
 public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onWeaponInstall(ShipVariantAPI variant, String weaponId) {
+	public void onWeaponInstall(ShipVariantAPI variant, String weaponId, String slotId) {
 		if (diverterConverterSet.contains(weaponId)) commitVariantChanges();
 	}
 
 	@Override
-	public void onWeaponRemove(ShipVariantAPI variant, String weaponId) {
+	public void onWeaponRemove(ShipVariantAPI variant, String weaponId, String slotId) {
 		if (diverterConverterSet.contains(weaponId)) commitVariantChanges();
 	}
 	//#endregion

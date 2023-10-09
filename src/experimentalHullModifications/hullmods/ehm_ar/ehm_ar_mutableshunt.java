@@ -35,12 +35,12 @@ import lyravega.proxies.lyr_hullSpec;
 public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onWeaponInstall(ShipVariantAPI variant, String weaponId) {
+	public void onWeaponInstall(ShipVariantAPI variant, String weaponId, String slotId) {
 		if (fluxShuntSet.contains(weaponId)) commitVariantChanges();
 	}
 
 	@Override
-	public void onWeaponRemove(ShipVariantAPI variant, String weaponId) {
+	public void onWeaponRemove(ShipVariantAPI variant, String weaponId, String slotId) {
 		if (fluxShuntSet.contains(weaponId)) commitVariantChanges();
 	}
 	//#endregion

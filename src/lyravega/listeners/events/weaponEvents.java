@@ -20,8 +20,9 @@ public interface weaponEvents {
 	 * events. Should be used mainly to change the variant or to trigger an UI effect
 	 * @param variant
 	 * @param weaponId of the installed weapon
+	 * @param slotId of the slot that the weapon is installed at
 	 */
-	public void onWeaponInstall(ShipVariantAPI variant, String weaponId);
+	public void onWeaponInstall(ShipVariantAPI variant, String weaponId, String slotId);
 
 	/**
 	 * Broadcasted when a weapon is removed from the refit ship, caught by this method.
@@ -30,6 +31,7 @@ public interface weaponEvents {
 	 * events. Should be used mainly to change the variant or to trigger an UI effect
 	 * @param variant
 	 * @param weaponId of the removed weapon
+	 * @param slotId of the slot that the weapon is removed from
 	 */
-	public void onWeaponRemove(ShipVariantAPI variant, String weaponId);
+	public void onWeaponRemove(ShipVariantAPI variant, String weaponId, String slotId);
 }

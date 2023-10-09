@@ -72,9 +72,9 @@ public class _ehm_ar_base extends _ehm_base implements normalEvents, weaponEvent
 		commitVariantChanges(); playDrillSound();
 	}
 
-	@Override public void onWeaponInstall(ShipVariantAPI variant, String weaponId) {}
+	@Override public void onWeaponInstall(ShipVariantAPI variant, String weaponId, String slotId) {}
 
-	@Override public void onWeaponRemove(ShipVariantAPI variant, String weaponId) {}
+	@Override public void onWeaponRemove(ShipVariantAPI variant, String weaponId, String slotId) {}
 	//#endregion
 	// END OF CUSTOM EVENTS
 

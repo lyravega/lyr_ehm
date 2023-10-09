@@ -118,10 +118,10 @@ public class lyr_shipTracker implements lyr_logger {
 	 * @param variant of the ship
 	 * @param weaponId of the weapon
 	 */
-	private static void onWeaponEvent(final String eventName, final ShipVariantAPI variant, final String weaponId) {
+	private static void onWeaponEvent(final String eventName, final ShipVariantAPI variant, final String weaponId, final String slotId) {
 		switch (eventName) {
-			case onWeaponInstall:	for (String hullModId: weaponEvents.keySet()) if (variant.hasHullMod(hullModId)) weaponEvents.get(hullModId).onWeaponInstall(variant, weaponId); return;
-			case onWeaponRemove:	for (String hullModId: weaponEvents.keySet()) if (variant.hasHullMod(hullModId)) weaponEvents.get(hullModId).onWeaponRemove(variant, weaponId); return;
+			case onWeaponInstall:	for (String hullModId: weaponEvents.keySet()) if (variant.hasHullMod(hullModId)) weaponEvents.get(hullModId).onWeaponInstall(variant, weaponId, slotId); return;
+			case onWeaponRemove:	for (String hullModId: weaponEvents.keySet()) if (variant.hasHullMod(hullModId)) weaponEvents.get(hullModId).onWeaponRemove(variant, weaponId, slotId); return;
 			default: return;
 		}
 	}
@@ -209,18 +209,18 @@ public class lyr_shipTracker implements lyr_logger {
 			if (oldWeaponId == null && newWeaponId == null) continue;
 			else if (oldWeaponId == null && newWeaponId != null) {	// weapon installed
 				weapons.put(slotId, newWeaponId);
-				onWeaponEvent(onWeaponInstall, variant, newWeaponId);
+				onWeaponEvent(onWeaponInstall, variant, newWeaponId, slotId);
 
 				if (lyr_ehm.settings.getLogEventInfo()) logger.info(logPrefix+"ST-"+trackerId+": Installed '"+newWeaponId+"' on '"+slotId+"'");
 			} else if (oldWeaponId != null && newWeaponId == null) {	// weapon removed
 				weapons.put(slotId, null);
-				onWeaponEvent(onWeaponRemove, variant, oldWeaponId);
+				onWeaponEvent(onWeaponRemove, variant, oldWeaponId, slotId);
 
 				if (lyr_ehm.settings.getLogEventInfo()) logger.info(logPrefix+"ST-"+trackerId+": Removed '"+oldWeaponId+"' from '"+slotId+"'");
 			} else if (oldWeaponId != null && newWeaponId != null && !oldWeaponId.equals(newWeaponId)) {	// weapon changed
 				weapons.put(slotId, newWeaponId);
-				onWeaponEvent(onWeaponInstall, variant, newWeaponId);
-				onWeaponEvent(onWeaponRemove, variant, oldWeaponId);
+				onWeaponEvent(onWeaponInstall, variant, newWeaponId, slotId);
+				onWeaponEvent(onWeaponRemove, variant, oldWeaponId, slotId);
 
 				if (lyr_ehm.settings.getLogEventInfo()) logger.info(logPrefix+"ST-"+trackerId+": Changed '"+oldWeaponId+"' on '"+slotId+"' with '"+newWeaponId+"'");
 			}	
