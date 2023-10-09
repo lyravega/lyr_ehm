@@ -18,6 +18,8 @@ public class lyr_refitPanel implements lyr_logger {
 	private static MethodHandle saveCurrentVariant; // there is an overload for this, beware
 	private static MethodHandle getMember;
 	private static MethodHandle syncWithCurrentVariant;
+	private static MethodHandle isEditedSinceLoad;
+	private static MethodHandle isEditedSinceSave;
 	private static MethodHandle setEditedSinceLoad;
 	private static MethodHandle setEditedSinceSave;
 	private static MethodHandle addAllWeaponsFromVariantToCargo;
@@ -31,6 +33,8 @@ public class lyr_refitPanel implements lyr_logger {
 			saveCurrentVariant = methodReflection.findMethodByName("saveCurrentVariant", clazz, boolean.class).getMethodHandle();
 			getMember = methodReflection.findMethodByName("getMember", clazz).getMethodHandle();
 			syncWithCurrentVariant = methodReflection.findMethodByName("syncWithCurrentVariant", clazz, boolean.class).getMethodHandle();
+			isEditedSinceLoad = methodReflection.findMethodByName("isEditedSinceLoad", clazz).getMethodHandle();
+			isEditedSinceSave = methodReflection.findMethodByName("isEditedSinceSave", clazz).getMethodHandle();
 			setEditedSinceLoad = methodReflection.findMethodByName("setEditedSinceLoad", clazz).getMethodHandle();
 			setEditedSinceSave = methodReflection.findMethodByName("setEditedSinceSave", clazz).getMethodHandle();
 			addAllWeaponsFromVariantToCargo = methodReflection.findMethodByName("addAllWeaponsFromVariantToCargo", clazz).getMethodHandle();
@@ -89,6 +93,22 @@ public class lyr_refitPanel implements lyr_logger {
 		} catch (Throwable t) {
 			logger.error(logPrefix+"Failed to use 'syncWithCurrentVariant()' in 'lyr_refitPanel'", t);
 		}
+	}
+
+	public boolean isEditedSinceLoad() {
+		try {
+			return (boolean) isEditedSinceLoad.invoke(refitPanel);
+		} catch (Throwable t) {
+			logger.error(logPrefix+"Failed to use 'isEditedSinceLoad()' in 'lyr_refitPanel'", t);
+		}	return false;
+	}
+
+	public boolean isEditedSinceSave() {
+		try {
+			return (boolean) isEditedSinceSave.invoke(refitPanel);
+		} catch (Throwable t) {
+			logger.error(logPrefix+"Failed to use 'isEditedSinceSave()' in 'lyr_refitPanel'", t);
+		}	return false;
 	}
 
 	public void setEditedSinceLoad(boolean isEditedSinceLoad) {
