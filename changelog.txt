@@ -1,9 +1,12 @@
-Version 0.8.5
+Version 0.8.5 - Hotfix
 
+- Fixed a fatal issue* caused by a change in 0.8.4 that lead to easily reproducable slot not found crashes
 - Changed "Logistics Overhaul" so that it cannot be installed on module-ships (for now)
 
+* This issue completely escaped my radar, and it's extremely easy to reproduce. As it is a big issue, pushing this version as another hotfix
 
-Version 0.8.4
+
+Version 0.8.4 - Hotfix
 
 - Fixed an issue with ship restoration that lagged the game if the ship had any activated slot shunts
 - Fixed launch tube description

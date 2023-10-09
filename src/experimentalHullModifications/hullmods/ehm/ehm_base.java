@@ -38,8 +38,6 @@ public final class ehm_base extends _ehm_base {
 		if (!hullSpec.isBuiltInMod(lyr_internals.id.hullmods.base) || !Misc.getDHullId(hullSpec).equals(hullSpec.getHullId())) {
 			variant.setHullSpecAPI(ehm_hullSpecClone(variant));
 
-			_ehm_ar_base.ehm_preProcessShunts(stats);
-
 			if (!variant.getPermaMods().contains(lyr_internals.id.hullmods.base)) {	// to make this a one-time commit, and to avoid re-committing if/when the ship is getting restored
 				// for (String moduleSlot : variant.getStationModules().keySet()) {
 				// 	ShipVariantAPI moduleVariant = variant.getModuleVariant(moduleSlot);
@@ -52,6 +50,7 @@ public final class ehm_base extends _ehm_base {
 			}
 		}
 
+		_ehm_ar_base.ehm_preProcessShunts(stats);	// at this point, the hull spec should be cloned so proceed and pre-process the shunts
 		_ehm_helpers.cleanWeaponGroupsUp(variant);
 	}
 
