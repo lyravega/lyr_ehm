@@ -24,6 +24,7 @@ import lyravega.tools.lyr_uiTools;
  */
 public class lyr_fleetTracker extends _lyr_tabListener {
 	private static final lyr_fleetTracker instance = new lyr_fleetTracker();	//  if this is null and not instantiated before onGameLoad(), will yield a NPE as hullmod effects load earlier
+	private final boolean useTransientTrackerUUIDs = true;	// to make the tags transient
 
 	private lyr_fleetTracker() {
 		super(CoreUITabId.REFIT);
@@ -49,8 +50,8 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 
 	@Override
 	public void onClose() {
-		for (FleetMemberAPI member : Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy())
-			removeTrackerUUIDs(member.getVariant());	// to make the tags transient
+		if (useTransientTrackerUUIDs) for (FleetMemberAPI member : Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy())
+			removeTrackerUUIDs(member.getVariant());
 
 		shipTrackers.clear();
 
