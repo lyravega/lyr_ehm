@@ -291,81 +291,43 @@ public final class lyr_hullSpec implements lyr_logger {
 	// END OF PROXY METHODS
 
 	//#region BRIDGE METHODS
-	public List<String> getBuiltInMods() { 
-		return hullSpec.getBuiltInMods();
-	}
+	public List<String> getBuiltInMods() { return hullSpec.getBuiltInMods(); }
 
-	public void addBuiltInMod(String hullModSpecId) { 
-		hullSpec.addBuiltInMod(hullModSpecId);
-	}
+	public void addBuiltInMod(String hullModSpecId) { hullSpec.addBuiltInMod(hullModSpecId); }
 
-	public void setManufacturer(String manufacturer) {
-		hullSpec.setManufacturer(manufacturer);
-	}
+	public void setManufacturer(String manufacturer) { hullSpec.setManufacturer(manufacturer); }
 
-	public void setDescriptionPrefix(String destriptionPrefix) {
-		hullSpec.setDescriptionPrefix(destriptionPrefix);
-	}
+	public void setDescriptionPrefix(String destriptionPrefix) { hullSpec.setDescriptionPrefix(destriptionPrefix); }
 
-	public String getDescriptionPrefix() {
-		return hullSpec.getDescriptionPrefix();
-	}
+	public String getDescriptionPrefix() { return hullSpec.getDescriptionPrefix(); }
 
-	public void setShipSystemId(String shipSystemId) {
-		hullSpec.setShipSystemId(shipSystemId);
-	}
+	public void setShipSystemId(String shipSystemId) { hullSpec.setShipSystemId(shipSystemId); }
 
-	public void addBuiltInWeapon(String slotId, String weaponSpecId) {
-		hullSpec.addBuiltInWeapon(slotId, weaponSpecId);
-	}
+	public void addBuiltInWeapon(String slotId, String weaponSpecId) { hullSpec.addBuiltInWeapon(slotId, weaponSpecId); }
 
-	public void setShipDefenseId(String defenseId) {
-		hullSpec.setShipDefenseId(defenseId);
-	}
+	public void setShipDefenseId(String defenseId) { hullSpec.setShipDefenseId(defenseId); }
 
-	public int getOrdnancePoints(MutableCharacterStatsAPI characterStats) {
-		return hullSpec.getOrdnancePoints(characterStats);
-	}
+	public int getOrdnancePoints(MutableCharacterStatsAPI characterStats) { return hullSpec.getOrdnancePoints(characterStats); }
 
-	public void setDParentHullId(String parentHullId) {
-		hullSpec.setDParentHullId(parentHullId);
-	}
+	public void setDParentHullId(String parentHullId) { hullSpec.setDParentHullId(parentHullId); }
 
-	public void setRestoreToBase(boolean restoreToBase) {
-		hullSpec.setRestoreToBase(restoreToBase);
-	}
+	public void setRestoreToBase(boolean restoreToBase) { hullSpec.setRestoreToBase(restoreToBase); }
 
-	public float getBaseValue() {
-		return hullSpec.getBaseValue();
-	}
+	public float getBaseValue() { return hullSpec.getBaseValue(); }
 
-	public String getHullName() {
-		return hullSpec.getHullName();
-	}
+	public String getHullName() { return hullSpec.getHullName(); }
 
-	public void setHullName(String hullName) {
-		hullSpec.setHullName(hullName);
-	}
+	public void setHullName(String hullName) { hullSpec.setHullName(hullName); }
 
-	public Set<String> getTags() {
-		return hullSpec.getTags();
-	}
+	public Set<String> getTags() { return hullSpec.getTags(); }
 
-	public void addTag(String tag) {
-		hullSpec.addTag(tag);
-	}
+	public void addTag(String tag) { hullSpec.addTag(tag); }
 
-	public List<WeaponSlotAPI> getAllWeaponSlotsCopy() {
-		return hullSpec.getAllWeaponSlotsCopy();
-	}
+	public List<WeaponSlotAPI> getAllWeaponSlotsCopy() { return hullSpec.getAllWeaponSlotsCopy(); }
 
-	public String getShipSystemId() {
-		return hullSpec.getShipSystemId();
-	}
+	public String getShipSystemId() { return hullSpec.getShipSystemId(); }
 
-	public EnumSet<ShipTypeHints> getHints() {
-		return hullSpec.getHints();
-	}
+	public EnumSet<ShipTypeHints> getHints() { return hullSpec.getHints(); }
 	//#endregion 
 	// END OF BRIDGE METHODS
 }

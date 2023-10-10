@@ -206,29 +206,17 @@ public final class lyr_weaponSlot implements lyr_logger {
 	// END OF PROXY METHODS
 
 	//#region BRIDGE METHODS
-	public boolean isWeaponSlot() {
-		return weaponSlot.isWeaponSlot();
-	}
+	public boolean isWeaponSlot() { return weaponSlot.isWeaponSlot(); }
 
-	public Vector2f getLocation() {
-		return weaponSlot.getLocation();
-	}
+	public Vector2f getLocation() { return weaponSlot.getLocation(); }
 
-	public float getAngle() {
-		return weaponSlot.getAngle();
-	}
+	public float getAngle() { return weaponSlot.getAngle(); }
 
-	public void setAngle(float angle) {
-		weaponSlot.setAngle(angle);
-	}
+	public void setAngle(float angle) { weaponSlot.setAngle(angle); }
 
-	public float getArc() {
-		return weaponSlot.getArc();
-	}
+	public float getArc() { return weaponSlot.getArc(); }
 
-	public void setArc(float angle) {
-		weaponSlot.setArc(angle);
-	}
+	public void setArc(float angle) { weaponSlot.setArc(angle); }
 	//#endregion
 	// END OF BRIDGE METHODS
 }

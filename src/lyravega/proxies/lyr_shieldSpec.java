@@ -183,17 +183,11 @@ public final class lyr_shieldSpec implements lyr_logger {
 	// END OF PROXY METHODS
 
 	//#region BRIDGE METHODS
-	public void setRingColor(Color colour) {
-		shieldSpec.setRingColor(colour);
-	}
+	public void setRingColor(Color colour) { shieldSpec.setRingColor(colour); }
 
-	public void setInnerColor(Color colour) {
-		shieldSpec.setInnerColor(colour);
-	}
+	public void setInnerColor(Color colour) { shieldSpec.setInnerColor(colour); }
 
-	public ShieldType getType() {
-		return shieldSpec.getType();
-	}
+	public ShieldType getType() { return shieldSpec.getType(); }
 	//#endregion
 	// END OF BRIDGE METHODS
 }
