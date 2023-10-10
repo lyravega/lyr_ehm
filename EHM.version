@@ -6,7 +6,7 @@
     {
         "major":0,
         "minor":8,
-        "patch":5,
+        "patch":6,
     },
     "starsectorVersion":"0.96a-RC10",
     "directDownloadURL":"https://github.com/lyravega/lyr_ehm/releases/download/0.8.3/ExperimentalHullModifications.0.8.3.zip",
