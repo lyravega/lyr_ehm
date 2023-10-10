@@ -2,6 +2,7 @@ package lyravega.proxies.ui;
 
 import java.lang.invoke.MethodHandle;
 
+import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 
 import lyravega.tools.lyr_logger;
@@ -12,6 +13,7 @@ public class lyr_shipDisplay implements lyr_logger {
 	static Class<?> clazz;
 	private static MethodHandle setFleetMember;
 	private static MethodHandle getCurrentVariant;
+	private static MethodHandle getShip;
 	private static MethodHandle clearFighterSlot;
 
 	static {
@@ -20,6 +22,7 @@ public class lyr_shipDisplay implements lyr_logger {
 
 			setFleetMember = methodReflection.findMethodByName("setFleetMember", clazz).getMethodHandle();
 			getCurrentVariant = methodReflection.findMethodByName("getCurrentVariant", clazz).getMethodHandle();
+			getShip = methodReflection.findMethodByName("getShip", clazz).getMethodHandle();
 			clearFighterSlot = methodReflection.findMethodByName("clearFighterSlot", clazz).getMethodHandle();
 		} catch (Throwable t) {
 			logger.fatal(logPrefix+"Failed to find a method in 'lyr_shipDisplay'", t);
@@ -51,6 +54,14 @@ public class lyr_shipDisplay implements lyr_logger {
 			return (ShipVariantAPI) getCurrentVariant.invoke(shipDisplay);
 		} catch (Throwable t) {
 			logger.error(logPrefix+"Failed to use 'getCurrentVariant()' in 'lyr_shipDisplay'", t);
+		}	return null;
+	}
+
+	public ShipAPI getShip() {
+		try {
+			return (ShipAPI) getShip.invoke(shipDisplay);
+		} catch (Throwable t) {
+			logger.error(logPrefix+"Failed to use 'getShip()' in 'lyr_shipDisplay'", t);
 		}	return null;
 	}
 
