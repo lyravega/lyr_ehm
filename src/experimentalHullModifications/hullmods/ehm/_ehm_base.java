@@ -50,7 +50,7 @@ import lyravega.tools.lyr_logger;
  * @see {@link experimentalHullModifications.hullmods.ehm_sc._ehm_sc_base _ehm_sc_base} for shield cosmetic base
  * @author lyravega
  */
-public class _ehm_base implements HullModEffect, lyr_logger {
+public abstract class _ehm_base implements HullModEffect, lyr_logger {
 	protected HullModSpecAPI hullModSpec;
 	protected String hullModSpecId;
 	protected Set<String> hullModSpecTags;

@@ -59,7 +59,7 @@ import lyravega.proxies.lyr_weaponSlot.slotTypeConstants;
  * @see {@link experimentalHullModifications.hullmods.ehm_sc._ehm_sc_base _ehm_sc_base} for shield cosmetic base
  * @author lyravega
  */
-public class _ehm_ar_base extends _ehm_base implements normalEvents, weaponEvents {
+public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, weaponEvents {
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstall(ShipVariantAPI variant) {

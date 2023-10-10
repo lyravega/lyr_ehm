@@ -32,7 +32,7 @@ import lyravega.proxies.lyr_shieldSpec;
  * @see {@link experimentalHullModifications.hullmods.ehm_ec._ehm_ec_base _ehm_ec_base} for engine cosmetic base
  * @author lyravega
  */
-public class _ehm_sc_base extends _ehm_base implements normalEvents {
+public abstract class _ehm_sc_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstall(ShipVariantAPI variant) {
