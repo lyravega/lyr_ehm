@@ -13,6 +13,7 @@ import com.fs.starfarer.api.fleet.FleetMemberAPI;
 
 import lyravega.misc.lyr_internals;
 import lyravega.plugin.lyr_ehm;
+import lyravega.tools.lyr_uiTools;
 
 /**
  * A tab listener class that implements several interfaces. There is a
@@ -56,7 +57,9 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 		if (lyr_ehm.settings.getLogTrackerInfo()) logger.info(logPrefix+"FT: Fleet Tracker terminated");
 	}
 
-	@Override public void onAdvance(float amount) {}
+	@Override public void onAdvance(float amount) {
+		lyr_uiTools.clearUndoAfter();
+	}
 
 	/** @see {@link lyr_shipTracker#updateVariant(ShipVariantAPI)} */ 
 	public static void updateShipTracker(ShipAPI ship) {
