@@ -182,14 +182,17 @@ public class lyr_reflectionTools implements lyr_logger {
 		 * @throws Throwable
 		 */
 		public static Object invokeDirect(Object instanceOrClass, String methodName, Object... parameters) throws Throwable {
-			for (Object currMethod : instanceOrClass.getClass().equals(Class.class) ? Class.class.cast(instanceOrClass).getDeclaredMethods() : instanceOrClass.getClass().getDeclaredMethods()) {
-				if (!String.class.cast(getName.invoke(currMethod)).equals(methodName)) continue;
+			boolean isClass = instanceOrClass.getClass().equals(Class.class);
+			Class<?> clazz = isClass ? (Class<?>) instanceOrClass : instanceOrClass.getClass();
 
-				if (instanceOrClass.getClass().equals(Class.class)) return MethodHandle.class.cast(unreflect.invoke(lookup, currMethod)).invokeWithArguments(parameters);
-				return MethodHandle.class.cast(unreflect.invoke(lookup, currMethod)).bindTo(instanceOrClass).invokeWithArguments(parameters);
+			for (Object method : clazz.getDeclaredMethods()) {
+				if (!String.class.cast(getName.invoke(method)).equals(methodName)) continue;
+
+				if (isClass) return MethodHandle.class.cast(unreflect.invoke(lookup, method)).invokeWithArguments(parameters);
+				return MethodHandle.class.cast(unreflect.invoke(lookup, method)).bindTo(instanceOrClass).invokeWithArguments(parameters);
 			} 
 
-			throw new Throwable(logPrefix+"Method with the name '"+methodName+"' was not found");
+			throw new Throwable(logPrefix+"Method with the name '"+methodName+"' was not found in '"+clazz.getName()+"'");
 		} 
 
 		// private final Object method;	// not necessary since accessors do not use this, so it is tossed away
