@@ -167,6 +167,31 @@ public class lyr_reflectionTools implements lyr_logger {
 			return new methodReflection(method);
 		}
 
+		/**
+		 * A lite method that searches an instance's class or a class for a declared
+		 * method name, unreflects its method handle, and attempts to invoke it with the
+		 * passed parameters.
+		 * <p> Does not handle methods with overloads; will try to invoke the first found
+		 * method, regardless of any passed parameters.
+		 * <p> Handles instance methods; if the first passed argument is an instantiated
+		 * object, then it'll be used by the method handle along with parameters.
+		 * @param instanceOrClass to search the method on, if an instance is passed, its class will be used
+		 * @param methodName as a {@code String}, without any brackets
+		 * @param parameters to be used as method arguments during invocation
+		 * @return anything that the method returns, null for void / no returns
+		 * @throws Throwable
+		 */
+		public static Object invokeDirect(Object instanceOrClass, String methodName, Object... parameters) throws Throwable {
+			for (Object currMethod : instanceOrClass.getClass().equals(Class.class) ? Class.class.cast(instanceOrClass).getDeclaredMethods() : instanceOrClass.getClass().getDeclaredMethods()) {
+				if (!String.class.cast(getName.invoke(currMethod)).equals(methodName)) continue;
+
+				if (instanceOrClass.getClass().equals(Class.class)) return MethodHandle.class.cast(unreflect.invoke(lookup, currMethod)).invokeWithArguments(parameters);
+				return MethodHandle.class.cast(unreflect.invoke(lookup, currMethod)).bindTo(instanceOrClass).invokeWithArguments(parameters);
+			} 
+
+			throw new Throwable(logPrefix+"Method with the name '"+methodName+"' was not found");
+		} 
+
 		// private final Object method;	// not necessary since accessors do not use this, so it is tossed away
 		private final MethodHandle methodHandle;
 		private final Class<?> returnType;
@@ -187,7 +212,7 @@ public class lyr_reflectionTools implements lyr_logger {
 			// this.method = method;
 			this.methodHandle = (MethodHandle) unreflect.invoke(lookup, method);
 			this.returnType = methodHandle.type().returnType();
-			this.parameterTypes = methodHandle.type().dropParameterTypes(0, 1).parameterArray();	// MethodHandle query for parameter types contains return type, drop it
+			this.parameterTypes = methodHandle.type().dropParameterTypes(0, 1).parameterArray();	// MethodType includes the instance class as the first parameter type
 			this.methodName = (String) getName.invoke(method);
 			this.methodModifiers = (int) getModifiers.invoke(method);
 			this.methodType = methodHandle.type();
@@ -207,7 +232,7 @@ public class lyr_reflectionTools implements lyr_logger {
 		private methodReflection(Object method, Class<?> clazz) throws Throwable {
 			// this.method = method;
 			this.returnType = (Class<?>) getReturnType.invoke(method);
-			this.parameterTypes = (Class<?>[]) getParameterTypes.invoke(method);	// Method reflection for parameter types does not contain return type
+			this.parameterTypes = (Class<?>[]) getParameterTypes.invoke(method);	// Method method to get parameter types do not include instance class unlike method handle types do
 			this.methodName = (String) getName.invoke(method);
 			this.methodModifiers = (int) getModifiers.invoke(method);
 			this.methodType = MethodType.methodType(returnType, parameterTypes);
