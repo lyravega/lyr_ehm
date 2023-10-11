@@ -3,6 +3,7 @@ package experimentalHullModifications.hullmods.ehm_ec;
 import static lyravega.proxies.lyr_engineBuilder.addEngineStyleSpec;
 import static lyravega.tools.lyr_uiTools.commitVariantChanges;
 import static lyravega.tools.lyr_uiTools.playDrillSound;
+import static lyravega.tools.lyr_uiTools.refreshFleetView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,15 +40,15 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstall(ShipVariantAPI variant) {
-		if (_ehm_helpers.removeHullModsWithSameTag(variant, lyr_internals.tag.engineCosmetic, this.hullModSpecId)) return;
-		commitVariantChanges(); playDrillSound();
+		if (_ehm_helpers.removeHullModsWithSameTag(variant, lyr_internals.tag.engineCosmetic, this.hullModSpecId)) return;	// removes other engine cosmetics and short-circuits if there was any
+		commitVariantChanges(); playDrillSound(); refreshFleetView();	// short-circuit is due to onRemove() below, to avoid doing same things multiple times 
 	}
 
 	@Override
 	public void onRemove(ShipVariantAPI variant) {
 		if (!_ehm_helpers.hasHullModWithTag(variant, lyr_internals.tag.engineCosmetic, this.hullModSpecId))
 			variant.setHullSpecAPI(ehm_restoreEngineSlots_lazy(variant));
-		commitVariantChanges(); playDrillSound();
+		commitVariantChanges(); playDrillSound(); refreshFleetView();
 	}
 	//#endregion
 	// END OF CUSTOM EVENTS
@@ -194,7 +195,7 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 		if (this.hullModSpec.hasTag(lyr_internals.tag.customizable)) {
 			tooltip.addSectionHeading(header.customizable, header.customizable_textColour, header.customizable_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 			tooltip.addPara(text.customizable[0], text.padding).setHighlight(text.customizable[1]);
-			tooltip.addPara(text.customizableEngine[0], text.padding).setHighlight(text.customizableEngine[1]);
+			// tooltip.addPara(text.customizableEngine[0], text.padding).setHighlight(text.customizableEngine[1]);
 		}
 
 		if (!isApplicableToShip(ship)) {

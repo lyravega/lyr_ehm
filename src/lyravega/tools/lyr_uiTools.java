@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.CoreUITabId;
 
 import lyravega.misc.lyr_internals;
@@ -95,7 +96,7 @@ public class lyr_uiTools extends lyr_reflectionTools {
 			refitPanel.setEditedSinceLoad(false);
 			refitPanel.setEditedSinceSave(false);
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failure in 'clearUndo()'"); t.printStackTrace();
+			logger.error(logPrefix+"Failure in 'clearUndo()'", t);
 		}
 	}
 
@@ -117,7 +118,23 @@ public class lyr_uiTools extends lyr_reflectionTools {
 
 			clearUndo = false;
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failure in 'clearUndo()'"); t.printStackTrace();
+			logger.error(logPrefix+"Failure in 'clearUndoAfter()'", t);
+		}
+	}
+
+	/**
+	 * Clears the player fleet view, which triggers its reinitialization. If a fleet member's
+	 * campaign contrails are changed, the changes will not be reflected in the game till a
+	 * save/load. This alleviates that issue. 
+	 */
+	public static void refreshFleetView() {
+		if (!isRefitTab()) return;
+		try {
+			CampaignFleetAPI playerFleet = Global.getSector().getPlayerFleet();
+			Object fleetView = methodReflection.invokeDirect(playerFleet, "getFleetView");
+			methodReflection.invokeDirect(fleetView, "clear");
+		} catch (Throwable t) {
+			logger.error(logPrefix+"Failure in 'refreshFleetView()'", t);
 		}
 	}
 
