@@ -69,7 +69,7 @@ public class lyr_reflectionTools implements lyr_logger {
 		 * which may be utilized to broaden/narrow the search and/or target more specific
 		 * methods.
 		 * @param methodName as a {@code String}, without any brackets
-		 * @param instanceOrClass to search the method on, if an instance is passed, its class will be used
+		 * @param instanceOrClass to search the method on
 		 * @param declaredOnly (overload, default {@code true}) to search all or declared methods
 		 * @param methodModifier (overload, default {@code null}) to search for a method with specific method modifier
 		 * @param parameterTypes (optional) full set of method parameter classes
@@ -123,7 +123,7 @@ public class lyr_reflectionTools implements lyr_logger {
 		 * <p> {@code declaredOnly} and {@code methodModifier} are overload parameters
 		 * which may be utilized to broaden/narrow the search and/or target more specific
 		 * methods.
-		 * @param instanceOrClass to search the method on, if an instance is passed, its class will be used
+		 * @param instanceOrClass to search the method on
 		 * @param returnType (one or both) method's return type, can be null
 		 * @param declaredOnly (overload, default {@code true}) to search all or declared methods
 		 * @param methodModifier (overload, default {@code null}) to search for a method with specific method modifier
@@ -173,9 +173,9 @@ public class lyr_reflectionTools implements lyr_logger {
 		 * passed parameters.
 		 * <p> Does not handle methods with overloads; will try to invoke the first found
 		 * method, regardless of any passed parameters.
-		 * <p> Handles instance methods; if the first passed argument is an instantiated
-		 * object, then it'll be used by the method handle along with parameters.
-		 * @param instanceOrClass to search the method on, if an instance is passed, its class will be used
+		 * <p> Handles instance methods; if {@code instanceOrClass} is an instantiated
+		 * object, then it'll be used by the method handle along with the parameters.
+		 * @param instanceOrClass to search the method on
 		 * @param methodName as a {@code String}, without any brackets
 		 * @param parameters to be used as method arguments during invocation
 		 * @return anything that the method returns, null for void / no returns
