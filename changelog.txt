@@ -1,6 +1,9 @@
 Version 0.8.6
 
+- Fixed suppressed built-in d-mods getting transferred to variants upon base hullmod installation
 - Fixed undo button not getting disabled visually when it was supposed to
+- Changed engine cosmetic mods to apply the campaign contrails immediately instead of requiring a save/load
+- Changed a few things under the hood to reduce the overall memory imprint of experimental ships
 
 
 Version 0.8.5 - Hotfix

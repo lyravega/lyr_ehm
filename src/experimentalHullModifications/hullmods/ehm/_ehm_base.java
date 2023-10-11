@@ -153,24 +153,23 @@ public abstract class _ehm_base implements HullModEffect, lyr_logger {
 		final SettingsAPI settings = Global.getSettings();
 
 		ShipHullSpecAPI hullSpecToClone = variant.getHullSpec();
-		ShipHullSpecAPI originalHullSpec;
 		lyr_hullSpec hullSpec;
+		lyr_hullSpec originalHullSpec;
 
-		if (hullSpecToClone.isRestoreToBase() && hullSpecToClone.getBaseHullId() != null ) {
-			for (String hullModId : hullSpecToClone.getBuiltInMods()) {
+		if (hullSpecToClone.isRestoreToBase() && hullSpecToClone.getBaseHullId() != null ) {	// these extras are necessary for ships that may be restored to a different hull spec
+			for (String hullModId : hullSpecToClone.getBuiltInMods()) {	// transfer the dmods on the hullspec to the variant instead
 				if (!settings.getHullModSpec(hullModId).hasTag(Tags.HULLMOD_DMOD)) continue;
 
-				variant.removeSuppressedMod(hullModId);
-				variant.addPermaMod(hullModId, false);
+				if (!variant.getSuppressedMods().contains(hullModId)) {	// if a dmod is suppressed (fixed), do not transfer it
+					variant.removeSuppressedMod(hullModId);
+					variant.addPermaMod(hullModId, false);
+				}
 			}
-			hullSpecToClone = hullSpecToClone.getBaseHull();
-
-			hullSpec = new lyr_hullSpec(settings.getHullSpec(Misc.getDHullId(hullSpecToClone)), true);
-			originalHullSpec = settings.getHullSpec(hullSpecToClone.getHullId().replace(Misc.D_HULL_SUFFIX, ""));
-		} else {
-			hullSpec = new lyr_hullSpec(settings.getHullSpec(Misc.getDHullId(hullSpecToClone)), true);
-			originalHullSpec = settings.getHullSpec(hullSpecToClone.getHullId().replace(Misc.D_HULL_SUFFIX, ""));
+			hullSpecToClone = hullSpecToClone.getBaseHull();	// target the base hull spec instead, to perform a soft restoration
 		}
+
+		hullSpec = new lyr_hullSpec(settings.getHullSpec(Misc.getDHullId(hullSpecToClone)), true);
+		originalHullSpec = new lyr_hullSpec(settings.getHullSpec(hullSpecToClone.getHullId().replace(Misc.D_HULL_SUFFIX, "")), false);
 
 		ehm_hullSpecAlteration(hullSpec, originalHullSpec);
 
@@ -194,7 +193,7 @@ public abstract class _ehm_base implements HullModEffect, lyr_logger {
 		final SettingsAPI settings = Global.getSettings();
 
 		lyr_hullSpec hullSpec = new lyr_hullSpec(settings.getHullSpec(variant.getHullSpec().getHullId()), true);
-		ShipHullSpecAPI originalHullSpec = settings.getHullSpec(variant.getHullSpec().getHullId().replace(Misc.D_HULL_SUFFIX, ""));
+		lyr_hullSpec originalHullSpec = new lyr_hullSpec(settings.getHullSpec(variant.getHullSpec().getHullId().replace(Misc.D_HULL_SUFFIX, "")), false);
 
 		ehm_hullSpecAlteration(hullSpec, originalHullSpec);
 		
@@ -207,7 +206,7 @@ public abstract class _ehm_base implements HullModEffect, lyr_logger {
 	 * @param hullSpec proxy with a cloned hull spec in it
 	 * @param originalHullSpec to be used as a reference; not a (D) version
 	 */
-	private static final void ehm_hullSpecAlteration(lyr_hullSpec hullSpec, ShipHullSpecAPI originalHullSpec) {
+	private static final void ehm_hullSpecAlteration(lyr_hullSpec hullSpec, lyr_hullSpec originalHullSpec) {
 		for (String hullSpecTag : originalHullSpec.getTags()) // this is a set, so there cannot be any duplicates, but still
 		if (!hullSpec.getTags().contains(hullSpecTag))
 		hullSpec.addTag(hullSpecTag);
@@ -220,6 +219,7 @@ public abstract class _ehm_base implements HullModEffect, lyr_logger {
 		// hullSpec.setBaseHullId(null);
 		// hullSpec.setRestoreToBase(false);
 		hullSpec.setBaseValue(originalHullSpec.getBaseValue());	// because d-hulls lose 25% in value immediately
+		hullSpec.setSpriteSpec(originalHullSpec.getSpriteSpec());	// to reduce memory imprint, letting garbage collector dispose same sprite specs
 		if (lyr_ehm.settings.getShowExperimentalFlavour()) {
 			hullSpec.setManufacturer(text.flavourManufacturer);
 			hullSpec.setDescriptionPrefix(text.flavourDescription);
