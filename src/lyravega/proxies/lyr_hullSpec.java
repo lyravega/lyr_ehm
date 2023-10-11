@@ -48,6 +48,8 @@ public final class lyr_hullSpec implements lyr_logger {
 	// private static MethodHandle setRestoreToBase;
 	// private static MethodHandle getBaseValue;
 	private static MethodHandle setBaseValue;
+	private static MethodHandle getSpriteSpec;
+	private static MethodHandle setSpriteSpec;
 
 	static {
 		try {
@@ -71,6 +73,8 @@ public final class lyr_hullSpec implements lyr_logger {
 			// setRestoreToBase = methodReflection.findMethodByName("setRestoreToBase", hullSpecClass).getMethodHandle();
 			// getBaseValue = methodReflection.findMethodByName("getBaseValue", hullSpecClass).getMethodHandle();
 			setBaseValue = methodReflection.findMethodByName("setBaseValue", hullSpecClass).getMethodHandle();
+			getSpriteSpec = methodReflection.findMethodByName("getSpriteSpec", hullSpecClass).getMethodHandle();
+			setSpriteSpec = methodReflection.findMethodByName("setSpriteSpec", hullSpecClass).getMethodHandle();
 		} catch (Throwable t) {
 			logger.fatal(logPrefix+"Failed to find a method in 'lyr_hullSpec'", t);
 		}
@@ -285,6 +289,29 @@ public final class lyr_hullSpec implements lyr_logger {
 			setBaseValue.invoke(hullSpec, value);
 		} catch (Throwable t) {
 			logger.error(logPrefix+"Failed to use 'setBaseValue()' in 'lyr_hullSpec'", t);
+		}
+	}
+
+	/**
+	 * @category Proxy method
+	 */
+	public Object getSpriteSpec() {
+		try {
+			return getSpriteSpec.invoke(hullSpec);
+		} catch (Throwable t) {
+			logger.error(logPrefix+"Failed to use 'getSpriteSpec()' in 'lyr_hullSpec'", t);
+		}	return null;
+	}
+
+	/**
+	 * @param spriteSpec
+	 * @category Proxy method
+	 */
+	public void setSpriteSpec(Object spriteSpec) {
+		try {
+			setSpriteSpec.invoke(hullSpec, spriteSpec);
+		} catch (Throwable t) {
+			logger.error(logPrefix+"Failed to use 'setSpriteSpec()' in 'lyr_hullSpec'", t);
 		}
 	}
 	//#endregion 
