@@ -190,6 +190,7 @@ public class lyr_reflectionTools {
 			for (Object method : clazz.getDeclaredMethods()) {
 				if (!String.class.cast(getName.invoke(method)).equals(methodName)) continue;
 
+				lyr_logger.reflectionInfo("Method with the name '"+methodName+"' was found in the class '"+clazz.getName()+"'");
 				if (isClass) return MethodHandle.class.cast(unreflect.invoke(lookup, method)).invokeWithArguments(parameters);
 				return MethodHandle.class.cast(unreflect.invoke(lookup, method)).bindTo(instanceOrClass).invokeWithArguments(parameters);
 			} 
