@@ -6,6 +6,9 @@ import org.apache.log4j.Priority;
 
 public class lyr_logger {
 	private static final Logger logger = Logger.getLogger("Experimental Hull Modifications");
+	static {
+		logger.setLevel(lyr_levels.LSTNR);
+	}
 
 	public static void setLevel(Level level) { logger.setLevel(level); }
 
