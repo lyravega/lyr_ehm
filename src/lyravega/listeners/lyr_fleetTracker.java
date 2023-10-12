@@ -5,6 +5,7 @@ import static lyravega.tools.lyr_uiTools.isRefitTab;
 import java.util.*;
 
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.CoreUITabId;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
@@ -13,6 +14,7 @@ import com.fs.starfarer.api.fleet.FleetMemberAPI;
 
 import lyravega.misc.lyr_internals;
 import lyravega.plugin.lyr_ehm;
+import lyravega.tools.lyr_reflectionTools.methodReflection;
 import lyravega.tools.lyr_uiTools;
 
 /**
@@ -40,8 +42,6 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 
 	@Override
 	public void onOpen() {
-		shipTrackers.clear();
-
 		for (FleetMemberAPI member : Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy())
 			addTrackerUUIDs(member.getVariant(), null);
 
@@ -60,6 +60,24 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 
 	@Override public void onAdvance(float amount) {
 		lyr_uiTools.clearUndoAfter();
+	}
+
+	/**
+	 * Clears the player fleet view, which triggers its reinitialization. If a fleet member's
+	 * campaign contrails are changed, the changes will not be reflected in the game till a
+	 * save/load. This alleviates that issue by forcing it.
+	 * @category Reflection
+	 */
+	public static void refreshFleetView() {
+		if (!isRefitTab()) return;
+
+		try {
+			CampaignFleetAPI playerFleet = Global.getSector().getPlayerFleet();
+			Object fleetView = methodReflection.invokeDirect(playerFleet, "getFleetView");
+			methodReflection.invokeDirect(fleetView, "clear");
+		} catch (Throwable t) {
+			logger.error(logPrefix+"Failure in 'refreshFleetView()'", t);
+		}
 	}
 
 	/** @see {@link lyr_shipTracker#updateVariant(ShipVariantAPI)} */ 

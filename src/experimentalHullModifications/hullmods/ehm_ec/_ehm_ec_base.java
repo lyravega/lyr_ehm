@@ -1,9 +1,9 @@
 package experimentalHullModifications.hullmods.ehm_ec;
 
+import static lyravega.listeners.lyr_fleetTracker.refreshFleetView;
 import static lyravega.proxies.lyr_engineBuilder.addEngineStyleSpec;
 import static lyravega.tools.lyr_uiTools.commitVariantChanges;
 import static lyravega.tools.lyr_uiTools.playDrillSound;
-import static lyravega.tools.lyr_uiTools.refreshFleetView;
 
 import java.util.HashMap;
 import java.util.Map;
