@@ -116,7 +116,7 @@ public final class lyr_engineBuilder {
 		try {
 			return (Object) clone.invoke(enginebuilder);
 		} catch (Throwable t) {
-			lyr_logger.info("Failed to use 'duplicate()' in 'lyr_engineBuilder'", t); return engineBuilder;
+			lyr_logger.error("Failed to use 'duplicate()' in 'lyr_engineBuilder'", t); return engineBuilder;
 		}
 	}
 	

@@ -4,6 +4,12 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
 
+/**
+ * A logger bridge class that provides bridge methods for a single logger
+ * along with a few ones that utilize custom log levels. Also useful to
+ * keep track of what's being utilized in where.
+ * @author lyravega
+ */
 public class lyr_logger {
 	private static final Logger logger = Logger.getLogger("Experimental Hull Modifications");
 	static {
