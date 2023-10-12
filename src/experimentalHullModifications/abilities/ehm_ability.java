@@ -10,9 +10,7 @@ import com.fs.starfarer.api.util.Misc;
 import experimentalHullModifications.abilities.listeners.ehm_submarketInjector;
 import experimentalHullModifications.abilities.listeners.ehm_shuntInjector;
 import lyravega.misc.lyr_internals;
-import lyravega.plugin.lyr_ehm;
 import lyravega.plugin.lyr_settings;
-import lyravega.tools.lyr_logger;
 
 /**
  * A toggle ability that works in conjunction with {@link ehm_submarketInjector
@@ -24,10 +22,10 @@ import lyravega.tools.lyr_logger;
  * the submarket are all transient.
  * @author lyravega
  */
-public final class ehm_ability extends BaseToggleAbility implements lyr_logger {
+public final class ehm_ability extends BaseToggleAbility {
 	@Override
 	protected String getActivationText() {
-		switch (lyr_ehm.settings.getShuntAvailability()) {
+		switch (lyr_settings.getShuntAvailability()) {
 			case "Always": return "Ready to experiment";
 			case "Submarket": return "Looking for a port";
 			default: return null;
@@ -44,7 +42,7 @@ public final class ehm_ability extends BaseToggleAbility implements lyr_logger {
 
 	@Override
 	protected void activateImpl() {
-		switch (lyr_ehm.settings.getShuntAvailability()) {
+		switch (lyr_settings.getShuntAvailability()) {
 			case "Always": ehm_shuntInjector.get().attach(true); break;
 			case "Submarket": ehm_submarketInjector.get().attach(true); break;
 			default: break;
@@ -53,7 +51,7 @@ public final class ehm_ability extends BaseToggleAbility implements lyr_logger {
 
 	@Override
 	protected void deactivateImpl() {
-		switch (lyr_ehm.settings.getShuntAvailability()) {
+		switch (lyr_settings.getShuntAvailability()) {
 			case "Always": ehm_shuntInjector.get().detach(); break;
 			case "Submarket": ehm_submarketInjector.get().detach(); break;
 			default: break;
@@ -78,7 +76,7 @@ public final class ehm_ability extends BaseToggleAbility implements lyr_logger {
         Color highlightColor = Misc.getHighlightColor();
 		String desc;
 
-		switch (lyr_ehm.settings.getShuntAvailability()) {
+		switch (lyr_settings.getShuntAvailability()) {
 			case "Always": desc = "While this ability is turned on, an excess amount of slot shunts will be made available in the refit tab. Unused ones will be cleaned-up."; break;
 			case "Submarket": desc = "While this ability is turned on, a submarket called Experimental Engineering will be visible on any docked port, and slot shunts will be available in the refit tab. Unused ones will be cleaned-up."; break;
 			default: desc = ""; break;

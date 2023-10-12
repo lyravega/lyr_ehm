@@ -43,7 +43,7 @@ import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_tooltip.header;
 import lyravega.misc.lyr_tooltip.text;
 import lyravega.misc.lyr_vectorUtility;
-import lyravega.plugin.lyr_ehm;
+import lyravega.plugin.lyr_settings;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.proxies.lyr_weaponSlot;
 import lyravega.proxies.lyr_weaponSlot.slotTypeConstants;
@@ -123,7 +123,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 
 		hullSpec.addBuiltInWeapon(slotId, shuntId);
 		parentSlot.setWeaponType(WeaponType.DECORATIVE);
-		if (lyr_ehm.settings.getHideAdapters()) parentSlot.setSlotType(slotTypeConstants.hidden);
+		if (lyr_settings.getHideAdapters()) parentSlot.setSlotType(slotTypeConstants.hidden);
 	}
 
 	protected static final void ehm_convertSlot(lyr_hullSpec hullSpec, String shuntId, String slotId) {
@@ -146,7 +146,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 		// if (slotPoints != null) slotPoints -= converters.get(shuntId).getChildCost();	// needs to be subtracted from here on initial install to avoid infinite installs
 		hullSpec.addBuiltInWeapon(slotId, shuntId);
 		parentSlot.setWeaponType(WeaponType.DECORATIVE);
-		if (lyr_ehm.settings.getHideConverters()) parentSlot.setSlotType(slotTypeConstants.hidden);
+		if (lyr_settings.getHideConverters()) parentSlot.setSlotType(slotTypeConstants.hidden);
 	}
 
 	protected static final void ehm_deactivateSlot(lyr_hullSpec hullSpec, String shuntId, String slotId) {
@@ -187,7 +187,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 		}
 
 		int slotPointsTotal = fromHullMods+fromDiverters-forConverters;
-		int deploymentPenalty = Math.max(0, lyr_ehm.settings.getBaseSlotPointPenalty()*Math.min(fromHullMods, fromHullMods - slotPointsTotal));
+		int deploymentPenalty = Math.max(0, lyr_settings.getBaseSlotPointPenalty()*Math.min(fromHullMods, fromHullMods - slotPointsTotal));
 		int[] slotPointArray = {slotPointsTotal, fromHullMods, fromDiverters, forConverters, deploymentPenalty};
 		return slotPointArray;
 	}

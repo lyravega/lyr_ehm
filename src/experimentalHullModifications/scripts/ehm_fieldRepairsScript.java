@@ -1,4 +1,4 @@
-package lyravega.scripts;
+package experimentalHullModifications.scripts;
 
 import java.util.LinkedHashSet;
 import java.util.Random;
@@ -26,7 +26,7 @@ import lyravega.misc.lyr_internals;
  * that it can be removed later on, leaving the original script pick the data up. 
  * @author Alex
  */
-public class lyr_fieldRepairsScript extends FieldRepairsScript {
+public class ehm_fieldRepairsScript extends FieldRepairsScript {
 	// @Override
 	Object readResolve() {
 		if (seen == null) {

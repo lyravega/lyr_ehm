@@ -13,9 +13,9 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 
 import lyravega.misc.lyr_internals;
-import lyravega.plugin.lyr_ehm;
 import lyravega.tools.lyr_reflectionTools.methodReflection;
 import lyravega.tools.lyr_uiTools;
+import lyravega.tools.logger.lyr_logger;
 
 /**
  * A tab listener class that implements several interfaces. There is a
@@ -45,7 +45,7 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 		for (FleetMemberAPI member : Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy())
 			addTrackerUUIDs(member.getVariant(), null);
 
-		if (lyr_ehm.settings.getLogTrackerInfo()) logger.info(logPrefix+"FT: Fleet Tracker initialized");
+		lyr_logger.info("FT: Fleet Tracker initialized");
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 
 		shipTrackers.clear();
 
-		if (lyr_ehm.settings.getLogTrackerInfo()) logger.info(logPrefix+"FT: Fleet Tracker terminated");
+		lyr_logger.info("FT: Fleet Tracker terminated");
 	}
 
 	@Override public void onAdvance(float amount) {
@@ -76,7 +76,7 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 			Object fleetView = methodReflection.invokeDirect(playerFleet, "getFleetView");
 			methodReflection.invokeDirect(fleetView, "clear");
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failure in 'refreshFleetView()'", t);
+			lyr_logger.warn("Failure in 'refreshFleetView()'", t);
 		}
 	}
 
@@ -109,7 +109,7 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 			shipTracker = new lyr_shipTracker(variant, shipTrackerUUID);
 			instance.shipTrackers.put(shipTrackerUUID, shipTracker);
 			
-			if (lyr_ehm.settings.getLogTrackerInfo()) logger.info(logPrefix+"ST-"+shipTrackerUUID+": Ship Tracker initialized");
+			lyr_logger.eventInfo("ST-"+shipTrackerUUID+": Ship Tracker initialized");
 		}
 
 		return shipTracker;
@@ -156,7 +156,7 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 		
 		instance.shipTrackers.remove(shipTrackerUUID);
 		
-		if (lyr_ehm.settings.getLogTrackerInfo()) logger.info(logPrefix+"ST-"+shipTrackerUUID+": Ship Tracker terminated");
+		lyr_logger.eventInfo("ST-"+shipTrackerUUID+": Ship Tracker terminated");
 	}
 
 	/**

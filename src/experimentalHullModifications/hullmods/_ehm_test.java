@@ -7,11 +7,8 @@ import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
-import com.fs.starfarer.api.combat.MutableShipStatsAPI;
-import com.fs.starfarer.api.combat.ShipAPI;
+import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
-import com.fs.starfarer.api.combat.ShipHullSpecAPI;
-import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
@@ -19,6 +16,7 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import lyravega.listeners.events.normalEvents;
+import lyravega.tools.logger.lyr_logger;
 
 public class _ehm_test extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
@@ -67,17 +65,17 @@ public class _ehm_test extends _ehm_base implements normalEvents {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) { try {
 
-	} catch (Throwable t ) { logger.warn("Test fail in 'applyEffectsBeforeShipCreation()'", t);	}}
+	} catch (Throwable t ) { lyr_logger.warn("Test fail in 'applyEffectsBeforeShipCreation()'", t);	}}
 
 	@Override
 	public void applyEffectsAfterShipCreation(ShipAPI ship, String hullModSpecId) { try {
 
-	} catch (Throwable t ) { logger.warn("Test fail in 'applyEffectsAfterShipCreation()'", t);	}}
+	} catch (Throwable t ) { lyr_logger.warn("Test fail in 'applyEffectsAfterShipCreation()'", t);	}}
 
 	@Override
 	public void applyEffectsToFighterSpawnedByShip(ShipAPI fighter, ShipAPI ship, String hullModSpecId) { try {
 
-	} catch (Throwable t ) { logger.warn("Test fail in 'applyEffectsToFighterSpawnedByShip()'", t);	}}
+	} catch (Throwable t ) { lyr_logger.warn("Test fail in 'applyEffectsToFighterSpawnedByShip()'", t);	}}
 
 	@Override
 	public void advanceInCampaign(FleetMemberAPI member, float amount) {

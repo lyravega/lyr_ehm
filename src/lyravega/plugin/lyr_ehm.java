@@ -8,8 +8,6 @@ import static lyravega.listeners.lyr_shipTracker.weaponEvents;
 
 import java.util.Set;
 
-import org.apache.log4j.Level;
-
 import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.SettingsAPI;
@@ -27,21 +25,16 @@ import experimentalHullModifications.abilities.ehm_ability;
 import experimentalHullModifications.abilities.listeners.ehm_shuntInjector;
 import experimentalHullModifications.abilities.listeners.ehm_submarketInjector;
 import experimentalHullModifications.hullmods.ehm._ehm_helpers;
+import experimentalHullModifications.scripts.ehm_fieldRepairsScript;
 import lyravega.listeners.lyr_fleetTracker;
 import lyravega.listeners.events.enhancedEvents;
 import lyravega.listeners.events.normalEvents;
 import lyravega.listeners.events.suppressedEvents;
 import lyravega.listeners.events.weaponEvents;
 import lyravega.misc.lyr_internals;
-import lyravega.scripts.lyr_fieldRepairsScript;
-import lyravega.tools.lyr_logger;
+import lyravega.tools.logger.lyr_logger;
 
-public class lyr_ehm extends BaseModPlugin implements lyr_logger {
-	public static final lyr_settings settings = new lyr_settings();
-	static {
-		logger.setLevel(Level.ALL);
-	}
-
+public class lyr_ehm extends BaseModPlugin {
 	public static final class friend {
 		private friend() {}
 	};	private static friend friend = new friend();
@@ -64,7 +57,7 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 
 	@Override
 	public void configureXStream(XStream x) {
-		x.alias("FieldRepairsScript", lyr_fieldRepairsScript.class);
+		x.alias("FieldRepairsScript", ehm_fieldRepairsScript.class);
 		x.alias("data.abilities.ehm_ability", ehm_ability.class);	// remember to use this for serialized shit
 		x.alias("ehm_refitTabListener", ehm_shuntInjector.class);	// added transient, but just in case
 		x.alias("ehm_colonyInteractionListener", ehm_submarketInjector.class);	// added transient, but just in case
@@ -95,7 +88,7 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 				faction.removeKnownHullMod(hullModSpec.getId());
 		}
 
-		final String targetTag = settings.getCosmeticsOnly() ? lyr_internals.tag.cosmetic : lyr_internals.tag.experimental;
+		final String targetTag = lyr_settings.getCosmeticsOnly() ? lyr_internals.tag.cosmetic : lyr_internals.tag.experimental;
 
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
 			if (!_ehm_helpers.isExperimentalMod(hullModSpec, true)) continue;
@@ -103,14 +96,14 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 			if (hullModSpec.hasTag(targetTag)) playerData.addHullMod(hullModSpec.getId());
 		}
 
-		logger.info(logPrefix + "Faction blueprints are updated");
+		lyr_logger.info("Faction blueprints are updated");
 	}
 
 	static void updateHullMods() {
 		final SettingsAPI settingsAPI = Global.getSettings();
 		Set<String> uiTags;
 
-		if (lyr_ehm.settings.getCosmeticsOnly()) {
+		if (lyr_settings.getCosmeticsOnly()) {
 			uiTags = settingsAPI.getHullModSpec(lyr_internals.id.hullmods.base).getUITags();
 			uiTags.clear(); uiTags.add(lyr_internals.tag.ui.cosmetics);
 
@@ -148,7 +141,7 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 		allModEvents.addAll(enhancedEvents.keySet());
 		allModEvents.addAll(suppressedEvents.keySet());
 
-		logger.info(logPrefix + "Experimental hull modifications are registered");
+		lyr_logger.info("Experimental hull modifications are registered");
 	}
 
 	private static void teachAbility(String abilityId) {	// add ability to ongoing games if not present
@@ -160,32 +153,32 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 			characterData.addAbility(abilityId);	
 			playerFleet.addAbility(abilityId);
 
-			logger.info(logPrefix + "Ability with the id '"+abilityId+"' taught");
-		} else logger.info(logPrefix + "Ability with the id '"+abilityId+"' was already known");
+			lyr_logger.info("Ability with the id '"+abilityId+"' taught");
+		} else lyr_logger.info("Ability with the id '"+abilityId+"' was already known");
 	}
 
 	private static void replaceFieldRepairsScript() {
 		final SectorAPI sector = Global.getSector();
 
 		if (Global.getSettings().getModManager().isModEnabled("QualityCaptains")) {
-			if (sector.hasScript(lyr_fieldRepairsScript.class)) {
-				sector.removeScriptsOfClass(lyr_fieldRepairsScript.class);
-				logger.info(logPrefix + "Removing modified 'FieldRepairsScript' replacement from this mod");
+			if (sector.hasScript(ehm_fieldRepairsScript.class)) {
+				sector.removeScriptsOfClass(ehm_fieldRepairsScript.class);
+				lyr_logger.warn("Removing modified 'FieldRepairsScript' replacement from this mod");
 			}
 
-			logger.info(logPrefix + "Skipping 'FieldRepairsScript' replacement as 'Quality Captains' is detected");
+			lyr_logger.info("Skipping 'FieldRepairsScript' replacement as 'Quality Captains' is detected");
 			return;
 		}
 
 		if (sector.hasScript(FieldRepairsScript.class)) sector.removeScriptsOfClass(FieldRepairsScript.class);
-		if (!sector.hasScript(lyr_fieldRepairsScript.class)) sector.addScript(new lyr_fieldRepairsScript());
-		logger.info(logPrefix + "Replaced 'FieldRepairsScript' with modified one");
+		if (!sector.hasScript(ehm_fieldRepairsScript.class)) sector.addScript(new ehm_fieldRepairsScript());
+		lyr_logger.info("Replaced 'FieldRepairsScript' with modified one");
 	}
 
 	static void attachShuntAccessListener() {
 		if (!Global.getSector().getPlayerFleet().getAbility(lyr_internals.id.ability).isActive()) return;
 
-		switch (settings.getShuntAvailability()) {
+		switch (lyr_settings.getShuntAvailability()) {
 			case "Always": ehm_submarketInjector.nullify(friend); ehm_shuntInjector.get().attach(true); break;
 			case "Submarket": ehm_shuntInjector.nullify(friend); ehm_submarketInjector.get().attach(true); break;
 			default: break;

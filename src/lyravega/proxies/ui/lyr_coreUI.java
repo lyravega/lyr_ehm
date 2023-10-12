@@ -2,10 +2,10 @@ package lyravega.proxies.ui;
 
 import java.lang.invoke.MethodHandle;
 
-import lyravega.tools.lyr_logger;
+import lyravega.tools.logger.lyr_logger;
 import lyravega.tools.lyr_reflectionTools.methodReflection;
 
-public class lyr_coreUI implements lyr_logger {
+public class lyr_coreUI {
 	private Object coreUI;	// CoreUIAPI, UIPanelAPI, UIComponentAPI
 	// private lyr_refitTab refitTab;
 	static Class<?> clazz;
@@ -17,7 +17,7 @@ public class lyr_coreUI implements lyr_logger {
 
 			getCurrentTab = methodReflection.findMethodByName("getCurrentTab", clazz).getMethodHandle();	// aimed at refit tab
 		} catch (Throwable t) {
-			logger.fatal(logPrefix+"Failed to find a method in 'lyr_coreUI'", t);
+			lyr_logger.fatal("Failed to find a method in 'lyr_coreUI'", t);
 		}
 	}
 
@@ -42,7 +42,7 @@ public class lyr_coreUI implements lyr_logger {
 		try {
 			return new lyr_refitTab(getCurrentTab.invoke(coreUI));
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'getCurrentTab()' in 'lyr_coreUI'", t);
+			lyr_logger.error("Failed to use 'getCurrentTab()' in 'lyr_coreUI'", t);
 		}	return null;
 	}
 }

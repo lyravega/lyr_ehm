@@ -20,7 +20,7 @@ import lyravega.listeners.events.normalEvents;
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_tooltip.header;
 import lyravega.misc.lyr_tooltip.text;
-import lyravega.plugin.lyr_ehm;
+import lyravega.plugin.lyr_settings;
 import lyravega.proxies.lyr_hullSpec;
 
 /**
@@ -123,7 +123,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 			case 4: return "converter shunts";
 			case 5: return "gained and utilized";
 			case 6: return "deployment point";
-			case 7: return lyr_ehm.settings.getBaseSlotPointPenalty()+"";
+			case 7: return lyr_settings.getBaseSlotPointPenalty()+"";
 			default: return null;
 		}
 	}

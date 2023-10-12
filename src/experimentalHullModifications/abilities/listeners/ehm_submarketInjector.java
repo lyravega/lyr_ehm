@@ -2,16 +2,16 @@ package experimentalHullModifications.abilities.listeners;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CargoAPI;
-import com.fs.starfarer.api.campaign.PlayerMarketTransaction;
 import com.fs.starfarer.api.campaign.CargoAPI.CargoItemQuantity;
+import com.fs.starfarer.api.campaign.PlayerMarketTransaction;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.listeners.ColonyInteractionListener;
 
 import experimentalHullModifications.submarkets.ehm_submarket;
 import lyravega.listeners._lyr_sectorListener;
 import lyravega.misc.lyr_internals;
-import lyravega.plugin.lyr_ehm;
 import lyravega.plugin.lyr_ehm.friend;
+import lyravega.tools.logger.lyr_logger;
 
 /**
  * A sector listener class whose sole purpose is to attach/detach the
@@ -43,7 +43,7 @@ public final class ehm_submarketInjector extends _lyr_sectorListener implements 
 
 		market.addSubmarket(lyr_internals.id.submarket);
 
-		if (lyr_ehm.settings.getLogListenerInfo()) logger.info(logPrefix + "Attached experimental submarket");
+		lyr_logger.listenerInfo("Attached experimental submarket");
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public final class ehm_submarketInjector extends _lyr_sectorListener implements 
 			if (ehm_submarket.shunts.contains(weaponCargo.getItem())) playerCargo.removeWeapons(weaponCargo.getItem(), weaponCargo.getCount());
 		}
 
-		if (lyr_ehm.settings.getLogListenerInfo()) logger.info(logPrefix + "Detached experimental submarket");
+		lyr_logger.listenerInfo("Detached experimental submarket");
 	}
 
 	@Override

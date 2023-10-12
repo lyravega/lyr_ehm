@@ -25,7 +25,7 @@ import lyravega.misc.lyr_internals.id.hullmods;
 import lyravega.misc.lyr_internals.id.shunts.launchTubes;
 import lyravega.misc.lyr_tooltip.header;
 import lyravega.misc.lyr_tooltip.text;
-import lyravega.plugin.lyr_ehm;
+import lyravega.plugin.lyr_settings;
 import lyravega.proxies.lyr_hullSpec;
 
 /**@category Adapter Retrofit 
@@ -125,7 +125,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 		ShipVariantAPI variant = ship.getVariant();
 
 		if (variant.hasHullMod(this.hullModSpecId)) {
-			if (lyr_ehm.settings.getShowInfoForActivators()) {	
+			if (lyr_settings.getShowInfoForActivators()) {	
 				Map<String, Integer> launchTubes = ehm_shuntCount(ship, lyr_internals.tag.tubeShunt);
 	
 				if (!launchTubes.isEmpty()) {
@@ -133,7 +133,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 					for (String shuntId: launchTubes.keySet()) {
 						tooltip.addPara(launchTubes.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
-				} else if (lyr_ehm.settings.getShowFullInfoForActivators()) {
+				} else if (lyr_settings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO EXTRA HANGARS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No large weapon slots are turned into hangars. Each large slot is turned into a single fighter bay with a launch tube.", 2f);
 				}

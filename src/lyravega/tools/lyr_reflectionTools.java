@@ -6,6 +6,8 @@ import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.invoke.MethodType;
 import java.util.Arrays;
 
+import lyravega.tools.logger.lyr_logger;
+
 /**
  * Hosts tools for reflection stuff. These tools are categorized under their
  * own inner classes, and covers a few of the most useful things.
@@ -21,7 +23,7 @@ import java.util.Arrays;
  * @see {@link fieldReflection#findFieldByClass(Class, Object)}
  */
 @SuppressWarnings("unused")
-public class lyr_reflectionTools implements lyr_logger {
+public class lyr_reflectionTools {
 	protected static final Lookup lookup = MethodHandles.lookup();
 	protected static final Class<?> lookupClass = lookup.getClass();
 
@@ -54,7 +56,7 @@ public class lyr_reflectionTools implements lyr_logger {
 				getModifiers = lookup.findVirtual(methodClass, "getModifiers", MethodType.methodType(int.class));
 				unreflect = lookup.findVirtual(lookupClass, "unreflect", MethodType.methodType(MethodHandle.class, methodClass));
 			} catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException e) {
-				logger.fatal(logPrefix+"Failed to initialize reflection tools for methods", e);
+				lyr_logger.fatal("Failed to initialize reflection tools for methods", e);
 			}
 		}
 
@@ -107,8 +109,8 @@ public class lyr_reflectionTools implements lyr_logger {
 				}
 			}
 
-			if (method == null) throw new Throwable(logPrefix+"Method with the name '"+methodName+"' was not found in the class '"+clazz.getName()+"'");
-			else logger.info(logPrefix+"Method with the name '"+methodName+"' found in the class '"+clazz.getName()+"'");
+			if (method == null) throw new Throwable("Method with the name '"+methodName+"' was not found in the class '"+clazz.getName()+"'");
+			else lyr_logger.reflectionInfo("Method with the name '"+methodName+"' was found in the class '"+clazz.getName()+"'");
 
 			return new methodReflection(method);
 		}
@@ -161,8 +163,8 @@ public class lyr_reflectionTools implements lyr_logger {
 				method = currMethod; break;
 			}
 
-			if (method == null) throw new Throwable(logPrefix+"Method"+(returnType != null ? " with the return type '"+returnType.toString()+"'" : "")+(parameterTypes.length > 0 ? " parameter types '"+parameterTypes.toString()+"'" : "")+" was not found in the class '"+clazz.getName()+"'");
-			else logger.info(logPrefix+"Method with the name '"+methodName+"' found in the class '"+clazz.getName()+"'");
+			if (method == null) throw new Throwable("Method with the name '"+methodName+"' was not found in the class '"+clazz.getName()+"'");
+			else lyr_logger.reflectionInfo("Method with the name '"+methodName+"' was found in the class '"+clazz.getName()+"'");
 
 			return new methodReflection(method);
 		}
@@ -192,7 +194,7 @@ public class lyr_reflectionTools implements lyr_logger {
 				return MethodHandle.class.cast(unreflect.invoke(lookup, method)).bindTo(instanceOrClass).invokeWithArguments(parameters);
 			} 
 
-			throw new Throwable(logPrefix+"Method with the name '"+methodName+"' was not found in '"+clazz.getName()+"'");
+			throw new Throwable("Method with the name '"+methodName+"' was not found in '"+clazz.getName()+"'");
 		} 
 
 		// private final Object method;	// not necessary since accessors do not use this, so it is tossed away
@@ -286,7 +288,7 @@ public class lyr_reflectionTools implements lyr_logger {
 				get = lookup.findVirtual(fieldClass, "get", MethodType.methodType(Object.class, Object.class));
 				set = lookup.findVirtual(fieldClass, "set", MethodType.methodType(void.class, Object.class, Object.class));
 			} catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException e) {
-				logger.fatal(logPrefix+"Failed to initialize reflection tools for fields", e);
+				lyr_logger.fatal("Failed to initialize reflection tools for fields", e);
 			}
 		}
 
@@ -322,8 +324,8 @@ public class lyr_reflectionTools implements lyr_logger {
 				}
 			} while (field == null && clazz != null);
 
-			if (field == null) throw new Throwable(logPrefix+"Field with the name '"+fieldName+"' was not found in '"+instanceOrClass.toString()+"'");
-			else logger.info("Field with the name '"+fieldName+"' found in '"+instanceOrClass.toString()+"'");
+			if (field == null) throw new Throwable("Field with the name '"+fieldName+"' was not found in '"+instanceOrClass.toString()+"'");
+			else lyr_logger.reflectionInfo("Field with the name '"+fieldName+"' found in '"+instanceOrClass.toString()+"'");
 
 			return new fieldReflection(field, instanceOrClass);
 		}
@@ -362,8 +364,8 @@ public class lyr_reflectionTools implements lyr_logger {
 				clazz = checkSuper ? clazz.getSuperclass() : null;
 			} while (field == null && clazz != null);
 
-			if (field == null) throw new Throwable(logPrefix+"Field with the name '"+fieldName+"' was not found in '"+instanceOrClass.toString()+"'");
-			else logger.info("Field with the name '"+fieldName+"' found in '"+instanceOrClass.toString()+"'");
+			if (field == null) throw new Throwable("Field with the name '"+fieldName+"' was not found in '"+instanceOrClass.toString()+"'");
+			else lyr_logger.reflectionInfo("Field with the name '"+fieldName+"' found in '"+instanceOrClass.toString()+"'");
 
 			return new fieldReflection(field, instanceOrClass);
 		}
@@ -397,7 +399,7 @@ public class lyr_reflectionTools implements lyr_logger {
 			try {
 				return get.invoke(field, instance);
 			} catch (Throwable t) {
-				logger.error(logPrefix+"Failed to use 'get()' for '"+this.name+"' field", t);
+				lyr_logger.error("Failed to use 'get()' for '"+this.name+"' field", t);
 			}; return null;
 		}
 
@@ -405,7 +407,7 @@ public class lyr_reflectionTools implements lyr_logger {
 			try {
 				set.invoke(field, instance, value);
 			} catch (Throwable t) {
-				logger.error(logPrefix+"Failed to use 'set()' for '"+this.name+"' field", t);
+				lyr_logger.error("Failed to use 'set()' for '"+this.name+"' field", t);
 			}
 		}
 	}

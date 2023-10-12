@@ -5,10 +5,10 @@ import java.lang.invoke.MethodHandle;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 
-import lyravega.tools.lyr_logger;
+import lyravega.tools.logger.lyr_logger;
 import lyravega.tools.lyr_reflectionTools.methodReflection;
 
-public class lyr_shipDisplay implements lyr_logger {
+public class lyr_shipDisplay {
 	private Object shipDisplay;		// UIPanelAPI, UIComponentAPI
 	static Class<?> clazz;
 	private static MethodHandle setFleetMember;
@@ -25,7 +25,7 @@ public class lyr_shipDisplay implements lyr_logger {
 			getShip = methodReflection.findMethodByName("getShip", clazz).getMethodHandle();
 			clearFighterSlot = methodReflection.findMethodByName("clearFighterSlot", clazz).getMethodHandle();
 		} catch (Throwable t) {
-			logger.fatal(logPrefix+"Failed to find a method in 'lyr_shipDisplay'", t);
+			lyr_logger.fatal("Failed to find a method in 'lyr_shipDisplay'", t);
 		}
 	}
 
@@ -45,7 +45,7 @@ public class lyr_shipDisplay implements lyr_logger {
 		try {
 			setFleetMember.invoke(shipDisplay, fleetMember, variant);
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'setFleetMember()' in 'lyr_shipDisplay'", t);
+			lyr_logger.error("Failed to use 'setFleetMember()' in 'lyr_shipDisplay'", t);
 		}
 	}
 
@@ -53,7 +53,7 @@ public class lyr_shipDisplay implements lyr_logger {
 		try {
 			return (ShipVariantAPI) getCurrentVariant.invoke(shipDisplay);
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'getCurrentVariant()' in 'lyr_shipDisplay'", t);
+			lyr_logger.error("Failed to use 'getCurrentVariant()' in 'lyr_shipDisplay'", t);
 		}	return null;
 	}
 
@@ -61,7 +61,7 @@ public class lyr_shipDisplay implements lyr_logger {
 		try {
 			return (ShipAPI) getShip.invoke(shipDisplay);
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'getShip()' in 'lyr_shipDisplay'", t);
+			lyr_logger.error("Failed to use 'getShip()' in 'lyr_shipDisplay'", t);
 		}	return null;
 	}
 
@@ -69,7 +69,7 @@ public class lyr_shipDisplay implements lyr_logger {
 		try {
 			clearFighterSlot.invoke(shipDisplay, fighterSlot, variant);
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'clearFighterSlot()' in 'lyr_shipDisplay'", t);
+			lyr_logger.error("Failed to use 'clearFighterSlot()' in 'lyr_shipDisplay'", t);
 		}
 	}
 }

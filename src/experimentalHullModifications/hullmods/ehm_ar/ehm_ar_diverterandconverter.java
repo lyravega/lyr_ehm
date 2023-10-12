@@ -30,7 +30,7 @@ import lyravega.misc.lyr_internals.id.shunts.converters;
 import lyravega.misc.lyr_internals.id.shunts.diverters;
 import lyravega.misc.lyr_tooltip.header;
 import lyravega.misc.lyr_tooltip.text;
-import lyravega.plugin.lyr_ehm;
+import lyravega.plugin.lyr_settings;
 import lyravega.proxies.lyr_hullSpec;
 
 /**@category Adapter Retrofit 
@@ -154,7 +154,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 			}
 		}
 
-		stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullmods.diverterandconverter, Math.max(0, lyr_ehm.settings.getBaseSlotPointPenalty()*Math.min(slotPointsFromMods, slotPointsFromMods - slotPoints)));
+		stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullmods.diverterandconverter, Math.max(0, lyr_settings.getBaseSlotPointPenalty()*Math.min(slotPointsFromMods, slotPointsFromMods - slotPoints)));
 
 		variant.setHullSpecAPI(hullSpec.retrieve());
 	}
@@ -167,7 +167,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 			case 1: return "diverters";
 			case 2: return "gained and utilized";
 			case 3: return "deployment point";
-			case 4: return lyr_ehm.settings.getBaseSlotPointPenalty()+"";
+			case 4: return lyr_settings.getBaseSlotPointPenalty()+"";
 			default: return null;
 		}
 	}
@@ -188,9 +188,9 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 			if (pointArray[1] > 0) tooltip.addPara("Hull modifications are providing " + pointArray[1] + " slot points", 2f, header.sEffect_textColour, pointArray[1] + " slot points");
 			if (pointArray[2] > 0) tooltip.addPara("Diverter shunts are providing " + pointArray[2] + " slot points", 2f, header.sEffect_textColour, pointArray[2] + " slot points");
 			if (pointArray[3] > 0) tooltip.addPara("Converter shunts are utilizing " + pointArray[3] + " slot points", 2f, header.notApplicable_textColour, pointArray[3] + " slot points");
-			if (lyr_ehm.settings.getBaseSlotPointPenalty() > 0 && pointArray[4] > 0) tooltip.addPara("Ship will require an additional " + pointArray[4] + " deployment points", 2f, header.notApplicable_textColour, pointArray[4] + " deployment points");
+			if (lyr_settings.getBaseSlotPointPenalty() > 0 && pointArray[4] > 0) tooltip.addPara("Ship will require an additional " + pointArray[4] + " deployment points", 2f, header.notApplicable_textColour, pointArray[4] + " deployment points");
 
-			if (lyr_ehm.settings.getShowInfoForActivators()) {
+			if (lyr_settings.getShowInfoForActivators()) {
 				Map<String, Integer> converters = ehm_shuntCount(ship, lyr_internals.tag.converterShunt);
 
 				if (!converters.isEmpty()) {
@@ -198,7 +198,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 					for (String shuntId: converters.keySet()) {
 						tooltip.addPara(converters.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
-				} else if (lyr_ehm.settings.getShowFullInfoForActivators()) {
+				} else if (lyr_settings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO CONVERTERS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No converters are installed. Converters are used to make a smaller slot a bigger one, if there are enough slot points.", 2f);
 				}
@@ -210,7 +210,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 					for (String shuntId: diverters.keySet()) {
 						tooltip.addPara(diverters.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
-				} else if (lyr_ehm.settings.getShowFullInfoForActivators()) {
+				} else if (lyr_settings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO DIVERTERS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No diverters are installed. Diverters disable a slot and provide slot points that are used by converters in turn.", 2f);
 				}

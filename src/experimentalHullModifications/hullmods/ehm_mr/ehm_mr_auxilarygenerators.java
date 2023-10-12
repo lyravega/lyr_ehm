@@ -21,7 +21,7 @@ import lyravega.listeners.events.normalEvents;
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_tooltip.header;
 import lyravega.misc.lyr_tooltip.text;
-import lyravega.plugin.lyr_ehm;
+import lyravega.plugin.lyr_settings;
 
 /**
  * A hullmod to convert OP to SP
@@ -69,7 +69,7 @@ public final class ehm_mr_auxilarygenerators extends _ehm_base implements normal
 			case 1: return slotPointBonus.get(HullSize.FRIGATE)+"/"+slotPointBonus.get(HullSize.DESTROYER)+"/"+slotPointBonus.get(HullSize.CRUISER)+"/"+slotPointBonus.get(HullSize.CAPITAL_SHIP);
 			case 2: return "gained and utilized";
 			case 3: return "deployment point";
-			case 4: return lyr_ehm.settings.getBaseSlotPointPenalty()+"";
+			case 4: return lyr_settings.getBaseSlotPointPenalty()+"";
 			default: return null;
 		}
 	}

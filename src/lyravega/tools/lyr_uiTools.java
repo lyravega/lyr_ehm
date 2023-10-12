@@ -9,8 +9,9 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CoreUITabId;
 
 import lyravega.misc.lyr_internals;
-import lyravega.plugin.lyr_ehm;
+import lyravega.plugin.lyr_settings;
 import lyravega.proxies.ui.*;
+import lyravega.tools.logger.lyr_logger;
 
 /**
  * Provides specialized MethodHandles and a few methods that are 
@@ -43,7 +44,7 @@ public class lyr_uiTools extends lyr_reflectionTools {
 	 * and {@code onInstall()}
 	 */
 	public static void playDrillSound() {
-		if (!lyr_ehm.settings.getPlayDrillSound() || !isRefitTab()) return;
+		if (!lyr_settings.getPlayDrillSound() || !isRefitTab()) return;
 		Global.getSoundPlayer().playUISound(lyr_internals.id.drillSound, 1.0f, 0.75f);
 	}
 
@@ -77,7 +78,7 @@ public class lyr_uiTools extends lyr_reflectionTools {
 			clearUndo = true;
 		} catch (Throwable t) {
 			// refreshRefit();
-			logger.error(logPrefix+"Failure in 'commitChanges()'");
+			lyr_logger.error("Failure in 'commitChanges()'");
 		}
 	}
 
@@ -95,7 +96,7 @@ public class lyr_uiTools extends lyr_reflectionTools {
 			refitPanel.setEditedSinceLoad(false);
 			refitPanel.setEditedSinceSave(false);
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failure in 'clearUndo()'", t);
+			lyr_logger.error("Failure in 'clearUndo()'", t);
 		}
 	}
 
@@ -117,7 +118,7 @@ public class lyr_uiTools extends lyr_reflectionTools {
 
 			clearUndo = false;
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failure in 'clearUndoAfter()'", t);
+			lyr_logger.error("Failure in 'clearUndoAfter()'", t);
 		}
 	}
 

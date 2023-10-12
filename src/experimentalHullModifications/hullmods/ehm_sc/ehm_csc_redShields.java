@@ -7,7 +7,7 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 
 import lyravega.listeners.events.customizableHullMod;
-import lyravega.plugin.lyr_settings.lyr_lunaAccessors;
+import lyravega.misc.lyr_lunaAccessors;
 
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 

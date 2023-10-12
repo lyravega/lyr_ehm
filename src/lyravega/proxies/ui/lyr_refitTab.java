@@ -2,10 +2,10 @@ package lyravega.proxies.ui;
 
 import java.lang.invoke.MethodHandle;
 
-import lyravega.tools.lyr_logger;
+import lyravega.tools.logger.lyr_logger;
 import lyravega.tools.lyr_reflectionTools.methodReflection;
 
-public class lyr_refitTab implements lyr_logger {
+public class lyr_refitTab {
 	private Object refitTab;	// UIPanelAPI, UIComponentAPI
 	// private lyr_refitPanel refitPanel;
 	static Class<?> clazz;
@@ -17,7 +17,7 @@ public class lyr_refitTab implements lyr_logger {
 
 			getRefitPanel = methodReflection.findMethodByName("getRefitPanel", clazz).getMethodHandle();
 		} catch (Throwable t) {
-			logger.fatal(logPrefix+"Failed to find a method in 'lyr_refitTab'", t);
+			lyr_logger.fatal("Failed to find a method in 'lyr_refitTab'", t);
 		}
 	}
 
@@ -37,7 +37,7 @@ public class lyr_refitTab implements lyr_logger {
 		try {
 			return new lyr_refitPanel(getRefitPanel.invoke(refitTab));
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'getRefitPanel()' in 'lyr_refitTab'", t);
+			lyr_logger.error("Failed to use 'getRefitPanel()' in 'lyr_refitTab'", t);
 		}	return null;
 	}
 }

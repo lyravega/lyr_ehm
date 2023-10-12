@@ -4,10 +4,10 @@ import java.lang.invoke.MethodHandle;
 
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 
-import lyravega.tools.lyr_logger;
+import lyravega.tools.logger.lyr_logger;
 import lyravega.tools.lyr_reflectionTools.methodReflection;
 
-public class lyr_refitPanel implements lyr_logger {
+public class lyr_refitPanel {
 	private Object refitPanel;	// UIPanelAPI, UIComponentAPI
 	// private lyr_designDisplay designDisplay;
 	// private lyr_shipDisplay shipDisplay;
@@ -39,7 +39,7 @@ public class lyr_refitPanel implements lyr_logger {
 			setEditedSinceSave = methodReflection.findMethodByName("setEditedSinceSave", clazz).getMethodHandle();
 			addAllWeaponsFromVariantToCargo = methodReflection.findMethodByName("addAllWeaponsFromVariantToCargo", clazz).getMethodHandle();
 		} catch (Throwable t) {
-			logger.fatal(logPrefix+"Failed to find a method in 'lyr_refitPanel'", t);
+			lyr_logger.fatal("Failed to find a method in 'lyr_refitPanel'", t);
 		}
 	}
 
@@ -59,7 +59,7 @@ public class lyr_refitPanel implements lyr_logger {
 		try {
 			return new lyr_designDisplay(getDesignDisplay.invoke(refitPanel));
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'getDesignDisplay()' in 'lyr_refitPanel'", t);
+			lyr_logger.error("Failed to use 'getDesignDisplay()' in 'lyr_refitPanel'", t);
 		}	return null;
 	}
 
@@ -67,7 +67,7 @@ public class lyr_refitPanel implements lyr_logger {
 		try {
 			return new lyr_shipDisplay(getShipDisplay.invoke(refitPanel));
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'getShipDisplay()' in 'lyr_refitPanel'", t);
+			lyr_logger.error("Failed to use 'getShipDisplay()' in 'lyr_refitPanel'", t);
 		}	return null;
 	}
 
@@ -75,7 +75,7 @@ public class lyr_refitPanel implements lyr_logger {
 		try {
 			saveCurrentVariant.invoke(refitPanel, false);	// if the boolean here is true, "Financial Transaction Confirmed" message will be shown
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'saveCurrentVariant()' in 'lyr_refitPanel'", t);
+			lyr_logger.error("Failed to use 'saveCurrentVariant()' in 'lyr_refitPanel'", t);
 		}
 	}
 
@@ -83,7 +83,7 @@ public class lyr_refitPanel implements lyr_logger {
 		try {
 			return (FleetMemberAPI) getMember.invoke(refitPanel);
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'getMember()' in 'lyr_refitPanel'", t);
+			lyr_logger.error("Failed to use 'getMember()' in 'lyr_refitPanel'", t);
 		}	return null;
 	}
 
@@ -91,7 +91,7 @@ public class lyr_refitPanel implements lyr_logger {
 		try {
 			syncWithCurrentVariant.invoke(refitPanel, true);	// if the boolean here is false, isEditedSinceLoad() is set to true
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'syncWithCurrentVariant()' in 'lyr_refitPanel'", t);
+			lyr_logger.error("Failed to use 'syncWithCurrentVariant()' in 'lyr_refitPanel'", t);
 		}
 	}
 
@@ -99,7 +99,7 @@ public class lyr_refitPanel implements lyr_logger {
 		try {
 			return (boolean) isEditedSinceLoad.invoke(refitPanel);
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'isEditedSinceLoad()' in 'lyr_refitPanel'", t);
+			lyr_logger.error("Failed to use 'isEditedSinceLoad()' in 'lyr_refitPanel'", t);
 		}	return false;
 	}
 
@@ -107,7 +107,7 @@ public class lyr_refitPanel implements lyr_logger {
 		try {
 			return (boolean) isEditedSinceSave.invoke(refitPanel);
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'isEditedSinceSave()' in 'lyr_refitPanel'", t);
+			lyr_logger.error("Failed to use 'isEditedSinceSave()' in 'lyr_refitPanel'", t);
 		}	return false;
 	}
 
@@ -115,7 +115,7 @@ public class lyr_refitPanel implements lyr_logger {
 		try {
 			setEditedSinceLoad.invoke(refitPanel, isEditedSinceLoad);
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'setEditedSinceLoad()' in 'lyr_refitPanel'", t);
+			lyr_logger.error("Failed to use 'setEditedSinceLoad()' in 'lyr_refitPanel'", t);
 		}
 	}
 
@@ -123,7 +123,7 @@ public class lyr_refitPanel implements lyr_logger {
 		try {
 			setEditedSinceSave.invoke(refitPanel, isEditedSinceSave);
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'setEditedSinceSave()' in 'lyr_refitPanel'", t);
+			lyr_logger.error("Failed to use 'setEditedSinceSave()' in 'lyr_refitPanel'", t);
 		}
 	}
 
@@ -131,7 +131,7 @@ public class lyr_refitPanel implements lyr_logger {
 		try {
 			addAllWeaponsFromVariantToCargo.invoke(refitPanel, variant);
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'addAllWeaponsFromVariantToCargo()' in 'lyr_refitPanel'", t);
+			lyr_logger.error("Failed to use 'addAllWeaponsFromVariantToCargo()' in 'lyr_refitPanel'", t);
 		}
 	}
 }

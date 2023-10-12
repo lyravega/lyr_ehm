@@ -26,7 +26,7 @@ import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_internals.id.shunts.capacitors;
 import lyravega.misc.lyr_internals.id.shunts.dissipators;
 import lyravega.misc.lyr_tooltip.header;
-import lyravega.plugin.lyr_ehm;
+import lyravega.plugin.lyr_settings;
 import lyravega.proxies.lyr_hullSpec;
 
 /**@category Adapter Retrofit 
@@ -135,7 +135,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 		ShipVariantAPI variant = ship.getVariant();
 
 		if (variant.hasHullMod(this.hullModSpecId)) {
-			if (lyr_ehm.settings.getShowInfoForActivators()) {
+			if (lyr_settings.getShowInfoForActivators()) {
 				Map<String, Integer> capacitors = ehm_shuntCount(ship, lyr_internals.tag.capacitorShunt);
 	
 				if (!capacitors.isEmpty()) {
@@ -146,7 +146,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 					for (String shuntId: capacitors.keySet()) {
 						tooltip.addPara(capacitors.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
-				} else if (lyr_ehm.settings.getShowFullInfoForActivators()) {
+				} else if (lyr_settings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO CAPACITORS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No capacitors are installed. Capacitors increase the total flux capacity of the ship, and affect built-in capacitors.", 2f);
 				}
@@ -161,7 +161,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 					for (String shuntId: dissipators.keySet()) {
 						tooltip.addPara(dissipators.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
-				} else if (lyr_ehm.settings.getShowFullInfoForActivators()) {
+				} else if (lyr_settings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO DISSIPATORS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No dissipators are installed. Dissipators increase the total flux dissipation of the ship, and affect built-in vents.", 2f);
 				}

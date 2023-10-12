@@ -2,19 +2,18 @@ package lyravega.listeners;
 
 import com.fs.starfarer.api.Global;
 
-import lyravega.plugin.lyr_ehm;
-import lyravega.tools.lyr_logger;
+import lyravega.tools.logger.lyr_logger;
 
 /**
  * A listener base that provides simple methods for attaching/detaching a listener to/from the sector
  * @author lyravega
  */
-public abstract class _lyr_sectorListener implements lyr_logger {
+public abstract class _lyr_sectorListener {
 	public final void attach(boolean isTransient) {	// used in plugin's onLoad()
 		if (!Global.getSector().getListenerManager().hasListener(this)) {
 			Global.getSector().getListenerManager().addListener(this, isTransient);
 
-			if (lyr_ehm.settings.getLogListenerInfo()) logger.info(logPrefix + "Attached '"+this.getClass().getSimpleName()+"' listener");
+			lyr_logger.listenerInfo("Attached '"+this.getClass().getSimpleName()+"' listener");
 		}
 	}
 
@@ -22,7 +21,7 @@ public abstract class _lyr_sectorListener implements lyr_logger {
 		if (Global.getSector().getListenerManager().hasListener(this)) {
 			Global.getSector().getListenerManager().removeListener(this);
 
-			if (lyr_ehm.settings.getLogListenerInfo()) logger.info(logPrefix + "Detached '"+this.getClass().getSimpleName()+"' listener");
+			lyr_logger.listenerInfo("Detached '"+this.getClass().getSimpleName()+"' listener");
 		}
 	}
 }

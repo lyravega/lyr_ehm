@@ -21,9 +21,9 @@ import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.hullmods.ehm._ehm_helpers;
 import lyravega.listeners.events.normalEvents;
 import lyravega.misc.lyr_internals;
+import lyravega.misc.lyr_lunaAccessors;
 import lyravega.misc.lyr_tooltip.header;
 import lyravega.misc.lyr_tooltip.text;
-import lyravega.plugin.lyr_settings.lyr_lunaAccessors;
 import lyravega.proxies.lyr_engineBuilder;
 import lyravega.proxies.lyr_hullSpec;
 

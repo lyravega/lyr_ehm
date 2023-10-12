@@ -7,7 +7,7 @@ import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
-import lyravega.tools.lyr_logger;
+import lyravega.tools.logger.lyr_logger;
 import lyravega.tools.lyr_reflectionTools.methodReflection;
 
 import org.lwjgl.util.vector.Vector2f;
@@ -21,7 +21,7 @@ import org.lwjgl.util.vector.Vector2f;
  * <p> Use {@link #retrieve()} to grab the stored {@link WeaponSlotAPI}.
  * @author lyravega
  */
-public final class lyr_weaponSlot implements lyr_logger {
+public final class lyr_weaponSlot {
 	private WeaponSlotAPI weaponSlot;
 	static Class<?> weaponSlotClass;
 	static Class<?> nodeClass;
@@ -54,7 +54,7 @@ public final class lyr_weaponSlot implements lyr_logger {
 			getSlotType = methodReflection.findMethodByName("getSlotType", weaponSlotClass).getMethodHandle();
 			setSlotType = methodReflection.findMethodByName("setSlotType", weaponSlotClass, slotTypeEnum).getMethodHandle();
 		} catch (Throwable t) {
-			logger.fatal(logPrefix+"Failed to find a method in 'lyr_weaponSlot'", t);
+			lyr_logger.fatal("Failed to find a method in 'lyr_weaponSlot'", t);
 		}
 	}
 
@@ -112,7 +112,7 @@ public final class lyr_weaponSlot implements lyr_logger {
 		try {
 			return (WeaponSlotAPI) clone.invoke(weaponSlot);
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'duplicate()' in 'lyr_weaponSlot'", t);
+			lyr_logger.error("Failed to use 'duplicate()' in 'lyr_weaponSlot'", t);
 		} return weaponSlot; // java, pls...
 	}
 	
@@ -135,7 +135,7 @@ public final class lyr_weaponSlot implements lyr_logger {
 		try {
 			setWeaponType.invoke(weaponSlot, weaponType);
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'setWeaponType()' in 'lyr_weaponSlot'", t);
+			lyr_logger.error("Failed to use 'setWeaponType()' in 'lyr_weaponSlot'", t);
 		}
 	}
 
@@ -147,7 +147,7 @@ public final class lyr_weaponSlot implements lyr_logger {
 		try {
 			setId.invoke(weaponSlot, weaponSlotId);
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'setId()' in 'lyr_weaponSlot'", t);
+			lyr_logger.error("Failed to use 'setId()' in 'lyr_weaponSlot'", t);
 		}
 	}
 
@@ -159,7 +159,7 @@ public final class lyr_weaponSlot implements lyr_logger {
 		try {
 			setSlotSize.invoke(weaponSlot, slotSize);
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'setSlotSize()' in 'lyr_weaponSlot'", t);
+			lyr_logger.error("Failed to use 'setSlotSize()' in 'lyr_weaponSlot'", t);
 		}
 	}
 
@@ -175,7 +175,7 @@ public final class lyr_weaponSlot implements lyr_logger {
 			// setNode_alt.invoke(weaponSlot, nodeClass.cast(newNode.invoke(nodeId, location)));
 			setNode.invoke(weaponSlot, nodeId, location);
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'setNode()' in 'lyr_weaponSlot'", t);
+			lyr_logger.error("Failed to use 'setNode()' in 'lyr_weaponSlot'", t);
 		}
 	}
 
@@ -187,7 +187,7 @@ public final class lyr_weaponSlot implements lyr_logger {
 		try {
 			return (Enum<?>) getSlotType.invoke(weaponSlot);
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'getSlotType()' in 'lyr_weaponSlot'", t);
+			lyr_logger.error("Failed to use 'getSlotType()' in 'lyr_weaponSlot'", t);
 		}	return null;
 	}
 
@@ -199,7 +199,7 @@ public final class lyr_weaponSlot implements lyr_logger {
 		try {
 			setSlotType.invoke(weaponSlot, slotTypeEnum.getEnumConstants()[slotType.ordinal()]);
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'setSlotType()' in 'lyr_weaponSlot'", t);
+			lyr_logger.error("Failed to use 'setSlotType()' in 'lyr_weaponSlot'", t);
 		}
 	}
 	//#endregion 

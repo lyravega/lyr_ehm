@@ -8,7 +8,7 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
-import lyravega.tools.lyr_logger;
+import lyravega.tools.logger.lyr_logger;
 import lyravega.tools.lyr_reflectionTools.methodReflection;
 
 /**
@@ -21,7 +21,7 @@ import lyravega.tools.lyr_reflectionTools.methodReflection;
  * javadocs to hopefully properly describe what they do.
  * @author lyravega
  */
-public final class lyr_engineBuilder implements lyr_logger {
+public final class lyr_engineBuilder {
 	private Object engineBuilder;
 	static Class<?> engineBuilderClass;
 	static Class<?> engineStyleIdEnum;
@@ -45,7 +45,7 @@ public final class lyr_engineBuilder implements lyr_logger {
 			newEngineStyleSpec = MethodHandles.lookup().findConstructor(engineStyleSpecClass, MethodType.methodType(void.class, JSONObject.class, String.class));
 			setEngineStyleSpec = methodReflection.findMethodByClass(engineBuilderClass, void.class, engineStyleSpecClass).getMethodHandle();
 		} catch (Throwable t) {
-			logger.fatal(logPrefix+"Failed to find a method in 'lyr_engineBuilder'", t);
+			lyr_logger.fatal("Failed to find a method in 'lyr_engineBuilder'", t);
 		}
 	}
 
@@ -116,7 +116,7 @@ public final class lyr_engineBuilder implements lyr_logger {
 		try {
 			return (Object) clone.invoke(enginebuilder);
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'duplicate()' in 'lyr_engineBuilder'", t); return engineBuilder;
+			lyr_logger.info("Failed to use 'duplicate()' in 'lyr_engineBuilder'", t); return engineBuilder;
 		}
 	}
 	
@@ -143,7 +143,7 @@ public final class lyr_engineBuilder implements lyr_logger {
 		try {
 			setEngineStyleId.invoke(engineBuilderClass.cast(engineBuilder), engineStyleIdEnum.getEnumConstants()[engineStyleId]);
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'setEngineStyle()' in 'lyr_engineBuilder'", t);
+			lyr_logger.error("Failed to use 'setEngineStyle()' in 'lyr_engineBuilder'", t);
 		}
 	}
 
@@ -165,7 +165,7 @@ public final class lyr_engineBuilder implements lyr_logger {
 		try {
 			setEngineStyleSpecFromJSON.invoke(engineBuilderClass.cast(engineBuilder), engineStyleSpecJSON, engineStyleSpecName);
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'setEngineDataFromJson()' in 'lyr_engineBuilder'", t);
+			lyr_logger.error("Failed to use 'setEngineDataFromJson()' in 'lyr_engineBuilder'", t);
 		}
 	}
 
@@ -182,7 +182,7 @@ public final class lyr_engineBuilder implements lyr_logger {
 		try {
 			setEngineStyleSpec.invoke(engineBuilderClass.cast(engineBuilder), engineStyleSpecClass.cast(engineStyleSpec));
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'setEngineStyleSpec()' in 'lyr_engineBuilder'", t);
+			lyr_logger.error("Failed to use 'setEngineStyleSpec()' in 'lyr_engineBuilder'", t);
 		}
 	}
 
@@ -200,7 +200,7 @@ public final class lyr_engineBuilder implements lyr_logger {
 		try {
 			return newEngineStyleSpec.invoke(engineStyleSpecJSON, engineStyleSpecName);
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'newEngineStyleSpec()' in 'lyr_engineBuilder'", t); return null;
+			lyr_logger.error("Failed to use 'newEngineStyleSpec()' in 'lyr_engineBuilder'", t); return null;
 		}
 	}
 

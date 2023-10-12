@@ -1,6 +1,5 @@
 package lyravega.plugin;
 
-import java.awt.Color;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,10 +11,11 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import lunalib.lunaSettings.LunaSettings;
 import lunalib.lunaSettings.LunaSettingsListener;
 import lyravega.listeners.events.customizableHullMod;
-import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_internals.id;
 import lyravega.misc.lyr_internals.tag;
-import lyravega.tools.lyr_logger;
+import lyravega.misc.lyr_lunaAccessors;
+import lyravega.tools.logger.lyr_levels;
+import lyravega.tools.logger.lyr_logger;
 
 /**
  * Luna settings listener to utilize anything LunaLib offers for settings
@@ -26,56 +26,39 @@ import lyravega.tools.lyr_logger;
  * restart.
  * @author lyravega
  */
-public class lyr_settings implements LunaSettingsListener, lyr_logger {
-	private static final Set<customizableHullMod> lunaMods = new HashSet<customizableHullMod>();
-
-	// MAIN SETTINGS
-	private String shuntAvailability; public String getShuntAvailability() { return shuntAvailability; }
-	// private String extraInfoInHullMods; public String getExtraInfoInHullMods() { return extraInfoInHullMods; }
-	private boolean showInfoForActivators; public boolean getShowInfoForActivators() { return showInfoForActivators; }
-	private boolean showFullInfoForActivators; public boolean getShowFullInfoForActivators() { return showFullInfoForActivators; }
-	// private String drillSound; public String getDrillSound() { return drillSound; }
-	private boolean playDrillSound; public boolean getPlayDrillSound() { return playDrillSound; }
-	private boolean playDrillSoundForAll; public boolean getPlayDrillSoundForAll() { return playDrillSoundForAll; }
-	private boolean cosmeticsOnly; public boolean getCosmeticsOnly() { return cosmeticsOnly; }
-	private boolean hideAdapters; public boolean getHideAdapters() { return hideAdapters; }
-	private boolean hideConverters; public boolean getHideConverters() { return hideConverters; }
-
-	// HULL MODIFICATION SETTINGS
-	private int baseSlotPointPenalty; public int getBaseSlotPointPenalty() { return baseSlotPointPenalty; }
-
-	// FLAVOUR SETTINGS
-	private boolean showExperimentalFlavour; public boolean getShowExperimentalFlavour() { return showExperimentalFlavour; }
-	private boolean showFluff; public boolean getShowFluff() { return showFluff; }
-
-	// DEBUG SETTINGS
-	private boolean debugTooltip; public boolean getDebugTooltip() { return debugTooltip; }
-	private boolean logEventInfo; public boolean getLogEventInfo() { return logEventInfo; }
-	private boolean logListenerInfo; public boolean getLogListenerInfo() { return logListenerInfo; }
-	private boolean logTrackerInfo; public boolean getLogTrackerInfo() { return logTrackerInfo; }
-
-	static void attach() {
-		if (!LunaSettings.hasSettingsListenerOfClass(lyr_settings.class)) {
-			LunaSettings.addSettingsListener(lyr_ehm.settings);
-
-			logger.info(logPrefix + "Attached LunaLib settings listener");
-		}
-
-		lyr_ehm.settings.cacheSettings();
+public class lyr_settings implements LunaSettingsListener {
+	private lyr_settings() {
+		cacheSettings();
 		registerModsWithCustomization();
 	}
 
-	private static void registerModsWithCustomization() {
-		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
-			if (!hullModSpec.hasTag(tag.customizable)) continue;
+	static void attach() {
+		if (!LunaSettings.hasSettingsListenerOfClass(lyr_settings.class)) {
+			LunaSettings.addSettingsListener(new lyr_settings());
 
-			HullModEffect hullModEffect = hullModSpec.getEffect();
-
-			if (customizableHullMod.class.isInstance(hullModEffect)) lunaMods.add((customizableHullMod) hullModEffect);
+			lyr_logger.info("Attached LunaLib settings listener");
 		}
 	}
 
-	private void cacheSettings() {
+	private static final Set<customizableHullMod> lunaMods = new HashSet<customizableHullMod>();
+
+	private static String shuntAvailability; public static String getShuntAvailability() { return shuntAvailability; }
+	// private static String extraInfoInHullMods; public static String getExtraInfoInHullMods() { return extraInfoInHullMods; }
+	private static boolean showInfoForActivators; public static boolean getShowInfoForActivators() { return showInfoForActivators; }
+	private static boolean showFullInfoForActivators; public static boolean getShowFullInfoForActivators() { return showFullInfoForActivators; }
+	// private static String drillSound; public static String getDrillSound() { return drillSound; }
+	private static boolean playDrillSound; public static boolean getPlayDrillSound() { return playDrillSound; }
+	private static boolean playDrillSoundForAll; public static boolean getPlayDrillSoundForAll() { return playDrillSoundForAll; }
+	private static boolean cosmeticsOnly; public static boolean getCosmeticsOnly() { return cosmeticsOnly; }
+	private static boolean hideAdapters; public static boolean getHideAdapters() { return hideAdapters; }
+	private static boolean hideConverters; public static boolean getHideConverters() { return hideConverters; }
+	private static int baseSlotPointPenalty; public static int getBaseSlotPointPenalty() { return baseSlotPointPenalty; }
+	private static boolean showExperimentalFlavour; public static boolean getShowExperimentalFlavour() { return showExperimentalFlavour; }
+	private static boolean showFluff; public static boolean getShowFluff() { return showFluff; }
+	private static boolean debugTooltip; public static boolean getDebugTooltip() { return debugTooltip; }
+//	private static int loggerLevel; public static int getLogEventInfo() { return loggerLevel; }
+
+	private static void cacheSettings() {
 		// MAIN SETTINGS
 		checkShuntAvailability();	// separate from others as it needs to trigger a method to add/remove listeners only if there's a change
 		String extraInfo = lyr_lunaAccessors.getString("ehm_extraInfoInHullMods");	// splitting radio into booleans
@@ -97,12 +80,20 @@ public class lyr_settings implements LunaSettingsListener, lyr_logger {
 
 		// DEBUG SETTINGS
 		debugTooltip = lyr_lunaAccessors.getBoolean("ehm_debugTooltip");
-		logEventInfo = lyr_lunaAccessors.getBoolean("ehm_logEventInfo");
-		logListenerInfo = lyr_lunaAccessors.getBoolean("ehm_logListenerInfo");
-		logTrackerInfo = lyr_lunaAccessors.getBoolean("ehm_logTrackerInfo");
+		checkLoggerLevel();
 	}
 
-	private void checkShuntAvailability() {
+	private static void registerModsWithCustomization() {
+		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
+			if (!hullModSpec.hasTag(tag.customizable)) continue;
+
+			HullModEffect hullModEffect = hullModSpec.getEffect();
+
+			if (customizableHullMod.class.isInstance(hullModEffect)) lunaMods.add((customizableHullMod) hullModEffect);
+		}
+	}
+
+	private static void checkShuntAvailability() {
 		final String temp = lyr_lunaAccessors.getString("ehm_shuntAvailability");
 
 		if (shuntAvailability != null && shuntAvailability.equals(temp)) return; else shuntAvailability = temp;
@@ -112,7 +103,19 @@ public class lyr_settings implements LunaSettingsListener, lyr_logger {
 		lyr_ehm.attachShuntAccessListener();
 	}
 
-	private void checkCosmeticsOnly() {
+	private static void checkLoggerLevel() {
+		switch (lyr_lunaAccessors.getInt("ehm_loggerLevel")) {
+			case 5: lyr_logger.setLevel(lyr_levels.WARN); break;
+			case 4: lyr_logger.setLevel(lyr_levels.LSTNR); break;
+			case 3: lyr_logger.setLevel(lyr_levels.INFO); break;
+			case 2: lyr_logger.setLevel(lyr_levels.EVENT); break;
+			case 1: lyr_logger.setLevel(lyr_levels.RFLCT); break;
+			case 0: lyr_logger.setLevel(lyr_levels.DEBUG); break;
+			default: lyr_logger.setLevel(lyr_levels.LSTNR); break;
+		}
+	}
+
+	private static void checkCosmeticsOnly() {
 		final boolean temp = lyr_lunaAccessors.getBoolean("ehm_cosmeticsOnly");
 
 		if (cosmeticsOnly == temp) return; else cosmeticsOnly = temp;
@@ -132,41 +135,6 @@ public class lyr_settings implements LunaSettingsListener, lyr_logger {
 			customizableMod.applyCustomization();
 		}
 
-		logger.info(logPrefix + "Settings reapplied");
-	}
-
-	public static class lyr_lunaAccessors {
-		private static final String modId = lyr_internals.id.mod;
-
-		public static final Boolean getBoolean(String settingId) { return LunaSettings.getBoolean(modId, settingId); }
-
-		public static final Color getColor(String settingId) { return LunaSettings.getColor(modId, settingId); }
-
-		public static final Double getDouble(String settingId) { return LunaSettings.getDouble(modId, settingId); }
-
-		public static final Float getFloat(String settingId) { return LunaSettings.getFloat(modId, settingId); }
-
-		public static final Integer getInt(String settingId) { return LunaSettings.getInt(modId, settingId); }
-
-		public static final String getString(String settingId) { return LunaSettings.getString(modId, settingId); }
-
-		public static final String getLunaName(String settingIdPrefix) { return getString(settingIdPrefix+"name"); }
-
-		public static final int[] getLunaRGBAColourArray(String settingIdPrefix) {
-			String colourString = getString(settingIdPrefix+"Colour");
-			int[] rgba = {0,0,0,0};
-			rgba[0] = Integer.parseInt(colourString.substring(1, 3), 16);
-			rgba[1] = Integer.parseInt(colourString.substring(3, 5), 16);
-			rgba[2] = Integer.parseInt(colourString.substring(5, 7), 16);
-			rgba[3] = getInt(settingIdPrefix+"Alpha");
-		
-			return rgba;
-		}
-
-		public static final Color getLunaRGBAColour(String settingIdPrefix) {
-			int[] rgba = getLunaRGBAColourArray(settingIdPrefix);
-		
-			return new Color(rgba[0], rgba[1], rgba[2], rgba[3]);
-		}
+		lyr_logger.info("Settings reapplied");
 	}
 }

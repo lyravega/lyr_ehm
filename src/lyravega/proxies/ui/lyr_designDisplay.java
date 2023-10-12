@@ -4,10 +4,10 @@ import java.lang.invoke.MethodHandle;
 
 import com.fs.starfarer.api.ui.ButtonAPI;
 
-import lyravega.tools.lyr_logger;
+import lyravega.tools.logger.lyr_logger;
 import lyravega.tools.lyr_reflectionTools.methodReflection;
 
-public class lyr_designDisplay implements lyr_logger {
+public class lyr_designDisplay {
 	private Object designDisplay;	// UIPanelAPI, UIComponentAPI
 	static Class<?> clazz;
 	private static MethodHandle undo;
@@ -22,7 +22,7 @@ public class lyr_designDisplay implements lyr_logger {
 			getSaveButton = methodReflection.findMethodByName("getSaveButton", clazz).getMethodHandle();
 			getUndoButton = methodReflection.findMethodByName("getUndoButton", clazz).getMethodHandle();
 		} catch (Throwable t) {
-			logger.fatal(logPrefix+"Failed to find a method in 'lyr_designDisplay'", t);
+			lyr_logger.fatal("Failed to find a method in 'lyr_designDisplay'", t);
 		}
 	}
 
@@ -42,7 +42,7 @@ public class lyr_designDisplay implements lyr_logger {
 		try {
 			undo.invoke(designDisplay);
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'undo()' in 'lyr_designDisplay'", t);
+			lyr_logger.error("Failed to use 'undo()' in 'lyr_designDisplay'", t);
 		}
 	}
 
@@ -50,7 +50,7 @@ public class lyr_designDisplay implements lyr_logger {
 		try {
 			return (ButtonAPI) getSaveButton.invoke(designDisplay);
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'getSaveButton()' in 'lyr_designDisplay'", t);
+			lyr_logger.error("Failed to use 'getSaveButton()' in 'lyr_designDisplay'", t);
 		}	return null;
 	}
 
@@ -58,7 +58,7 @@ public class lyr_designDisplay implements lyr_logger {
 		try {
 			return (ButtonAPI) getUndoButton.invoke(designDisplay);
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'getUndoButton()' in 'lyr_designDisplay'", t);
+			lyr_logger.error("Failed to use 'getUndoButton()' in 'lyr_designDisplay'", t);
 		}	return null;
 	}
 }

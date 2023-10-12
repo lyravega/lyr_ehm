@@ -8,9 +8,9 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
 import lyravega.listeners.events.*;
-import lyravega.plugin.lyr_ehm;
-import lyravega.tools.lyr_logger;
+import lyravega.plugin.lyr_settings;
 import lyravega.tools.lyr_uiTools;
+import lyravega.tools.logger.lyr_logger;
 
 /**
  * A class that acts like a listener in a way. Constructor takes a 
@@ -25,7 +25,7 @@ import lyravega.tools.lyr_uiTools;
  * @see {@link suppressedEvents} onSuppress / onRestore events for hullmods
  * @author lyravega
  */
-public class lyr_shipTracker implements lyr_logger {
+public class lyr_shipTracker {
 	private ShipVariantAPI variant = null;
 	// private ShipHullSpecAPI hullSpec = null;
 	private final String trackerId;
@@ -102,7 +102,7 @@ public class lyr_shipTracker implements lyr_logger {
 			case onSuppress:	if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onSuppress(variant); return;
 			case onRestore:		if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onRestore(variant); return;
 			default: return;
-		} else if (lyr_ehm.settings.getPlayDrillSoundForAll()) switch (eventName) {
+		} else if (lyr_settings.getPlayDrillSoundForAll()) switch (eventName) {
 			case onInstall:		
 			case onRemove:		lyr_uiTools.playDrillSound(); return;
 			default: return;
@@ -126,21 +126,13 @@ public class lyr_shipTracker implements lyr_logger {
 		}
 	}
 
-	// private void checkHullSpec() {
-	// 	if (!variant.getHullSpec().getHullId().equals(this.hullSpec.getHullId())) {
-	// 		this.hullSpec = variant.getHullSpec();
-
-	// 		if (log) logger.info(logPrefix+"ST-"+memberId+": Hull Spec of the ship has been changed");
-	// 	}
-	// }
-
 	private void checkHullMods() {
 		for (final String hullModId : variant.getHullMods()) {
 			if (hullMods.contains(hullModId)) continue;
 			if (suppressedMods.contains(hullModId)) { hullMods.add(hullModId); continue; }
 
 			hullMods.add(hullModId); onHullModEvent(onInstall, variant, hullModId);
-			if (lyr_ehm.settings.getLogEventInfo()) logger.info(logPrefix+"ST-"+trackerId+": Installed '"+hullModId+"'");
+			lyr_logger.eventInfo("ST-"+trackerId+": Installed '"+hullModId+"'");
 		}
 
 		for (iterator = hullMods.iterator(); iterator.hasNext();) { final String hullModId = iterator.next();
@@ -148,7 +140,7 @@ public class lyr_shipTracker implements lyr_logger {
 			if (variant.getSuppressedMods().contains(hullModId)) { iterator.remove(); continue; }
 
 			iterator.remove(); onHullModEvent(onRemove, variant, hullModId);
-			if (lyr_ehm.settings.getLogEventInfo()) logger.info(logPrefix+"ST-"+trackerId+": Removed '"+hullModId+"'");
+			lyr_logger.eventInfo("ST-"+trackerId+": Removed '"+hullModId+"'");
 		}
 	}
 
@@ -158,7 +150,7 @@ public class lyr_shipTracker implements lyr_logger {
 			if (embeddedMods.contains(hullModId)) continue;
 
 			enhancedMods.add(hullModId); onHullModEvent(onEnhance, variant, hullModId);
-			if (lyr_ehm.settings.getLogEventInfo()) logger.info(logPrefix+"ST-"+trackerId+": Enhanced '"+hullModId+"'");
+			lyr_logger.eventInfo("ST-"+trackerId+": Enhanced '"+hullModId+"'");
 		}
 
 		for (final String hullModId : variant.getSModdedBuiltIns()) {
@@ -166,21 +158,21 @@ public class lyr_shipTracker implements lyr_logger {
 			if (enhancedMods.contains(hullModId)) enhancedMods.remove(hullModId);
 
 			embeddedMods.add(hullModId); onHullModEvent(onEnhance, variant, hullModId);
-			if (lyr_ehm.settings.getLogEventInfo()) logger.info(logPrefix+"ST-"+trackerId+": Enhanced embedded '"+hullModId+"'");
+			lyr_logger.eventInfo("ST-"+trackerId+": Enhanced embedded '"+hullModId+"'");
 		}
 
 		for (iterator = enhancedMods.iterator(); iterator.hasNext();) { final String hullModId = iterator.next();
 			if (variant.getSMods().contains(hullModId)) continue;
 
 			iterator.remove(); onHullModEvent(onNormalize, variant, hullModId);
-			if (lyr_ehm.settings.getLogEventInfo()) logger.info(logPrefix+"ST-"+trackerId+": Normalized '"+hullModId+"'");
+			lyr_logger.eventInfo("ST-"+trackerId+": Normalized '"+hullModId+"'");
 		}
 
 		for (iterator = embeddedMods.iterator(); iterator.hasNext();) { final String hullModId = iterator.next();
 			if (variant.getSModdedBuiltIns().contains(hullModId)) continue;
 
 			iterator.remove(); onHullModEvent(onNormalize, variant, hullModId);
-			if (lyr_ehm.settings.getLogEventInfo()) logger.info(logPrefix+"ST-"+trackerId+": Normalized embedded '"+hullModId+"'");
+			lyr_logger.eventInfo("ST-"+trackerId+": Normalized embedded '"+hullModId+"'");
 		}
 	}
 
@@ -189,14 +181,14 @@ public class lyr_shipTracker implements lyr_logger {
 			if (suppressedMods.contains(hullModId)) continue;
 
 			suppressedMods.add(hullModId); onHullModEvent(onSuppress, variant, hullModId);
-			if (lyr_ehm.settings.getLogEventInfo()) logger.info(logPrefix+"ST-"+trackerId+": Suppressed '"+hullModId+"'");
+			lyr_logger.eventInfo("ST-"+trackerId+": Suppressed '"+hullModId+"'");
 		}
 
 		for (iterator = suppressedMods.iterator(); iterator.hasNext();) { final String hullModId = iterator.next();
 			if (variant.getSuppressedMods().contains(hullModId)) continue;
 
 			iterator.remove(); onHullModEvent(onRestore, variant, hullModId);
-			if (lyr_ehm.settings.getLogEventInfo()) logger.info(logPrefix+"ST-"+trackerId+": Restored '"+hullModId+"'");
+			lyr_logger.eventInfo("ST-"+trackerId+": Restored '"+hullModId+"'");
 		}
 	}
 
@@ -211,18 +203,18 @@ public class lyr_shipTracker implements lyr_logger {
 				weapons.put(slotId, newWeaponId);
 				onWeaponEvent(onWeaponInstall, variant, newWeaponId, slotId);
 
-				if (lyr_ehm.settings.getLogEventInfo()) logger.info(logPrefix+"ST-"+trackerId+": Installed '"+newWeaponId+"' on '"+slotId+"'");
+				lyr_logger.eventInfo("ST-"+trackerId+": Installed '"+newWeaponId+"' on '"+slotId+"'");
 			} else if (oldWeaponId != null && newWeaponId == null) {	// weapon removed
 				weapons.put(slotId, null);
 				onWeaponEvent(onWeaponRemove, variant, oldWeaponId, slotId);
 
-				if (lyr_ehm.settings.getLogEventInfo()) logger.info(logPrefix+"ST-"+trackerId+": Removed '"+oldWeaponId+"' from '"+slotId+"'");
+				lyr_logger.eventInfo("ST-"+trackerId+": Removed '"+oldWeaponId+"' from '"+slotId+"'");
 			} else if (oldWeaponId != null && newWeaponId != null && !oldWeaponId.equals(newWeaponId)) {	// weapon changed
 				weapons.put(slotId, newWeaponId);
 				onWeaponEvent(onWeaponInstall, variant, newWeaponId, slotId);
 				onWeaponEvent(onWeaponRemove, variant, oldWeaponId, slotId);
 
-				if (lyr_ehm.settings.getLogEventInfo()) logger.info(logPrefix+"ST-"+trackerId+": Changed '"+oldWeaponId+"' on '"+slotId+"' with '"+newWeaponId+"'");
+				lyr_logger.eventInfo("ST-"+trackerId+": Changed '"+oldWeaponId+"' on '"+slotId+"' with '"+newWeaponId+"'");
 			}	
 		}
 	}

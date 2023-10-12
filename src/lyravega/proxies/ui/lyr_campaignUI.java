@@ -5,10 +5,10 @@ import java.lang.invoke.MethodHandle;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI;
 
-import lyravega.tools.lyr_logger;
+import lyravega.tools.logger.lyr_logger;
 import lyravega.tools.lyr_reflectionTools.methodReflection;
 
-public class lyr_campaignUI implements lyr_logger {
+public class lyr_campaignUI {
 	private CampaignUIAPI campaignUI;
 	// private lyr_encounterDialog encounterDialog;
 	// private lyr_coreUI coreUI;
@@ -25,7 +25,7 @@ public class lyr_campaignUI implements lyr_logger {
 			// getEncounterDialog = methodReflection.findMethodByName("getEncounterDialog", clazz).getMethodHandle();
 			getCore = methodReflection.findMethodByName("getCore", clazz).getMethodHandle();
 		} catch (Throwable t) {
-			logger.fatal(logPrefix+"Failed to find a method in 'lyr_campaignUI'", t);
+			lyr_logger.fatal("Failed to find a method in 'lyr_campaignUI'", t);
 		}
 	}
 
@@ -45,7 +45,7 @@ public class lyr_campaignUI implements lyr_logger {
 		try {
 			return getScreenPanel.invoke(campaignUI);
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'getScreenPanel()' in 'lyr_campaignUI'", t);
+			lyr_logger.error("Failed to use 'getScreenPanel()' in 'lyr_campaignUI'", t);
 		}	return null;
 	}
 
@@ -53,7 +53,7 @@ public class lyr_campaignUI implements lyr_logger {
 		if (campaignUI.getCurrentInteractionDialog() != null) try {
 			return new lyr_encounterDialog();
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'getEncounterDialog()' in 'lyr_campaignUI'", t);
+			lyr_logger.error("Failed to use 'getEncounterDialog()' in 'lyr_campaignUI'", t);
 		}	return null;
 	}
 
@@ -61,7 +61,7 @@ public class lyr_campaignUI implements lyr_logger {
 		if (campaignUI.getCurrentInteractionDialog() == null) try {
 			return new lyr_coreUI(getCore.invoke(campaignUI));
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'getCore()' in 'lyr_campaignUI'", t);
+			lyr_logger.error("Failed to use 'getCore()' in 'lyr_campaignUI'", t);
 		} return getEncounterDialog().getCoreUI();
 	}
 }

@@ -17,7 +17,7 @@ import lyravega.listeners.lyr_fleetTracker;
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_tooltip.header;
 import lyravega.misc.lyr_tooltip.text;
-import lyravega.plugin.lyr_ehm;
+import lyravega.plugin.lyr_settings;
 
 /**
  * Serves as a requirement for all experimental hull modifications, and enables tracking
@@ -77,7 +77,7 @@ public final class ehm_base extends _ehm_base {
 
 			super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
 		} else {
-			if (lyr_ehm.settings.getDebugTooltip()) {
+			if (lyr_settings.getDebugTooltip()) {
 				tooltip.addSectionHeading("DEBUG INFO: GENERAL", header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 				tooltip.addPara("Mods: "+Global.getSettings().getModManager().getEnabledModsCopy().toString(), 5f).setHighlight("Mods: ");
 
@@ -109,7 +109,7 @@ public final class ehm_base extends _ehm_base {
 					if (scriptSimpleName.equals("lyr_fieldRepairsScript")) tooltip.addPara("FieldRepairsScript (EHM): Running", 5f).setHighlight("FieldRepairsScript (EHM):");
 					if (scriptSimpleName.equals("CaptainsFieldRepairsScript")) tooltip.addPara("FieldRepairsScript (QC): Running", 5f).setHighlight("FieldRepairsScript (QC):");
 				}
-			} else if (lyr_ehm.settings.getShowFluff()) {
+			} else if (lyr_settings.getShowFluff()) {
 				String playerSalutation = Global.getSector().getPlayerPerson().getGender() == Gender.MALE ? Misc.SIR : Misc.MAAM;
 
 				tooltip.addSectionHeading("FLUFF", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);

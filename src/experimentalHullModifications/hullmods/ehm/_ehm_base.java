@@ -24,9 +24,8 @@ import com.fs.starfarer.api.util.Misc;
 import lyravega.misc.lyr_internals;
 import lyravega.misc.lyr_tooltip.header;
 import lyravega.misc.lyr_tooltip.text;
-import lyravega.plugin.lyr_ehm;
+import lyravega.plugin.lyr_settings;
 import lyravega.proxies.lyr_hullSpec;
-import lyravega.tools.lyr_logger;
 
 /**
  * This is the master base class for all experimental hullmods. Stores the most 
@@ -50,7 +49,7 @@ import lyravega.tools.lyr_logger;
  * @see {@link experimentalHullModifications.hullmods.ehm_sc._ehm_sc_base _ehm_sc_base} for shield cosmetic base
  * @author lyravega
  */
-public abstract class _ehm_base implements HullModEffect, lyr_logger {
+public abstract class _ehm_base implements HullModEffect {
 	protected HullModSpecAPI hullModSpec;
 	protected String hullModSpecId;
 	protected Set<String> hullModSpecTags;
@@ -220,7 +219,7 @@ public abstract class _ehm_base implements HullModEffect, lyr_logger {
 		// hullSpec.setRestoreToBase(false);
 		hullSpec.setBaseValue(originalHullSpec.getBaseValue());	// because d-hulls lose 25% in value immediately
 		hullSpec.setSpriteSpec(originalHullSpec.getSpriteSpec());	// to reduce memory imprint, letting garbage collector dispose same sprite specs
-		if (lyr_ehm.settings.getShowExperimentalFlavour()) {
+		if (lyr_settings.getShowExperimentalFlavour()) {
 			hullSpec.setManufacturer(text.flavourManufacturer);
 			hullSpec.setDescriptionPrefix(text.flavourDescription);
 			hullSpec.setHullName(originalHullSpec.getHullName() + " (E)");	// restore to base hull name, replacing "(D)" with "(E)"

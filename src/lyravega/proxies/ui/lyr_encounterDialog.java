@@ -5,10 +5,10 @@ import java.lang.invoke.MethodHandle;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.InteractionDialogAPI;
 
-import lyravega.tools.lyr_logger;
+import lyravega.tools.logger.lyr_logger;
 import lyravega.tools.lyr_reflectionTools.methodReflection;
 
-public class lyr_encounterDialog implements lyr_logger {
+public class lyr_encounterDialog {
 	private InteractionDialogAPI encounterDialog;	// InteractionDialogAPI, VisualPanelAPI, UIPanelAPI, UIComponentAPI
 	// private lyr_campaignUI campaignUI;
 	// private lyr_coreUI coreUI;
@@ -21,7 +21,7 @@ public class lyr_encounterDialog implements lyr_logger {
 
 			getCoreUI = methodReflection.findMethodByName("getCoreUI", clazz).getMethodHandle();
 		} catch (Throwable t) {
-			logger.fatal(logPrefix+"Failed to find a method in 'lyr_encounterDialog'", t);
+			lyr_logger.fatal("Failed to find a method in 'lyr_encounterDialog'", t);
 		}
 	}
 
@@ -41,7 +41,7 @@ public class lyr_encounterDialog implements lyr_logger {
 		try {
 			return new lyr_coreUI(getCoreUI.invoke(encounterDialog));
 		} catch (Throwable t) {
-			logger.error(logPrefix+"Failed to use 'getCoreUI()' in 'lyr_encounterDialog'", t);
+			lyr_logger.error("Failed to use 'getCoreUI()' in 'lyr_encounterDialog'", t);
 		}	return null;
 	}
 
@@ -49,7 +49,7 @@ public class lyr_encounterDialog implements lyr_logger {
 	// 	try {
 	// 		lunalib.lunaExtensions.DialogExtensionsKt.openLunaCustomPanel(encounterDialog, new LunaSettingsUIMainPanel(false));
 	// 	} catch (Throwable t) {
-	// 		logger.error(logPrefix+"Failed to use 'openLunaSettings()' in 'lyr_encounterDialog'", t);
+	// 		lyr_customLogger.error("Failed to use 'openLunaSettings()' in 'lyr_encounterDialog'", t);
 	// 	}
 	// }
 }
