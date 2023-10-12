@@ -155,19 +155,16 @@ public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 				if (noAutomatedShipsSkill) tooltip.addPara(text.noAutomatedShipsSkill[0], text.padding).setHighlight(text.noAutomatedShipsSkill[1]);
 			}
 		} else if (!canBeAddedOrRemovedNow(ship, null, null)) {
-			boolean isFakeCaptain = captain.getNameString().isEmpty();	// as captain always returns something, checking the name to see if it's empty
-			boolean isAICore = captain.isAICore();
-
 			if (variant.hasHullMod(this.hullModSpecId)) {
 				tooltip.addSectionHeading(header.lockedIn, header.locked_textColour, header.locked_bgColour, Alignment.MID, header.padding);
 
-				if (isAICore) tooltip.addPara(text.hasAICore[0], text.padding).setHighlight(text.hasAICore[1]);
-				else if (!isFakeCaptain) tooltip.addPara(text.hasCaptain[0], text.padding).setHighlight(text.hasCaptain[1]);
+				if (captain.isAICore()) tooltip.addPara(text.hasAICore[0], text.padding).setHighlight(text.hasAICore[1]);
+				else if (!captain.isDefault()) tooltip.addPara(text.hasCaptain[0], text.padding).setHighlight(text.hasCaptain[1]);
 			} else {
 				tooltip.addSectionHeading(header.lockedOut, header.locked_textColour, header.locked_bgColour, Alignment.MID, header.padding);
 
-				if (isAICore) tooltip.addPara(text.hasAICore[0], text.padding).setHighlight(text.hasAICore[1]);
-				else if (!isFakeCaptain) tooltip.addPara(text.hasCaptain[0], text.padding).setHighlight(text.hasCaptain[1]);
+				if (captain.isAICore()) tooltip.addPara(text.hasAICore[0], text.padding).setHighlight(text.hasAICore[1]);
+				else if (!captain.isDefault()) tooltip.addPara(text.hasCaptain[0], text.padding).setHighlight(text.hasCaptain[1]);
 			}
 			
 			if (!variant.getNonBuiltInWings().isEmpty()) tooltip.addPara(text.hasWings[0], text.padding).setHighlight(text.hasWings[1]);
@@ -193,7 +190,7 @@ public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
 		if (ship == null) return false;
 
-		if (!ship.getCaptain().getNameString().isEmpty()) return false;
+		if (!ship.getCaptain().isDefault()) return false;
 		if (!ship.getVariant().getNonBuiltInWings().isEmpty()) return false;
 
 		return true;
