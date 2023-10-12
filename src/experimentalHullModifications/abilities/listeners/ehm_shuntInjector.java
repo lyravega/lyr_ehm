@@ -9,6 +9,7 @@ import experimentalHullModifications.submarkets.ehm_submarket;
 import lyravega.listeners._lyr_sectorListener;
 import lyravega.listeners._lyr_tabListener;
 import lyravega.misc.lyr_internals;
+import lyravega.plugin.lyr_ehm.friend;
 
 /**
  * A sector listener class that adds/removes slot shunts to/from the player
@@ -26,6 +27,12 @@ public final class ehm_shuntInjector extends _lyr_tabListener {
 		if (instance == null) instance = new ehm_shuntInjector();
 
 		return instance;
+	}
+
+	public static void nullify(friend friend) {
+		if (friend == null || instance == null) return;
+
+		instance.detach(); instance = null;
 	}
 
 	@Override

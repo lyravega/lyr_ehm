@@ -42,6 +42,10 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 		logger.setLevel(Level.ALL);
 	}
 
+	public static final class friend {
+		private friend() {}
+	};	private static friend friend = new friend();
+
 	@Override
 	public void onGameLoad(boolean newGame) {
 		teachAbility(lyr_internals.id.ability);
@@ -182,8 +186,8 @@ public class lyr_ehm extends BaseModPlugin implements lyr_logger {
 		if (!Global.getSector().getPlayerFleet().getAbility(lyr_internals.id.ability).isActive()) return;
 
 		switch (settings.getShuntAvailability()) {
-			case "Always": ehm_submarketInjector.get().detach(); ehm_shuntInjector.get().attach(true); break;
-			case "Submarket": ehm_shuntInjector.get().detach(); ehm_submarketInjector.get().attach(true); break;
+			case "Always": ehm_submarketInjector.nullify(friend); ehm_shuntInjector.get().attach(true); break;
+			case "Submarket": ehm_shuntInjector.nullify(friend); ehm_submarketInjector.get().attach(true); break;
 			default: break;
 		}
 	}

@@ -11,6 +11,7 @@ import experimentalHullModifications.submarkets.ehm_submarket;
 import lyravega.listeners._lyr_sectorListener;
 import lyravega.misc.lyr_internals;
 import lyravega.plugin.lyr_ehm;
+import lyravega.plugin.lyr_ehm.friend;
 
 /**
  * A sector listener class whose sole purpose is to attach/detach the
@@ -27,7 +28,13 @@ public final class ehm_submarketInjector extends _lyr_sectorListener implements 
 
 		return instance;
 	}
-	
+
+	public static void nullify(friend friend) {
+		if (friend == null || instance == null) return;
+
+		instance.detach(); instance = null;
+	}
+
 	@Override
 	public void reportPlayerOpenedMarket(MarketAPI market) {
 		if (market == null) return;
