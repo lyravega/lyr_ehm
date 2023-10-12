@@ -7,7 +7,7 @@ public class lyr_levels extends Level {
 		super(level, levelStr, syslogEquivalent);
 	}
 
-	public final static int LSTNR_INT = INFO_INT + 100;
+	public final static int LSTNR_INT = INFO_INT - 10;
 	public final static String LSTNR_STR = "LSTNR";
 	final static public Level LSTNR = new lyr_levels(LSTNR_INT, LSTNR_STR, 6);
 

@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
 
 public class lyr_logger {
-	private static final Logger logger = Logger.getLogger("Test Logger");
+	private static final Logger logger = Logger.getLogger("Experimental Hull Modifications");
 
 	public static void setLevel(Level level) { logger.setLevel(level); }
 

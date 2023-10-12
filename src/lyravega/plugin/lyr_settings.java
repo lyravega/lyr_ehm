@@ -105,9 +105,8 @@ public class lyr_settings implements LunaSettingsListener {
 
 	private static void checkLoggerLevel() {
 		switch (lyr_lunaAccessors.getInt("ehm_loggerLevel")) {
-			case 5: lyr_logger.setLevel(lyr_levels.WARN); break;
-			case 4: lyr_logger.setLevel(lyr_levels.LSTNR); break;
-			case 3: lyr_logger.setLevel(lyr_levels.INFO); break;
+			case 4: lyr_logger.setLevel(lyr_levels.INFO); break;
+			case 3: lyr_logger.setLevel(lyr_levels.LSTNR); break;
 			case 2: lyr_logger.setLevel(lyr_levels.EVENT); break;
 			case 1: lyr_logger.setLevel(lyr_levels.RFLCT); break;
 			case 0: lyr_logger.setLevel(lyr_levels.DEBUG); break;
