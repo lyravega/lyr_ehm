@@ -10,11 +10,13 @@ import lyravega.listeners._lyr_sectorListener;
 import lyravega.listeners._lyr_tabListener;
 import lyravega.misc.lyr_internals;
 import lyravega.plugin.lyr_ehm.friend;
+import lyravega.tools.logger.lyr_logger;
 
 /**
  * A sector listener class that adds/removes slot shunts to/from the player
- * inventory when the refit tab is opened/closed.
+ * inventory when the refit tab is opened/closed while the ability is toggled on
  * @author lyravega
+ * @see {@link experimentalHullModifications.abilities.ehm_ability Control Ability}
  */
 public final class ehm_shuntInjector extends _lyr_tabListener {
 	private static _lyr_sectorListener instance = null;
@@ -44,6 +46,8 @@ public final class ehm_shuntInjector extends _lyr_tabListener {
 		for (String shuntId : ehm_submarket.shunts) {
 			playerCargo.addWeapons(shuntId, 1000);
 		}
+
+		lyr_logger.debug("Adding slot shunts to player cargo");
 	}
 
 	@Override
@@ -55,6 +59,8 @@ public final class ehm_shuntInjector extends _lyr_tabListener {
 		for (CargoItemQuantity<String> weaponCargo : playerCargo.getWeapons()) {
 			if (ehm_submarket.shunts.contains(weaponCargo.getItem())) playerCargo.removeWeapons(weaponCargo.getItem(), weaponCargo.getCount());
 		}
+
+		lyr_logger.debug("Removing slot shunts from player cargo");
 	}
 
 	@Override public void onAdvance(float amount) {}

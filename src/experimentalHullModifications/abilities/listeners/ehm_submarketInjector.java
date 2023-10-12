@@ -14,9 +14,11 @@ import lyravega.plugin.lyr_ehm.friend;
 import lyravega.tools.logger.lyr_logger;
 
 /**
- * A sector listener class whose sole purpose is to attach/detach the
- * {@link experimentalHullModifications.submarkets.ehm_submarket experimental submarket}
- * when the player interacts with a (valid) market.
+ * A sector listener class whose sole purpose is to attach/detach a submarket
+ * when the player interacts with a (valid) market while the ability is toggled on
+ * @author lyravega
+ * @see {@link experimentalHullModifications.abilities.ehm_ability Control Ability}
+ * @see {@link experimentalHullModifications.submarkets.ehm_submarket Experimental Submarket}
  */
 public final class ehm_submarketInjector extends _lyr_sectorListener implements ColonyInteractionListener {
 	private static _lyr_sectorListener instance = null;
@@ -43,7 +45,7 @@ public final class ehm_submarketInjector extends _lyr_sectorListener implements 
 
 		market.addSubmarket(lyr_internals.id.submarket);
 
-		lyr_logger.listenerInfo("Attached experimental submarket");
+		lyr_logger.debug("Attached experimental submarket");
 	}
 
 	@Override
@@ -59,7 +61,7 @@ public final class ehm_submarketInjector extends _lyr_sectorListener implements 
 			if (ehm_submarket.shunts.contains(weaponCargo.getItem())) playerCargo.removeWeapons(weaponCargo.getItem(), weaponCargo.getCount());
 		}
 
-		lyr_logger.listenerInfo("Detached experimental submarket");
+		lyr_logger.debug("Detached experimental submarket");
 	}
 
 	@Override
