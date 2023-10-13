@@ -1,21 +1,11 @@
-package lyravega.plugin;
-
-import static lyravega.listeners.lyr_shipTracker.allModEvents;
-import static lyravega.listeners.lyr_shipTracker.enhancedEvents;
-import static lyravega.listeners.lyr_shipTracker.normalEvents;
-import static lyravega.listeners.lyr_shipTracker.suppressedEvents;
-import static lyravega.listeners.lyr_shipTracker.weaponEvents;
+package experimentalHullModifications.plugin;
 
 import java.util.Set;
 
 import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.SettingsAPI;
-import com.fs.starfarer.api.campaign.CampaignFleetAPI;
-import com.fs.starfarer.api.campaign.CharacterDataAPI;
-import com.fs.starfarer.api.campaign.FactionAPI;
-import com.fs.starfarer.api.campaign.SectorAPI;
-import com.fs.starfarer.api.combat.HullModEffect;
+import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.impl.campaign.skills.FieldRepairsScript;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
@@ -24,14 +14,11 @@ import com.thoughtworks.xstream.XStream;
 import experimentalHullModifications.abilities.ehm_ability;
 import experimentalHullModifications.abilities.listeners.ehm_shuntInjector;
 import experimentalHullModifications.abilities.listeners.ehm_submarketInjector;
-import experimentalHullModifications.hullmods.ehm._ehm_helpers;
+import experimentalHullModifications.misc.lyr_internals;
 import experimentalHullModifications.scripts.ehm_fieldRepairsScript;
+import lyravega.listeners.lyr_eventDispatcher;
 import lyravega.listeners.lyr_fleetTracker;
-import lyravega.listeners.events.enhancedEvents;
-import lyravega.listeners.events.normalEvents;
-import lyravega.listeners.events.suppressedEvents;
-import lyravega.listeners.events.weaponEvents;
-import lyravega.misc.lyr_internals;
+import lyravega.tools._ehm_helpers;
 import lyravega.tools.logger.lyr_logger;
 
 public class lyr_ehm extends BaseModPlugin {
@@ -52,7 +39,7 @@ public class lyr_ehm extends BaseModPlugin {
 	public void onApplicationLoad() throws Exception {
 		lyr_settings.attach();
 		updateHullMods();
-		registerModsWithEvents();
+		lyr_eventDispatcher.registerModsWithEvents();
 	}
 
 	@Override
@@ -116,32 +103,6 @@ public class lyr_ehm extends BaseModPlugin {
 			uiTags = settingsAPI.getHullModSpec(lyr_internals.id.hullmods.undo).getUITags();
 			uiTags.clear(); uiTags.addAll(lyr_internals.tag.ui.all);
 		}
-	}
-
-	/**
-	 * Checks all of the hullmod effects and if they have implemented any events, registers them
-	 * in their map. During tracking, if any one of these events are detected, the relevant event
-	 * methods will be called
-	 * @see {@link lyr_ehm.hullmods.ehm.ehm_base ehm_base} base hull modification that enables tracking
-	 * @see {@link normalEvents} / {@link enhancedEvents} / {@link suppressedEvents}
-	 */
-	private static void registerModsWithEvents() {
-		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
-			if (!_ehm_helpers.isExperimentalMod(hullModSpec, true)) continue;
-
-			HullModEffect hullModEffect = hullModSpec.getEffect();
-
-			if (weaponEvents.class.isInstance(hullModEffect)) weaponEvents.put(hullModSpec.getId(), (weaponEvents) hullModEffect);
-			if (normalEvents.class.isInstance(hullModEffect)) normalEvents.put(hullModSpec.getId(), (normalEvents) hullModEffect);
-			if (enhancedEvents.class.isInstance(hullModEffect)) enhancedEvents.put(hullModSpec.getId(), (enhancedEvents) hullModEffect);
-			if (suppressedEvents.class.isInstance(hullModEffect)) suppressedEvents.put(hullModSpec.getId(), (suppressedEvents) hullModEffect);
-		}
-
-		allModEvents.addAll(normalEvents.keySet());
-		allModEvents.addAll(enhancedEvents.keySet());
-		allModEvents.addAll(suppressedEvents.keySet());
-
-		lyr_logger.info("Experimental hull modifications are registered");
 	}
 
 	private static void teachAbility(String abilityId) {	// add ability to ongoing games if not present

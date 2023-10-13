@@ -1,4 +1,4 @@
-package lyravega.misc;
+package lyravega.tools;
 
 import org.lwjgl.util.vector.Vector2f;
 

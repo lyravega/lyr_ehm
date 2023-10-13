@@ -5,11 +5,11 @@ import com.fs.starfarer.api.campaign.CargoAPI;
 import com.fs.starfarer.api.campaign.CargoAPI.CargoItemQuantity;
 import com.fs.starfarer.api.campaign.CoreUITabId;
 
+import experimentalHullModifications.misc.lyr_internals;
+import experimentalHullModifications.plugin.lyr_ehm.friend;
 import experimentalHullModifications.submarkets.ehm_submarket;
 import lyravega.listeners._lyr_sectorListener;
 import lyravega.listeners._lyr_tabListener;
-import lyravega.misc.lyr_internals;
-import lyravega.plugin.lyr_ehm.friend;
 import lyravega.tools.logger.lyr_logger;
 
 /**

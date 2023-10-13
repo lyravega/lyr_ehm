@@ -8,8 +8,8 @@ import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CoreUITabId;
 
-import lyravega.misc.lyr_internals;
-import lyravega.plugin.lyr_settings;
+import experimentalHullModifications.misc.lyr_internals;
+import experimentalHullModifications.plugin.lyr_settings;
 import lyravega.proxies.ui.*;
 import lyravega.tools.logger.lyr_logger;
 

@@ -13,11 +13,12 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
 import experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base;
+import experimentalHullModifications.misc.lyr_internals;
+import experimentalHullModifications.misc.lyr_tooltip.header;
+import experimentalHullModifications.misc.lyr_tooltip.text;
+import experimentalHullModifications.plugin.lyr_settings;
 import lyravega.listeners.lyr_fleetTracker;
-import lyravega.misc.lyr_internals;
-import lyravega.misc.lyr_tooltip.header;
-import lyravega.misc.lyr_tooltip.text;
-import lyravega.plugin.lyr_settings;
+import lyravega.tools._ehm_helpers;
 
 /**
  * Serves as a requirement for all experimental hull modifications, and enables tracking

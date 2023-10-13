@@ -1,4 +1,4 @@
-package lyravega.misc;
+package experimentalHullModifications.misc;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -239,24 +239,5 @@ public final class lyr_internals {
 			adapterRetrofit = "ehm_ar_",	// must match hullmod id in .csv
 			shieldCosmetic = "ehm_sc_",	// must match hullmod id in .csv
 			engineCosmetic = "ehm_ec_";	// must match hullmod id in .csv
-	}
-
-	public static final class uuid {
-		public static final String
-			prefix = "UUID",
-			shipPrefix = "UUID-",
-			parentPrefix = "UUID+";
-	}
-
-	public static final class events {
-		public static final String 
-			onInstall = "onInstall",
-			onRemove = "onRemove",
-			onEnhance = "onEnhance",
-			onNormalize = "onNormalize",
-			onSuppress = "onSuppress",
-			onRestore = "onRestore",
-			onWeaponInstall = "onWeaponInstall",
-			onWeaponRemove = "onWeaponRemove";
 	}
 }

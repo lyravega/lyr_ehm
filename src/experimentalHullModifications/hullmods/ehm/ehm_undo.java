@@ -10,10 +10,11 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
+import experimentalHullModifications.misc.lyr_internals;
+import experimentalHullModifications.misc.lyr_tooltip.header;
+import experimentalHullModifications.misc.lyr_tooltip.text;
 import lyravega.listeners.lyr_fleetTracker;
-import lyravega.misc.lyr_internals;
-import lyravega.misc.lyr_tooltip.header;
-import lyravega.misc.lyr_tooltip.text;
+import lyravega.tools._ehm_helpers;
 
 /**
  * Removes the base hull modification that all other experimental ones require

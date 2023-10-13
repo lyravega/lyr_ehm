@@ -1,4 +1,4 @@
-package lyravega.plugin;
+package experimentalHullModifications.plugin;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -8,12 +8,12 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.HullModEffect;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 
+import experimentalHullModifications.misc.lyr_internals.id;
+import experimentalHullModifications.misc.lyr_internals.tag;
 import lunalib.lunaSettings.LunaSettings;
 import lunalib.lunaSettings.LunaSettingsListener;
 import lyravega.listeners.events.customizableHullMod;
-import lyravega.misc.lyr_internals.id;
-import lyravega.misc.lyr_internals.tag;
-import lyravega.misc.lyr_lunaAccessors;
+import lyravega.tools.lyr_lunaAccessors;
 import lyravega.tools.logger.lyr_levels;
 import lyravega.tools.logger.lyr_logger;
 

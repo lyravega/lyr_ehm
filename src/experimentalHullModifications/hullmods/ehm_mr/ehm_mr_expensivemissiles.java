@@ -10,7 +10,7 @@ import com.fs.starfarer.api.util.DynamicStatsAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.hullmods.ehm_wr.ehm_wr_missileslotretrofit;
-import lyravega.misc.lyr_internals;
+import experimentalHullModifications.misc.lyr_internals;
 
 /**
  * @category Effect Extension

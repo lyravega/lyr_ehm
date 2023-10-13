@@ -14,14 +14,14 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
-import experimentalHullModifications.hullmods.ehm._ehm_helpers;
+import experimentalHullModifications.misc.lyr_internals;
+import experimentalHullModifications.misc.lyr_tooltip.header;
+import experimentalHullModifications.misc.lyr_tooltip.text;
+import experimentalHullModifications.plugin.lyr_settings;
 import lyravega.listeners.events.enhancedEvents;
 import lyravega.listeners.events.normalEvents;
-import lyravega.misc.lyr_internals;
-import lyravega.misc.lyr_tooltip.header;
-import lyravega.misc.lyr_tooltip.text;
-import lyravega.plugin.lyr_settings;
 import lyravega.proxies.lyr_hullSpec;
+import lyravega.tools._ehm_helpers;
 
 /**
  * First experimental hull modification that can be built-in, with an original effect.

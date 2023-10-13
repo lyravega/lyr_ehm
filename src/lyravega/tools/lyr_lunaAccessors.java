@@ -1,7 +1,8 @@
-package lyravega.misc;
+package lyravega.tools;
 
 import java.awt.Color;
 
+import experimentalHullModifications.misc.lyr_internals;
 import lunalib.lunaSettings.LunaSettings;
 
 public class lyr_lunaAccessors {

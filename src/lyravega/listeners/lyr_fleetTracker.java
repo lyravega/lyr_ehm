@@ -12,7 +12,6 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 
-import lyravega.misc.lyr_internals;
 import lyravega.tools.lyr_reflectionTools.methodReflection;
 import lyravega.tools.lyr_uiTools;
 import lyravega.tools.logger.lyr_logger;
@@ -25,6 +24,13 @@ import lyravega.tools.logger.lyr_logger;
  * @author lyravega
  */
 public class lyr_fleetTracker extends _lyr_tabListener {
+	public static final class uuid {
+		public static final String
+			prefix = "UUID",
+			shipPrefix = "UUID-",
+			parentPrefix = "UUID+";
+	}
+
 	private static final lyr_fleetTracker instance = new lyr_fleetTracker();	//  if this is null and not instantiated before onGameLoad(), will yield a NPE as hullmod effects load earlier
 	private final boolean useTransientTrackerUUIDs = true;	// to make the tags transient
 
@@ -170,20 +176,20 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 	 */
 	public static String getShipTrackerUUID(ShipVariantAPI variant) {
 		for (String tag : variant.getTags()) {
-			if (tag.startsWith(lyr_internals.uuid.shipPrefix)) return tag.substring(lyr_internals.uuid.shipPrefix.length());
+			if (tag.startsWith(lyr_fleetTracker.uuid.shipPrefix)) return tag.substring(lyr_fleetTracker.uuid.shipPrefix.length());
 		}; return addTrackerUUIDs(variant, null);	// this here ensures the ship (and its modules) has tracker UUIDs
 	}
 
 	public static String getParentTrackerUUID(ShipVariantAPI variant) {
 		for (String tag : variant.getTags()) {
-			if (tag.startsWith(lyr_internals.uuid.parentPrefix)) return tag.substring(lyr_internals.uuid.parentPrefix.length());
+			if (tag.startsWith(lyr_fleetTracker.uuid.parentPrefix)) return tag.substring(lyr_fleetTracker.uuid.parentPrefix.length());
 		}; return null;
 	}
 
 	/**
 	 * Adds a random UUID to a variant as a tag. These tags are used instead of any
 	 * other ID to spawn ship trackers and track the changes on the variants. These
-	 * tags have prefixes located at {@link lyravega.misc.lyr_internals.uuid} 
+	 * tags have prefixes located at {@link lyravega.listeners.lyr_fleetTracker.uuid} 
 	 * <p> If used on a variant that has child module variants, they will automatically
 	 * receive their own UUID tag, along with their parent's. Using this on a child
 	 * module variant is not recommended as the parent's UUID will not be assigned on
@@ -203,16 +209,16 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 		String shipTrackerUUID = null;
 
 		for (String tag : variant.getTags()) {
-			if (!tag.startsWith(lyr_internals.uuid.shipPrefix)) continue;
+			if (!tag.startsWith(lyr_fleetTracker.uuid.shipPrefix)) continue;
 			
-			shipTrackerUUID = tag.substring(lyr_internals.uuid.shipPrefix.length()); break;
+			shipTrackerUUID = tag.substring(lyr_fleetTracker.uuid.shipPrefix.length()); break;
 		}; if (shipTrackerUUID == null) shipTrackerUUID = UUID.randomUUID().toString();
 
-		if (shipTrackerUUID != null && !variant.hasTag(lyr_internals.uuid.shipPrefix+shipTrackerUUID))
-			variant.addTag(lyr_internals.uuid.shipPrefix+shipTrackerUUID);	// ship's uuid
+		if (shipTrackerUUID != null && !variant.hasTag(lyr_fleetTracker.uuid.shipPrefix+shipTrackerUUID))
+			variant.addTag(lyr_fleetTracker.uuid.shipPrefix+shipTrackerUUID);	// ship's uuid
 
-		if (parentTrackerUUID != null && !variant.hasTag(lyr_internals.uuid.parentPrefix+parentTrackerUUID))
-			variant.addTag(lyr_internals.uuid.parentPrefix+parentTrackerUUID);	// parent's uuid
+		if (parentTrackerUUID != null && !variant.hasTag(lyr_fleetTracker.uuid.parentPrefix+parentTrackerUUID))
+			variant.addTag(lyr_fleetTracker.uuid.parentPrefix+parentTrackerUUID);	// parent's uuid
 		
 		for (String moduleSlot : variant.getStationModules().keySet()) {
 			ShipVariantAPI moduleVariant = variant.getModuleVariant(moduleSlot);
@@ -232,7 +238,7 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 	 */
 	public static void removeTrackerUUIDs(ShipVariantAPI variant) {
 		for (Iterator<String> iterator = variant.getTags().iterator(); iterator.hasNext(); )
-			if (iterator.next().startsWith(lyr_internals.uuid.prefix)) iterator.remove();
+			if (iterator.next().startsWith(lyr_fleetTracker.uuid.prefix)) iterator.remove();
 		
 		for (String moduleSlotId : variant.getStationModules().keySet()) {
 			removeTrackerUUIDs(variant.getModuleVariant(moduleSlotId));

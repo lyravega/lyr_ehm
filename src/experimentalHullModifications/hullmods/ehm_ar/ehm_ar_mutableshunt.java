@@ -22,11 +22,11 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
-import lyravega.misc.lyr_internals;
-import lyravega.misc.lyr_internals.id.shunts.capacitors;
-import lyravega.misc.lyr_internals.id.shunts.dissipators;
-import lyravega.misc.lyr_tooltip.header;
-import lyravega.plugin.lyr_settings;
+import experimentalHullModifications.misc.lyr_internals;
+import experimentalHullModifications.misc.lyr_internals.id.shunts.capacitors;
+import experimentalHullModifications.misc.lyr_internals.id.shunts.dissipators;
+import experimentalHullModifications.misc.lyr_tooltip.header;
+import experimentalHullModifications.plugin.lyr_settings;
 import lyravega.proxies.lyr_hullSpec;
 
 /**@category Adapter Retrofit 

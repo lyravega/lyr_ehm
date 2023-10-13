@@ -25,10 +25,10 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
-import experimentalHullModifications.hullmods.ehm._ehm_helpers;
+import experimentalHullModifications.misc.lyr_tooltip.header;
+import experimentalHullModifications.misc.lyr_tooltip.text;
 import lyravega.listeners.events.normalEvents;
-import lyravega.misc.lyr_tooltip.header;
-import lyravega.misc.lyr_tooltip.text;
+import lyravega.tools._ehm_helpers;
 
 /**
  * Turns normal ships into automated, and automated ones into normal ones.

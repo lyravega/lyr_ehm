@@ -11,7 +11,7 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.hullmods.ehm_wr.ehm_wr_energyslotretrofit;
-import lyravega.misc.lyr_internals;
+import experimentalHullModifications.misc.lyr_internals;
 
 /**
  * @category Effect Extension 

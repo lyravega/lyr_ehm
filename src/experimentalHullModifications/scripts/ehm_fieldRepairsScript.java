@@ -16,13 +16,13 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.util.IntervalUtil;
 import com.fs.starfarer.api.util.Misc;
 
-import lyravega.misc.lyr_internals;
+import experimentalHullModifications.misc.lyr_internals;
 
 /**
  * {@link FieldRepairsScript} replacement with a dirty hack to avoid getting the cloned
  * hull specs replaced in {@link #restoreToNonDHull}, as it might result in a crash due
  * to replaced hull specs lacking weapon slots that the variant may be using.
- * <p> Uses the same alias through {@link lyravega.plugin.lyr_ehm#configureXStream} method so
+ * <p> Uses the same alias through {@link experimentalHullModifications.plugin.lyr_ehm#configureXStream} method so
  * that it can be removed later on, leaving the original script pick the data up. 
  * @author Alex
  */

@@ -8,7 +8,7 @@ import lyravega.listeners.lyr_shipTracker;
  * When a weapon change is detected, the event methods in this interface will be called
  * for any hull modification effect that implements this.
  * <p> The hull modifications are registered as having this interface implemented during
- * {@link lyravega.plugin.lyr_ehm#onApplicationLoad() onApplicationLoad()}
+ * {@link experimentalHullModifications.plugin.lyr_ehm#onApplicationLoad() onApplicationLoad()}
  * @see {@link lyr_shipTracker} to cache the old variants and compare them with the newer ones
  * @author lyravega
  */

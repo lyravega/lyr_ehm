@@ -1,11 +1,6 @@
-package experimentalHullModifications.hullmods.ehm;
+package lyravega.tools;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.MutableStat.StatMod;
@@ -13,12 +8,10 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
-import com.fs.starfarer.api.loading.HullModSpecAPI;
-import com.fs.starfarer.api.loading.WeaponGroupSpec;
-import com.fs.starfarer.api.loading.WeaponSlotAPI;
-import com.fs.starfarer.api.loading.WeaponSpecAPI;
+import com.fs.starfarer.api.loading.*;
 
-import lyravega.misc.lyr_internals;
+import experimentalHullModifications.hullmods.ehm.ehm_base;
+import experimentalHullModifications.misc.lyr_internals;
 
 /**
  * A class dedicated to house the helper functions for the ships

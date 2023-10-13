@@ -8,7 +8,7 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 
 import lyravega.listeners.events.customizableHullMod;
-import lyravega.misc.lyr_lunaAccessors;
+import lyravega.tools.lyr_lunaAccessors;
 
 /**
  * NOTE: id of this shield in the .csv remains "ehm_sc_blueShields" for save compatibility

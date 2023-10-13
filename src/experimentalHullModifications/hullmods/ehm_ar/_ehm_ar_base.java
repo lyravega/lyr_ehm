@@ -32,21 +32,21 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
-import experimentalHullModifications.hullmods.ehm._ehm_helpers;
 import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_diverterandconverter.childParameters;
 import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.childrenParameters;
 import experimentalHullModifications.hullmods.ehm_mr.ehm_mr_auxilarygenerators;
 import experimentalHullModifications.hullmods.ehm_mr.ehm_mr_overengineered;
+import experimentalHullModifications.misc.lyr_internals;
+import experimentalHullModifications.misc.lyr_tooltip.header;
+import experimentalHullModifications.misc.lyr_tooltip.text;
+import experimentalHullModifications.plugin.lyr_settings;
 import lyravega.listeners.events.normalEvents;
 import lyravega.listeners.events.weaponEvents;
-import lyravega.misc.lyr_internals;
-import lyravega.misc.lyr_tooltip.header;
-import lyravega.misc.lyr_tooltip.text;
-import lyravega.misc.lyr_vectorUtility;
-import lyravega.plugin.lyr_settings;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.proxies.lyr_weaponSlot;
 import lyravega.proxies.lyr_weaponSlot.slotTypeConstants;
+import lyravega.tools._ehm_helpers;
+import lyravega.tools.lyr_vectorUtility;
 
 
 /**

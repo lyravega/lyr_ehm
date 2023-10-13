@@ -13,8 +13,8 @@ import com.fs.starfarer.api.fleet.FleetMemberType;
 import com.fs.starfarer.api.impl.campaign.submarkets.BaseSubmarketPlugin;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 
-import lyravega.misc.lyr_internals;
-import lyravega.plugin.lyr_settings;
+import experimentalHullModifications.misc.lyr_internals;
+import experimentalHullModifications.plugin.lyr_settings;
 
 /**
  * A submarket for the experimental slot shunts. The submarket is attached/detached

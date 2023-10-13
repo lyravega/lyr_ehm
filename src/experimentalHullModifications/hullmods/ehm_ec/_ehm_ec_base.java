@@ -18,14 +18,14 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
-import experimentalHullModifications.hullmods.ehm._ehm_helpers;
+import experimentalHullModifications.misc.lyr_internals;
+import experimentalHullModifications.misc.lyr_tooltip.header;
+import experimentalHullModifications.misc.lyr_tooltip.text;
 import lyravega.listeners.events.normalEvents;
-import lyravega.misc.lyr_internals;
-import lyravega.misc.lyr_lunaAccessors;
-import lyravega.misc.lyr_tooltip.header;
-import lyravega.misc.lyr_tooltip.text;
 import lyravega.proxies.lyr_engineBuilder;
 import lyravega.proxies.lyr_hullSpec;
+import lyravega.tools._ehm_helpers;
+import lyravega.tools.lyr_lunaAccessors;
 
 /**
  * This class is used by engine cosmetic hullmods. The changes are 

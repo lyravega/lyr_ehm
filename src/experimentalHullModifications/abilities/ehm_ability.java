@@ -8,9 +8,9 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
 import experimentalHullModifications.abilities.listeners.ehm_submarketInjector;
+import experimentalHullModifications.misc.lyr_internals;
+import experimentalHullModifications.plugin.lyr_settings;
 import experimentalHullModifications.abilities.listeners.ehm_shuntInjector;
-import lyravega.misc.lyr_internals;
-import lyravega.plugin.lyr_settings;
 
 /**
  * A toggle ability that works in conjunction with {@link ehm_submarketInjector
