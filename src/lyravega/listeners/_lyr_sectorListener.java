@@ -2,7 +2,7 @@ package lyravega.listeners;
 
 import com.fs.starfarer.api.Global;
 
-import lyravega.tools.logger.lyr_logger;
+import lyravega.utilities.logger.lyr_logger;
 
 /**
  * A listener base that provides simple methods for attaching/detaching a listener to/from the sector

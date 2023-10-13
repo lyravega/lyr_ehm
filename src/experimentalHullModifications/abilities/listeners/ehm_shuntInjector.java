@@ -5,12 +5,12 @@ import com.fs.starfarer.api.campaign.CargoAPI;
 import com.fs.starfarer.api.campaign.CargoAPI.CargoItemQuantity;
 import com.fs.starfarer.api.campaign.CoreUITabId;
 
-import experimentalHullModifications.misc.lyr_internals;
+import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.plugin.lyr_ehm.friend;
 import experimentalHullModifications.submarkets.ehm_submarket;
 import lyravega.listeners._lyr_sectorListener;
 import lyravega.listeners._lyr_tabListener;
-import lyravega.tools.logger.lyr_logger;
+import lyravega.utilities.logger.lyr_logger;
 
 /**
  * A sector listener class that adds/removes slot shunts to/from the player
@@ -39,7 +39,7 @@ public final class ehm_shuntInjector extends _lyr_tabListener {
 
 	@Override
 	public void onOpen() {
-		if (!Global.getSector().getPlayerFleet().getAbility(lyr_internals.id.ability).isActive()) return;
+		if (!Global.getSector().getPlayerFleet().getAbility(ehm_internals.id.ability).isActive()) return;
 
 		CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
 
@@ -52,7 +52,7 @@ public final class ehm_shuntInjector extends _lyr_tabListener {
 
 	@Override
 	public void onClose() {
-		if (!Global.getSector().getPlayerFleet().getAbility(lyr_internals.id.ability).isActive()) return;
+		if (!Global.getSector().getPlayerFleet().getAbility(ehm_internals.id.ability).isActive()) return;
 
 		CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
 

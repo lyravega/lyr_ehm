@@ -10,7 +10,7 @@ import com.fs.starfarer.api.util.DynamicStatsAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.hullmods.ehm_wr.ehm_wr_missileslotretrofit;
-import experimentalHullModifications.misc.lyr_internals;
+import experimentalHullModifications.misc.ehm_internals;
 
 /**
  * @category Effect Extension
@@ -22,19 +22,19 @@ public final class ehm_mr_expensivemissiles extends _ehm_base {
 		if (variant.getHullSpec().getBuiltInMods().contains("hbi") || variant.getPermaMods().contains("hbi")) {
 			variant.addSuppressedMod("hbi");
 		}
-		variant.addPermaMod(lyr_internals.id.hullmods.extensions.expensivemissiles, false);
+		variant.addPermaMod(ehm_internals.id.hullmods.extensions.expensivemissiles, false);
 	}
 
 	public static void removeExtension(ShipVariantAPI variant) {
 		if (variant.getSuppressedMods().contains("hbi")) {
-			if (!variant.hasHullMod(lyr_internals.id.hullmods.energyslotretrofit)) variant.removeSuppressedMod("hbi");
+			if (!variant.hasHullMod(ehm_internals.id.hullmods.energyslotretrofit)) variant.removeSuppressedMod("hbi");
 		}
-		variant.removePermaMod(lyr_internals.id.hullmods.extensions.expensivemissiles);
+		variant.removePermaMod(ehm_internals.id.hullmods.extensions.expensivemissiles);
 	}
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String id) {
-		if (!stats.getVariant().hasHullMod(lyr_internals.id.hullmods.missileslotretrofit)) { removeExtension(stats.getVariant()); return; }
+		if (!stats.getVariant().hasHullMod(ehm_internals.id.hullmods.missileslotretrofit)) { removeExtension(stats.getVariant()); return; }
 
 		DynamicStatsAPI dynamicStats = stats.getDynamic();
 		dynamicStats.getMod(Stats.SMALL_MISSILE_MOD).modifyFlat(id, 2);

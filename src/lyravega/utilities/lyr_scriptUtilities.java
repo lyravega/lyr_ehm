@@ -1,6 +1,6 @@
-package lyravega.tools;
+package lyravega.utilities;
 
-import static lyravega.tools.lyr_uiTools.isRefitTab;
+import static lyravega.utilities.lyr_interfaceUtilities.isRefitTab;
 
 import java.awt.AWTException;
 import java.awt.Robot;
@@ -11,7 +11,7 @@ import java.util.List;
 import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 
-public class lyr_scriptTools extends lyr_reflectionTools {
+public class lyr_scriptUtilities extends lyr_reflectionUtilities {
 	public static <T extends EveryFrameScript> List<T> getScriptsOfClass(Class<T> clazz) {
 		List<T> scripts = new ArrayList<T>();
 

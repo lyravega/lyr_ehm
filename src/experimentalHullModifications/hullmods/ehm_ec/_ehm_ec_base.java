@@ -2,8 +2,8 @@ package experimentalHullModifications.hullmods.ehm_ec;
 
 import static lyravega.listeners.lyr_fleetTracker.refreshFleetView;
 import static lyravega.proxies.lyr_engineBuilder.addEngineStyleSpec;
-import static lyravega.tools.lyr_uiTools.commitVariantChanges;
-import static lyravega.tools.lyr_uiTools.playDrillSound;
+import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
+import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,14 +18,14 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
-import experimentalHullModifications.misc.lyr_internals;
-import experimentalHullModifications.misc.lyr_tooltip.header;
-import experimentalHullModifications.misc.lyr_tooltip.text;
+import experimentalHullModifications.misc.ehm_internals;
+import experimentalHullModifications.misc.ehm_tooltip.header;
+import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.listeners.events.normalEvents;
 import lyravega.proxies.lyr_engineBuilder;
 import lyravega.proxies.lyr_hullSpec;
-import lyravega.tools._ehm_helpers;
-import lyravega.tools.lyr_lunaAccessors;
+import lyravega.utilities.lyr_miscUtilities;
+import lyravega.utilities.lyr_lunaUtilities;
 
 /**
  * This class is used by engine cosmetic hullmods. The changes are 
@@ -40,13 +40,13 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstall(ShipVariantAPI variant) {
-		if (_ehm_helpers.removeHullModsWithSameTag(variant, lyr_internals.tag.engineCosmetic, this.hullModSpecId)) return;	// removes other engine cosmetics and short-circuits if there was any
+		if (lyr_miscUtilities.removeHullModsWithSameTag(variant, ehm_internals.tag.engineCosmetic, this.hullModSpecId)) return;	// removes other engine cosmetics and short-circuits if there was any
 		commitVariantChanges(); playDrillSound(); refreshFleetView();	// short-circuit is due to onRemove() below, to avoid doing same things multiple times 
 	}
 
 	@Override
 	public void onRemove(ShipVariantAPI variant) {
-		if (!_ehm_helpers.hasHullModWithTag(variant, lyr_internals.tag.engineCosmetic, this.hullModSpecId))
+		if (!lyr_miscUtilities.hasHullModWithTag(variant, ehm_internals.tag.engineCosmetic, this.hullModSpecId))
 			variant.setHullSpecAPI(ehm_restoreEngineSlots_lazy(variant));
 		commitVariantChanges(); playDrillSound(); refreshFleetView();
 	}
@@ -116,46 +116,46 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 	protected static void newCustomEngineSpec(String settingIdPrefix, String customEngineSpecName) {
 		Map<String, Object> customEngineSpecData = new HashMap<String, Object>();
 
-		customEngineSpecData.put("engineColor", lyr_lunaAccessors.getLunaRGBAColourArray(settingIdPrefix+"engine"));
-		customEngineSpecData.put("contrailColor", lyr_lunaAccessors.getLunaRGBAColourArray(settingIdPrefix+"contrail"));
-		if (lyr_lunaAccessors.getBoolean(settingIdPrefix+"hasDifferentCampaignEngine")) {
-			customEngineSpecData.put("engineCampaignColor", lyr_lunaAccessors.getLunaRGBAColourArray(settingIdPrefix+"engineCampaign"));
+		customEngineSpecData.put("engineColor", lyr_lunaUtilities.getLunaRGBAColourArray(settingIdPrefix+"engine"));
+		customEngineSpecData.put("contrailColor", lyr_lunaUtilities.getLunaRGBAColourArray(settingIdPrefix+"contrail"));
+		if (lyr_lunaUtilities.getBoolean(settingIdPrefix+"hasDifferentCampaignEngine")) {
+			customEngineSpecData.put("engineCampaignColor", lyr_lunaUtilities.getLunaRGBAColourArray(settingIdPrefix+"engineCampaign"));
 		}
-		if (lyr_lunaAccessors.getBoolean(settingIdPrefix+"hasDifferentCampaignContrail")) {
-			customEngineSpecData.put("contrailCampaignColor", lyr_lunaAccessors.getLunaRGBAColourArray(settingIdPrefix+"contrailCampaign"));
+		if (lyr_lunaUtilities.getBoolean(settingIdPrefix+"hasDifferentCampaignContrail")) {
+			customEngineSpecData.put("contrailCampaignColor", lyr_lunaUtilities.getLunaRGBAColourArray(settingIdPrefix+"contrailCampaign"));
 		}
-		customEngineSpecData.put("glowSizeMult", lyr_lunaAccessors.getDouble(settingIdPrefix+"glowSizeMult"));
-		if (lyr_lunaAccessors.getBoolean(settingIdPrefix+"hasAlternateGlow")) {
-			customEngineSpecData.put("glowAlternateColor", lyr_lunaAccessors.getLunaRGBAColourArray(settingIdPrefix+"glowAlternate"));
+		customEngineSpecData.put("glowSizeMult", lyr_lunaUtilities.getDouble(settingIdPrefix+"glowSizeMult"));
+		if (lyr_lunaUtilities.getBoolean(settingIdPrefix+"hasAlternateGlow")) {
+			customEngineSpecData.put("glowAlternateColor", lyr_lunaUtilities.getLunaRGBAColourArray(settingIdPrefix+"glowAlternate"));
 		}
-		customEngineSpecData.put("contrailMaxSpeedMult", lyr_lunaAccessors.getDouble(settingIdPrefix+"contrailMaxSpeedMult"));
-		customEngineSpecData.put("contrailAngularVelocityMult", lyr_lunaAccessors.getDouble(settingIdPrefix+"contrailAngularVelocityMult"));
-		switch (lyr_lunaAccessors.getString(settingIdPrefix+"mode")) {
+		customEngineSpecData.put("contrailMaxSpeedMult", lyr_lunaUtilities.getDouble(settingIdPrefix+"contrailMaxSpeedMult"));
+		customEngineSpecData.put("contrailAngularVelocityMult", lyr_lunaUtilities.getDouble(settingIdPrefix+"contrailAngularVelocityMult"));
+		switch (lyr_lunaUtilities.getString(settingIdPrefix+"mode")) {
 			case "Particles": default: {
 				customEngineSpecData.put("mode", "PARTICLES");
-				customEngineSpecData.put("contrailParticleDuration", lyr_lunaAccessors.getDouble(settingIdPrefix+"contrailParticleDuration"));
-				customEngineSpecData.put("contrailParticleSizeMult", lyr_lunaAccessors.getDouble(settingIdPrefix+"contrailParticleSizeMult"));
-				customEngineSpecData.put("contrailParticleFinalSizeMult", lyr_lunaAccessors.getDouble(settingIdPrefix+"contrailParticleFinalSizeMult"));
+				customEngineSpecData.put("contrailParticleDuration", lyr_lunaUtilities.getDouble(settingIdPrefix+"contrailParticleDuration"));
+				customEngineSpecData.put("contrailParticleSizeMult", lyr_lunaUtilities.getDouble(settingIdPrefix+"contrailParticleSizeMult"));
+				customEngineSpecData.put("contrailParticleFinalSizeMult", lyr_lunaUtilities.getDouble(settingIdPrefix+"contrailParticleFinalSizeMult"));
 			} break;
 			case "Plasma": {
 				customEngineSpecData.put("mode", "QUAD_STRIP");
-				customEngineSpecData.put("contrailDuration", lyr_lunaAccessors.getDouble(settingIdPrefix+"contrailDuration"));
-				customEngineSpecData.put("contrailMinSeg", lyr_lunaAccessors.getDouble(settingIdPrefix+"contrailMinSeg"));
-				customEngineSpecData.put("contrailSpawnDistMult", lyr_lunaAccessors.getDouble(settingIdPrefix+"contrailSpawnDistMult"));
-				customEngineSpecData.put("contrailWidthMult", lyr_lunaAccessors.getDouble(settingIdPrefix+"contrailWidthMult"));
-				customEngineSpecData.put("contrailWidthAddedFractionAtEnd", lyr_lunaAccessors.getDouble(settingIdPrefix+"contrailWidthAddedFractionAtEnd"));
+				customEngineSpecData.put("contrailDuration", lyr_lunaUtilities.getDouble(settingIdPrefix+"contrailDuration"));
+				customEngineSpecData.put("contrailMinSeg", lyr_lunaUtilities.getDouble(settingIdPrefix+"contrailMinSeg"));
+				customEngineSpecData.put("contrailSpawnDistMult", lyr_lunaUtilities.getDouble(settingIdPrefix+"contrailSpawnDistMult"));
+				customEngineSpecData.put("contrailWidthMult", lyr_lunaUtilities.getDouble(settingIdPrefix+"contrailWidthMult"));
+				customEngineSpecData.put("contrailWidthAddedFractionAtEnd", lyr_lunaUtilities.getDouble(settingIdPrefix+"contrailWidthAddedFractionAtEnd"));
 			} break;
 			case "Disabled": {
 				customEngineSpecData.put("mode", "NONE");
 			} break;
 		}
-		if (lyr_lunaAccessors.getString(settingIdPrefix+"type").equals("Additive")) {
+		if (lyr_lunaUtilities.getString(settingIdPrefix+"type").equals("Additive")) {
 			customEngineSpecData.put("type", "GLOW");
 		} else /*if (lyr_lunaAccessors.getString(settingIdPrefix+"type").equals("Regular"))*/ {
 			customEngineSpecData.put("type", "SMOKE");
 		}
-		customEngineSpecData.put("omegaMode", lyr_lunaAccessors.getBoolean(settingIdPrefix+"omegaMode"));
-		switch (lyr_lunaAccessors.getString(settingIdPrefix+"glowSprite")) {
+		customEngineSpecData.put("omegaMode", lyr_lunaUtilities.getBoolean(settingIdPrefix+"omegaMode"));
+		switch (lyr_lunaUtilities.getString(settingIdPrefix+"glowSprite")) {
 			case "I": {
 				customEngineSpecData.put("glowSprite", "graphics/fx/engineglow32.png");
 			} break;
@@ -169,7 +169,7 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 				customEngineSpecData.put("glowSprite", "");
 			} break;
 		}
-		switch (lyr_lunaAccessors.getString(settingIdPrefix+"glowOutline")) {
+		switch (lyr_lunaUtilities.getString(settingIdPrefix+"glowOutline")) {
 			case "I": {
 				customEngineSpecData.put("glowOutline", "graphics/fx/engineflame32.png");
 			} break;
@@ -192,7 +192,7 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (ship == null) return;
 
-		if (this.hullModSpec.hasTag(lyr_internals.tag.customizable)) {
+		if (this.hullModSpec.hasTag(ehm_internals.tag.customizable)) {
 			tooltip.addSectionHeading(header.customizable, header.customizable_textColour, header.customizable_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 			tooltip.addPara(text.customizable[0], text.padding).setHighlight(text.customizable[1]);
 			// tooltip.addPara(text.customizableEngine[0], text.padding).setHighlight(text.customizableEngine[1]);
@@ -201,7 +201,7 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 		if (!isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
-			if (!_ehm_helpers.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
+			if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
 			// if (_ehm_helpers.ehm_hasHullModWithTag(ship, lyr_internals.tag.engineCosmetic, id)) tooltip.addPara(text.hasEngineCosmetic[0], text.padding).setHighlight(text.hasEngineCosmetic[1]);
 		}
 
@@ -212,7 +212,7 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false; 
 
-		if (!_ehm_helpers.hasRetrofitBaseBuiltIn(ship)) return false; 
+		if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) return false; 
 		// if (_ehm_helpers.ehm_hasHullModWithTag(ship, lyr_internals.tag.engineCosmetic, id)) return false;
 
 		return true; 

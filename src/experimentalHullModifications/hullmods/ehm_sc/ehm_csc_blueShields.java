@@ -8,7 +8,7 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 
 import lyravega.listeners.events.customizableHullMod;
-import lyravega.tools.lyr_lunaAccessors;
+import lyravega.utilities.lyr_lunaUtilities;
 
 /**
  * NOTE: id of this shield in the .csv remains "ehm_sc_blueShields" for save compatibility
@@ -23,9 +23,9 @@ public final class ehm_csc_blueShields extends _ehm_sc_base implements customiza
 	public void applyCustomization() {
 		String settingIdPrefix = this.getClass().getSimpleName()+"_";
 
-		innerColour = lyr_lunaAccessors.getLunaRGBAColour(settingIdPrefix+"inner");
-		ringColour = lyr_lunaAccessors.getLunaRGBAColour(settingIdPrefix+"ring");
-		this.hullModSpec.setDisplayName(lyr_lunaAccessors.getLunaName(settingIdPrefix));
+		innerColour = lyr_lunaUtilities.getLunaRGBAColour(settingIdPrefix+"inner");
+		ringColour = lyr_lunaUtilities.getLunaRGBAColour(settingIdPrefix+"ring");
+		this.hullModSpec.setDisplayName(lyr_lunaUtilities.getLunaName(settingIdPrefix));
 	}
 
 	@Override

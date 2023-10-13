@@ -5,8 +5,8 @@ import java.lang.invoke.MethodHandle;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI;
 
-import lyravega.tools.logger.lyr_logger;
-import lyravega.tools.lyr_reflectionTools.methodReflection;
+import lyravega.utilities.logger.lyr_logger;
+import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
 
 public class lyr_campaignUI {
 	private CampaignUIAPI campaignUI;

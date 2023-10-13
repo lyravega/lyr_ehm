@@ -1,7 +1,7 @@
 package experimentalHullModifications.hullmods.ehm_mr;
 
-import static lyravega.tools.lyr_uiTools.commitVariantChanges;
-import static lyravega.tools.lyr_uiTools.playDrillSound;
+import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
+import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -25,13 +25,13 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
-import experimentalHullModifications.misc.lyr_internals;
-import experimentalHullModifications.misc.lyr_tooltip.header;
-import experimentalHullModifications.misc.lyr_tooltip.text;
+import experimentalHullModifications.misc.ehm_internals;
+import experimentalHullModifications.misc.ehm_tooltip.header;
+import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.listeners.events.enhancedEvents;
 import lyravega.listeners.events.normalEvents;
 import lyravega.proxies.lyr_hullSpec;
-import lyravega.tools._ehm_helpers;
+import lyravega.utilities.lyr_miscUtilities;
 
 /**
  * <p> This category {@code ehm_mr} covers the odd ones since the evens have their own
@@ -85,7 +85,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		if (!stats.getVariant().getHullSpec().getBuiltInMods().contains(lyr_internals.id.hullmods.base)) return;
+		if (!stats.getVariant().getHullSpec().getBuiltInMods().contains(ehm_internals.id.hullmods.base)) return;
 
 		ShipVariantAPI variant = stats.getVariant();
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
@@ -185,7 +185,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 	public void addSModSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec, boolean isForBuildInList) {
 		if (!isApplicableToShip(ship)) return;
 
-		if (!ship.getVariant().getHullSpec().getBuiltInMods().contains(lyr_internals.id.hullmods.base)) {
+		if (!ship.getVariant().getHullSpec().getBuiltInMods().contains(ehm_internals.id.hullmods.base)) {
 			tooltip.addSectionHeading(header.noEffect, header.noEffect_textColour, header.noEffect_bgColour, Alignment.MID, header.padding);
 			tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
 			return;
@@ -226,13 +226,13 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 		if (!isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
-			if (!_ehm_helpers.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
-			if (_ehm_helpers.isModule(ship)) tooltip.addPara(text.isModule[0], text.padding).setHighlight(text.isModule[1]);
-			if (_ehm_helpers.isParent(ship)) tooltip.addPara(text.isParent[0], text.padding).setHighlight(text.isParent[1]);
-			if ((!ship.getVariant().getSMods().contains(this.hullModSpecId) && _ehm_helpers.hasModularHullmods(ship, this.hullModSpecId))
-			|| _ehm_helpers.hasWeapons(ship)
-			|| _ehm_helpers.hasAnyFittedWings(ship)
-			|| _ehm_helpers.hasCapacitorsOrVents(ship)) tooltip.addPara(text.notStripped[0], text.padding).setHighlight(text.notStripped[1]);
+			if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
+			if (lyr_miscUtilities.isModule(ship)) tooltip.addPara(text.isModule[0], text.padding).setHighlight(text.isModule[1]);
+			if (lyr_miscUtilities.isParent(ship)) tooltip.addPara(text.isParent[0], text.padding).setHighlight(text.isParent[1]);
+			if ((!ship.getVariant().getSMods().contains(this.hullModSpecId) && lyr_miscUtilities.hasModularHullmods(ship, this.hullModSpecId))
+			|| lyr_miscUtilities.hasWeapons(ship)
+			|| lyr_miscUtilities.hasAnyFittedWings(ship)
+			|| lyr_miscUtilities.hasCapacitorsOrVents(ship)) tooltip.addPara(text.notStripped[0], text.padding).setHighlight(text.notStripped[1]);
 		} else if (!ship.getVariant().getSMods().contains(this.hullModSpecId)) {
 			tooltip.addSectionHeading(header.severeWarning, header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 			tooltip.addPara(text.overEngineeredWarning[0], text.padding).setHighlight(text.overEngineeredWarning[1]);
@@ -249,13 +249,13 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false;
 
-		if (!_ehm_helpers.hasRetrofitBaseBuiltIn(ship)) return false;
-		if (_ehm_helpers.isModule(ship)) return false;
-		if (_ehm_helpers.isParent(ship)) return false;
-		if (!ship.getVariant().getSMods().contains(this.hullModSpecId) && _ehm_helpers.hasModularHullmods(ship, this.hullModSpecId)) return false;
-		if (_ehm_helpers.hasWeapons(ship)) return false;
-		if (_ehm_helpers.hasAnyFittedWings(ship)) return false;
-		if (_ehm_helpers.hasCapacitorsOrVents(ship)) return false;
+		if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) return false;
+		if (lyr_miscUtilities.isModule(ship)) return false;
+		if (lyr_miscUtilities.isParent(ship)) return false;
+		if (!ship.getVariant().getSMods().contains(this.hullModSpecId) && lyr_miscUtilities.hasModularHullmods(ship, this.hullModSpecId)) return false;
+		if (lyr_miscUtilities.hasWeapons(ship)) return false;
+		if (lyr_miscUtilities.hasAnyFittedWings(ship)) return false;
+		if (lyr_miscUtilities.hasCapacitorsOrVents(ship)) return false;
 
 		return true; 
 	}

@@ -9,7 +9,7 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 
 import lyravega.listeners.events.customizableHullMod;
-import lyravega.tools.lyr_lunaAccessors;
+import lyravega.utilities.lyr_lunaUtilities;
 
 /**@category Engine Cosmetic 
  * @author lyravega
@@ -25,7 +25,7 @@ public final class ehm_cec_blueEngines extends _ehm_ec_base implements customiza
 
 		newCustomEngineSpec(settingIdPrefix, customEngineSpecId);
 		engineStyleSpec = customEngineStyleSpecs.get(customEngineSpecId);
-		this.hullModSpec.setDisplayName(lyr_lunaAccessors.getLunaName(settingIdPrefix));
+		this.hullModSpec.setDisplayName(lyr_lunaUtilities.getLunaName(settingIdPrefix));
 	}
 
 	@Override

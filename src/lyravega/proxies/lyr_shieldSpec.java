@@ -6,8 +6,8 @@ import java.lang.invoke.MethodHandle;
 import com.fs.starfarer.api.combat.ShieldAPI.ShieldType;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
 
-import lyravega.tools.logger.lyr_logger;
-import lyravega.tools.lyr_reflectionTools.methodReflection;
+import lyravega.utilities.logger.lyr_logger;
+import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
 
 /**
  * A proxy-like class for {@link ShieldSpecAPI} that utilizes obfuscated 

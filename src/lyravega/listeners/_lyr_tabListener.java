@@ -5,7 +5,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CoreUITabId;
 import com.fs.starfarer.api.campaign.listeners.CoreUITabListener;
 
-import lyravega.tools.lyr_scriptTools;
+import lyravega.utilities.lyr_scriptUtilities;
 
 /**
  * A sector listener base specifically aimed towards detecting when a core tab is opened and/or
@@ -68,7 +68,7 @@ public abstract class _lyr_tabListener extends _lyr_sectorListener implements Co
 
 	//#region EveryFrameScriptWithCleanup
 	private final void attachTabScript() {
-		if (lyr_scriptTools.getTransientScriptsOfClass(this.getClass()).isEmpty()) Global.getSector().addTransientScript(this);
+		if (lyr_scriptUtilities.getTransientScriptsOfClass(this.getClass()).isEmpty()) Global.getSector().addTransientScript(this);
 	}
 
 	private final void removeTabScript() {

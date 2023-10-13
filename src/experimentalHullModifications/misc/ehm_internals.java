@@ -3,7 +3,7 @@ package experimentalHullModifications.misc;
 import java.util.HashSet;
 import java.util.Set;
 
-public final class lyr_internals {
+public final class ehm_internals {
 	public static final class id {
 		public static final String
 			submarket = "ehm_submarket",	// must match submarket id in .csv

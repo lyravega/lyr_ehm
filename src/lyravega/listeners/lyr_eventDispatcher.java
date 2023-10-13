@@ -10,11 +10,11 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 
 import experimentalHullModifications.plugin.lyr_ehm;
-import experimentalHullModifications.plugin.lyr_settings;
+import experimentalHullModifications.plugin.ehm_settings;
 import lyravega.listeners.events.*;
-import lyravega.tools._ehm_helpers;
-import lyravega.tools.lyr_uiTools;
-import lyravega.tools.logger.lyr_logger;
+import lyravega.utilities.lyr_miscUtilities;
+import lyravega.utilities.lyr_interfaceUtilities;
+import lyravega.utilities.logger.lyr_logger;
 
 /**
  * Not a listener on its own, but houses methods for registering classes
@@ -51,7 +51,7 @@ public final class lyr_eventDispatcher {
 	 */
 	public static void registerModsWithEvents() {
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
-			if (!_ehm_helpers.isExperimentalMod(hullModSpec, true)) continue;
+			if (!lyr_miscUtilities.isExperimentalMod(hullModSpec, true)) continue;
 	
 			HullModEffect hullModEffect = hullModSpec.getEffect();
 	
@@ -86,9 +86,9 @@ public final class lyr_eventDispatcher {
 			case onSuppress:	if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onSuppress(variant); return;
 			case onRestore:		if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onRestore(variant); return;
 			default: return;
-		} else if (lyr_settings.getPlayDrillSoundForAll()) switch (eventName) {
+		} else if (ehm_settings.getPlayDrillSoundForAll()) switch (eventName) {
 			case onInstall:		
-			case onRemove:		lyr_uiTools.playDrillSound(); return;
+			case onRemove:		lyr_interfaceUtilities.playDrillSound(); return;
 			default: return;
 		}
 	}

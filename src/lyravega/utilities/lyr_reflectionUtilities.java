@@ -1,4 +1,4 @@
-package lyravega.tools;
+package lyravega.utilities;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -6,7 +6,7 @@ import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.invoke.MethodType;
 import java.util.Arrays;
 
-import lyravega.tools.logger.lyr_logger;
+import lyravega.utilities.logger.lyr_logger;
 
 /**
  * Hosts tools for reflection stuff. These tools are categorized under their
@@ -23,7 +23,7 @@ import lyravega.tools.logger.lyr_logger;
  * @see {@link fieldReflection#findFieldByClass(Class, Object)}
  */
 @SuppressWarnings("unused")
-public class lyr_reflectionTools {
+public class lyr_reflectionUtilities {
 	protected static final Lookup lookup = MethodHandles.lookup();
 	protected static final Class<?> lookupClass = lookup.getClass();
 
@@ -245,12 +245,12 @@ public class lyr_reflectionTools {
 			this.methodHandle = lookup.findVirtual(clazz, methodName, methodType);
 		}
 		
-		public Class<?> getReturnType() { return this.returnType; }
-		public Class<?>[] getParameterTypes() { return this.parameterTypes; }
-		public String getName() { return this.methodName; }
-		public int getModifiers() { return this.methodModifiers; }
-		public MethodType getMethodType() { return this.methodType; }
-		public MethodHandle getMethodHandle() { return this.methodHandle; }
+		public Class<?> getReturnType() { lyr_logger.reflectionInfo("Retrieving 'returnType' of '"+this.methodName+"'"); return this.returnType; }
+		public Class<?>[] getParameterTypes() { lyr_logger.reflectionInfo("Retrieving 'parameterTypes' of '"+this.methodName+"'"); return this.parameterTypes; }
+		public String getName() { lyr_logger.reflectionInfo("Retrieving 'name' of '"+this.methodName+"'"); return this.methodName; }
+		public int getModifiers() { lyr_logger.reflectionInfo("Retrieving 'modifiers' of '"+this.methodName+"'"); return this.methodModifiers; }
+		public MethodType getMethodType() { lyr_logger.reflectionInfo("Retrieving 'methodType' of '"+this.methodName+"'"); return this.methodType; }
+		public MethodHandle getMethodHandle() { lyr_logger.reflectionInfo("Retrieving 'methodHandle' of '"+this.methodName+"'"); return this.methodHandle; }
 	}
 	//#endregion
 	// END OF METHOD STUFF

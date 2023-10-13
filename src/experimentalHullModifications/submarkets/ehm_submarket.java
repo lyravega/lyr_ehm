@@ -13,12 +13,12 @@ import com.fs.starfarer.api.fleet.FleetMemberType;
 import com.fs.starfarer.api.impl.campaign.submarkets.BaseSubmarketPlugin;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 
-import experimentalHullModifications.misc.lyr_internals;
-import experimentalHullModifications.plugin.lyr_settings;
+import experimentalHullModifications.misc.ehm_internals;
+import experimentalHullModifications.plugin.ehm_settings;
 
 /**
  * A submarket for the experimental slot shunts. The submarket is attached/detached
- * if the relevant {@link lyr_settings#shuntAvailability shuntAvailability}
+ * if the relevant {@link ehm_settings#shuntAvailability shuntAvailability}
  * setting is selected, and whenever the player interacts with a valid market. The
  * submarket is not persistent.
  * <p> Each time it is attached to a market, it will get re-initialized, at which
@@ -30,7 +30,7 @@ public final class ehm_submarket extends BaseSubmarketPlugin {
 	public static final Set<String> shunts = new HashSet<String>();	// doing this here separately as there can be disabled/unused shunts
 	static {
 		for (WeaponSpecAPI weaponSpec : Global.getSettings().getAllWeaponSpecs()) {	// doing this here might be problematic, OK so far
-			if (!weaponSpec.hasTag(lyr_internals.tag.experimental)) continue;
+			if (!weaponSpec.hasTag(ehm_internals.tag.experimental)) continue;
 
 			shunts.add(weaponSpec.getWeaponId());
 		}
@@ -46,7 +46,7 @@ public final class ehm_submarket extends BaseSubmarketPlugin {
 			this.cargo.addWeapons(shuntId, 1000);
 		}
 		this.cargo.addMothballedShip(FleetMemberType.SHIP, "crig_Standard", "EHM Lab");
-		this.cargo.getMothballedShips().getMembersListCopy().iterator().next().getVariant().addMod(lyr_internals.id.hullmods.base);
+		this.cargo.getMothballedShips().getMembersListCopy().iterator().next().getVariant().addMod(ehm_internals.id.hullmods.base);
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public final class ehm_submarket extends BaseSubmarketPlugin {
 	public boolean isIllegalOnSubmarket(CargoStackAPI stack, TransferAction action) {
 		if (!stack.isWeaponStack()) return true;
 
-		return !stack.getWeaponSpecIfWeapon().hasTag(lyr_internals.tag.experimental);
+		return !stack.getWeaponSpecIfWeapon().hasTag(ehm_internals.tag.experimental);
 	}
 
 	@Override

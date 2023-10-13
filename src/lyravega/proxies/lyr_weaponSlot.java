@@ -7,8 +7,8 @@ import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
-import lyravega.tools.logger.lyr_logger;
-import lyravega.tools.lyr_reflectionTools.methodReflection;
+import lyravega.utilities.logger.lyr_logger;
+import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
 
 import org.lwjgl.util.vector.Vector2f;
 
@@ -167,7 +167,7 @@ public final class lyr_weaponSlot {
 	 * @param nodeId an id to assign to the node (using slotId is fine)
 	 * @param location a ship-relative vector to create the node at
 	 * @category Proxy method
-	 * @see {@link lyravega.tools.lyr_vectorUtility#generateChildLocation} that
+	 * @see {@link lyravega.utilities.lyr_vectorUtilities#generateChildLocation} that
 	 * calculates new node positions through passed offsets
 	 */
 	public void setNode(String nodeId, Vector2f location) {

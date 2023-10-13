@@ -1,8 +1,8 @@
 package experimentalHullModifications.hullmods.ehm_mr;
 
-import static lyravega.tools.lyr_uiTools.commitVariantChanges;
-import static lyravega.tools.lyr_uiTools.playDrillSound;
 import static com.fs.starfarer.api.impl.hullmods.Automated.isAutomatedNoPenalty;
+import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
+import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 import static com.fs.starfarer.api.impl.hullmods.Automated.MAX_CR_PENALTY;
 
 import java.awt.Color;
@@ -25,10 +25,10 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
-import experimentalHullModifications.misc.lyr_tooltip.header;
-import experimentalHullModifications.misc.lyr_tooltip.text;
+import experimentalHullModifications.misc.ehm_tooltip.header;
+import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.listeners.events.normalEvents;
-import lyravega.tools._ehm_helpers;
+import lyravega.utilities.lyr_miscUtilities;
 
 /**
  * Turns normal ships into automated, and automated ones into normal ones.
@@ -149,7 +149,7 @@ public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 		if (!isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
-			if (!_ehm_helpers.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
+			if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
 			if (!variant.hasHullMod(this.hullModSpecId)) {
 				if (Misc.isUnremovable(captain)) tooltip.addPara(text.integratedAICore[0], text.padding).setHighlight(text.integratedAICore[1]);
 				if (noAutomatedShipsSkill) tooltip.addPara(text.noAutomatedShipsSkill[0], text.padding).setHighlight(text.noAutomatedShipsSkill[1]);
@@ -177,7 +177,7 @@ public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false;
 
-		if (!_ehm_helpers.hasRetrofitBaseBuiltIn(ship)) return false;
+		if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) return false;
 		if (!ship.getVariant().hasHullMod(this.hullModSpecId)) {
 			if (Misc.isUnremovable(ship.getCaptain())) return false;
 			if (Global.getSector().getPlayerStats().getSkillLevel(Skills.AUTOMATED_SHIPS) < 1) return false;

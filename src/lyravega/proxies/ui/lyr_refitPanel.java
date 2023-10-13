@@ -4,8 +4,8 @@ import java.lang.invoke.MethodHandle;
 
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 
-import lyravega.tools.logger.lyr_logger;
-import lyravega.tools.lyr_reflectionTools.methodReflection;
+import lyravega.utilities.logger.lyr_logger;
+import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
 
 public class lyr_refitPanel {
 	private Object refitPanel;	// UIPanelAPI, UIComponentAPI

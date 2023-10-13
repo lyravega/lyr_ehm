@@ -1,4 +1,4 @@
-package lyravega.tools;
+package lyravega.utilities;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodType;
@@ -8,10 +8,10 @@ import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CoreUITabId;
 
-import experimentalHullModifications.misc.lyr_internals;
-import experimentalHullModifications.plugin.lyr_settings;
+import experimentalHullModifications.misc.ehm_internals;
+import experimentalHullModifications.plugin.ehm_settings;
 import lyravega.proxies.ui.*;
-import lyravega.tools.logger.lyr_logger;
+import lyravega.utilities.logger.lyr_logger;
 
 /**
  * Provides specialized MethodHandles and a few methods that are 
@@ -22,7 +22,7 @@ import lyravega.tools.logger.lyr_logger;
  * too, as the relevant classes are known here. 
  * @author lyravega
  */
-public class lyr_uiTools extends lyr_reflectionTools {
+public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 	/**
 	 * Just a simple check to see if it is the refit tab or not.
 	 * @return true if it is refit tab
@@ -44,8 +44,8 @@ public class lyr_uiTools extends lyr_reflectionTools {
 	 * and {@code onInstall()}
 	 */
 	public static void playDrillSound() {
-		if (!lyr_settings.getPlayDrillSound() || !isRefitTab()) return;
-		Global.getSoundPlayer().playUISound(lyr_internals.id.drillSound, 1.0f, 0.75f);
+		if (!ehm_settings.getPlayDrillSound() || !isRefitTab()) return;
+		Global.getSoundPlayer().playUISound(ehm_internals.id.drillSound, 1.0f, 0.75f);
 	}
 
 	private static boolean clearUndo = false;

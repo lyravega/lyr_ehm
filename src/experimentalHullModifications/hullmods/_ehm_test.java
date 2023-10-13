@@ -1,7 +1,7 @@
 package experimentalHullModifications.hullmods;
 
-import static lyravega.tools.lyr_uiTools.commitVariantChanges;
-import static lyravega.tools.lyr_uiTools.playDrillSound;
+import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
+import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
 import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
@@ -16,7 +16,7 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import lyravega.listeners.events.normalEvents;
-import lyravega.tools.logger.lyr_logger;
+import lyravega.utilities.logger.lyr_logger;
 
 public class _ehm_test extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS

@@ -1,7 +1,7 @@
 package experimentalHullModifications.hullmods.ehm;
 
-import static lyravega.tools.lyr_uiTools.commitVariantChanges;
-import static lyravega.tools.lyr_uiTools.playDrillSound;
+import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
+import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
@@ -10,11 +10,11 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
-import experimentalHullModifications.misc.lyr_internals;
-import experimentalHullModifications.misc.lyr_tooltip.header;
-import experimentalHullModifications.misc.lyr_tooltip.text;
+import experimentalHullModifications.misc.ehm_internals;
+import experimentalHullModifications.misc.ehm_tooltip.header;
+import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.listeners.lyr_fleetTracker;
-import lyravega.tools._ehm_helpers;
+import lyravega.utilities.lyr_miscUtilities;
 
 /**
  * Removes the base hull modification that all other experimental ones require
@@ -29,8 +29,8 @@ public final class ehm_undo extends _ehm_base {
 
 		lyr_fleetTracker.terminateShipTracker(stats);
 
-		variant.getHullMods().remove(lyr_internals.id.hullmods.base);
-		variant.getPermaMods().remove(lyr_internals.id.hullmods.base);
+		variant.getHullMods().remove(ehm_internals.id.hullmods.base);
+		variant.getPermaMods().remove(ehm_internals.id.hullmods.base);
 		variant.getHullMods().remove(this.hullModSpecId);
 		variant.setHullSpecAPI(ehm_hullSpecOriginal(variant)); commitVariantChanges(); playDrillSound(); 
 	}
@@ -42,11 +42,11 @@ public final class ehm_undo extends _ehm_base {
 		if (!isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
-			if (!_ehm_helpers.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
-			if (_ehm_helpers.hasExperimentalSMod(ship)) tooltip.addPara(text.hasAnyExperimentalBuiltIn[0], text.padding).setHighlight(text.hasAnyExperimentalBuiltIn[1]); 
+			if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
+			if (lyr_miscUtilities.hasExperimentalSMod(ship)) tooltip.addPara(text.hasAnyExperimentalBuiltIn[0], text.padding).setHighlight(text.hasAnyExperimentalBuiltIn[1]); 
 			else {
-				if (_ehm_helpers.hasHullModWithTag(ship, lyr_internals.tag.experimental, lyr_internals.id.hullmods.base)) tooltip.addPara(text.hasAnyExperimental[0], text.padding).setHighlight(text.hasAnyExperimental[1]);
-				if (_ehm_helpers.hasWeapons(ship)) tooltip.addPara(text.hasWeapons[0], text.padding).setHighlight(text.hasWeapons[1]);
+				if (lyr_miscUtilities.hasHullModWithTag(ship, ehm_internals.tag.experimental, ehm_internals.id.hullmods.base)) tooltip.addPara(text.hasAnyExperimental[0], text.padding).setHighlight(text.hasAnyExperimental[1]);
+				if (lyr_miscUtilities.hasWeapons(ship)) tooltip.addPara(text.hasWeapons[0], text.padding).setHighlight(text.hasWeapons[1]);
 			}
 		}
 
@@ -57,9 +57,9 @@ public final class ehm_undo extends _ehm_base {
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false;
 
-		if (!_ehm_helpers.hasRetrofitBaseBuiltIn(ship)) return false;
-		if (_ehm_helpers.hasHullModWithTag(ship, lyr_internals.tag.experimental, lyr_internals.id.hullmods.base)) return false;
-		if (_ehm_helpers.hasWeapons(ship)) return false; 
+		if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) return false;
+		if (lyr_miscUtilities.hasHullModWithTag(ship, ehm_internals.tag.experimental, ehm_internals.id.hullmods.base)) return false;
+		if (lyr_miscUtilities.hasWeapons(ship)) return false; 
 
 		return true; 
 	}
@@ -67,6 +67,6 @@ public final class ehm_undo extends _ehm_base {
 	@Override
 	public boolean showInRefitScreenModPickerFor(ShipAPI ship) {
 		if (!super.showInRefitScreenModPickerFor(ship)) return false;
-		return (_ehm_helpers.hasRetrofitBaseBuiltIn(ship)) ? true : false;
+		return (lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) ? true : false;
 	}
 }

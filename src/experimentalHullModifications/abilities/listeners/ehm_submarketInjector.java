@@ -7,11 +7,11 @@ import com.fs.starfarer.api.campaign.PlayerMarketTransaction;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.listeners.ColonyInteractionListener;
 
-import experimentalHullModifications.misc.lyr_internals;
+import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.plugin.lyr_ehm.friend;
 import experimentalHullModifications.submarkets.ehm_submarket;
 import lyravega.listeners._lyr_sectorListener;
-import lyravega.tools.logger.lyr_logger;
+import lyravega.utilities.logger.lyr_logger;
 
 /**
  * A sector listener class whose sole purpose is to attach/detach a submarket
@@ -40,10 +40,10 @@ public final class ehm_submarketInjector extends _lyr_sectorListener implements 
 	@Override
 	public void reportPlayerOpenedMarket(MarketAPI market) {
 		if (market == null) return;
-		if (!Global.getSector().getPlayerFleet().getAbility(lyr_internals.id.ability).isActive()) return;	// show submarket only if this ability is active
-		if (market.hasSubmarket(lyr_internals.id.submarket)) return;
+		if (!Global.getSector().getPlayerFleet().getAbility(ehm_internals.id.ability).isActive()) return;	// show submarket only if this ability is active
+		if (market.hasSubmarket(ehm_internals.id.submarket)) return;
 
-		market.addSubmarket(lyr_internals.id.submarket);
+		market.addSubmarket(ehm_internals.id.submarket);
 
 		lyr_logger.debug("Attached experimental submarket");
 	}
@@ -51,10 +51,10 @@ public final class ehm_submarketInjector extends _lyr_sectorListener implements 
 	@Override
 	public void reportPlayerClosedMarket(MarketAPI market) {
 		if (market == null) return;
-		if (!Global.getSector().getPlayerFleet().getAbility(lyr_internals.id.ability).isActive()) return;
-		if (!market.hasSubmarket(lyr_internals.id.submarket)) return;
+		if (!Global.getSector().getPlayerFleet().getAbility(ehm_internals.id.ability).isActive()) return;
+		if (!market.hasSubmarket(ehm_internals.id.submarket)) return;
 
-		market.removeSubmarket(lyr_internals.id.submarket);
+		market.removeSubmarket(ehm_internals.id.submarket);
 
 		CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
 		for (CargoItemQuantity<String> weaponCargo : playerCargo.getWeapons()) {

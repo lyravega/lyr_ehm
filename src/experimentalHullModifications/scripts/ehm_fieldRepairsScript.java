@@ -16,7 +16,7 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.util.IntervalUtil;
 import com.fs.starfarer.api.util.Misc;
 
-import experimentalHullModifications.misc.lyr_internals;
+import experimentalHullModifications.misc.ehm_internals;
 
 /**
  * {@link FieldRepairsScript} replacement with a dirty hack to avoid getting the cloned
@@ -113,7 +113,7 @@ public class ehm_fieldRepairsScript extends FieldRepairsScript {
 	}
 	
 	public static void restoreToNonDHull(ShipVariantAPI v) {
-		if (v.hasHullMod(lyr_internals.id.hullmods.base)) return;	// dirty hack to avoid getting the cloned hullSpec replaced
+		if (v.hasHullMod(ehm_internals.id.hullmods.base)) return;	// dirty hack to avoid getting the cloned hullSpec replaced
 
 		ShipHullSpecAPI base = v.getHullSpec().getDParentHull();
 		

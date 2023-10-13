@@ -1,7 +1,7 @@
 package experimentalHullModifications.hullmods.ehm_mr;
 
-import static lyravega.tools.lyr_uiTools.commitVariantChanges;
-import static lyravega.tools.lyr_uiTools.playDrillSound;
+import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
+import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,14 +14,14 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
-import experimentalHullModifications.misc.lyr_internals;
-import experimentalHullModifications.misc.lyr_tooltip.header;
-import experimentalHullModifications.misc.lyr_tooltip.text;
-import experimentalHullModifications.plugin.lyr_settings;
+import experimentalHullModifications.misc.ehm_internals;
+import experimentalHullModifications.misc.ehm_tooltip.header;
+import experimentalHullModifications.misc.ehm_tooltip.text;
+import experimentalHullModifications.plugin.ehm_settings;
 import lyravega.listeners.events.enhancedEvents;
 import lyravega.listeners.events.normalEvents;
 import lyravega.proxies.lyr_hullSpec;
-import lyravega.tools._ehm_helpers;
+import lyravega.utilities.lyr_miscUtilities;
 
 /**
  * First experimental hull modification that can be built-in, with an original effect.
@@ -70,7 +70,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		if (!stats.getVariant().getHullSpec().getBuiltInMods().contains(lyr_internals.id.hullmods.base)) return;
+		if (!stats.getVariant().getHullSpec().getBuiltInMods().contains(ehm_internals.id.hullmods.base)) return;
 		if (!stats.getVariant().getSMods().contains(this.hullModSpecId)) return;
 
 		ShipVariantAPI variant = stats.getVariant();
@@ -98,7 +98,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 	public void addSModSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec, boolean isForBuildInList) {
 		if (!isApplicableToShip(ship)) return;
 
-		if (!ship.getVariant().getHullSpec().getBuiltInMods().contains(lyr_internals.id.hullmods.base)) {
+		if (!ship.getVariant().getHullSpec().getBuiltInMods().contains(ehm_internals.id.hullmods.base)) {
 			tooltip.addSectionHeading(header.noEffect, header.noEffect_textColour, header.noEffect_bgColour, Alignment.MID, header.padding);
 			tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
 			return;
@@ -123,7 +123,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 			case 4: return "converter shunts";
 			case 5: return "gained and utilized";
 			case 6: return "deployment point";
-			case 7: return lyr_settings.getBaseSlotPointPenalty()+"";
+			case 7: return ehm_settings.getBaseSlotPointPenalty()+"";
 			default: return null;
 		}
 	}
@@ -135,7 +135,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 		if (!isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
-			if (!_ehm_helpers.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
+			if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
 		} else if (!ship.getVariant().getSMods().contains(this.hullModSpecId)) {
 			tooltip.addSectionHeading(header.severeWarning, header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 			tooltip.addPara(text.overEngineeredWarning[0], text.padding).setHighlight(text.overEngineeredWarning[1]);
@@ -148,7 +148,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false; 
 
-		if (!_ehm_helpers.hasRetrofitBaseBuiltIn(ship)) return false; 
+		if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) return false; 
 
 		return true; 
 	}

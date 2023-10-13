@@ -7,8 +7,8 @@ import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_diverterandco
 // import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.capacitorMap;
 // import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.dissipatorMap;
 import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.adapterMap;
-import static lyravega.tools.lyr_uiTools.commitVariantChanges;
-import static lyravega.tools.lyr_uiTools.playDrillSound;
+import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
+import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,17 +36,17 @@ import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_diverterandconverter
 import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.childrenParameters;
 import experimentalHullModifications.hullmods.ehm_mr.ehm_mr_auxilarygenerators;
 import experimentalHullModifications.hullmods.ehm_mr.ehm_mr_overengineered;
-import experimentalHullModifications.misc.lyr_internals;
-import experimentalHullModifications.misc.lyr_tooltip.header;
-import experimentalHullModifications.misc.lyr_tooltip.text;
-import experimentalHullModifications.plugin.lyr_settings;
+import experimentalHullModifications.misc.ehm_internals;
+import experimentalHullModifications.misc.ehm_tooltip.header;
+import experimentalHullModifications.misc.ehm_tooltip.text;
+import experimentalHullModifications.plugin.ehm_settings;
 import lyravega.listeners.events.normalEvents;
 import lyravega.listeners.events.weaponEvents;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.proxies.lyr_weaponSlot;
 import lyravega.proxies.lyr_weaponSlot.slotTypeConstants;
-import lyravega.tools._ehm_helpers;
-import lyravega.tools.lyr_vectorUtility;
+import lyravega.utilities.lyr_miscUtilities;
+import lyravega.utilities.lyr_vectorUtilities;
 
 
 /**
@@ -92,7 +92,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 			if (matcher.find()) slotId = matcher.group();
 			else continue;	// this should never happen
 
-			if (!slotId.startsWith(lyr_internals.affix.normalSlot)) continue;
+			if (!slotId.startsWith(ehm_internals.affix.normalSlot)) continue;
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
 			if (shuntSpec.getSize() != variant.getSlot(slotId).getSlotSize()) continue;
 
@@ -110,8 +110,8 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 
 		for (String childId: childrenParameters.getChildren()) { // childId and childSlotId are not the same, be aware
 			lyr_weaponSlot childSlot = parentSlot.clone();
-			String childSlotId = lyr_internals.affix.adaptedSlot + slotId + childId; // also used as nodeId because nodeId isn't visible
-			Vector2f childSlotLocation = lyr_vectorUtility.generateChildLocation(parentSlot.getLocation(), parentSlot.getAngle(), childrenParameters.getChildOffset(childId));
+			String childSlotId = ehm_internals.affix.adaptedSlot + slotId + childId; // also used as nodeId because nodeId isn't visible
+			Vector2f childSlotLocation = lyr_vectorUtilities.generateChildLocation(parentSlot.getLocation(), parentSlot.getAngle(), childrenParameters.getChildOffset(childId));
 			WeaponSize childSlotSize = childrenParameters.getChildSize(childId);
 
 			childSlot.setId(childSlotId);
@@ -123,7 +123,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 
 		hullSpec.addBuiltInWeapon(slotId, shuntId);
 		parentSlot.setWeaponType(WeaponType.DECORATIVE);
-		if (lyr_settings.getHideAdapters()) parentSlot.setSlotType(slotTypeConstants.hidden);
+		if (ehm_settings.getHideAdapters()) parentSlot.setSlotType(slotTypeConstants.hidden);
 	}
 
 	protected static final void ehm_convertSlot(lyr_hullSpec hullSpec, String shuntId, String slotId) {
@@ -135,7 +135,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 		lyr_weaponSlot parentSlot = hullSpec.getWeaponSlot(slotId);
 
 		lyr_weaponSlot childSlot = parentSlot.clone();
-		String childSlotId = lyr_internals.affix.convertedSlot + slotId + childParameters.getChildSuffix(); // also used as nodeId because nodeId isn't visible
+		String childSlotId = ehm_internals.affix.convertedSlot + slotId + childParameters.getChildSuffix(); // also used as nodeId because nodeId isn't visible
 
 		childSlot.setId(childSlotId);
 		childSlot.setNode(childSlotId, parentSlot.getLocation());
@@ -146,7 +146,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 		// if (slotPoints != null) slotPoints -= converters.get(shuntId).getChildCost();	// needs to be subtracted from here on initial install to avoid infinite installs
 		hullSpec.addBuiltInWeapon(slotId, shuntId);
 		parentSlot.setWeaponType(WeaponType.DECORATIVE);
-		if (lyr_settings.getHideConverters()) parentSlot.setSlotType(slotTypeConstants.hidden);
+		if (ehm_settings.getHideConverters()) parentSlot.setSlotType(slotTypeConstants.hidden);
 	}
 
 	protected static final void ehm_deactivateSlot(lyr_hullSpec hullSpec, String shuntId, String slotId) {
@@ -157,9 +157,9 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 	protected static final int ehm_slotPointsFromHullMods(ShipVariantAPI variant) {
 		int slotPoints = 0;
 
-		if (variant.getSMods().contains(lyr_internals.id.hullmods.overengineered))
+		if (variant.getSMods().contains(ehm_internals.id.hullmods.overengineered))
 			slotPoints += ehm_mr_overengineered.slotPointBonus.get(variant.getHullSize());
-		if (variant.hasHullMod(lyr_internals.id.hullmods.auxilarygenerators))
+		if (variant.hasHullMod(ehm_internals.id.hullmods.auxilarygenerators))
 			slotPoints += ehm_mr_auxilarygenerators.slotPointBonus.get(variant.getHullSize());
 
 		return slotPoints;
@@ -187,7 +187,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 		}
 
 		int slotPointsTotal = fromHullMods+fromDiverters-forConverters;
-		int deploymentPenalty = Math.max(0, lyr_settings.getBaseSlotPointPenalty()*Math.min(fromHullMods, fromHullMods - slotPointsTotal));
+		int deploymentPenalty = Math.max(0, ehm_settings.getBaseSlotPointPenalty()*Math.min(fromHullMods, fromHullMods - slotPointsTotal));
 		int[] slotPointArray = {slotPointsTotal, fromHullMods, fromDiverters, forConverters, deploymentPenalty};
 		return slotPointArray;
 	}
@@ -232,9 +232,9 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 		if (!isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
-			if (!_ehm_helpers.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
-			if (this.hullModSpecTags.contains(lyr_internals.tag.reqNoPhase) && ship.getPhaseCloak() != null) tooltip.addPara(text.hasPhase[0], text.padding).setHighlight(text.hasPhase[1]);
-			if (ship.getVariant().hasHullMod(lyr_internals.id.hullmods.logisticsoverhaul)) tooltip.addPara(text.hasLogisticsOverhaul[0], text.padding).setHighlight(text.hasLogisticsOverhaul[1]);
+			if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
+			if (this.hullModSpecTags.contains(ehm_internals.tag.reqNoPhase) && ship.getPhaseCloak() != null) tooltip.addPara(text.hasPhase[0], text.padding).setHighlight(text.hasPhase[1]);
+			if (ship.getVariant().hasHullMod(ehm_internals.id.hullmods.logisticsoverhaul)) tooltip.addPara(text.hasLogisticsOverhaul[0], text.padding).setHighlight(text.hasLogisticsOverhaul[1]);
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
@@ -244,9 +244,9 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false; 
 
-		if (!_ehm_helpers.hasRetrofitBaseBuiltIn(ship)) return false; 
-		if (this.hullModSpecTags.contains(lyr_internals.tag.reqNoPhase) && ship.getPhaseCloak() != null) return false; 
-		if (ship.getVariant().hasHullMod(lyr_internals.id.hullmods.logisticsoverhaul)) return false;
+		if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) return false; 
+		if (this.hullModSpecTags.contains(ehm_internals.tag.reqNoPhase) && ship.getPhaseCloak() != null) return false; 
+		if (ship.getVariant().hasHullMod(ehm_internals.id.hullmods.logisticsoverhaul)) return false;
 		
 		return true; 
 	}

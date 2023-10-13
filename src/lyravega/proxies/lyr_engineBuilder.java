@@ -8,8 +8,8 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
-import lyravega.tools.logger.lyr_logger;
-import lyravega.tools.lyr_reflectionTools.methodReflection;
+import lyravega.utilities.logger.lyr_logger;
+import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
 
 /**
  * A proxy-like class for... engine builder? When {@code getEngineSlots()}

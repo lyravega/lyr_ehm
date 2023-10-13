@@ -1,6 +1,6 @@
 package lyravega.listeners;
 
-import static lyravega.tools.lyr_uiTools.isRefitTab;
+import static lyravega.utilities.lyr_interfaceUtilities.isRefitTab;
 
 import java.util.*;
 
@@ -12,9 +12,9 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 
-import lyravega.tools.lyr_reflectionTools.methodReflection;
-import lyravega.tools.lyr_uiTools;
-import lyravega.tools.logger.lyr_logger;
+import lyravega.utilities.lyr_interfaceUtilities;
+import lyravega.utilities.logger.lyr_logger;
+import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
 
 /**
  * A tab listener class that implements several interfaces. There is a
@@ -65,7 +65,7 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 	}
 
 	@Override public void onAdvance(float amount) {
-		lyr_uiTools.clearUndoAfter();
+		lyr_interfaceUtilities.clearUndoAfter();
 	}
 
 	/**

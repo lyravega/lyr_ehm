@@ -14,12 +14,12 @@ import com.thoughtworks.xstream.XStream;
 import experimentalHullModifications.abilities.ehm_ability;
 import experimentalHullModifications.abilities.listeners.ehm_shuntInjector;
 import experimentalHullModifications.abilities.listeners.ehm_submarketInjector;
-import experimentalHullModifications.misc.lyr_internals;
+import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.scripts.ehm_fieldRepairsScript;
 import lyravega.listeners.lyr_eventDispatcher;
 import lyravega.listeners.lyr_fleetTracker;
-import lyravega.tools._ehm_helpers;
-import lyravega.tools.logger.lyr_logger;
+import lyravega.utilities.lyr_miscUtilities;
+import lyravega.utilities.logger.lyr_logger;
 
 public class lyr_ehm extends BaseModPlugin {
 	public static final class friend {
@@ -28,7 +28,7 @@ public class lyr_ehm extends BaseModPlugin {
 
 	@Override
 	public void onGameLoad(boolean newGame) {
-		teachAbility(lyr_internals.id.ability);
+		teachAbility(ehm_internals.id.ability);
 		updateBlueprints();
 		replaceFieldRepairsScript();
 		attachShuntAccessListener();
@@ -37,7 +37,7 @@ public class lyr_ehm extends BaseModPlugin {
 
 	@Override
 	public void onApplicationLoad() throws Exception {
-		lyr_settings.attach();
+		ehm_settings.attach();
 		updateHullMods();
 		lyr_eventDispatcher.registerModsWithEvents();
 	}
@@ -60,7 +60,7 @@ public class lyr_ehm extends BaseModPlugin {
 
 		// purge experimental weapon blueprints
 		for (WeaponSpecAPI weaponSpec : Global.getSettings().getAllWeaponSpecs()) {
-			if (!_ehm_helpers.isExperimentalShunt(weaponSpec, false)) continue;
+			if (!lyr_miscUtilities.isExperimentalShunt(weaponSpec, false)) continue;
 
 			for (FactionAPI faction : Global.getSector().getAllFactions())
 				faction.removeKnownWeapon(weaponSpec.getWeaponId());
@@ -68,17 +68,17 @@ public class lyr_ehm extends BaseModPlugin {
 
 		// purge experimental hullmod blueprints
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
-			if (!_ehm_helpers.isExperimentalMod(hullModSpec, false)) continue;
+			if (!lyr_miscUtilities.isExperimentalMod(hullModSpec, false)) continue;
 
 			playerData.removeHullMod(hullModSpec.getId());
 			for (FactionAPI faction : Global.getSector().getAllFactions())
 				faction.removeKnownHullMod(hullModSpec.getId());
 		}
 
-		final String targetTag = lyr_settings.getCosmeticsOnly() ? lyr_internals.tag.cosmetic : lyr_internals.tag.experimental;
+		final String targetTag = ehm_settings.getCosmeticsOnly() ? ehm_internals.tag.cosmetic : ehm_internals.tag.experimental;
 
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
-			if (!_ehm_helpers.isExperimentalMod(hullModSpec, true)) continue;
+			if (!lyr_miscUtilities.isExperimentalMod(hullModSpec, true)) continue;
 
 			if (hullModSpec.hasTag(targetTag)) playerData.addHullMod(hullModSpec.getId());
 		}
@@ -90,18 +90,18 @@ public class lyr_ehm extends BaseModPlugin {
 		final SettingsAPI settingsAPI = Global.getSettings();
 		Set<String> uiTags;
 
-		if (lyr_settings.getCosmeticsOnly()) {
-			uiTags = settingsAPI.getHullModSpec(lyr_internals.id.hullmods.base).getUITags();
-			uiTags.clear(); uiTags.add(lyr_internals.tag.ui.cosmetics);
+		if (ehm_settings.getCosmeticsOnly()) {
+			uiTags = settingsAPI.getHullModSpec(ehm_internals.id.hullmods.base).getUITags();
+			uiTags.clear(); uiTags.add(ehm_internals.tag.ui.cosmetics);
 
-			uiTags = settingsAPI.getHullModSpec(lyr_internals.id.hullmods.undo).getUITags();
-			uiTags.clear(); uiTags.add(lyr_internals.tag.ui.cosmetics);
+			uiTags = settingsAPI.getHullModSpec(ehm_internals.id.hullmods.undo).getUITags();
+			uiTags.clear(); uiTags.add(ehm_internals.tag.ui.cosmetics);
 		} else {
-			uiTags = settingsAPI.getHullModSpec(lyr_internals.id.hullmods.base).getUITags();
-			uiTags.clear(); uiTags.addAll(lyr_internals.tag.ui.all);
+			uiTags = settingsAPI.getHullModSpec(ehm_internals.id.hullmods.base).getUITags();
+			uiTags.clear(); uiTags.addAll(ehm_internals.tag.ui.all);
 
-			uiTags = settingsAPI.getHullModSpec(lyr_internals.id.hullmods.undo).getUITags();
-			uiTags.clear(); uiTags.addAll(lyr_internals.tag.ui.all);
+			uiTags = settingsAPI.getHullModSpec(ehm_internals.id.hullmods.undo).getUITags();
+			uiTags.clear(); uiTags.addAll(ehm_internals.tag.ui.all);
 		}
 	}
 
@@ -137,9 +137,9 @@ public class lyr_ehm extends BaseModPlugin {
 	}
 
 	static void attachShuntAccessListener() {
-		if (!Global.getSector().getPlayerFleet().getAbility(lyr_internals.id.ability).isActive()) return;
+		if (!Global.getSector().getPlayerFleet().getAbility(ehm_internals.id.ability).isActive()) return;
 
-		switch (lyr_settings.getShuntAvailability()) {
+		switch (ehm_settings.getShuntAvailability()) {
 			case "Always": ehm_submarketInjector.nullify(friend); ehm_shuntInjector.get().attach(true); break;
 			case "Submarket": ehm_shuntInjector.nullify(friend); ehm_submarketInjector.get().attach(true); break;
 			default: break;

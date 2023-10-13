@@ -1,4 +1,4 @@
-package lyravega.tools;
+package lyravega.utilities;
 
 import org.lwjgl.util.vector.Vector2f;
 
@@ -7,7 +7,7 @@ import org.lwjgl.util.vector.Vector2f;
  * calculate the new locations of child slots.
  * @author lyravega
  */
-public class lyr_vectorUtility {
+public class lyr_vectorUtilities {
 	private static final double PI = Math.PI;
 
 	private static double reduceSinAngle(double radians)

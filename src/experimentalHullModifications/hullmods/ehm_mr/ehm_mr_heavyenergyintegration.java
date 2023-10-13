@@ -11,7 +11,7 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.hullmods.ehm_wr.ehm_wr_energyslotretrofit;
-import experimentalHullModifications.misc.lyr_internals;
+import experimentalHullModifications.misc.ehm_internals;
 
 /**
  * @category Effect Extension 
@@ -22,20 +22,20 @@ public final class ehm_mr_heavyenergyintegration extends _ehm_base {
 	public static void installExtension(ShipVariantAPI variant) {
 		if (variant.getHullSpec().getBuiltInMods().contains("hbi") || variant.getPermaMods().contains("hbi")) {
 			variant.addSuppressedMod("hbi");
-			variant.addPermaMod(lyr_internals.id.hullmods.extensions.heavyenergyintegration, false);
+			variant.addPermaMod(ehm_internals.id.hullmods.extensions.heavyenergyintegration, false);
 		}
 	}
 
 	public static void removeExtension(ShipVariantAPI variant) {
 		if (variant.getSuppressedMods().contains("hbi")) {
-			if (!variant.hasHullMod(lyr_internals.id.hullmods.missileslotretrofit)) variant.removeSuppressedMod("hbi");
-			variant.removePermaMod(lyr_internals.id.hullmods.extensions.heavyenergyintegration);
+			if (!variant.hasHullMod(ehm_internals.id.hullmods.missileslotretrofit)) variant.removeSuppressedMod("hbi");
+			variant.removePermaMod(ehm_internals.id.hullmods.extensions.heavyenergyintegration);
 		}
 	}
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String id) {
-		if (!stats.getVariant().hasHullMod(lyr_internals.id.hullmods.energyslotretrofit)) { removeExtension(stats.getVariant()); return; }
+		if (!stats.getVariant().hasHullMod(ehm_internals.id.hullmods.energyslotretrofit)) { removeExtension(stats.getVariant()); return; }
 
 		stats.getDynamic().getMod(Stats.LARGE_ENERGY_MOD).modifyFlat(id, -COST_REDUCTION);
 	}

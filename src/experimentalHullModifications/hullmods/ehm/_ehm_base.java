@@ -21,10 +21,10 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
-import experimentalHullModifications.misc.lyr_internals;
-import experimentalHullModifications.misc.lyr_tooltip.header;
-import experimentalHullModifications.misc.lyr_tooltip.text;
-import experimentalHullModifications.plugin.lyr_settings;
+import experimentalHullModifications.misc.ehm_internals;
+import experimentalHullModifications.misc.ehm_tooltip.header;
+import experimentalHullModifications.misc.ehm_tooltip.text;
+import experimentalHullModifications.plugin.ehm_settings;
 import lyravega.proxies.lyr_hullSpec;
 
 /**
@@ -219,7 +219,7 @@ public abstract class _ehm_base implements HullModEffect {
 		// hullSpec.setRestoreToBase(false);
 		hullSpec.setBaseValue(originalHullSpec.getBaseValue());	// because d-hulls lose 25% in value immediately
 		hullSpec.setSpriteSpec(originalHullSpec.getSpriteSpec());	// to reduce memory imprint, letting garbage collector dispose same sprite specs
-		if (lyr_settings.getShowExperimentalFlavour()) {
+		if (ehm_settings.getShowExperimentalFlavour()) {
 			hullSpec.setManufacturer(text.flavourManufacturer);
 			hullSpec.setDescriptionPrefix(text.flavourDescription);
 			hullSpec.setHullName(originalHullSpec.getHullName() + " (E)");	// restore to base hull name, replacing "(D)" with "(E)"
@@ -227,7 +227,7 @@ public abstract class _ehm_base implements HullModEffect {
 			hullSpec.setDescriptionPrefix(hullSpec.getDescriptionPrefix());	// restore with base prefix, if any
 			hullSpec.setHullName(originalHullSpec.getHullName());	// restore to base hull name, removing "(D)"
 		}
-		hullSpec.addBuiltInMod(lyr_internals.id.hullmods.base);
+		hullSpec.addBuiltInMod(ehm_internals.id.hullmods.base);
 	}
 
 	/**

@@ -1,7 +1,7 @@
 package experimentalHullModifications.hullmods.ehm;
 
-import static lyravega.tools.lyr_uiTools.commitVariantChanges;
-import static lyravega.tools.lyr_uiTools.playDrillSound;
+import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
+import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
 import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
@@ -13,12 +13,12 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
 import experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base;
-import experimentalHullModifications.misc.lyr_internals;
-import experimentalHullModifications.misc.lyr_tooltip.header;
-import experimentalHullModifications.misc.lyr_tooltip.text;
-import experimentalHullModifications.plugin.lyr_settings;
+import experimentalHullModifications.misc.ehm_internals;
+import experimentalHullModifications.misc.ehm_tooltip.header;
+import experimentalHullModifications.misc.ehm_tooltip.text;
+import experimentalHullModifications.plugin.ehm_settings;
 import lyravega.listeners.lyr_fleetTracker;
-import lyravega.tools._ehm_helpers;
+import lyravega.utilities.lyr_miscUtilities;
 
 /**
  * Serves as a requirement for all experimental hull modifications, and enables tracking
@@ -36,23 +36,23 @@ public final class ehm_base extends _ehm_base {
 
 		lyr_fleetTracker.updateShipTracker(stats);	// if this is done after the block below, it'll create multiple trackers for ships with a captain
 
-		if (!hullSpec.isBuiltInMod(lyr_internals.id.hullmods.base) || !Misc.getDHullId(hullSpec).equals(hullSpec.getHullId())) {
+		if (!hullSpec.isBuiltInMod(ehm_internals.id.hullmods.base) || !Misc.getDHullId(hullSpec).equals(hullSpec.getHullId())) {
 			variant.setHullSpecAPI(ehm_hullSpecClone(variant));
 
-			if (!variant.getPermaMods().contains(lyr_internals.id.hullmods.base)) {	// to make this a one-time commit, and to avoid re-committing if/when the ship is getting restored
+			if (!variant.getPermaMods().contains(ehm_internals.id.hullmods.base)) {	// to make this a one-time commit, and to avoid re-committing if/when the ship is getting restored
 				// for (String moduleSlot : variant.getStationModules().keySet()) {
 				// 	ShipVariantAPI moduleVariant = variant.getModuleVariant(moduleSlot);
 
 				// 	if (!moduleVariant.getPermaMods().contains(lyr_internals.id.hullmods.base)) moduleVariant.addPermaMod(lyr_internals.id.hullmods.base, false);
 				// }
 
-				variant.addPermaMod(lyr_internals.id.hullmods.base, false);
+				variant.addPermaMod(ehm_internals.id.hullmods.base, false);
 				commitVariantChanges(); playDrillSound();
 			}
 		}
 
 		_ehm_ar_base.ehm_preProcessShunts(stats);	// at this point, the hull spec should be cloned so proceed and pre-process the shunts
-		_ehm_helpers.cleanWeaponGroupsUp(variant);
+		lyr_miscUtilities.cleanWeaponGroupsUp(variant);
 	}
 
 	@Override 
@@ -78,7 +78,7 @@ public final class ehm_base extends _ehm_base {
 
 			super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
 		} else {
-			if (lyr_settings.getDebugTooltip()) {
+			if (ehm_settings.getDebugTooltip()) {
 				tooltip.addSectionHeading("DEBUG INFO: GENERAL", header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 				tooltip.addPara("Mods: "+Global.getSettings().getModManager().getEnabledModsCopy().toString(), 5f).setHighlight("Mods: ");
 
@@ -96,7 +96,7 @@ public final class ehm_base extends _ehm_base {
 				tooltip.addPara("Variant ID: "+variant.getHullVariantId(), 5f).setHighlight("Variant ID:");
 				tooltip.addPara("Member ID: "+ship.getFleetMemberId(), 5f).setHighlight("Member ID:");
 				tooltip.addPara("isModule: "+!Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy().contains(ship.getFleetMember()), 5f).setHighlight("isModule:");
-				tooltip.addPara("isParent: "+_ehm_helpers.isParent(ship), 5f).setHighlight("isParent:");
+				tooltip.addPara("isParent: "+lyr_miscUtilities.isParent(ship), 5f).setHighlight("isParent:");
 				tooltip.addPara("HullHints: "+hullSpec.getHints().toString(), 5f).setHighlight("HullHints:");
 				tooltip.addPara("VariantHints: "+variant.getHints().toString(), 5f).setHighlight("VariantHints:");
 				tooltip.addPara("HullTags: "+hullSpec.getTags().toString(), 5f).setHighlight("HullTags:");
@@ -110,7 +110,7 @@ public final class ehm_base extends _ehm_base {
 					if (scriptSimpleName.equals("lyr_fieldRepairsScript")) tooltip.addPara("FieldRepairsScript (EHM): Running", 5f).setHighlight("FieldRepairsScript (EHM):");
 					if (scriptSimpleName.equals("CaptainsFieldRepairsScript")) tooltip.addPara("FieldRepairsScript (QC): Running", 5f).setHighlight("FieldRepairsScript (QC):");
 				}
-			} else if (lyr_settings.getShowFluff()) {
+			} else if (ehm_settings.getShowFluff()) {
 				String playerSalutation = Global.getSector().getPlayerPerson().getGender() == Gender.MALE ? Misc.SIR : Misc.MAAM;
 
 				tooltip.addSectionHeading("FLUFF", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
@@ -122,42 +122,42 @@ public final class ehm_base extends _ehm_base {
 						tooltip.addPara(playerSalutation + ", if you are unhappy with what I am offering you, I can get rid of the base hull modifications that I've made. Let me know!", text.padding);
 						break;
 					case 2: 
-						if (!_ehm_helpers.hasHullModWithTag(ship, lyr_internals.tag.weaponRetrofit, null))
+						if (!lyr_miscUtilities.hasHullModWithTag(ship, ehm_internals.tag.weaponRetrofit, null))
 							tooltip.addPara(playerSalutation + ", with slot retrofits every weapon slot may be altered all together to make them compatible with other weapon types.", text.padding);
 						else tooltip.addPara("The slot retrofits come at a cost, but their main purpose is to allow flexibility, and of course letting you use your favourite weapons, "+ playerSalutation, text.padding);
 						break;
 					case 3: 
-						if (!_ehm_helpers.hasHullModWithTag(ship, lyr_internals.tag.systemRetrofit, null))
+						if (!lyr_miscUtilities.hasHullModWithTag(ship, ehm_internals.tag.systemRetrofit, null))
 							tooltip.addPara("The ships are designed along with their systems, however with system retrofits, I can change them anytime you want, "+ playerSalutation +".", text.padding);
 						else tooltip.addPara("Some system & ship combinations may be powerful. Some may not. No refunds! Just joking...", text.padding);
 						break;
 					case 4: 
-						if (!_ehm_helpers.hasHullModWithTag(ship, lyr_internals.tag.engineCosmetic, null))
+						if (!lyr_miscUtilities.hasHullModWithTag(ship, ehm_internals.tag.engineCosmetic, null))
 							tooltip.addPara(playerSalutation + ", let me know if you'd like to have this ship's engine exhaust colour get changed. I can even fully customize them to your exact specifications!", text.padding);
 						else tooltip.addPara("The engine exhaust cosmetics are looking great, " + playerSalutation, text.padding);
 						break;
 					case 5:
-						if (!_ehm_helpers.hasHullModWithTag(ship, lyr_internals.tag.shieldCosmetic, null))
+						if (!lyr_miscUtilities.hasHullModWithTag(ship, ehm_internals.tag.shieldCosmetic, null))
 							tooltip.addPara("The shield emitters may be modified to project a shield with different colours, " + playerSalutation + ". The effect is purely cosmetic", text.padding);
 						else tooltip.addPara("The shield emitters are modified to project colours of your choice, " + playerSalutation, text.padding);
 						break;
 					case 6: 
-						if (!variant.hasHullMod(lyr_internals.id.hullmods.diverterandconverter))
+						if (!variant.hasHullMod(ehm_internals.id.hullmods.diverterandconverter))
 							tooltip.addPara("Power may be diverted from a weapon slot to another with a diverter slot shunt, " + playerSalutation + ". The trade-off is necessary to make such modifications.", text.padding);
 						else tooltip.addPara("If a converter remains idle, we might be lacking the necessary power diverted to it " + playerSalutation, text.padding);
 						break;
 					case 7: 
-						if (!variant.hasHullMod(lyr_internals.id.hullmods.mutableshunt))
+						if (!variant.hasHullMod(ehm_internals.id.hullmods.mutableshunt))
 							tooltip.addPara(playerSalutation + ", slot housings may be replaced with extra flux capacitors or dissipators, or a fighter bay may be fit into a large slot with select slot shunts!", text.padding);
 						else tooltip.addPara("The capacitors and dissipators are designed to improve the built-in ones and also support other on-board systems indirectly. An additional fighter bay on the other hand...", text.padding);
 						break;
 					case 8: 
-						if (!variant.hasHullMod(lyr_internals.id.hullmods.stepdownadapter))
+						if (!variant.hasHullMod(ehm_internals.id.hullmods.stepdownadapter))
 							tooltip.addPara(playerSalutation + ", if you need more weapon slots of smaller sizes for any reason, bigger slots may be adapted into multiple smaller ones!", text.padding);
 						else tooltip.addPara("Any adapters will be activated, " + playerSalutation + ". The additional slots might be smaller, but sometimes having more of something is the answer.", text.padding);
 						break;
 					case 9: 
-						if (!variant.getSMods().contains(lyr_internals.id.hullmods.overengineered))
+						if (!variant.getSMods().contains(ehm_internals.id.hullmods.overengineered))
 							tooltip.addPara(playerSalutation + ", have you thought about letting me over-engineer the ship? You might find the benefits interesting!", text.padding);
 						else tooltip.addPara("This over-engineered ship is a beast, " + playerSalutation + "! Every internal system, even the bulkheads were replaced, while keeping the structural integrity intact! A mir... *cough* masterpiece!", text.padding);
 						break;
@@ -170,6 +170,6 @@ public final class ehm_base extends _ehm_base {
 	@Override
 	public boolean showInRefitScreenModPickerFor(ShipAPI ship) {
 		if (!super.showInRefitScreenModPickerFor(ship)) return false;
-		return (_ehm_helpers.hasRetrofitBaseBuiltIn(ship)) ? false : true;
+		return (lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) ? false : true;
 	}
 }

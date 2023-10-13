@@ -1,4 +1,4 @@
-package lyravega.tools;
+package lyravega.utilities;
 
 import java.util.*;
 
@@ -11,13 +11,14 @@ import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.loading.*;
 
 import experimentalHullModifications.hullmods.ehm.ehm_base;
-import experimentalHullModifications.misc.lyr_internals;
+import experimentalHullModifications.misc.ehm_internals;
 
 /**
- * A class dedicated to house the helper functions for the ships
+ * A class dedicated to house the helper functions for the ships, variants,
+ * and whatnot. Mostly contains checkers
  * @author lyravega
  */
-public class _ehm_helpers {
+public class lyr_miscUtilities {
 	/**
 	 * @param ship to check
 	 * @param hullmodIdToIgnore can be null. If not, the hullmod with this id will be ignored
@@ -149,7 +150,7 @@ public class _ehm_helpers {
 	 */
 	public static final boolean hasExperimentalSMod(ShipAPI ship) {
 		for (String hullModId: ship.getVariant().getSMods()) {
-			if (Global.getSettings().getHullModSpec(hullModId).hasTag(lyr_internals.tag.experimental)) return true;
+			if (Global.getSettings().getHullModSpec(hullModId).hasTag(ehm_internals.tag.experimental)) return true;
 		}; return false;
 	}
 
@@ -159,7 +160,7 @@ public class _ehm_helpers {
 	 * @return true if ship has it, false otherwise (duh)
 	 */
 	public static final boolean hasRetrofitBaseBuiltIn(ShipAPI ship) {
-		return ship.getVariant().getHullSpec().isBuiltInMod(lyr_internals.id.hullmods.base);
+		return ship.getVariant().getHullSpec().isBuiltInMod(ehm_internals.id.hullmods.base);
 	}
 
 	/**
@@ -202,7 +203,7 @@ public class _ehm_helpers {
 		List<WeaponGroupSpec> weaponGroups = variant.getWeaponGroups();
 		Collection<String> groupKeepTargets = variant.getFittedWeaponSlots();	// this is to fix an (vanilla) issue where groups have incorrect entries
 		Map<String, String> groupCleanupTargets = new HashMap<String, String>(variant.getHullSpec().getBuiltInWeapons());
-		groupCleanupTargets.values().retainAll(lyr_internals.id.shunts.set);
+		groupCleanupTargets.values().retainAll(ehm_internals.id.shunts.set);
 	
 		for (Iterator<WeaponGroupSpec> iterator = weaponGroups.iterator(); iterator.hasNext();) {
 			WeaponGroupSpec weaponGroup = iterator.next();
@@ -223,16 +224,16 @@ public class _ehm_helpers {
 	}
 
 	public static boolean isExperimentalMod(HullModSpecAPI spec, boolean excludeRestricted) {
-		if (!spec.getManufacturer().equals(lyr_internals.id.manufacturer)) return false;
-		if (!spec.hasTag(lyr_internals.tag.experimental)) return false;
-		if (excludeRestricted && spec.hasTag(lyr_internals.tag.restricted)) return false;
+		if (!spec.getManufacturer().equals(ehm_internals.id.manufacturer)) return false;
+		if (!spec.hasTag(ehm_internals.tag.experimental)) return false;
+		if (excludeRestricted && spec.hasTag(ehm_internals.tag.restricted)) return false;
 		return true;
 	}
 
 	public static boolean isExperimentalShunt(WeaponSpecAPI spec, boolean excludeRestricted) {
-		if (!spec.getManufacturer().equals(lyr_internals.id.manufacturer)) return false;
-		if (!spec.hasTag(lyr_internals.tag.experimental)) return false;
-		if (excludeRestricted && spec.hasTag(lyr_internals.tag.restricted)) return false;
+		if (!spec.getManufacturer().equals(ehm_internals.id.manufacturer)) return false;
+		if (!spec.hasTag(ehm_internals.tag.experimental)) return false;
+		if (excludeRestricted && spec.hasTag(ehm_internals.tag.restricted)) return false;
 		return true;
 	}
 }

@@ -8,14 +8,14 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
 import experimentalHullModifications.abilities.listeners.ehm_submarketInjector;
-import experimentalHullModifications.misc.lyr_internals;
-import experimentalHullModifications.plugin.lyr_settings;
+import experimentalHullModifications.misc.ehm_internals;
+import experimentalHullModifications.plugin.ehm_settings;
 import experimentalHullModifications.abilities.listeners.ehm_shuntInjector;
 
 /**
  * A toggle ability that works in conjunction with {@link ehm_submarketInjector
  * interactionListener} or with {@link ehm_shuntInjector tabListener} to determine how to
- * display the slot shunts. The option {@link lyr_settings#shuntAvailability
+ * display the slot shunts. The option {@link ehm_settings#shuntAvailability
  * shuntAvailability} controls the display mode.
  * <p> {@link experimentalHullModifications.submarkets.ehm_submarket Slot shunt submarket}
  * will only be displayed if relevant option is selected. Both settings' listeners and
@@ -25,7 +25,7 @@ import experimentalHullModifications.abilities.listeners.ehm_shuntInjector;
 public final class ehm_ability extends BaseToggleAbility {
 	@Override
 	protected String getActivationText() {
-		switch (lyr_settings.getShuntAvailability()) {
+		switch (ehm_settings.getShuntAvailability()) {
 			case "Always": return "Ready to experiment";
 			case "Submarket": return "Looking for a port";
 			default: return null;
@@ -42,7 +42,7 @@ public final class ehm_ability extends BaseToggleAbility {
 
 	@Override
 	protected void activateImpl() {
-		switch (lyr_settings.getShuntAvailability()) {
+		switch (ehm_settings.getShuntAvailability()) {
 			case "Always": ehm_shuntInjector.get().attach(true); break;
 			case "Submarket": ehm_submarketInjector.get().attach(true); break;
 			default: break;
@@ -51,7 +51,7 @@ public final class ehm_ability extends BaseToggleAbility {
 
 	@Override
 	protected void deactivateImpl() {
-		switch (lyr_settings.getShuntAvailability()) {
+		switch (ehm_settings.getShuntAvailability()) {
 			case "Always": ehm_shuntInjector.get().detach(); break;
 			case "Submarket": ehm_submarketInjector.get().detach(); break;
 			default: break;
@@ -76,7 +76,7 @@ public final class ehm_ability extends BaseToggleAbility {
         Color highlightColor = Misc.getHighlightColor();
 		String desc;
 
-		switch (lyr_settings.getShuntAvailability()) {
+		switch (ehm_settings.getShuntAvailability()) {
 			case "Always": desc = "While this ability is turned on, an excess amount of slot shunts will be made available in the refit tab. Unused ones will be cleaned-up."; break;
 			case "Submarket": desc = "While this ability is turned on, a submarket called Experimental Engineering will be visible on any docked port, and slot shunts will be available in the refit tab. Unused ones will be cleaned-up."; break;
 			default: desc = ""; break;
@@ -92,6 +92,6 @@ public final class ehm_ability extends BaseToggleAbility {
 
 	@Override
 	public Color getActiveColor() {
-		return Global.getSector().getFaction(lyr_internals.id.faction).getBrightUIColor();
+		return Global.getSector().getFaction(ehm_internals.id.faction).getBrightUIColor();
 	}
 }

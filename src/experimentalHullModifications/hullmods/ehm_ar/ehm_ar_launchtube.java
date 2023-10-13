@@ -1,6 +1,6 @@
 package experimentalHullModifications.hullmods.ehm_ar;
 
-import static lyravega.tools.lyr_uiTools.commitVariantChanges;
+import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,14 +19,14 @@ import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
-import experimentalHullModifications.misc.lyr_internals;
-import experimentalHullModifications.misc.lyr_internals.id.hullmods;
-import experimentalHullModifications.misc.lyr_internals.id.shunts.launchTubes;
-import experimentalHullModifications.misc.lyr_tooltip.header;
-import experimentalHullModifications.misc.lyr_tooltip.text;
-import experimentalHullModifications.plugin.lyr_settings;
+import experimentalHullModifications.misc.ehm_internals;
+import experimentalHullModifications.misc.ehm_internals.id.hullmods;
+import experimentalHullModifications.misc.ehm_internals.id.shunts.launchTubes;
+import experimentalHullModifications.misc.ehm_tooltip.header;
+import experimentalHullModifications.misc.ehm_tooltip.text;
+import experimentalHullModifications.plugin.ehm_settings;
 import lyravega.proxies.lyr_hullSpec;
-import lyravega.tools._ehm_helpers;
+import lyravega.utilities.lyr_miscUtilities;
 
 /**@category Adapter Retrofit 
  * @author lyravega
@@ -47,7 +47,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 
 	static final Map<String, Float> launchTubeMap = new HashMap<String, Float>();
 	static {
-		launchTubeMap.put(lyr_internals.id.shunts.launchTubes.large, 1.0f);
+		launchTubeMap.put(ehm_internals.id.shunts.launchTubes.large, 1.0f);
 	}
 	
 	// com.fs.starfarer.api.impl.hullmods.ConvertedHangar
@@ -75,12 +75,12 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 			// if (slot.isDecorative()) continue;
 
 			String slotId = slot.getId();
-			if (slotId.startsWith(lyr_internals.affix.convertedSlot)) { iterator.remove(); continue; }
+			if (slotId.startsWith(ehm_internals.affix.convertedSlot)) { iterator.remove(); continue; }
 			if (variant.getWeaponSpec(slotId) == null) { iterator.remove(); continue; }
 
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
 			if (shuntSpec.getSize() != slot.getSlotSize()) { iterator.remove(); continue; }
-			if (!shuntSpec.hasTag(lyr_internals.tag.experimental)) { iterator.remove(); continue; }
+			if (!shuntSpec.hasTag(ehm_internals.tag.experimental)) { iterator.remove(); continue; }
 
 			String shuntId = shuntSpec.getWeaponId();
 			switch (shuntId) {
@@ -125,15 +125,15 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 		ShipVariantAPI variant = ship.getVariant();
 
 		if (variant.hasHullMod(this.hullModSpecId)) {
-			if (lyr_settings.getShowInfoForActivators()) {	
-				Map<String, Integer> launchTubes = ehm_shuntCount(ship, lyr_internals.tag.tubeShunt);
+			if (ehm_settings.getShowInfoForActivators()) {	
+				Map<String, Integer> launchTubes = ehm_shuntCount(ship, ehm_internals.tag.tubeShunt);
 	
 				if (!launchTubes.isEmpty()) {
 					tooltip.addSectionHeading("EXTRA HANGARS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 					for (String shuntId: launchTubes.keySet()) {
 						tooltip.addPara(launchTubes.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
-				} else if (lyr_settings.getShowFullInfoForActivators()) {
+				} else if (ehm_settings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO EXTRA HANGARS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No large weapon slots are turned into hangars. Each large slot is turned into a single fighter bay with a launch tube.", 2f);
 				}
@@ -147,7 +147,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 
 			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.locked_bgColour, Alignment.MID, header.padding);
 
-			if (_ehm_helpers.hasExtraWings(ship, hullmods.launchtube)) tooltip.addPara(text.hasExtraWings[0], text.padding).setHighlight(text.hasExtraWings[1]);
+			if (lyr_miscUtilities.hasExtraWings(ship, hullmods.launchtube)) tooltip.addPara(text.hasExtraWings[0], text.padding).setHighlight(text.hasExtraWings[1]);
 		}
 	}
 	
@@ -155,7 +155,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
 		if (ship == null) return false;
 
-		if (ship.getVariant().hasHullMod(this.hullModSpecId) && _ehm_helpers.hasExtraWings(ship, hullmods.launchtube)) return false;
+		if (ship.getVariant().hasHullMod(this.hullModSpecId) && lyr_miscUtilities.hasExtraWings(ship, hullmods.launchtube)) return false;
 
 		return true;
 	}

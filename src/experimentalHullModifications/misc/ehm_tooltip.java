@@ -2,7 +2,7 @@ package experimentalHullModifications.misc;
 
 import java.awt.Color;
 
-public class lyr_tooltip {
+public class ehm_tooltip {
 	public static class text {
 		public static final float padding = 5.0f;
 		public static final String 

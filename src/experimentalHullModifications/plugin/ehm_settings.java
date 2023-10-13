@@ -8,14 +8,14 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.HullModEffect;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 
-import experimentalHullModifications.misc.lyr_internals.id;
-import experimentalHullModifications.misc.lyr_internals.tag;
+import experimentalHullModifications.misc.ehm_internals.id;
+import experimentalHullModifications.misc.ehm_internals.tag;
 import lunalib.lunaSettings.LunaSettings;
 import lunalib.lunaSettings.LunaSettingsListener;
 import lyravega.listeners.events.customizableHullMod;
-import lyravega.tools.lyr_lunaAccessors;
-import lyravega.tools.logger.lyr_levels;
-import lyravega.tools.logger.lyr_logger;
+import lyravega.utilities.lyr_lunaUtilities;
+import lyravega.utilities.logger.lyr_levels;
+import lyravega.utilities.logger.lyr_logger;
 
 /**
  * Luna settings listener to utilize anything LunaLib offers for settings
@@ -26,15 +26,15 @@ import lyravega.tools.logger.lyr_logger;
  * restart.
  * @author lyravega
  */
-public class lyr_settings implements LunaSettingsListener {
-	private lyr_settings() {
+public class ehm_settings implements LunaSettingsListener {
+	private ehm_settings() {
 		cacheSettings();
 		registerModsWithCustomization();
 	}
 
 	static void attach() {
-		if (!LunaSettings.hasSettingsListenerOfClass(lyr_settings.class)) {
-			LunaSettings.addSettingsListener(new lyr_settings());
+		if (!LunaSettings.hasSettingsListenerOfClass(ehm_settings.class)) {
+			LunaSettings.addSettingsListener(new ehm_settings());
 
 			lyr_logger.info("Attached LunaLib settings listener");
 		}
@@ -61,25 +61,25 @@ public class lyr_settings implements LunaSettingsListener {
 	private static void cacheSettings() {
 		// MAIN SETTINGS
 		checkShuntAvailability();	// separate from others as it needs to trigger a method to add/remove listeners only if there's a change
-		String extraInfo = lyr_lunaAccessors.getString("ehm_extraInfoInHullMods");	// splitting radio into booleans
+		String extraInfo = lyr_lunaUtilities.getString("ehm_extraInfoInHullMods");	// splitting radio into booleans
 		showInfoForActivators = !extraInfo.equals("None");
 		showFullInfoForActivators = extraInfo.equals("Full");
-		String drillSound = lyr_lunaAccessors.getString("ehm_drillSound");	// splitting radio into booleans
+		String drillSound = lyr_lunaUtilities.getString("ehm_drillSound");	// splitting radio into booleans
 		playDrillSound = !drillSound.equals("None");
 		playDrillSoundForAll = drillSound.equals("All");
 		checkCosmeticsOnly();	// separate from others like the shunt option as it invokes a method to properly update stuff
-		hideAdapters = lyr_lunaAccessors.getBoolean("ehm_hideAdapters");
-		hideConverters = lyr_lunaAccessors.getBoolean("ehm_hideConverters");
+		hideAdapters = lyr_lunaUtilities.getBoolean("ehm_hideAdapters");
+		hideConverters = lyr_lunaUtilities.getBoolean("ehm_hideConverters");
 
 		// HULL MODIFICATION SETTINGS
-		baseSlotPointPenalty = lyr_lunaAccessors.getInt("ehm_baseSlotPointPenalty");
+		baseSlotPointPenalty = lyr_lunaUtilities.getInt("ehm_baseSlotPointPenalty");
 
 		// FLAVOUR SETTINGS
-		showExperimentalFlavour = lyr_lunaAccessors.getBoolean("ehm_showExperimentalFlavour");
-		showFluff = lyr_lunaAccessors.getBoolean("ehm_showFluff");
+		showExperimentalFlavour = lyr_lunaUtilities.getBoolean("ehm_showExperimentalFlavour");
+		showFluff = lyr_lunaUtilities.getBoolean("ehm_showFluff");
 
 		// DEBUG SETTINGS
-		debugTooltip = lyr_lunaAccessors.getBoolean("ehm_debugTooltip");
+		debugTooltip = lyr_lunaUtilities.getBoolean("ehm_debugTooltip");
 		checkLoggerLevel();
 	}
 
@@ -94,7 +94,7 @@ public class lyr_settings implements LunaSettingsListener {
 	}
 
 	private static void checkShuntAvailability() {
-		final String temp = lyr_lunaAccessors.getString("ehm_shuntAvailability");
+		final String temp = lyr_lunaUtilities.getString("ehm_shuntAvailability");
 
 		if (shuntAvailability != null && shuntAvailability.equals(temp)) return; else shuntAvailability = temp;
 
@@ -104,7 +104,7 @@ public class lyr_settings implements LunaSettingsListener {
 	}
 
 	private static void checkLoggerLevel() {
-		switch (lyr_lunaAccessors.getInt("ehm_loggerLevel")) {
+		switch (lyr_lunaUtilities.getInt("ehm_loggerLevel")) {
 			case 4: lyr_logger.setLevel(lyr_levels.INFO); break;
 			case 3: lyr_logger.setLevel(lyr_levels.LSTNR); break;
 			case 2: lyr_logger.setLevel(lyr_levels.EVENT); break;
@@ -115,7 +115,7 @@ public class lyr_settings implements LunaSettingsListener {
 	}
 
 	private static void checkCosmeticsOnly() {
-		final boolean temp = lyr_lunaAccessors.getBoolean("ehm_cosmeticsOnly");
+		final boolean temp = lyr_lunaUtilities.getBoolean("ehm_cosmeticsOnly");
 
 		if (cosmeticsOnly == temp) return; else cosmeticsOnly = temp;
 

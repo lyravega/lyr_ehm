@@ -1,6 +1,6 @@
 package experimentalHullModifications.hullmods.ehm_ar;
 
-import static lyravega.tools.lyr_uiTools.commitVariantChanges;
+import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,11 +22,11 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
-import experimentalHullModifications.misc.lyr_internals;
-import experimentalHullModifications.misc.lyr_internals.id.shunts.capacitors;
-import experimentalHullModifications.misc.lyr_internals.id.shunts.dissipators;
-import experimentalHullModifications.misc.lyr_tooltip.header;
-import experimentalHullModifications.plugin.lyr_settings;
+import experimentalHullModifications.misc.ehm_internals;
+import experimentalHullModifications.misc.ehm_internals.id.shunts.capacitors;
+import experimentalHullModifications.misc.ehm_internals.id.shunts.dissipators;
+import experimentalHullModifications.misc.ehm_tooltip.header;
+import experimentalHullModifications.plugin.ehm_settings;
 import lyravega.proxies.lyr_hullSpec;
 
 /**@category Adapter Retrofit 
@@ -50,14 +50,14 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 	static final Map<String, Float[]> capacitorMap = new HashMap<String, Float[]>();
 	static final Map<String, Float[]> dissipatorMap = new HashMap<String, Float[]>();
 	static {
-		capacitorMap.put(lyr_internals.id.shunts.capacitors.large, new Float[] {0.04f, 6f * Misc.FLUX_PER_CAPACITOR});
-		capacitorMap.put(lyr_internals.id.shunts.capacitors.medium, new Float[] {0.02f, 3f * Misc.FLUX_PER_CAPACITOR});
-		capacitorMap.put(lyr_internals.id.shunts.capacitors.small, new Float[] {0.01f, 1.5f * Misc.FLUX_PER_CAPACITOR});
+		capacitorMap.put(ehm_internals.id.shunts.capacitors.large, new Float[] {0.04f, 6f * Misc.FLUX_PER_CAPACITOR});
+		capacitorMap.put(ehm_internals.id.shunts.capacitors.medium, new Float[] {0.02f, 3f * Misc.FLUX_PER_CAPACITOR});
+		capacitorMap.put(ehm_internals.id.shunts.capacitors.small, new Float[] {0.01f, 1.5f * Misc.FLUX_PER_CAPACITOR});
 		fluxShuntSet.addAll(capacitorMap.keySet());
 
-		dissipatorMap.put(lyr_internals.id.shunts.dissipators.large, new Float[] {0.04f, 6f * Misc.DISSIPATION_PER_VENT});
-		dissipatorMap.put(lyr_internals.id.shunts.dissipators.medium, new Float[] {0.02f, 3f * Misc.DISSIPATION_PER_VENT});
-		dissipatorMap.put(lyr_internals.id.shunts.dissipators.small, new Float[] {0.01f, 1.5f * Misc.DISSIPATION_PER_VENT});
+		dissipatorMap.put(ehm_internals.id.shunts.dissipators.large, new Float[] {0.04f, 6f * Misc.DISSIPATION_PER_VENT});
+		dissipatorMap.put(ehm_internals.id.shunts.dissipators.medium, new Float[] {0.02f, 3f * Misc.DISSIPATION_PER_VENT});
+		dissipatorMap.put(ehm_internals.id.shunts.dissipators.small, new Float[] {0.01f, 1.5f * Misc.DISSIPATION_PER_VENT});
 		fluxShuntSet.addAll(dissipatorMap.keySet());
 	}
 
@@ -75,12 +75,12 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 			// if (slot.isDecorative()) continue;
 
 			String slotId = slot.getId();
-			if (slotId.startsWith(lyr_internals.affix.convertedSlot)) { iterator.remove(); continue; }
+			if (slotId.startsWith(ehm_internals.affix.convertedSlot)) { iterator.remove(); continue; }
 			if (variant.getWeaponSpec(slotId) == null) { iterator.remove(); continue; }
 
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
 			if (shuntSpec.getSize() != slot.getSlotSize()) { iterator.remove(); continue; }
-			if (!shuntSpec.hasTag(lyr_internals.tag.experimental)) { iterator.remove(); continue; }
+			if (!shuntSpec.hasTag(ehm_internals.tag.experimental)) { iterator.remove(); continue; }
 
 			String shuntId = shuntSpec.getWeaponId();
 			switch (shuntId) {
@@ -135,8 +135,8 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 		ShipVariantAPI variant = ship.getVariant();
 
 		if (variant.hasHullMod(this.hullModSpecId)) {
-			if (lyr_settings.getShowInfoForActivators()) {
-				Map<String, Integer> capacitors = ehm_shuntCount(ship, lyr_internals.tag.capacitorShunt);
+			if (ehm_settings.getShowInfoForActivators()) {
+				Map<String, Integer> capacitors = ehm_shuntCount(ship, ehm_internals.tag.capacitorShunt);
 	
 				if (!capacitors.isEmpty()) {
 					float totalBonus = ship.getMutableStats().getFluxCapacity().modified-(variant.getNumFluxCapacitors()*Misc.FLUX_PER_CAPACITOR+variant.getHullSpec().getFluxCapacity());
@@ -146,12 +146,12 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 					for (String shuntId: capacitors.keySet()) {
 						tooltip.addPara(capacitors.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
-				} else if (lyr_settings.getShowFullInfoForActivators()) {
+				} else if (ehm_settings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO CAPACITORS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No capacitors are installed. Capacitors increase the total flux capacity of the ship, and affect built-in capacitors.", 2f);
 				}
 
-				Map<String, Integer> dissipators = ehm_shuntCount(ship, lyr_internals.tag.dissipatorShunt);
+				Map<String, Integer> dissipators = ehm_shuntCount(ship, ehm_internals.tag.dissipatorShunt);
 	
 				if (!dissipators.isEmpty()) {
 					float totalBonus = ship.getMutableStats().getFluxDissipation().modified-(variant.getNumFluxVents()*Misc.DISSIPATION_PER_VENT+variant.getHullSpec().getFluxDissipation());
@@ -161,7 +161,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 					for (String shuntId: dissipators.keySet()) {
 						tooltip.addPara(dissipators.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
-				} else if (lyr_settings.getShowFullInfoForActivators()) {
+				} else if (ehm_settings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO DISSIPATORS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No dissipators are installed. Dissipators increase the total flux dissipation of the ship, and affect built-in vents.", 2f);
 				}

@@ -1,12 +1,12 @@
-package lyravega.tools;
+package lyravega.utilities;
 
 import java.awt.Color;
 
-import experimentalHullModifications.misc.lyr_internals;
+import experimentalHullModifications.misc.ehm_internals;
 import lunalib.lunaSettings.LunaSettings;
 
-public class lyr_lunaAccessors {
-	private static final String modId = lyr_internals.id.mod;
+public class lyr_lunaUtilities {
+	private static final String modId = ehm_internals.id.mod;
 
 	public static final Boolean getBoolean(String settingId) { return LunaSettings.getBoolean(modId, settingId); }
 

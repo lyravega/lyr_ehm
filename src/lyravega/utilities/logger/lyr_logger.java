@@ -1,4 +1,4 @@
-package lyravega.tools.logger;
+package lyravega.utilities.logger;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -13,6 +13,9 @@ import org.apache.log4j.Priority;
 public class lyr_logger {
 	private static final Logger logger = Logger.getLogger("Experimental Hull Modifications");
 	static {
+		// try {
+		// 	Class.forName(lyr_levels.class.getName());
+		// } catch (ClassNotFoundException e) {}
 		logger.setLevel(lyr_levels.LSTNR);
 	}
 

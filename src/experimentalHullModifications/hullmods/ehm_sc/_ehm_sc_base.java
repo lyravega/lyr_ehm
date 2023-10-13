@@ -1,7 +1,7 @@
 package experimentalHullModifications.hullmods.ehm_sc;
 
-import static lyravega.tools.lyr_uiTools.commitVariantChanges;
-import static lyravega.tools.lyr_uiTools.playDrillSound;
+import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
+import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
 import java.awt.Color;
 
@@ -14,13 +14,13 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
-import experimentalHullModifications.misc.lyr_internals;
-import experimentalHullModifications.misc.lyr_tooltip.header;
-import experimentalHullModifications.misc.lyr_tooltip.text;
+import experimentalHullModifications.misc.ehm_internals;
+import experimentalHullModifications.misc.ehm_tooltip.header;
+import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.listeners.events.normalEvents;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.proxies.lyr_shieldSpec;
-import lyravega.tools._ehm_helpers;
+import lyravega.utilities.lyr_miscUtilities;
 
 /**
  * This class is used by shield cosmetic hullmods. The changes are 
@@ -36,13 +36,13 @@ public abstract class _ehm_sc_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstall(ShipVariantAPI variant) {
-		if (_ehm_helpers.removeHullModsWithSameTag(variant, lyr_internals.tag.shieldCosmetic, this.hullModSpecId)) return;
+		if (lyr_miscUtilities.removeHullModsWithSameTag(variant, ehm_internals.tag.shieldCosmetic, this.hullModSpecId)) return;
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
 	public void onRemove(ShipVariantAPI variant) {
-		if (!_ehm_helpers.hasHullModWithTag(variant, lyr_internals.tag.shieldCosmetic, this.hullModSpecId))
+		if (!lyr_miscUtilities.hasHullModWithTag(variant, ehm_internals.tag.shieldCosmetic, this.hullModSpecId))
 			variant.setHullSpecAPI(ehm_restoreShield(variant));
 		commitVariantChanges(); playDrillSound();
 	}
@@ -85,7 +85,7 @@ public abstract class _ehm_sc_base extends _ehm_base implements normalEvents {
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (ship == null) return;
 
-		if (this.hullModSpec.hasTag(lyr_internals.tag.customizable)) {
+		if (this.hullModSpec.hasTag(ehm_internals.tag.customizable)) {
 			tooltip.addSectionHeading(header.customizable, header.customizable_textColour, header.customizable_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 			tooltip.addPara(text.customizable[0], text.padding).setHighlight(text.customizable[1]);
 		}
@@ -93,7 +93,7 @@ public abstract class _ehm_sc_base extends _ehm_base implements normalEvents {
 		if (!isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
-			if (!_ehm_helpers.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
+			if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
 			// if (_ehm_helpers.ehm_hasHullModWithTag(ship, lyr_internals.tag.shieldCosmetic, id)) tooltip.addPara(text.hasShieldCosmetic[0], text.padding).setHighlight(text.hasShieldCosmetic[1]);
 
 			if (ship.getShield() == null) tooltip.addPara(text.noShields[0], text.padding).setHighlight(text.noShields[1]);
@@ -106,7 +106,7 @@ public abstract class _ehm_sc_base extends _ehm_base implements normalEvents {
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false;
 
-		if (!_ehm_helpers.hasRetrofitBaseBuiltIn(ship)) return false;
+		if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) return false;
 		// if (_ehm_helpers.ehm_hasHullModWithTag(ship, lyr_internals.tag.shieldCosmetic, id)) return false;
 
 		if (ship.getShield() == null) return false;
