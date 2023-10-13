@@ -1,6 +1,7 @@
 Version 0.8.6
 
-- Fixed an issue on base hullmod installation that added fixed dmods back to the ship
+- Fixed Logistics Overhaul not ignoring the hidden modular hull modifications in its checks
+- Fixed an issue on base hullmod installation that added fixed built-in dmods back to the ship
 - Fixed undo button not getting disabled visually when it was supposed to
 - Changed engine cosmetic mods to apply the campaign contrails immediately instead of requiring a save/load
 
