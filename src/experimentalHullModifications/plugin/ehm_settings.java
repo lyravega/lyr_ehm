@@ -1,18 +1,15 @@
 package experimentalHullModifications.plugin;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.combat.HullModEffect;
-import com.fs.starfarer.api.loading.HullModSpecAPI;
 
+import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_internals.id;
 import experimentalHullModifications.misc.ehm_internals.tag;
 import lunalib.lunaSettings.LunaSettings;
 import lunalib.lunaSettings.LunaSettingsListener;
-import lyravega.listeners.events.customizableHullMod;
+import lyravega.listeners.lyr_eventDispatcher;
+import lyravega.listeners.events.customizableMod;
 import lyravega.utilities.lyr_lunaUtilities;
 import lyravega.utilities.logger.lyr_levels;
 import lyravega.utilities.logger.lyr_logger;
@@ -21,7 +18,7 @@ import lyravega.utilities.logger.lyr_logger;
  * Luna settings listener to utilize anything LunaLib offers for settings
  * management. All settings are registered {@code onApplicationLoad()}.
  * <p> Any hull modification bearing the tag {@link tag#customizable} that
- * also implements the {@link customizableHullMod} interface are registered
+ * also implements the {@link customizableMod} interface are registered
  * as such, and any changes will be applied on them without a reload or a
  * restart.
  * @author lyravega
@@ -29,7 +26,6 @@ import lyravega.utilities.logger.lyr_logger;
 public class ehm_settings implements LunaSettingsListener {
 	private ehm_settings() {
 		cacheSettings();
-		registerModsWithCustomization();
 	}
 
 	static void attach() {
@@ -39,8 +35,6 @@ public class ehm_settings implements LunaSettingsListener {
 			lyr_logger.info("Attached LunaLib settings listener");
 		}
 	}
-
-	private static final Set<customizableHullMod> lunaMods = new HashSet<customizableHullMod>();
 
 	private static String shuntAvailability; public static String getShuntAvailability() { return shuntAvailability; }
 	// private static String extraInfoInHullMods; public static String getExtraInfoInHullMods() { return extraInfoInHullMods; }
@@ -83,16 +77,6 @@ public class ehm_settings implements LunaSettingsListener {
 		checkLoggerLevel();
 	}
 
-	private static void registerModsWithCustomization() {
-		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
-			if (!hullModSpec.hasTag(tag.customizable)) continue;
-
-			HullModEffect hullModEffect = hullModSpec.getEffect();
-
-			if (customizableHullMod.class.isInstance(hullModEffect)) lunaMods.add((customizableHullMod) hullModEffect);
-		}
-	}
-
 	private static void checkShuntAvailability() {
 		final String temp = lyr_lunaUtilities.getString("ehm_shuntAvailability");
 
@@ -127,12 +111,9 @@ public class ehm_settings implements LunaSettingsListener {
 	@Override
 	public void settingsChanged(String modId) {
 		if (!modId.equals(id.mod)) return;
-		
-		cacheSettings();	// order may be important; customizable hull modifications might require these to be cached first
 
-		for (customizableHullMod customizableMod: lunaMods) {
-			customizableMod.applyCustomization();
-		}
+		cacheSettings();	// order may be important; customizable hull modifications might require these to be cached first
+		lyr_eventDispatcher.applyCustomization(ehm_internals.id.mod, null);
 
 		lyr_logger.info("Settings reapplied");
 	}

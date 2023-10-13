@@ -7,7 +7,7 @@ package lyravega.listeners.events;
  * those hull modifications when settings are saved.
  * @author lyravega
  */
-public interface customizableHullMod {
+public interface customizableMod {
     /**
      * Called whenever the listener detects a change in settings for this hull modification
      */

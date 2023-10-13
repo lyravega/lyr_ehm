@@ -8,13 +8,13 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 
-import lyravega.listeners.events.customizableHullMod;
+import lyravega.listeners.events.customizableMod;
 import lyravega.utilities.lyr_lunaUtilities;
 
 /**@category Engine Cosmetic 
  * @author lyravega
  */
-public final class ehm_cec_redEngines extends _ehm_ec_base implements customizableHullMod {
+public final class ehm_cec_redEngines extends _ehm_ec_base implements customizableMod {
 	private static final String customEngineSpecId = ehm_cec_redEngines.class.getSimpleName().toUpperCase();
 	private static final int engineStyleId = custom;
 	private static Object engineStyleSpec;

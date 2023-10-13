@@ -39,7 +39,7 @@ public class lyr_ehm extends BaseModPlugin {
 	public void onApplicationLoad() throws Exception {
 		ehm_settings.attach();
 		updateHullMods();
-		lyr_eventDispatcher.registerModsWithEvents();
+		lyr_eventDispatcher.registerModsWithEvents("data/hullmods/hull_mods.csv", ehm_internals.id.mod);
 	}
 
 	@Override

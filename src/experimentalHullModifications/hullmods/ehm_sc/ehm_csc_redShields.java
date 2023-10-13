@@ -6,7 +6,7 @@ import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 
-import lyravega.listeners.events.customizableHullMod;
+import lyravega.listeners.events.customizableMod;
 import lyravega.utilities.lyr_lunaUtilities;
 
 import com.fs.starfarer.api.combat.ShipVariantAPI;
@@ -16,7 +16,7 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
  * @category Custom Shield Cosmetic 
  * @author lyravega
  */
-public final class ehm_csc_redShields extends _ehm_sc_base implements customizableHullMod {
+public final class ehm_csc_redShields extends _ehm_sc_base implements customizableMod {
 	private static Color innerColour;
 	private static Color ringColour;
 

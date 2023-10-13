@@ -18,9 +18,7 @@ import lyravega.utilities.logger.lyr_logger;
  * rebuilt constantly. Refit and real ships needs to be linked
  * externally in other words, but they can use same instance of
  * this object.
- * @see {@link normalEvents} onInstall / onRemove events for hullmods
- * @see {@link enhancedEvents} onEnhance / onNormalize events for sMods
- * @see {@link suppressedEvents} onSuppress / onRestore events for hullmods
+ * @see {@link normalEvents} / {@link enhancedEvents} / {@link suppressedEvents} / {@link weaponEvents}
  * @author lyravega
  */
 public class lyr_shipTracker {
@@ -58,10 +56,7 @@ public class lyr_shipTracker {
 	 * cached from the old variant. If the relevant hullmods have any event
 	 * methods, they will be called upon. See below for details on those
 	 * @param variant to update and compare
-	 * @see {@link weaponEvents} for broadcasted weapon install/remove events
-	 * @see {@link normalEvents} for hullmod install/remove events
-	 * @see {@link enhancedEvents} for hullmod enhance/normalize events
-	 * @see {@link suppressedEvents} for hullmod suppressed/restored events
+	 * @see {@link normalEvents} / {@link enhancedEvents} / {@link suppressedEvents} / {@link weaponEvents}
 	 */
 	public void updateVariant(final ShipVariantAPI variant) {
 		this.variant = variant;

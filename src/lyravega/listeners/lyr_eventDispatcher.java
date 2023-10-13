@@ -4,15 +4,15 @@ import static lyravega.listeners.lyr_eventDispatcher.events.*;
 
 import java.util.*;
 
+import org.json.JSONArray;
+
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.HullModEffect;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 
-import experimentalHullModifications.plugin.lyr_ehm;
 import experimentalHullModifications.plugin.ehm_settings;
 import lyravega.listeners.events.*;
-import lyravega.utilities.lyr_miscUtilities;
 import lyravega.utilities.lyr_interfaceUtilities;
 import lyravega.utilities.logger.lyr_logger;
 
@@ -21,6 +21,7 @@ import lyravega.utilities.logger.lyr_logger;
  * as having a certain event, store them in the maps, and dispatch the
  * said events when necessary 
  * @author lyravega
+ * @see {@link normalEvents} / {@link enhancedEvents} / {@link suppressedEvents} / {@link weaponEvents} / {@link customizableMod}
  */
 public final class lyr_eventDispatcher {
 	public static final class events {
@@ -36,36 +37,50 @@ public final class lyr_eventDispatcher {
 	}
 
 	// hull modification effects that implement any of the event interfaces are stored in these maps
-	public static final Map<String, weaponEvents> weaponEvents = new HashMap<String, weaponEvents>();
-	public static final Map<String, normalEvents> normalEvents = new HashMap<String, normalEvents>();
-	public static final Map<String, enhancedEvents> enhancedEvents = new HashMap<String, enhancedEvents>();
-	public static final Map<String, suppressedEvents> suppressedEvents = new HashMap<String, suppressedEvents>();
-	public static final Set<String> allModEvents = new HashSet<String>();
+	private static final Map<String, weaponEvents> weaponEvents = new HashMap<String, weaponEvents>();
+	private static final Map<String, normalEvents> normalEvents = new HashMap<String, normalEvents>();
+	private static final Map<String, enhancedEvents> enhancedEvents = new HashMap<String, enhancedEvents>();
+	private static final Map<String, suppressedEvents> suppressedEvents = new HashMap<String, suppressedEvents>();
+	private static final Map<String, Map<String, customizableMod>> customizableHullMods = new HashMap<String, Map<String, customizableMod>>();
+	private static final Set<String> allModEvents = new HashSet<String>();
 
 	/**
 	 * Checks all of the hullmod effects and if they have implemented any events, registers them
 	 * in their map. During tracking, if any one of these events are detected, the relevant event
 	 * methods will be called
-	 * @see {@link lyr_ehm.hullmods.ehm.ehm_base ehm_base} base hull modification that enables tracking
-	 * @see {@link normalEvents} / {@link enhancedEvents} / {@link suppressedEvents}
+	 * @param hullModCSV path to the {@code hull_mods.csv} file
+	 * @param modId of the mod that the file belongs to
+	 * @param exclusionTag to skip hull modifications having this tag, may be {@code null}
+	 * @see {@link normalEvents} / {@link enhancedEvents} / {@link suppressedEvents} / {@link weaponEvents}
 	 */
-	public static void registerModsWithEvents() {
-		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
-			if (!lyr_miscUtilities.isExperimentalMod(hullModSpec, true)) continue;
-	
-			HullModEffect hullModEffect = hullModSpec.getEffect();
-	
-			if (weaponEvents.class.isInstance(hullModEffect)) weaponEvents.put(hullModSpec.getId(), (weaponEvents) hullModEffect);
-			if (normalEvents.class.isInstance(hullModEffect)) normalEvents.put(hullModSpec.getId(), (normalEvents) hullModEffect);
-			if (enhancedEvents.class.isInstance(hullModEffect)) enhancedEvents.put(hullModSpec.getId(), (enhancedEvents) hullModEffect);
-			if (suppressedEvents.class.isInstance(hullModEffect)) suppressedEvents.put(hullModSpec.getId(), (suppressedEvents) hullModEffect);
-		}
+	public static void registerModsWithEvents(String hullModCSV, String modId) {
+		try {
+			JSONArray loadCSV = Global.getSettings().loadCSV(hullModCSV, modId);
+			final Map<String, customizableMod> customizableMods = new HashMap<String, customizableMod>();
 
-		allModEvents.addAll(normalEvents.keySet());
-		allModEvents.addAll(enhancedEvents.keySet());
-		allModEvents.addAll(suppressedEvents.keySet());
-	
-		lyr_logger.info("Experimental hull modifications are registered");
+			for (int i = 0; i < loadCSV.length(); i++) {
+				HullModSpecAPI hullModSpec = Global.getSettings().getHullModSpec(loadCSV.getJSONObject(i).getString("id"));
+				if (hullModSpec == null) continue;
+
+				HullModEffect hullModEffect = hullModSpec.getEffect();
+				if (weaponEvents.class.isInstance(hullModEffect)) weaponEvents.put(hullModSpec.getId(), weaponEvents.class.cast(hullModEffect));
+				if (normalEvents.class.isInstance(hullModEffect)) normalEvents.put(hullModSpec.getId(), normalEvents.class.cast(hullModEffect));
+				if (enhancedEvents.class.isInstance(hullModEffect)) enhancedEvents.put(hullModSpec.getId(), enhancedEvents.class.cast(hullModEffect));
+				if (suppressedEvents.class.isInstance(hullModEffect)) suppressedEvents.put(hullModSpec.getId(), suppressedEvents.class.cast(hullModEffect));
+				if (customizableMod.class.isInstance(hullModEffect)) customizableMods.put(hullModSpec.getId(), customizableMod.class.cast(hullModEffect));
+
+				lyr_logger.debug("Processed hull modification '"+hullModSpec.getId()+"'");
+			}
+
+			customizableHullMods.put(modId, customizableMods);
+			allModEvents.addAll(normalEvents.keySet());
+			allModEvents.addAll(enhancedEvents.keySet());
+			allModEvents.addAll(suppressedEvents.keySet());
+
+			lyr_logger.info("Experimental hull modifications are registered");
+		} catch (Throwable t) {
+			lyr_logger.error("Could not load the hull modification .csv file '"+hullModCSV+"' for the mod with the id '"+modId+"'", t);
+		}
 	}
 
 	/**
@@ -107,6 +122,26 @@ public final class lyr_eventDispatcher {
 			case onWeaponInstall:	for (String hullModId: weaponEvents.keySet()) if (variant.hasHullMod(hullModId)) weaponEvents.get(hullModId).onWeaponInstall(variant, weaponId, slotId); return;
 			case onWeaponRemove:	for (String hullModId: weaponEvents.keySet()) if (variant.hasHullMod(hullModId)) weaponEvents.get(hullModId).onWeaponRemove(variant, weaponId, slotId); return;
 			default: return;
+		}
+	}
+
+	/**
+	 * Applies any customization that a hull modification has in its {@code applyCustomization()}
+	 * method implemented through the interface. This event may be broadcasted for all registered
+	 * hullmods for a given {@code modId} or dispatched to a specific one with {@code hullModId}
+	 * <p> {@code modId} would be useful along with something like LunaLib to affect all of these
+	 * at once. {@code hullModId} might be useful in targeting specific hullmods instead of all.
+	 * There is just a simple try-catch block; take care when passing the ids.
+	 * @param modId to restrict scope of this event to hullmods from a single mod
+	 * @param hullModId may be {@code null} to broadcast this event to all hullmods, otherwise just to a single one  
+	 */
+	public static void applyCustomization(final String modId, final String hullModId) {
+		try {
+			if (hullModId != null) customizableHullMods.get(modId).get(hullModId).applyCustomization();
+			else for (customizableMod customizableMod : customizableHullMods.get(modId).values()) customizableMod.applyCustomization();
+			lyr_logger.debug("Utilized 'applyCustomization()' in the event dispatcher");
+		} catch (Throwable t) {
+			lyr_logger.error("Failure in 'applyCustomization()' in the event dispatcher", t);
 		}
 	}
 }
