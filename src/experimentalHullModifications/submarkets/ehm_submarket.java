@@ -14,23 +14,24 @@ import com.fs.starfarer.api.impl.campaign.submarkets.BaseSubmarketPlugin;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 
 import experimentalHullModifications.misc.ehm_internals;
-import experimentalHullModifications.plugin.ehm_settings;
 
 /**
  * A submarket for the experimental slot shunts. The submarket is attached/detached
- * if the relevant {@link ehm_settings#shuntAvailability shuntAvailability}
- * setting is selected, and whenever the player interacts with a valid market. The
- * submarket is not persistent.
+ * if the relevant setting is selected, and whenever the player interacts with a
+ * valid market. The submarket is transient, will be removed after interaction.
  * <p> Each time it is attached to a market, it will get re-initialized, at which
  * point its contens will be refreshed.
- * @see {@link experimentalHullModifications.abilities.ehm_ability.ehm_interactionListener interactionListener} that reports when player opens/closes a market
+ * @see {@link experimentalHullModifications.abilities.listeners.ehm_submarketInjector Submarket Injector} listener to detect when the player opens/closes a market
  * @author lyravega
  */
 public final class ehm_submarket extends BaseSubmarketPlugin {
 	public static final Set<String> shunts = new HashSet<String>();	// doing this here separately as there can be disabled/unused shunts
 	static {
-		for (WeaponSpecAPI weaponSpec : Global.getSettings().getAllWeaponSpecs()) {	// doing this here might be problematic, OK so far
-			if (!weaponSpec.hasTag(ehm_internals.tag.experimental)) continue;
+		// for (WeaponSpecAPI weaponSpec : Global.getSettings().getAllWeaponSpecs()) {	// doing this here might be problematic, OK so far
+			// if (!weaponSpec.hasTag(ehm_internals.tag.experimental)) continue;
+		for (String weaponId : ehm_internals.id.shunts.set) {
+			WeaponSpecAPI weaponSpec = Global.getSettings().getWeaponSpec(weaponId);
+			if (weaponSpec == null) continue;
 
 			shunts.add(weaponSpec.getWeaponId());
 		}
