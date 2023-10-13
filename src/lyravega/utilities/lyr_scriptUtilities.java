@@ -35,6 +35,7 @@ public class lyr_scriptUtilities extends lyr_reflectionUtilities {
 	//#region INNER CLASS: refreshRefitScript
 	private static refreshRefitScript refreshRefitScript;
 
+	@Deprecated
 	public static void refreshRefit() {
 		if (!isRefitTab()) return;
 
