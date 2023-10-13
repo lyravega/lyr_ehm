@@ -129,7 +129,9 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 		EnumSet<ShipTypeHints> hints = lyr_hullSpec.getHints();
 		hints.removeAll(hintsToRemove); hints.add(ShipTypeHints.CIVILIAN);
 
-		if (!stats.getVariant().getSMods().contains(this.hullModSpecId)) return;
+		if (!stats.getVariant().getSMods().contains(this.hullModSpecId)) {
+			variant.setHullSpecAPI(lyr_hullSpec.retrieve()); return;
+		}
 
 		// if (!variant.hasHullMod(HullMods.CIVGRADE)) {
 		if (!originalHullSpec.getBuiltInMods().contains(HullMods.CIVGRADE)) {
@@ -229,7 +231,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 			if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
 			if (lyr_miscUtilities.isModule(ship)) tooltip.addPara(text.isModule[0], text.padding).setHighlight(text.isModule[1]);
 			if (lyr_miscUtilities.isParent(ship)) tooltip.addPara(text.isParent[0], text.padding).setHighlight(text.isParent[1]);
-			if ((!ship.getVariant().getSMods().contains(this.hullModSpecId) && lyr_miscUtilities.hasModularHullmods(ship, this.hullModSpecId))
+			if (lyr_miscUtilities.hasModularHullmods(ship, this.hullModSpecId, false)
 			|| lyr_miscUtilities.hasWeapons(ship)
 			|| lyr_miscUtilities.hasAnyFittedWings(ship)
 			|| lyr_miscUtilities.hasCapacitorsOrVents(ship)) tooltip.addPara(text.notStripped[0], text.padding).setHighlight(text.notStripped[1]);
@@ -252,10 +254,10 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 		if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) return false;
 		if (lyr_miscUtilities.isModule(ship)) return false;
 		if (lyr_miscUtilities.isParent(ship)) return false;
-		if (!ship.getVariant().getSMods().contains(this.hullModSpecId) && lyr_miscUtilities.hasModularHullmods(ship, this.hullModSpecId)) return false;
 		if (lyr_miscUtilities.hasWeapons(ship)) return false;
 		if (lyr_miscUtilities.hasAnyFittedWings(ship)) return false;
 		if (lyr_miscUtilities.hasCapacitorsOrVents(ship)) return false;
+		if (lyr_miscUtilities.hasModularHullmods(ship, this.hullModSpecId, false)) return false;
 
 		return true; 
 	}

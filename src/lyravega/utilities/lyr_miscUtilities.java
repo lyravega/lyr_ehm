@@ -24,10 +24,10 @@ public class lyr_miscUtilities {
 	 * @param hullmodIdToIgnore can be null. If not, the hullmod with this id will be ignored
 	 * @return true if the ship has modular hullmods (except the ignored one if any)
 	 */
-	public static boolean hasModularHullmods(ShipAPI ship, String hullmodIdToIgnore) {
-		if (hullmodIdToIgnore == null) return !ship.getVariant().getNonBuiltInHullmods().isEmpty();
+	public static boolean hasModularHullmods(ShipAPI ship, String hullmodIdToIgnore, boolean ignoreHidden) {
 		for (String hullModId : ship.getVariant().getNonBuiltInHullmods()) {
-			if (hullModId.equals(hullmodIdToIgnore)) continue;
+			if (hullmodIdToIgnore != null && hullModId.equals(hullmodIdToIgnore)) continue;
+			if (!ignoreHidden && Global.getSettings().getHullModSpec(hullModId).isHiddenEverywhere()) continue;
 
 			return true;
 		}; return false;
