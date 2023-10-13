@@ -14,7 +14,7 @@ import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
 /**
  * A proxy-like class for... engine builder? When {@code getEngineSlots()}
  * is used on a hull, these objects which seems to be creating the engines
- * on the slots is returned. 
+ * on the slots is returned.
  * <p> Unlike the other proxies, whose obfuscated classes has a base on the
  * API, these do not, so they are treated as objects.
  * <p> Contains some custom methods unlike the other proxies, with long
@@ -72,10 +72,10 @@ public final class lyr_engineBuilder {
 
 	public static final Map<String, Object> customEngineStyleSpecs = new HashMap<String, Object>();
 
-	
+
 	/**
-	 * Creates a new instance for the passed {@link Object}, and 
-	 * clones it if necessary. Alterations should be done on a clone if 
+	 * Creates a new instance for the passed {@link Object}, and
+	 * clones it if necessary. Alterations should be done on a clone if
 	 * it is going to be a new slot.
 	 * @param enginebuilder to be proxied
 	 * @param clone if the enginebuilder needs to be cloned
@@ -83,7 +83,7 @@ public final class lyr_engineBuilder {
 	public lyr_engineBuilder(Object enginebuilder, boolean clone) { // clone what? it's a general object, clone should never be true
 		this.engineBuilder = (clone) ? this.duplicate(enginebuilder) : enginebuilder;
 	}
-	
+
 	/**
 	 * Used to retrieve the stored {@link Object} in the proxy. However,
 	 * since this is an object and not some instance of an API member,
@@ -94,7 +94,7 @@ public final class lyr_engineBuilder {
 	public Object retrieve() {
 		return engineBuilder;
 	}
-	
+
 	/**
 	 * Used to exchange the {@link Object} stored in the proxy
 	 * class in order to re-use this proxy instead of creating new ones.
@@ -107,7 +107,7 @@ public final class lyr_engineBuilder {
 	}
 
 	/**
-	 * Clones the stored {@link Object}, and returns it. For 
+	 * Clones the stored {@link Object}, and returns it. For
 	 * internal use if necessary.
 	 * @return a cloned {@link Object}
 	 * @category Proxy method
@@ -119,22 +119,22 @@ public final class lyr_engineBuilder {
 			lyr_logger.error("Failed to use 'duplicate()' in 'lyr_engineBuilder'", t); return engineBuilder;
 		}
 	}
-	
+
 	/**
 	 * A cheap clone that creates and returns a new instance of this
-	 * object with a duplicate of its stored object. 
+	 * object with a duplicate of its stored object.
 	 * @return a cloned {@link lyr_engineBuilder}
 	 */
 	@Override
 	public lyr_engineBuilder clone() {
 		return new lyr_engineBuilder(engineBuilder, true);
 	}
-	
+
 	//#region PROXY METHODS
 	/**
 	 * Uses the passed enumNumber to grab an engine style from the
-	 * obfuscated code, and invoke the obfuscated engineBuilder 
-	 * method with it. 
+	 * obfuscated code, and invoke the obfuscated engineBuilder
+	 * method with it.
 	 * @param engineStyleId
 	 * @category Proxy method
 	 * @see engineStyleIds
@@ -216,6 +216,6 @@ public final class lyr_engineBuilder {
 	public static void addEngineStyleSpec(JSONObject engineStyleSpecJSON, String engineStyleSpecName) {
 		customEngineStyleSpecs.put(engineStyleSpecName, newEngineStyleSpec(engineStyleSpecJSON, engineStyleSpecName));
 	}
-	//#endregion 
+	//#endregion
 	// END OF PROXY METHODS
 }

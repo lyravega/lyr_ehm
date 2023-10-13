@@ -4,7 +4,7 @@ import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 
-/**@category System Retrofit 
+/**@category System Retrofit
  * @author lyravega
  */
 public final class ehm_sr_drone_station_high extends _ehm_sr_base {

@@ -4,16 +4,15 @@ import java.awt.Color;
 
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
+import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 
 import lyravega.listeners.events.customizableMod;
 import lyravega.utilities.lyr_lunaUtilities;
 
-import com.fs.starfarer.api.combat.ShipVariantAPI;
-
 /**
  * NOTE: id of this shield in the .csv remains "ehm_sc_redShields" for save compatibility
- * @category Custom Shield Cosmetic 
+ * @category Custom Shield Cosmetic
  * @author lyravega
  */
 public final class ehm_csc_redShields extends _ehm_sc_base implements customizableMod {

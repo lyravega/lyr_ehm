@@ -10,7 +10,7 @@ import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 
 import experimentalHullModifications.hullmods.ehm_mr.ehm_mr_expensivemissiles;
 
-/**@category Weapon Retrofit 
+/**@category Weapon Retrofit
  * @see Slave: {@link ehm_mr_expensivemissiles}
  * @author lyravega
  */

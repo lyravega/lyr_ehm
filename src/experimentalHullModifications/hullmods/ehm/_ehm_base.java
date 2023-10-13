@@ -8,12 +8,8 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.SettingsAPI;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
-import com.fs.starfarer.api.combat.HullModEffect;
-import com.fs.starfarer.api.combat.MutableShipStatsAPI;
-import com.fs.starfarer.api.combat.ShipAPI;
+import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
-import com.fs.starfarer.api.combat.ShipHullSpecAPI;
-import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
@@ -28,20 +24,20 @@ import experimentalHullModifications.plugin.ehm_settings;
 import lyravega.proxies.lyr_hullSpec;
 
 /**
- * This is the master base class for all experimental hullmods. Stores the most 
- * common methods and strings for global access, which are used by other bases, 
- * and hullMods. 
- * <p> The other bases implement their own, more specific methods for the hullMods 
+ * This is the master base class for all experimental hullmods. Stores the most
+ * common methods and strings for global access, which are used by other bases,
+ * and hullMods.
+ * <p> The other bases implement their own, more specific methods for the hullMods
  * that use them as their parent, and it usually is the place where the hullSpec
- * changes occur. 
- * <p> The usable hullMods themselves only contain extremely specific things like 
- * the values to be passed, and custom {@code ehm_cannotBeInstalledNowReason(...)} 
- * and/or {@code ehm_unapplicableReason(...))} if necessary. 
- * <p> Primary reason for doing it this way is to provide better maintenance for 
- * different categories at the cost of a few extra calls to get to where the 
+ * changes occur.
+ * <p> The usable hullMods themselves only contain extremely specific things like
+ * the values to be passed, and custom {@code ehm_cannotBeInstalledNowReason(...)}
+ * and/or {@code ehm_unapplicableReason(...))} if necessary.
+ * <p> Primary reason for doing it this way is to provide better maintenance for
+ * different categories at the cost of a few extra calls to get to where the
  * action is.
- * <p> Do NOT alter the string values (if there are any), and avoid using this 
- * directly if possible. 
+ * <p> Do NOT alter the string values (if there are any), and avoid using this
+ * directly if possible.
  * @see {@link experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base _ehm_ar_base} for slot adapter base
  * @see {@link experimentalHullModifications.hullmods.ehm_sr._ehm_sr_base _ehm_sr_base} for system retrofit base
  * @see {@link experimentalHullModifications.hullmods.ehm_wr._ehm_wr_base _ehm_wr_base} for weapon retrofit base
@@ -54,7 +50,7 @@ public abstract class _ehm_base implements HullModEffect {
 	protected String hullModSpecId;
 	protected Set<String> hullModSpecTags;
 
-	@Override 
+	@Override
 	public void init(HullModSpecAPI hullModSpec) {
 		this.hullModSpec = hullModSpec;
 		this.hullModSpecId = hullModSpec.getId();
@@ -67,9 +63,9 @@ public abstract class _ehm_base implements HullModEffect {
 	@Override public void applyEffectsAfterShipCreation(ShipAPI ship, String hullModSpecId) {}
 
 	@Override public void applyEffectsToFighterSpawnedByShip(ShipAPI fighter, ShipAPI ship, String hullModSpecId) {}
-	
+
 	@Override public void advanceInCampaign(FleetMemberAPI member, float amount) {}
-	
+
 	@Override public void advanceInCombat(ShipAPI ship, float amount) {}
 
 	@Override public boolean affectsOPCosts() { return false; }
@@ -93,7 +89,7 @@ public abstract class _ehm_base implements HullModEffect {
 
 	@Override public boolean shouldAddDescriptionToTooltip(HullSize hullSize, ShipAPI ship, boolean isForModSpec) { return true; }
 
-	@Override 
+	@Override
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (ship == null) return;
 
@@ -116,16 +112,16 @@ public abstract class _ehm_base implements HullModEffect {
 	@Override public void addSModEffectSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec, boolean isForBuildInList) {}
 
 	@Override public String getSModDescriptionParam(int index, HullSize hullSize) { return null; }
-	
+
 	@Override public String getSModDescriptionParam(int index, HullSize hullSize, ShipAPI ship) { return getSModDescriptionParam(index, hullSize); }
 	//#endregion
 	// END OF TOOLTIP
 
 	//#region CHECKS
 	@Override public boolean isApplicableToShip(ShipAPI ship) { return true; }
-	
+
 	@Override public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) { return true; }
-	
+
 	@Override public String getUnapplicableReason(ShipAPI ship) { return null; }	// handled with description instead
 
 	@Override public String getCanNotBeInstalledNowReason(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) { return null; }	// handled with description instead
@@ -178,12 +174,12 @@ public abstract class _ehm_base implements HullModEffect {
 	/**
 	 * Similar to clone in how it does things internally. Grabs a stock hullSpec from
 	 * the SpecStore, which is used for comparison / restoration purposes.
-	 * <p> The returned hullSpec will have any tags and built-in stuff that the current 
+	 * <p> The returned hullSpec will have any tags and built-in stuff that the current
 	 * hullSpec has, however they should be standard. The reason for trying to retain
 	 * such additions is, in some restoration cases, the returned hullSpec is simply
 	 * applied to the variant, whereas a step-by-step restoration should be preferred.
-	 * <p> As no other mods does things this way as far as I know, at the very least 
-	 * the aforementioned things will be preserved. But to be honest, I should expand 
+	 * <p> As no other mods does things this way as far as I know, at the very least
+	 * the aforementioned things will be preserved. But to be honest, I should expand
 	 * the restoration methods instead of simply applying the returned hullSpec.
 	 * @param variant to be used as a template
 	 * @return a 'fresh' hullSpec from the SpecStore
@@ -195,7 +191,7 @@ public abstract class _ehm_base implements HullModEffect {
 		lyr_hullSpec originalHullSpec = new lyr_hullSpec(settings.getHullSpec(variant.getHullSpec().getHullId().replace(Misc.D_HULL_SUFFIX, "")), false);
 
 		ehm_hullSpecAlteration(hullSpec, originalHullSpec);
-		
+
 		return hullSpec.retrieve();
 	}
 

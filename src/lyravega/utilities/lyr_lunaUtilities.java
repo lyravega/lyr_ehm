@@ -29,13 +29,13 @@ public class lyr_lunaUtilities {
 		rgba[1] = Integer.parseInt(colourString.substring(3, 5), 16);
 		rgba[2] = Integer.parseInt(colourString.substring(5, 7), 16);
 		rgba[3] = getInt(settingIdPrefix+"Alpha");
-	
+
 		return rgba;
 	}
 
 	public static final Color getLunaRGBAColour(String settingIdPrefix) {
 		int[] rgba = getLunaRGBAColourArray(settingIdPrefix);
-	
+
 		return new Color(rgba[0], rgba[1], rgba[2], rgba[3]);
 	}
 }

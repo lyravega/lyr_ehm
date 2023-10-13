@@ -28,11 +28,11 @@ public class lyr_levels extends Level {
 	 * Noticed a weird issue with statics. If the static block isn't below here and assignments are done above, and
 	 * if the class isn't getting forcibly loaded with something like 'Class.forName(lyr_levels.class.getName())'
 	 * then the class may not get loaded / initialized
-	 * 
+	 *
 	 * This is an issue because if a static field is referenced in another class, it will register as a null, and
 	 * possibly result in null pointer exceptions everywhere. To avoid that bizarre issue, the class needs to be
 	 * force-loaded or the assignments needs to be done in the static block below
-	 * 
+	 *
 	 * However in another example with a constructor, stuff are loaded all fine and dandy. No idea why this is
 	 * happening in this class but not on the others. The fleet tracker for example, instantiates itself as a
 	 * singleton, though perhaps using a method to retrieve the said instance is triggering the load properly.

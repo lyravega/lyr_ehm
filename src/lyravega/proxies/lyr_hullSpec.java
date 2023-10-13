@@ -16,7 +16,7 @@ import lyravega.utilities.logger.lyr_logger;
 import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
 
 /**
- * A proxy-like class for {@link ShipHullSpecAPI} that utilizes obfuscated 
+ * A proxy-like class for {@link ShipHullSpecAPI} that utilizes obfuscated
  * methods without referring to them.
  * <p> There are many bridge methods here that simply call the API methods
  * as long as there is one. Proxied methods are implemented on a use-case
@@ -82,7 +82,7 @@ public final class lyr_hullSpec {
 
 	/**
 	 * Creates a new proxy-like object instance for the passed {@link ShipHullSpecAPI
-	 * hullSpec}, and clones it if needed. 
+	 * hullSpec}, and clones it if needed.
 	 * <p> If the spec is not unique, it must be cloned first using the argument, as
 	 * otherwise changes on this spec will affect all other specs of the same type.
 	 * <p> Cloning should be done as early as possible, and should be avoided on
@@ -117,7 +117,7 @@ public final class lyr_hullSpec {
 	}
 
 	/**
-	 * Clones the stored {@link ShipHullSpecAPI}, and returns it. For 
+	 * Clones the stored {@link ShipHullSpecAPI}, and returns it. For
 	 * internal use if necessary. {@link #retrieve()} should be used
 	 * if access to the API is needed.
 	 * @return a cloned {@link ShipHullSpecAPI}
@@ -133,7 +133,7 @@ public final class lyr_hullSpec {
 
 	/**
 	 * A cheap clone that creates and returns a new instance of this
-	 * object with a duplicate of its stored object. 
+	 * object with a duplicate of its stored object.
 	 * @return a cloned {@link lyr_hullSpec}
 	 */
 	@Override
@@ -143,9 +143,9 @@ public final class lyr_hullSpec {
 
 	//#region PROXY METHODS
 	/**
-	 * Gets the weapon slot with the matching id, and creates a {@link lyr_weaponSlot} 
-	 * proxy for it. The created proxy is returned, which is necessary to access the 
-	 * obfuscated methods for it. 
+	 * Gets the weapon slot with the matching id, and creates a {@link lyr_weaponSlot}
+	 * proxy for it. The created proxy is returned, which is necessary to access the
+	 * obfuscated methods for it.
 	 * <p> The created proxy is recycled through {@link lyr_weaponSlot#recycle(WeaponSlotAPI) recycle(WeaponSlotAPI)}.
 	 * <p> Use {@link #retrieve()} to use the API version through the proxy.
 	 * @param weaponSlotId to get
@@ -155,14 +155,14 @@ public final class lyr_hullSpec {
 	 */
 	public lyr_weaponSlot getWeaponSlot(String weaponSlotId) {
 		this.weaponSlot = (this.weaponSlot == null) ? new lyr_weaponSlot(hullSpec.getWeaponSlotAPI(weaponSlotId), false) : this.weaponSlot.recycle(hullSpec.getWeaponSlotAPI(weaponSlotId));
-		
+
 		return this.weaponSlot;
 	}
 
 	/**
-	 * Gets the shieldSpec of the hullSpec, and creates a {@link lyr_shieldSpec} 
-	 * proxy for it. The created proxy is returned, which is necessary to access the 
-	 * obfuscated methods for it. 
+	 * Gets the shieldSpec of the hullSpec, and creates a {@link lyr_shieldSpec}
+	 * proxy for it. The created proxy is returned, which is necessary to access the
+	 * obfuscated methods for it.
 	 * <p> Use {@link #retrieve()} to use the API version through the proxy.
 	 * @return {@link lyr_weaponSlot} proxy
 	 * @category Proxy spawner
@@ -180,30 +180,30 @@ public final class lyr_hullSpec {
 	@Deprecated // this shouldn't be used as cloning the hullSpec also clones the shieldSpec (and engineSpec)
 	public lyr_shieldSpec getShieldSpec(boolean clone) {
 		this.shieldSpec = (this.shieldSpec == null) ? new lyr_shieldSpec(hullSpec.getShieldSpec(), true) : this.shieldSpec.recycle(this.shieldSpec.duplicate(hullSpec.getShieldSpec()));
-		
+
 		return this.shieldSpec;
 	}
 
 	/**
-	 * Invokes a getter on the obfuscated hullSpec and returns the result 
-	 * as an object list. The returned objects aren't actually engineSlots 
+	 * Invokes a getter on the obfuscated hullSpec and returns the result
+	 * as an object list. The returned objects aren't actually engineSlots
 	 * as expected, but rather engineBuilders I believe. The engineBuilders
-	 * seem to use an engineStyle to create a new engine, and place it on 
-	 * an engineSlot. Check the long-winded javadoc for the 
+	 * seem to use an engineStyle to create a new engine, and place it on
+	 * an engineSlot. Check the long-winded javadoc for the
 	 * {@link lyr_engineBuilder} for more information.
 	 * @return an object list with engineBuilders (?) in it
 	 * @category Proxy method
 	 */
 	public List<?> getEngineSlots() {
-		if (engineSlots != null) return this.engineSlots; 
+		if (engineSlots != null) return this.engineSlots;
 
 		try {
 			this.engineSlots = (List<Object>) getEngineSlots.invoke(hullSpec);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'getEngineSlots()' in 'lyr_hullSpec'", t);
-		} 
+		}
 
-		return this.engineSlots; 
+		return this.engineSlots;
 	}
 
 	/**
@@ -249,7 +249,7 @@ public final class lyr_hullSpec {
 	 * @category Proxy method
 	 */
 	public void addBuiltInWing(String wingId) {
-		try { 
+		try {
 			addBuiltInWing.invoke(hullSpec, wingId);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'addBuiltInWing()' in 'lyr_hullSpec'", t);
@@ -261,7 +261,7 @@ public final class lyr_hullSpec {
 	 * @category Proxy method
 	 */
 	public void setOrdnancePoints(int ordnancePoints) {
-		try { 
+		try {
 			setOrdnancePoints.invoke(hullSpec, ordnancePoints);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'setOrdnancePoints()' in 'lyr_hullSpec'", t);
@@ -273,7 +273,7 @@ public final class lyr_hullSpec {
 	 * @category Proxy method
 	 */
 	public void setBaseHullId(String baseHullId) {
-		try { 
+		try {
 			setBaseHullId.invoke(hullSpec, baseHullId);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'setBaseHullId()' in 'lyr_hullSpec'", t);
@@ -314,7 +314,7 @@ public final class lyr_hullSpec {
 			lyr_logger.error("Failed to use 'setSpriteSpec()' in 'lyr_hullSpec'", t);
 		}
 	}
-	//#endregion 
+	//#endregion
 	// END OF PROXY METHODS
 
 	//#region BRIDGE METHODS
@@ -355,6 +355,6 @@ public final class lyr_hullSpec {
 	public String getShipSystemId() { return hullSpec.getShipSystemId(); }
 
 	public EnumSet<ShipTypeHints> getHints() { return hullSpec.getHints(); }
-	//#endregion 
+	//#endregion
 	// END OF BRIDGE METHODS
 }

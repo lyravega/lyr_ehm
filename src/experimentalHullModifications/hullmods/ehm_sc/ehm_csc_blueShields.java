@@ -12,7 +12,7 @@ import lyravega.utilities.lyr_lunaUtilities;
 
 /**
  * NOTE: id of this shield in the .csv remains "ehm_sc_blueShields" for save compatibility
- * @category Custom Shield Cosmetic 
+ * @category Custom Shield Cosmetic
  * @author lyravega
  */
 public final class ehm_csc_blueShields extends _ehm_sc_base implements customizableMod {

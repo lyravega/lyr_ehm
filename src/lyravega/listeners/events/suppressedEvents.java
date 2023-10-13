@@ -12,6 +12,7 @@ import lyravega.listeners.lyr_shipTracker;
  * through {@link lyr_eventDispatcher#registerModsWithEvents(String, String)}
  * @see {@link lyr_shipTracker} to cache the old variants and compare them with the newer ones
  * @author lyravega
+ * @category Event Handler
  */
 public interface suppressedEvents {
 	/**

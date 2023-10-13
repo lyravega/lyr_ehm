@@ -8,13 +8,13 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 
 /**
  * NOTE: id of this shield in the .csv remains "ehm_sc_cyanShields" for save compatibility
- * @category Shield Cosmetic 
+ * @category Shield Cosmetic
  * @author lyravega
  */
 public final class ehm_sc_highTechShields extends _ehm_sc_base {
 	private static final Color innerColour = new Color(125,125,255,75);
 	private static final Color ringColour = new Color(255,255,255,255);
-	
+
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();

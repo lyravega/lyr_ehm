@@ -29,7 +29,7 @@ import lyravega.utilities.lyr_miscUtilities;
  * <p> This category {@code ehm_mr} covers the odd ones since the evens have their own
  * categories, and as such they extend the base effect directly and don't have a base
  * of their own.
- * @category Miscellaneous Retrofit 
+ * @category Miscellaneous Retrofit
  * @author lyravega
  */
 public final class ehm_mr_overengineered extends _ehm_base implements normalEvents, enhancedEvents {
@@ -109,7 +109,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 			tooltip.addPara(text.overEngineeredNoEffect[0], text.padding).setHighlight(text.overEngineeredNoEffect[1]);
 		} else {
 			tooltip.addSectionHeading(header.sEffect, header.sEffect_textColour, header.sEffect_bgColour, Alignment.MID, header.padding);
-			tooltip.addPara(this.hullModSpec.getSModDescription(hullSize).replaceAll("\\%", "%%"), text.padding, header.sEffect_textColour, getSModDescriptionParam(0, hullSize), getSModDescriptionParam(1, hullSize)); 
+			tooltip.addPara(this.hullModSpec.getSModDescription(hullSize).replaceAll("\\%", "%%"), text.padding, header.sEffect_textColour, getSModDescriptionParam(0, hullSize), getSModDescriptionParam(1, hullSize));
 		}
 	}
 
@@ -146,11 +146,11 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 
 	@Override
 	public boolean isApplicableToShip(ShipAPI ship) {
-		if (ship == null) return false; 
+		if (ship == null) return false;
 
-		if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) return false; 
+		if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) return false;
 
-		return true; 
+		return true;
 	}
 	//#endregion
 }

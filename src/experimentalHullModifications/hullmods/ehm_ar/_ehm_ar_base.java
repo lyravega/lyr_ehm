@@ -19,12 +19,8 @@ import org.lwjgl.util.vector.Vector2f;
 
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
-import com.fs.starfarer.api.combat.MutableShipStatsAPI;
-import com.fs.starfarer.api.combat.ShipAPI;
+import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
-import com.fs.starfarer.api.combat.ShipHullSpecAPI;
-import com.fs.starfarer.api.combat.ShipVariantAPI;
-import com.fs.starfarer.api.combat.WeaponAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
@@ -50,9 +46,9 @@ import lyravega.utilities.lyr_vectorUtilities;
 
 
 /**
- * This class is used by slot activator hullmods. Slot activators are designed 
- * to search the ship for specific weapons, and perform operations on the 
- * hullSpec to yield interesting results, such as creating a new weapon slot. 
+ * This class is used by slot activator hullmods. Slot activators are designed
+ * to search the ship for specific weapons, and perform operations on the
+ * hullSpec to yield interesting results, such as creating a new weapon slot.
  * @see {@link experimentalHullModifications.hullmods.ehm_sr._ehm_sr_base _ehm_sr_base} for system retrofit base
  * @see {@link experimentalHullModifications.hullmods.ehm_wr._ehm_wr_base _ehm_wr_base} for weapon retrofit base
  * @see {@link experimentalHullModifications.hullmods.ehm_ec._ehm_ec_base _ehm_ec_base} for engine cosmetic base
@@ -213,7 +209,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 		return shuntMap;
 	}
 
-	/** 
+	/**
 	 * Refreshes the hullSpec and returns it.
 	 * @param variant whose hullSpec will be restored
 	 * @return a restored hullSpec
@@ -242,18 +238,18 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 
 	@Override
 	public boolean isApplicableToShip(ShipAPI ship) {
-		if (ship == null) return false; 
+		if (ship == null) return false;
 
-		if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) return false; 
-		if (this.hullModSpecTags.contains(ehm_internals.tag.reqNoPhase) && ship.getPhaseCloak() != null) return false; 
+		if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) return false;
+		if (this.hullModSpecTags.contains(ehm_internals.tag.reqNoPhase) && ship.getPhaseCloak() != null) return false;
 		if (ship.getVariant().hasHullMod(ehm_internals.id.hullmods.logisticsoverhaul)) return false;
-		
-		return true; 
+
+		return true;
 	}
 
 	@Override
 	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
-		if (ship == null) return false; 
+		if (ship == null) return false;
 
 		return true;
 	}

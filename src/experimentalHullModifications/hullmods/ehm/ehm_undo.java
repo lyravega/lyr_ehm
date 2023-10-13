@@ -32,7 +32,7 @@ public final class ehm_undo extends _ehm_base {
 		variant.getHullMods().remove(ehm_internals.id.hullmods.base);
 		variant.getPermaMods().remove(ehm_internals.id.hullmods.base);
 		variant.getHullMods().remove(this.hullModSpecId);
-		variant.setHullSpecAPI(ehm_hullSpecOriginal(variant)); commitVariantChanges(); playDrillSound(); 
+		variant.setHullSpecAPI(ehm_hullSpecOriginal(variant)); commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public final class ehm_undo extends _ehm_base {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
 			if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
-			if (lyr_miscUtilities.hasExperimentalSMod(ship)) tooltip.addPara(text.hasAnyExperimentalBuiltIn[0], text.padding).setHighlight(text.hasAnyExperimentalBuiltIn[1]); 
+			if (lyr_miscUtilities.hasExperimentalSMod(ship)) tooltip.addPara(text.hasAnyExperimentalBuiltIn[0], text.padding).setHighlight(text.hasAnyExperimentalBuiltIn[1]);
 			else {
 				if (lyr_miscUtilities.hasHullModWithTag(ship, ehm_internals.tag.experimental, ehm_internals.id.hullmods.base)) tooltip.addPara(text.hasAnyExperimental[0], text.padding).setHighlight(text.hasAnyExperimental[1]);
 				if (lyr_miscUtilities.hasWeapons(ship)) tooltip.addPara(text.hasWeapons[0], text.padding).setHighlight(text.hasWeapons[1]);
@@ -52,18 +52,18 @@ public final class ehm_undo extends _ehm_base {
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
 	}
-	
+
 	@Override
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false;
 
 		if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) return false;
 		if (lyr_miscUtilities.hasHullModWithTag(ship, ehm_internals.tag.experimental, ehm_internals.id.hullmods.base)) return false;
-		if (lyr_miscUtilities.hasWeapons(ship)) return false; 
+		if (lyr_miscUtilities.hasWeapons(ship)) return false;
 
-		return true; 
+		return true;
 	}
-	
+
 	@Override
 	public boolean showInRefitScreenModPickerFor(ShipAPI ship) {
 		if (!super.showInRefitScreenModPickerFor(ship)) return false;

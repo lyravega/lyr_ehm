@@ -104,7 +104,7 @@ public class lyr_reflectionUtilities {
 				for (Object currMethod : (declaredOnly) ? clazz.getDeclaredMethods() : clazz.getMethods()) {
 					if (!String.class.cast(getName.invoke(currMethod)).equals(methodName)) continue;
 					if (methodModifier != null && methodModifier != (int) getModifiers.invoke(currMethod)) continue;
-		
+
 					method = currMethod; break;
 				}
 			}
@@ -193,10 +193,10 @@ public class lyr_reflectionUtilities {
 				lyr_logger.reflectionInfo("Method with the name '"+methodName+"' was found in the class '"+clazz.getName()+"'");
 				if (isClass) return MethodHandle.class.cast(unreflect.invoke(lookup, method)).invokeWithArguments(parameters);
 				return MethodHandle.class.cast(unreflect.invoke(lookup, method)).bindTo(instanceOrClass).invokeWithArguments(parameters);
-			} 
+			}
 
 			throw new Throwable("Method with the name '"+methodName+"' was not found in '"+clazz.getName()+"'");
-		} 
+		}
 
 		// private final Object method;	// not necessary since accessors do not use this, so it is tossed away
 		private final MethodHandle methodHandle;
@@ -244,7 +244,7 @@ public class lyr_reflectionUtilities {
 			this.methodType = MethodType.methodType(returnType, parameterTypes);
 			this.methodHandle = lookup.findVirtual(clazz, methodName, methodType);
 		}
-		
+
 		public Class<?> getReturnType() { lyr_logger.reflectionInfo("Retrieving 'returnType' of '"+this.methodName+"'"); return this.returnType; }
 		public Class<?>[] getParameterTypes() { lyr_logger.reflectionInfo("Retrieving 'parameterTypes' of '"+this.methodName+"'"); return this.parameterTypes; }
 		public String getName() { lyr_logger.reflectionInfo("Retrieving 'name' of '"+this.methodName+"'"); return this.methodName; }
@@ -309,7 +309,7 @@ public class lyr_reflectionUtilities {
 		 * @throws Throwable if such a field is not found or errors happen during construction
 		 */
 		public static final fieldReflection findFieldByName(String fieldName, Object instanceOrClass) throws Throwable {
-			return findFieldByName(fieldName, instanceOrClass, true, true);		
+			return findFieldByName(fieldName, instanceOrClass, true, true);
 		}
 
 		/** @see #findFieldByName(String, Object) */
@@ -346,7 +346,7 @@ public class lyr_reflectionUtilities {
 		 * @throws Throwable
 		 */
 		public static final fieldReflection findFieldByClass(Class<?> fieldClazz, Object instanceOrClass) throws Throwable {
-			return findFieldByClass(fieldClazz, instanceOrClass, true, true);		
+			return findFieldByClass(fieldClazz, instanceOrClass, true, true);
 		}
 
 		/** @see #findFieldByClass(Class, Object) */
@@ -383,7 +383,7 @@ public class lyr_reflectionUtilities {
 		 * not. If the operation fails, will throw an error; rest of the methods would
 		 * be useless in that case anyway.
 		 * @param field as an object
-		 * @param instance as an object, 
+		 * @param instance as an object,
 		 * @throws Throwable
 		 */
 		private fieldReflection(Object field, Object instance) throws Throwable {

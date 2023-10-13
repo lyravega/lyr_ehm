@@ -1,9 +1,9 @@
 package experimentalHullModifications.hullmods.ehm_mr;
 
+import static com.fs.starfarer.api.impl.hullmods.Automated.MAX_CR_PENALTY;
 import static com.fs.starfarer.api.impl.hullmods.Automated.isAutomatedNoPenalty;
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
-import static com.fs.starfarer.api.impl.hullmods.Automated.MAX_CR_PENALTY;
 
 import java.awt.Color;
 import java.util.HashMap;
@@ -32,7 +32,7 @@ import lyravega.utilities.lyr_miscUtilities;
 
 /**
  * Turns normal ships into automated, and automated ones into normal ones.
- * @category Miscellaneous Retrofit 
+ * @category Miscellaneous Retrofit
  * @author lyravega
  */
 public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
@@ -45,7 +45,7 @@ public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 		crewMultipliers.put(HullSize.CRUISER, new int[]{6,9});
 		crewMultipliers.put(HullSize.CAPITAL_SHIP, new int[]{10,15});
 	}
-	
+
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstall(ShipVariantAPI variant) {
@@ -166,7 +166,7 @@ public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 				if (captain.isAICore()) tooltip.addPara(text.hasAICore[0], text.padding).setHighlight(text.hasAICore[1]);
 				else if (!captain.isDefault()) tooltip.addPara(text.hasCaptain[0], text.padding).setHighlight(text.hasCaptain[1]);
 			}
-			
+
 			if (!variant.getNonBuiltInWings().isEmpty()) tooltip.addPara(text.hasWings[0], text.padding).setHighlight(text.hasWings[1]);
 		}
 
@@ -183,7 +183,7 @@ public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 			if (Global.getSector().getPlayerStats().getSkillLevel(Skills.AUTOMATED_SHIPS) < 1) return false;
 		}
 
-		return true; 
+		return true;
 	}
 
 	@Override

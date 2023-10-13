@@ -13,8 +13,8 @@ import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
 import org.lwjgl.util.vector.Vector2f;
 
 /**
- * A proxy-like class for {@link WeaponSlotAPI} that utilizes obfuscated 
- * methods without referring to them. 
+ * A proxy-like class for {@link WeaponSlotAPI} that utilizes obfuscated
+ * methods without referring to them.
  * <p> There are many bridge methods here that simply call the API methods
  * as long as there is one. Proxied methods are implemented on a use-case
  * basis.
@@ -27,7 +27,7 @@ public final class lyr_weaponSlot {
 	static Class<?> nodeClass;
 	static Class<?> slotTypeEnum;
 	private static MethodHandle clone;
-	private static MethodHandle setWeaponType; 
+	private static MethodHandle setWeaponType;
 	// private static MethodHandle isWeaponSlot;
 	private static MethodHandle setId;
 	private static MethodHandle setSlotSize;
@@ -63,15 +63,15 @@ public final class lyr_weaponSlot {
 	 * Note that the constants are in enum format; they're used as such.
 	 * @see #setSlotType(slotTypeConstants) for the method that utilizes this.
 	 */
-	public static enum slotTypeConstants { 
+	public static enum slotTypeConstants {
 		turret,
 		hardpoint,
 		hidden;
 	}
 
 	/**
-	 * Creates a new instance for the passed {@link WeaponSlotAPI}, and 
-	 * clones it if necessary. Alterations should be done on a clone if 
+	 * Creates a new instance for the passed {@link WeaponSlotAPI}, and
+	 * clones it if necessary. Alterations should be done on a clone if
 	 * it is going to be a new slot.
 	 * @param weaponSlot to be proxied
 	 * @param clone if the weaponSlot needs to be cloned
@@ -79,7 +79,7 @@ public final class lyr_weaponSlot {
 	public lyr_weaponSlot(WeaponSlotAPI weaponSlot, boolean clone) {
 		this.weaponSlot = (clone) ? this.duplicate(weaponSlot) : weaponSlot;
 	}
-	
+
 	/**
 	 * Used to retrieve the stored {@link WeaponSlotAPI} in the proxy to
 	 * access the API methods through the proxy itself, or to use it if
@@ -89,7 +89,7 @@ public final class lyr_weaponSlot {
 	public WeaponSlotAPI retrieve() {
 		return weaponSlot;
 	}
-	
+
 	/**
 	 * Used to exchange the {@link WeaponSlotAPI} stored in the proxy
 	 * class in order to re-use this proxy instead of creating new ones.
@@ -102,7 +102,7 @@ public final class lyr_weaponSlot {
 	}
 
 	/**
-	 * Clones the stored {@link WeaponSlotAPI}, and returns it. For 
+	 * Clones the stored {@link WeaponSlotAPI}, and returns it. For
 	 * internal use if necessary. {@link #retrieve()} should be used
 	 * if access to the API is needed.
 	 * @return a cloned {@link WeaponSlotAPI}
@@ -115,10 +115,10 @@ public final class lyr_weaponSlot {
 			lyr_logger.error("Failed to use 'duplicate()' in 'lyr_weaponSlot'", t);
 		} return weaponSlot; // java, pls...
 	}
-	
+
 	/**
 	 * A cheap clone that creates and returns a new instance of this
-	 * object with a duplicate of its stored object. 
+	 * object with a duplicate of its stored object.
 	 * @return a cloned {@link lyr_weaponSlot}
 	 */
 	@Override
@@ -202,7 +202,7 @@ public final class lyr_weaponSlot {
 			lyr_logger.error("Failed to use 'setSlotType()' in 'lyr_weaponSlot'", t);
 		}
 	}
-	//#endregion 
+	//#endregion
 	// END OF PROXY METHODS
 
 	//#region BRIDGE METHODS

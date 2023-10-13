@@ -28,7 +28,7 @@ import lyravega.utilities.lyr_miscUtilities;
  * <p> This category {@code ehm_mr} covers the odd ones since the evens have their own
  * categories, and as such they extend the base effect directly and don't have a base
  * of their own.
- * @category Miscellaneous Retrofit 
+ * @category Miscellaneous Retrofit
  * @author lyravega
  */
 public final class ehm_mr_auxilarygenerators extends _ehm_base implements normalEvents {
@@ -96,14 +96,14 @@ public final class ehm_mr_auxilarygenerators extends _ehm_base implements normal
 
 	@Override
 	public boolean isApplicableToShip(ShipAPI ship) {
-		if (ship == null) return false; 
+		if (ship == null) return false;
 
 		ShipVariantAPI variant = ship.getVariant();
 
-		if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) return false; 
-		if (!variant.hasHullMod(ehm_internals.id.hullmods.diverterandconverter)) return false; 
+		if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) return false;
+		if (!variant.hasHullMod(ehm_internals.id.hullmods.diverterandconverter)) return false;
 
-		return true; 
+		return true;
 	}
 
 	@Override

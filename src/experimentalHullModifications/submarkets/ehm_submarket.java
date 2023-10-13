@@ -58,7 +58,7 @@ public final class ehm_submarket extends BaseSubmarketPlugin {
 
 		return this.cargo;
 	}
-	
+
 	@Override
 	public CargoAPI getCargoNullOk() {
 		return this.cargo;
@@ -73,7 +73,7 @@ public final class ehm_submarket extends BaseSubmarketPlugin {
 	public boolean isIllegalOnSubmarket(String commodityId, TransferAction action) {
 		return true;
 	}
-	
+
 	@Override
 	public boolean isIllegalOnSubmarket(CargoStackAPI stack, TransferAction action) {
 		if (!stack.isWeaponStack()) return true;
@@ -85,7 +85,7 @@ public final class ehm_submarket extends BaseSubmarketPlugin {
 	public String getIllegalTransferText(CargoStackAPI stack, TransferAction action) {
 		return "Only accessible for slot shunts";
 	}
-	
+
 	@Override
 	public boolean isIllegalOnSubmarket(FleetMemberAPI member, TransferAction action) {
 		return true;
@@ -95,12 +95,12 @@ public final class ehm_submarket extends BaseSubmarketPlugin {
 	public String getIllegalTransferText(FleetMemberAPI member, TransferAction action) {
 		return "Only accessible for slot shunts";
 	}
-	
+
 	@Override
 	public boolean isParticipatesInEconomy() {
 		return false;
 	}
-	
+
 	@Override
 	public float getTariff() {
 		return 0f;
@@ -120,7 +120,7 @@ public final class ehm_submarket extends BaseSubmarketPlugin {
 	public String getSellVerb() {
 		return "Salvage";
 	}
-	
+
 	@Override
 	public boolean isEnabled(CoreUIAPI ui) {
 		return true;

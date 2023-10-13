@@ -10,8 +10,8 @@ import lyravega.utilities.logger.lyr_logger;
 import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
 
 /**
- * A proxy-like class for {@link ShieldSpecAPI} that utilizes obfuscated 
- * methods without referring to them. 
+ * A proxy-like class for {@link ShieldSpecAPI} that utilizes obfuscated
+ * methods without referring to them.
  * <p> There are many bridge methods here that simply call the API methods
  * as long as there is one. Proxied methods are implemented on a use-case
  * basis.
@@ -30,7 +30,7 @@ public final class lyr_shieldSpec {
 	private static MethodHandle setArc;
 	private static MethodHandle setPhaseCost;
 	private static MethodHandle setPhaseUpkeep;
-	
+
 	static {
 		try {
 			shieldSpecClass = methodReflection.findMethodByName("getShieldSpec", lyr_hullSpec.hullSpecClass).getReturnType();
@@ -60,7 +60,7 @@ public final class lyr_shieldSpec {
 	public lyr_shieldSpec(ShieldSpecAPI shieldSpec, boolean clone) {
 		this.shieldSpec = (clone) ? this.duplicate(shieldSpec) : shieldSpec;
 	}
-	
+
 	/**
 	 * Used to retrieve the stored {@link ShieldSpecAPI} in the proxy to
 	 * access the API methods through the proxy itself, or to use it if
@@ -83,7 +83,7 @@ public final class lyr_shieldSpec {
 	}
 
 	/**
-	 * Clones the stored {@link ShieldSpecAPI}, and returns it. For 
+	 * Clones the stored {@link ShieldSpecAPI}, and returns it. For
 	 * internal use if necessary. {@link #retrieve()} should be used
 	 * if access to the API is needed.
 	 * @return a cloned {@link ShieldSpecAPI}
@@ -96,10 +96,10 @@ public final class lyr_shieldSpec {
 			lyr_logger.error("Failed to use 'duplicate()' in 'lyr_shieldSpec'", t);
 		} return shieldSpec; // java, pls...
 	}
-	
+
 	/**
 	 * A cheap clone that creates and returns a new instance of this
-	 * object with a duplicate of its stored object. 
+	 * object with a duplicate of its stored object.
 	 * @return a cloned {@link lyr_shieldSpec}
 	 */
 	@Override
@@ -179,7 +179,7 @@ public final class lyr_shieldSpec {
 			lyr_logger.error("Failed to use 'setPhaseUpkeep()' in 'lyr_shieldSpec'", t);
 		}
 	}
-	//#endregion 
+	//#endregion
 	// END OF PROXY METHODS
 
 	//#region BRIDGE METHODS

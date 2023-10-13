@@ -24,11 +24,11 @@ import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.listeners.events.normalEvents;
 import lyravega.proxies.lyr_engineBuilder;
 import lyravega.proxies.lyr_hullSpec;
-import lyravega.utilities.lyr_miscUtilities;
 import lyravega.utilities.lyr_lunaUtilities;
+import lyravega.utilities.lyr_miscUtilities;
 
 /**
- * This class is used by engine cosmetic hullmods. The changes are 
+ * This class is used by engine cosmetic hullmods. The changes are
  * permanent, and does not use {@code advanceInCombat()}.
  * @see {@link experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base _ehm_ar_base} for slot adapter base
  * @see {@link experimentalHullModifications.hullmods.ehm_sr._ehm_sr_base _ehm_sr_base} for system retrofit base
@@ -41,7 +41,7 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 	@Override
 	public void onInstall(ShipVariantAPI variant) {
 		if (lyr_miscUtilities.removeHullModsWithSameTag(variant, ehm_internals.tag.engineCosmetic, this.hullModSpecId)) return;	// removes other engine cosmetics and short-circuits if there was any
-		commitVariantChanges(); playDrillSound(); refreshFleetView();	// short-circuit is due to onRemove() below, to avoid doing same things multiple times 
+		commitVariantChanges(); playDrillSound(); refreshFleetView();	// short-circuit is due to onRemove() below, to avoid doing same things multiple times
 	}
 
 	@Override
@@ -210,12 +210,12 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 
 	@Override
 	public boolean isApplicableToShip(ShipAPI ship) {
-		if (ship == null) return false; 
+		if (ship == null) return false;
 
-		if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) return false; 
+		if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) return false;
 		// if (_ehm_helpers.ehm_hasHullModWithTag(ship, lyr_internals.tag.engineCosmetic, id)) return false;
 
-		return true; 
+		return true;
 	}
 	//#endregion
 }

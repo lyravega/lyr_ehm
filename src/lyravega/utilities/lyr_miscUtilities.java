@@ -49,10 +49,10 @@ public class lyr_miscUtilities {
 	public static boolean hasExtraWings(ShipAPI ship, String hullModSpecId) {
 		int wingsSize = ship.getVariant().getWings().size();
 		StatMod flatStatMod = ship.getMutableStats().getNumFighterBays().getFlatStatMod(hullModSpecId);
-	
+
 		if (flatStatMod != null) {
 			float fighterBayFlat = flatStatMod.getValue();
-	
+
 			for (int i = (int) (ship.getMutableStats().getNumFighterBays().getModifiedValue() - fighterBayFlat); i < wingsSize; i++) {
 				if (ship.getVariant().getWingId(i) != null) return true;
 			}
@@ -81,7 +81,7 @@ public class lyr_miscUtilities {
 	 */
 	public static boolean hasCapacitorsOrVents(ShipAPI ship) {
 		return ship.getVariant().getNumFluxVents() > 0 || ship.getVariant().getNumFluxCapacitors() > 0;
-	}	
+	}
 
 	/**
 	 * @param ship to check
@@ -90,7 +90,7 @@ public class lyr_miscUtilities {
 	public static final boolean hasWeapons(ShipAPI ship) {
 		for (WeaponAPI weapon: ship.getAllWeapons()) {
 			WeaponSlotAPI slot = weapon.getSlot();
-	
+
 			if (!slot.isWeaponSlot()) continue;
 			return true;
 		}; return false;
@@ -104,7 +104,7 @@ public class lyr_miscUtilities {
 	public static final boolean hasWeapons(ShipAPI ship, String slotPrefix) {
 		for (WeaponAPI weapon: ship.getAllWeapons()) {
 			WeaponSlotAPI slot = weapon.getSlot();
-	
+
 			if (!slot.getId().startsWith(slotPrefix)) continue;
 			else if (slot.isDecorative()) return true;	// in this case, it is an activated shunt on a spawned slot
 			if (!slot.isWeaponSlot()) continue;
@@ -121,7 +121,7 @@ public class lyr_miscUtilities {
 	public static final boolean hasWeapons(ShipAPI ship, Set<String> ignoredWeaponIds) {
 		for (WeaponAPI weapon: ship.getAllWeapons()) {
 			WeaponSlotAPI slot = weapon.getSlot();
-	
+
 			if (ignoredWeaponIds.contains(weapon.getId())) continue;
 			if (!slot.isWeaponSlot()) continue;
 			return true;
@@ -136,7 +136,7 @@ public class lyr_miscUtilities {
 	public static final boolean hasWeapons(ShipAPI ship, WeaponType weaponType) {
 		for (WeaponAPI weapon: ship.getAllWeapons()) {
 			WeaponSlotAPI slot = weapon.getSlot();
-	
+
 			if (weapon.getType() == weaponType) continue;
 			if (!slot.isWeaponSlot()) continue;
 			return true;
@@ -145,7 +145,7 @@ public class lyr_miscUtilities {
 
 	/**
 	 * Checks the ship if it has retrofit base ({@link ehm_base}) installed
-	 * @param ship to check 
+	 * @param ship to check
 	 * @return true if ship has it, false otherwise (duh)
 	 */
 	public static final boolean hasExperimentalSMod(ShipAPI ship) {
@@ -156,7 +156,7 @@ public class lyr_miscUtilities {
 
 	/**
 	 * Checks the ship if it has retrofit base ({@link ehm_base}) installed
-	 * @param ship to check 
+	 * @param ship to check
 	 * @return true if ship has it, false otherwise (duh)
 	 */
 	public static final boolean hasRetrofitBaseBuiltIn(ShipAPI ship) {
@@ -191,7 +191,7 @@ public class lyr_miscUtilities {
 		}; return false;
 	}
 
-	/** 
+	/**
 	 * Activated shunts (decorative, built-in ones) are added to the weapon
 	 * groups by the game in some cases, like when the hullSpec is replaced.
 	 * <p>This method goes over the groups and removes them. Not sure when
@@ -204,10 +204,10 @@ public class lyr_miscUtilities {
 		Collection<String> groupKeepTargets = variant.getFittedWeaponSlots();	// this is to fix an (vanilla) issue where groups have incorrect entries
 		Map<String, String> groupCleanupTargets = new HashMap<String, String>(variant.getHullSpec().getBuiltInWeapons());
 		groupCleanupTargets.values().retainAll(ehm_internals.id.shunts.set);
-	
+
 		for (Iterator<WeaponGroupSpec> iterator = weaponGroups.iterator(); iterator.hasNext();) {
 			WeaponGroupSpec weaponGroup = iterator.next();
-	
+
 			weaponGroup.getSlots().removeAll(groupCleanupTargets.keySet());
 			weaponGroup.getSlots().retainAll(groupKeepTargets);
 			if (weaponGroup.getSlots().isEmpty()) iterator.remove();

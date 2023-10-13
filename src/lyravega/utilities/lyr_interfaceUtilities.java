@@ -14,12 +14,12 @@ import lyravega.proxies.ui.*;
 import lyravega.utilities.logger.lyr_logger;
 
 /**
- * Provides specialized MethodHandles and a few methods that are 
- * designed to be used on the Starsector UI, which is why these 
- * are splitted from the parent class. 
- * <p> And yes, all this is to get the refit screen to refresh 
+ * Provides specialized MethodHandles and a few methods that are
+ * designed to be used on the Starsector UI, which is why these
+ * are splitted from the parent class.
+ * <p> And yes, all this is to get the refit screen to refresh
  * the design. However may serve as a point to do other stuff
- * too, as the relevant classes are known here. 
+ * too, as the relevant classes are known here.
  * @author lyravega
  */
 public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
@@ -64,7 +64,7 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 	public static void commitVariantChanges() {
 		if (!isRefitTab()) return; // necessary for calls that that originate while 'onGameLoad()'
 		try {
-			lyr_refitPanel refitPanel = new lyr_campaignUI().getCore().getCurrentTab().getRefitPanel(); 
+			lyr_refitPanel refitPanel = new lyr_campaignUI().getCore().getCurrentTab().getRefitPanel();
 			lyr_shipDisplay shipDisplay = refitPanel.getShipDisplay();
 
 			refitPanel.saveCurrentVariant();
@@ -83,7 +83,7 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 	}
 
 	/**
-	 * Checks if it's the refit tab and then sets the 'undo' button as inactive. 
+	 * Checks if it's the refit tab and then sets the 'undo' button as inactive.
 	 * @deprecated If some other UI element like the the hullmod or the weapon picker is open,
 	 * will not clear the undo button properly.
 	 */
@@ -124,14 +124,14 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 
 	//#region SEARCH TOOLS
 	/**
-	 * Does a recursive search on an UI object, trying to find a child object with 
+	 * Does a recursive search on an UI object, trying to find a child object with
 	 * the given declared methodName. Useful for finding the class of a child, or
 	 * for finding a unique one to utilize. Useless if the goal is neither finding
 	 * the class, nor utilizing the child object.
 	 * <p> maxDepth parameter controls the search depth; if it is 0, then only the
 	 * children for the given parent will be searched, as if this is an iterative
-	 * method. For values above 0, recursive searching till the given maxDepth 
-	 * will be performed. 
+	 * method. For values above 0, recursive searching till the given maxDepth
+	 * will be performed.
 	 * <p> Does NOT handle methods with parameters, only suitable for methods with
 	 * no arguments. And will stop at the first found. For methods with overloads,
 	 * or parameters, not suitable.
@@ -158,9 +158,9 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 			}
 
 			if (depth < maxDepth) for (Object child : children) {
-				Object targetObject = adaptiveSearch_findChildObjectWithDeclaredMethod(child, methodName, depth+1, maxDepth); 
-				
-				if (targetObject != null) return targetObject; 
+				Object targetObject = adaptiveSearch_findChildObjectWithDeclaredMethod(child, methodName, depth+1, maxDepth);
+
+				if (targetObject != null) return targetObject;
 			}
 		} catch (Throwable t) {
 			// no catch on purpose
@@ -170,13 +170,13 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 	}
 
 	/**
-	 * Does a recursive search on a UI object, trying to find a child object with 
+	 * Does a recursive search on a UI object, trying to find a child object with
 	 * the given childClass. If such an object is found, depending on the getChild
 	 * boolean, either the child object itself, or its parent will be retrieved.
 	 * <p> maxDepth parameter controls the search depth; if it is 0, then only the
 	 * children for the given parent will be searched, as if this is an iterative
-	 * method. For values above 0, recursive searching till the given maxDepth 
-	 * will be performed. 
+	 * method. For values above 0, recursive searching till the given maxDepth
+	 * will be performed.
 	 * @param object the root ui object whose children will be searched
 	 * @param childClass to search for
 	 * @param getChild to determine whether the child or its parent object to be retrieved
@@ -198,9 +198,9 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 			}
 
 			if (depth < maxDepth) for (Object child : children) {
-				Object targetObject = adaptiveSearch_findObjectWithChildClass(child, childClass, getChild, depth+1, maxDepth); 
-				
-				if (targetObject != null) return targetObject; 
+				Object targetObject = adaptiveSearch_findObjectWithChildClass(child, childClass, getChild, depth+1, maxDepth);
+
+				if (targetObject != null) return targetObject;
 			}
 		} catch (Throwable t) {
 			// no catch on purpose

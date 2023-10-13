@@ -2,12 +2,7 @@ package experimentalHullModifications.hullmods.ehm_ar;
 
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.lwjgl.util.vector.Vector2f;
 
@@ -32,7 +27,7 @@ import experimentalHullModifications.plugin.ehm_settings;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.utilities.lyr_miscUtilities;
 
-/**@category Adapter Retrofit 
+/**@category Adapter Retrofit
  * @author lyravega
  */
 public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
@@ -191,10 +186,10 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 			if (lyr_miscUtilities.hasWeapons(ship, ehm_internals.affix.adaptedSlot)) tooltip.addPara(text.hasWeaponsOnAdaptedSlots[0], text.padding).setHighlight(text.hasWeaponsOnAdaptedSlots[1]);
 		}
 	}
-	
+
 	@Override
 	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
-		if (ship == null) return false; 
+		if (ship == null) return false;
 
 		if (lyr_miscUtilities.hasWeapons(ship, ehm_internals.affix.adaptedSlot)) return false;
 

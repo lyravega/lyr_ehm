@@ -19,7 +19,7 @@ import lyravega.proxies.lyr_hullSpec;
 import lyravega.utilities.lyr_miscUtilities;
 
 /**
- * This class is used by system retrofit hullmods. They are pretty 
+ * This class is used by system retrofit hullmods. They are pretty
  * straightforward in their operation; change the system of a hullSpec.
  * @see {@link experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base _ehm_ar_base} for slot adapter base
  * @see {@link experimentalHullModifications.hullmods.ehm_wr._ehm_wr_base _ehm_wr_base} for weapon retrofit base
@@ -45,29 +45,29 @@ public abstract class _ehm_sr_base extends _ehm_base implements normalEvents {
 	// END OF CUSTOM EVENTS
 
 	/**
-	 * Alters the system on a hullSpec, and returns it. The returned hullSpec needs 
+	 * Alters the system on a hullSpec, and returns it. The returned hullSpec needs
 	 * to be installed on the variant.
 	 * @param variant of the ship that will have its system replaced
 	 * @param systemId of the system to be installed on the passed variant
 	 * @return a new hullSpec to be installed on the variant
 	 * @see {@link #ehm_systemRestore()} reverses this process
 	 */
-	protected static final ShipHullSpecAPI ehm_systemRetrofit(ShipVariantAPI variant, String systemId) { 
-		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false); 
-		hullSpec.setShipSystemId(systemId); 
-		return hullSpec.retrieve(); 
+	protected static final ShipHullSpecAPI ehm_systemRetrofit(ShipVariantAPI variant, String systemId) {
+		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
+		hullSpec.setShipSystemId(systemId);
+		return hullSpec.retrieve();
 	}
-	
+
 	/**
-	 * Restores a system of a hullSpec to its stock one, and returns it. Returned hullSpec 
+	 * Restores a system of a hullSpec to its stock one, and returns it. Returned hullSpec
 	 * needs to be installed on the variant.
 	 * @param variant that will have its system reset to factory defaults
 	 * @return a hullspec to be installed on the variant
 	 */
-	public static final ShipHullSpecAPI ehm_systemRestore(ShipVariantAPI variant) { 
+	public static final ShipHullSpecAPI ehm_systemRestore(ShipVariantAPI variant) {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 		hullSpec.setShipSystemId(ehm_hullSpecReference(variant).getShipSystemId());
-		return hullSpec.retrieve(); 
+		return hullSpec.retrieve();
 	}
 
 	//#region INSTALLATION CHECKS
@@ -92,17 +92,17 @@ public abstract class _ehm_sr_base extends _ehm_base implements normalEvents {
 
 	@Override
 	public boolean isApplicableToShip(ShipAPI ship) {
-		if (ship == null) return false; 
+		if (ship == null) return false;
 
-		if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) return false; 
+		if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) return false;
 		// if (_ehm_helpers.ehm_hasHullmodWithTag(ship, lyr_internals.tag.systemRetrofit, this.hullModSpecId)) return false;
 		if (ship.getVariant().hasHullMod(ehm_internals.id.hullmods.logisticsoverhaul)) return false;
 
-		if (this.hullModSpecTags.contains(ehm_internals.tag.reqShields) && ship.getShield() == null) return false; 
-		if (this.hullModSpecTags.contains(ehm_internals.tag.reqNoPhase) && ship.getPhaseCloak() != null) return false; 
-		if (this.hullModSpecTags.contains(ehm_internals.tag.reqWings) && ship.getNumFighterBays() == 0) return false; 
-		
-		return true; 
+		if (this.hullModSpecTags.contains(ehm_internals.tag.reqShields) && ship.getShield() == null) return false;
+		if (this.hullModSpecTags.contains(ehm_internals.tag.reqNoPhase) && ship.getPhaseCloak() != null) return false;
+		if (this.hullModSpecTags.contains(ehm_internals.tag.reqWings) && ship.getNumFighterBays() == 0) return false;
+
+		return true;
 	}
 	//#endregion
 }

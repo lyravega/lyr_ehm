@@ -12,11 +12,12 @@ import lyravega.listeners.lyr_shipTracker;
  * through {@link lyr_eventDispatcher#registerModsWithEvents(String, String)}
  * @see {@link lyr_shipTracker} to cache the old variants and compare them with the newer ones
  * @author lyravega
+ * @category Event Handler
  */
 public interface weaponEvents {
 	/**
 	 * Broadcasted when a weapon is installed on the refit ship, caught by this method.
-	 * Further filtering may be necessary depending on the usage 
+	 * Further filtering may be necessary depending on the usage
 	 * <p> Effects here will be transient as these methods are called only once after their
 	 * events. Should be used mainly to change the variant or to trigger an UI effect
 	 * @param variant
@@ -27,7 +28,7 @@ public interface weaponEvents {
 
 	/**
 	 * Broadcasted when a weapon is removed from the refit ship, caught by this method.
-	 * Further filtering may be necessary depending on the usage 
+	 * Further filtering may be necessary depending on the usage
 	 * <p> Effects here will be transient as these methods are called only once after their
 	 * events. Should be used mainly to change the variant or to trigger an UI effect
 	 * @param variant

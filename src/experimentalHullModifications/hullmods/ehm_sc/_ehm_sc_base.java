@@ -23,7 +23,7 @@ import lyravega.proxies.lyr_shieldSpec;
 import lyravega.utilities.lyr_miscUtilities;
 
 /**
- * This class is used by shield cosmetic hullmods. The changes are 
+ * This class is used by shield cosmetic hullmods. The changes are
  * permanent, and does not use {@code advanceInCombat()}.
  * </p> Reason to split this as another base was primarily maintenance.
  * @see {@link experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base _ehm_ar_base} for slot adapter base
@@ -51,14 +51,14 @@ public abstract class _ehm_sc_base extends _ehm_base implements normalEvents {
 
 	/**
 	 * Alters the shield colours of the ship. Inner and ring colours
-	 * can be different. 
+	 * can be different.
 	 * @param variant whose shieldSpec will be altered
 	 * @return an altered hullSpec with altered shieldSpec colours
 	 */
 	protected static final ShipHullSpecAPI ehm_applyShieldCosmetics(ShipVariantAPI variant, Color inner, Color ring) {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 		lyr_shieldSpec shieldSpec = hullSpec.getShieldSpec();
-		
+
 		shieldSpec.setInnerColor(inner);
 		shieldSpec.setRingColor(ring);
 
@@ -76,7 +76,7 @@ public abstract class _ehm_sc_base extends _ehm_base implements normalEvents {
 		ShieldSpecAPI stockShieldSpec = ehm_hullSpecReference(variant).getShieldSpec();
 
 		hullSpec.setShieldSpec(stockShieldSpec);
-		
+
 		return hullSpec.retrieve();
 	}
 
@@ -101,7 +101,7 @@ public abstract class _ehm_sc_base extends _ehm_base implements normalEvents {
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
 	}
-	
+
 	@Override
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false;

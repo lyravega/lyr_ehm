@@ -2,10 +2,7 @@ package experimentalHullModifications.hullmods.ehm_ar;
 
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
@@ -28,7 +25,7 @@ import experimentalHullModifications.plugin.ehm_settings;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.utilities.lyr_miscUtilities;
 
-/**@category Adapter Retrofit 
+/**@category Adapter Retrofit
  * @author lyravega
  */
 public final class ehm_ar_launchtube extends _ehm_ar_base {
@@ -49,7 +46,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 	static {
 		launchTubeMap.put(ehm_internals.id.shunts.launchTubes.large, 1.0f);
 	}
-	
+
 	// com.fs.starfarer.api.impl.hullmods.ConvertedHangar
 	// private static final HullModEffect convertedHangarEffect = Global.getSettings().getHullModSpec("converted_hangar").getEffect();
 	// com.fs.starfarer.api.impl.hullmods.VastHangar
@@ -69,7 +66,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 		// 	vastHangarEffect.applyEffectsBeforeShipCreation(hullSize, stats, "vast_hangar");
 		// 	convertedHangarEffect.applyEffectsBeforeShipCreation(hullSize, stats, "converted_hangar");
 		// }
-		
+
 		for (Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
 			WeaponSlotAPI slot = iterator.next();
 			// if (slot.isDecorative()) continue;
@@ -125,9 +122,9 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 		ShipVariantAPI variant = ship.getVariant();
 
 		if (variant.hasHullMod(this.hullModSpecId)) {
-			if (ehm_settings.getShowInfoForActivators()) {	
+			if (ehm_settings.getShowInfoForActivators()) {
 				Map<String, Integer> launchTubes = ehm_shuntCount(ship, ehm_internals.tag.tubeShunt);
-	
+
 				if (!launchTubes.isEmpty()) {
 					tooltip.addSectionHeading("EXTRA HANGARS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 					for (String shuntId: launchTubes.keySet()) {
@@ -150,7 +147,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 			if (lyr_miscUtilities.hasExtraWings(ship, hullmods.launchtube)) tooltip.addPara(text.hasExtraWings[0], text.padding).setHighlight(text.hasExtraWings[1]);
 		}
 	}
-	
+
 	@Override
 	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
 		if (ship == null) return false;

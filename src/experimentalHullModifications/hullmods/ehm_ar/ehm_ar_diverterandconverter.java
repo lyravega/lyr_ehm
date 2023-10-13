@@ -2,12 +2,7 @@ package experimentalHullModifications.hullmods.ehm_ar;
 
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
@@ -33,7 +28,7 @@ import experimentalHullModifications.plugin.ehm_settings;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.utilities.lyr_miscUtilities;
 
-/**@category Adapter Retrofit 
+/**@category Adapter Retrofit
  * @author lyravega
  */
 public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
@@ -76,7 +71,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 			return this.childSize;
 		}
 	}
-	
+
 	static final Map<String, childParameters> converterMap = new HashMap<String, childParameters>();
 	private static childParameters mediumToLarge = new childParameters("ML", WeaponSize.LARGE, 2);
 	private static childParameters smallToLarge = new childParameters("SL", WeaponSize.LARGE, 3);
@@ -216,7 +211,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 				}
 			}
 		}
-		
+
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
 
 		if (!canBeAddedOrRemovedNow(ship, null, null)) {
@@ -230,7 +225,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 
 	@Override
 	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
-		if (ship == null) return false; 
+		if (ship == null) return false;
 
 		if (lyr_miscUtilities.hasWeapons(ship, ehm_internals.affix.convertedSlot)) return false;
 

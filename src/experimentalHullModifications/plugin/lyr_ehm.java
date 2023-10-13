@@ -111,7 +111,7 @@ public class lyr_ehm extends BaseModPlugin {
 
 		if (!characterData.getAbilities().contains(abilityId)
 		 || !playerFleet.hasAbility(abilityId)) {
-			characterData.addAbility(abilityId);	
+			characterData.addAbility(abilityId);
 			playerFleet.addAbility(abilityId);
 
 			lyr_logger.info("Ability with the id '"+abilityId+"' taught");

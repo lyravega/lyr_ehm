@@ -11,7 +11,7 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import lyravega.listeners.events.customizableMod;
 import lyravega.utilities.lyr_lunaUtilities;
 
-/**@category Engine Cosmetic 
+/**@category Engine Cosmetic
  * @author lyravega
  */
 public final class ehm_cec_blueEngines extends _ehm_ec_base implements customizableMod {

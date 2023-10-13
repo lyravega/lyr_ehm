@@ -2,12 +2,7 @@ package experimentalHullModifications.hullmods.ehm_ar;
 
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
@@ -29,7 +24,7 @@ import experimentalHullModifications.misc.ehm_tooltip.header;
 import experimentalHullModifications.plugin.ehm_settings;
 import lyravega.proxies.lyr_hullSpec;
 
-/**@category Adapter Retrofit 
+/**@category Adapter Retrofit
  * @author lyravega
  */
 public final class ehm_ar_mutableshunt extends _ehm_ar_base {
@@ -69,7 +64,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 
 		float[] totalFluxCapacityBonus = {1.0f, 0.0f};	// [0] mult, [1] flat
 		float[] totalFluxDissipationBonus = {1.0f, 0.0f};	// [0] mult, [1] flat
-		
+
 		for (Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
 			WeaponSlotAPI slot = iterator.next();
 			// if (slot.isDecorative()) continue;
@@ -137,7 +132,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 		if (variant.hasHullMod(this.hullModSpecId)) {
 			if (ehm_settings.getShowInfoForActivators()) {
 				Map<String, Integer> capacitors = ehm_shuntCount(ship, ehm_internals.tag.capacitorShunt);
-	
+
 				if (!capacitors.isEmpty()) {
 					float totalBonus = ship.getMutableStats().getFluxCapacity().modified-(variant.getNumFluxCapacitors()*Misc.FLUX_PER_CAPACITOR+variant.getHullSpec().getFluxCapacity());
 
@@ -152,7 +147,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 				}
 
 				Map<String, Integer> dissipators = ehm_shuntCount(ship, ehm_internals.tag.dissipatorShunt);
-	
+
 				if (!dissipators.isEmpty()) {
 					float totalBonus = ship.getMutableStats().getFluxDissipation().modified-(variant.getNumFluxVents()*Misc.DISSIPATION_PER_VENT+variant.getHullSpec().getFluxDissipation());
 
@@ -179,7 +174,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 
 	@Override
 	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
-		if (ship == null) return false; 
+		if (ship == null) return false;
 
 		return true;
 	}

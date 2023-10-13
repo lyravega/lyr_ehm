@@ -9,13 +9,10 @@ import java.util.Map;
 
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
-import com.fs.starfarer.api.combat.MutableShipStatsAPI;
+import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.ShieldAPI.ShieldType;
-import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShipTypeHints;
-import com.fs.starfarer.api.combat.ShipHullSpecAPI;
-import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.impl.campaign.ids.HullMods;
@@ -37,7 +34,7 @@ import lyravega.utilities.lyr_miscUtilities;
  * <p> This category {@code ehm_mr} covers the odd ones since the evens have their own
  * categories, and as such they extend the base effect directly and don't have a base
  * of their own.
- * @category Miscellaneous Retrofit 
+ * @category Miscellaneous Retrofit
  * @author lyravega
  */
 public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalEvents, enhancedEvents {
@@ -101,7 +98,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 			} else if (!slot.isWeaponSlot()) continue;
 
 			logisticsBonus += logisticsSlotBonus.get(slot.getSlotSize());
-			
+
 			// commitVariantChanges = ehm_deactivateSlot(hullSpec, null, slot.getId());
 			// _ehm_ar_base.ehm_deactivateSlot(lyr_hullSpec, null, slot.getId());
 			lyr_hullSpec.getWeaponSlot(slot.getId()).setWeaponType(WeaponType.DECORATIVE);
@@ -122,7 +119,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 		// bonus from fighter bays
 		float bays = stats.getNumFighterBays().getBaseValue(); if (bays > 0) {
 			logisticsBonus += bays * logisticsSlotBonus.get(WeaponSize.LARGE);
-			stats.getNumFighterBays().modifyFlat(this.hullModSpecId, -bays);	// game nukes the 
+			stats.getNumFighterBays().modifyFlat(this.hullModSpecId, -bays);	// game nukes the
 		}
 
 		// adjusting hints
@@ -198,7 +195,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 			tooltip.addPara(text.overEngineeredNoEffect[0], text.padding).setHighlight(text.overEngineeredNoEffect[1]);
 		} else {
 			tooltip.addSectionHeading(header.sEffect, header.sEffect_textColour, header.sEffect_bgColour, Alignment.MID, header.padding);
-			tooltip.addPara(this.hullModSpec.getSModDescription(hullSize).replaceAll("\\%", "%%"), text.padding, header.sEffect_textColour, getSModDescriptionParam(0, hullSize)); 
+			tooltip.addPara(this.hullModSpec.getSModDescription(hullSize).replaceAll("\\%", "%%"), text.padding, header.sEffect_textColour, getSModDescriptionParam(0, hullSize));
 
 			tooltip.addPara("+1 Built-in & Logistics modification capacity", text.padding, header.sEffect_textColour, "+1");
 			String logisticsBonus = "+"+(int) ship.getMutableStats().getCargoMod().getFlatBonus(this.hullModSpecId).value;
@@ -259,7 +256,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 		if (lyr_miscUtilities.hasCapacitorsOrVents(ship)) return false;
 		if (lyr_miscUtilities.hasModularHullmods(ship, this.hullModSpecId, false)) return false;
 
-		return true; 
+		return true;
 	}
 
 	@Override

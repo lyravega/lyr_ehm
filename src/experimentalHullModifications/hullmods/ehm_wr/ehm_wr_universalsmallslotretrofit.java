@@ -9,7 +9,7 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 
-/**@category Weapon Retrofit 
+/**@category Weapon Retrofit
  * @author lyravega
  */
 public final class ehm_wr_universalsmallslotretrofit extends _ehm_wr_base {

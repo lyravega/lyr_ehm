@@ -83,7 +83,7 @@ public class ehm_settings implements LunaSettingsListener {
 		if (shuntAvailability != null && shuntAvailability.equals(temp)) return; else shuntAvailability = temp;
 
 		if (Global.getCurrentState() != GameState.CAMPAIGN) return;
-		
+
 		lyr_ehm.attachShuntAccessListener();
 	}
 
@@ -104,7 +104,7 @@ public class ehm_settings implements LunaSettingsListener {
 		if (cosmeticsOnly == temp) return; else cosmeticsOnly = temp;
 
 		if (Global.getCurrentState() != GameState.CAMPAIGN) return;
-		
+
 		lyr_ehm.updateBlueprints(); lyr_ehm.updateHullMods();
 	}
 

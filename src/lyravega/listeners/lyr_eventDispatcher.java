@@ -19,13 +19,13 @@ import lyravega.utilities.logger.lyr_logger;
 /**
  * Not a listener on its own, but houses methods for registering classes
  * as having a certain event, store them in the maps, and dispatch the
- * said events when necessary 
+ * said events when necessary
  * @author lyravega
  * @see {@link normalEvents} / {@link enhancedEvents} / {@link suppressedEvents} / {@link weaponEvents} / {@link customizableMod}
  */
 public final class lyr_eventDispatcher {
 	public static final class events {
-		public static final String 
+		public static final String
 			onInstall = "onInstall",
 			onRemove = "onRemove",
 			onEnhance = "onEnhance",
@@ -102,7 +102,7 @@ public final class lyr_eventDispatcher {
 			case onRestore:		if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onRestore(variant); return;
 			default: return;
 		} else if (ehm_settings.getPlayDrillSoundForAll()) switch (eventName) {
-			case onInstall:		
+			case onInstall:
 			case onRemove:		lyr_interfaceUtilities.playDrillSound(); return;
 			default: return;
 		}
@@ -133,7 +133,7 @@ public final class lyr_eventDispatcher {
 	 * at once. {@code hullModId} might be useful in targeting specific hullmods instead of all.
 	 * There is just a simple try-catch block; take care when passing the ids.
 	 * @param modId to restrict scope of this event to hullmods from a single mod
-	 * @param hullModId may be {@code null} to broadcast this event to all hullmods, otherwise just to a single one  
+	 * @param hullModId may be {@code null} to broadcast this event to all hullmods, otherwise just to a single one
 	 */
 	public static void onSettingsChange(final String modId, final String hullModId) {
 		try {

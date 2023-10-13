@@ -14,7 +14,7 @@ import experimentalHullModifications.hullmods.ehm_wr.ehm_wr_energyslotretrofit;
 import experimentalHullModifications.misc.ehm_internals;
 
 /**
- * @category Effect Extension 
+ * @category Effect Extension
  * @see Master: {@link ehm_wr_energyslotretrofit}
  * @author lyravega
  */
@@ -39,7 +39,7 @@ public final class ehm_mr_heavyenergyintegration extends _ehm_base {
 
 		stats.getDynamic().getMod(Stats.LARGE_ENERGY_MOD).modifyFlat(id, -COST_REDUCTION);
 	}
-	
+
 	@Override
 	public String getDescriptionParam(int index, HullSize hullSize) {
 		if (index == 0) return "" + (int) COST_REDUCTION + "";

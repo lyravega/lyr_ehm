@@ -41,11 +41,11 @@ public class lyr_scriptUtilities extends lyr_reflectionUtilities {
 
 		for(EveryFrameScript script : Global.getSector().getTransientScripts()) {
 			if(script instanceof refreshRefitScript) {
-				refreshRefitScript = (refreshRefitScript) script; 
+				refreshRefitScript = (refreshRefitScript) script;
 			}
 		}
 
-		if (refreshRefitScript == null) { 
+		if (refreshRefitScript == null) {
 			refreshRefitScript = new refreshRefitScript();
 		}
 	}
@@ -54,7 +54,7 @@ public class lyr_scriptUtilities extends lyr_reflectionUtilities {
 		private boolean isDone = false;
 		private float frameCount = 0f;
 		private static Robot robot;
-	
+
 		static {
 			try {
 				robot = new Robot();

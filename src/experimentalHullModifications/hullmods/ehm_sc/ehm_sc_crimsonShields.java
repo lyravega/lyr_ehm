@@ -8,7 +8,7 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 
 /**
  * NOTE: id of this shield in the .csv remains "ehm_sc_yellowShields" for save compatibility
- * @category Shield Cosmetic 
+ * @category Shield Cosmetic
  * @author lyravega
  */
 public final class ehm_sc_crimsonShields extends _ehm_sc_base {

@@ -11,7 +11,7 @@ import lyravega.listeners.events.*;
 import lyravega.utilities.logger.lyr_logger;
 
 /**
- * A class that acts like a listener in a way. Constructor takes a 
+ * A class that acts like a listener in a way. Constructor takes a
  * ship and saves the relevant fields. They are compared later on
  * through updates to see if there are any changes.
  * <p> Not attached to a ship as a listener as the refit ships are
@@ -32,7 +32,7 @@ public class lyr_shipTracker {
 	private final Map<String, String> weapons = new HashMap<String, String>();
 	// private Map<String, ShipVariantAPI> moduleVariants = null;
 	private Iterator<String> iterator;
-	
+
 	//#region CONSTRUCTORS & ACCESSORS
 	public lyr_shipTracker(final ShipVariantAPI variant, final String trackerId) {
 		this.variant = variant;
@@ -158,7 +158,7 @@ public class lyr_shipTracker {
 				lyr_eventDispatcher.onWeaponEvent(onWeaponRemove, variant, oldWeaponId, slotId);
 
 				lyr_logger.eventInfo("ST-"+trackerId+": Changed '"+oldWeaponId+"' on '"+slotId+"' with '"+newWeaponId+"'");
-			}	
+			}
 		}
 	}
 }

@@ -27,9 +27,9 @@ import lyravega.proxies.lyr_weaponSlot;
 import lyravega.utilities.lyr_miscUtilities;
 
 /**
- * This class is used by weapon retrofit hullmods. They are pretty 
- * straightforward in their operation; change all of the weapon slots 
- * on a ship to a different type. 
+ * This class is used by weapon retrofit hullmods. They are pretty
+ * straightforward in their operation; change all of the weapon slots
+ * on a ship to a different type.
  * @see {@link experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base _ehm_ar_base} for slot adapter base
  * @see {@link experimentalHullModifications.hullmods.ehm_sr._ehm_sr_base _ehm_sr_base} for system retrofit base
  * @see {@link experimentalHullModifications.hullmods.ehm_ec._ehm_ec_base _ehm_ec_base} for engine cosmetic base
@@ -61,7 +61,7 @@ public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 	 * @return an altered hullSpec with different weaponSlots
 	 * @see {@link #ehm_weaponSlotRestore()} reverses this process one slot at a time
 	 */
-	protected static final ShipHullSpecAPI ehm_weaponSlotRetrofit(ShipVariantAPI variant, Map<WeaponType, WeaponType> conversions, WeaponSize slotSize) {	
+	protected static final ShipHullSpecAPI ehm_weaponSlotRetrofit(ShipVariantAPI variant, Map<WeaponType, WeaponType> conversions, WeaponSize slotSize) {
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
 
 		for (WeaponSlotAPI slot: hullSpec.getAllWeaponSlotsCopy()) {
@@ -73,9 +73,9 @@ public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 			if (conversions.containsKey(convertFrom)) {
 				WeaponType convertTo = conversions.get(convertFrom);
 				hullSpec.getWeaponSlot(slotId).setWeaponType(convertTo);
-			} 
+			}
 		}
-		
+
 		return hullSpec.retrieve();
 	}
 
@@ -95,7 +95,7 @@ public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 			String weaponId = variant.getWeaponId(slotId);
 			lyr_weaponSlot slot = hullSpec.getWeaponSlot(slotId);
 			WeaponType stockSlotWeaponType = stockSlot.getWeaponType();
-			
+
 			// doesn't support new additions
 			if (slot.retrieve().isDecorative() && ehm_internals.id.shunts.adapters.set.contains(weaponId)) {
 				hullSpec.getWeaponSlot(ehm_internals.affix.adaptedSlot+slotId+"L").setWeaponType(stockSlotWeaponType);
@@ -113,7 +113,7 @@ public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 
 		return hullSpec.retrieve();
 	}
-	
+
 	public static final ShipHullSpecAPI ehm_weaponSlotRestore_lazy(ShipVariantAPI variant) {
 		ShipHullSpecAPI hullSpec = ehm_hullSpecRefresh(variant);
 
@@ -149,11 +149,11 @@ public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false;
 
-		if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) return false; 
-		// if (_ehm_helpers.ehm_hasHullmodWithTag(ship, lyr_internals.tag.weaponRetrofit, this.hullModSpecId)) return false; 
+		if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) return false;
+		// if (_ehm_helpers.ehm_hasHullmodWithTag(ship, lyr_internals.tag.weaponRetrofit, this.hullModSpecId)) return false;
 		if (ship.getVariant().hasHullMod(ehm_internals.id.hullmods.logisticsoverhaul)) return false;
 
-		return true; 
+		return true;
 	}
 
 	@Override

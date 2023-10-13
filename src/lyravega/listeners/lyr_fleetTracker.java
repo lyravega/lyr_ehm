@@ -86,14 +86,14 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 		}
 	}
 
-	/** @see {@link lyr_shipTracker#updateVariant(ShipVariantAPI)} */ 
+	/** @see {@link lyr_shipTracker#updateVariant(ShipVariantAPI)} */
 	public static void updateShipTracker(ShipAPI ship) {
 		if (!isRefitTab()) return;
 
 		getShipTracker(ship.getVariant()).updateVariant(ship.getVariant());
 	}
 
-	/** @see {@link lyr_shipTracker#updateVariant(ShipVariantAPI)} */ 
+	/** @see {@link lyr_shipTracker#updateVariant(ShipVariantAPI)} */
 	public static void updateShipTracker(MutableShipStatsAPI stats) {
 		if (!isRefitTab() || !ShipAPI.class.isInstance(stats.getEntity())) return;	// the cast check needs to be done because parts of the UI has outdated variant data unless it is a ShipAPI
 
@@ -114,7 +114,7 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 		if (shipTracker == null) {
 			shipTracker = new lyr_shipTracker(variant, shipTrackerUUID);
 			instance.shipTrackers.put(shipTrackerUUID, shipTracker);
-			
+
 			lyr_logger.eventInfo("ST-"+shipTrackerUUID+": Ship Tracker initialized");
 		}
 
@@ -135,14 +135,14 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 		return null;
 	}
 
-	/** @see {@link #removeShipTracker(ShipVariantAPI)} */ 
+	/** @see {@link #removeShipTracker(ShipVariantAPI)} */
 	public static void terminateShipTracker(ShipAPI ship) {
 		if (!isRefitTab()) return;
 
 		removeShipTracker(ship.getVariant());
 	}
 
-	/** @see {@link #removeShipTracker(ShipVariantAPI)} */ 
+	/** @see {@link #removeShipTracker(ShipVariantAPI)} */
 	public static void terminateShipTracker(MutableShipStatsAPI stats) {
 		if (!isRefitTab() || !ShipAPI.class.isInstance(stats.getEntity())) return;	// the cast check needs to be done because parts of the UI has outdated variant data unless it is a ShipAPI
 
@@ -159,9 +159,9 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 		lyr_shipTracker shipTracker = instance.shipTrackers.get(shipTrackerUUID);
 
 		if (shipTracker == null) return;
-		
+
 		instance.shipTrackers.remove(shipTrackerUUID);
-		
+
 		lyr_logger.eventInfo("ST-"+shipTrackerUUID+": Ship Tracker terminated");
 	}
 
@@ -189,7 +189,7 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 	/**
 	 * Adds a random UUID to a variant as a tag. These tags are used instead of any
 	 * other ID to spawn ship trackers and track the changes on the variants. These
-	 * tags have prefixes located at {@link lyravega.listeners.lyr_fleetTracker.uuid} 
+	 * tags have prefixes located at {@link lyravega.listeners.lyr_fleetTracker.uuid}
 	 * <p> If used on a variant that has child module variants, they will automatically
 	 * receive their own UUID tag, along with their parent's. Using this on a child
 	 * module variant is not recommended as the parent's UUID will not be assigned on
@@ -210,7 +210,7 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 
 		for (String tag : variant.getTags()) {
 			if (!tag.startsWith(lyr_fleetTracker.uuid.shipPrefix)) continue;
-			
+
 			shipTrackerUUID = tag.substring(lyr_fleetTracker.uuid.shipPrefix.length()); break;
 		}; if (shipTrackerUUID == null) shipTrackerUUID = UUID.randomUUID().toString();
 
@@ -219,7 +219,7 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 
 		if (parentTrackerUUID != null && !variant.hasTag(lyr_fleetTracker.uuid.parentPrefix+parentTrackerUUID))
 			variant.addTag(lyr_fleetTracker.uuid.parentPrefix+parentTrackerUUID);	// parent's uuid
-		
+
 		for (String moduleSlot : variant.getStationModules().keySet()) {
 			ShipVariantAPI moduleVariant = variant.getModuleVariant(moduleSlot);
 
@@ -239,7 +239,7 @@ public class lyr_fleetTracker extends _lyr_tabListener {
 	public static void removeTrackerUUIDs(ShipVariantAPI variant) {
 		for (Iterator<String> iterator = variant.getTags().iterator(); iterator.hasNext(); )
 			if (iterator.next().startsWith(lyr_fleetTracker.uuid.prefix)) iterator.remove();
-		
+
 		for (String moduleSlotId : variant.getStationModules().keySet()) {
 			removeTrackerUUIDs(variant.getModuleVariant(moduleSlotId));
 		}

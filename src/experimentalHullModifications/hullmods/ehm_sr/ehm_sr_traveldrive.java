@@ -1,10 +1,10 @@
 package experimentalHullModifications.hullmods.ehm_sr;
 
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
-import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
+import com.fs.starfarer.api.combat.ShipVariantAPI;
 
-/**@category System Retrofit 
+/**@category System Retrofit
  * @author lyravega
  */
 public final class ehm_sr_traveldrive extends _ehm_sr_base {
