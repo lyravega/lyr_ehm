@@ -135,7 +135,7 @@ public final class lyr_eventDispatcher {
 	 * @param modId to restrict scope of this event to hullmods from a single mod
 	 * @param hullModId may be {@code null} to broadcast this event to all hullmods, otherwise just to a single one  
 	 */
-	public static void applyCustomization(final String modId, final String hullModId) {
+	public static void onSettingsChange(final String modId, final String hullModId) {
 		try {
 			if (hullModId != null) customizableHullMods.get(modId).get(hullModId).applyCustomization();
 			else for (customizableMod customizableMod : customizableHullMods.get(modId).values()) customizableMod.applyCustomization();

@@ -113,7 +113,7 @@ public class ehm_settings implements LunaSettingsListener {
 		if (!modId.equals(id.mod)) return;
 
 		cacheSettings();	// order may be important; customizable hull modifications might require these to be cached first
-		lyr_eventDispatcher.applyCustomization(ehm_internals.id.mod, null);
+		lyr_eventDispatcher.onSettingsChange(ehm_internals.id.mod, null);
 
 		lyr_logger.info("Settings reapplied");
 	}

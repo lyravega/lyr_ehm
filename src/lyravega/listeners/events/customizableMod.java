@@ -1,10 +1,13 @@
 package lyravega.listeners.events;
 
+import lyravega.listeners.lyr_eventDispatcher;
+
 /**
- * Implemented by any hull modification that have any setting which
- * can be changed through mod's settings menu created through LunaLib. 
- * <p> The {@link #applyCustomization()} will be executed on all of
- * those hull modifications when settings are saved.
+ * Any hull modification effect that implement this interface may utilize the 
+ * {@code applyCustomization()} method when a change in for example LunaLib's
+ * settings is detected.
+ * <p> The hull modifications should be registered in {@code onApplicationLoad()}
+ * through {@link lyr_eventDispatcher#registerModsWithEvents(String, String)}
  * @author lyravega
  */
 public interface customizableMod {

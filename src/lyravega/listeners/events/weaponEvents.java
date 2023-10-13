@@ -2,13 +2,14 @@ package lyravega.listeners.events;
 
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 
+import lyravega.listeners.lyr_eventDispatcher;
 import lyravega.listeners.lyr_shipTracker;
 
 /**
  * When a weapon change is detected, the event methods in this interface will be called
  * for any hull modification effect that implements this.
- * <p> The hull modifications are registered as having this interface implemented during
- * {@link experimentalHullModifications.plugin.lyr_ehm#onApplicationLoad() onApplicationLoad()}
+ * <p> The hull modifications should be registered in {@code onApplicationLoad()}
+ * through {@link lyr_eventDispatcher#registerModsWithEvents(String, String)}
  * @see {@link lyr_shipTracker} to cache the old variants and compare them with the newer ones
  * @author lyravega
  */
