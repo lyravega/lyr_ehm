@@ -3,10 +3,13 @@ package experimentalHullModifications.hullmods.ehm_sr;
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
+import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.api.loading.Description;
+import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
@@ -17,6 +20,8 @@ import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.listeners.events.normalEvents;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.utilities.lyr_miscUtilities;
+import lyravega.utilities.lyr_reflectionUtilities;
+import lyravega.utilities.logger.lyr_logger;
 
 /**
  * This class is used by system retrofit hullmods. They are pretty
@@ -43,6 +48,30 @@ public abstract class _ehm_sr_base extends _ehm_base implements normalEvents {
 	}
 	//#endregion
 	// END OF CUSTOM EVENTS
+
+	@Override
+	public void init(HullModSpecAPI hullModSpec) {
+		String shipSystemId = this.getClass().getSimpleName().replace(ehm_internals.affix.systemRetrofit, "");
+
+		if (Global.getSettings().getShipSystemSpec(shipSystemId) == null) {
+			hullModSpec.setHidden(true);
+			hullModSpec.setHiddenEverywhere(true);
+
+			lyr_logger.warn("Ship system with systemId '"+shipSystemId+"' not found, hiding '"+hullModSpec.getId()+"'"); return;
+		}
+
+		Description shipSystemDescription = Global.getSettings().getDescription(shipSystemId, Description.Type.SHIP_SYSTEM);
+
+		hullModSpec.setDescriptionFormat(shipSystemDescription.getText1());
+		// hullModSpec.setShortDesc(shipSystemDescription.getText3());	// this is not on the API
+		try {
+			lyr_reflectionUtilities.methodReflection.invokeDirect(hullModSpec, "setShortDesc", shipSystemDescription.getText3());
+		} catch (Throwable t) {
+			lyr_logger.error("Could not set the short description of hull modification spec", t);
+		}
+
+		super.init(hullModSpec);
+	}
 
 	/**
 	 * Alters the system on a hullSpec, and returns it. The returned hullSpec needs
@@ -75,7 +104,7 @@ public abstract class _ehm_sr_base extends _ehm_base implements normalEvents {
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (ship == null) return;
 
-		if (!isApplicableToShip(ship)) {
+		if (!this.isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
 			if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
