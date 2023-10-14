@@ -23,7 +23,7 @@ import lyravega.utilities.logger.lyr_logger;
  * restart.
  * @author lyravega
  */
-public class ehm_settings implements LunaSettingsListener {
+public final class ehm_settings implements LunaSettingsListener {
 	private ehm_settings() {
 		cacheSettings();
 	}
@@ -56,11 +56,11 @@ public class ehm_settings implements LunaSettingsListener {
 		// MAIN SETTINGS
 		checkShuntAvailability();	// separate from others as it needs to trigger a method to add/remove listeners only if there's a change
 		String extraInfo = lyr_lunaUtilities.getString("ehm_extraInfoInHullMods");	// splitting radio into booleans
-		showInfoForActivators = !extraInfo.equals("None");
-		showFullInfoForActivators = extraInfo.equals("Full");
+		showInfoForActivators = !"None".equals(extraInfo);
+		showFullInfoForActivators = "Full".equals(extraInfo);
 		String drillSound = lyr_lunaUtilities.getString("ehm_drillSound");	// splitting radio into booleans
-		playDrillSound = !drillSound.equals("None");
-		playDrillSoundForAll = drillSound.equals("All");
+		playDrillSound = !"None".equals(drillSound);
+		playDrillSoundForAll = "All".equals(drillSound);
 		checkCosmeticsOnly();	// separate from others like the shunt option as it invokes a method to properly update stuff
 		hideAdapters = lyr_lunaUtilities.getBoolean("ehm_hideAdapters");
 		hideConverters = lyr_lunaUtilities.getBoolean("ehm_hideConverters");
@@ -110,7 +110,7 @@ public class ehm_settings implements LunaSettingsListener {
 
 	@Override
 	public void settingsChanged(String modId) {
-		if (!modId.equals(id.mod)) return;
+		if (!id.mod.equals(modId)) return;
 
 		cacheSettings();	// order may be important; customizable hull modifications might require these to be cached first
 		lyr_eventDispatcher.onSettingsChange(ehm_internals.id.mod, null);

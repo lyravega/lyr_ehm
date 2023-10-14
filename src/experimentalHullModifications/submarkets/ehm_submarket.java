@@ -27,11 +27,11 @@ import experimentalHullModifications.misc.ehm_internals;
 public final class ehm_submarket extends BaseSubmarketPlugin {
 	public static final Set<String> shunts = new HashSet<String>();	// doing this here separately as there can be disabled/unused shunts
 	static {
-		// for (WeaponSpecAPI weaponSpec : Global.getSettings().getAllWeaponSpecs()) {	// doing this here might be problematic, OK so far
-			// if (!weaponSpec.hasTag(ehm_internals.tag.experimental)) continue;
-		for (String weaponId : ehm_internals.id.shunts.set) {
-			WeaponSpecAPI weaponSpec = Global.getSettings().getWeaponSpec(weaponId);
-			if (weaponSpec == null) continue;
+		for (WeaponSpecAPI weaponSpec : Global.getSettings().getAllWeaponSpecs()) {	// doing this here might be problematic, OK so far
+			if (!weaponSpec.hasTag(ehm_internals.tag.experimental)) continue;
+		// for (String weaponId : ehm_internals.id.shunts.set) {	this is dangerous during game launch, older above one works though
+		// 	WeaponSpecAPI weaponSpec = Global.getSettings().getWeaponSpec(weaponId);
+			// if (weaponSpec == null) continue;
 
 			shunts.add(weaponSpec.getWeaponId());
 		}

@@ -55,12 +55,12 @@ public abstract class _lyr_tabListener extends _lyr_sectorListener implements Co
 	//#region CoreUITabListener
 	@Override
 	public final void reportAboutToOpenCoreTab(CoreUITabId tab, Object param) {
-		if (tab != targetTab) return;
+		if (tab != this.targetTab) return;
 
-		if (!executeOnOpenOnce || !onOpenExecuted) {
-			onOpenExecuted = true;
-			attachTabScript();
-			onOpen();
+		if (!this.executeOnOpenOnce || !this.onOpenExecuted) {
+			this.onOpenExecuted = true;
+			this.attachTabScript();
+			this.onOpen();
 		}
 	}
 	//#endregion
@@ -77,9 +77,9 @@ public abstract class _lyr_tabListener extends _lyr_sectorListener implements Co
 
 	@Override
 	public final void advance(float amount) {
-		if (Global.getSector().getCampaignUI().getCurrentCoreTab() == targetTab) { onAdvance(amount); return; }
+		if (Global.getSector().getCampaignUI().getCurrentCoreTab() != this.targetTab) this.cleanup();
 
-		this.cleanup();
+		this.onAdvance(amount);
 	}
 
 	@Override public final boolean isDone() { return false; }	// as the script is removed at the end, isDone never returns true
@@ -88,9 +88,9 @@ public abstract class _lyr_tabListener extends _lyr_sectorListener implements Co
 
 	@Override
 	public final void cleanup() {
-		onOpenExecuted = false;
-		removeTabScript();
-		onClose();
+		this.onOpenExecuted = false;
+		this.removeTabScript();
+		this.onClose();
 	}
 	//#endregion
 	// END OF EveryFrameScriptWithCleanup

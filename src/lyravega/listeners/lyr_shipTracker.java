@@ -21,7 +21,7 @@ import lyravega.utilities.logger.lyr_logger;
  * @see {@link normalEvents} / {@link enhancedEvents} / {@link suppressedEvents} / {@link weaponEvents}
  * @author lyravega
  */
-public class lyr_shipTracker {
+public final class lyr_shipTracker {
 	private ShipVariantAPI variant = null;
 	// private ShipHullSpecAPI hullSpec = null;
 	private final String trackerId;
@@ -45,7 +45,7 @@ public class lyr_shipTracker {
 		this.suppressedMods.addAll(variant.getSuppressedMods());
 
 		for (WeaponSlotAPI slot : variant.getHullSpec().getAllWeaponSlotsCopy()) {
-			weapons.put(slot.getId(), variant.getWeaponId(slot.getId()));
+			this.weapons.put(slot.getId(), variant.getWeaponId(slot.getId()));
 		}
 	}
 
@@ -61,103 +61,103 @@ public class lyr_shipTracker {
 	public void updateVariant(final ShipVariantAPI variant) {
 		this.variant = variant;
 
-		checkHullMods();
-		checkEnhancedMods();
-		checkSuppressedMods();
-		checkWeapons();
+		this.checkHullMods();
+		this.checkEnhancedMods();
+		this.checkSuppressedMods();
+		this.checkWeapons();
 	}
 	//#endregion
 	// END OF CONSTRUCTORS & ACCESSORS
 
 	private void checkHullMods() {
-		for (final String hullModId : variant.getHullMods()) {
-			if (hullMods.contains(hullModId)) continue;
-			if (suppressedMods.contains(hullModId)) { hullMods.add(hullModId); continue; }
+		for (final String hullModId : this.variant.getHullMods()) {
+			if (this.hullMods.contains(hullModId)) continue;
+			if (this.suppressedMods.contains(hullModId)) { this.hullMods.add(hullModId); continue; }
 
-			hullMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onInstall, variant, hullModId);
-			lyr_logger.eventInfo("ST-"+trackerId+": Installed '"+hullModId+"'");
+			this.hullMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onInstall, this.variant, hullModId);
+			lyr_logger.eventInfo("ST-"+this.trackerId+": Installed '"+hullModId+"'");
 		}
 
-		for (iterator = hullMods.iterator(); iterator.hasNext();) { final String hullModId = iterator.next();
-			if (variant.hasHullMod(hullModId)) continue;
-			if (variant.getSuppressedMods().contains(hullModId)) { iterator.remove(); continue; }
+		for (this.iterator = this.hullMods.iterator(); this.iterator.hasNext();) { final String hullModId = this.iterator.next();
+			if (this.variant.hasHullMod(hullModId)) continue;
+			if (this.variant.getSuppressedMods().contains(hullModId)) { this.iterator.remove(); continue; }
 
-			iterator.remove(); lyr_eventDispatcher.onHullModEvent(onRemove, variant, hullModId);
-			lyr_logger.eventInfo("ST-"+trackerId+": Removed '"+hullModId+"'");
+			this.iterator.remove(); lyr_eventDispatcher.onHullModEvent(onRemove, this.variant, hullModId);
+			lyr_logger.eventInfo("ST-"+this.trackerId+": Removed '"+hullModId+"'");
 		}
 	}
 
 	private void checkEnhancedMods() {
-		for (final String hullModId : variant.getSMods()) {
-			if (enhancedMods.contains(hullModId)) continue;
-			if (embeddedMods.contains(hullModId)) continue;
+		for (final String hullModId : this.variant.getSMods()) {
+			if (this.enhancedMods.contains(hullModId)) continue;
+			if (this.embeddedMods.contains(hullModId)) continue;
 
-			enhancedMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onEnhance, variant, hullModId);
-			lyr_logger.eventInfo("ST-"+trackerId+": Enhanced '"+hullModId+"'");
+			this.enhancedMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onEnhance, this.variant, hullModId);
+			lyr_logger.eventInfo("ST-"+this.trackerId+": Enhanced '"+hullModId+"'");
 		}
 
-		for (final String hullModId : variant.getSModdedBuiltIns()) {
-			if (embeddedMods.contains(hullModId)) continue;
-			if (enhancedMods.contains(hullModId)) enhancedMods.remove(hullModId);
+		for (final String hullModId : this.variant.getSModdedBuiltIns()) {
+			if (this.embeddedMods.contains(hullModId)) continue;
+			if (this.enhancedMods.contains(hullModId)) this.enhancedMods.remove(hullModId);
 
-			embeddedMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onEnhance, variant, hullModId);
-			lyr_logger.eventInfo("ST-"+trackerId+": Enhanced embedded '"+hullModId+"'");
+			this.embeddedMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onEnhance, this.variant, hullModId);
+			lyr_logger.eventInfo("ST-"+this.trackerId+": Enhanced embedded '"+hullModId+"'");
 		}
 
-		for (iterator = enhancedMods.iterator(); iterator.hasNext();) { final String hullModId = iterator.next();
-			if (variant.getSMods().contains(hullModId)) continue;
+		for (this.iterator = this.enhancedMods.iterator(); this.iterator.hasNext();) { final String hullModId = this.iterator.next();
+			if (this.variant.getSMods().contains(hullModId)) continue;
 
-			iterator.remove(); lyr_eventDispatcher.onHullModEvent(onNormalize, variant, hullModId);
-			lyr_logger.eventInfo("ST-"+trackerId+": Normalized '"+hullModId+"'");
+			this.iterator.remove(); lyr_eventDispatcher.onHullModEvent(onNormalize, this.variant, hullModId);
+			lyr_logger.eventInfo("ST-"+this.trackerId+": Normalized '"+hullModId+"'");
 		}
 
-		for (iterator = embeddedMods.iterator(); iterator.hasNext();) { final String hullModId = iterator.next();
-			if (variant.getSModdedBuiltIns().contains(hullModId)) continue;
+		for (this.iterator = this.embeddedMods.iterator(); this.iterator.hasNext();) { final String hullModId = this.iterator.next();
+			if (this.variant.getSModdedBuiltIns().contains(hullModId)) continue;
 
-			iterator.remove(); lyr_eventDispatcher.onHullModEvent(onNormalize, variant, hullModId);
-			lyr_logger.eventInfo("ST-"+trackerId+": Normalized embedded '"+hullModId+"'");
+			this.iterator.remove(); lyr_eventDispatcher.onHullModEvent(onNormalize, this.variant, hullModId);
+			lyr_logger.eventInfo("ST-"+this.trackerId+": Normalized embedded '"+hullModId+"'");
 		}
 	}
 
 	private void checkSuppressedMods() {
-		for (final String hullModId : variant.getSuppressedMods()) {
-			if (suppressedMods.contains(hullModId)) continue;
+		for (final String hullModId : this.variant.getSuppressedMods()) {
+			if (this.suppressedMods.contains(hullModId)) continue;
 
-			suppressedMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onSuppress, variant, hullModId);
-			lyr_logger.eventInfo("ST-"+trackerId+": Suppressed '"+hullModId+"'");
+			this.suppressedMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onSuppress, this.variant, hullModId);
+			lyr_logger.eventInfo("ST-"+this.trackerId+": Suppressed '"+hullModId+"'");
 		}
 
-		for (iterator = suppressedMods.iterator(); iterator.hasNext();) { final String hullModId = iterator.next();
-			if (variant.getSuppressedMods().contains(hullModId)) continue;
+		for (this.iterator = this.suppressedMods.iterator(); this.iterator.hasNext();) { final String hullModId = this.iterator.next();
+			if (this.variant.getSuppressedMods().contains(hullModId)) continue;
 
-			iterator.remove(); lyr_eventDispatcher.onHullModEvent(onRestore, variant, hullModId);
-			lyr_logger.eventInfo("ST-"+trackerId+": Restored '"+hullModId+"'");
+			this.iterator.remove(); lyr_eventDispatcher.onHullModEvent(onRestore, this.variant, hullModId);
+			lyr_logger.eventInfo("ST-"+this.trackerId+": Restored '"+hullModId+"'");
 		}
 	}
 
 	private void checkWeapons() {
-		for (WeaponSlotAPI slot : variant.getHullSpec().getAllWeaponSlotsCopy()) {
+		for (WeaponSlotAPI slot : this.variant.getHullSpec().getAllWeaponSlotsCopy()) {
 			String slotId = slot.getId();
-			String newWeaponId = variant.getWeaponId(slotId);
-			String oldWeaponId = weapons.get(slotId);
+			String newWeaponId = this.variant.getWeaponId(slotId);
+			String oldWeaponId = this.weapons.get(slotId);
 
 			if (oldWeaponId == null && newWeaponId == null) continue;
 			else if (oldWeaponId == null && newWeaponId != null) {	// weapon installed
-				weapons.put(slotId, newWeaponId);
-				lyr_eventDispatcher.onWeaponEvent(onWeaponInstall, variant, newWeaponId, slotId);
+				this.weapons.put(slotId, newWeaponId);
+				lyr_eventDispatcher.onWeaponEvent(onWeaponInstall, this.variant, newWeaponId, slotId);
 
-				lyr_logger.eventInfo("ST-"+trackerId+": Installed '"+newWeaponId+"' on '"+slotId+"'");
+				lyr_logger.eventInfo("ST-"+this.trackerId+": Installed '"+newWeaponId+"' on '"+slotId+"'");
 			} else if (oldWeaponId != null && newWeaponId == null) {	// weapon removed
-				weapons.put(slotId, null);
-				lyr_eventDispatcher.onWeaponEvent(onWeaponRemove, variant, oldWeaponId, slotId);
+				this.weapons.put(slotId, null);
+				lyr_eventDispatcher.onWeaponEvent(onWeaponRemove, this.variant, oldWeaponId, slotId);
 
-				lyr_logger.eventInfo("ST-"+trackerId+": Removed '"+oldWeaponId+"' from '"+slotId+"'");
+				lyr_logger.eventInfo("ST-"+this.trackerId+": Removed '"+oldWeaponId+"' from '"+slotId+"'");
 			} else if (oldWeaponId != null && newWeaponId != null && !oldWeaponId.equals(newWeaponId)) {	// weapon changed
-				weapons.put(slotId, newWeaponId);
-				lyr_eventDispatcher.onWeaponEvent(onWeaponInstall, variant, newWeaponId, slotId);
-				lyr_eventDispatcher.onWeaponEvent(onWeaponRemove, variant, oldWeaponId, slotId);
+				this.weapons.put(slotId, newWeaponId);
+				lyr_eventDispatcher.onWeaponEvent(onWeaponInstall, this.variant, newWeaponId, slotId);
+				lyr_eventDispatcher.onWeaponEvent(onWeaponRemove, this.variant, oldWeaponId, slotId);
 
-				lyr_logger.eventInfo("ST-"+trackerId+": Changed '"+oldWeaponId+"' on '"+slotId+"' with '"+newWeaponId+"'");
+				lyr_logger.eventInfo("ST-"+this.trackerId+": Changed '"+oldWeaponId+"' on '"+slotId+"' with '"+newWeaponId+"'");
 			}
 		}
 	}

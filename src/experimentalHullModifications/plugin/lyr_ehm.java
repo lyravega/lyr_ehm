@@ -21,7 +21,7 @@ import lyravega.listeners.lyr_fleetTracker;
 import lyravega.utilities.lyr_miscUtilities;
 import lyravega.utilities.logger.lyr_logger;
 
-public class lyr_ehm extends BaseModPlugin {
+public final class lyr_ehm extends BaseModPlugin {
 	public static final class friend {
 		private friend() {}
 	};	private static friend friend = new friend();

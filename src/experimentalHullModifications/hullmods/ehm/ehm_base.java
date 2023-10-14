@@ -106,9 +106,9 @@ public final class ehm_base extends _ehm_base {
 				for (EveryFrameScript script : Global.getSector().getScripts()) {
 					String scriptSimpleName = script.getClass().getSimpleName();
 
-					if (scriptSimpleName.equals("FieldRepairsScript")) tooltip.addPara("FieldRepairsScript (vanilla): Running", 5f).setHighlight("FieldRepairsScript (vanilla):");
-					if (scriptSimpleName.equals("lyr_fieldRepairsScript")) tooltip.addPara("FieldRepairsScript (EHM): Running", 5f).setHighlight("FieldRepairsScript (EHM):");
-					if (scriptSimpleName.equals("CaptainsFieldRepairsScript")) tooltip.addPara("FieldRepairsScript (QC): Running", 5f).setHighlight("FieldRepairsScript (QC):");
+					if ("FieldRepairsScript".equals(scriptSimpleName)) tooltip.addPara("FieldRepairsScript (vanilla): Running", 5f).setHighlight("FieldRepairsScript (vanilla):");
+					if ("lyr_fieldRepairsScript".equals(scriptSimpleName)) tooltip.addPara("FieldRepairsScript (EHM): Running", 5f).setHighlight("FieldRepairsScript (EHM):");
+					if ("CaptainsFieldRepairsScript".equals(scriptSimpleName)) tooltip.addPara("FieldRepairsScript (QC): Running", 5f).setHighlight("FieldRepairsScript (QC):");
 				}
 			} else if (ehm_settings.getShowFluff()) {
 				String playerSalutation = Global.getSector().getPlayerPerson().getGender() == Gender.MALE ? Misc.SIR : Misc.MAAM;
