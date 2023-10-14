@@ -20,6 +20,10 @@ public class lyr_levels extends Level {
 	public static final String EVENT_STR = "EVENT";
 	public static final Level EVENT;
 
+	public static final int TRCKR_INT = INFO_INT - 200;
+	public static final String TRCKR_STR = "TRCKR";
+	public static final Level TRCKR;
+
 	public static final int RFLCT_INT = DEBUG_INT + 1000;
 	public static final String RFLCT_STR = "RFLCT";
 	public static final Level RFLCT;
@@ -41,6 +45,7 @@ public class lyr_levels extends Level {
 	static {
 		LSTNR = new lyr_levels(LSTNR_INT, LSTNR_STR, 6);	// info-like
 		EVENT = new lyr_levels(EVENT_INT, EVENT_STR, 6);	// info-like
+		TRCKR = new lyr_levels(TRCKR_INT, TRCKR_STR, 6);	// info-like
 		RFLCT = new lyr_levels(RFLCT_INT, RFLCT_STR, 7);	// debug-like
 	}
 
@@ -54,8 +59,9 @@ public class lyr_levels extends Level {
 
 	public static Level toLevel(int val, Level defaultLevel) {
 		switch (val) {
-			case EVENT_INT: return EVENT;
 			case LSTNR_INT: return LSTNR;
+			case EVENT_INT: return EVENT;
+			case TRCKR_INT: return TRCKR;
 			case RFLCT_INT: return RFLCT;
 			default: return Level.toLevel(val, defaultLevel);
 		}
@@ -64,8 +70,9 @@ public class lyr_levels extends Level {
 	public static Level toLevel(String logArgument, Level defaultLevel) {
 		// switch (String.valueOf(logArgument).toUpperCase()) {	// janky null string handling to be used in a switch case
 		switch (logArgument == null ? "" : logArgument.toUpperCase()) {	// less janky I guess? meh
-			case EVENT_STR: return EVENT;
 			case LSTNR_STR: return LSTNR;
+			case EVENT_STR: return EVENT;
+			case TRCKR_STR: return TRCKR;
 			case RFLCT_STR: return RFLCT;
 			default: return Level.toLevel(logArgument, defaultLevel);
 		}

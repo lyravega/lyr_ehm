@@ -21,6 +21,10 @@ public class lyr_logger {
 
 	public static void setLevel(Level level) { logger.setLevel(level); }
 
+	public static void trackerInfo(Object message) { logger.log(lyr_levels.TRCKR, message, null); }
+
+	public static void trackerInfo(Object message, Throwable t) { logger.log(lyr_levels.TRCKR, message, t); }
+
 	public static void eventInfo(Object message) { logger.log(lyr_levels.EVENT, message, null); }
 
 	public static void eventInfo(Object message, Throwable t) { logger.log(lyr_levels.EVENT, message, t); }

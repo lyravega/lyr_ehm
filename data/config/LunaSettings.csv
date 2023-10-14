@@ -193,4 +193,4 @@ ehm_showFluff,Show Fluff Messages,Boolean,true,,"If enabled, the base hull modif
 ehm_debugSettingsHeader,EHM Debug,Header,Debug Settings,,,,,
 ehm_debugSettingsText,EHM Debug Text,Text,"Some of these settings may be useful to identify a problem with this mod. Some of the logging features may bloat the game logs, and should be left disabled in normal conditions",,,,,
 ehm_debugTooltip,Show Debug Tooltip,Boolean,false,,"If enabled, the base hull modification will display [some debug info] on its tooltip",,,
-ehm_loggerLevel,Logger Level,Int,3,,"Logger level, default: 3. Lower values will make this mod to output more info to the log file.",0,4,
+ehm_loggerLevel,Logger Level,Int,3,,"Logger level, default: 3. Lower values will make this mod to output more info to the log file.",0,5,
