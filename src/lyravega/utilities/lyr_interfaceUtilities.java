@@ -7,6 +7,7 @@ import java.util.List;
 import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CoreUITabId;
+import com.fs.starfarer.api.combat.ShipAPI;
 
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.plugin.ehm_settings;
@@ -46,6 +47,15 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 	public static void playDrillSound() {
 		if (!ehm_settings.getPlayDrillSound() || !isRefitTab()) return;
 		Global.getSoundPlayer().playUISound(ehm_internals.id.drillSound, 1.0f, 0.75f);
+	}
+
+	/**
+	 * Grabs the refit ship seen on the screen. It is grabbed from the ship
+	 * display itself.
+	 * @return the refit ship
+	 */
+	public static ShipAPI getRefitShip() {
+		return new lyr_campaignUI().getCore().getCurrentTab().getRefitPanel().getShipDisplay().getShip();
 	}
 
 	private static boolean clearUndo = false;
