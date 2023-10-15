@@ -73,7 +73,7 @@ public final class lyr_eventDispatcher {
 				if (suppressedEvents.class.isInstance(hullModEffect)) suppressedEvents.put(hullModSpec.getId(), suppressedEvents.class.cast(hullModEffect));
 				if (customizableMod.class.isInstance(hullModEffect)) customizableMods.put(hullModSpec.getId(), customizableMod.class.cast(hullModEffect));
 
-				lyr_logger.debug("Processed hull modification '"+hullModSpec.getId()+"'");
+				lyr_logger.debug("Processed hull modification '"+hullModSpec.getId()+"' from '"+modId+"'");
 			}
 
 			customizableHullMods.put(modId, customizableMods);
@@ -81,7 +81,7 @@ public final class lyr_eventDispatcher {
 			allModEvents.addAll(enhancedEvents.keySet());
 			allModEvents.addAll(suppressedEvents.keySet());
 
-			lyr_logger.info("Experimental hull modifications are registered");
+			lyr_logger.info("Hull modifications from the mod '"+modId+"' are processed");
 		} catch (Throwable t) {
 			lyr_logger.error("Could not load the hull modification .csv file '"+hullModCSV+"' for the mod with the id '"+modId+"'", t);
 		}
