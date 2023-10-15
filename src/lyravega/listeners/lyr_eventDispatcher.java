@@ -26,16 +26,16 @@ import lyravega.utilities.logger.lyr_logger;
 public final class lyr_eventDispatcher {
 	public static final class events {
 		public static final String
-			onInstall = "onInstall",
-			onRemove = "onRemove",
-			onEnhance = "onEnhance",
-			onNormalize = "onNormalize",
-			onSuppress = "onSuppress",
-			onRestore = "onRestore",
-			onWeaponInstall = "onWeaponInstall",
-			onWeaponRemove = "onWeaponRemove",
-			onWingAssign = "onWingAssign",
-			onWingRelieve = "onWingRelieve";
+			onInstalled = "onInstalled",
+			onRemoved = "onRemoved",
+			onEnhanced = "onEnhanced",
+			onNormalized = "onNormalized",
+			onSuppressed = "onSuppressed",
+			onRestored = "onRestored",
+			onWeaponInstalled = "onWeaponInstalled",
+			onWeaponRemoved = "onWeaponRemoved",
+			onWingAssigned = "onWingAssigned",
+			onWingRelieved = "onWingRelieved";
 	}
 
 	// hull modification effects that implement any of the event interfaces are stored in these maps
@@ -98,16 +98,16 @@ public final class lyr_eventDispatcher {
 	 */
 	static void onHullModEvent(final String eventName, final ShipVariantAPI variant, final String hullModId) {
 		if (allModEvents.contains(hullModId)) switch (eventName) {
-			case onInstall:		if (normalEvents.containsKey(hullModId)) normalEvents.get(hullModId).onInstalled(variant); return;
-			case onRemove:		if (normalEvents.containsKey(hullModId)) normalEvents.get(hullModId).onRemoved(variant); return;
-			case onEnhance:		if (enhancedEvents.containsKey(hullModId)) enhancedEvents.get(hullModId).onEnhanced(variant); return;
-			case onNormalize:	if (enhancedEvents.containsKey(hullModId)) enhancedEvents.get(hullModId).onNormalized(variant); return;
-			case onSuppress:	if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onSuppressed(variant); return;
-			case onRestore:		if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onRestored(variant); return;
+			case onInstalled:		if (normalEvents.containsKey(hullModId)) normalEvents.get(hullModId).onInstalled(variant); return;
+			case onRemoved:			if (normalEvents.containsKey(hullModId)) normalEvents.get(hullModId).onRemoved(variant); return;
+			case onEnhanced:		if (enhancedEvents.containsKey(hullModId)) enhancedEvents.get(hullModId).onEnhanced(variant); return;
+			case onNormalized:		if (enhancedEvents.containsKey(hullModId)) enhancedEvents.get(hullModId).onNormalized(variant); return;
+			case onSuppressed:		if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onSuppressed(variant); return;
+			case onRestored:		if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onRestored(variant); return;
 			default: return;
 		} else if (ehm_settings.getPlayDrillSoundForAll()) switch (eventName) {
-			case onInstall:
-			case onRemove:		lyr_interfaceUtilities.playDrillSound(); return;
+			case onInstalled:
+			case onRemoved:			lyr_interfaceUtilities.playDrillSound(); return;
 			default: return;
 		}
 	}
@@ -120,8 +120,8 @@ public final class lyr_eventDispatcher {
 	 */
 	static void onWeaponEvent(final String eventName, final ShipVariantAPI variant, final String weaponId, final String slotId) {
 		switch (eventName) {
-			case onWeaponInstall:	for (String hullModId: weaponEvents.keySet()) if (variant.hasHullMod(hullModId)) weaponEvents.get(hullModId).onWeaponInstalled(variant, weaponId, slotId); return;
-			case onWeaponRemove:	for (String hullModId: weaponEvents.keySet()) if (variant.hasHullMod(hullModId)) weaponEvents.get(hullModId).onWeaponRemoved(variant, weaponId, slotId); return;
+			case onWeaponInstalled:	for (String hullModId: weaponEvents.keySet()) if (variant.hasHullMod(hullModId)) weaponEvents.get(hullModId).onWeaponInstalled(variant, weaponId, slotId); return;
+			case onWeaponRemoved:	for (String hullModId: weaponEvents.keySet()) if (variant.hasHullMod(hullModId)) weaponEvents.get(hullModId).onWeaponRemoved(variant, weaponId, slotId); return;
 			default: return;
 		}
 	}
@@ -134,8 +134,8 @@ public final class lyr_eventDispatcher {
 	 */
 	static void onWingEvent(final String eventName, final ShipVariantAPI variant, final String weaponId, final int bayNumber) {
 		switch (eventName) {
-			case onWingAssign:		for (String hullModId: wingEvents.keySet()) if (variant.hasHullMod(hullModId)) wingEvents.get(hullModId).onWingAssigned(variant, weaponId, bayNumber); return;
-			case onWingRelieve:		for (String hullModId: wingEvents.keySet()) if (variant.hasHullMod(hullModId)) wingEvents.get(hullModId).onWingRelieved(variant, weaponId, bayNumber); return;
+			case onWingAssigned:	for (String hullModId: wingEvents.keySet()) if (variant.hasHullMod(hullModId)) wingEvents.get(hullModId).onWingAssigned(variant, weaponId, bayNumber); return;
+			case onWingRelieved:	for (String hullModId: wingEvents.keySet()) if (variant.hasHullMod(hullModId)) wingEvents.get(hullModId).onWingRelieved(variant, weaponId, bayNumber); return;
 			default: return;
 		}
 	}
