@@ -39,13 +39,13 @@ import lyravega.utilities.lyr_miscUtilities;
 public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstall(ShipVariantAPI variant) {
+	public void onInstalled(ShipVariantAPI variant) {
 		if (lyr_miscUtilities.removeHullModsWithSameTag(variant, ehm_internals.tag.weaponRetrofit, this.hullModSpecId)) return;	// if installing this removes another, skip
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
-	public void onRemove(ShipVariantAPI variant) {
+	public void onRemoved(ShipVariantAPI variant) {
 		// if (!_ehm_helpers.ehm_hasHullModWithTag(variant, lyr_internals.tag.weaponRetrofit, this.hullModSpecId))	// unlike other exclusive mods, this one needs to run to restore the slots to original first
 			variant.setHullSpecAPI(ehm_weaponSlotRestore_lazy(variant));
 		commitVariantChanges(); playDrillSound();
@@ -125,7 +125,7 @@ public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (ship == null) return;
 
-		if (!isApplicableToShip(ship)) {
+		if (!this.isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
 			if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
@@ -133,7 +133,7 @@ public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 			if (ship.getVariant().hasHullMod(ehm_internals.id.hullmods.logisticsoverhaul)) tooltip.addPara(text.hasLogisticsOverhaul[0], text.padding).setHighlight(text.hasLogisticsOverhaul[1]);
 		}
 
-		if (!canBeAddedOrRemovedNow(ship, null, null)) {
+		if (!this.canBeAddedOrRemovedNow(ship, null, null)) {
 			String inOrOut = ship.getVariant().hasHullMod(this.hullModSpecId) ? header.lockedIn : header.lockedOut;
 
 			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.locked_bgColour, Alignment.MID, header.padding);

@@ -21,7 +21,7 @@ public interface suppressedEvents {
 	 * events. Should be used mainly to change the variant or to trigger an UI effect
 	 * @param variant
 	 */
-	public void onSuppress(ShipVariantAPI variant);
+	public void onSuppressed(ShipVariantAPI variant);
 
 	/**
 	 * Called if this hull modification is no longer suppressed on the refit ship
@@ -29,5 +29,5 @@ public interface suppressedEvents {
 	 * events. Should be used mainly to change the variant or to trigger an UI effect
 	 * @param variant
 	 */
-	public void onRestore(ShipVariantAPI variant);
+	public void onRestored(ShipVariantAPI variant);
 }

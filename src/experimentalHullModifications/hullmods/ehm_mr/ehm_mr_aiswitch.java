@@ -48,14 +48,14 @@ public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstall(ShipVariantAPI variant) {
+	public void onInstalled(ShipVariantAPI variant) {
 		if (!variant.getHullSpec().getBuiltInMods().contains(HullMods.AUTOMATED)) variant.addPermaMod(HullMods.AUTOMATED, false);
 		else variant.addSuppressedMod(HullMods.AUTOMATED);	// if this hullmod is suppressed, relevant calculations that look for it won't work properly
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
-	public void onRemove(ShipVariantAPI variant) {
+	public void onRemoved(ShipVariantAPI variant) {
 		if (!variant.getSuppressedMods().contains(HullMods.AUTOMATED)) variant.removePermaMod(HullMods.AUTOMATED);
 		else variant.removeSuppressedMod(HullMods.AUTOMATED);
 		commitVariantChanges(); playDrillSound();
@@ -146,7 +146,7 @@ public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 			if (noAutomatedShipsSkill) tooltip.addPara("- Automated Ships skill not detected!", 1, highlightArray, "Automated Ships", "not detected");
 		}
 
-		if (!isApplicableToShip(ship)) {
+		if (!this.isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
 			if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
@@ -154,7 +154,7 @@ public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 				if (Misc.isUnremovable(captain)) tooltip.addPara(text.integratedAICore[0], text.padding).setHighlight(text.integratedAICore[1]);
 				if (noAutomatedShipsSkill) tooltip.addPara(text.noAutomatedShipsSkill[0], text.padding).setHighlight(text.noAutomatedShipsSkill[1]);
 			}
-		} else if (!canBeAddedOrRemovedNow(ship, null, null)) {
+		} else if (!this.canBeAddedOrRemovedNow(ship, null, null)) {
 			if (variant.hasHullMod(this.hullModSpecId)) {
 				tooltip.addSectionHeading(header.lockedIn, header.locked_textColour, header.locked_bgColour, Alignment.MID, header.padding);
 

@@ -35,13 +35,13 @@ import lyravega.utilities.lyr_miscUtilities;
 public abstract class _ehm_sc_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstall(ShipVariantAPI variant) {
+	public void onInstalled(ShipVariantAPI variant) {
 		if (lyr_miscUtilities.removeHullModsWithSameTag(variant, ehm_internals.tag.shieldCosmetic, this.hullModSpecId)) return;
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
-	public void onRemove(ShipVariantAPI variant) {
+	public void onRemoved(ShipVariantAPI variant) {
 		if (!lyr_miscUtilities.hasHullModWithTag(variant, ehm_internals.tag.shieldCosmetic, this.hullModSpecId))
 			variant.setHullSpecAPI(ehm_restoreShield(variant));
 		commitVariantChanges(); playDrillSound();
@@ -90,7 +90,7 @@ public abstract class _ehm_sc_base extends _ehm_base implements normalEvents {
 			tooltip.addPara(text.customizable[0], text.padding).setHighlight(text.customizable[1]);
 		}
 
-		if (!isApplicableToShip(ship)) {
+		if (!this.isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
 			if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);

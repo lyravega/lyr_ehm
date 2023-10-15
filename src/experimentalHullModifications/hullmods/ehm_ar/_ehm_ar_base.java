@@ -58,19 +58,19 @@ import lyravega.utilities.lyr_vectorUtilities;
 public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, weaponEvents {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstall(ShipVariantAPI variant) {
+	public void onInstalled(ShipVariantAPI variant) {
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
-	public void onRemove(ShipVariantAPI variant) {
+	public void onRemoved(ShipVariantAPI variant) {
 		variant.setHullSpecAPI(ehm_activatorRemoval_lazy(variant));
 		commitVariantChanges(); playDrillSound();
 	}
 
-	@Override public void onWeaponInstall(ShipVariantAPI variant, String weaponId, String slotId) {}
+	@Override public void onWeaponInstalled(ShipVariantAPI variant, String weaponId, String slotId) {}
 
-	@Override public void onWeaponRemove(ShipVariantAPI variant, String weaponId, String slotId) {}
+	@Override public void onWeaponRemoved(ShipVariantAPI variant, String weaponId, String slotId) {}
 	//#endregion
 	// END OF CUSTOM EVENTS
 
@@ -225,7 +225,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (ship == null) return;
 
-		if (!isApplicableToShip(ship)) {
+		if (!this.isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
 			if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);

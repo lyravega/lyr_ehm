@@ -35,22 +35,22 @@ import lyravega.utilities.lyr_miscUtilities;
 public final class ehm_mr_overengineered extends _ehm_base implements normalEvents, enhancedEvents {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstall(ShipVariantAPI variant) {
+	public void onInstalled(ShipVariantAPI variant) {
 		playDrillSound();
 	}
 
 	@Override
-	public void onRemove(ShipVariantAPI variant) {
+	public void onRemoved(ShipVariantAPI variant) {
 		playDrillSound();
 	}
 
 	@Override
-	public void onEnhance(ShipVariantAPI variant) {
+	public void onEnhanced(ShipVariantAPI variant) {
 		commitVariantChanges();
 	}
 
 	@Override
-	public void onNormalize(ShipVariantAPI variant) {
+	public void onNormalized(ShipVariantAPI variant) {
 		variant.setHullSpecAPI(ehm_hullSpecRefresh(variant));
 		commitVariantChanges();
 	}
@@ -96,7 +96,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 
 	@Override
 	public void addSModSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec, boolean isForBuildInList) {
-		if (!isApplicableToShip(ship)) return;
+		if (!this.isApplicableToShip(ship)) return;
 
 		if (!ship.getVariant().getHullSpec().getBuiltInMods().contains(ehm_internals.id.hullmods.base)) {
 			tooltip.addSectionHeading(header.noEffect, header.noEffect_textColour, header.noEffect_bgColour, Alignment.MID, header.padding);
@@ -109,7 +109,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 			tooltip.addPara(text.overEngineeredNoEffect[0], text.padding).setHighlight(text.overEngineeredNoEffect[1]);
 		} else {
 			tooltip.addSectionHeading(header.sEffect, header.sEffect_textColour, header.sEffect_bgColour, Alignment.MID, header.padding);
-			tooltip.addPara(this.hullModSpec.getSModDescription(hullSize).replaceAll("\\%", "%%"), text.padding, header.sEffect_textColour, getSModDescriptionParam(0, hullSize), getSModDescriptionParam(1, hullSize));
+			tooltip.addPara(this.hullModSpec.getSModDescription(hullSize).replaceAll("\\%", "%%"), text.padding, header.sEffect_textColour, this.getSModDescriptionParam(0, hullSize), this.getSModDescriptionParam(1, hullSize));
 		}
 	}
 
@@ -132,7 +132,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (ship == null) return;
 
-		if (!isApplicableToShip(ship)) {
+		if (!this.isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
 			if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);

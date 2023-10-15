@@ -33,11 +33,14 @@ public final class lyr_eventDispatcher {
 			onSuppress = "onSuppress",
 			onRestore = "onRestore",
 			onWeaponInstall = "onWeaponInstall",
-			onWeaponRemove = "onWeaponRemove";
+			onWeaponRemove = "onWeaponRemove",
+			onWingAssign = "onWingAssign",
+			onWingRelieve = "onWingRelieve";
 	}
 
 	// hull modification effects that implement any of the event interfaces are stored in these maps
 	private static final Map<String, weaponEvents> weaponEvents = new HashMap<String, weaponEvents>();
+	private static final Map<String, wingEvents> wingEvents = new HashMap<String, wingEvents>();
 	private static final Map<String, normalEvents> normalEvents = new HashMap<String, normalEvents>();
 	private static final Map<String, enhancedEvents> enhancedEvents = new HashMap<String, enhancedEvents>();
 	private static final Map<String, suppressedEvents> suppressedEvents = new HashMap<String, suppressedEvents>();
@@ -64,6 +67,7 @@ public final class lyr_eventDispatcher {
 
 				HullModEffect hullModEffect = hullModSpec.getEffect();
 				if (weaponEvents.class.isInstance(hullModEffect)) weaponEvents.put(hullModSpec.getId(), weaponEvents.class.cast(hullModEffect));
+				if (wingEvents.class.isInstance(hullModEffect)) wingEvents.put(hullModSpec.getId(), wingEvents.class.cast(hullModEffect));
 				if (normalEvents.class.isInstance(hullModEffect)) normalEvents.put(hullModSpec.getId(), normalEvents.class.cast(hullModEffect));
 				if (enhancedEvents.class.isInstance(hullModEffect)) enhancedEvents.put(hullModSpec.getId(), enhancedEvents.class.cast(hullModEffect));
 				if (suppressedEvents.class.isInstance(hullModEffect)) suppressedEvents.put(hullModSpec.getId(), suppressedEvents.class.cast(hullModEffect));
@@ -92,14 +96,14 @@ public final class lyr_eventDispatcher {
 	 * @param variant of the ship
 	 * @param hullModId of the hull modification
 	 */
-	public static void onHullModEvent(final String eventName, final ShipVariantAPI variant, final String hullModId) {
+	static void onHullModEvent(final String eventName, final ShipVariantAPI variant, final String hullModId) {
 		if (allModEvents.contains(hullModId)) switch (eventName) {
-			case onInstall:		if (normalEvents.containsKey(hullModId)) normalEvents.get(hullModId).onInstall(variant); return;
-			case onRemove:		if (normalEvents.containsKey(hullModId)) normalEvents.get(hullModId).onRemove(variant); return;
-			case onEnhance:		if (enhancedEvents.containsKey(hullModId)) enhancedEvents.get(hullModId).onEnhance(variant); return;
-			case onNormalize:	if (enhancedEvents.containsKey(hullModId)) enhancedEvents.get(hullModId).onNormalize(variant); return;
-			case onSuppress:	if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onSuppress(variant); return;
-			case onRestore:		if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onRestore(variant); return;
+			case onInstall:		if (normalEvents.containsKey(hullModId)) normalEvents.get(hullModId).onInstalled(variant); return;
+			case onRemove:		if (normalEvents.containsKey(hullModId)) normalEvents.get(hullModId).onRemoved(variant); return;
+			case onEnhance:		if (enhancedEvents.containsKey(hullModId)) enhancedEvents.get(hullModId).onEnhanced(variant); return;
+			case onNormalize:	if (enhancedEvents.containsKey(hullModId)) enhancedEvents.get(hullModId).onNormalized(variant); return;
+			case onSuppress:	if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onSuppressed(variant); return;
+			case onRestore:		if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onRestored(variant); return;
 			default: return;
 		} else if (ehm_settings.getPlayDrillSoundForAll()) switch (eventName) {
 			case onInstall:
@@ -109,18 +113,29 @@ public final class lyr_eventDispatcher {
 	}
 
 	/**
-	 * Broadcasts a weapon event to all installed hull modifications. The hull modifications
-	 * need to implement the relative interfaces and methods first
-	 * <p> Filtering needs to be done in the event method as this is a global broadcast to
-	 * all installed hull modifications
-	 * @param eventName type of the event
-	 * @param variant of the ship
-	 * @param weaponId of the weapon
+	 * Broadcasts a weapon event to all hull modifications registered with the related interface.
+	 * Only the variants that have the hull modification installed will handle the event.
+	 * <p> Further filtering needs to be done as the only filtering done on this level is only
+	 * a simple check if the variant has a relevant hull modification installed.
 	 */
-	public static void onWeaponEvent(final String eventName, final ShipVariantAPI variant, final String weaponId, final String slotId) {
+	static void onWeaponEvent(final String eventName, final ShipVariantAPI variant, final String weaponId, final String slotId) {
 		switch (eventName) {
-			case onWeaponInstall:	for (String hullModId: weaponEvents.keySet()) if (variant.hasHullMod(hullModId)) weaponEvents.get(hullModId).onWeaponInstall(variant, weaponId, slotId); return;
-			case onWeaponRemove:	for (String hullModId: weaponEvents.keySet()) if (variant.hasHullMod(hullModId)) weaponEvents.get(hullModId).onWeaponRemove(variant, weaponId, slotId); return;
+			case onWeaponInstall:	for (String hullModId: weaponEvents.keySet()) if (variant.hasHullMod(hullModId)) weaponEvents.get(hullModId).onWeaponInstalled(variant, weaponId, slotId); return;
+			case onWeaponRemove:	for (String hullModId: weaponEvents.keySet()) if (variant.hasHullMod(hullModId)) weaponEvents.get(hullModId).onWeaponRemoved(variant, weaponId, slotId); return;
+			default: return;
+		}
+	}
+
+	/**
+	 * Broadcasts a wing event to all hull modifications registered with the related interface.
+	 * Only the variants that have the hull modification installed will handle the event.
+	 * <p> Further filtering needs to be done as the only filtering done on this level is only
+	 * a simple check if the variant has a relevant hull modification installed.
+	 */
+	static void onWingEvent(final String eventName, final ShipVariantAPI variant, final String weaponId, final int bayNumber) {
+		switch (eventName) {
+			case onWingAssign:		for (String hullModId: wingEvents.keySet()) if (variant.hasHullMod(hullModId)) wingEvents.get(hullModId).onWingAssigned(variant, weaponId, bayNumber); return;
+			case onWingRelieve:		for (String hullModId: wingEvents.keySet()) if (variant.hasHullMod(hullModId)) wingEvents.get(hullModId).onWingRelieved(variant, weaponId, bayNumber); return;
 			default: return;
 		}
 	}

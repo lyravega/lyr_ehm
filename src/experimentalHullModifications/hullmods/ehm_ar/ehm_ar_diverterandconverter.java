@@ -34,12 +34,12 @@ import lyravega.utilities.lyr_miscUtilities;
 public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onWeaponInstall(ShipVariantAPI variant, String weaponId, String slotId) {
+	public void onWeaponInstalled(ShipVariantAPI variant, String weaponId, String slotId) {
 		if (diverterConverterSet.contains(weaponId)) commitVariantChanges();
 	}
 
 	@Override
-	public void onWeaponRemove(ShipVariantAPI variant, String weaponId, String slotId) {
+	public void onWeaponRemoved(ShipVariantAPI variant, String weaponId, String slotId) {
 		if (diverterConverterSet.contains(weaponId)) commitVariantChanges();
 	}
 	//#endregion
@@ -214,7 +214,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
 
-		if (!canBeAddedOrRemovedNow(ship, null, null)) {
+		if (!this.canBeAddedOrRemovedNow(ship, null, null)) {
 			String inOrOut = ship.getVariant().hasHullMod(this.hullModSpecId) ? header.lockedIn : header.lockedOut;
 
 			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.locked_bgColour, Alignment.MID, header.padding);

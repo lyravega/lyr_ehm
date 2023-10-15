@@ -21,7 +21,7 @@ public interface normalEvents {
 	 * events. Should be used mainly to change the variant or to trigger an UI effect
 	 * @param variant
 	 */
-	public void onInstall(ShipVariantAPI variant);
+	public void onInstalled(ShipVariantAPI variant);
 
 	/**
 	 * Called if this hull modification is removed from the refit ship
@@ -29,5 +29,5 @@ public interface normalEvents {
 	 * events. Should be used mainly to change the variant or to trigger an UI effect
 	 * @param variant
 	 */
-	public void onRemove(ShipVariantAPI variant);
+	public void onRemoved(ShipVariantAPI variant);
 }

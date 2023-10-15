@@ -21,12 +21,12 @@ import lyravega.utilities.logger.lyr_logger;
 public class _ehm_test extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstall(ShipVariantAPI variant) {
+	public void onInstalled(ShipVariantAPI variant) {
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
-	public void onRemove(ShipVariantAPI variant) {
+	public void onRemoved(ShipVariantAPI variant) {
 		commitVariantChanges(); playDrillSound();
 	}
 	//#endregion
@@ -46,12 +46,12 @@ public class _ehm_test extends _ehm_base implements normalEvents {
 		private hullInfo(ShipVariantAPI variant) {
 			this.hullSpec = variant.getHullSpec();
 			this.isDHull_variant = variant.isDHull();
-			this.isDHull = hullSpec.isDHull();
-			this.isDefaultDHull = hullSpec.isDefaultDHull();
-			this.isRestoreToBase = hullSpec.isRestoreToBase();
-			this.hullId = hullSpec.getHullId();
-			this.baseHullId = hullSpec.getBaseHullId();
-			this.dParentHullId = hullSpec.getDParentHullId();
+			this.isDHull = this.hullSpec.isDHull();
+			this.isDefaultDHull = this.hullSpec.isDefaultDHull();
+			this.isRestoreToBase = this.hullSpec.isRestoreToBase();
+			this.hullId = this.hullSpec.getHullId();
+			this.baseHullId = this.hullSpec.getBaseHullId();
+			this.dParentHullId = this.hullSpec.getDParentHullId();
 		}
 	}
 

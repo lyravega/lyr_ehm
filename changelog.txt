@@ -1,5 +1,7 @@
 Version 0.8.6
 
+Refactored and overhauled most of the stuff under the hood; initial changes begun on the previous version, which are now all completed. Most of the 0.8.x versions didn't offer much in terms of gameplay, but with all these out of the way, parts of the mod that needs attention may get some. Hopefully.
+
 - Fixed "Logistics Overhaul" not ignoring the hidden modular hull modifications in its checks
 - Fixed an issue on base hullmod installation that added fixed built-in dmods back to the ship
 - Fixed undo button not getting disabled visually when it was supposed to
@@ -7,8 +9,8 @@ Version 0.8.6
 - Changed engine cosmetic mods to apply the campaign contrails immediately instead of requiring a save/load
 - Changed ship/module tracking completely, which comes with a few non-gameplay benefits:
 	- All of the ships in the fleet will be tracked when the refit tab is open
-	- "Play Drill Sounds - All" option will do so when a hullmod is installed on / removed from all ships
-	- Modules will not spawn unnecessary trackers and instead reuse their own
+	- "Play Drill Sounds - All" option will do so when a hullmod is installed on / removed from any ship
+	- Modules will not spawn unnecessary trackers and instead use their own
 	- Officer and autofit menus will not cause the trackers to detect false-positive changes on the ship
 
 

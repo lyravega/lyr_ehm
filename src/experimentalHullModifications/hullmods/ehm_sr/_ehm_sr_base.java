@@ -35,13 +35,13 @@ import lyravega.utilities.logger.lyr_logger;
 public abstract class _ehm_sr_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstall(ShipVariantAPI variant) {
+	public void onInstalled(ShipVariantAPI variant) {
 		if (lyr_miscUtilities.removeHullModsWithSameTag(variant, ehm_internals.tag.systemRetrofit, this.hullModSpecId)) return;
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
-	public void onRemove(ShipVariantAPI variant) {
+	public void onRemoved(ShipVariantAPI variant) {
 		if (!lyr_miscUtilities.hasHullModWithTag(variant, ehm_internals.tag.systemRetrofit, this.hullModSpecId))
 			variant.setHullSpecAPI(ehm_systemRestore(variant));
 		commitVariantChanges(); playDrillSound();

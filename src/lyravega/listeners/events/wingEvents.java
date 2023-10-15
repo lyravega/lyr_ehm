@@ -6,7 +6,7 @@ import lyravega.listeners.lyr_eventDispatcher;
 import lyravega.listeners.lyr_shipTracker;
 
 /**
- * When a weapon change is detected, the event methods in this interface will be called
+ * When a wing change is detected, the event methods in this interface will be called
  * for any hull modification effect that implements this.
  * <p> The hull modifications should be registered in {@code onApplicationLoad()}
  * through {@link lyr_eventDispatcher#registerModsWithEvents(String, String)}
@@ -14,28 +14,28 @@ import lyravega.listeners.lyr_shipTracker;
  * @author lyravega
  * @category Event Handler
  */
-public interface weaponEvents {
+public interface wingEvents {
 	/**
-	 * Broadcasted when a weapon is removed from the refit ship, caught by this method.
+	 * Broadcasted when a wing is removed from the refit ship, caught by this method.
 	 * Further filtering may be necessary depending on the usage, as the only filter
 	 * prior is whether this hull modification is installed on the variant
 	 * <p> Effects here will be transient as these methods are called only once after their
 	 * events. Should be used mainly to change the variant or to trigger an UI effect
 	 * @param variant
-	 * @param weaponId of the installed weapon
-	 * @param slotId of the slot that the weapon is installed at
+	 * @param wingId of the assigned wing
+	 * @param bayNumber of the bay that the wing is housed at
 	 */
-	public void onWeaponInstalled(ShipVariantAPI variant, String weaponId, String slotId);
+	public void onWingAssigned(ShipVariantAPI variant, String wingId, int bayNumber);
 
 	/**
-	 * Broadcasted when a weapon is removed from the refit ship, caught by this method.
+	 * Broadcasted when a wing is removed from the refit ship, caught by this method.
 	 * Further filtering may be necessary depending on the usage, as the only filter
 	 * prior is whether this hull modification is installed on the variant
 	 * <p> Effects here will be transient as these methods are called only once after their
 	 * events. Should be used mainly to change the variant or to trigger an UI effect
 	 * @param variant
-	 * @param weaponId of the removed weapon
-	 * @param slotId of the slot that the weapon is removed from
+	 * @param wingId of the relieved wing
+	 * @param bayNumber of the bay that the wing was housed at
 	 */
-	public void onWeaponRemoved(ShipVariantAPI variant, String weaponId, String slotId);
+	public void onWingRelieved(ShipVariantAPI variant, String wingId, int bayNumber);
 }

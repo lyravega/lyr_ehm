@@ -33,12 +33,12 @@ import lyravega.utilities.lyr_miscUtilities;
 public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onWeaponInstall(ShipVariantAPI variant, String weaponId, String slotId) {
+	public void onWeaponInstalled(ShipVariantAPI variant, String weaponId, String slotId) {
 		if (adapterMap.keySet().contains(weaponId)) commitVariantChanges();
 	}
 
 	@Override
-	public void onWeaponRemove(ShipVariantAPI variant, String weaponId, String slotId) {
+	public void onWeaponRemoved(ShipVariantAPI variant, String weaponId, String slotId) {
 		if (adapterMap.keySet().contains(weaponId)) commitVariantChanges();
 	}
 	//#endregion
@@ -53,9 +53,9 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 		private Map<String, WeaponSize> childrenSizes;
 
 		private childrenParameters() {
-			children = new HashSet<String>();
-			childrenOffsets = new HashMap<String, Vector2f>();
-			childrenSizes = new HashMap<String, WeaponSize>();
+			this.children = new HashSet<String>();
+			this.childrenOffsets = new HashMap<String, Vector2f>();
+			this.childrenSizes = new HashMap<String, WeaponSize>();
 		}
 
 		private void addChild(String childId, WeaponSize childSize, Vector2f childOffset) {
@@ -178,7 +178,7 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
 
-		if (!canBeAddedOrRemovedNow(ship, null, null)) {
+		if (!this.canBeAddedOrRemovedNow(ship, null, null)) {
 			String inOrOut = variant.hasHullMod(this.hullModSpecId) ? header.lockedIn : header.lockedOut;
 
 			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.locked_bgColour, Alignment.MID, header.padding);

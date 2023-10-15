@@ -33,6 +33,7 @@ public final class lyr_shipTracker {
 	private final Set<String> embeddedMods = new HashSet<String>();
 	private final Set<String> suppressedMods = new HashSet<String>();
 	private final Map<String, String> weapons = new HashMap<String, String>();
+	private final ArrayList<String> wings = new ArrayList<String>();
 	private Iterator<String> iterator;
 
 	//#region CONSTRUCTORS & ACCESSORS
@@ -46,6 +47,7 @@ public final class lyr_shipTracker {
 		this.enhancedMods.addAll(variant.getSMods());
 		this.embeddedMods.addAll(variant.getSModdedBuiltIns());
 		this.suppressedMods.addAll(variant.getSuppressedMods());
+		this.wings.addAll(variant.getWings());
 
 		for (WeaponSlotAPI slot : variant.getHullSpec().getAllWeaponSlotsCopy()) {
 			this.weapons.put(slot.getId(), variant.getWeaponId(slot.getId()));
@@ -80,6 +82,7 @@ public final class lyr_shipTracker {
 		this.checkEnhancedMods();
 		this.checkSuppressedMods();
 		this.checkWeapons();
+		this.checkWings();
 	}
 	//#endregion
 	// END OF CONSTRUCTORS & ACCESSORS
@@ -173,6 +176,36 @@ public final class lyr_shipTracker {
 				lyr_eventDispatcher.onWeaponEvent(onWeaponRemove, this.variant, oldWeaponId, slotId);
 
 				lyr_logger.eventInfo(this.logPrefix+": Changed '"+oldWeaponId+"' on '"+slotId+"' with '"+newWeaponId+"'");
+			}
+		}
+	}
+
+	private void checkWings() {
+		if (this.wings.size() < this.variant.getWings().size()) {	// needed because 'getWings()' grows when needed
+			this.wings.addAll(Collections.nCopies(this.variant.getWings().size() - this.wings.size(), ""));
+		}
+
+		for (int bayNumber = 0; bayNumber < this.wings.size(); bayNumber++) {	// iterating over this instead of 'getWings()' because it may get cleared
+			String oldWingId = this.wings.get(bayNumber);
+			String newWingId = this.variant.getWingId(bayNumber);
+
+			if (oldWingId.isEmpty() && newWingId == null) continue;
+			else if (oldWingId.isEmpty() && newWingId != null) {	// weapon installed
+				this.wings.set(bayNumber, newWingId);
+				lyr_eventDispatcher.onWingEvent(onWingAssign, this.variant, newWingId, bayNumber);
+
+				lyr_logger.eventInfo(this.logPrefix+": Installed '"+newWingId+"' on '"+bayNumber+"'");
+			} else if (!oldWingId.isEmpty() && newWingId == null) {	// weapon removed
+				this.wings.set(bayNumber, "");
+				lyr_eventDispatcher.onWingEvent(onWingRelieve, this.variant, oldWingId, bayNumber);
+
+				lyr_logger.eventInfo(this.logPrefix+": Removed '"+oldWingId+"' from '"+bayNumber+"'");
+			} else if (!oldWingId.isEmpty() && newWingId != null && !oldWingId.equals(newWingId)) {	// weapon changed
+				this.wings.set(bayNumber, newWingId);
+				lyr_eventDispatcher.onWingEvent(onWingAssign, this.variant, newWingId, bayNumber);
+				lyr_eventDispatcher.onWingEvent(onWingRelieve, this.variant, oldWingId, bayNumber);
+
+				lyr_logger.eventInfo(this.logPrefix+": Changed '"+oldWingId+"' on '"+bayNumber+"' with '"+newWingId+"'");
 			}
 		}
 	}

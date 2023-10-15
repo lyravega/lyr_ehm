@@ -21,7 +21,7 @@ public interface enhancedEvents {
 	 * events. Should be used mainly to change the variant or to trigger an UI effect
 	 * @param variant
 	 */
-	public void onEnhance(ShipVariantAPI variant);
+	public void onEnhanced(ShipVariantAPI variant);
 
 	/**
 	 * Called if this hull modification is no longer enhanced on the refit ship
@@ -30,5 +30,5 @@ public interface enhancedEvents {
 	 * events. Should be used mainly to change the variant or to trigger an UI effect
 	 * @param variant
 	 */
-	public void onNormalize(ShipVariantAPI variant);
+	public void onNormalized(ShipVariantAPI variant);
 }

@@ -40,24 +40,24 @@ import lyravega.utilities.lyr_miscUtilities;
 public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalEvents, enhancedEvents {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstall(ShipVariantAPI variant) {
+	public void onInstalled(ShipVariantAPI variant) {
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
-	public void onRemove(ShipVariantAPI variant) {
+	public void onRemoved(ShipVariantAPI variant) {
 		variant.setHullSpecAPI(ehm_hullSpecRefresh(variant));
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
-	public void onEnhance(ShipVariantAPI variant) {
+	public void onEnhanced(ShipVariantAPI variant) {
 		variant.addPermaMod(HullMods.CIVGRADE, false);
 		commitVariantChanges();
 	}
 
 	@Override
-	public void onNormalize(ShipVariantAPI variant) {
+	public void onNormalized(ShipVariantAPI variant) {
 		variant.removePermaMod(HullMods.CIVGRADE);
 		variant.setHullSpecAPI(ehm_hullSpecRefresh(variant));
 		commitVariantChanges();
@@ -182,7 +182,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 
 	@Override
 	public void addSModSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec, boolean isForBuildInList) {
-		if (!isApplicableToShip(ship)) return;
+		if (!this.isApplicableToShip(ship)) return;
 
 		if (!ship.getVariant().getHullSpec().getBuiltInMods().contains(ehm_internals.id.hullmods.base)) {
 			tooltip.addSectionHeading(header.noEffect, header.noEffect_textColour, header.noEffect_bgColour, Alignment.MID, header.padding);
@@ -195,7 +195,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 			tooltip.addPara(text.overEngineeredNoEffect[0], text.padding).setHighlight(text.overEngineeredNoEffect[1]);
 		} else {
 			tooltip.addSectionHeading(header.sEffect, header.sEffect_textColour, header.sEffect_bgColour, Alignment.MID, header.padding);
-			tooltip.addPara(this.hullModSpec.getSModDescription(hullSize).replaceAll("\\%", "%%"), text.padding, header.sEffect_textColour, getSModDescriptionParam(0, hullSize));
+			tooltip.addPara(this.hullModSpec.getSModDescription(hullSize).replaceAll("\\%", "%%"), text.padding, header.sEffect_textColour, this.getSModDescriptionParam(0, hullSize));
 
 			tooltip.addPara("+1 Built-in & Logistics modification capacity", text.padding, header.sEffect_textColour, "+1");
 			String logisticsBonus = "+"+(int) ship.getMutableStats().getCargoMod().getFlatBonus(this.hullModSpecId).value;
@@ -222,7 +222,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (ship == null) return;
 
-		if (!isApplicableToShip(ship)) {
+		if (!this.isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
 			if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
@@ -237,7 +237,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 			tooltip.addPara(text.overEngineeredWarning[0], text.padding).setHighlight(text.overEngineeredWarning[1]);
 		}
 
-		if (!canBeAddedOrRemovedNow(ship, null, null)) {
+		if (!this.canBeAddedOrRemovedNow(ship, null, null)) {
 			tooltip.addSectionHeading(header.lockedIn, header.locked_textColour, header.locked_bgColour, Alignment.MID, header.padding);
 		}
 
