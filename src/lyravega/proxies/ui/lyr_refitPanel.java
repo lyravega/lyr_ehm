@@ -4,8 +4,8 @@ import java.lang.invoke.MethodHandle;
 
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 
-import lyravega.utilities.logger.lyr_logger;
 import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
+import lyravega.utilities.logger.lyr_logger;
 
 public class lyr_refitPanel {
 	private Object refitPanel;	// UIPanelAPI, UIComponentAPI
@@ -48,7 +48,7 @@ public class lyr_refitPanel {
 	}
 
 	public Object retrieve() {
-		return refitPanel;
+		return this.refitPanel;
 	}
 
 	public void recycle(Object refitPanel) {
@@ -57,7 +57,7 @@ public class lyr_refitPanel {
 
 	public lyr_designDisplay getDesignDisplay() {
 		try {
-			return new lyr_designDisplay(getDesignDisplay.invoke(refitPanel));
+			return new lyr_designDisplay(getDesignDisplay.invoke(this.refitPanel));
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'getDesignDisplay()' in 'lyr_refitPanel'", t);
 		}	return null;
@@ -65,7 +65,7 @@ public class lyr_refitPanel {
 
 	public lyr_shipDisplay getShipDisplay() {
 		try {
-			return new lyr_shipDisplay(getShipDisplay.invoke(refitPanel));
+			return new lyr_shipDisplay(getShipDisplay.invoke(this.refitPanel));
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'getShipDisplay()' in 'lyr_refitPanel'", t);
 		}	return null;
@@ -73,7 +73,7 @@ public class lyr_refitPanel {
 
 	public void saveCurrentVariant() {
 		try {
-			saveCurrentVariant.invoke(refitPanel, false);	// if the boolean here is true, "Financial Transaction Confirmed" message will be shown
+			saveCurrentVariant.invoke(this.refitPanel, false);	// if the boolean here is true, "Financial Transaction Confirmed" message will be shown
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'saveCurrentVariant()' in 'lyr_refitPanel'", t);
 		}
@@ -81,7 +81,7 @@ public class lyr_refitPanel {
 
 	public FleetMemberAPI getMember() {
 		try {
-			return (FleetMemberAPI) getMember.invoke(refitPanel);
+			return (FleetMemberAPI) getMember.invoke(this.refitPanel);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'getMember()' in 'lyr_refitPanel'", t);
 		}	return null;
@@ -89,7 +89,7 @@ public class lyr_refitPanel {
 
 	public void syncWithCurrentVariant() {
 		try {
-			syncWithCurrentVariant.invoke(refitPanel, true);	// if the boolean here is false, isEditedSinceLoad() is set to true
+			syncWithCurrentVariant.invoke(this.refitPanel, true);	// if the boolean here is false, isEditedSinceLoad() is set to true
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'syncWithCurrentVariant()' in 'lyr_refitPanel'", t);
 		}
@@ -97,7 +97,7 @@ public class lyr_refitPanel {
 
 	public boolean isEditedSinceLoad() {
 		try {
-			return (boolean) isEditedSinceLoad.invoke(refitPanel);
+			return (boolean) isEditedSinceLoad.invoke(this.refitPanel);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'isEditedSinceLoad()' in 'lyr_refitPanel'", t);
 		}	return false;
@@ -105,7 +105,7 @@ public class lyr_refitPanel {
 
 	public boolean isEditedSinceSave() {
 		try {
-			return (boolean) isEditedSinceSave.invoke(refitPanel);
+			return (boolean) isEditedSinceSave.invoke(this.refitPanel);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'isEditedSinceSave()' in 'lyr_refitPanel'", t);
 		}	return false;
@@ -113,7 +113,7 @@ public class lyr_refitPanel {
 
 	public void setEditedSinceLoad(boolean isEditedSinceLoad) {
 		try {
-			setEditedSinceLoad.invoke(refitPanel, isEditedSinceLoad);
+			setEditedSinceLoad.invoke(this.refitPanel, isEditedSinceLoad);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'setEditedSinceLoad()' in 'lyr_refitPanel'", t);
 		}
@@ -121,7 +121,7 @@ public class lyr_refitPanel {
 
 	public void setEditedSinceSave(boolean isEditedSinceSave) {
 		try {
-			setEditedSinceSave.invoke(refitPanel, isEditedSinceSave);
+			setEditedSinceSave.invoke(this.refitPanel, isEditedSinceSave);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'setEditedSinceSave()' in 'lyr_refitPanel'", t);
 		}
@@ -129,7 +129,7 @@ public class lyr_refitPanel {
 
 	public void addAllWeaponsFromVariantToCargo(Object variant) {
 		try {
-			addAllWeaponsFromVariantToCargo.invoke(refitPanel, variant);
+			addAllWeaponsFromVariantToCargo.invoke(this.refitPanel, variant);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'addAllWeaponsFromVariantToCargo()' in 'lyr_refitPanel'", t);
 		}

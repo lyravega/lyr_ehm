@@ -2,8 +2,8 @@ package lyravega.proxies.ui;
 
 import java.lang.invoke.MethodHandle;
 
-import lyravega.utilities.logger.lyr_logger;
 import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
+import lyravega.utilities.logger.lyr_logger;
 
 public class lyr_coreUI {
 	private Object coreUI;	// CoreUIAPI, UIPanelAPI, UIComponentAPI
@@ -30,7 +30,7 @@ public class lyr_coreUI {
 	}
 
 	public Object retrieve() {
-		return coreUI;
+		return this.coreUI;
 	}
 
 	public void recycle(Object coreUI) {
@@ -40,7 +40,7 @@ public class lyr_coreUI {
 	// this is currently only utilized for the refit tab
 	public lyr_refitTab getCurrentTab() {
 		try {
-			return new lyr_refitTab(getCurrentTab.invoke(coreUI));
+			return new lyr_refitTab(getCurrentTab.invoke(this.coreUI));
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'getCurrentTab()' in 'lyr_coreUI'", t);
 		}	return null;

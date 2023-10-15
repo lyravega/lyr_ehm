@@ -5,8 +5,8 @@ import java.lang.invoke.MethodHandle;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI;
 
-import lyravega.utilities.logger.lyr_logger;
 import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
+import lyravega.utilities.logger.lyr_logger;
 
 public class lyr_campaignUI {
 	private CampaignUIAPI campaignUI;
@@ -34,7 +34,7 @@ public class lyr_campaignUI {
 	}
 
 	public CampaignUIAPI retrieve() {
-		return campaignUI;
+		return this.campaignUI;
 	}
 
 	public void recycle(CampaignUIAPI campaignUI) {
@@ -43,14 +43,14 @@ public class lyr_campaignUI {
 
 	public Object getScreenPanel() {
 		try {
-			return getScreenPanel.invoke(campaignUI);
+			return getScreenPanel.invoke(this.campaignUI);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'getScreenPanel()' in 'lyr_campaignUI'", t);
 		}	return null;
 	}
 
 	public lyr_encounterDialog getEncounterDialog() {
-		if (campaignUI.getCurrentInteractionDialog() != null) try {
+		if (this.campaignUI.getCurrentInteractionDialog() != null) try {
 			return new lyr_encounterDialog();
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'getEncounterDialog()' in 'lyr_campaignUI'", t);
@@ -58,10 +58,10 @@ public class lyr_campaignUI {
 	}
 
 	public lyr_coreUI getCore() {
-		if (campaignUI.getCurrentInteractionDialog() == null) try {
-			return new lyr_coreUI(getCore.invoke(campaignUI));
+		if (this.campaignUI.getCurrentInteractionDialog() == null) try {
+			return new lyr_coreUI(getCore.invoke(this.campaignUI));
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'getCore()' in 'lyr_campaignUI'", t);
-		} return getEncounterDialog().getCoreUI();
+		} return this.getEncounterDialog().getCoreUI();
 	}
 }

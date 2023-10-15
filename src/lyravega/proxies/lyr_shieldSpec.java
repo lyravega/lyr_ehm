@@ -6,8 +6,8 @@ import java.lang.invoke.MethodHandle;
 import com.fs.starfarer.api.combat.ShieldAPI.ShieldType;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
 
-import lyravega.utilities.logger.lyr_logger;
 import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
+import lyravega.utilities.logger.lyr_logger;
 
 /**
  * A proxy-like class for {@link ShieldSpecAPI} that utilizes obfuscated
@@ -68,7 +68,7 @@ public final class lyr_shieldSpec {
 	 * @return the stored {@link ShieldSpecAPI}
 	 */
 	public ShieldSpecAPI retrieve() {
-		return shieldSpec;
+		return this.shieldSpec;
 	}
 
 	/**
@@ -104,7 +104,7 @@ public final class lyr_shieldSpec {
 	 */
 	@Override
 	public lyr_shieldSpec clone() {
-		return new lyr_shieldSpec(shieldSpec, true);
+		return new lyr_shieldSpec(this.shieldSpec, true);
 	}
 
 	//#region PROXY METHODS
@@ -114,7 +114,7 @@ public final class lyr_shieldSpec {
 	 */
 	public void setType(ShieldType shieldType) {
 		try {
-			setType.invoke(shieldSpec, shieldType);
+			setType.invoke(this.shieldSpec, shieldType);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'setType()' in 'lyr_shieldSpec'", t);
 		}
@@ -126,7 +126,7 @@ public final class lyr_shieldSpec {
 	 */
 	public void setFluxPerDamageAbsorbed(float absorbtionRatio) {
 		try {
-			setFluxPerDamageAbsorbed.invoke(shieldSpec, absorbtionRatio);
+			setFluxPerDamageAbsorbed.invoke(this.shieldSpec, absorbtionRatio);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'setFluxPerDamageAbsorbed()' in 'lyr_shieldSpec'", t);
 		}
@@ -138,7 +138,7 @@ public final class lyr_shieldSpec {
 	 */
 	public void setUpkeepCost(float upkeepCost) {
 		try {
-			setUpkeepCost.invoke(shieldSpec, upkeepCost);
+			setUpkeepCost.invoke(this.shieldSpec, upkeepCost);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'setUpkeepCost()' in 'lyr_shieldSpec'", t);
 		}
@@ -150,7 +150,7 @@ public final class lyr_shieldSpec {
 	 */
 	public void setArc(float arcSize) {
 		try {
-			setArc.invoke(shieldSpec, arcSize);
+			setArc.invoke(this.shieldSpec, arcSize);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'setArc()' in 'lyr_shieldSpec'", t);
 		}
@@ -162,7 +162,7 @@ public final class lyr_shieldSpec {
 	 */
 	public void setPhaseCost(float phaseCost) {
 		try {
-			setPhaseCost.invoke(shieldSpec, phaseCost);
+			setPhaseCost.invoke(this.shieldSpec, phaseCost);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'setPhaseCost()' in 'lyr_shieldSpec'", t);
 		}
@@ -174,7 +174,7 @@ public final class lyr_shieldSpec {
 	 */
 	public void setPhaseUpkeep(float phaseUpkeep) {
 		try {
-			setPhaseUpkeep.invoke(shieldSpec, phaseUpkeep);
+			setPhaseUpkeep.invoke(this.shieldSpec, phaseUpkeep);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'setPhaseUpkeep()' in 'lyr_shieldSpec'", t);
 		}
@@ -183,11 +183,11 @@ public final class lyr_shieldSpec {
 	// END OF PROXY METHODS
 
 	//#region BRIDGE METHODS
-	public void setRingColor(Color colour) { shieldSpec.setRingColor(colour); }
+	public void setRingColor(Color colour) { this.shieldSpec.setRingColor(colour); }
 
-	public void setInnerColor(Color colour) { shieldSpec.setInnerColor(colour); }
+	public void setInnerColor(Color colour) { this.shieldSpec.setInnerColor(colour); }
 
-	public ShieldType getType() { return shieldSpec.getType(); }
+	public ShieldType getType() { return this.shieldSpec.getType(); }
 	//#endregion
 	// END OF BRIDGE METHODS
 }

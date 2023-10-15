@@ -5,8 +5,8 @@ import java.lang.invoke.MethodHandle;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.InteractionDialogAPI;
 
-import lyravega.utilities.logger.lyr_logger;
 import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
+import lyravega.utilities.logger.lyr_logger;
 
 public class lyr_encounterDialog {
 	private InteractionDialogAPI encounterDialog;	// InteractionDialogAPI, VisualPanelAPI, UIPanelAPI, UIComponentAPI
@@ -30,7 +30,7 @@ public class lyr_encounterDialog {
 	}
 
 	public InteractionDialogAPI retrieve() {
-		return encounterDialog;
+		return this.encounterDialog;
 	}
 
 	public void recycle(InteractionDialogAPI encounterDialog) {
@@ -39,7 +39,7 @@ public class lyr_encounterDialog {
 
 	public lyr_coreUI getCoreUI() {
 		try {
-			return new lyr_coreUI(getCoreUI.invoke(encounterDialog));
+			return new lyr_coreUI(getCoreUI.invoke(this.encounterDialog));
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'getCoreUI()' in 'lyr_encounterDialog'", t);
 		}	return null;

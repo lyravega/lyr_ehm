@@ -4,8 +4,8 @@ import java.lang.invoke.MethodHandle;
 
 import com.fs.starfarer.api.ui.ButtonAPI;
 
-import lyravega.utilities.logger.lyr_logger;
 import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
+import lyravega.utilities.logger.lyr_logger;
 
 public class lyr_designDisplay {
 	private Object designDisplay;	// UIPanelAPI, UIComponentAPI
@@ -31,7 +31,7 @@ public class lyr_designDisplay {
 	}
 
 	public Object retrieve() {
-		return designDisplay;
+		return this.designDisplay;
 	}
 
 	public void recycle(Object designDisplay) {
@@ -40,7 +40,7 @@ public class lyr_designDisplay {
 
 	public void undo() {
 		try {
-			undo.invoke(designDisplay);
+			undo.invoke(this.designDisplay);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'undo()' in 'lyr_designDisplay'", t);
 		}
@@ -48,7 +48,7 @@ public class lyr_designDisplay {
 
 	public ButtonAPI getSaveButton() {
 		try {
-			return (ButtonAPI) getSaveButton.invoke(designDisplay);
+			return (ButtonAPI) getSaveButton.invoke(this.designDisplay);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'getSaveButton()' in 'lyr_designDisplay'", t);
 		}	return null;
@@ -56,7 +56,7 @@ public class lyr_designDisplay {
 
 	public ButtonAPI getUndoButton() {
 		try {
-			return (ButtonAPI) getUndoButton.invoke(designDisplay);
+			return (ButtonAPI) getUndoButton.invoke(this.designDisplay);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'getUndoButton()' in 'lyr_designDisplay'", t);
 		}	return null;

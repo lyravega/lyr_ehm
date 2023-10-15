@@ -2,8 +2,8 @@ package lyravega.proxies.ui;
 
 import java.lang.invoke.MethodHandle;
 
-import lyravega.utilities.logger.lyr_logger;
 import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
+import lyravega.utilities.logger.lyr_logger;
 
 public class lyr_refitTab {
 	private Object refitTab;	// UIPanelAPI, UIComponentAPI
@@ -26,7 +26,7 @@ public class lyr_refitTab {
 	}
 
 	public Object retrieve() {
-		return refitTab;
+		return this.refitTab;
 	}
 
 	public void recycle(Object refitTab) {
@@ -35,7 +35,7 @@ public class lyr_refitTab {
 
 	public lyr_refitPanel getRefitPanel() {
 		try {
-			return new lyr_refitPanel(getRefitPanel.invoke(refitTab));
+			return new lyr_refitPanel(getRefitPanel.invoke(this.refitTab));
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'getRefitPanel()' in 'lyr_refitTab'", t);
 		}	return null;

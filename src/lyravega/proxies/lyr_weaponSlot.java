@@ -3,14 +3,14 @@ package lyravega.proxies;
 import java.lang.invoke.MethodHandle;
 // import java.lang.invoke.MethodType;
 
+import org.lwjgl.util.vector.Vector2f;
+
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
-import lyravega.utilities.logger.lyr_logger;
 import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
-
-import org.lwjgl.util.vector.Vector2f;
+import lyravega.utilities.logger.lyr_logger;
 
 /**
  * A proxy-like class for {@link WeaponSlotAPI} that utilizes obfuscated
@@ -87,7 +87,7 @@ public final class lyr_weaponSlot {
 	 * @return the stored {@link WeaponSlotAPI}
 	 */
 	public WeaponSlotAPI retrieve() {
-		return weaponSlot;
+		return this.weaponSlot;
 	}
 
 	/**
@@ -123,7 +123,7 @@ public final class lyr_weaponSlot {
 	 */
 	@Override
 	public lyr_weaponSlot clone() {
-		return new lyr_weaponSlot(weaponSlot, true);
+		return new lyr_weaponSlot(this.weaponSlot, true);
 	}
 
 	//#region PROXY METHODS
@@ -133,7 +133,7 @@ public final class lyr_weaponSlot {
 	 */
 	public void setWeaponType(WeaponType weaponType) {
 		try {
-			setWeaponType.invoke(weaponSlot, weaponType);
+			setWeaponType.invoke(this.weaponSlot, weaponType);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'setWeaponType()' in 'lyr_weaponSlot'", t);
 		}
@@ -145,7 +145,7 @@ public final class lyr_weaponSlot {
 	 */
 	public void setId(String weaponSlotId) {
 		try {
-			setId.invoke(weaponSlot, weaponSlotId);
+			setId.invoke(this.weaponSlot, weaponSlotId);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'setId()' in 'lyr_weaponSlot'", t);
 		}
@@ -157,7 +157,7 @@ public final class lyr_weaponSlot {
 	 */
 	public void setSlotSize(WeaponSize slotSize) {
 		try {
-			setSlotSize.invoke(weaponSlot, slotSize);
+			setSlotSize.invoke(this.weaponSlot, slotSize);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'setSlotSize()' in 'lyr_weaponSlot'", t);
 		}
@@ -173,7 +173,7 @@ public final class lyr_weaponSlot {
 	public void setNode(String nodeId, Vector2f location) {
 		try {
 			// setNode_alt.invoke(weaponSlot, nodeClass.cast(newNode.invoke(nodeId, location)));
-			setNode.invoke(weaponSlot, nodeId, location);
+			setNode.invoke(this.weaponSlot, nodeId, location);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'setNode()' in 'lyr_weaponSlot'", t);
 		}
@@ -185,7 +185,7 @@ public final class lyr_weaponSlot {
 	 */
 	public Enum<?> getSlotType() {
 		try {
-			return (Enum<?>) getSlotType.invoke(weaponSlot);
+			return (Enum<?>) getSlotType.invoke(this.weaponSlot);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'getSlotType()' in 'lyr_weaponSlot'", t);
 		}	return null;
@@ -197,7 +197,7 @@ public final class lyr_weaponSlot {
 	 */
 	public void setSlotType(slotTypeConstants slotType) {
 		try {
-			setSlotType.invoke(weaponSlot, slotTypeEnum.getEnumConstants()[slotType.ordinal()]);
+			setSlotType.invoke(this.weaponSlot, slotTypeEnum.getEnumConstants()[slotType.ordinal()]);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'setSlotType()' in 'lyr_weaponSlot'", t);
 		}
@@ -206,17 +206,17 @@ public final class lyr_weaponSlot {
 	// END OF PROXY METHODS
 
 	//#region BRIDGE METHODS
-	public boolean isWeaponSlot() { return weaponSlot.isWeaponSlot(); }
+	public boolean isWeaponSlot() { return this.weaponSlot.isWeaponSlot(); }
 
-	public Vector2f getLocation() { return weaponSlot.getLocation(); }
+	public Vector2f getLocation() { return this.weaponSlot.getLocation(); }
 
-	public float getAngle() { return weaponSlot.getAngle(); }
+	public float getAngle() { return this.weaponSlot.getAngle(); }
 
-	public void setAngle(float angle) { weaponSlot.setAngle(angle); }
+	public void setAngle(float angle) { this.weaponSlot.setAngle(angle); }
 
-	public float getArc() { return weaponSlot.getArc(); }
+	public float getArc() { return this.weaponSlot.getArc(); }
 
-	public void setArc(float angle) { weaponSlot.setArc(angle); }
+	public void setArc(float angle) { this.weaponSlot.setArc(angle); }
 	//#endregion
 	// END OF BRIDGE METHODS
 }

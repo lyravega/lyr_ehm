@@ -5,8 +5,8 @@ import java.lang.invoke.MethodHandle;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 
-import lyravega.utilities.logger.lyr_logger;
 import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
+import lyravega.utilities.logger.lyr_logger;
 
 public class lyr_shipDisplay {
 	private Object shipDisplay;		// UIPanelAPI, UIComponentAPI
@@ -34,7 +34,7 @@ public class lyr_shipDisplay {
 	}
 
 	public Object retrieve() {
-		return shipDisplay;
+		return this.shipDisplay;
 	}
 
 	public void recycle(Object shipDisplay) {
@@ -43,7 +43,7 @@ public class lyr_shipDisplay {
 
 	public void setFleetMember(Object fleetMember, Object variant) {
 		try {
-			setFleetMember.invoke(shipDisplay, fleetMember, variant);
+			setFleetMember.invoke(this.shipDisplay, fleetMember, variant);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'setFleetMember()' in 'lyr_shipDisplay'", t);
 		}
@@ -51,7 +51,7 @@ public class lyr_shipDisplay {
 
 	public ShipVariantAPI getCurrentVariant() {
 		try {
-			return (ShipVariantAPI) getCurrentVariant.invoke(shipDisplay);
+			return (ShipVariantAPI) getCurrentVariant.invoke(this.shipDisplay);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'getCurrentVariant()' in 'lyr_shipDisplay'", t);
 		}	return null;
@@ -59,7 +59,7 @@ public class lyr_shipDisplay {
 
 	public ShipAPI getShip() {
 		try {
-			return (ShipAPI) getShip.invoke(shipDisplay);
+			return (ShipAPI) getShip.invoke(this.shipDisplay);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'getShip()' in 'lyr_shipDisplay'", t);
 		}	return null;
@@ -67,7 +67,7 @@ public class lyr_shipDisplay {
 
 	public void clearFighterSlot(int fighterSlot, ShipVariantAPI variant) {
 		try {
-			clearFighterSlot.invoke(shipDisplay, fighterSlot, variant);
+			clearFighterSlot.invoke(this.shipDisplay, fighterSlot, variant);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'clearFighterSlot()' in 'lyr_shipDisplay'", t);
 		}
