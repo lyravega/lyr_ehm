@@ -1,9 +1,15 @@
 Version 0.8.6
 
-- Fixed Logistics Overhaul not ignoring the hidden modular hull modifications in its checks
+- Fixed "Logistics Overhaul" not ignoring the hidden modular hull modifications in its checks
 - Fixed an issue on base hullmod installation that added fixed built-in dmods back to the ship
 - Fixed undo button not getting disabled visually when it was supposed to
+- Changed system retrofits so that they will be hidden if a the system is not found, instead of crashing the game on install
 - Changed engine cosmetic mods to apply the campaign contrails immediately instead of requiring a save/load
+- Changed ship/module tracking completely, which comes with a few non-gameplay benefits:
+	- All of the ships in the fleet will be tracked when the refit tab is open
+	- "Play Drill Sounds - All" option will do so when a hullmod is installed on / removed from all ships
+	- Modules will not spawn unnecessary trackers and instead reuse their own
+	- Officer and autofit menus will not cause the trackers to detect false-positive changes on the ship
 
 
 Version 0.8.5 - Hotfix
@@ -87,7 +93,7 @@ Changes/Fixes:
 - Added 3 fully customizable* engine cosmetic hullmods; "Red", "Green" and "Blue" engines
 - Added full shield and engine customization options through the new options menu
 - Added "Auxilary Generators" hullmod; provides 1/1/2/2 slot points at the cost of 10/10/20/20 OP
-- (D) is removed, or if 'showExperimentalFlavour' is enabled, replaced with (E) from hull class names 
+- (D) is removed, or if 'showExperimentalFlavour' is enabled, replaced with (E) from hull class names
 - Fixed shunt market ability toggle not properly persisting through reloads
 - Fixed value reduction on ships that persisted till a reload
 - Hid the removal tool from .csv for now

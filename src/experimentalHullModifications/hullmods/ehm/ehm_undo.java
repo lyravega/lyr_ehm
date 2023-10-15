@@ -13,7 +13,6 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import experimentalHullModifications.misc.ehm_tooltip.text;
-import lyravega.listeners.lyr_fleetTracker;
 import lyravega.utilities.lyr_miscUtilities;
 
 /**
@@ -27,8 +26,6 @@ public final class ehm_undo extends _ehm_base {
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
 
-		lyr_fleetTracker.terminateShipTracker(stats);
-
 		variant.getHullMods().remove(ehm_internals.id.hullmods.base);
 		variant.getPermaMods().remove(ehm_internals.id.hullmods.base);
 		variant.getHullMods().remove(this.hullModSpecId);
@@ -39,7 +36,7 @@ public final class ehm_undo extends _ehm_base {
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (ship == null) return;
 
-		if (!isApplicableToShip(ship)) {
+		if (!this.isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
 			if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);

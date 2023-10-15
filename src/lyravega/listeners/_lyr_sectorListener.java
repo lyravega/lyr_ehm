@@ -9,7 +9,7 @@ import lyravega.utilities.logger.lyr_logger;
  * @author lyravega
  */
 public abstract class _lyr_sectorListener {
-	public final void attach(boolean isTransient) {	// used in plugin's onLoad()
+	public final void attachListener(boolean isTransient) {	// used in plugin's onLoad()
 		if (!Global.getSector().getListenerManager().hasListener(this)) {
 			Global.getSector().getListenerManager().addListener(this, isTransient);
 
@@ -17,7 +17,7 @@ public abstract class _lyr_sectorListener {
 		}
 	}
 
-	public final void detach() {
+	public final void detachListener() {
 		if (Global.getSector().getListenerManager().hasListener(this)) {
 			Global.getSector().getListenerManager().removeListener(this);
 

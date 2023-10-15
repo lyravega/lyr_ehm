@@ -32,7 +32,7 @@ public final class lyr_ehm extends BaseModPlugin {
 		updateBlueprints();
 		replaceFieldRepairsScript();
 		attachShuntAccessListener();
-		lyr_fleetTracker.get().attach(true);
+		lyr_fleetTracker.attach();
 	}
 
 	@Override
@@ -46,8 +46,8 @@ public final class lyr_ehm extends BaseModPlugin {
 	public void configureXStream(XStream x) {
 		x.alias("FieldRepairsScript", ehm_fieldRepairsScript.class);
 		x.alias("data.abilities.ehm_ability", ehm_ability.class);	// remember to use this for serialized shit
-		x.alias("ehm_refitTabListener", ehm_shuntInjector.class);	// added transient, but just in case
-		x.alias("ehm_colonyInteractionListener", ehm_submarketInjector.class);	// added transient, but just in case
+		x.alias("ehm_shuntInjector", ehm_shuntInjector.class);	// added transient, but just in case
+		x.alias("ehm_submarketInjector", ehm_submarketInjector.class);	// added transient, but just in case
 	}
 
 	/**
@@ -140,8 +140,8 @@ public final class lyr_ehm extends BaseModPlugin {
 		if (!Global.getSector().getPlayerFleet().getAbility(ehm_internals.id.ability).isActive()) return;
 
 		switch (ehm_settings.getShuntAvailability()) {
-			case "Always": ehm_submarketInjector.nullify(friend); ehm_shuntInjector.get().attach(true); break;
-			case "Submarket": ehm_shuntInjector.nullify(friend); ehm_submarketInjector.get().attach(true); break;
+			case "Always": ehm_submarketInjector.nullify(friend); ehm_shuntInjector.attach(); break;
+			case "Submarket": ehm_shuntInjector.nullify(friend); ehm_submarketInjector.attach(); break;
 			default: break;
 		}
 	}

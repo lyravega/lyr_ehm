@@ -25,20 +25,26 @@ public final class ehm_shuntInjector extends _lyr_tabListener {
 		super(CoreUITabId.REFIT);
 	}
 
-	public static _lyr_sectorListener get() {
+	public static void attach() {
 		if (instance == null) instance = new ehm_shuntInjector();
 
-		return instance;
+		instance.attachListener(true);
+	}
+
+	public static void detach() {
+		if (instance == null) return;
+
+		instance.detachListener();
 	}
 
 	public static void nullify(friend friend) {
 		if (friend == null || instance == null) return;
 
-		instance.detach(); instance = null;
+		instance.detachListener(); instance = null;
 	}
 
 	@Override
-	public void onOpen() {
+	protected void onOpen() {
 		if (!Global.getSector().getPlayerFleet().getAbility(ehm_internals.id.ability).isActive()) return;
 
 		CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
@@ -51,7 +57,7 @@ public final class ehm_shuntInjector extends _lyr_tabListener {
 	}
 
 	@Override
-	public void onClose() {
+	protected void onClose() {
 		if (!Global.getSector().getPlayerFleet().getAbility(ehm_internals.id.ability).isActive()) return;
 
 		CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
@@ -63,5 +69,7 @@ public final class ehm_shuntInjector extends _lyr_tabListener {
 		lyr_logger.debug("Removing slot shunts from player cargo");
 	}
 
-	@Override public void onAdvance(float amount) {}
+	@Override protected void delayedOnOpen() {}
+
+	@Override protected void onAdvance(float amount) {}
 }

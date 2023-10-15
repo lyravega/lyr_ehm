@@ -25,16 +25,22 @@ public final class ehm_submarketInjector extends _lyr_sectorListener implements 
 
 	private ehm_submarketInjector() {}
 
-	public static _lyr_sectorListener get() {
+	public static void attach() {
 		if (instance == null) instance = new ehm_submarketInjector();
 
-		return instance;
+		instance.attachListener(true);
+	}
+
+	public static void detach() {
+		if (instance == null) return;
+
+		instance.detachListener();
 	}
 
 	public static void nullify(friend friend) {
 		if (friend == null || instance == null) return;
 
-		instance.detach(); instance = null;
+		instance.detachListener(); instance = null;
 	}
 
 	@Override

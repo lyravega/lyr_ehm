@@ -17,7 +17,6 @@ import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import experimentalHullModifications.misc.ehm_tooltip.text;
 import experimentalHullModifications.plugin.ehm_settings;
-import lyravega.listeners.lyr_fleetTracker;
 import lyravega.utilities.lyr_miscUtilities;
 
 /**
@@ -33,8 +32,6 @@ public final class ehm_base extends _ehm_base {
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
 		ShipHullSpecAPI hullSpec = variant.getHullSpec();
-
-		lyr_fleetTracker.updateShipTracker(stats);	// if this is done after the block below, it'll create multiple trackers for ships with a captain
 
 		if (!hullSpec.isBuiltInMod(ehm_internals.id.hullmods.base) || !Misc.getDHullId(hullSpec).equals(hullSpec.getHullId())) {
 			variant.setHullSpecAPI(ehm_hullSpecClone(variant));
@@ -56,9 +53,7 @@ public final class ehm_base extends _ehm_base {
 	}
 
 	@Override
-	public void applyEffectsAfterShipCreation(ShipAPI ship, String hullModSpecId) {
-		lyr_fleetTracker.updateShipTracker(ship);
-	}
+	public void applyEffectsAfterShipCreation(ShipAPI ship, String hullModSpecId) {}
 
 	@Override
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {

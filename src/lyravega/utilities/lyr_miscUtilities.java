@@ -224,14 +224,14 @@ public class lyr_miscUtilities {
 	}
 
 	public static boolean isExperimentalMod(HullModSpecAPI spec, boolean excludeRestricted) {
-		if (!spec.getManufacturer().equals(ehm_internals.id.manufacturer)) return false;
+		if (!ehm_internals.id.manufacturer.equals(spec.getManufacturer())) return false;
 		if (!spec.hasTag(ehm_internals.tag.experimental)) return false;
 		if (excludeRestricted && spec.hasTag(ehm_internals.tag.restricted)) return false;
 		return true;
 	}
 
 	public static boolean isExperimentalShunt(WeaponSpecAPI spec, boolean excludeRestricted) {
-		if (!spec.getManufacturer().equals(ehm_internals.id.manufacturer)) return false;
+		if (!ehm_internals.id.manufacturer.equals(spec.getManufacturer())) return false;
 		if (!spec.hasTag(ehm_internals.tag.experimental)) return false;
 		if (excludeRestricted && spec.hasTag(ehm_internals.tag.restricted)) return false;
 		return true;

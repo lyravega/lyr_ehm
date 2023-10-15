@@ -5,6 +5,7 @@ import static lyravega.listeners.lyr_eventDispatcher.events.*;
 import java.util.*;
 
 import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
 import lyravega.listeners.events.*;
@@ -23,22 +24,24 @@ import lyravega.utilities.logger.lyr_logger;
  */
 public final class lyr_shipTracker {
 	private ShipVariantAPI variant = null;
-	// private ShipHullSpecAPI hullSpec = null;
-	private final String trackerId;
+	private final String trackerUUID;
+	private final String parentTrackerUUID;
+	private final String logPrefix;
+	private final lyr_fleetTracker fleetTracker;
 	private final Set<String> hullMods = new HashSet<String>();
 	private final Set<String> enhancedMods = new HashSet<String>();
 	private final Set<String> embeddedMods = new HashSet<String>();
 	private final Set<String> suppressedMods = new HashSet<String>();
 	private final Map<String, String> weapons = new HashMap<String, String>();
-	// private Map<String, ShipVariantAPI> moduleVariants = null;
 	private Iterator<String> iterator;
 
 	//#region CONSTRUCTORS & ACCESSORS
-	public lyr_shipTracker(final ShipVariantAPI variant, final String trackerId) {
+	public lyr_shipTracker(lyr_fleetTracker fleetTracker, final ShipVariantAPI variant, final String trackerId, final String parentTrackerId) {
 		this.variant = variant;
-		// this.hullSpec = variant.getHullSpec();
-		this.trackerId = trackerId;
-		// this.parentId = getUUID(variant);
+		this.trackerUUID = trackerId;
+		this.parentTrackerUUID = parentTrackerId;
+		this.logPrefix = (parentTrackerId != null ? "MT-" : "ST-") + trackerId;
+		this.fleetTracker = fleetTracker;
 		this.hullMods.addAll(variant.getHullMods());
 		this.enhancedMods.addAll(variant.getSMods());
 		this.embeddedMods.addAll(variant.getSModdedBuiltIns());
@@ -47,9 +50,21 @@ public final class lyr_shipTracker {
 		for (WeaponSlotAPI slot : variant.getHullSpec().getAllWeaponSlotsCopy()) {
 			this.weapons.put(slot.getId(), variant.getWeaponId(slot.getId()));
 		}
+
+		lyr_logger.trackerInfo(this.logPrefix+": Tracker initialized");
 	}
 
-	ShipVariantAPI getVariant() { return this.variant; }
+	public ShipVariantAPI getOwnVariant() { return this.variant; }
+
+	public ShipVariantAPI getParentVariant() { return this.fleetTracker.shipTrackers.get(this.parentTrackerUUID).getOwnVariant(); }
+
+	public FleetMemberAPI getOwnMember() { return this.fleetTracker.fleetMembers.get(this.trackerUUID); }
+
+	public FleetMemberAPI getParentMember() { return this.fleetTracker.fleetMembers.get(this.parentTrackerUUID); }
+
+	public String getOwnTrackerUUID() { return this.trackerUUID; }
+
+	public String getParentTrackerUUID() { return this.parentTrackerUUID; }
 
 	/**
 	 * Updates the stored variant, and then compares the hullmods and weapons
@@ -58,7 +73,7 @@ public final class lyr_shipTracker {
 	 * @param variant to update and compare
 	 * @see {@link normalEvents} / {@link enhancedEvents} / {@link suppressedEvents} / {@link weaponEvents}
 	 */
-	public void updateVariant(final ShipVariantAPI variant) {
+	void updateVariant(final ShipVariantAPI variant) {
 		this.variant = variant;
 
 		this.checkHullMods();
@@ -75,7 +90,7 @@ public final class lyr_shipTracker {
 			if (this.suppressedMods.contains(hullModId)) { this.hullMods.add(hullModId); continue; }
 
 			this.hullMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onInstall, this.variant, hullModId);
-			lyr_logger.eventInfo("ST-"+this.trackerId+": Installed '"+hullModId+"'");
+			lyr_logger.eventInfo(this.logPrefix+": Installed '"+hullModId+"'");
 		}
 
 		for (this.iterator = this.hullMods.iterator(); this.iterator.hasNext();) { final String hullModId = this.iterator.next();
@@ -83,7 +98,7 @@ public final class lyr_shipTracker {
 			if (this.variant.getSuppressedMods().contains(hullModId)) { this.iterator.remove(); continue; }
 
 			this.iterator.remove(); lyr_eventDispatcher.onHullModEvent(onRemove, this.variant, hullModId);
-			lyr_logger.eventInfo("ST-"+this.trackerId+": Removed '"+hullModId+"'");
+			lyr_logger.eventInfo(this.logPrefix+": Removed '"+hullModId+"'");
 		}
 	}
 
@@ -93,7 +108,7 @@ public final class lyr_shipTracker {
 			if (this.embeddedMods.contains(hullModId)) continue;
 
 			this.enhancedMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onEnhance, this.variant, hullModId);
-			lyr_logger.eventInfo("ST-"+this.trackerId+": Enhanced '"+hullModId+"'");
+			lyr_logger.eventInfo(this.logPrefix+": Enhanced '"+hullModId+"'");
 		}
 
 		for (final String hullModId : this.variant.getSModdedBuiltIns()) {
@@ -101,21 +116,21 @@ public final class lyr_shipTracker {
 			if (this.enhancedMods.contains(hullModId)) this.enhancedMods.remove(hullModId);
 
 			this.embeddedMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onEnhance, this.variant, hullModId);
-			lyr_logger.eventInfo("ST-"+this.trackerId+": Enhanced embedded '"+hullModId+"'");
+			lyr_logger.eventInfo(this.logPrefix+": Enhanced embedded '"+hullModId+"'");
 		}
 
 		for (this.iterator = this.enhancedMods.iterator(); this.iterator.hasNext();) { final String hullModId = this.iterator.next();
 			if (this.variant.getSMods().contains(hullModId)) continue;
 
 			this.iterator.remove(); lyr_eventDispatcher.onHullModEvent(onNormalize, this.variant, hullModId);
-			lyr_logger.eventInfo("ST-"+this.trackerId+": Normalized '"+hullModId+"'");
+			lyr_logger.eventInfo(this.logPrefix+": Normalized '"+hullModId+"'");
 		}
 
 		for (this.iterator = this.embeddedMods.iterator(); this.iterator.hasNext();) { final String hullModId = this.iterator.next();
 			if (this.variant.getSModdedBuiltIns().contains(hullModId)) continue;
 
 			this.iterator.remove(); lyr_eventDispatcher.onHullModEvent(onNormalize, this.variant, hullModId);
-			lyr_logger.eventInfo("ST-"+this.trackerId+": Normalized embedded '"+hullModId+"'");
+			lyr_logger.eventInfo(this.logPrefix+": Normalized embedded '"+hullModId+"'");
 		}
 	}
 
@@ -124,14 +139,14 @@ public final class lyr_shipTracker {
 			if (this.suppressedMods.contains(hullModId)) continue;
 
 			this.suppressedMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onSuppress, this.variant, hullModId);
-			lyr_logger.eventInfo("ST-"+this.trackerId+": Suppressed '"+hullModId+"'");
+			lyr_logger.eventInfo(this.logPrefix+": Suppressed '"+hullModId+"'");
 		}
 
 		for (this.iterator = this.suppressedMods.iterator(); this.iterator.hasNext();) { final String hullModId = this.iterator.next();
 			if (this.variant.getSuppressedMods().contains(hullModId)) continue;
 
 			this.iterator.remove(); lyr_eventDispatcher.onHullModEvent(onRestore, this.variant, hullModId);
-			lyr_logger.eventInfo("ST-"+this.trackerId+": Restored '"+hullModId+"'");
+			lyr_logger.eventInfo(this.logPrefix+": Restored '"+hullModId+"'");
 		}
 	}
 
@@ -146,18 +161,18 @@ public final class lyr_shipTracker {
 				this.weapons.put(slotId, newWeaponId);
 				lyr_eventDispatcher.onWeaponEvent(onWeaponInstall, this.variant, newWeaponId, slotId);
 
-				lyr_logger.eventInfo("ST-"+this.trackerId+": Installed '"+newWeaponId+"' on '"+slotId+"'");
+				lyr_logger.eventInfo(this.logPrefix+": Installed '"+newWeaponId+"' on '"+slotId+"'");
 			} else if (oldWeaponId != null && newWeaponId == null) {	// weapon removed
 				this.weapons.put(slotId, null);
 				lyr_eventDispatcher.onWeaponEvent(onWeaponRemove, this.variant, oldWeaponId, slotId);
 
-				lyr_logger.eventInfo("ST-"+this.trackerId+": Removed '"+oldWeaponId+"' from '"+slotId+"'");
+				lyr_logger.eventInfo(this.logPrefix+": Removed '"+oldWeaponId+"' from '"+slotId+"'");
 			} else if (oldWeaponId != null && newWeaponId != null && !oldWeaponId.equals(newWeaponId)) {	// weapon changed
 				this.weapons.put(slotId, newWeaponId);
 				lyr_eventDispatcher.onWeaponEvent(onWeaponInstall, this.variant, newWeaponId, slotId);
 				lyr_eventDispatcher.onWeaponEvent(onWeaponRemove, this.variant, oldWeaponId, slotId);
 
-				lyr_logger.eventInfo("ST-"+this.trackerId+": Changed '"+oldWeaponId+"' on '"+slotId+"' with '"+newWeaponId+"'");
+				lyr_logger.eventInfo(this.logPrefix+": Changed '"+oldWeaponId+"' on '"+slotId+"' with '"+newWeaponId+"'");
 			}
 		}
 	}

@@ -7,10 +7,10 @@ import com.fs.starfarer.api.impl.campaign.abilities.BaseToggleAbility;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
+import experimentalHullModifications.abilities.listeners.ehm_shuntInjector;
 import experimentalHullModifications.abilities.listeners.ehm_submarketInjector;
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.plugin.ehm_settings;
-import experimentalHullModifications.abilities.listeners.ehm_shuntInjector;
 
 /**
  * A toggle ability that works in conjunction with {@link ehm_submarketInjector
@@ -43,8 +43,8 @@ public final class ehm_ability extends BaseToggleAbility {
 	@Override
 	protected void activateImpl() {
 		switch (ehm_settings.getShuntAvailability()) {
-			case "Always": ehm_shuntInjector.get().attach(true); break;
-			case "Submarket": ehm_submarketInjector.get().attach(true); break;
+			case "Always": ehm_shuntInjector.attach(); break;
+			case "Submarket": ehm_submarketInjector.attach(); break;
 			default: break;
 		}
 	}
@@ -52,8 +52,8 @@ public final class ehm_ability extends BaseToggleAbility {
 	@Override
 	protected void deactivateImpl() {
 		switch (ehm_settings.getShuntAvailability()) {
-			case "Always": ehm_shuntInjector.get().detach(); break;
-			case "Submarket": ehm_submarketInjector.get().detach(); break;
+			case "Always": ehm_shuntInjector.detach(); break;
+			case "Submarket": ehm_submarketInjector.detach(); break;
 			default: break;
 		}
 	}
@@ -68,7 +68,7 @@ public final class ehm_ability extends BaseToggleAbility {
 
 	@Override
 	public boolean showActiveIndicator() {
-		return isActive();
+		return this.isActive();
 	}
 
 	@Override
@@ -82,10 +82,11 @@ public final class ehm_ability extends BaseToggleAbility {
 			default: desc = ""; break;
 		}
 
-		tooltip.addTitle(spec.getName(), highlightColor);
+		tooltip.addTitle(this.spec.getName(), highlightColor);
 		tooltip.addPara(desc, 10f);
 	}
 
+	@Override
 	public boolean hasTooltip() {
 		return true;
 	}

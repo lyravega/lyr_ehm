@@ -190,7 +190,7 @@ public class lyr_reflectionUtilities {
 			for (Object method : clazz.getDeclaredMethods()) {
 				if (!String.class.cast(getName.invoke(method)).equals(methodName)) continue;
 
-				lyr_logger.reflectionInfo("Method with the name '"+methodName+"' was found in the class '"+clazz.getName()+"'");
+				// lyr_logger.reflectionInfo("Method with the name '"+methodName+"' was found in the class '"+clazz.getName()+"'");
 				if (isClass) return MethodHandle.class.cast(unreflect.invoke(lookup, method)).invokeWithArguments(parameters);
 				return MethodHandle.class.cast(unreflect.invoke(lookup, method)).bindTo(instanceOrClass).invokeWithArguments(parameters);
 			}
@@ -217,11 +217,11 @@ public class lyr_reflectionUtilities {
 		private methodReflection(Object method) throws Throwable {
 			// this.method = method;
 			this.methodHandle = (MethodHandle) unreflect.invoke(lookup, method);
-			this.returnType = methodHandle.type().returnType();
-			this.parameterTypes = methodHandle.type().dropParameterTypes(0, 1).parameterArray();	// MethodType includes the instance class as the first parameter type
+			this.returnType = this.methodHandle.type().returnType();
+			this.parameterTypes = this.methodHandle.type().dropParameterTypes(0, 1).parameterArray();	// MethodType includes the instance class as the first parameter type
 			this.methodName = (String) getName.invoke(method);
 			this.methodModifiers = (int) getModifiers.invoke(method);
-			this.methodType = methodHandle.type();
+			this.methodType = this.methodHandle.type();
 		}
 
 		/**
@@ -241,8 +241,8 @@ public class lyr_reflectionUtilities {
 			this.parameterTypes = (Class<?>[]) getParameterTypes.invoke(method);	// Method method to get parameter types do not include instance class unlike method handle types do
 			this.methodName = (String) getName.invoke(method);
 			this.methodModifiers = (int) getModifiers.invoke(method);
-			this.methodType = MethodType.methodType(returnType, parameterTypes);
-			this.methodHandle = lookup.findVirtual(clazz, methodName, methodType);
+			this.methodType = MethodType.methodType(this.returnType, this.parameterTypes);
+			this.methodHandle = lookup.findVirtual(clazz, this.methodName, this.methodType);
 		}
 
 		public Class<?> getReturnType() { lyr_logger.reflectionInfo("Retrieving 'returnType' of '"+this.methodName+"'"); return this.returnType; }
@@ -398,7 +398,7 @@ public class lyr_reflectionUtilities {
 
 		public Object get() {
 			try {
-				return get.invoke(field, instance);
+				return get.invoke(this.field, this.instance);
 			} catch (Throwable t) {
 				lyr_logger.error("Failed to use 'get()' for '"+this.name+"' field", t);
 			}; return null;
@@ -406,7 +406,7 @@ public class lyr_reflectionUtilities {
 
 		public void set(Object value) {
 			try {
-				set.invoke(field, instance, value);
+				set.invoke(this.field, this.instance, value);
 			} catch (Throwable t) {
 				lyr_logger.error("Failed to use 'set()' for '"+this.name+"' field", t);
 			}

@@ -20,6 +20,7 @@ public abstract class _lyr_tabListener extends _lyr_sectorListener implements Co
 	private final CoreUITabId targetTab;
 	private final boolean executeOnOpenOnce;
 	private boolean onOpenExecuted = false;
+	private boolean delayedOnOpenExecuted = false;
 
 	public _lyr_tabListener(CoreUITabId targetTab) {
 		this.targetTab = targetTab;
@@ -34,12 +35,17 @@ public abstract class _lyr_tabListener extends _lyr_sectorListener implements Co
 	/**
 	 * Called when the target tab is opened
 	 */
-	public abstract void onOpen();
+	protected abstract void onOpen();
 
 	/**
 	 * Called when the target tab is closed
 	 */
-	public abstract void onClose();
+	protected abstract void onClose();
+
+	/**
+	 * Called when the target tab is opened, with a frame or two delay
+	 */
+	protected abstract void delayedOnOpen();
 
 	/**
 	 * Alternative to {@code advance(amount)}, if such a method is necessary. Called
@@ -50,7 +56,7 @@ public abstract class _lyr_tabListener extends _lyr_sectorListener implements Co
 	 * the detection, hence the abstraction
 	 * @param amount
 	 */
-	public abstract void onAdvance(float amount);
+	protected abstract void onAdvance(float amount);
 
 	//#region CoreUITabListener
 	@Override
@@ -59,7 +65,8 @@ public abstract class _lyr_tabListener extends _lyr_sectorListener implements Co
 
 		if (!this.executeOnOpenOnce || !this.onOpenExecuted) {
 			this.onOpenExecuted = true;
-			this.attachTabScript();
+			this.delayedOnOpenExecuted = false;
+			this.attachScript();
 			this.onOpen();
 		}
 	}
@@ -67,11 +74,11 @@ public abstract class _lyr_tabListener extends _lyr_sectorListener implements Co
 	// END OF CoreUITabListener
 
 	//#region EveryFrameScriptWithCleanup
-	private final void attachTabScript() {
+	private final void attachScript() {
 		if (lyr_scriptUtilities.getTransientScriptsOfClass(this.getClass()).isEmpty()) Global.getSector().addTransientScript(this);
 	}
 
-	private final void removeTabScript() {
+	private final void removeScript() {
 		Global.getSector().removeTransientScript(this);
 	}
 
@@ -79,6 +86,7 @@ public abstract class _lyr_tabListener extends _lyr_sectorListener implements Co
 	public final void advance(float amount) {
 		if (Global.getSector().getCampaignUI().getCurrentCoreTab() != this.targetTab) this.cleanup();
 
+		if (!this.delayedOnOpenExecuted) { this.delayedOnOpenExecuted = true; this.delayedOnOpen(); }
 		this.onAdvance(amount);
 	}
 
@@ -89,7 +97,8 @@ public abstract class _lyr_tabListener extends _lyr_sectorListener implements Co
 	@Override
 	public final void cleanup() {
 		this.onOpenExecuted = false;
-		this.removeTabScript();
+		// this.delayedOnOpenExecuted = false;
+		this.removeScript();
 		this.onClose();
 	}
 	//#endregion

@@ -1,9 +1,9 @@
 package experimentalHullModifications.hullmods.ehm_ec;
 
-import static lyravega.listeners.lyr_fleetTracker.refreshFleetView;
 import static lyravega.proxies.lyr_engineBuilder.addEngineStyleSpec;
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
+import static lyravega.utilities.lyr_interfaceUtilities.refreshFleetView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -149,7 +149,7 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 				customEngineSpecData.put("mode", "NONE");
 			} break;
 		}
-		if (lyr_lunaUtilities.getString(settingIdPrefix+"type").equals("Additive")) {
+		if ("Additive".equals(lyr_lunaUtilities.getString(settingIdPrefix+"type"))) {
 			customEngineSpecData.put("type", "GLOW");
 		} else /*if (lyr_lunaAccessors.getString(settingIdPrefix+"type").equals("Regular"))*/ {
 			customEngineSpecData.put("type", "SMOKE");
@@ -198,7 +198,7 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 			// tooltip.addPara(text.customizableEngine[0], text.padding).setHighlight(text.customizableEngine[1]);
 		}
 
-		if (!isApplicableToShip(ship)) {
+		if (!this.isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
 			if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);

@@ -6,8 +6,11 @@ import java.util.List;
 
 import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.CoreUITabId;
+import com.fs.starfarer.api.campaign.listeners.CoreUITabListener;
 import com.fs.starfarer.api.combat.ShipAPI;
+import com.fs.starfarer.api.fleet.FleetMemberAPI;
 
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.plugin.ehm_settings;
@@ -52,13 +55,16 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 	/**
 	 * Grabs the refit ship seen on the screen. It is grabbed from the ship
 	 * display itself.
-	 * @return the refit ship
+	 * @return the refit ship, check for {@code null}
 	 */
 	public static ShipAPI getRefitShip() {
+		if (!isRefitTab()) return null;
+
 		return new lyr_campaignUI().getCore().getCurrentTab().getRefitPanel().getShipDisplay().getShip();
 	}
 
-	private static boolean clearUndo = false;
+	public static boolean clearUndoAfter = false;
+	public static boolean refreshShipDisplay = true;
 
 	/**
 	 * This method will immediately save the refit variant and refresh the UI by utilizing the
@@ -67,7 +73,7 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 	 * <p> In some cases, the undo button will remain enabled, however it will not do anything
 	 * upon interaction. Disabling this button is optional. This issue is caused by having
 	 * another UI element like the mod or weapon picker open when this method is called.
-	 * <p> To deal with the problem above, this method sets a flag called {@link #clearUndo},
+	 * <p> To deal with the problem above, this method sets a flag called {@link #clearUndoAfter},
 	 * which is reset by {@link #clearUndoAfter()}. It should get called after a delay when
 	 * there are no additional UI elements, ideally through an EFS to disable the button.
 	 */
@@ -85,7 +91,7 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 			refitPanel.setEditedSinceLoad(false);
 			refitPanel.setEditedSinceSave(false);
 
-			clearUndo = true;
+			clearUndoAfter = true;
 		} catch (Throwable t) {
 			// refreshRefit();
 			lyr_logger.error("Failure in 'commitChanges()'");
@@ -111,12 +117,12 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 	}
 
 	/**
-	 * If {@link #clearUndo} flag is set, clears it and sets the 'undo' button as inactive.
+	 * If {@link #clearUndoAfter} flag is set, clears it and sets the 'undo' button as inactive.
 	 * <p> Needs to be run after a delay (through an EFS) after the flag is set, otherwise
 	 * will fail to clear the button(s) like its deprecated sibling {@link #clearUndo()}.
 	 */
 	public static void clearUndoAfter() {
-		if (!clearUndo) return;	// works through a flag, and doesn't check if it's the refit tab. Origin of caller should do that check there instead
+		if (!clearUndoAfter) return;	// works through a flag, and doesn't check if it's the refit tab. Origin of caller should do that check there instead
 		try {
 			lyr_refitPanel refitPanel = new lyr_campaignUI().getCore().getCurrentTab().getRefitPanel();
 			lyr_designDisplay designDisplay = refitPanel.getDesignDisplay();
@@ -126,9 +132,66 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 			designDisplay.getSaveButton().setEnabled(false);
 			designDisplay.getUndoButton().setEnabled(false);
 
-			clearUndo = false;
+			clearUndoAfter = false;
 		} catch (Throwable t) {
 			lyr_logger.error("Failure in 'clearUndoAfter()'", t);
+		}
+	}
+
+	/**
+	 * This method refreshes the ship display in the refit tab, updates it with the fleet
+	 * member's variant. This is necessary in a single case where the first ship/variant
+	 * seen in the refit tab may be outdated the first time refit tab is opened.
+	 * <p> This happends if/when a change is made on a fleet member variant by the listener
+	 * method {@link CoreUITabListener#reportAboutToOpenCoreTab(CoreUITabId, Object)} for
+	 * example. No other cases so far.
+	 * <p> Calling this method from that same listener method will yield no results, and as
+	 * such this needs to be called with a slight delay (through an EFS) like the {@link
+	 * #clearUndoAfter()}. Has its own flag {@link #refreshShipDisplay} that needs to be
+	 * reset when the tab is closed.
+	 */
+	public static void refreshShipDisplay() {
+		if (!refreshShipDisplay) return;
+		try {
+			FleetMemberAPI targetMember = null;
+			String refitMemberId = getRefitShip().getFleetMemberId();
+
+			for (FleetMemberAPI member : Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy()) {
+				if (!refitMemberId.equals(member.getId())) continue;
+
+				targetMember = member; break;
+			}
+
+			lyr_refitPanel refitPanel = new lyr_campaignUI().getCore().getCurrentTab().getRefitPanel();
+			lyr_shipDisplay shipDisplay = refitPanel.getShipDisplay();
+
+			shipDisplay.setFleetMember(null, null);
+			refitPanel.syncWithCurrentVariant();
+			shipDisplay.setFleetMember(targetMember, null);
+			refitPanel.syncWithCurrentVariant();
+			refitPanel.saveCurrentVariant();
+			refitPanel.setEditedSinceLoad(false);
+			refitPanel.setEditedSinceSave(false);
+
+			refreshShipDisplay = false;
+		} catch (Throwable t) {
+			lyr_logger.error("Failure in 'reloadMemberVariant()'");
+		}
+	}
+
+	/**
+	 * Clears the player fleet view, which triggers its reinitialization. If a fleet member's
+	 * campaign contrails are changed, the changes will not be reflected in the game till a
+	 * save/load. This alleviates that issue by forcing it.
+	 */
+	public static void refreshFleetView() {
+		if (!isRefitTab()) return;
+		try {
+			CampaignFleetAPI playerFleet = Global.getSector().getPlayerFleet();
+			Object fleetView = methodReflection.invokeDirect(playerFleet, "getFleetView");
+			methodReflection.invokeDirect(fleetView, "clear");
+		} catch (Throwable t) {
+			lyr_logger.warn("Failure in 'refreshFleetView()'", t);
 		}
 	}
 
