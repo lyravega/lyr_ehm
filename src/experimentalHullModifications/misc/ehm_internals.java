@@ -5,7 +5,7 @@ import java.util.Set;
 
 import lyravega.misc.lyr_internals;
 
-public final class ehm_internals {
+public final class ehm_internals extends lyr_internals {
 	public static final class id extends lyr_internals.id {
 		public static final String
 			submarket = "ehm_submarket",	// must match submarket id in .csv
