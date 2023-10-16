@@ -98,12 +98,15 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 		if (member != null) this.fleetMembers.put(shipTrackerUUID, member);
 
 		for (String moduleSlotId : variant.getStationModules().keySet()) {
-			ShipVariantAPI clonedModuleVariant = variant.getModuleVariant(moduleSlotId).clone();
+			ShipVariantAPI moduleVariant = variant.getModuleVariant(moduleSlotId);
 
-			clonedModuleVariant.setSource(VariantSource.REFIT);
-			variant.setModuleVariant(moduleSlotId, clonedModuleVariant);
+			if (moduleVariant.getSource() != VariantSource.REFIT) {
+				moduleVariant = moduleVariant.clone();
+				moduleVariant.setSource(VariantSource.REFIT);
+				variant.setModuleVariant(moduleSlotId, moduleVariant);
+			}
 
-			this.addTracking(clonedModuleVariant, null, shipTrackerUUID);
+			this.addTracking(moduleVariant, null, shipTrackerUUID);
 		}
 	}
 
