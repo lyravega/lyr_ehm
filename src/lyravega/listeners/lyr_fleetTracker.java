@@ -10,6 +10,7 @@ import com.fs.starfarer.api.campaign.CoreUITabId;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.loading.VariantSource;
 
 import lyravega.utilities.lyr_interfaceUtilities;
 import lyravega.utilities.logger.lyr_logger;
@@ -96,8 +97,14 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 		this.shipTrackers.put(shipTrackerUUID, shipTracker);
 		if (member != null) this.fleetMembers.put(shipTrackerUUID, member);
 
-		for (String moduleSlot : variant.getStationModules().keySet())
-			this.addTracking(variant.getModuleVariant(moduleSlot), null, shipTrackerUUID);
+		for (String moduleSlotId : variant.getStationModules().keySet()) {
+			ShipVariantAPI clonedModuleVariant = variant.getModuleVariant(moduleSlotId).clone();
+
+			clonedModuleVariant.setSource(VariantSource.REFIT);
+			variant.setModuleVariant(moduleSlotId, clonedModuleVariant);
+
+			this.addTracking(clonedModuleVariant, null, shipTrackerUUID);
+		}
 	}
 
 	private void removeTracking(ShipVariantAPI variant) {
