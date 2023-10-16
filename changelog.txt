@@ -4,6 +4,7 @@ Refactored and overhauled most of the stuff under the hood; initial changes begu
 
 - Fixed "Logistics Overhaul" not ignoring the hidden modular hull modifications in its checks
 - Fixed an issue on base hullmod installation that added fixed built-in dmods back to the ship
+- Fixed experimental hull modifications creating ghost categories in mission mode even though they were hidden
 - Fixed undo button not getting disabled visually when it was supposed to
 - Changed system retrofits so that they will be hidden if a the system is not found, instead of crashing the game on install
 - Changed engine cosmetic mods to apply the campaign contrails immediately instead of requiring a save/load
