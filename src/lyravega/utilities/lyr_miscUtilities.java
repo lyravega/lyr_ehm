@@ -192,11 +192,9 @@ public class lyr_miscUtilities {
 	}
 
 	/**
-	 * Activated shunts (decorative, built-in ones) are added to the weapon
-	 * groups by the game in some cases, like when the hullSpec is replaced.
-	 * <p>This method goes over the groups and removes them. Not sure when
-	 * / why / how this happens. This is a sufficient workaround till the
-	 * root cause can be found, however.
+	 * Activated shunts become decorative built-ins, but they stay on their
+	 * weapon groups in most cases. This method goes over every weapon group
+	 * on the ship and purges the activated shunts from them.
 	 * @param variant whose weapon groups will be purged of activated shunts
 	 */
 	public static final void cleanWeaponGroupsUp(ShipVariantAPI variant) {

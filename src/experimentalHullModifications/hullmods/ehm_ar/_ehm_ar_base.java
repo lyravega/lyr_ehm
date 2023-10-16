@@ -59,6 +59,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstalled(ShipVariantAPI variant) {
+		lyr_miscUtilities.cleanWeaponGroupsUp(variant);
 		commitVariantChanges(); playDrillSound();
 	}
 
