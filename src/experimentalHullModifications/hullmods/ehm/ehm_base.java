@@ -164,7 +164,6 @@ public final class ehm_base extends _ehm_base {
 
 	@Override
 	public boolean showInRefitScreenModPickerFor(ShipAPI ship) {
-		if (!super.showInRefitScreenModPickerFor(ship)) return false;
 		return (lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) ? false : true;
 	}
 }

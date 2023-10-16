@@ -3,7 +3,6 @@ package experimentalHullModifications.hullmods;
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
-import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
@@ -109,6 +108,6 @@ public class _ehm_test extends _ehm_base implements normalEvents {
 
 	@Override
 	public boolean showInRefitScreenModPickerFor(ShipAPI ship) {
-		return Global.getCurrentState() != GameState.TITLE;
+		return true;
 	}
 }

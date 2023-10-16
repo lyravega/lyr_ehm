@@ -63,7 +63,6 @@ public final class ehm_undo extends _ehm_base {
 
 	@Override
 	public boolean showInRefitScreenModPickerFor(ShipAPI ship) {
-		if (!super.showInRefitScreenModPickerFor(ship)) return false;
 		return (lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) ? true : false;
 	}
 }

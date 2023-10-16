@@ -3,7 +3,6 @@ package experimentalHullModifications.hullmods.ehm;
 import java.awt.Color;
 import java.util.Set;
 
-import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.SettingsAPI;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
@@ -78,7 +77,7 @@ public abstract class _ehm_base implements HullModEffect {
 
 	@Override public boolean isSModEffectAPenalty() { return false; }
 
-	@Override public boolean showInRefitScreenModPickerFor(ShipAPI ship) { return Global.getCurrentState() != GameState.TITLE; }	// hide stuff in missions
+	@Override public boolean showInRefitScreenModPickerFor(ShipAPI ship) { return true; }	// "restricted" tag is used to hide stuff in missions
 
 	//#region TOOLTIP
 	@Override public Color getBorderColor() { return null; }
@@ -95,7 +94,7 @@ public abstract class _ehm_base implements HullModEffect {
 
 		if (ship.getVariant().getSMods().contains(this.hullModSpecId)) return;
 
-		if (isApplicableToShip(ship) && canBeAddedOrRemovedNow(ship, null, null)) {
+		if (this.isApplicableToShip(ship) && this.canBeAddedOrRemovedNow(ship, null, null)) {
 			tooltip.addSectionHeading(header.warning, header.warning_textColour, header.warning_bgColour, Alignment.MID, header.padding);
 			tooltip.addPara(text.warning[0], text.padding).setHighlight(text.warning[1]);
 		}
@@ -103,7 +102,7 @@ public abstract class _ehm_base implements HullModEffect {
 
 	@Override public String getDescriptionParam(int index, HullSize hullSize) { return null; }
 
-	@Override public String getDescriptionParam(int index, HullSize hullSize, ShipAPI ship) { return getDescriptionParam(index, hullSize); }
+	@Override public String getDescriptionParam(int index, HullSize hullSize, ShipAPI ship) { return this.getDescriptionParam(index, hullSize); }
 
 	@Override public boolean hasSModEffectSection(HullSize hullSize, ShipAPI ship, boolean isForModSpec) { return false; }
 
@@ -113,7 +112,7 @@ public abstract class _ehm_base implements HullModEffect {
 
 	@Override public String getSModDescriptionParam(int index, HullSize hullSize) { return null; }
 
-	@Override public String getSModDescriptionParam(int index, HullSize hullSize, ShipAPI ship) { return getSModDescriptionParam(index, hullSize); }
+	@Override public String getSModDescriptionParam(int index, HullSize hullSize, ShipAPI ship) { return this.getSModDescriptionParam(index, hullSize); }
 	//#endregion
 	// END OF TOOLTIP
 
