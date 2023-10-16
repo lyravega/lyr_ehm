@@ -225,7 +225,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 		if (!this.isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
-			if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
+			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
 			if (lyr_miscUtilities.isModule(ship)) tooltip.addPara(text.isModule[0], text.padding).setHighlight(text.isModule[1]);
 			if (lyr_miscUtilities.isParent(ship)) tooltip.addPara(text.isParent[0], text.padding).setHighlight(text.isParent[1]);
 			if (lyr_miscUtilities.hasModularHullmods(ship, this.hullModSpecId, false)
@@ -248,7 +248,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false;
 
-		if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) return false;
+		if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) return false;
 		if (lyr_miscUtilities.isModule(ship)) return false;
 		if (lyr_miscUtilities.isParent(ship)) return false;
 		if (lyr_miscUtilities.hasWeapons(ship)) return false;

@@ -33,9 +33,9 @@ import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.chil
 import experimentalHullModifications.hullmods.ehm_mr.ehm_mr_auxilarygenerators;
 import experimentalHullModifications.hullmods.ehm_mr.ehm_mr_overengineered;
 import experimentalHullModifications.misc.ehm_internals;
+import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import experimentalHullModifications.misc.ehm_tooltip.text;
-import experimentalHullModifications.plugin.ehm_settings;
 import lyravega.listeners.events.normalEvents;
 import lyravega.listeners.events.weaponEvents;
 import lyravega.proxies.lyr_hullSpec;
@@ -59,7 +59,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstalled(ShipVariantAPI variant) {
-		lyr_miscUtilities.cleanWeaponGroupsUp(variant);
+		lyr_miscUtilities.cleanWeaponGroupsUp(variant, ehm_internals.id.shunts.set);
 		commitVariantChanges(); playDrillSound();
 	}
 
@@ -229,7 +229,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 		if (!this.isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
-			if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
+			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
 			if (this.hullModSpecTags.contains(ehm_internals.tag.reqNoPhase) && ship.getPhaseCloak() != null) tooltip.addPara(text.hasPhase[0], text.padding).setHighlight(text.hasPhase[1]);
 			if (ship.getVariant().hasHullMod(ehm_internals.id.hullmods.logisticsoverhaul)) tooltip.addPara(text.hasLogisticsOverhaul[0], text.padding).setHighlight(text.hasLogisticsOverhaul[1]);
 		}
@@ -241,7 +241,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false;
 
-		if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) return false;
+		if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) return false;
 		if (this.hullModSpecTags.contains(ehm_internals.tag.reqNoPhase) && ship.getPhaseCloak() != null) return false;
 		if (ship.getVariant().hasHullMod(ehm_internals.id.hullmods.logisticsoverhaul)) return false;
 

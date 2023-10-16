@@ -12,8 +12,8 @@ import com.fs.starfarer.api.campaign.listeners.CoreUITabListener;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 
-import experimentalHullModifications.misc.ehm_internals;
-import experimentalHullModifications.plugin.ehm_settings;
+import lyravega.misc.lyr_internals;
+import lyravega.misc.lyr_settings;
 import lyravega.proxies.ui.*;
 import lyravega.utilities.logger.lyr_logger;
 
@@ -48,8 +48,8 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 	 * and {@code onInstall()}
 	 */
 	public static void playDrillSound() {
-		if (!ehm_settings.getPlayDrillSound() || !isRefitTab()) return;
-		Global.getSoundPlayer().playUISound(ehm_internals.id.drillSound, 1.0f, 0.75f);
+		if (!lyr_settings.getPlayDrillSound() || !isRefitTab()) return;
+		Global.getSoundPlayer().playUISound(lyr_internals.id.drillSound, 1.0f, 0.75f);
 	}
 
 	/**

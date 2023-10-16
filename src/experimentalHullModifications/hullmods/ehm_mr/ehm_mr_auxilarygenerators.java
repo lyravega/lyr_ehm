@@ -17,9 +17,9 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.misc.ehm_internals;
+import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import experimentalHullModifications.misc.ehm_tooltip.text;
-import experimentalHullModifications.plugin.ehm_settings;
 import lyravega.listeners.events.normalEvents;
 import lyravega.utilities.lyr_miscUtilities;
 
@@ -81,7 +81,7 @@ public final class ehm_mr_auxilarygenerators extends _ehm_base implements normal
 		if (!this.isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
-			if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
+			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
 			if (!ship.getVariant().hasHullMod(ehm_internals.id.hullmods.diverterandconverter)) tooltip.addPara(text.lacksActivator[0], text.padding).setHighlight(text.lacksActivator[1]);
 		}
 
@@ -100,7 +100,7 @@ public final class ehm_mr_auxilarygenerators extends _ehm_base implements normal
 
 		ShipVariantAPI variant = ship.getVariant();
 
-		if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) return false;
+		if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) return false;
 		if (!variant.hasHullMod(ehm_internals.id.hullmods.diverterandconverter)) return false;
 
 		return true;

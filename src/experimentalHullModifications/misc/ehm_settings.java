@@ -1,15 +1,16 @@
-package experimentalHullModifications.plugin;
+package experimentalHullModifications.misc;
 
 import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
 
-import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_internals.id;
 import experimentalHullModifications.misc.ehm_internals.tag;
+import experimentalHullModifications.plugin.lyr_ehm;
 import lunalib.lunaSettings.LunaSettings;
 import lunalib.lunaSettings.LunaSettingsListener;
 import lyravega.listeners.lyr_eventDispatcher;
 import lyravega.listeners.events.customizableMod;
+import lyravega.misc.lyr_settings;
 import lyravega.utilities.lyr_lunaUtilities;
 import lyravega.utilities.logger.lyr_levels;
 import lyravega.utilities.logger.lyr_logger;
@@ -23,12 +24,12 @@ import lyravega.utilities.logger.lyr_logger;
  * restart.
  * @author lyravega
  */
-public final class ehm_settings implements LunaSettingsListener {
+public final class ehm_settings extends lyr_settings implements LunaSettingsListener {
 	private ehm_settings() {
 		cacheSettings();
 	}
 
-	static void attach() {
+	public static void attach() {
 		if (!LunaSettings.hasSettingsListenerOfClass(ehm_settings.class)) {
 			LunaSettings.addSettingsListener(new ehm_settings());
 
@@ -36,49 +37,45 @@ public final class ehm_settings implements LunaSettingsListener {
 		}
 	}
 
-	private static String shuntAvailability; public static String getShuntAvailability() { return shuntAvailability; }
-	// private static String extraInfoInHullMods; public static String getExtraInfoInHullMods() { return extraInfoInHullMods; }
-	private static boolean showInfoForActivators; public static boolean getShowInfoForActivators() { return showInfoForActivators; }
-	private static boolean showFullInfoForActivators; public static boolean getShowFullInfoForActivators() { return showFullInfoForActivators; }
-	// private static String drillSound; public static String getDrillSound() { return drillSound; }
-	private static boolean playDrillSound; public static boolean getPlayDrillSound() { return playDrillSound; }
-	private static boolean playDrillSoundForAll; public static boolean getPlayDrillSoundForAll() { return playDrillSoundForAll; }
-	private static boolean cosmeticsOnly; public static boolean getCosmeticsOnly() { return cosmeticsOnly; }
-	private static boolean hideAdapters; public static boolean getHideAdapters() { return hideAdapters; }
-	private static boolean hideConverters; public static boolean getHideConverters() { return hideConverters; }
-	private static int baseSlotPointPenalty; public static int getBaseSlotPointPenalty() { return baseSlotPointPenalty; }
-	private static boolean showExperimentalFlavour; public static boolean getShowExperimentalFlavour() { return showExperimentalFlavour; }
-	private static boolean showFluff; public static boolean getShowFluff() { return showFluff; }
-	private static boolean debugTooltip; public static boolean getDebugTooltip() { return debugTooltip; }
-//	private static int loggerLevel; public static int getLogEventInfo() { return loggerLevel; }
+	protected static String shuntAvailability; public static String getShuntAvailability() { return shuntAvailability; }
+	protected static boolean showInfoForActivators; public static boolean getShowInfoForActivators() { return showInfoForActivators; }
+	protected static boolean showFullInfoForActivators; public static boolean getShowFullInfoForActivators() { return showFullInfoForActivators; }
+	protected static boolean cosmeticsOnly; public static boolean getCosmeticsOnly() { return cosmeticsOnly; }
+	protected static boolean hideAdapters; public static boolean getHideAdapters() { return hideAdapters; }
+	protected static boolean hideConverters; public static boolean getHideConverters() { return hideConverters; }
+	protected static int baseSlotPointPenalty; public static int getBaseSlotPointPenalty() { return baseSlotPointPenalty; }
+	protected static boolean showExperimentalFlavour; public static boolean getShowExperimentalFlavour() { return showExperimentalFlavour; }
+	protected static boolean showFluff; public static boolean getShowFluff() { return showFluff; }
+	protected static boolean debugTooltip; public static boolean getDebugTooltip() { return debugTooltip; }
+	protected static int loggerLevel; public static int getLogEventInfo() { return loggerLevel; }
 
 	private static void cacheSettings() {
 		// MAIN SETTINGS
 		checkShuntAvailability();	// separate from others as it needs to trigger a method to add/remove listeners only if there's a change
-		String extraInfo = lyr_lunaUtilities.getString("ehm_extraInfoInHullMods");	// splitting radio into booleans
+		String extraInfo = lyr_lunaUtilities.getString(ehm_internals.id.mod, "ehm_extraInfoInHullMods");	// splitting radio into booleans
 		showInfoForActivators = !"None".equals(extraInfo);
 		showFullInfoForActivators = "Full".equals(extraInfo);
-		String drillSound = lyr_lunaUtilities.getString("ehm_drillSound");	// splitting radio into booleans
+		String drillSound = lyr_lunaUtilities.getString(ehm_internals.id.mod, "ehm_drillSound");	// splitting radio into booleans
 		playDrillSound = !"None".equals(drillSound);
 		playDrillSoundForAll = "All".equals(drillSound);
 		checkCosmeticsOnly();	// separate from others like the shunt option as it invokes a method to properly update stuff
-		hideAdapters = lyr_lunaUtilities.getBoolean("ehm_hideAdapters");
-		hideConverters = lyr_lunaUtilities.getBoolean("ehm_hideConverters");
+		hideAdapters = lyr_lunaUtilities.getBoolean(ehm_internals.id.mod, "ehm_hideAdapters");
+		hideConverters = lyr_lunaUtilities.getBoolean(ehm_internals.id.mod, "ehm_hideConverters");
 
 		// HULL MODIFICATION SETTINGS
-		baseSlotPointPenalty = lyr_lunaUtilities.getInt("ehm_baseSlotPointPenalty");
+		baseSlotPointPenalty = lyr_lunaUtilities.getInt(ehm_internals.id.mod, "ehm_baseSlotPointPenalty");
 
 		// FLAVOUR SETTINGS
-		showExperimentalFlavour = lyr_lunaUtilities.getBoolean("ehm_showExperimentalFlavour");
-		showFluff = lyr_lunaUtilities.getBoolean("ehm_showFluff");
+		showExperimentalFlavour = lyr_lunaUtilities.getBoolean(ehm_internals.id.mod, "ehm_showExperimentalFlavour");
+		showFluff = lyr_lunaUtilities.getBoolean(ehm_internals.id.mod, "ehm_showFluff");
 
 		// DEBUG SETTINGS
-		debugTooltip = lyr_lunaUtilities.getBoolean("ehm_debugTooltip");
+		debugTooltip = lyr_lunaUtilities.getBoolean(ehm_internals.id.mod, "ehm_debugTooltip");
 		checkLoggerLevel();
 	}
 
 	private static void checkShuntAvailability() {
-		final String temp = lyr_lunaUtilities.getString("ehm_shuntAvailability");
+		final String temp = lyr_lunaUtilities.getString(ehm_internals.id.mod, "ehm_shuntAvailability");
 
 		if (shuntAvailability != null && shuntAvailability.equals(temp)) return; else shuntAvailability = temp;
 
@@ -88,7 +85,9 @@ public final class ehm_settings implements LunaSettingsListener {
 	}
 
 	private static void checkLoggerLevel() {
-		switch (lyr_lunaUtilities.getInt("ehm_loggerLevel")) {
+		loggerLevel = lyr_lunaUtilities.getInt(ehm_internals.id.mod, "ehm_loggerLevel");
+
+		switch (loggerLevel) {
 			case 5: lyr_logger.setLevel(lyr_levels.INFO); break;
 			case 4: lyr_logger.setLevel(lyr_levels.LSTNR); break;
 			case 3: lyr_logger.setLevel(lyr_levels.EVENT); break;
@@ -100,7 +99,7 @@ public final class ehm_settings implements LunaSettingsListener {
 	}
 
 	private static void checkCosmeticsOnly() {
-		final boolean temp = lyr_lunaUtilities.getBoolean("ehm_cosmeticsOnly");
+		final boolean temp = lyr_lunaUtilities.getBoolean(ehm_internals.id.mod, "ehm_cosmeticsOnly");
 
 		if (cosmeticsOnly == temp) return; else cosmeticsOnly = temp;
 

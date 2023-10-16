@@ -107,7 +107,7 @@ public abstract class _ehm_sr_base extends _ehm_base implements normalEvents {
 		if (!this.isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
-			if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
+			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
 			// if (_ehm_helpers.ehm_hasHullmodWithTag(ship, lyr_internals.tag.systemRetrofit, this.hullModSpecId)) tooltip.addPara(text.hasSystemRetrofit[0], text.padding).setHighlight(text.hasSystemRetrofit[1]);
 			if (ship.getVariant().hasHullMod(ehm_internals.id.hullmods.logisticsoverhaul)) tooltip.addPara(text.hasLogisticsOverhaul[0], text.padding).setHighlight(text.hasLogisticsOverhaul[1]);
 
@@ -123,7 +123,7 @@ public abstract class _ehm_sr_base extends _ehm_base implements normalEvents {
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false;
 
-		if (!lyr_miscUtilities.hasRetrofitBaseBuiltIn(ship)) return false;
+		if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) return false;
 		// if (_ehm_helpers.ehm_hasHullmodWithTag(ship, lyr_internals.tag.systemRetrofit, this.hullModSpecId)) return false;
 		if (ship.getVariant().hasHullMod(ehm_internals.id.hullmods.logisticsoverhaul)) return false;
 

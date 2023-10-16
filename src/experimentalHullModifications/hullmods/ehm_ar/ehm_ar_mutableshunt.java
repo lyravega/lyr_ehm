@@ -20,8 +20,8 @@ import com.fs.starfarer.api.util.Misc;
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_internals.id.shunts.capacitors;
 import experimentalHullModifications.misc.ehm_internals.id.shunts.dissipators;
+import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
-import experimentalHullModifications.plugin.ehm_settings;
 import lyravega.proxies.lyr_hullSpec;
 
 /**@category Adapter Retrofit

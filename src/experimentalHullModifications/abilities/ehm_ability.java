@@ -10,7 +10,7 @@ import com.fs.starfarer.api.util.Misc;
 import experimentalHullModifications.abilities.listeners.ehm_shuntInjector;
 import experimentalHullModifications.abilities.listeners.ehm_submarketInjector;
 import experimentalHullModifications.misc.ehm_internals;
-import experimentalHullModifications.plugin.ehm_settings;
+import experimentalHullModifications.misc.ehm_settings;
 
 /**
  * A toggle ability that works in conjunction with {@link ehm_submarketInjector

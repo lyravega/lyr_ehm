@@ -8,10 +8,8 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
-import com.fs.starfarer.api.loading.*;
-
-import experimentalHullModifications.hullmods.ehm.ehm_base;
-import experimentalHullModifications.misc.ehm_internals;
+import com.fs.starfarer.api.loading.WeaponGroupSpec;
+import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
 /**
  * A class dedicated to house the helper functions for the ships, variants,
@@ -144,23 +142,13 @@ public class lyr_miscUtilities {
 	}
 
 	/**
-	 * Checks the ship if it has retrofit base ({@link ehm_base}) installed
+	 * Checks if a hullmod is built-in on the ship
+	 * @param ship to check
 	 * @param ship to check
 	 * @return true if ship has it, false otherwise (duh)
 	 */
-	public static final boolean hasExperimentalSMod(ShipAPI ship) {
-		for (String hullModId: ship.getVariant().getSMods()) {
-			if (Global.getSettings().getHullModSpec(hullModId).hasTag(ehm_internals.tag.experimental)) return true;
-		}; return false;
-	}
-
-	/**
-	 * Checks the ship if it has retrofit base ({@link ehm_base}) installed
-	 * @param ship to check
-	 * @return true if ship has it, false otherwise (duh)
-	 */
-	public static final boolean hasRetrofitBaseBuiltIn(ShipAPI ship) {
-		return ship.getVariant().getHullSpec().isBuiltInMod(ehm_internals.id.hullmods.base);
+	public static final boolean hasBuiltInHullMod(ShipAPI ship, String hullModId) {
+		return ship.getVariant().getHullSpec().isBuiltInMod(hullModId);
 	}
 
 	/**
@@ -168,10 +156,11 @@ public class lyr_miscUtilities {
 	 * @param ship to check the installed hullmods
 	 * @param tag to check if the ship has one already
 	 * @param ignoredHullmodId to exclude from the check, can be {@code null}
+	 * @param checkAll {@code true} to check all hullmods, {@code false} to only check sMods
 	 * @return true if there is another mod with the searched tag, false otherwise
 	 */
-	public static final boolean hasHullModWithTag(ShipAPI ship, String tag, String ignoredHullmodId) {
-		for (String hullModId : ship.getVariant().getHullMods()) {
+	public static final boolean hasHullModWithTag(ShipAPI ship, String tag, String ignoredHullmodId, boolean checkAll) {
+		for (String hullModId : checkAll ? ship.getVariant().getHullMods() : ship.getVariant().getSMods()) {
 			if (hullModId.equals(ignoredHullmodId)) continue;
 			if (Global.getSettings().getHullModSpec(hullModId).hasTag(tag)) return true;
 		}; return false;
@@ -192,16 +181,20 @@ public class lyr_miscUtilities {
 	}
 
 	/**
-	 * Activated shunts become decorative built-ins, but they stay on their
-	 * weapon groups in most cases. This method goes over every weapon group
-	 * on the ship and purges the activated shunts from them.
-	 * @param variant whose weapon groups will be purged of activated shunts
+	 * Purges the weapon groups of weapons with the matching ids in the passed set.
+	 * While this is not necessary in pretty much all cases, there are a rare few
+	 * that might require this. Activated shunts is an example for this.
+	 * <p> Shunts that get activated when an activator is installed stay in their
+	 * weapon groups. This method ensures that the now decorative, non-functional
+	 * weapons are removed from those.
+	 * @param variant whose weapon groups will be purged
+	 * @param weaponIdSet a set of weapon ids that will be removed from weapon groups
 	 */
-	public static final void cleanWeaponGroupsUp(ShipVariantAPI variant) {
+	public static final void cleanWeaponGroupsUp(ShipVariantAPI variant, Set<String> weaponIdSet) {
 		List<WeaponGroupSpec> weaponGroups = variant.getWeaponGroups();
 		Collection<String> groupKeepTargets = variant.getFittedWeaponSlots();	// this is to fix an (vanilla) issue where groups have incorrect entries
 		Map<String, String> groupCleanupTargets = new HashMap<String, String>(variant.getHullSpec().getBuiltInWeapons());
-		groupCleanupTargets.values().retainAll(ehm_internals.id.shunts.set);
+		groupCleanupTargets.values().retainAll(weaponIdSet);
 
 		for (Iterator<WeaponGroupSpec> iterator = weaponGroups.iterator(); iterator.hasNext();) {
 			WeaponGroupSpec weaponGroup = iterator.next();
@@ -219,19 +212,5 @@ public class lyr_miscUtilities {
 			variant.removeMod(hullmodId);
 			return true;
 		}; return false;
-	}
-
-	public static boolean isExperimentalMod(HullModSpecAPI spec, boolean excludeRestricted) {
-		if (!ehm_internals.id.manufacturer.equals(spec.getManufacturer())) return false;
-		if (!spec.hasTag(ehm_internals.tag.experimental)) return false;
-		if (excludeRestricted && spec.hasTag(ehm_internals.tag.restricted)) return false;
-		return true;
-	}
-
-	public static boolean isExperimentalShunt(WeaponSpecAPI spec, boolean excludeRestricted) {
-		if (!ehm_internals.id.manufacturer.equals(spec.getManufacturer())) return false;
-		if (!spec.hasTag(ehm_internals.tag.experimental)) return false;
-		if (excludeRestricted && spec.hasTag(ehm_internals.tag.restricted)) return false;
-		return true;
 	}
 }

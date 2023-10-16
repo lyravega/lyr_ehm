@@ -7,6 +7,7 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 
+import experimentalHullModifications.misc.ehm_internals;
 import lyravega.listeners.events.customizableMod;
 import lyravega.utilities.lyr_lunaUtilities;
 
@@ -23,16 +24,16 @@ public final class ehm_csc_blueShields extends _ehm_sc_base implements customiza
 	public void applyCustomization() {
 		String settingIdPrefix = this.getClass().getSimpleName()+"_";
 
-		innerColour = lyr_lunaUtilities.getLunaRGBAColour(settingIdPrefix+"inner");
-		ringColour = lyr_lunaUtilities.getLunaRGBAColour(settingIdPrefix+"ring");
-		this.hullModSpec.setDisplayName(lyr_lunaUtilities.getLunaName(settingIdPrefix));
+		innerColour = lyr_lunaUtilities.getLunaRGBAColour(ehm_internals.id.mod, settingIdPrefix+"inner");
+		ringColour = lyr_lunaUtilities.getLunaRGBAColour(ehm_internals.id.mod, settingIdPrefix+"ring");
+		this.hullModSpec.setDisplayName(lyr_lunaUtilities.getLunaName(ehm_internals.id.mod, settingIdPrefix));
 	}
 
 	@Override
 	public void init(HullModSpecAPI hullModSpec) {
 		super.init(hullModSpec);
 
-		applyCustomization();
+		this.applyCustomization();
 	}
 
 	@Override

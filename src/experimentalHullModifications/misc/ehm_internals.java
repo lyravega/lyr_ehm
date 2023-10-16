@@ -3,14 +3,15 @@ package experimentalHullModifications.misc;
 import java.util.HashSet;
 import java.util.Set;
 
+import lyravega.misc.lyr_internals;
+
 public final class ehm_internals {
-	public static final class id {
+	public static final class id extends lyr_internals.id {
 		public static final String
 			submarket = "ehm_submarket",	// must match submarket id in .csv
 			ability = "ehm_ability",	// must match ability id in .csv
 			faction = "experimental",	// must match faction id in .csv and .faction
 			manufacturer = "Experimental",	// must match the 'designTypeColors' in settings.json
-			drillSound = "drill",	// must match .json
 			mod = "lyr_ehm";	// must match .json
 		public static final class hullmods {
 			public static final String

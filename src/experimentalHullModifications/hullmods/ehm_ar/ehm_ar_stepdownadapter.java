@@ -21,9 +21,9 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_internals.id.shunts.adapters;
+import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import experimentalHullModifications.misc.ehm_tooltip.text;
-import experimentalHullModifications.plugin.ehm_settings;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.utilities.lyr_miscUtilities;
 

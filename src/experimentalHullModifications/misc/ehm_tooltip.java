@@ -23,7 +23,7 @@ public class ehm_tooltip {
 			// hasShieldCosmetic = {"Another shield cosmetic modification is already installed", "shield cosmetic modification"},	// not used
 			// hasEngineCosmetic = {"Another engine cosmetic modification is already installed", "engine cosmetic modification"},	// not used
 			hasAnyExperimental = {"All experimental hull modifications needs to be removed from the ship first", "needs to be removed"},
-			hasAnyExperimentalBuiltIn = {"Cannot be used due to a built-in experimental hull modification", "built-in"},
+			hasAnyExperimentalEnhanced = {"Cannot be used due to a built-in experimental hull modification", "built-in"},
 			hasLogisticsOverhaul = {"Cannot be installed due to ship having completely overhauled for logistics usage", "overhauled for logistics"},
 			isModule = {"Cannot be installed on modules", "modules"},
 			isParent = {"Cannot be installed on module ships", "module ships"},

@@ -15,10 +15,10 @@ import experimentalHullModifications.abilities.ehm_ability;
 import experimentalHullModifications.abilities.listeners.ehm_shuntInjector;
 import experimentalHullModifications.abilities.listeners.ehm_submarketInjector;
 import experimentalHullModifications.misc.ehm_internals;
+import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.scripts.ehm_fieldRepairsScript;
 import lyravega.listeners.lyr_eventDispatcher;
 import lyravega.listeners.lyr_fleetTracker;
-import lyravega.utilities.lyr_miscUtilities;
 import lyravega.utilities.logger.lyr_logger;
 
 public final class lyr_ehm extends BaseModPlugin {
@@ -54,13 +54,14 @@ public final class lyr_ehm extends BaseModPlugin {
 	 * Purges all of the experimental stuff from all factions' known lists,
 	 * then adds valid experimental hull modifications to player's faction
 	 */
-	static void updateBlueprints() {
+	public static void updateBlueprints() {
 		// FactionAPI playerFaction = Global.getSector().getPlayerPerson().getFaction();
 		CharacterDataAPI playerData = Global.getSector().getCharacterData();
 
 		// purge experimental weapon blueprints
 		for (WeaponSpecAPI weaponSpec : Global.getSettings().getAllWeaponSpecs()) {
-			if (!lyr_miscUtilities.isExperimentalShunt(weaponSpec, false)) continue;
+			if (!ehm_internals.id.manufacturer.equals(weaponSpec.getManufacturer())) continue;
+			if (!weaponSpec.hasTag(ehm_internals.tag.experimental)) continue;
 
 			for (FactionAPI faction : Global.getSector().getAllFactions())
 				faction.removeKnownWeapon(weaponSpec.getWeaponId());
@@ -68,7 +69,8 @@ public final class lyr_ehm extends BaseModPlugin {
 
 		// purge experimental hullmod blueprints
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
-			if (!lyr_miscUtilities.isExperimentalMod(hullModSpec, false)) continue;
+			if (!ehm_internals.id.manufacturer.equals(hullModSpec.getManufacturer())) continue;
+			if (!hullModSpec.hasTag(ehm_internals.tag.experimental)) continue;
 
 			playerData.removeHullMod(hullModSpec.getId());
 			for (FactionAPI faction : Global.getSector().getAllFactions())
@@ -78,7 +80,9 @@ public final class lyr_ehm extends BaseModPlugin {
 		final String targetTag = ehm_settings.getCosmeticsOnly() ? ehm_internals.tag.cosmetic : ehm_internals.tag.experimental;
 
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
-			if (!lyr_miscUtilities.isExperimentalMod(hullModSpec, true)) continue;
+			if (!ehm_internals.id.manufacturer.equals(hullModSpec.getManufacturer())) continue;
+			if (!hullModSpec.hasTag(ehm_internals.tag.experimental)) continue;
+			if (hullModSpec.hasTag(ehm_internals.tag.restricted)) continue;
 
 			if (hullModSpec.hasTag(targetTag)) playerData.addHullMod(hullModSpec.getId());
 		}
@@ -86,7 +90,7 @@ public final class lyr_ehm extends BaseModPlugin {
 		lyr_logger.info("Faction blueprints are updated");
 	}
 
-	static void updateHullMods() {
+	public static void updateHullMods() {
 		final SettingsAPI settingsAPI = Global.getSettings();
 		Set<String> uiTags;
 
@@ -136,7 +140,7 @@ public final class lyr_ehm extends BaseModPlugin {
 		lyr_logger.info("Replaced 'FieldRepairsScript' with modified one");
 	}
 
-	static void attachShuntAccessListener() {
+	public static void attachShuntAccessListener() {
 		if (!Global.getSector().getPlayerFleet().getAbility(ehm_internals.id.ability).isActive()) return;
 
 		switch (ehm_settings.getShuntAvailability()) {

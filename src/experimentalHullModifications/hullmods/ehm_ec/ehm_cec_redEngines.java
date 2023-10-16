@@ -8,6 +8,7 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 
+import experimentalHullModifications.misc.ehm_internals;
 import lyravega.listeners.events.customizableMod;
 import lyravega.utilities.lyr_lunaUtilities;
 
@@ -25,14 +26,14 @@ public final class ehm_cec_redEngines extends _ehm_ec_base implements customizab
 
 		newCustomEngineSpec(settingIdPrefix, customEngineSpecId);
 		engineStyleSpec = customEngineStyleSpecs.get(customEngineSpecId);
-		this.hullModSpec.setDisplayName(lyr_lunaUtilities.getLunaName(settingIdPrefix));
+		this.hullModSpec.setDisplayName(lyr_lunaUtilities.getLunaName(ehm_internals.id.mod, settingIdPrefix));
 	}
 
 	@Override
 	public void init(HullModSpecAPI hullModSpec) {
 		super.init(hullModSpec);
 
-		applyCustomization();
+		this.applyCustomization();
 	}
 
 	@Override
