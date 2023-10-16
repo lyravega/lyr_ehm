@@ -44,6 +44,7 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 		instance.attachListener(true);
 	}
 
+	private final String trackerModId = "lyr_tracker";
 	final Map<String, lyr_shipTracker> shipTrackers = new HashMap<String, lyr_shipTracker>();
 	final Map<String, FleetMemberAPI> fleetMembers = new HashMap<String, FleetMemberAPI>();
 
@@ -74,8 +75,8 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 	}
 
 	private void addTracking(ShipVariantAPI variant, FleetMemberAPI member, String parentTrackerUUID) {
-		if (variant.getPermaMods().contains("lyr_tracker")) return;
-		variant.addPermaMod("lyr_tracker", false);
+		if (variant.getPermaMods().contains(this.trackerModId)) return;
+		variant.addPermaMod(this.trackerModId, false);
 
 		String shipTrackerUUID = null;
 
@@ -100,8 +101,8 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 	}
 
 	private void removeTracking(ShipVariantAPI variant) {
-		if (!variant.getPermaMods().contains("lyr_tracker")) return;
-		variant.removePermaMod("lyr_tracker");
+		if (!variant.getPermaMods().contains(this.trackerModId)) return;
+		variant.removePermaMod(this.trackerModId);
 
 		for (Iterator<String> iterator = variant.getTags().iterator(); iterator.hasNext(); )
 			if (iterator.next().startsWith(lyr_fleetTracker.uuid.prefix)) iterator.remove();
@@ -168,6 +169,7 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 
 		this.getShipTracker(stats).updateVariant(stats.getVariant());
 	}
+
 
 	public static class lyr_tracker extends BaseHullMod implements HullModFleetEffect {
 		@Override public boolean withAdvanceInCampaign() { return false; }
