@@ -99,6 +99,10 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 
 		for (String moduleSlotId : variant.getStationModules().keySet()) {
 			ShipVariantAPI moduleVariant = variant.getModuleVariant(moduleSlotId);
+			ShipHullSpecAPI moduleHullSpec = moduleVariant.getHullSpec();
+
+			if (moduleHullSpec.getOrdnancePoints(null) == 0) continue;	// vanilla first checks this then
+			if (moduleHullSpec.hasTag("module_unselectable")) continue;		// this to identify unselectables
 
 			if (moduleVariant.getSource() != VariantSource.REFIT) {
 				moduleVariant = moduleVariant.clone();
