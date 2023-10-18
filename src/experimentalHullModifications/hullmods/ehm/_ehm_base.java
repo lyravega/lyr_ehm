@@ -163,7 +163,7 @@ public abstract class _ehm_base implements HullModEffect {
 		}
 
 		hullSpec = new lyr_hullSpec(settings.getHullSpec(Misc.getDHullId(hullSpecToClone)), true);
-		originalHullSpec = new lyr_hullSpec(settings.getHullSpec(hullSpecToClone.getHullId().replace(Misc.D_HULL_SUFFIX, "")), false);
+		originalHullSpec = new lyr_hullSpec(settings.getHullSpec(hullSpecToClone.getHullId().replace(Misc.D_HULL_SUFFIX, "")));
 
 		ehm_hullSpecAlteration(hullSpec, originalHullSpec);
 
@@ -187,7 +187,7 @@ public abstract class _ehm_base implements HullModEffect {
 		final SettingsAPI settings = Global.getSettings();
 
 		lyr_hullSpec hullSpec = new lyr_hullSpec(settings.getHullSpec(variant.getHullSpec().getHullId()), true);
-		lyr_hullSpec originalHullSpec = new lyr_hullSpec(settings.getHullSpec(variant.getHullSpec().getHullId().replace(Misc.D_HULL_SUFFIX, "")), false);
+		lyr_hullSpec originalHullSpec = new lyr_hullSpec(settings.getHullSpec(variant.getHullSpec().getHullId().replace(Misc.D_HULL_SUFFIX, "")));
 
 		ehm_hullSpecAlteration(hullSpec, originalHullSpec);
 

@@ -74,7 +74,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 		if (!stats.getVariant().getSMods().contains(this.hullModSpecId)) return;
 
 		ShipVariantAPI variant = stats.getVariant();
-		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
+		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(variant.getHullSpec());
 
 		lyr_hullSpec.setOrdnancePoints((int) Math.round(ehm_hullSpecReference(variant).getOrdnancePoints(null)*(1+ordnancePointBonus)));
 		variant.setHullSpecAPI(lyr_hullSpec.retrieve());

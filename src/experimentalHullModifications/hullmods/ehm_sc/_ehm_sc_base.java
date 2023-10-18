@@ -56,7 +56,7 @@ public abstract class _ehm_sc_base extends _ehm_base implements normalEvents {
 	 * @return an altered hullSpec with altered shieldSpec colours
 	 */
 	protected static final ShipHullSpecAPI ehm_applyShieldCosmetics(ShipVariantAPI variant, Color inner, Color ring) {
-		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
+		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec());
 		lyr_shieldSpec shieldSpec = hullSpec.getShieldSpec();
 
 		shieldSpec.setInnerColor(inner);
@@ -72,7 +72,7 @@ public abstract class _ehm_sc_base extends _ehm_base implements normalEvents {
 	 * @return an altered hullSpec with its shieldSpec is restored
 	 */
 	public static final ShipHullSpecAPI ehm_restoreShield(ShipVariantAPI variant) {
-		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
+		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec());
 		ShieldSpecAPI stockShieldSpec = ehm_hullSpecReference(variant).getShieldSpec();
 
 		hullSpec.setShieldSpec(stockShieldSpec);

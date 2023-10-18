@@ -85,7 +85,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 		if (!stats.getVariant().getHullSpec().getBuiltInMods().contains(ehm_internals.id.hullmods.base)) return;
 
 		ShipVariantAPI variant = stats.getVariant();
-		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
+		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(variant.getHullSpec());
 		ShipHullSpecAPI originalHullSpec = ehm_hullSpecReference(variant);
 		// boolean commitVariantChanges = false;
 

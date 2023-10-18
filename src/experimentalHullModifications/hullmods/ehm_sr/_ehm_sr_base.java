@@ -82,7 +82,7 @@ public abstract class _ehm_sr_base extends _ehm_base implements normalEvents {
 	 * @see {@link #ehm_systemRestore()} reverses this process
 	 */
 	protected static final ShipHullSpecAPI ehm_systemRetrofit(ShipVariantAPI variant, String systemId) {
-		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
+		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec());
 		hullSpec.setShipSystemId(systemId);
 		return hullSpec.retrieve();
 	}
@@ -94,7 +94,7 @@ public abstract class _ehm_sr_base extends _ehm_base implements normalEvents {
 	 * @return a hullspec to be installed on the variant
 	 */
 	public static final ShipHullSpecAPI ehm_systemRestore(ShipVariantAPI variant) {
-		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
+		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec());
 		hullSpec.setShipSystemId(ehm_hullSpecReference(variant).getShipSystemId());
 		return hullSpec.retrieve();
 	}

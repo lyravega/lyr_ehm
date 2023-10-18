@@ -89,8 +89,13 @@ public final class lyr_hullSpec {
 	 * already cloned hullSpecs. Otherwise loose hullSpecs will float around till
 	 * they are garbage-collected, which is, unnecessary (duh)
 	 * @param hullSpec to be proxied
-	 * @param clone if the hullSpec needs to be cloned
+	 * @param clone (overload) if the hullSpec needs to be cloned during construction
 	 */
+	public lyr_hullSpec(ShipHullSpecAPI hullSpec) {
+		this.hullSpec = hullSpec;
+	}
+
+	/** @see #lyr_hullSpec(ShipHullSpecAPI) */
 	public lyr_hullSpec(ShipHullSpecAPI hullSpec, boolean clone) {
 		this.hullSpec = (clone) ? this.duplicate(hullSpec) : hullSpec;
 	}
@@ -138,7 +143,7 @@ public final class lyr_hullSpec {
 	 */
 	@Override
 	public lyr_hullSpec clone() {
-		return new lyr_hullSpec(this.hullSpec, true);
+		return new lyr_hullSpec(this.duplicate(this.hullSpec));
 	}
 
 	//#region PROXY METHODS

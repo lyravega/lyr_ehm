@@ -60,7 +60,7 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 	 * @return a hullSpec with the altered engine visuals
 	 */
 	protected static final ShipHullSpecAPI ehm_applyEngineCosmetics(ShipVariantAPI variant, int styleEnum) {
-		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
+		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec());
 		lyr_engineBuilder engineSlot = new lyr_engineBuilder(null, false);
 
 		for (Object temp : hullSpec.getEngineSlots()) {
@@ -78,7 +78,7 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 	 * @return a hullSpec with the altered engine visuals
 	 */
 	protected static final ShipHullSpecAPI ehm_applyEngineCosmetics(ShipVariantAPI variant, int styleEnum, Object engineData) {
-		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec(), false);
+		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec());
 		lyr_engineBuilder engineSlot = new lyr_engineBuilder(null, false);
 
 		for (Object temp : hullSpec.getEngineSlots()) {
