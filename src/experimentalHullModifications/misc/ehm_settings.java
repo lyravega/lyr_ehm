@@ -47,7 +47,6 @@ public final class ehm_settings extends lyr_settings implements LunaSettingsList
 	protected static boolean showExperimentalFlavour; public static boolean getShowExperimentalFlavour() { return showExperimentalFlavour; }
 	protected static boolean showFluff; public static boolean getShowFluff() { return showFluff; }
 	protected static boolean debugTooltip; public static boolean getDebugTooltip() { return debugTooltip; }
-	protected static int loggerLevel; public static int getLogEventInfo() { return loggerLevel; }
 
 	private static void cacheSettings() {
 		// MAIN SETTINGS
@@ -84,7 +83,7 @@ public final class ehm_settings extends lyr_settings implements LunaSettingsList
 		lyr_ehm.attachShuntAccessListener();
 	}
 
-	private static void checkLoggerLevel() {
+	protected static void checkLoggerLevel() {
 		loggerLevel = lyr_lunaUtilities.getInt(ehm_internals.id.mod, "ehm_loggerLevel");
 
 		switch (loggerLevel) {
@@ -94,7 +93,7 @@ public final class ehm_settings extends lyr_settings implements LunaSettingsList
 			case 2: lyr_logger.setLevel(lyr_levels.TRCKR); break;
 			case 1: lyr_logger.setLevel(lyr_levels.RFLCT); break;
 			case 0: lyr_logger.setLevel(lyr_levels.DEBUG); break;
-			default: lyr_logger.setLevel(lyr_levels.LSTNR); break;
+			default: lyr_logger.setLevel(lyr_levels.EVENT); break;
 		}
 	}
 
