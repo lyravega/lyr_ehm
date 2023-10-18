@@ -55,8 +55,13 @@ public final class lyr_shieldSpec {
 	 * <p> Cloning a hullSpecs will also clone its shieldSpec (and engineSpec), so
 	 * the clone parameter should be false unless otherwise is needed.
 	 * @param shieldSpec to be proxied
-	 * @param clone if the shieldSpec needs to be cloned
+	 * @param clone (overload) if the shieldSpec needs to be cloned during construction
 	 */
+	public lyr_shieldSpec(ShieldSpecAPI shieldSpec) {
+		this.shieldSpec = shieldSpec;
+	}
+
+	/** @see #lyr_shieldSpec(ShieldSpecAPI) */
 	public lyr_shieldSpec(ShieldSpecAPI shieldSpec, boolean clone) {
 		this.shieldSpec = (clone) ? this.duplicate(shieldSpec) : shieldSpec;
 	}
@@ -104,7 +109,7 @@ public final class lyr_shieldSpec {
 	 */
 	@Override
 	public lyr_shieldSpec clone() {
-		return new lyr_shieldSpec(this.shieldSpec, true);
+		return new lyr_shieldSpec(this.duplicate(this.shieldSpec));
 	}
 
 	//#region PROXY METHODS

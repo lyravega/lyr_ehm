@@ -159,7 +159,7 @@ public final class lyr_hullSpec {
 	 * @see {@link ShipHullSpecAPI#getWeaponSlotAPI(String) getWeaponSlotAPI(String)}
 	 */
 	public lyr_weaponSlot getWeaponSlot(String weaponSlotId) {
-		this.weaponSlot = (this.weaponSlot == null) ? new lyr_weaponSlot(this.hullSpec.getWeaponSlotAPI(weaponSlotId), false) : this.weaponSlot.recycle(this.hullSpec.getWeaponSlotAPI(weaponSlotId));
+		this.weaponSlot = (this.weaponSlot == null) ? new lyr_weaponSlot(this.hullSpec.getWeaponSlotAPI(weaponSlotId)) : this.weaponSlot.recycle(this.hullSpec.getWeaponSlotAPI(weaponSlotId));
 
 		return this.weaponSlot;
 	}
@@ -174,17 +174,7 @@ public final class lyr_hullSpec {
 	 * @see {@link ShipHullSpecAPI#getShieldSpec() getShieldSpec()}
 	 */
 	public lyr_shieldSpec getShieldSpec() {
-		this.shieldSpec = (this.shieldSpec == null) ? new lyr_shieldSpec(this.hullSpec.getShieldSpec(), false) : this.shieldSpec;
-
-		return this.shieldSpec;
-	}
-
-	/**
-	 * @see #getShieldSpec()
-	 */
-	@Deprecated // this shouldn't be used as cloning the hullSpec also clones the shieldSpec (and engineSpec)
-	public lyr_shieldSpec getShieldSpec(boolean clone) {
-		this.shieldSpec = (this.shieldSpec == null) ? new lyr_shieldSpec(this.hullSpec.getShieldSpec(), true) : this.shieldSpec.recycle(this.shieldSpec.duplicate(this.hullSpec.getShieldSpec()));
+		this.shieldSpec = (this.shieldSpec == null) ? new lyr_shieldSpec(this.hullSpec.getShieldSpec()) : this.shieldSpec;
 
 		return this.shieldSpec;
 	}

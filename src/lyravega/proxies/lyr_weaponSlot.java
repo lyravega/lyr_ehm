@@ -74,8 +74,13 @@ public final class lyr_weaponSlot {
 	 * clones it if necessary. Alterations should be done on a clone if
 	 * it is going to be a new slot.
 	 * @param weaponSlot to be proxied
-	 * @param clone if the weaponSlot needs to be cloned
+	 * @param clone (overload) if the weaponSlot needs to be cloned during construction
 	 */
+	public lyr_weaponSlot(WeaponSlotAPI weaponSlot) {
+		this.weaponSlot = weaponSlot;
+	}
+
+	/** @see #lyr_weaponSlot(WeaponSlotAPI) */
 	public lyr_weaponSlot(WeaponSlotAPI weaponSlot, boolean clone) {
 		this.weaponSlot = (clone) ? this.duplicate(weaponSlot) : weaponSlot;
 	}
@@ -123,7 +128,7 @@ public final class lyr_weaponSlot {
 	 */
 	@Override
 	public lyr_weaponSlot clone() {
-		return new lyr_weaponSlot(this.weaponSlot, true);
+		return new lyr_weaponSlot(this.duplicate(this.weaponSlot));
 	}
 
 	//#region PROXY METHODS
