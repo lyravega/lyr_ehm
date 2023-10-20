@@ -10,12 +10,14 @@ public class lyr_refitTab {
 	// private lyr_refitPanel refitPanel;
 	static Class<?> clazz;
 	private static MethodHandle getRefitPanel;
+	private static MethodHandle getParentData;
 
 	static {
 		try {
 			clazz = methodReflection.findMethodByName("getRefitTab", lyr_refitPanel.clazz).getReturnType();
 
 			getRefitPanel = methodReflection.findMethodByName("getRefitPanel", clazz).getMethodHandle();
+			getParentData = methodReflection.findMethodByName("getParentData", clazz).getMethodHandle();
 		} catch (Throwable t) {
 			lyr_logger.fatal("Failed to find a method in 'lyr_refitTab'", t);
 		}
@@ -42,6 +44,14 @@ public class lyr_refitTab {
 			return new lyr_refitPanel(getRefitPanel.invoke(this.refitTab));
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'getRefitPanel()' in 'lyr_refitTab'", t);
+		}	return null;
+	}
+
+	public Object getParentData() {
+		try {
+			return getParentData.invoke(this.refitTab);
+		} catch (Throwable t) {
+			lyr_logger.error("Failed to use 'getParentData()' in 'lyr_refitTab'", t);
 		}	return null;
 	}
 }
