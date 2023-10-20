@@ -43,6 +43,10 @@ public class lyr_refitPanel {
 		}
 	}
 
+	public lyr_refitPanel() {
+		this.refitPanel = new lyr_campaignUI().getCore().getCurrentTab().getRefitPanel();
+	}
+
 	public lyr_refitPanel(Object refitPanel) {
 		this.refitPanel = refitPanel;
 	}

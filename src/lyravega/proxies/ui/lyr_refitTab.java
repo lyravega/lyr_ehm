@@ -21,6 +21,10 @@ public class lyr_refitTab {
 		}
 	}
 
+	public lyr_refitTab() {
+		this.refitTab = new lyr_campaignUI().getCore().getCurrentTab();
+	}
+
 	public lyr_refitTab(Object refitTab) {
 		this.refitTab = refitTab;
 	}

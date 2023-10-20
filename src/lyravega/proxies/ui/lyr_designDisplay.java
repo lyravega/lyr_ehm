@@ -26,6 +26,10 @@ public class lyr_designDisplay {
 		}
 	}
 
+	public lyr_designDisplay() {
+		this.designDisplay = new lyr_campaignUI().getCore().getCurrentTab().getRefitPanel().getDesignDisplay();
+	}
+
 	public lyr_designDisplay(Object designDisplay) {
 		this.designDisplay = designDisplay;
 	}
