@@ -2,6 +2,10 @@ package lyravega.proxies.ui;
 
 import java.lang.invoke.MethodHandle;
 
+import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.loading.WeaponSlotAPI;
+
+import lyravega.utilities.lyr_reflectionUtilities.fieldReflection;
 import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
 import lyravega.utilities.logger.lyr_logger;
 
@@ -47,11 +51,28 @@ public class lyr_refitTab {
 		}	return null;
 	}
 
-	public Object getParentData() {
+	public lyr_parentData getParentData() {
 		try {
-			return getParentData.invoke(this.refitTab);
+			Object parentData = getParentData.invoke(this.refitTab);
+			if (parentData != null)	return new lyr_parentData(getParentData.invoke(this.refitTab));
+			else return null;
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'getParentData()' in 'lyr_refitTab'", t);
 		}	return null;
+	}
+
+	public static class lyr_parentData {
+		private final FleetMemberAPI member;
+
+		private final WeaponSlotAPI weaponSlot;
+
+		private lyr_parentData(final Object parentData) throws Throwable {
+			this.member = (FleetMemberAPI) fieldReflection.findFieldByClass(FleetMemberAPI.class, parentData).get();
+			this.weaponSlot = (WeaponSlotAPI) fieldReflection.findFieldByClass(WeaponSlotAPI.class, parentData).get();
+		}
+
+		public FleetMemberAPI getMember() { return this.member; }
+
+		public WeaponSlotAPI getWeaponSlot() { return this.weaponSlot; }
 	}
 }
