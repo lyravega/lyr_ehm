@@ -3,11 +3,10 @@ package experimentalHullModifications.misc;
 import java.util.HashSet;
 import java.util.Set;
 
-import lyravega.misc.lyr_internals;
-
-public final class ehm_internals extends lyr_internals {
-	public static final class id extends lyr_internals.id {
+public final class ehm_internals {
+	public static final class id {
 		public static final String
+			drillSound = "drill",	// must match .json
 			submarket = "ehm_submarket",	// must match submarket id in .csv
 			ability = "ehm_ability",	// must match ability id in .csv
 			faction = "experimental",	// must match faction id in .csv and .faction

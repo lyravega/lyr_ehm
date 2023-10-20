@@ -10,7 +10,6 @@ import lunalib.lunaSettings.LunaSettings;
 import lunalib.lunaSettings.LunaSettingsListener;
 import lyravega.listeners.lyr_eventDispatcher;
 import lyravega.listeners.events.customizableMod;
-import lyravega.misc.lyr_settings;
 import lyravega.utilities.lyr_lunaUtilities;
 import lyravega.utilities.logger.lyr_levels;
 import lyravega.utilities.logger.lyr_logger;
@@ -24,7 +23,7 @@ import lyravega.utilities.logger.lyr_logger;
  * restart.
  * @author lyravega
  */
-public final class ehm_settings extends lyr_settings implements LunaSettingsListener {
+public final class ehm_settings implements LunaSettingsListener {
 	private ehm_settings() {
 		cacheSettings();
 	}
@@ -47,6 +46,9 @@ public final class ehm_settings extends lyr_settings implements LunaSettingsList
 	protected static boolean showExperimentalFlavour; public static boolean getShowExperimentalFlavour() { return showExperimentalFlavour; }
 	protected static boolean showFluff; public static boolean getShowFluff() { return showFluff; }
 	protected static boolean debugTooltip; public static boolean getDebugTooltip() { return debugTooltip; }
+	protected static boolean playDrillSound = true; public static boolean getPlayDrillSound() { return playDrillSound; }
+	protected static boolean playDrillSoundForAll = false; public static boolean getPlayDrillSoundForAll() { return playDrillSoundForAll; }
+	protected static int loggerLevel; public static int getLogEventInfo() { return loggerLevel; }
 
 	private static void cacheSettings() {
 		// MAIN SETTINGS
@@ -93,7 +95,7 @@ public final class ehm_settings extends lyr_settings implements LunaSettingsList
 			case 2: lyr_logger.setLevel(lyr_levels.TRCKR); break;
 			case 1: lyr_logger.setLevel(lyr_levels.RFLCT); break;
 			case 0: lyr_logger.setLevel(lyr_levels.DEBUG); break;
-			default: lyr_logger.setLevel(lyr_levels.EVENT); break;
+			default: lyr_logger.setLevel(lyr_levels.LSTNR); break;
 		}
 	}
 
