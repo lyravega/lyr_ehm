@@ -357,7 +357,7 @@ public class lyr_reflectionUtilities {
 
 			do {
 				for (Object currField : (declaredOnly) ? clazz.getDeclaredFields() : clazz.getFields()) {
-					if (!getType.invoke(field).equals(fieldClazz)) continue;
+					if (!getType.invoke(currField).equals(fieldClazz)) continue;
 
 					fieldName = (String) getName.invoke(currField);
 					field = currField; break;
