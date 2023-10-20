@@ -22,7 +22,7 @@ public class lyr_refitTab {
 	}
 
 	public lyr_refitTab() {
-		this.refitTab = new lyr_campaignUI().getCore().getCurrentTab();
+		this.refitTab = new lyr_campaignUI().getCore().getCurrentTab().retrieve();
 	}
 
 	public lyr_refitTab(Object refitTab) {

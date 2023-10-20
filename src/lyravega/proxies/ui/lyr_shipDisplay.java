@@ -30,7 +30,7 @@ public class lyr_shipDisplay {
 	}
 
 	public lyr_shipDisplay() {
-		this.shipDisplay = new lyr_campaignUI().getCore().getCurrentTab().getRefitPanel().getShipDisplay();
+		this.shipDisplay = new lyr_campaignUI().getCore().getCurrentTab().getRefitPanel().getShipDisplay().retrieve();
 	}
 
 	public lyr_shipDisplay(Object shipDisplay) {

@@ -22,7 +22,7 @@ public class lyr_coreUI {
 	}
 
 	public lyr_coreUI() {
-		this.coreUI = new lyr_campaignUI().getCore();
+		this.coreUI = new lyr_campaignUI().getCore().retrieve();
 	}
 
 	public lyr_coreUI(Object coreUI) {
