@@ -14,9 +14,8 @@ import com.fs.starfarer.api.fleet.FleetMemberAPI;
 
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_settings;
-import lyravega.proxies.ui.lyr_designDisplay;
-import lyravega.proxies.ui.lyr_refitPanel;
-import lyravega.proxies.ui.lyr_shipDisplay;
+import lyravega.proxies.ui.*;
+import lyravega.proxies.ui.lyr_refitTab.lyr_parentData;
 import lyravega.utilities.logger.lyr_logger;
 
 /**
@@ -63,6 +62,18 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 		if (!isRefitTab()) return null;
 
 		return lyr_shipDisplay.proxify().getShip();
+	}
+
+	/**
+	 * Grabs the module's parent data, if any. It is grabbed from the refit
+	 * tab itself. The parent data contains parent member, and the slot of
+	 * the module.
+	 * @return the parent data, check for {@code null}
+	 */
+	public static lyr_parentData getParentData() {
+		if (!isRefitTab()) return null;
+
+		return lyr_refitTab.proxify().getParentData();
 	}
 
 	public static boolean clearUndoAfter = false;
