@@ -12,7 +12,6 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.loading.VariantSource;
 
-import lyravega.proxies.ui.*;
 import lyravega.utilities.lyr_interfaceUtilities;
 import lyravega.utilities.logger.lyr_logger;
 
@@ -24,14 +23,6 @@ import lyravega.utilities.logger.lyr_logger;
  * @author lyravega
  */
 public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abstractTracker {
-	private lyr_shipDisplay shipDisplay = null;	// changes on refit tab open
-	private lyr_refitTab refitTab = null;	// changes on refit tab open
-	private lyr_refitPanel refitPanel = null;	// changes on refit tab open
-	private lyr_encounterDialog encounterDialog = null;	// changes on market interaction
-	private lyr_designDisplay designDisplay = null;	// changes on refit tab open
-	private lyr_coreUI coreUI = null;	// changes everytime a market interaction opens a tab
-	private lyr_campaignUI campaignUI = null;
-
 	public static final class uuid {
 		public static final String
 			prefix = "UUID",
@@ -43,34 +34,6 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 
 	private lyr_fleetTracker() {
 		super(CoreUITabId.REFIT);
-	}
-
-	private void checkUIStuffDEBUG() {
-		if (!isRefitTab()) return;
-
-		lyr_shipDisplay debug_shipDisplay = lyr_shipDisplay.proxify();
-		lyr_refitTab debug_refitTab = lyr_refitTab.proxify();
-		lyr_refitPanel debug_refitPanel = lyr_refitPanel.proxify();
-		lyr_encounterDialog debug_encounterDialog = lyr_encounterDialog.proxify();
-		lyr_designDisplay debug_designDisplay = lyr_designDisplay.proxify();
-		lyr_coreUI debug_coreUI = lyr_coreUI.proxify();
-		lyr_campaignUI debug_campaignUI = lyr_campaignUI.proxify();
-
-		if (this.shipDisplay == null) this.shipDisplay = debug_shipDisplay;
-		if (this.refitTab == null) this.refitTab = debug_refitTab;
-		if (this.refitPanel == null) this.refitPanel = debug_refitPanel;
-		if (this.encounterDialog == null) this.encounterDialog = debug_encounterDialog;
-		if (this.designDisplay == null) this.designDisplay = debug_designDisplay;
-		if (this.coreUI == null) this.coreUI = debug_coreUI;
-		if (this.campaignUI == null) this.campaignUI = debug_campaignUI;
-
-		if (this.shipDisplay.retrieve() != debug_shipDisplay.retrieve()) { lyr_logger.debug("shipDisplay changed"); this.shipDisplay = debug_shipDisplay; }
-		if (this.refitTab.retrieve() != debug_refitTab.retrieve()) { lyr_logger.debug("refitTab changed"); this.refitTab = debug_refitTab; }
-		if (this.refitPanel.retrieve() != debug_refitPanel.retrieve()) { lyr_logger.debug("refitPanel changed"); this.refitPanel = debug_refitPanel; }
-		if (this.encounterDialog.retrieve() != debug_encounterDialog.retrieve()) { lyr_logger.debug("encounterDialog changed"); this.encounterDialog = debug_encounterDialog; }
-		if (this.designDisplay.retrieve() != debug_designDisplay.retrieve()) { lyr_logger.debug("designDisplay changed"); this.designDisplay = debug_designDisplay; }
-		if (this.coreUI.retrieve() != debug_coreUI.retrieve()) { lyr_logger.debug("coreUI changed"); this.coreUI = debug_coreUI; }
-		if (this.campaignUI.retrieve() != debug_campaignUI.retrieve()) { lyr_logger.debug("campaignUI changed"); this.campaignUI = debug_campaignUI; }
 	}
 
 	public static _lyr_abstractTracker instance() {
@@ -105,13 +68,11 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 	@Override protected void delayedOnOpen() {
 		// if (lyr_interfaceUtilities.refreshShipDisplay) lyr_interfaceUtilities.refreshShipDisplay();
 		lyr_interfaceUtilities.refreshShipDisplay();
-		this.checkUIStuffDEBUG();
 	}
 
 	@Override protected void onAdvance(float amount) {
 		// if (lyr_interfaceUtilities.clearUndoAfter) lyr_interfaceUtilities.clearUndoAfter();
 		lyr_interfaceUtilities.clearUndoAfter();
-		this.checkUIStuffDEBUG();
 	}
 
 	private void addTracking(ShipVariantAPI variant, FleetMemberAPI member, String parentTrackerUUID) {
