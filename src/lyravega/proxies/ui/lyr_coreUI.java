@@ -2,9 +2,22 @@ package lyravega.proxies.ui;
 
 import java.lang.invoke.MethodHandle;
 
+import com.fs.starfarer.api.campaign.CoreUIAPI;
+import com.fs.starfarer.api.ui.UIComponentAPI;
+import com.fs.starfarer.api.ui.UIPanelAPI;
+
 import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
 import lyravega.utilities.logger.lyr_logger;
 
+/**
+ * A proxy-like class which offers a few proxy methods for the obfuscated core UI class.
+ * <p> The stored object may be retrieved with {@code retrieve()}, and it implements the
+ * {@link CoreUIAPI}, {@link UIPanelAPI} and {@link UIComponentAPI} interfaces which may
+ * be utilized for additional access.
+ * <p> If there is no encounter dialogue, then campaign UI's core UI is utilized.
+ * Otherwise, each new encounter dialogue constructs its own core UI.
+ * @author lyravega
+ */
 public class lyr_coreUI {
 	private Object coreUI;	// CoreUIAPI, UIPanelAPI, UIComponentAPI
 	// private lyr_refitTab refitTab;
@@ -29,6 +42,7 @@ public class lyr_coreUI {
 		this.coreUI = coreUI;
 	}
 
+	/** @return an object which may be cast on {@link CoreUIAPI}, {@link UIPanelAPI} or {@link UIComponentAPI} for partial API access */
 	public Object retrieve() {
 		return this.coreUI;
 	}

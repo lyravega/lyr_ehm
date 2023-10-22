@@ -3,10 +3,21 @@ package lyravega.proxies.ui;
 import java.lang.invoke.MethodHandle;
 
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.ui.UIComponentAPI;
+import com.fs.starfarer.api.ui.UIPanelAPI;
 
 import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
 import lyravega.utilities.logger.lyr_logger;
 
+/**
+ * A proxy-like class which offers a few proxy methods for the obfuscated refit panel class.
+ * It is a part of the refit UI, acts as a container for most UI elements for the refit ship.
+ * <p> The stored object may be retrieved with {@code retrieve()}, and it implements the
+ * {@link UIPanelAPI} and {@link UIComponentAPI} interfaces from the API which may be
+ * utilized for additional access.
+ * <p> Reconstructed when the refit tab is opened.
+ * @author lyravega
+ */
 public class lyr_refitPanel {
 	private Object refitPanel;	// UIPanelAPI, UIComponentAPI
 	// private lyr_designDisplay designDisplay;
@@ -51,6 +62,7 @@ public class lyr_refitPanel {
 		this.refitPanel = refitPanel;
 	}
 
+	/** @return an object which may be cast on {@link UIPanelAPI} or {@link UIComponentAPI} for partial API access */
 	public Object retrieve() {
 		return this.refitPanel;
 	}

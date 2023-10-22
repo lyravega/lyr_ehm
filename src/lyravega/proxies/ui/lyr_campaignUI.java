@@ -8,6 +8,13 @@ import com.fs.starfarer.api.campaign.CampaignUIAPI;
 import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
 import lyravega.utilities.logger.lyr_logger;
 
+/**
+ * A proxy-like class which offers a few proxy methods for the obfuscated campaign UI class.
+ * <p> The stored object may be retrieved with {@code retrieve()}, and it implements the
+ * {@link CampaignUIAPI} interace from the API which may be utilized for additional access.
+ * <p> Seems to very unique, it is at the very least persistent through saves/loads.
+ * @author lyravega
+ */
 public class lyr_campaignUI {
 	private CampaignUIAPI campaignUI;
 	// private lyr_encounterDialog encounterDialog;
@@ -37,6 +44,7 @@ public class lyr_campaignUI {
 		this.campaignUI = Global.getSector().getCampaignUI();
 	}
 
+	/** @return a {@link CampaignUIAPI} object for partial API access */
 	public CampaignUIAPI retrieve() {
 		return this.campaignUI;
 	}

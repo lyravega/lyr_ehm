@@ -4,11 +4,22 @@ import java.lang.invoke.MethodHandle;
 
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
+import com.fs.starfarer.api.ui.UIComponentAPI;
+import com.fs.starfarer.api.ui.UIPanelAPI;
 
 import lyravega.utilities.lyr_reflectionUtilities.fieldReflection;
 import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
 import lyravega.utilities.logger.lyr_logger;
 
+/**
+ * A proxy-like class which offers a few proxy methods for the obfuscated refit tab class.
+ * It is a part of the refit UI, responsible for the whole refit tab.
+ * <p> The stored object may be retrieved with {@code retrieve()}, and it implements the
+ * {@link UIPanelAPI} and {@link UIComponentAPI} interfaces from the API which may be
+ * utilized for additional access.
+ * <p> Reconstructed when the refit tab is opened.
+ * @author lyravega
+ */
 public class lyr_refitTab {
 	private Object refitTab;	// UIPanelAPI, UIComponentAPI
 	// private lyr_refitPanel refitPanel;
@@ -35,6 +46,7 @@ public class lyr_refitTab {
 		this.refitTab = refitTab;
 	}
 
+	/** @return an object which may be cast on {@link UIPanelAPI} or {@link UIComponentAPI} for partial API access */
 	public Object retrieve() {
 		return this.refitTab;
 	}
