@@ -25,6 +25,10 @@ public class lyr_encounterDialog {
 		}
 	}
 
+	public static lyr_encounterDialog proxify() {
+		return new lyr_encounterDialog();
+	}
+
 	public lyr_encounterDialog() {
 		this.encounterDialog = Global.getSector().getCampaignUI().getCurrentInteractionDialog();
 	}

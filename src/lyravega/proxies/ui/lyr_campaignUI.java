@@ -29,6 +29,10 @@ public class lyr_campaignUI {
 		}
 	}
 
+	public static lyr_campaignUI proxify() {
+		return new lyr_campaignUI();
+	}
+
 	public lyr_campaignUI() {
 		this.campaignUI = Global.getSector().getCampaignUI();
 	}

@@ -27,8 +27,8 @@ public class lyr_refitTab {
 		}
 	}
 
-	public lyr_refitTab() {
-		this.refitTab = new lyr_campaignUI().getCore().getCurrentTab().retrieve();
+	public static lyr_refitTab proxify() {
+		return new lyr_campaignUI().getCore().getCurrentTab();
 	}
 
 	public lyr_refitTab(Object refitTab) {

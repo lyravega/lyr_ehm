@@ -62,7 +62,7 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 	public static ShipAPI getRefitShip() {
 		if (!isRefitTab()) return null;
 
-		return new lyr_shipDisplay().getShip();
+		return lyr_shipDisplay.proxify().getShip();
 	}
 
 	public static boolean clearUndoAfter = false;
@@ -82,7 +82,7 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 	public static void commitVariantChanges() {
 		if (!isRefitTab()) return; // necessary for calls that that originate while 'onGameLoad()'
 		try {
-			lyr_refitPanel refitPanel = new lyr_refitPanel();
+			lyr_refitPanel refitPanel = lyr_refitPanel.proxify();
 			lyr_shipDisplay shipDisplay = refitPanel.getShipDisplay();
 
 			refitPanel.saveCurrentVariant();
@@ -109,7 +109,7 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 	public static void clearUndo() {
 		if (!isRefitTab()) return;	// just in case
 		try {
-			lyr_refitPanel refitPanel = new lyr_refitPanel();
+			lyr_refitPanel refitPanel = lyr_refitPanel.proxify();
 
 			refitPanel.setEditedSinceLoad(false);
 			refitPanel.setEditedSinceSave(false);
@@ -126,7 +126,7 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 	public static void clearUndoAfter() {
 		if (!clearUndoAfter) return;	// works through a flag, and doesn't check if it's the refit tab. Origin of caller should do that check there instead
 		try {
-			lyr_refitPanel refitPanel = new lyr_refitPanel();
+			lyr_refitPanel refitPanel = lyr_refitPanel.proxify();
 			lyr_designDisplay designDisplay = refitPanel.getDesignDisplay();
 
 			refitPanel.setEditedSinceLoad(false);
@@ -164,7 +164,7 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 				targetMember = member; break;
 			}
 
-			lyr_refitPanel refitPanel = new lyr_refitPanel();
+			lyr_refitPanel refitPanel = lyr_refitPanel.proxify();
 			lyr_shipDisplay shipDisplay = refitPanel.getShipDisplay();
 
 			shipDisplay.setFleetMember(null, null);

@@ -43,8 +43,8 @@ public class lyr_refitPanel {
 		}
 	}
 
-	public lyr_refitPanel() {
-		this.refitPanel = new lyr_campaignUI().getCore().getCurrentTab().getRefitPanel().retrieve();
+	public static lyr_refitPanel proxify() {
+		return new lyr_campaignUI().getCore().getCurrentTab().getRefitPanel();
 	}
 
 	public lyr_refitPanel(Object refitPanel) {
