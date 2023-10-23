@@ -188,7 +188,7 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 
 			refreshShipDisplay = false;
 		} catch (Throwable t) {
-			lyr_logger.error("Failure in 'reloadMemberVariant()'");
+			lyr_logger.error("Failure in 'refreshShipDisplay()'");
 		}
 	}
 
