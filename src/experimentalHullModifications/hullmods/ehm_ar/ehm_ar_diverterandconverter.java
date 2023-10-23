@@ -17,6 +17,7 @@ import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.api.util.DynamicStatsAPI;
 
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_internals.id.hullmods;
@@ -118,13 +119,17 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 
 			String shuntId = shuntSpec.getWeaponId();
 			switch (shuntId) {
-				case converters.mediumToLarge: case converters.smallToLarge: case converters.smallToMedium:
-					if (slot.isDecorative()) slotPoints -= converterMap.get(shuntId).getChildCost();
+				case converters.mediumToLarge: case converters.smallToLarge: case converters.smallToMedium: {
+					int mod = converterMap.get(shuntId).getChildCost();
+					if (slot.isDecorative()) slotPoints -= mod;
+					stats.getDynamic().getMod("ehm_slotPointsToConverters").modifyFlat(slotId, -mod);
 					break;
-				case diverters.large: case diverters.medium: case diverters.small:
-					if (slot.isDecorative()) slotPoints += diverterMap.get(shuntId);
+				} case diverters.large: case diverters.medium: case diverters.small: {
+					int mod = diverterMap.get(shuntId);
+					if (slot.isDecorative()) slotPoints += mod;
+					stats.getDynamic().getMod("ehm_slotPointsFromDiverters").modifyFlat(slotId, mod);
 					break;
-				default: { iterator.remove(); break; }
+				} default: { iterator.remove(); break; }
 			}
 		}
 
@@ -135,17 +140,17 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 			String shuntId = variant.getWeaponSpec(slotId).getWeaponId();
 
 			switch (shuntId) {
-				case converters.mediumToLarge: case converters.smallToLarge: case converters.smallToMedium:
+				case converters.mediumToLarge: case converters.smallToLarge: case converters.smallToMedium: {
 					int cost = converterMap.get(shuntId).getChildCost();
 					if (slotPoints - cost < 0) break;
 					slotPoints -= cost;
 					ehm_convertSlot(hullSpec, shuntId, slotId);
 					break;
-				case diverters.large: case diverters.medium: case diverters.small:
+				} case diverters.large: case diverters.medium: case diverters.small: {
 					slotPoints += diverterMap.get(shuntId);
 					ehm_deactivateSlot(hullSpec, shuntId, slotId);
 					break;
-				default: break;
+				} default: break;
 			}
 		}
 
@@ -174,16 +179,22 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 		ShipVariantAPI variant = ship.getVariant();
 
 		if (variant.hasHullMod(this.hullModSpecId)) {
-			int[] pointArray = ehm_slotPointCalculation(ship);
+			DynamicStatsAPI dynamicStats = ship.getMutableStats().getDynamic();
 
-			if (pointArray[0] > 0) tooltip.addSectionHeading(pointArray[0] + " UNUSED SLOT POINTS", header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
-			else if (pointArray[0] == 0) tooltip.addSectionHeading("NO SLOT POINTS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
+			int fromMods = (int) dynamicStats.getMod("ehm_slotPointsFromMods").computeEffective(0f);
+			int fromDiverters = (int) dynamicStats.getMod("ehm_slotPointsFromDiverters").computeEffective(0f);
+			int toConverters = (int) dynamicStats.getMod("ehm_slotPointsToConverters").computeEffective(0f);
+			int total = fromMods + fromDiverters + toConverters;
+			int deploymentPenalty = ehm_settings.getBaseSlotPointPenalty() > 0 ? Math.max(0, ehm_settings.getBaseSlotPointPenalty()*Math.min(fromMods, fromMods - total)) : 0;
+
+			if (total > 0) tooltip.addSectionHeading(total + " UNUSED SLOT POINTS", header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
+			else if (total == 0) tooltip.addSectionHeading("NO SLOT POINTS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
 			else tooltip.addSectionHeading("SLOT POINT DEFICIT", header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
-			if (pointArray[1] > 0) tooltip.addPara("Hull modifications are providing " + pointArray[1] + " slot points", 2f, header.sEffect_textColour, pointArray[1] + " slot points");
-			if (pointArray[2] > 0) tooltip.addPara("Diverter shunts are providing " + pointArray[2] + " slot points", 2f, header.sEffect_textColour, pointArray[2] + " slot points");
-			if (pointArray[3] > 0) tooltip.addPara("Converter shunts are utilizing " + pointArray[3] + " slot points", 2f, header.notApplicable_textColour, pointArray[3] + " slot points");
-			if (ehm_settings.getBaseSlotPointPenalty() > 0 && pointArray[4] > 0) tooltip.addPara("Ship will require an additional " + pointArray[4] + " deployment points", 2f, header.notApplicable_textColour, pointArray[4] + " deployment points");
+			if (fromMods > 0) tooltip.addPara("Hull modifications are providing " + fromMods + " slot points", 2f, header.sEffect_textColour, fromMods + " slot points");
+			if (fromDiverters > 0) tooltip.addPara("Diverter shunts are providing " + fromDiverters + " slot points", 2f, header.sEffect_textColour, fromDiverters + " slot points");
+			if (toConverters < 0) tooltip.addPara("Converter shunts are utilizing " + toConverters + " slot points", 2f, header.notApplicable_textColour, toConverters + " slot points");
+			if (deploymentPenalty > 0) tooltip.addPara("Ship will require an additional " + deploymentPenalty + " deployment points", 2f, header.notApplicable_textColour, deploymentPenalty + " deployment points");
 
 			if (ehm_settings.getShowInfoForActivators()) {
 				Map<String, Integer> converters = ehm_shuntCount(ship, ehm_internals.tag.converterShunt);

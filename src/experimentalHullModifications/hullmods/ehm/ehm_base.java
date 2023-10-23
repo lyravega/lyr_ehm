@@ -10,6 +10,7 @@ import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.api.util.DynamicStatsAPI;
 import com.fs.starfarer.api.util.Misc;
 
 import experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base;
@@ -110,6 +111,12 @@ public final class ehm_base extends _ehm_base implements weaponEvents {
 				tooltip.addPara("VariantHints: "+variant.getHints().toString(), 5f).setHighlight("VariantHints:");
 				tooltip.addPara("HullTags: "+hullSpec.getTags().toString(), 5f).setHighlight("HullTags:");
 				tooltip.addPara("VariantTags: "+variant.getTags().toString(), 5f).setHighlight("VariantTags:");
+
+				DynamicStatsAPI dynamicStats = ship.getMutableStats().getDynamic();
+				tooltip.addSectionHeading("DEBUG INFO: SLOT POINTS", header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
+				tooltip.addPara("Hullmods: "+(dynamicStats.getMod("ehm_slotPointsFromMods").computeEffective(0f)), 5f).setHighlight("Hullmods:");
+				tooltip.addPara("Diverters: "+(dynamicStats.getMod("ehm_slotPointsFromDiverters").computeEffective(0f)), 5f).setHighlight("Diverters:");
+				tooltip.addPara("Converters: "+(dynamicStats.getMod("ehm_slotPointsToConverters").computeEffective(0f)), 5f).setHighlight("Converters:");
 
 				tooltip.addSectionHeading("DEBUG INFO: SCRIPTS", header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 				for (EveryFrameScript script : Global.getSector().getScripts()) {

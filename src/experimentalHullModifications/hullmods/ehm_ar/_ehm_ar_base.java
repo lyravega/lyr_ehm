@@ -167,7 +167,9 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 	 * @param variant of the ship
 	 * @param initialBonus if the ship has any initial bonus slot points
 	 * @return int array: 0=total, 1=fromHullMods, 2=fromDiverters, 3=forConverters, 4=deploymentPenalty
+	 * @deprecated as dynamic stats are utilized for this information
 	 */
+	@Deprecated
 	protected static final int[] ehm_slotPointCalculation(ShipAPI ship) {
 		int fromDiverters = 0;
 		int forConverters = 0;
