@@ -13,6 +13,7 @@ Refactored and overhauled most of the stuff under the hood; initial changes begu
 	- "Play Drill Sounds - All" option will do so when a hullmod is installed on / removed from any ship
 	- Modules will not spawn unnecessary trackers or get confused by duplicates and instead use their own
 	- Officer and autofit menus will not cause the trackers to detect false-positive changes on the ship
+- Combined some logging settings, suppressed most messages for default setting
 
 
 Version 0.8.5 - Hotfix
