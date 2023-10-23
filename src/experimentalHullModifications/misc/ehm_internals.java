@@ -183,6 +183,13 @@ public final class ehm_internals {
 				set.addAll(launchTubes.set);
 			}
 		}
+
+		public static final class stats {
+			public static final String
+				hullmods = "ehm_slotPointsFromMods",
+				diverters = "ehm_slotPointsFromDiverters",
+				converters = "ehm_slotPointsToConverters";
+		}
 	}
 
 	public static final class tag {

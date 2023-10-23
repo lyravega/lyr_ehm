@@ -58,7 +58,7 @@ public final class ehm_mr_auxilarygenerators extends _ehm_base implements normal
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		stats.getDynamic().getMod("ehm_slotPointsFromMods").modifyFlat(this.hullModSpecId, slotPointBonus.get(hullSize));	// used in tooltips
+		stats.getDynamic().getMod(ehm_internals.id.stats.hullmods).modifyFlat(this.hullModSpecId, slotPointBonus.get(hullSize));	// used in tooltips
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION
