@@ -120,13 +120,15 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 			final String shuntId = shuntSpec.getWeaponId();
 			switch (shuntId) {
 				case converters.mediumToLarge: case converters.smallToLarge: case converters.smallToMedium: {
-					int mod = converterMap.get(shuntId).getChildCost();
-					if (slot.isDecorative()) slotPoints -= mod;
+					if (!slot.isDecorative()) break;
+					final int mod = converterMap.get(shuntId).getChildCost();
+					slotPoints -= mod;
 					stats.getDynamic().getMod(ehm_internals.id.stats.slotPointsToConverters).modifyFlat(slotId, -mod);	// used in tooltips
 					break;
 				} case diverters.large: case diverters.medium: case diverters.small: {
-					int mod = diverterMap.get(shuntId);
-					if (slot.isDecorative()) slotPoints += mod;
+					if (!slot.isDecorative()) break;
+					final int mod = diverterMap.get(shuntId);
+					slotPoints += mod;
 					stats.getDynamic().getMod(ehm_internals.id.stats.slotPointsFromDiverters).modifyFlat(slotId, mod);	// used in tooltips
 					break;
 				} default: { iterator.remove(); break; }
