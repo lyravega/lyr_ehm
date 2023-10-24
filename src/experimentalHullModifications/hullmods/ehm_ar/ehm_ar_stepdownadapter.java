@@ -104,24 +104,24 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 	}
 
 	@Override
-	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		ShipVariantAPI variant = stats.getVariant();
-		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec());
-		List<WeaponSlotAPI> shunts = hullSpec.getAllWeaponSlotsCopy();
+	public void applyEffectsBeforeShipCreation(final HullSize hullSize, final MutableShipStatsAPI stats, final String hullModSpecId) {
+		final ShipVariantAPI variant = stats.getVariant();
+		final lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec());
+		final List<WeaponSlotAPI> shunts = hullSpec.getAllWeaponSlotsCopy();
 
-		for (Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
-			WeaponSlotAPI slot = iterator.next();
+		for (final Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
+			final WeaponSlotAPI slot = iterator.next();
 			// if (slot.isDecorative()) continue;
 
-			String slotId = slot.getId();
-			if (!slotId.startsWith(ehm_internals.affix.normalSlot)) { iterator.remove(); continue; }
+			final String slotId = slot.getId();
 			if (variant.getWeaponSpec(slotId) == null) { iterator.remove(); continue; }
+			if (!slotId.startsWith(ehm_internals.affix.normalSlot)) { iterator.remove(); continue; }
 
-			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
+			final WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
 			if (shuntSpec.getSize() != slot.getSlotSize()) { iterator.remove(); continue; }
 			if (!shuntSpec.hasTag(ehm_internals.tag.experimental)) { iterator.remove(); continue; }
 
-			String shuntId = shuntSpec.getWeaponId();
+			final String shuntId = shuntSpec.getWeaponId();
 			switch (shuntId) {
 				case adapters.largeDual: case adapters.largeQuad: case adapters.largeTriple: case adapters.mediumDual: {
 					break;
@@ -129,11 +129,11 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 			}
 		}
 
-		for (WeaponSlotAPI slot : shunts) {
+		for (final WeaponSlotAPI slot : shunts) {
 			if (slot.isDecorative()) continue;
 
-			String slotId = slot.getId();
-			String shuntId = variant.getWeaponSpec(slotId).getWeaponId();
+			final String slotId = slot.getId();
+			final String shuntId = variant.getWeaponSpec(slotId).getWeaponId();
 
 			switch (shuntId) {
 				case adapters.largeDual: case adapters.largeQuad: case adapters.largeTriple: case adapters.mediumDual: {

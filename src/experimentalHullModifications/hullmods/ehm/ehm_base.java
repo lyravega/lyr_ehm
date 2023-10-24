@@ -119,6 +119,8 @@ public final class ehm_base extends _ehm_base implements weaponEvents {
 				tooltip.addPara("'"+stats.slotPointsFromMods+"': "+(dynamicStats.getMod(stats.slotPointsFromMods).computeEffective(0f)), 5f).setHighlight("'"+stats.slotPointsFromMods+"':");
 				tooltip.addPara("'"+stats.slotPointsFromDiverters+"': "+(dynamicStats.getMod(stats.slotPointsFromDiverters).computeEffective(0f)), 5f).setHighlight("'"+stats.slotPointsFromDiverters+"':");
 				tooltip.addPara("'"+stats.slotPointsToConverters+"': "+(dynamicStats.getMod(stats.slotPointsToConverters).computeEffective(0f)), 5f).setHighlight("'"+stats.slotPointsToConverters+"':");
+				tooltip.addPara("'"+stats.capacitors+"': "+(dynamicStats.getMod(stats.capacitors).computeEffective(0f)), 5f).setHighlight("'"+stats.capacitors+"':");
+				tooltip.addPara("'"+stats.dissipators+"': "+(dynamicStats.getMod(stats.dissipators).computeEffective(0f)), 5f).setHighlight("'"+stats.dissipators+"':");
 
 				tooltip.addSectionHeading("DEBUG INFO: SCRIPTS", header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 				for (EveryFrameScript script : Global.getSector().getScripts()) {

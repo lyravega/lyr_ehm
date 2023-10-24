@@ -187,6 +187,8 @@ public final class ehm_internals {
 		public static final class stats {
 			public static final String
 				launchTubes = "ehm_launchTubes",
+				capacitors = "ehm_capacitors",
+				dissipators = "ehm_dissipators",
 				slotPointsFromMods = "ehm_slotPointsFromMods",
 				slotPointsFromDiverters = "ehm_slotPointsFromDiverters",
 				slotPointsToConverters = "ehm_slotPointsToConverters";

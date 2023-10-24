@@ -7,10 +7,8 @@ import java.util.*;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
-import com.fs.starfarer.api.combat.MutableShipStatsAPI;
-import com.fs.starfarer.api.combat.ShipAPI;
+import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
-import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
@@ -42,60 +40,62 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 	// END OF CUSTOM EVENTS
 
 	static final Set<String> fluxShuntSet = new HashSet<String>();
-	static final Map<String, Float[]> capacitorMap = new HashMap<String, Float[]>();
-	static final Map<String, Float[]> dissipatorMap = new HashMap<String, Float[]>();
+	static final Map<String, Integer> capacitorMap = new HashMap<String, Integer>();
+	static final Map<String, Integer> dissipatorMap = new HashMap<String, Integer>();
+	static final float capacitorFlatMod = 1.5f * Misc.FLUX_PER_CAPACITOR;
+	static final float dissipatorFlatMod = 1.5f * Misc.DISSIPATION_PER_VENT;
+	static final float fluxMultMod = 0.01f;
+
 	static {
-		capacitorMap.put(ehm_internals.id.shunts.capacitors.large, new Float[] {0.04f, 6f * Misc.FLUX_PER_CAPACITOR});
-		capacitorMap.put(ehm_internals.id.shunts.capacitors.medium, new Float[] {0.02f, 3f * Misc.FLUX_PER_CAPACITOR});
-		capacitorMap.put(ehm_internals.id.shunts.capacitors.small, new Float[] {0.01f, 1.5f * Misc.FLUX_PER_CAPACITOR});
+		capacitorMap.put(ehm_internals.id.shunts.capacitors.large, 4);
+		capacitorMap.put(ehm_internals.id.shunts.capacitors.medium, 2);
+		capacitorMap.put(ehm_internals.id.shunts.capacitors.small, 1);
 		fluxShuntSet.addAll(capacitorMap.keySet());
 
-		dissipatorMap.put(ehm_internals.id.shunts.dissipators.large, new Float[] {0.04f, 6f * Misc.DISSIPATION_PER_VENT});
-		dissipatorMap.put(ehm_internals.id.shunts.dissipators.medium, new Float[] {0.02f, 3f * Misc.DISSIPATION_PER_VENT});
-		dissipatorMap.put(ehm_internals.id.shunts.dissipators.small, new Float[] {0.01f, 1.5f * Misc.DISSIPATION_PER_VENT});
+		dissipatorMap.put(ehm_internals.id.shunts.dissipators.large, 4);
+		dissipatorMap.put(ehm_internals.id.shunts.dissipators.medium, 2);
+		dissipatorMap.put(ehm_internals.id.shunts.dissipators.small, 1);
 		fluxShuntSet.addAll(dissipatorMap.keySet());
 	}
 
 	@Override
-	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		ShipVariantAPI variant = stats.getVariant();
-		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec());
-		List<WeaponSlotAPI> shunts = hullSpec.getAllWeaponSlotsCopy();
+	public void applyEffectsBeforeShipCreation(final HullSize hullSize, final MutableShipStatsAPI stats, final String hullModSpecId) {
+		final ShipVariantAPI variant = stats.getVariant();
+		final lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec());
+		final List<WeaponSlotAPI> shunts = hullSpec.getAllWeaponSlotsCopy();
 
-		float[] totalFluxCapacityBonus = {1.0f, 0.0f};	// [0] mult, [1] flat
-		float[] totalFluxDissipationBonus = {1.0f, 0.0f};	// [0] mult, [1] flat
+		final StatBonus dissipatorStat = stats.getDynamic().getMod(ehm_internals.id.stats.dissipators);
+		final StatBonus capacitorStat = stats.getDynamic().getMod(ehm_internals.id.stats.capacitors);
 
-		for (Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
-			WeaponSlotAPI slot = iterator.next();
+		for (final Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
+			final WeaponSlotAPI slot = iterator.next();
 			// if (slot.isDecorative()) continue;
 
-			String slotId = slot.getId();
-			if (slotId.startsWith(ehm_internals.affix.convertedSlot)) { iterator.remove(); continue; }
+			final String slotId = slot.getId();
 			if (variant.getWeaponSpec(slotId) == null) { iterator.remove(); continue; }
+			if (slotId.startsWith(ehm_internals.affix.convertedSlot)) { iterator.remove(); continue; }
 
-			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
+			final WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
 			if (shuntSpec.getSize() != slot.getSlotSize()) { iterator.remove(); continue; }
 			if (!shuntSpec.hasTag(ehm_internals.tag.experimental)) { iterator.remove(); continue; }
 
-			String shuntId = shuntSpec.getWeaponId();
+			final String shuntId = shuntSpec.getWeaponId();
 			switch (shuntId) {
 				case capacitors.large: case capacitors.medium: case capacitors.small: {
-					totalFluxCapacityBonus[0] += capacitorMap.get(shuntId)[0];
-					totalFluxCapacityBonus[1] += capacitorMap.get(shuntId)[1];
+					capacitorStat.modifyFlat(slotId, capacitorMap.get(shuntId));
 					break;
 				} case dissipators.large: case dissipators.medium: case dissipators.small: {
-					totalFluxDissipationBonus[0] += dissipatorMap.get(shuntId)[0];
-					totalFluxDissipationBonus[1] += dissipatorMap.get(shuntId)[1];
+					dissipatorStat.modifyFlat(slotId, dissipatorMap.get(shuntId));
 					break;
 				} default: { iterator.remove(); break; }
 			}
 		}
 
-		for (WeaponSlotAPI slot : shunts) {
+		for (final WeaponSlotAPI slot : shunts) {
 			if (slot.isDecorative()) continue;
 
-			String slotId = slot.getId();
-			String shuntId = variant.getWeaponSpec(slotId).getWeaponId();
+			final String slotId = slot.getId();
+			final String shuntId = variant.getWeaponSpec(slotId).getWeaponId();
 
 			switch (shuntId) {
 				case capacitors.large: case capacitors.medium: case capacitors.small:
@@ -106,10 +106,13 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 			}
 		}
 
-		stats.getFluxCapacity().modifyMult(this.hullModSpecId, totalFluxCapacityBonus[0]);
-		stats.getFluxCapacity().modifyFlat(this.hullModSpecId, totalFluxCapacityBonus[1]);
-		stats.getFluxDissipation().modifyMult(this.hullModSpecId, totalFluxDissipationBonus[0]);
-		stats.getFluxDissipation().modifyFlat(this.hullModSpecId, totalFluxDissipationBonus[1]);
+		final float effectiveCapacitorStat = capacitorStat.computeEffective(0f);
+		final float effectiveDissipatorStat = dissipatorStat.computeEffective(0f);
+
+		stats.getFluxCapacity().modifyMult(this.hullModSpecId, 1f+effectiveCapacitorStat*fluxMultMod);
+		stats.getFluxCapacity().modifyFlat(this.hullModSpecId, effectiveCapacitorStat*capacitorFlatMod);
+		stats.getFluxDissipation().modifyMult(this.hullModSpecId, 1f+effectiveDissipatorStat*fluxMultMod);
+		stats.getFluxDissipation().modifyFlat(this.hullModSpecId, effectiveDissipatorStat*dissipatorFlatMod);
 
 		variant.setHullSpecAPI(hullSpec.retrieve());
 	}
