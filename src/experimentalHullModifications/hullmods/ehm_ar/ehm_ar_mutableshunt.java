@@ -59,27 +59,27 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 	}
 
 	@Override
-	public void applyEffectsBeforeShipCreation(final HullSize hullSize, final MutableShipStatsAPI stats, final String hullModSpecId) {
-		final ShipVariantAPI variant = stats.getVariant();
-		final lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec());
-		final List<WeaponSlotAPI> shunts = hullSpec.getAllWeaponSlotsCopy();
+	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
+		ShipVariantAPI variant = stats.getVariant();
+		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec());
+		List<WeaponSlotAPI> shunts = hullSpec.getAllWeaponSlotsCopy();
 
-		final StatBonus dissipatorStat = stats.getDynamic().getMod(ehm_internals.id.stats.dissipators);
-		final StatBonus capacitorStat = stats.getDynamic().getMod(ehm_internals.id.stats.capacitors);
+		StatBonus dissipatorStat = stats.getDynamic().getMod(ehm_internals.id.stats.dissipators);
+		StatBonus capacitorStat = stats.getDynamic().getMod(ehm_internals.id.stats.capacitors);
 
-		for (final Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
-			final WeaponSlotAPI slot = iterator.next();
+		for (Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
+			WeaponSlotAPI slot = iterator.next();
 			// if (slot.isDecorative()) continue;
 
-			final String slotId = slot.getId();
+			String slotId = slot.getId();
 			if (variant.getWeaponSpec(slotId) == null) { iterator.remove(); continue; }
 			if (slotId.startsWith(ehm_internals.affix.convertedSlot)) { iterator.remove(); continue; }
 
-			final WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
+			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
 			if (shuntSpec.getSize() != slot.getSlotSize()) { iterator.remove(); continue; }
 			if (!shuntSpec.hasTag(ehm_internals.tag.experimental)) { iterator.remove(); continue; }
 
-			final String shuntId = shuntSpec.getWeaponId();
+			String shuntId = shuntSpec.getWeaponId();
 			switch (shuntId) {
 				case capacitors.large: case capacitors.medium: case capacitors.small: {
 					capacitorStat.modifyFlat(slotId, capacitorMap.get(shuntId));
@@ -91,11 +91,11 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 			}
 		}
 
-		for (final WeaponSlotAPI slot : shunts) {
+		for (WeaponSlotAPI slot : shunts) {
 			if (slot.isDecorative()) continue;
 
-			final String slotId = slot.getId();
-			final String shuntId = variant.getWeaponSpec(slotId).getWeaponId();
+			String slotId = slot.getId();
+			String shuntId = variant.getWeaponSpec(slotId).getWeaponId();
 
 			switch (shuntId) {
 				case capacitors.large: case capacitors.medium: case capacitors.small:
@@ -106,8 +106,8 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 			}
 		}
 
-		final float effectiveCapacitorStat = capacitorStat.computeEffective(0f);
-		final float effectiveDissipatorStat = dissipatorStat.computeEffective(0f);
+		float effectiveCapacitorStat = capacitorStat.computeEffective(0f);
+		float effectiveDissipatorStat = dissipatorStat.computeEffective(0f);
 
 		stats.getFluxCapacity().modifyMult(this.hullModSpecId, 1f+effectiveCapacitorStat*fluxMultMod);
 		stats.getFluxCapacity().modifyFlat(this.hullModSpecId, effectiveCapacitorStat*capacitorFlatMod);
