@@ -338,20 +338,20 @@ public class lyr_reflectionUtilities {
 		 * <p> Useless if the search target has multiple fields with the given class, however
 		 * might still be useful in a few cases till a better version of this method is
 		 * implemented.
-		 * @param fieldClass
-		 * @param instanceOrClass
+		 * @param fieldClassOrInterface of the field that is being searched for
+		 * @param instanceOrClass of the object, class for static lookups
 		 * @param checkSuper (overload, default true) to check the super class for inherited fields
 		 * @param declaredOnly (overload, default true) to check only the declared fields
 		 * @return {@link fieldReflection}
 		 * @see #findFieldByName(String, Object)
 		 * @throws Throwable
 		 */
-		public static final fieldReflection findFieldByClass(Class<?> fieldClass, Object instanceOrClass) throws Throwable {
-			return findFieldByClass(fieldClass, instanceOrClass, true, true);
+		public static final fieldReflection findFieldByClass(Class<?> fieldClassOrInterface, Object instanceOrClass) throws Throwable {
+			return findFieldByClass(fieldClassOrInterface, instanceOrClass, true, true);
 		}
 
 		/** @see #findFieldByClass(Class, Object) */
-		public static final fieldReflection findFieldByClass(Class<?> fieldClass, Object instanceOrClass, boolean checkSuper, boolean declaredOnly) throws Throwable {
+		public static final fieldReflection findFieldByClass(Class<?> fieldClassOrInterface, Object instanceOrClass, boolean checkSuper, boolean declaredOnly) throws Throwable {
 			Class<?> clazz = instanceOrClass.getClass().equals(Class.class) ? (Class<?>) instanceOrClass : instanceOrClass.getClass();
 			Object field = null;
 			String fieldName = null;
@@ -359,7 +359,7 @@ public class lyr_reflectionUtilities {
 			do {
 				for (Object currField : (declaredOnly) ? clazz.getDeclaredFields() : clazz.getFields()) {
 					Class<?> currFieldClass = (Class<?>) getType.invoke(currField);
-					if (!currFieldClass.equals(fieldClass) && !Arrays.asList(currFieldClass.getInterfaces()).contains(fieldClass)) continue;
+					if (!currFieldClass.equals(fieldClassOrInterface) && !Arrays.asList(currFieldClass.getInterfaces()).contains(fieldClassOrInterface)) continue;
 
 					fieldName = (String) getName.invoke(currField);
 					field = currField; break;
@@ -367,8 +367,8 @@ public class lyr_reflectionUtilities {
 				clazz = checkSuper ? clazz.getSuperclass() : null;
 			} while (field == null && clazz != null);
 
-			if (field == null) throw new Throwable("Field with the class '"+fieldClass.getSimpleName()+"' was not found in '"+instanceOrClass.toString()+"'");
-			else lyr_logger.reflectionInfo("Field with the class '"+fieldClass.getSimpleName()+"' found in '"+instanceOrClass.toString()+"'");
+			if (field == null) throw new Throwable("Field with the class '"+fieldClassOrInterface.getSimpleName()+"' was not found in '"+instanceOrClass.toString()+"'");
+			else lyr_logger.reflectionInfo("Field with the class '"+fieldClassOrInterface.getSimpleName()+"' found in '"+instanceOrClass.toString()+"'");
 
 			return new fieldReflection(field, instanceOrClass);
 		}
