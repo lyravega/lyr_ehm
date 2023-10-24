@@ -123,9 +123,9 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 
 			String shuntId = shuntSpec.getWeaponId();
 			switch (shuntId) {
-				case adapters.largeDual: case adapters.largeQuad: case adapters.largeTriple: case adapters.mediumDual:
+				case adapters.largeDual: case adapters.largeQuad: case adapters.largeTriple: case adapters.mediumDual: {
 					break;
-				default: { iterator.remove(); break; }
+				} default: { iterator.remove(); break; }
 			}
 		}
 
@@ -136,10 +136,10 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 			String shuntId = variant.getWeaponSpec(slotId).getWeaponId();
 
 			switch (shuntId) {
-				case adapters.largeDual: case adapters.largeQuad: case adapters.largeTriple: case adapters.mediumDual:
+				case adapters.largeDual: case adapters.largeQuad: case adapters.largeTriple: case adapters.mediumDual: {
 					ehm_adaptSlot(hullSpec, shuntId, slotId);
 					break;
-				default: break;
+				} default: break;
 			}
 		}
 

@@ -7,10 +7,8 @@ import java.util.*;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
-import com.fs.starfarer.api.combat.MutableShipStatsAPI;
-import com.fs.starfarer.api.combat.ShipAPI;
+import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
-import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
@@ -57,8 +55,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 		ShipVariantAPI variant = stats.getVariant();
 		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec());
 		List<WeaponSlotAPI> shunts = hullSpec.getAllWeaponSlotsCopy();
-
-		int fighterBayFlat = 0;
+		StatBonus launchTubesStat = stats.getDynamic().getMod(ehm_internals.id.stats.launchTubes);
 
 		// if (stats.getNumFighterBays().getBaseValue() <= 0) {
 		// 	convertedHangarEffect.applyEffectsBeforeShipCreation(hullSize, stats, "converted_hangar");
@@ -81,10 +78,10 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 
 			String shuntId = shuntSpec.getWeaponId();
 			switch (shuntId) {
-				case launchTubes.large:
-					fighterBayFlat += launchTubeMap.get(shuntId);
+				case launchTubes.large: {
+					launchTubesStat.modifyFlat(slotId, launchTubeMap.get(shuntId));
 					break;
-				default: { iterator.remove(); break; }
+				} default: { iterator.remove(); break; }
 			}
 		}
 
@@ -95,14 +92,14 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 			String shuntId = variant.getWeaponSpec(slotId).getWeaponId();
 
 			switch (shuntId) {
-				case launchTubes.large:
+				case launchTubes.large: {
 					ehm_deactivateSlot(hullSpec, shuntId, slotId);
 					break;
-				default: break;
+				} default: break;
 			}
 		}
 
-		stats.getNumFighterBays().modifyFlat(this.hullModSpecId, fighterBayFlat);
+		stats.getNumFighterBays().modifyFlat(this.hullModSpecId, launchTubesStat.computeEffective(0f));
 
 		variant.setHullSpecAPI(hullSpec.retrieve());
 	}

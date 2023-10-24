@@ -79,15 +79,15 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 
 			String shuntId = shuntSpec.getWeaponId();
 			switch (shuntId) {
-				case capacitors.large: case capacitors.medium: case capacitors.small:
+				case capacitors.large: case capacitors.medium: case capacitors.small: {
 					totalFluxCapacityBonus[0] += capacitorMap.get(shuntId)[0];
 					totalFluxCapacityBonus[1] += capacitorMap.get(shuntId)[1];
 					break;
-				case dissipators.large: case dissipators.medium: case dissipators.small:
+				} case dissipators.large: case dissipators.medium: case dissipators.small: {
 					totalFluxDissipationBonus[0] += dissipatorMap.get(shuntId)[0];
 					totalFluxDissipationBonus[1] += dissipatorMap.get(shuntId)[1];
 					break;
-				default: { iterator.remove(); break; }
+				} default: { iterator.remove(); break; }
 			}
 		}
 
@@ -99,10 +99,10 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 
 			switch (shuntId) {
 				case capacitors.large: case capacitors.medium: case capacitors.small:
-				case dissipators.large: case dissipators.medium: case dissipators.small:
+				case dissipators.large: case dissipators.medium: case dissipators.small: {
 					ehm_deactivateSlot(hullSpec, shuntId, slotId);
 					break;
-				default: break;
+				} default: break;
 			}
 		}
 

@@ -186,9 +186,10 @@ public final class ehm_internals {
 
 		public static final class stats {
 			public static final String
-				hullmods = "ehm_slotPointsFromMods",
-				diverters = "ehm_slotPointsFromDiverters",
-				converters = "ehm_slotPointsToConverters";
+				launchTubes = "ehm_launchTubes",
+				slotPointsFromMods = "ehm_slotPointsFromMods",
+				slotPointsFromDiverters = "ehm_slotPointsFromDiverters",
+				slotPointsToConverters = "ehm_slotPointsToConverters";
 		}
 	}
 

@@ -122,12 +122,12 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 				case converters.mediumToLarge: case converters.smallToLarge: case converters.smallToMedium: {
 					int mod = converterMap.get(shuntId).getChildCost();
 					if (slot.isDecorative()) slotPoints -= mod;
-					stats.getDynamic().getMod(ehm_internals.id.stats.converters).modifyFlat(slotId, -mod);	// used in tooltips
+					stats.getDynamic().getMod(ehm_internals.id.stats.slotPointsToConverters).modifyFlat(slotId, -mod);	// used in tooltips
 					break;
 				} case diverters.large: case diverters.medium: case diverters.small: {
 					int mod = diverterMap.get(shuntId);
 					if (slot.isDecorative()) slotPoints += mod;
-					stats.getDynamic().getMod(ehm_internals.id.stats.diverters).modifyFlat(slotId, mod);	// used in tooltips
+					stats.getDynamic().getMod(ehm_internals.id.stats.slotPointsFromDiverters).modifyFlat(slotId, mod);	// used in tooltips
 					break;
 				} default: { iterator.remove(); break; }
 			}
@@ -181,9 +181,9 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 		if (variant.hasHullMod(this.hullModSpecId)) {
 			DynamicStatsAPI dynamicStats = ship.getMutableStats().getDynamic();
 
-			int fromMods = (int) dynamicStats.getMod(ehm_internals.id.stats.hullmods).computeEffective(0f);
-			int fromDiverters = (int) dynamicStats.getMod(ehm_internals.id.stats.diverters).computeEffective(0f);
-			int toConverters = (int) dynamicStats.getMod(ehm_internals.id.stats.converters).computeEffective(0f);
+			int fromMods = (int) dynamicStats.getMod(ehm_internals.id.stats.slotPointsFromMods).computeEffective(0f);
+			int fromDiverters = (int) dynamicStats.getMod(ehm_internals.id.stats.slotPointsFromDiverters).computeEffective(0f);
+			int toConverters = (int) dynamicStats.getMod(ehm_internals.id.stats.slotPointsToConverters).computeEffective(0f);
 			int total = fromMods + fromDiverters + toConverters;
 			int deploymentPenalty = ehm_settings.getBaseSlotPointPenalty() > 0 ? Math.max(0, ehm_settings.getBaseSlotPointPenalty()*Math.min(fromMods, fromMods - total)) : 0;
 

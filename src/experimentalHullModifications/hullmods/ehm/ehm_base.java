@@ -15,6 +15,7 @@ import com.fs.starfarer.api.util.Misc;
 
 import experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base;
 import experimentalHullModifications.misc.ehm_internals;
+import experimentalHullModifications.misc.ehm_internals.id.stats;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import experimentalHullModifications.misc.ehm_tooltip.text;
@@ -113,10 +114,11 @@ public final class ehm_base extends _ehm_base implements weaponEvents {
 				tooltip.addPara("VariantTags: "+variant.getTags().toString(), 5f).setHighlight("VariantTags:");
 
 				DynamicStatsAPI dynamicStats = ship.getMutableStats().getDynamic();
-				tooltip.addSectionHeading("DEBUG INFO: SLOT POINTS", header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
-				tooltip.addPara("Hullmods: "+(dynamicStats.getMod(ehm_internals.id.stats.hullmods).computeEffective(0f)), 5f).setHighlight("Hullmods:");
-				tooltip.addPara("Diverters: "+(dynamicStats.getMod(ehm_internals.id.stats.diverters).computeEffective(0f)), 5f).setHighlight("Diverters:");
-				tooltip.addPara("Converters: "+(dynamicStats.getMod(ehm_internals.id.stats.converters).computeEffective(0f)), 5f).setHighlight("Converters:");
+				tooltip.addSectionHeading("DEBUG INFO: DYNAMIC STATS", header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
+				tooltip.addPara("'"+stats.launchTubes+"': "+(dynamicStats.getMod(stats.launchTubes).computeEffective(0f)), 5f).setHighlight("'"+stats.launchTubes+"':");
+				tooltip.addPara("'"+stats.slotPointsFromMods+"': "+(dynamicStats.getMod(stats.slotPointsFromMods).computeEffective(0f)), 5f).setHighlight("'"+stats.slotPointsFromMods+"':");
+				tooltip.addPara("'"+stats.slotPointsFromDiverters+"': "+(dynamicStats.getMod(stats.slotPointsFromDiverters).computeEffective(0f)), 5f).setHighlight("'"+stats.slotPointsFromDiverters+"':");
+				tooltip.addPara("'"+stats.slotPointsToConverters+"': "+(dynamicStats.getMod(stats.slotPointsToConverters).computeEffective(0f)), 5f).setHighlight("'"+stats.slotPointsToConverters+"':");
 
 				tooltip.addSectionHeading("DEBUG INFO: SCRIPTS", header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 				for (EveryFrameScript script : Global.getSector().getScripts()) {
