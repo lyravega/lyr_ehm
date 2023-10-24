@@ -205,7 +205,16 @@ public class lyr_miscUtilities {
 		}
 	}
 
-	public static final boolean removeHullModsWithSameTag(ShipVariantAPI variant, String tag, String ignoredHullmodId) {
+	/**
+	 * Removes a hullmod from the variant, if it has a tag that matches the
+	 * given one. {@code ignoredHullmodId} is used to skip a certain hullmod,
+	 * and remove the other. Used to make a tag exclusive on the variant.
+	 * @param variant to check
+	 * @param tag of the hullmod which will be removed
+	 * @param ignoredHullmodId of the hullmod to ignore and keep
+	 * @return {@code true} if a hullmod is removed, {@code false} otherwise
+	 */
+	public static final boolean removeHullModWithTag(ShipVariantAPI variant, String tag, String ignoredHullmodId) {
 		for (String hullmodId : variant.getNonBuiltInHullmods()) {
 			if (hullmodId.equals(ignoredHullmodId)) continue;
 			if (!Global.getSettings().getHullModSpec(hullmodId).hasTag(tag)) continue;

@@ -40,7 +40,7 @@ public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstalled(ShipVariantAPI variant) {
-		if (lyr_miscUtilities.removeHullModsWithSameTag(variant, ehm_internals.tag.weaponRetrofit, this.hullModSpecId)) return;	// if installing this removes another, skip
+		if (lyr_miscUtilities.removeHullModWithTag(variant, ehm_internals.tag.weaponRetrofit, this.hullModSpecId)) return;	// if installing this removes another, skip
 		commitVariantChanges(); playDrillSound();
 	}
 
