@@ -7,7 +7,7 @@
 	"description":"Adds experimental hull modifications",
 	"jars":["jars/lyr_ehm.jar"],
 	"modPlugin": "experimentalHullModifications.plugin.lyr_ehm",
-	"dependencies": 
+	"dependencies":
 	[
 		{
 			"id": "lw_lazylib",
