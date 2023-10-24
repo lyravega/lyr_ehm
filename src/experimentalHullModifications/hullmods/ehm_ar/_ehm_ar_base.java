@@ -232,7 +232,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
 
 			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
-			if (this.hullModSpecTags.contains(ehm_internals.tag.reqNoPhase) && ship.getPhaseCloak() != null) tooltip.addPara(text.hasPhase[0], text.padding).setHighlight(text.hasPhase[1]);
+			if (this.hullModSpecTags.contains(ehm_internals.tag.reqNoPhase) && !lyr_miscUtilities.hasPhaseCloak(ship)) tooltip.addPara(text.hasPhase[0], text.padding).setHighlight(text.hasPhase[1]);
 			if (ship.getVariant().hasHullMod(ehm_internals.id.hullmods.logisticsoverhaul)) tooltip.addPara(text.hasLogisticsOverhaul[0], text.padding).setHighlight(text.hasLogisticsOverhaul[1]);
 		}
 
@@ -244,7 +244,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 		if (ship == null) return false;
 
 		if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) return false;
-		if (this.hullModSpecTags.contains(ehm_internals.tag.reqNoPhase) && ship.getPhaseCloak() != null) return false;
+		if (this.hullModSpecTags.contains(ehm_internals.tag.reqNoPhase) && !lyr_miscUtilities.hasPhaseCloak(ship)) return false;
 		if (ship.getVariant().hasHullMod(ehm_internals.id.hullmods.logisticsoverhaul)) return false;
 
 		return true;

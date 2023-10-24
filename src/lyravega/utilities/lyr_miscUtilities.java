@@ -213,4 +213,14 @@ public class lyr_miscUtilities {
 			return true;
 		}; return false;
 	}
+
+	/**
+	 * Checks if the ship has phase cloak. Checks the ship instead of hullspec,
+	 * as ship may be modified to have it while hullspec is lacking it
+	 * @param ship to check
+	 * @return {@code true} if ship has {@code "phasecloak"}, {@code false} otherwise
+	 */
+	public static final boolean hasPhaseCloak(ShipAPI ship) {
+		return ship.getPhaseCloak() != null && !"phasecloak".equals(ship.getPhaseCloak().getId());
+	}
 }
