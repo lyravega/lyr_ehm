@@ -230,6 +230,6 @@ public class lyr_miscUtilities {
 	 * @return {@code true} if ship has {@code "phasecloak"}, {@code false} otherwise
 	 */
 	public static final boolean hasPhaseCloak(ShipAPI ship) {
-		return ship.getPhaseCloak() != null && !"phasecloak".equals(ship.getPhaseCloak().getId());
+		return ship.getPhaseCloak() != null && "phasecloak".equals(ship.getPhaseCloak().getId());
 	}
 }
