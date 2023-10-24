@@ -10,7 +10,6 @@ import lunalib.lunaSettings.LunaSettings;
 import lunalib.lunaSettings.LunaSettingsListener;
 import lyravega.listeners.lyr_eventDispatcher;
 import lyravega.listeners.events.customizableMod;
-import lyravega.utilities.lyr_interfaceUtilities;
 import lyravega.utilities.lyr_lunaUtilities;
 import lyravega.utilities.logger.lyr_levels;
 import lyravega.utilities.logger.lyr_logger;
@@ -116,7 +115,6 @@ public final class ehm_settings implements LunaSettingsListener {
 
 		cacheSettings();	// order may be important; customizable hull modifications might require these to be cached first
 		lyr_eventDispatcher.onSettingsChange(ehm_internals.id.mod, null);
-		lyr_interfaceUtilities.refreshFleetView();	// to make customizable engine changes apply on save
 
 		lyr_logger.info("Settings reapplied");
 	}

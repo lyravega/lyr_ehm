@@ -198,7 +198,7 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 	 * save/load. This alleviates that issue by forcing it.
 	 */
 	public static void refreshFleetView() {
-		if (Global.getCurrentState() != GameState.CAMPAIGN) return;
+		if (!isRefitTab()) return;
 		try {
 			CampaignFleetAPI playerFleet = Global.getSector().getPlayerFleet();
 			Object fleetView = methodReflection.invokeDirect(playerFleet, "getFleetView");
