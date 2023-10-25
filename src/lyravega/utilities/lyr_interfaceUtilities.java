@@ -196,9 +196,17 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 	 * Clears the player fleet view, which triggers its reinitialization. If a fleet member's
 	 * campaign contrails are changed, the changes will not be reflected in the game till a
 	 * save/load. This alleviates that issue by forcing it.
+	 * <p> May be called outside the refit tab. Should be used through an event that doesn't
+	 * constantly happen, for example an {@code onInstalled()} event. Only works in campaign
+	 * mode since others lack a fleet view anyway, so it does not check if it is the refit tab.
+	 * @param forceSync (required outside refit) if {@code true}, forces a sync on the player fleet prior to refresh to update the fleet view members
 	 */
-	public static void refreshFleetView() {
-		if (!isRefitTab()) return;
+	public static void refreshFleetView(boolean forceSync) {
+		// if (!isRefitTab()) return;
+		if (Global.getCurrentState() != GameState.CAMPAIGN) return;
+
+		if (forceSync) Global.getSector().getPlayerFleet().forceSync();
+
 		try {
 			CampaignFleetAPI playerFleet = Global.getSector().getPlayerFleet();
 			Object fleetView = methodReflection.invokeDirect(playerFleet, "getFleetView");
