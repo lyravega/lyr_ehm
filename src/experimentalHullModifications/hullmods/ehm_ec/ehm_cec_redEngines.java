@@ -1,6 +1,5 @@
 package experimentalHullModifications.hullmods.ehm_ec;
 
-import static lyravega.proxies.lyr_engineBuilder.customEngineStyleSpecs;
 import static lyravega.proxies.lyr_engineBuilder.engineStyleIds.custom;
 
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
@@ -16,17 +15,15 @@ import lyravega.utilities.lyr_lunaUtilities;
  * @author lyravega
  */
 public final class ehm_cec_redEngines extends _ehm_ec_base implements customizableMod {
-	private static final String customEngineSpecId = ehm_cec_redEngines.class.getSimpleName().toUpperCase();
-	private static final int engineStyleId = custom;
-	private static Object engineStyleSpec;
+	private final int engineStyleId = custom;
+	private Object engineStyleSpec;
 
 	@Override
 	public void applyCustomization() {
-		String settingIdPrefix = this.getClass().getSimpleName()+"_";
+		String id = this.getClass().getSimpleName();
 
-		newCustomEngineSpec(settingIdPrefix, customEngineSpecId);
-		engineStyleSpec = customEngineStyleSpecs.get(customEngineSpecId);
-		this.hullModSpec.setDisplayName(lyr_lunaUtilities.getLunaName(ehm_internals.id.mod, settingIdPrefix));
+		this.engineStyleSpec = newCustomEngineStyleSpec(id);
+		this.hullModSpec.setDisplayName(lyr_lunaUtilities.getLunaName(ehm_internals.id.mod, id));
 	}
 
 	@Override
@@ -40,6 +37,6 @@ public final class ehm_cec_redEngines extends _ehm_ec_base implements customizab
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
 
-		variant.setHullSpecAPI(ehm_applyEngineCosmetics(variant, engineStyleId, engineStyleSpec));
+		variant.setHullSpecAPI(ehm_applyEngineCosmetics(variant, this.engineStyleId, this.engineStyleSpec));
 	}
 }

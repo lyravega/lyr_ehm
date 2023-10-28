@@ -17,16 +17,16 @@ import lyravega.utilities.lyr_lunaUtilities;
  * @author lyravega
  */
 public final class ehm_csc_blueShields extends _ehm_sc_base implements customizableMod {
-	private static Color innerColour;
-	private static Color ringColour;
+	private Color innerColour;
+	private Color ringColour;
 
 	@Override
 	public void applyCustomization() {
-		String settingIdPrefix = this.getClass().getSimpleName()+"_";
+		String id = this.getClass().getSimpleName();
 
-		innerColour = lyr_lunaUtilities.getLunaRGBAColour(ehm_internals.id.mod, settingIdPrefix+"inner");
-		ringColour = lyr_lunaUtilities.getLunaRGBAColour(ehm_internals.id.mod, settingIdPrefix+"ring");
-		this.hullModSpec.setDisplayName(lyr_lunaUtilities.getLunaName(ehm_internals.id.mod, settingIdPrefix));
+		this.innerColour = lyr_lunaUtilities.getLunaRGBAColour(ehm_internals.id.mod, id+"_inner");
+		this.ringColour = lyr_lunaUtilities.getLunaRGBAColour(ehm_internals.id.mod, id+"_ring");
+		this.hullModSpec.setDisplayName(lyr_lunaUtilities.getLunaName(ehm_internals.id.mod, id));
 	}
 
 	@Override
@@ -40,6 +40,6 @@ public final class ehm_csc_blueShields extends _ehm_sc_base implements customiza
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
 
-		variant.setHullSpecAPI(ehm_applyShieldCosmetics(variant, innerColour, ringColour));
+		variant.setHullSpecAPI(ehm_applyShieldCosmetics(variant, this.innerColour, this.ringColour));
 	}
 }

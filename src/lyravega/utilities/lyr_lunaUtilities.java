@@ -20,7 +20,7 @@ public class lyr_lunaUtilities {
 	/**
 	 * Gets a string setting from LunaLib with {@code prefix+"Name"} id and returns it
 	 */
-	public static final String getLunaName(String modId, String settingIdPrefix) { return LunaSettings.getString(modId, settingIdPrefix+"name"); }
+	public static final String getLunaName(String modId, String settingIdPrefix) { return LunaSettings.getString(modId, settingIdPrefix+"_name"); }
 
 	/**
 	 * Gets a colour setting from LunaLib with {@code prefix+"Colour"} id along with an

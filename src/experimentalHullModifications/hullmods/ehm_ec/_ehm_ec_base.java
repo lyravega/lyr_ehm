@@ -1,6 +1,5 @@
 package experimentalHullModifications.hullmods.ehm_ec;
 
-import static lyravega.proxies.lyr_engineBuilder.addEngineStyleSpec;
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 import static lyravega.utilities.lyr_interfaceUtilities.refreshFleetView;
@@ -103,70 +102,71 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 	}
 
 	/**
-	 * Creates a new engine data from the current settings set through LunaLib's menu. The
-	 * data is converted into an JSON object and passed to the static method {@link
-	 * lyravega.proxies.lyr_engineBuilder#addEngineData addEngineData()}, which generates
-	 * a game-usable engine data object and stores it in a map there which can be used
-	 * afterwards {@link lyravega.proxies.lyr_engineBuilder#customEngineStyleSpecs customEngineData}.
-	 * <p> Directly returning this object and using is possible, but not done that way.
-	 * @param settingIdPrefix class name is used as prefix in LunaLib setting ID's
-	 * @param customEngineSpecName as the mapId to retrieve it from the map later
+	 * Creates a new engine data from the current settings set through LunaLib's menu. The data
+	 * is converted into an JSON object and passed to the static method in engine style builder
+	 * {@link lyravega.proxies.lyr_engineBuilder#newEngineStyleSpec(String, JSONObject)}, which
+	 * generates a usable engine data object, stores it in a map while returning it.
+	 * <p> LunaLib setting id's are extremely important and must match what this method assumes
+	 * and expects, otherwise partial data may be missing at best, or may not work as expected
+	 * at worst. The hull modification class names are utilized as the id, and are expected.
+	 * @param customEngineStyleSpecName to be used as the id and as a setting prefix
+	 * @return engine style spec object
 	 */
-	protected static void newCustomEngineSpec(String settingIdPrefix, String customEngineSpecName) {
+	protected static Object newCustomEngineStyleSpec(String customEngineStyleSpecName) {
 		final Map<String, Object> customEngineSpecData = new HashMap<String, Object>();
 
-		customEngineSpecData.put("engineColor", lyr_lunaUtilities.getLunaRGBAColourArray(ehm_internals.id.mod, settingIdPrefix+"engine"));
-		customEngineSpecData.put("contrailColor", lyr_lunaUtilities.getLunaRGBAColourArray(ehm_internals.id.mod, settingIdPrefix+"contrail"));
-		if (lyr_lunaUtilities.getBoolean(ehm_internals.id.mod, settingIdPrefix+"hasDifferentCampaignEngine")) {
-			customEngineSpecData.put("engineCampaignColor", lyr_lunaUtilities.getLunaRGBAColourArray(ehm_internals.id.mod, settingIdPrefix+"engineCampaign"));
+		customEngineSpecData.put("engineColor", lyr_lunaUtilities.getLunaRGBAColourArray(ehm_internals.id.mod, customEngineStyleSpecName+"_engine"));
+		customEngineSpecData.put("contrailColor", lyr_lunaUtilities.getLunaRGBAColourArray(ehm_internals.id.mod, customEngineStyleSpecName+"_contrail"));
+		if (lyr_lunaUtilities.getBoolean(ehm_internals.id.mod, customEngineStyleSpecName+"_hasDifferentCampaignEngine")) {
+			customEngineSpecData.put("engineCampaignColor", lyr_lunaUtilities.getLunaRGBAColourArray(ehm_internals.id.mod, customEngineStyleSpecName+"_engineCampaign"));
 		}
-		if (lyr_lunaUtilities.getBoolean(ehm_internals.id.mod, settingIdPrefix+"hasDifferentCampaignContrail")) {
-			customEngineSpecData.put("contrailCampaignColor", lyr_lunaUtilities.getLunaRGBAColourArray(ehm_internals.id.mod, settingIdPrefix+"contrailCampaign"));
+		if (lyr_lunaUtilities.getBoolean(ehm_internals.id.mod, customEngineStyleSpecName+"_hasDifferentCampaignContrail")) {
+			customEngineSpecData.put("contrailCampaignColor", lyr_lunaUtilities.getLunaRGBAColourArray(ehm_internals.id.mod, customEngineStyleSpecName+"_contrailCampaign"));
 		}
-		customEngineSpecData.put("glowSizeMult", lyr_lunaUtilities.getDouble(ehm_internals.id.mod, settingIdPrefix+"glowSizeMult"));
-		if (lyr_lunaUtilities.getBoolean(ehm_internals.id.mod, settingIdPrefix+"hasAlternateGlow")) {
-			customEngineSpecData.put("glowAlternateColor", lyr_lunaUtilities.getLunaRGBAColourArray(ehm_internals.id.mod, settingIdPrefix+"glowAlternate"));
+		customEngineSpecData.put("glowSizeMult", lyr_lunaUtilities.getDouble(ehm_internals.id.mod, customEngineStyleSpecName+"_glowSizeMult"));
+		if (lyr_lunaUtilities.getBoolean(ehm_internals.id.mod, customEngineStyleSpecName+"_hasAlternateGlow")) {
+			customEngineSpecData.put("glowAlternateColor", lyr_lunaUtilities.getLunaRGBAColourArray(ehm_internals.id.mod, customEngineStyleSpecName+"_glowAlternate"));
 		}
-		customEngineSpecData.put("contrailMaxSpeedMult", lyr_lunaUtilities.getDouble(ehm_internals.id.mod, settingIdPrefix+"contrailMaxSpeedMult"));
-		customEngineSpecData.put("contrailAngularVelocityMult", lyr_lunaUtilities.getDouble(ehm_internals.id.mod, settingIdPrefix+"contrailAngularVelocityMult"));
-		switch (lyr_lunaUtilities.getString(ehm_internals.id.mod, settingIdPrefix+"mode")) {
+		customEngineSpecData.put("contrailMaxSpeedMult", lyr_lunaUtilities.getDouble(ehm_internals.id.mod, customEngineStyleSpecName+"_contrailMaxSpeedMult"));
+		customEngineSpecData.put("contrailAngularVelocityMult", lyr_lunaUtilities.getDouble(ehm_internals.id.mod, customEngineStyleSpecName+"_contrailAngularVelocityMult"));
+		switch (lyr_lunaUtilities.getString(ehm_internals.id.mod, customEngineStyleSpecName+"_mode")) {
 			case "Particles": default: {
 				customEngineSpecData.put("mode", "PARTICLES");
-				customEngineSpecData.put("contrailParticleDuration", lyr_lunaUtilities.getDouble(ehm_internals.id.mod, settingIdPrefix+"contrailParticleDuration"));
-				customEngineSpecData.put("contrailParticleSizeMult", lyr_lunaUtilities.getDouble(ehm_internals.id.mod, settingIdPrefix+"contrailParticleSizeMult"));
-				customEngineSpecData.put("contrailParticleFinalSizeMult", lyr_lunaUtilities.getDouble(ehm_internals.id.mod, settingIdPrefix+"contrailParticleFinalSizeMult"));
+				customEngineSpecData.put("contrailParticleDuration", lyr_lunaUtilities.getDouble(ehm_internals.id.mod, customEngineStyleSpecName+"_contrailParticleDuration"));
+				customEngineSpecData.put("contrailParticleSizeMult", lyr_lunaUtilities.getDouble(ehm_internals.id.mod, customEngineStyleSpecName+"_contrailParticleSizeMult"));
+				customEngineSpecData.put("contrailParticleFinalSizeMult", lyr_lunaUtilities.getDouble(ehm_internals.id.mod, customEngineStyleSpecName+"_contrailParticleFinalSizeMult"));
 			} break;
 			case "Plasma": {
 				customEngineSpecData.put("mode", "QUAD_STRIP");
-				customEngineSpecData.put("contrailDuration", lyr_lunaUtilities.getDouble(ehm_internals.id.mod, settingIdPrefix+"contrailDuration"));
-				customEngineSpecData.put("contrailMinSeg", lyr_lunaUtilities.getDouble(ehm_internals.id.mod, settingIdPrefix+"contrailMinSeg"));
-				customEngineSpecData.put("contrailSpawnDistMult", lyr_lunaUtilities.getDouble(ehm_internals.id.mod, settingIdPrefix+"contrailSpawnDistMult"));
-				customEngineSpecData.put("contrailWidthMult", lyr_lunaUtilities.getDouble(ehm_internals.id.mod, settingIdPrefix+"contrailWidthMult"));
-				customEngineSpecData.put("contrailWidthAddedFractionAtEnd", lyr_lunaUtilities.getDouble(ehm_internals.id.mod, settingIdPrefix+"contrailWidthAddedFractionAtEnd"));
+				customEngineSpecData.put("contrailDuration", lyr_lunaUtilities.getDouble(ehm_internals.id.mod, customEngineStyleSpecName+"_contrailDuration"));
+				customEngineSpecData.put("contrailMinSeg", lyr_lunaUtilities.getDouble(ehm_internals.id.mod, customEngineStyleSpecName+"_contrailMinSeg"));
+				customEngineSpecData.put("contrailSpawnDistMult", lyr_lunaUtilities.getDouble(ehm_internals.id.mod, customEngineStyleSpecName+"_contrailSpawnDistMult"));
+				customEngineSpecData.put("contrailWidthMult", lyr_lunaUtilities.getDouble(ehm_internals.id.mod, customEngineStyleSpecName+"_contrailWidthMult"));
+				customEngineSpecData.put("contrailWidthAddedFractionAtEnd", lyr_lunaUtilities.getDouble(ehm_internals.id.mod, customEngineStyleSpecName+"_contrailWidthAddedFractionAtEnd"));
 			} break;
 			case "Disabled": {
 				customEngineSpecData.put("mode", "NONE");
 			} break;
 		}
-		switch (lyr_lunaUtilities.getString(ehm_internals.id.mod, settingIdPrefix+"type")) {
+		switch (lyr_lunaUtilities.getString(ehm_internals.id.mod, customEngineStyleSpecName+"_type")) {
 			case "Additive": customEngineSpecData.put("type", "GLOW"); break;
 			case "Regular": customEngineSpecData.put("type", "SMOKE"); break;
 		}
-		customEngineSpecData.put("omegaMode", lyr_lunaUtilities.getBoolean(ehm_internals.id.mod, settingIdPrefix+"omegaMode"));
-		switch (lyr_lunaUtilities.getString(ehm_internals.id.mod, settingIdPrefix+"glowSprite")) {
+		customEngineSpecData.put("omegaMode", lyr_lunaUtilities.getBoolean(ehm_internals.id.mod, customEngineStyleSpecName+"_omegaMode"));
+		switch (lyr_lunaUtilities.getString(ehm_internals.id.mod, customEngineStyleSpecName+"_glowSprite")) {
 			case "I": customEngineSpecData.put("glowSprite", "graphics/fx/engineglow32.png"); break;
 			case "II": customEngineSpecData.put("glowSprite", "graphics/fx/engineglow32b.png"); break;
 			case "III": customEngineSpecData.put("glowSprite", "graphics/fx/engineglow32s.png"); break;
 			case "Default": default: customEngineSpecData.put("glowSprite", ""); break;
 		}
-		switch (lyr_lunaUtilities.getString(ehm_internals.id.mod, settingIdPrefix+"glowOutline")) {
+		switch (lyr_lunaUtilities.getString(ehm_internals.id.mod, customEngineStyleSpecName+"_glowOutline")) {
 			case "I": customEngineSpecData.put("glowOutline", "graphics/fx/engineflame32.png"); break;
 			case "II": customEngineSpecData.put("glowOutline", "graphics/fx/engineflame32b.png"); break;
 			case "III": customEngineSpecData.put("glowOutline", "graphics/fx/engineflame32-orig.png"); break;	// causes a NPE, nothing loads this so "ehm_test" does it
 			case "Default": default: customEngineSpecData.put("glowOutline", ""); break;
 		}
 
-		addEngineStyleSpec(new JSONObject(customEngineSpecData), customEngineSpecName);
+		return lyr_engineBuilder.newEngineStyleSpec(customEngineStyleSpecName, new JSONObject(customEngineSpecData));
 	}
 
 	//#region INSTALLATION CHECKS

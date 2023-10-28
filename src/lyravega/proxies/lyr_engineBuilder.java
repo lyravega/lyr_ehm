@@ -161,7 +161,7 @@ public final class lyr_engineBuilder {
 	 * @see #setEngineStyleSpec(Object)
 	 */
 	@Deprecated
-	public void setEngineStyleSpecFromJSON(JSONObject engineStyleSpecJSON, String engineStyleSpecName) {
+	public void setEngineStyleSpecFromJSON(String engineStyleSpecName, JSONObject engineStyleSpecJSON) {
 		try {
 			setEngineStyleSpecFromJSON.invoke(engineBuilderClass.cast(this.engineBuilder), engineStyleSpecJSON, engineStyleSpecName);
 		} catch (Throwable t) {
@@ -188,33 +188,24 @@ public final class lyr_engineBuilder {
 
 	/**
 	 * Constructs a new engine data from a JSON object, with relevant fields found in
-	 * "engine_styles.json" file.
-	 * <p> Visibility is set to private as this should NOT be used directly since there
-	 * is another method {@link #addEngineStyleSpec(JSONObject, String)} which adds the new
-	 * engine style data to the {@link #customEngineStyleSpecs} map; storing it for later use.
-	 * @param engineStyleSpecJSON must have relevant stuff found in the "engine_styles.json"!
+	 * "engine_styles.json" file. Constructed engine style specs are stored in the map,
+	 * {@link #customEngineStyleSpecs}, and also returned for further use.
 	 * @param engineStyleSpecName
+	 * @param engineStyleSpecJSON must have relevant stuff found in the "engine_styles.json"!
+	 * @return the constructed engine style spec object
 	 * @category Proxy constructor
 	 */
-	private static Object newEngineStyleSpec(JSONObject engineStyleSpecJSON, String engineStyleSpecName) {
-		try {
-			return newEngineStyleSpec.invoke(engineStyleSpecJSON, engineStyleSpecName);
-		} catch (Throwable t) {
-			lyr_logger.error("Failed to use 'newEngineStyleSpec()' in 'lyr_engineBuilder'", t); return null;
-		}
-	}
+	public static Object newEngineStyleSpec(String engineStyleSpecName, JSONObject engineStyleSpecJSON) {
+		Object engineStyleSpec = null;
 
-	/**
-	 * Uses {@link #newEngineStyleSpec(JSONObject, String)} to construct a new engine style
-	 * data object from the JSON object. Returns it after adding it to the {@link
-	 * #customEngineStyleSpecs}. {@link #setEngineStyleSpec(Object)} should be utilized to use
-	 * these stored custom engine styles.
-	 * @param engineStyleSpecJSON must have relevant stuff found in the "engine_styles.json"!
-	 * @param engineStyleSpecName
-	 * @category Utility
-	 */
-	public static void addEngineStyleSpec(JSONObject engineStyleSpecJSON, String engineStyleSpecName) {
-		customEngineStyleSpecs.put(engineStyleSpecName, newEngineStyleSpec(engineStyleSpecJSON, engineStyleSpecName));
+		try {
+			engineStyleSpec = newEngineStyleSpec.invoke(engineStyleSpecJSON, engineStyleSpecName);
+			customEngineStyleSpecs.put(engineStyleSpecName, engineStyleSpec);
+		} catch (Throwable t) {
+			lyr_logger.error("Failed to use 'newEngineStyleSpec()' in 'lyr_engineBuilder'", t);
+		}
+
+		return engineStyleSpec;
 	}
 	//#endregion
 	// END OF PROXY METHODS

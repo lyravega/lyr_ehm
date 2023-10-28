@@ -10,12 +10,12 @@ import lyravega.proxies.lyr_engineBuilder.engineStyleIds;
  * @author lyravega
  */
 public final class ehm_ec_highTechEngines extends _ehm_ec_base {
-	private static final int engineStyleId = engineStyleIds.highTech;
+	private final int engineStyleId = engineStyleIds.highTech;
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
 
-		variant.setHullSpecAPI(ehm_applyEngineCosmetics(variant, engineStyleId));
+		variant.setHullSpecAPI(ehm_applyEngineCosmetics(variant, this.engineStyleId));
 	}
 }
