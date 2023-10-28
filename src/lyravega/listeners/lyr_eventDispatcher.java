@@ -44,7 +44,7 @@ public final class lyr_eventDispatcher {
 	private static final Map<String, normalEvents> normalEvents = new HashMap<String, normalEvents>();
 	private static final Map<String, enhancedEvents> enhancedEvents = new HashMap<String, enhancedEvents>();
 	private static final Map<String, suppressedEvents> suppressedEvents = new HashMap<String, suppressedEvents>();
-	private static final Map<String, Map<String, customizableMod>> customizableHullMods = new HashMap<String, Map<String, customizableMod>>();
+	private static final Map<String, Map<String, customizableMod>> allCustomizableMods = new HashMap<String, Map<String, customizableMod>>();
 	private static final Set<String> allModEvents = new HashSet<String>();
 
 	/**
@@ -76,7 +76,7 @@ public final class lyr_eventDispatcher {
 				lyr_logger.debug("Processed hull modification '"+hullModSpec.getId()+"' from '"+modId+"'");
 			}
 
-			customizableHullMods.put(modId, customizableMods);
+			allCustomizableMods.put(modId, customizableMods);
 			allModEvents.addAll(normalEvents.keySet());
 			allModEvents.addAll(enhancedEvents.keySet());
 			allModEvents.addAll(suppressedEvents.keySet());
@@ -152,8 +152,8 @@ public final class lyr_eventDispatcher {
 	 */
 	public static void onSettingsChange(final String modId, final String hullModId) {
 		try {
-			if (hullModId != null) customizableHullMods.get(modId).get(hullModId).applyCustomization();
-			else for (customizableMod customizableMod : customizableHullMods.get(modId).values()) customizableMod.applyCustomization();
+			if (hullModId != null) allCustomizableMods.get(modId).get(hullModId).applyCustomization();
+			else for (customizableMod customizableMod : allCustomizableMods.get(modId).values()) customizableMod.applyCustomization();
 			lyr_logger.debug("Utilized 'applyCustomization()' in the event dispatcher");
 		} catch (Throwable t) {
 			lyr_logger.error("Failure in 'applyCustomization()' in the event dispatcher", t);

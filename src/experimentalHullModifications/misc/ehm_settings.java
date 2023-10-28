@@ -4,12 +4,10 @@ import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
 
 import experimentalHullModifications.misc.ehm_internals.id;
-import experimentalHullModifications.misc.ehm_internals.tag;
 import experimentalHullModifications.plugin.lyr_ehm;
 import lunalib.lunaSettings.LunaSettings;
 import lunalib.lunaSettings.LunaSettingsListener;
 import lyravega.listeners.lyr_eventDispatcher;
-import lyravega.listeners.events.customizableMod;
 import lyravega.utilities.lyr_interfaceUtilities;
 import lyravega.utilities.lyr_lunaUtilities;
 import lyravega.utilities.logger.lyr_levels;
@@ -18,10 +16,6 @@ import lyravega.utilities.logger.lyr_logger;
 /**
  * Luna settings listener to utilize anything LunaLib offers for settings
  * management. All settings are registered {@code onApplicationLoad()}.
- * <p> Any hull modification bearing the tag {@link tag#customizable} that
- * also implements the {@link customizableMod} interface are registered
- * as such, and any changes will be applied on them without a reload or a
- * restart.
  * @author lyravega
  */
 public final class ehm_settings implements LunaSettingsListener {
