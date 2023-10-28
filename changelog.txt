@@ -1,11 +1,6 @@
-Version 0.8.7 WIP
+Version 0.8.6a
 
-- Changed engine cosmetic mods to apply the campaign contrails immediately after settings are saved as well
-
-
-Version 0.8.6
-
-Refactored and overhauled most of the stuff under the hood; initial changes begun on the previous version, which are now all completed. Most of the 0.8.x versions didn't offer much in terms of gameplay, but with all these out of the way, parts of the mod that needs attention may get some. Hopefully.
+Refactored and overhauled most of the stuff under the hood; initial changes begun on the previous versions, which are now all completed. Most of the 0.8.x versions didn't offer much in terms of gameplay, but with all these out of the way, parts of the mod that needs attention may get some. Hopefully.
 
 - Fixed phase cloak checks of certain hullmods reporting incorrectly and blocking installation
 - Fixed "Logistics Overhaul" not ignoring the hidden modular hull modifications in its checks
@@ -13,7 +8,7 @@ Refactored and overhauled most of the stuff under the hood; initial changes begu
 - Fixed experimental hull modifications creating ghost categories in mission mode even though they were hidden
 - Fixed undo button not getting disabled visually when it was supposed to
 - Changed system retrofits so that they will be hidden if a the system is not found, instead of crashing the game on install
-- Changed engine cosmetic mods to apply the campaign contrails immediately on install instead of requiring a save/load
+- Changed engine cosmetic mods to apply the campaign engine changes immediately on install and/or when settings are saved
 - Changed ship/module tracking completely, which comes with a few non-gameplay benefits:
 	- All of the ships in the fleet will be tracked when the refit tab is open
 	- "Play Drill Sounds - All" option will do so when a hullmod is installed on / removed from any ship
