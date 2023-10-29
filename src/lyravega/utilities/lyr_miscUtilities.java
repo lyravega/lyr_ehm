@@ -3,11 +3,11 @@ package lyravega.utilities;
 import java.util.*;
 
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.MutableStat.StatMod;
-import com.fs.starfarer.api.combat.ShipAPI;
-import com.fs.starfarer.api.combat.ShipVariantAPI;
-import com.fs.starfarer.api.combat.WeaponAPI;
+import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShipTypeHints;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
+import com.fs.starfarer.api.impl.campaign.ids.HullMods;
 import com.fs.starfarer.api.loading.WeaponGroupSpec;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
@@ -231,5 +231,24 @@ public class lyr_miscUtilities {
 	 */
 	public static final boolean hasPhaseCloak(ShipAPI ship) {
 		return ship.getPhaseCloak() != null && "phasecloak".equals(ship.getPhaseCloak().getId());
+	}
+
+	/**
+	 * Checks a hull spec if it has any civilian hints or the civgrade hull modification.
+	 * There is no standard for this, some ships utilize hints, some utilize the hullmod,
+	 * hence the necessity for a blanket check to assume what is civilian and not.
+	 * @param hullSpec to check
+	 * @return {@code true} if it has any, {@code false} otherwise
+	 */
+	public static final boolean hasCivilianHintsOrMod(ShipHullSpecAPI hullSpec) {
+		if (hullSpec.getBuiltInMods().contains(HullMods.CIVGRADE)) return true;
+
+		for (ShipTypeHints hint : hullSpec.getHints()) switch (hint) {
+			case CIVILIAN: case TANKER: case TRANSPORT: case FREIGHTER: case LINER:
+				return true;
+			default: continue;
+		}
+
+		return false;
 	}
 }
