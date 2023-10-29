@@ -88,20 +88,14 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 		ShipVariantAPI variant = stats.getVariant();
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(variant.getHullSpec());
 		ShipHullSpecAPI originalHullSpec = ehm_hullSpecReference(variant);
-		// boolean commitVariantChanges = false;
 
 		float logisticsBonus = 0;
 
 		// bonus from weapon slots
 		for (WeaponSlotAPI slot : originalHullSpec.getAllWeaponSlotsCopy()) {
-			if (slot.isBuiltIn()) {
-				if (slot.getWeaponType() != WeaponType.BUILT_IN) continue;
-			} else if (!slot.isWeaponSlot()) continue;
+			if (!slot.isWeaponSlot()) continue;
 
 			logisticsBonus += logisticsSlotBonus.get(slot.getSlotSize());
-
-			// commitVariantChanges = ehm_deactivateSlot(hullSpec, null, slot.getId());
-			// _ehm_ar_base.ehm_deactivateSlot(lyr_hullSpec, null, slot.getId());
 			lyr_hullSpec.getWeaponSlot(slot.getId()).setWeaponType(WeaponType.DECORATIVE);
 		}
 
@@ -159,7 +153,6 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 		stats.getDynamic().getMod(Stats.MAX_PERMANENT_HULLMODS_MOD).modifyFlat(this.hullModSpecId, 2);
 
 		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
-		// if (commitVariantChanges && !isGettingRestored(variant)) { commitVariantChanges = false; commitVariantChanges(); }
 	}
 
 	@Override
