@@ -251,4 +251,21 @@ public class lyr_miscUtilities {
 
 		return false;
 	}
+
+	/**
+	 * A check method to see if a ship is stripped or not. More of a convenience
+	 * method that utilizes other check methods, all bundled in one. Checks wings,
+	 * capacitors & vents, weapons and modular mods that are not hidden everywhere
+	 * @param ship to check
+	 * @param hullModSpecId to ignore, should be the caller's id
+	 * @return {@code true} if ship is stripped, {@code false} otherwise
+	 */
+	public static final boolean isStripped(ShipAPI ship, String hullModSpecId) {
+		if (hasAnyFittedWings(ship)) return false;
+		if (hasCapacitorsOrVents(ship)) return false;
+		if (hasWeapons(ship)) return false;
+		if (hasModularHullmods(ship, hullModSpecId, false)) return false;
+
+		return true;
+	}
 }
