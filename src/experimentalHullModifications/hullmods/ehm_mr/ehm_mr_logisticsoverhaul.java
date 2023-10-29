@@ -47,25 +47,26 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 	@Override
 	public void onRemoved(ShipVariantAPI variant) {
 		variant.setHullSpecAPI(ehm_hullSpecRefresh(variant));
+		variant.removeMod(HullMods.CIVGRADE);	// to clean-up the variant if it was added as a built-in through this mod
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
 	public void onEnhanced(ShipVariantAPI variant) {
-		variant.addPermaMod(HullMods.CIVGRADE, false);
 		commitVariantChanges();
 	}
 
 	@Override
 	public void onNormalized(ShipVariantAPI variant) {
-		variant.removePermaMod(HullMods.CIVGRADE);
 		variant.setHullSpecAPI(ehm_hullSpecRefresh(variant));
 		commitVariantChanges();
 	}
 	//#endregion
 	// END OF CUSTOM EVENTS
 
-	private static final EnumSet<ShipTypeHints> hintsToRemove = EnumSet.of(ShipTypeHints.CARRIER, ShipTypeHints.COMBAT, ShipTypeHints.NO_AUTO_ESCORT);
+	private static final EnumSet<ShipTypeHints> hintsToRemove = EnumSet.of(ShipTypeHints.CARRIER, ShipTypeHints.COMBAT, ShipTypeHints.NO_AUTO_ESCORT, ShipTypeHints.PHASE);
+	private static final EnumSet<ShipTypeHints> hintsToAdd = EnumSet.of(ShipTypeHints.CIVILIAN, ShipTypeHints.ALWAYS_PANIC);
+
 	public static final Map<HullSize, Float> logisticsModBonus = new HashMap<HullSize, Float>();
 	public static final Map<WeaponSize, Float> logisticsSlotBonus = new HashMap<WeaponSize, Float>();
 	static {
@@ -122,16 +123,15 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 			stats.getNumFighterBays().modifyFlat(this.hullModSpecId, -bays);	// game nukes the
 		}
 
-		// adjusting hints
-		EnumSet<ShipTypeHints> hints = lyr_hullSpec.getHints();
-		hints.removeAll(hintsToRemove); hints.add(ShipTypeHints.CIVILIAN);
+		// adjusting hints & adding civgrade if needed
+		EnumSet<ShipTypeHints> hints = lyr_hullSpec.getHints();	hints.removeAll(hintsToRemove); hints.addAll(hintsToAdd);
+		if (!lyr_hullSpec.retrieve().isBuiltInMod(HullMods.CIVGRADE)) lyr_hullSpec.addBuiltInMod(HullMods.CIVGRADE);
 
 		if (!stats.getVariant().getSMods().contains(this.hullModSpecId)) {
-			variant.setHullSpecAPI(lyr_hullSpec.retrieve()); return;
+			variant.setHullSpecAPI(lyr_hullSpec.retrieve()); return;	// cut-off point for non s-mod effects
 		}
 
-		// if (!variant.hasHullMod(HullMods.CIVGRADE)) {
-		if (!originalHullSpec.getBuiltInMods().contains(HullMods.CIVGRADE)) {
+		if (!lyr_miscUtilities.hasCivilianHintsOrMod(originalHullSpec)) {
 			lyr_hullSpec.setOrdnancePoints((int) Math.round(originalHullSpec.getOrdnancePoints(null)*0.25));
 
 			if (!variant.hasHullMod(HullMods.AUTOMATED)) {
@@ -200,7 +200,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 			tooltip.addPara("+1 Built-in & Logistics modification capacity", text.padding, header.sEffect_textColour, "+1");
 			String logisticsBonus = "+"+(int) ship.getMutableStats().getCargoMod().getFlatBonus(this.hullModSpecId).value;
 			tooltip.addPara(logisticsBonus+" Fuel & Cargo storage", text.padding, header.sEffect_textColour, logisticsBonus);
-			if (!ship.getVariant().getHullSpec().getBuiltInMods().contains(HullMods.CIVGRADE)) tooltip.addPara("x0.25 Skeleton Crew, Maintenance & Ordnance Points", text.padding, header.sEffect_textColour, "x0.25");
+			if (!lyr_miscUtilities.hasCivilianHintsOrMod(ehm_hullSpecReference(ship.getVariant()))) tooltip.addPara("x0.25 Skeleton Crew, Maintenance & Ordnance Points", text.padding, header.sEffect_textColour, "x0.25");
 		}
 	}
 
