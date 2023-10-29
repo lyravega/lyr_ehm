@@ -65,9 +65,7 @@ public class lyr_refitTab {
 
 	public lyr_parentData getParentData() {
 		try {
-			Object parentData = getParentData.invoke(this.refitTab);
-			if (parentData != null)	return new lyr_parentData(getParentData.invoke(this.refitTab));
-			else return null;
+			return new lyr_parentData(getParentData.invoke(this.refitTab));
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'getParentData()' in 'lyr_refitTab'", t);
 		}	return null;
