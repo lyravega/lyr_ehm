@@ -108,8 +108,7 @@ public final class ehm_base extends _ehm_base implements weaponEvents {
 				tooltip.addPara("Member ID: "+ship.getFleetMemberId(), 5f).setHighlight("Member ID:");
 				tooltip.addPara("isModule: "+!Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy().contains(ship.getFleetMember()), 5f).setHighlight("isModule:");
 				tooltip.addPara("isParent: "+lyr_miscUtilities.isParent(ship), 5f).setHighlight("isParent:");
-				tooltip.addPara("HullHints: "+hullSpec.getHints().toString(), 5f).setHighlight("HullHints:");
-				tooltip.addPara("VariantHints: "+variant.getHints().toString(), 5f).setHighlight("VariantHints:");
+				tooltip.addPara("Hints: "+hullSpec.getHints().toString(), 5f).setHighlight("Hints:");	// variant returns hints from hullspec, so only one is enough
 				tooltip.addPara("HullTags: "+hullSpec.getTags().toString(), 5f).setHighlight("HullTags:");
 				tooltip.addPara("VariantTags: "+variant.getTags().toString(), 5f).setHighlight("VariantTags:");
 
