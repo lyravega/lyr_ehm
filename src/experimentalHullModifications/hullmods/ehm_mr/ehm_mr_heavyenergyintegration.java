@@ -20,7 +20,7 @@ import experimentalHullModifications.misc.ehm_internals;
  */
 public final class ehm_mr_heavyenergyintegration extends _ehm_base {
 	public static void installExtension(ShipVariantAPI variant) {
-		if (variant.getHullSpec().getBuiltInMods().contains("hbi") || variant.getPermaMods().contains("hbi")) {
+		if (variant.getHullSpec().isBuiltInMod("hbi") || variant.getPermaMods().contains("hbi")) {
 			variant.addSuppressedMod("hbi");
 			variant.addPermaMod(ehm_internals.id.hullmods.extensions.heavyenergyintegration, false);
 		}

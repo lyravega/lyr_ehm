@@ -206,7 +206,7 @@ public abstract class _ehm_base implements HullModEffect {
 		hullSpec.addTag(hullSpecTag);
 
 		for (String builtInHullModSpecId : originalHullSpec.getBuiltInMods()) // this is a list, there can be duplicates so check first
-		if (!hullSpec.getBuiltInMods().contains(builtInHullModSpecId))
+		if (!hullSpec.isBuiltInMod(builtInHullModSpecId))
 		hullSpec.addBuiltInMod(builtInHullModSpecId);
 
 		// hullSpec.setDParentHullId(null);

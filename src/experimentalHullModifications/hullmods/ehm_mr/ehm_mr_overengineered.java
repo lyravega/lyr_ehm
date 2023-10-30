@@ -70,7 +70,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		if (!stats.getVariant().getHullSpec().getBuiltInMods().contains(ehm_internals.id.hullmods.base)) return;
+		if (!stats.getVariant().getHullSpec().isBuiltInMod(ehm_internals.id.hullmods.base)) return;
 		if (!stats.getVariant().getSMods().contains(this.hullModSpecId)) return;
 
 		ShipVariantAPI variant = stats.getVariant();
@@ -99,7 +99,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 	public void addSModSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec, boolean isForBuildInList) {
 		if (!this.isApplicableToShip(ship)) return;
 
-		if (!ship.getVariant().getHullSpec().getBuiltInMods().contains(ehm_internals.id.hullmods.base)) {
+		if (!ship.getHullSpec().isBuiltInMod(ehm_internals.id.hullmods.base)) {
 			tooltip.addSectionHeading(header.noEffect, header.noEffect_textColour, header.noEffect_bgColour, Alignment.MID, header.padding);
 			tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
 			return;

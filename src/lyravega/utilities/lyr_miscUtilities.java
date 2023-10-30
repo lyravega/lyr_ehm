@@ -148,7 +148,7 @@ public class lyr_miscUtilities {
 	 * @return true if ship has it, false otherwise (duh)
 	 */
 	public static final boolean hasBuiltInHullMod(ShipAPI ship, String hullModId) {
-		return ship.getVariant().getHullSpec().isBuiltInMod(hullModId);
+		return ship.getHullSpec().isBuiltInMod(hullModId);
 	}
 
 	/**
@@ -224,13 +224,12 @@ public class lyr_miscUtilities {
 	}
 
 	/**
-	 * Checks if the ship has phase cloak. Checks the ship instead of hullspec,
-	 * as ship may be modified to have it while hullspec is lacking it
 	 * @param ship to check
 	 * @return {@code true} if ship has {@code "phasecloak"}, {@code false} otherwise
 	 */
 	public static final boolean hasPhaseCloak(ShipAPI ship) {
-		return ship.getPhaseCloak() != null && "phasecloak".equals(ship.getPhaseCloak().getId());
+		return ship.getHullSpec().isPhase();
+		// return ship.getPhaseCloak() != null && "phasecloak".equals(ship.getPhaseCloak().getId());
 	}
 
 	/**
@@ -241,7 +240,7 @@ public class lyr_miscUtilities {
 	 * @return {@code true} if it has any, {@code false} otherwise
 	 */
 	public static final boolean hasCivilianHintsOrMod(ShipHullSpecAPI hullSpec) {
-		if (hullSpec.getBuiltInMods().contains(HullMods.CIVGRADE)) return true;
+		if (hullSpec.isBuiltInMod(HullMods.CIVGRADE)) return true;
 
 		for (ShipTypeHints hint : hullSpec.getHints()) switch (hint) {
 			case CIVILIAN: case TANKER: case TRANSPORT: case FREIGHTER: case LINER:

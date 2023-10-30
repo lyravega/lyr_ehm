@@ -350,6 +350,8 @@ public final class lyr_hullSpec {
 	public String getShipSystemId() { return this.hullSpec.getShipSystemId(); }
 
 	public EnumSet<ShipTypeHints> getHints() { return this.hullSpec.getHints(); }
+
+	public boolean isBuiltInMod(String hullModId) { return this.hullSpec.isBuiltInMod(hullModId); }
 	//#endregion
 	// END OF BRIDGE METHODS
 }

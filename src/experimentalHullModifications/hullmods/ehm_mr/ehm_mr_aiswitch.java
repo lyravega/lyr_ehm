@@ -50,7 +50,7 @@ public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstalled(ShipVariantAPI variant) {
-		if (!variant.getHullSpec().getBuiltInMods().contains(HullMods.AUTOMATED)) variant.addPermaMod(HullMods.AUTOMATED, false);
+		if (!variant.getHullSpec().isBuiltInMod(HullMods.AUTOMATED)) variant.addPermaMod(HullMods.AUTOMATED, false);
 		else variant.addSuppressedMod(HullMods.AUTOMATED);	// if this hullmod is suppressed, relevant calculations that look for it won't work properly
 		commitVariantChanges(); playDrillSound();
 	}
@@ -70,7 +70,7 @@ public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 		float dp = stats.getSuppliesToRecover().getBaseValue();
 		boolean noAutomatedShipsSkill = Global.getSector().getPlayerStats().getSkillLevel(Skills.AUTOMATED_SHIPS) < 1;
 
-		if (variant.getHullSpec().getBuiltInMods().contains(HullMods.AUTOMATED) || variant.getSuppressedMods().contains(HullMods.AUTOMATED)) {
+		if (variant.getHullSpec().isBuiltInMod(HullMods.AUTOMATED) || variant.getSuppressedMods().contains(HullMods.AUTOMATED)) {
 			stats.getMinCrewMod().modifyFlat(this.hullModSpecId, dp*crewMultipliers.get(hullSize)[0]);	// after suppression, add crew complement
 			stats.getMaxCrewMod().modifyFlat(this.hullModSpecId, dp*crewMultipliers.get(hullSize)[1]);
 			stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(this.hullModSpecId, (int) (dp * 0.25));
@@ -90,7 +90,7 @@ public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 	public void applyEffectsAfterShipCreation(ShipAPI ship, String hullModSpecId) {
 		ShipVariantAPI variant = ship.getVariant();
 
-		if (variant.getHullSpec().getBuiltInMods().contains(HullMods.AUTOMATED) || variant.getSuppressedMods().contains(HullMods.AUTOMATED)) {
+		if (variant.getHullSpec().isBuiltInMod(HullMods.AUTOMATED) || variant.getSuppressedMods().contains(HullMods.AUTOMATED)) {
 			ship.setInvalidTransferCommandTarget(false);
 		} else {
 			// settings.getHullModSpec(HullMods.AUTOMATED).getEffect().applyEffectsAfterShipCreation(ship, hullModSpecId);
@@ -124,7 +124,7 @@ public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 		PersonAPI captain = ship.getCaptain();
 		boolean noAutomatedShipsSkill = Global.getSector().getPlayerStats().getSkillLevel(Skills.AUTOMATED_SHIPS) < 1;
 
-		if (variant.getHullSpec().getBuiltInMods().contains(HullMods.AUTOMATED)) {
+		if (variant.getHullSpec().isBuiltInMod(HullMods.AUTOMATED)) {
 			float dp = ship.getFleetMember().getUnmodifiedDeploymentPointsCost();
 			int minCrew = (int) dp*crewMultipliers.get(hullSize)[0], maxCrew = (int) dp*crewMultipliers.get(hullSize)[1];
 
