@@ -90,7 +90,7 @@ public final class ehm_settings implements LunaSettingsListener {
 			case 2: lyr_logger.setLevel(lyr_levels.TRCKR); break;
 			case 1: lyr_logger.setLevel(lyr_levels.RFLCT); break;
 			case 0: lyr_logger.setLevel(lyr_levels.DEBUG); break;
-			default: lyr_logger.setLevel(lyr_levels.LSTNR); break;
+			default: lyr_logger.setLevel(lyr_levels.TRCKR); break;
 		}
 	}
 
