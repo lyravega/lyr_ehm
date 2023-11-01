@@ -1,3 +1,9 @@
+Version 0.8.7
+
+- Added a double-guard to prevent a null pointer exception caused by ship/fleet tracking
+- Changed "Logistics Overhaul" to apply civilian conversion bonuses to a smaller selection of ships
+
+
 Version 0.8.6a
 
 Refactored and overhauled most of the stuff under the hood; initial changes begun on the previous versions, which are now all completed. Most of the 0.8.x versions didn't offer much in terms of gameplay, but with all these out of the way, parts of the mod that needs attention may get some. Hopefully.

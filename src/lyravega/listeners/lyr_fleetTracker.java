@@ -45,6 +45,15 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 		instance.attachListener(true);
 	}
 
+	public static void flush() {
+		if (instance == null) return;
+
+		instance.terminateFleetTracker();
+		if (isRefitTab()) instance.updateFleetTracker();
+
+		lyr_logger.trackerInfo("FT: Fleet Tracker flushed");
+	}
+
 	private final String trackerModId = "lyr_tracker";
 	final Map<String, lyr_shipTracker> shipTrackers = new HashMap<String, lyr_shipTracker>();
 	final Map<String, FleetMemberAPI> fleetMembers = new HashMap<String, FleetMemberAPI>();
@@ -60,8 +69,6 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 	protected void onClose() {
 		this.terminateFleetTracker();
 
-		lyr_interfaceUtilities.refreshShipDisplay = true;
-
 		lyr_logger.trackerInfo("FT: Fleet Tracker terminated");
 	}
 
@@ -76,10 +83,12 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 	}
 
 	private void addTracking(ShipVariantAPI variant, FleetMemberAPI member, String parentTrackerUUID) {
-		if (variant.getPermaMods().contains(this.trackerModId)) return;
-		variant.addPermaMod(this.trackerModId, false);
+		if (variant.hasTag(lyr_fleetTracker.uuid.prefix)) return;
 
 		String shipTrackerUUID = null;
+
+		if (!variant.getPermaMods().contains(this.trackerModId))
+			variant.addPermaMod(this.trackerModId, false);	// add before constructing tracker or this will be tracked too
 
 		for (String tag : variant.getTags()) {
 			if (!tag.startsWith(lyr_fleetTracker.uuid.shipPrefix)) continue;
@@ -87,15 +96,18 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 			shipTrackerUUID = tag.substring(lyr_fleetTracker.uuid.shipPrefix.length()); break;
 		}; if (shipTrackerUUID == null) shipTrackerUUID = UUID.randomUUID().toString();
 
+		lyr_shipTracker shipTracker = new lyr_shipTracker(this, variant, shipTrackerUUID, parentTrackerUUID);
+		this.shipTrackers.put(shipTrackerUUID, shipTracker);
+		if (member != null) this.fleetMembers.put(shipTrackerUUID, member);
+
+		if (!variant.hasTag(lyr_fleetTracker.uuid.prefix))
+			variant.addTag(lyr_fleetTracker.uuid.prefix);
+
 		if (shipTrackerUUID != null && !variant.hasTag(lyr_fleetTracker.uuid.shipPrefix+shipTrackerUUID))
 			variant.addTag(lyr_fleetTracker.uuid.shipPrefix+shipTrackerUUID);	// ship's uuid
 
 		if (parentTrackerUUID != null && !variant.hasTag(lyr_fleetTracker.uuid.parentPrefix+parentTrackerUUID))
 			variant.addTag(lyr_fleetTracker.uuid.parentPrefix+parentTrackerUUID);	// parent's uuid
-
-		lyr_shipTracker shipTracker = new lyr_shipTracker(this, variant, shipTrackerUUID, parentTrackerUUID);
-		this.shipTrackers.put(shipTrackerUUID, shipTracker);
-		if (member != null) this.fleetMembers.put(shipTrackerUUID, member);
 
 		for (String moduleSlotId : variant.getStationModules().keySet()) {
 			ShipVariantAPI moduleVariant = variant.getModuleVariant(moduleSlotId);
@@ -115,8 +127,10 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 	}
 
 	private void removeTracking(ShipVariantAPI variant) {
-		if (!variant.getPermaMods().contains(this.trackerModId)) return;
-		variant.removePermaMod(this.trackerModId);
+		if (!variant.hasTag(lyr_fleetTracker.uuid.prefix)) return;
+
+		if (variant.getPermaMods().contains(this.trackerModId))
+			variant.removePermaMod(this.trackerModId);
 
 		for (Iterator<String> iterator = variant.getTags().iterator(); iterator.hasNext(); )
 			if (iterator.next().startsWith(lyr_fleetTracker.uuid.prefix)) iterator.remove();
@@ -132,6 +146,8 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 	}
 
 	private void terminateFleetTracker() {
+		lyr_interfaceUtilities.refreshShipDisplay = true;
+
 		this.shipTrackers.clear();
 		this.fleetMembers.clear();
 
