@@ -205,7 +205,7 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 			if (refitShip == null) return;
 
 			if (ship.getFleetMemberId().equals(refitShip.getFleetMemberId()))
-			instance.updateShipTracker(ship);
+				instance.updateShipTracker(ship);	// there is an extremely rare case where this was causing a NPE; code changed slightly to hopefully prevent it
 		}
 
 		@Override public void advanceInCampaign(CampaignFleetAPI fleet) {}

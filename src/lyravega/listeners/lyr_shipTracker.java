@@ -40,7 +40,7 @@ public final class lyr_shipTracker {
 	public lyr_shipTracker(lyr_fleetTracker fleetTracker, final ShipVariantAPI variant, final FleetMemberAPI member, final String trackerUUID, final String parentTrackerUUID) {
 		this.variant = variant;
 		this.fleetTracker = fleetTracker;
-		this.logPrefix = (parentTrackerUUID != null ? "MT-" : "ST-") + trackerUUID;
+		this.logPrefix = (member == null ? "MT-" : "ST-") + trackerUUID;
 		this.trackerUUID = trackerUUID;
 		this.parentTrackerUUID = parentTrackerUUID;
 		this.hullMods.addAll(variant.getHullMods());
