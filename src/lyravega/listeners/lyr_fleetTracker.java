@@ -10,6 +10,7 @@ import com.fs.starfarer.api.campaign.CoreUITabId;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.loading.VariantSource;
 
 import lyravega.utilities.lyr_interfaceUtilities;
@@ -72,22 +73,16 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 	}
 
 	private void addTracking(ShipVariantAPI variant, FleetMemberAPI member, String parentTrackerUUID) {
-		if (variant.hasTag(lyr_fleetTracker.uuid.prefix)) return;
-
-		String shipTrackerUUID = null;
+		// if (variant.hasTag(lyr_fleetTracker.uuid.prefix)) return;
 
 		if (!variant.getPermaMods().contains(this.trackerModId))
 			variant.addPermaMod(this.trackerModId, false);	// add before constructing tracker or this will be tracked too
 
-		for (String tag : variant.getTags()) {
-			if (!tag.startsWith(lyr_fleetTracker.uuid.shipPrefix)) continue;
+		String shipTrackerUUID = this.getTrackerUUID(variant);
+		if (shipTrackerUUID == null) shipTrackerUUID = UUID.randomUUID().toString();
 
-			shipTrackerUUID = tag.substring(lyr_fleetTracker.uuid.shipPrefix.length()); break;
-		}; if (shipTrackerUUID == null) shipTrackerUUID = UUID.randomUUID().toString();
-
-		lyr_shipTracker shipTracker = new lyr_shipTracker(this, variant, shipTrackerUUID, parentTrackerUUID);
-		this.shipTrackers.put(shipTrackerUUID, shipTracker);
-		if (member != null) this.fleetMembers.put(shipTrackerUUID, member);
+		lyr_shipTracker shipTracker = this.getShipTracker(shipTrackerUUID);
+		if (shipTracker == null) shipTracker = new lyr_shipTracker(this, variant, member, shipTrackerUUID, parentTrackerUUID);
 
 		if (!variant.hasTag(lyr_fleetTracker.uuid.prefix))
 			variant.addTag(lyr_fleetTracker.uuid.prefix);
@@ -103,7 +98,7 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 			ShipHullSpecAPI moduleHullSpec = moduleVariant.getHullSpec();
 
 			if (moduleHullSpec.getOrdnancePoints(null) == 0) continue;	// vanilla first checks this then
-			if (moduleHullSpec.hasTag("module_unselectable")) continue;	// this to identify unselectables
+			if (moduleHullSpec.hasTag(Tags.MODULE_UNSELECTABLE)) continue;	// this to identify unselectables
 
 			if (moduleVariant.getSource() != VariantSource.REFIT) {
 				moduleVariant = moduleVariant.clone();
@@ -116,7 +111,7 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 	}
 
 	private void removeTracking(ShipVariantAPI variant) {
-		if (!variant.hasTag(lyr_fleetTracker.uuid.prefix)) return;
+		// if (!variant.hasTag(lyr_fleetTracker.uuid.prefix)) return;
 
 		if (variant.getPermaMods().contains(this.trackerModId))
 			variant.removePermaMod(this.trackerModId);
@@ -131,12 +126,12 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 
 	private void updateFleetTracker() {
 		for (FleetMemberAPI member : Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy())
-			this.addTracking(member.getVariant(), member, null);
+			if (this.getShipTracker(member) == null) this.addTracking(member.getVariant(), member, null);
 	}
 
 	private void terminateFleetTracker() {
 		for (FleetMemberAPI member : Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy())
-			this.removeTracking(member.getVariant());
+			if (this.getShipTracker(member) != null) this.removeTracking(member.getVariant());
 
 		this.shipTrackers.clear();
 		this.fleetMembers.clear();
@@ -148,6 +143,7 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 		};	return null;
 	}
 
+	//#region _lyr_abstractTracker IMPLEMENTATION
 	@Override
 	public lyr_shipTracker getShipTracker(FleetMemberAPI member) {
 		return this.shipTrackers.get(this.getTrackerUUID(member.getVariant()));
@@ -163,29 +159,37 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 		return this.shipTrackers.get(this.getTrackerUUID(stats.getVariant()));
 	}
 
-	/** @see {@link lyr_shipTracker#updateVariant(ShipVariantAPI)} */
 	@Override
+	public lyr_shipTracker getShipTracker(ShipVariantAPI variant) {
+		return this.shipTrackers.get(this.getTrackerUUID(variant));
+	}
+
+	@Override
+	public lyr_shipTracker getShipTracker(String trackerUUID) {
+		return this.shipTrackers.get(trackerUUID);
+	}
+
+	/** @see {@link lyr_shipTracker#updateVariant(ShipVariantAPI)} */ @Override
 	public void updateShipTracker(FleetMemberAPI member) {
-		if (!isRefitTab()) return;
-
-		this.getShipTracker(member).updateVariant(member.getVariant());
+		if (isRefitTab()) this.getShipTracker(member).updateVariant(member.getVariant());
 	}
 
-	/** @see {@link lyr_shipTracker#updateVariant(ShipVariantAPI)} */
-	@Override
+	/** @see {@link lyr_shipTracker#updateVariant(ShipVariantAPI)} */ @Override
 	public void updateShipTracker(ShipAPI ship) {
-		if (!isRefitTab()) return;
-
-		this.getShipTracker(ship).updateVariant(ship.getVariant());
+		if (isRefitTab()) this.getShipTracker(ship).updateVariant(ship.getVariant());
 	}
 
-	/** @see {@link lyr_shipTracker#updateVariant(ShipVariantAPI)} */
-	@Override
+	/** @see {@link lyr_shipTracker#updateVariant(ShipVariantAPI)} */ @Override
 	public void updateShipTracker(MutableShipStatsAPI stats) {
-		if (!isRefitTab() || !ShipAPI.class.isInstance(stats.getEntity())) return;	// the cast check needs to be done because parts of the UI has outdated variant data unless it is a ShipAPI
-
-		this.getShipTracker(stats).updateVariant(stats.getVariant());
+		if (isRefitTab() && ShipAPI.class.isInstance(stats.getEntity())) this.getShipTracker(stats).updateVariant(stats.getVariant());	// the cast check needs to be done because parts of the UI has outdated variant data unless it is a ShipAPI
 	}
+
+	/** @see {@link lyr_shipTracker#updateVariant(ShipVariantAPI)} */ @Override @Deprecated
+	public void updateShipTracker(ShipVariantAPI variant) {
+		if (isRefitTab()) this.getShipTracker(variant).updateVariant(variant);
+	}
+	//#endregion
+	// END OF _lyr_abstractTracker IMPLEMENTATION
 
 	public static class lyr_tracker extends BaseHullMod implements HullModFleetEffect {
 		@Override public boolean withAdvanceInCampaign() { return false; }

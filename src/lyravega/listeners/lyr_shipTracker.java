@@ -24,10 +24,10 @@ import lyravega.utilities.logger.lyr_logger;
  */
 public final class lyr_shipTracker {
 	private ShipVariantAPI variant = null;
+	private final lyr_fleetTracker fleetTracker;
+	private final String logPrefix;
 	private final String trackerUUID;
 	private final String parentTrackerUUID;
-	private final String logPrefix;
-	private final lyr_fleetTracker fleetTracker;
 	private final Set<String> hullMods = new HashSet<String>();
 	private final Set<String> enhancedMods = new HashSet<String>();
 	private final Set<String> embeddedMods = new HashSet<String>();
@@ -37,21 +37,22 @@ public final class lyr_shipTracker {
 	private Iterator<String> iterator;
 
 	//#region CONSTRUCTORS & ACCESSORS
-	public lyr_shipTracker(lyr_fleetTracker fleetTracker, final ShipVariantAPI variant, final String trackerId, final String parentTrackerId) {
+	public lyr_shipTracker(lyr_fleetTracker fleetTracker, final ShipVariantAPI variant, final FleetMemberAPI member, final String trackerUUID, final String parentTrackerUUID) {
 		this.variant = variant;
-		this.trackerUUID = trackerId;
-		this.parentTrackerUUID = parentTrackerId;
-		this.logPrefix = (parentTrackerId != null ? "MT-" : "ST-") + trackerId;
 		this.fleetTracker = fleetTracker;
+		this.logPrefix = (parentTrackerUUID != null ? "MT-" : "ST-") + trackerUUID;
+		this.trackerUUID = trackerUUID;
+		this.parentTrackerUUID = parentTrackerUUID;
 		this.hullMods.addAll(variant.getHullMods());
 		this.enhancedMods.addAll(variant.getSMods());
 		this.embeddedMods.addAll(variant.getSModdedBuiltIns());
 		this.suppressedMods.addAll(variant.getSuppressedMods());
+		for (WeaponSlotAPI slot : variant.getHullSpec().getAllWeaponSlotsCopy())
+			this.weapons.put(slot.getId(), variant.getWeaponId(slot.getId()));
 		this.wings.addAll(variant.getWings());
 
-		for (WeaponSlotAPI slot : variant.getHullSpec().getAllWeaponSlotsCopy()) {
-			this.weapons.put(slot.getId(), variant.getWeaponId(slot.getId()));
-		}
+		fleetTracker.shipTrackers.put(trackerUUID, this);
+		if (member != null) fleetTracker.fleetMembers.put(parentTrackerUUID, member);
 
 		lyr_logger.trackerInfo(this.logPrefix+": Tracker initialized");
 	}
