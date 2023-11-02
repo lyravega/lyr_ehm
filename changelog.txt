@@ -1,6 +1,6 @@
-Version 0.8.7
+Version 0.8.6b
 
-- Added a double-guard to prevent a null pointer exception caused by ship/fleet tracking
+- Added some guards to prevent a null pointer exception caused by ship/fleet tracking
 - Changed "Logistics Overhaul" to apply civilian conversion bonuses to a smaller selection of ships
 
 
