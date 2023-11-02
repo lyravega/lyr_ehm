@@ -14,6 +14,7 @@ import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.loading.VariantSource;
 
 import lyravega.utilities.lyr_interfaceUtilities;
+import lyravega.utilities.logger.lyr_levels;
 import lyravega.utilities.logger.lyr_logger;
 
 /**
@@ -204,8 +205,17 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 			ShipAPI refitShip = lyr_interfaceUtilities.getRefitShip();
 			if (refitShip == null) return;
 
-			if (ship.getFleetMemberId().equals(refitShip.getFleetMemberId()))
-				instance.updateShipTracker(ship);	// there is an extremely rare case where this was causing a NPE; code changed slightly to hopefully prevent it
+			if (ship.getFleetMemberId().equals(refitShip.getFleetMemberId())) {
+				if (instance.getShipTracker(ship) == null) {	// there is an extremely rare case where this is null; the block below is a nuclear option to prevent it
+					if (lyr_logger.getLevel() != lyr_levels.DEBUG) {
+						lyr_logger.setLevel(lyr_levels.DEBUG); lyr_logger.debug("Lowering logger level to 'DEBUG'");
+					};	lyr_logger.warn("FT: Tracker not found, initializing a temporary one");
+
+					instance.addTracking(ship.getVariant(), null, null);
+				}
+
+				instance.updateShipTracker(ship);
+			}
 		}
 
 		@Override public void advanceInCampaign(CampaignFleetAPI fleet) {}
