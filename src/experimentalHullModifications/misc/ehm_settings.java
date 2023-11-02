@@ -3,7 +3,6 @@ package experimentalHullModifications.misc;
 import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
 
-import experimentalHullModifications.misc.ehm_internals.id;
 import experimentalHullModifications.plugin.lyr_ehm;
 import lunalib.lunaSettings.LunaSettings;
 import lunalib.lunaSettings.LunaSettingsListener;
@@ -90,7 +89,7 @@ public final class ehm_settings implements LunaSettingsListener {
 			case 2: lyr_logger.setLevel(lyr_levels.TRCKR); break;
 			case 1: lyr_logger.setLevel(lyr_levels.RFLCT); break;
 			case 0: lyr_logger.setLevel(lyr_levels.DEBUG); break;
-			default: lyr_logger.setLevel(lyr_levels.TRCKR); break;
+			default: lyr_logger.setLevel(lyr_levels.LSTNR); break;
 		}
 	}
 
@@ -106,10 +105,10 @@ public final class ehm_settings implements LunaSettingsListener {
 
 	@Override
 	public void settingsChanged(String modId) {
-		if (!id.mod.equals(modId)) return;
+		if (!ehm_internals.id.mod.equals(modId)) return;
 
 		cacheSettings();	// order may be important; customizable hull modifications might require these to be cached first
-		lyr_eventDispatcher.onSettingsChange(ehm_internals.id.mod, null);
+		lyr_eventDispatcher.onSettingsChange(modId, null);
 		lyr_interfaceUtilities.refreshFleetView(true);
 
 		lyr_logger.info("Settings reapplied");

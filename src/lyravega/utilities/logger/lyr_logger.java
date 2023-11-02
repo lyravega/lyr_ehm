@@ -11,7 +11,7 @@ import org.apache.log4j.Priority;
  * @author lyravega
  */
 public class lyr_logger {
-	private static final Logger logger = Logger.getLogger("Experimental Hull Modifications");
+	private static final Logger logger = Logger.getLogger("EHM (Experimental Hull Modifications)");
 	static {
 		// try {
 		// 	Class.forName(lyr_levels.class.getName());

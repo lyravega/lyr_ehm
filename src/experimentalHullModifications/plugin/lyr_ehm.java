@@ -43,11 +43,6 @@ public final class lyr_ehm extends BaseModPlugin {
 	}
 
 	@Override
-	public void beforeGameSave() {
-		lyr_fleetTracker.flush();	// to prevent a potential NPE
-	}
-
-	@Override
 	public void configureXStream(XStream x) {
 		x.alias("FieldRepairsScript", ehm_fieldRepairsScript.class);
 		x.alias("data.abilities.ehm_ability", ehm_ability.class);	// remember to use this for serialized shit

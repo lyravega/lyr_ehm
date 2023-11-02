@@ -45,15 +45,6 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 		instance.attachListener(true);
 	}
 
-	public static void flush() {
-		if (instance == null) return;
-
-		instance.terminateFleetTracker();
-		if (isRefitTab()) instance.updateFleetTracker();
-
-		lyr_logger.trackerInfo("FT: Fleet Tracker flushed");
-	}
-
 	private final String trackerModId = "lyr_tracker";
 	final Map<String, lyr_shipTracker> shipTrackers = new HashMap<String, lyr_shipTracker>();
 	final Map<String, FleetMemberAPI> fleetMembers = new HashMap<String, FleetMemberAPI>();
@@ -146,13 +137,13 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 	}
 
 	private void terminateFleetTracker() {
+		for (FleetMemberAPI member : Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy())
+			this.removeTracking(member.getVariant());
+
 		lyr_interfaceUtilities.refreshShipDisplay = true;
 
 		this.shipTrackers.clear();
 		this.fleetMembers.clear();
-
-		for (FleetMemberAPI member : Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy())
-			this.removeTracking(member.getVariant());
 	}
 
 	private String getTrackerUUID(ShipVariantAPI variant) {
@@ -199,7 +190,6 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 
 		this.getShipTracker(stats).updateVariant(stats.getVariant());
 	}
-
 
 	public static class lyr_tracker extends BaseHullMod implements HullModFleetEffect {
 		@Override public boolean withAdvanceInCampaign() { return false; }
