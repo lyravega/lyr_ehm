@@ -77,7 +77,6 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 	}
 
 	public static boolean clearUndoAfter = false;
-	public static boolean refreshShipDisplay = true;
 
 	/**
 	 * This method will immediately save the refit variant and refresh the UI by utilizing the
@@ -135,7 +134,7 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 	 * will fail to clear the button(s) like its deprecated sibling {@link #clearUndo()}.
 	 */
 	public static void clearUndoAfter() {
-		if (!clearUndoAfter) return;	// works through a flag, and doesn't check if it's the refit tab. Origin of caller should do that check there instead
+		if (!isRefitTab() || !clearUndoAfter) return;	// works through a flag but also checks the tab just in case
 		try {
 			lyr_refitPanel refitPanel = lyr_refitPanel.proxify();
 			lyr_designDisplay designDisplay = refitPanel.getDesignDisplay();
@@ -160,11 +159,10 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 	 * example. No other cases so far.
 	 * <p> Calling this method from that same listener method will yield no results, and as
 	 * such this needs to be called with a slight delay (through an EFS) like the {@link
-	 * #clearUndoAfter()}. Has its own flag {@link #refreshShipDisplay} that needs to be
-	 * reset when the tab is closed.
+	 * #clearUndoAfter()}.
 	 */
 	public static void refreshShipDisplay() {
-		if (!refreshShipDisplay) return;
+		if (!isRefitTab()) return;
 		try {
 			FleetMemberAPI targetMember = null;
 			String refitMemberId = getRefitShip().getFleetMemberId();
@@ -185,8 +183,6 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 			refitPanel.saveCurrentVariant();
 			refitPanel.setEditedSinceLoad(false);
 			refitPanel.setEditedSinceSave(false);
-
-			refreshShipDisplay = false;
 		} catch (Throwable t) {
 			lyr_logger.error("Failure in 'refreshShipDisplay()'");
 		}

@@ -64,13 +64,11 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 	}
 
 	@Override protected void delayedOnOpen() {
-		// if (lyr_interfaceUtilities.refreshShipDisplay) lyr_interfaceUtilities.refreshShipDisplay();
 		lyr_interfaceUtilities.refreshShipDisplay();
 	}
 
 	@Override protected void onAdvance(float amount) {
-		// if (lyr_interfaceUtilities.clearUndoAfter) lyr_interfaceUtilities.clearUndoAfter();
-		lyr_interfaceUtilities.clearUndoAfter();
+		if (lyr_interfaceUtilities.clearUndoAfter) lyr_interfaceUtilities.clearUndoAfter();
 	}
 
 	private void addTracking(ShipVariantAPI variant, FleetMemberAPI member, String parentTrackerUUID) {
@@ -139,8 +137,6 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 	private void terminateFleetTracker() {
 		for (FleetMemberAPI member : Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy())
 			this.removeTracking(member.getVariant());
-
-		lyr_interfaceUtilities.refreshShipDisplay = true;
 
 		this.shipTrackers.clear();
 		this.fleetMembers.clear();
