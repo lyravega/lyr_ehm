@@ -203,19 +203,17 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 		@Override
 		public void applyEffectsAfterShipCreation(ShipAPI ship, String id) {
 			ShipAPI refitShip = lyr_interfaceUtilities.getRefitShip();
-			if (refitShip == null) return;
+			if (refitShip == null || !ship.getFleetMemberId().equals(refitShip.getFleetMemberId())) return;
 
-			if (ship.getFleetMemberId().equals(refitShip.getFleetMemberId())) {
-				if (instance.getShipTracker(ship) == null) {	// there is an extremely rare case where this is null; the block below is a nuclear option to prevent it
-					if (lyr_logger.getLevel() != lyr_levels.DEBUG) {
-						lyr_logger.setLevel(lyr_levels.DEBUG); lyr_logger.debug("Lowering logger level to 'DEBUG'");
-					};	lyr_logger.warn("FT: Tracker not found, initializing a temporary one");
+			if (instance.getShipTracker(ship) == null) {	// there is an extremely rare case where this is null; the block below is a nuclear option to prevent it
+				if (lyr_logger.getLevel() != lyr_levels.DEBUG) {
+					lyr_logger.setLevel(lyr_levels.DEBUG); lyr_logger.debug("Lowering logger level to 'DEBUG'");
+				};	lyr_logger.warn("FT: Tracker not found, initializing a temporary one");
 
-					instance.addTracking(ship.getVariant(), null, null);
-				}
-
-				instance.updateShipTracker(ship);
+				instance.addTracking(ship.getVariant(), null, null);
 			}
+
+			instance.updateShipTracker(ship);
 		}
 
 		@Override public void advanceInCampaign(CampaignFleetAPI fleet) {}
