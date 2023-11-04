@@ -72,17 +72,12 @@ public class lyr_refitTab {
 	}
 
 	public static class lyr_parentData {
-		private final FleetMemberAPI member;
-
-		private final WeaponSlotAPI weaponSlot;
+		private final FleetMemberAPI member; public FleetMemberAPI getMember() { return this.member; }
+		private final WeaponSlotAPI weaponSlot; public WeaponSlotAPI getWeaponSlot() { return this.weaponSlot; }
 
 		private lyr_parentData(final Object parentData) throws Throwable {
 			this.member = (FleetMemberAPI) fieldReflection.findFieldByClass(FleetMemberAPI.class, parentData).get();
 			this.weaponSlot = (WeaponSlotAPI) fieldReflection.findFieldByClass(WeaponSlotAPI.class, parentData).get();
 		}
-
-		public FleetMemberAPI getMember() { return this.member; }
-
-		public WeaponSlotAPI getWeaponSlot() { return this.weaponSlot; }
 	}
 }

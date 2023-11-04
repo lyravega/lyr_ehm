@@ -58,6 +58,8 @@ public class ehm_tooltip {
 			lockedIn = "LOCKED IN",
 			lockedOut = "LOCKED OUT";
 		public static final Color
+			invisible_bgColour = new Color(0, 0, 0, 0),
+			invisible_textColour = new Color(0, 0, 0, 0),
 			info_bgColour = Color.decode("0x000000"),
 			info_textColour = Color.decode("0x518B9E"),
 			warning_bgColour = Color.decode("0x000000"),
