@@ -1,12 +1,14 @@
 package lyravega.misc;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Map.Entry;
+import java.util.*;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CargoAPI;
+import com.fs.starfarer.api.campaign.CargoAPI.CargoItemType;
+import com.fs.starfarer.api.campaign.CargoStackAPI;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
+import com.fs.starfarer.api.characters.MutableCharacterStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
@@ -16,30 +18,12 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import lunalib.lunaRefit.BaseRefitButton;
+import lyravega.utilities.lyr_miscUtilities;
 
 public class test extends BaseRefitButton {
-	private static test instance;
-
-	public static test instance() {
-		return instance;
-	}
-
-	// public static int getOverdriveLevel(ShipVariantAPI variant) {
-	// 	return instance.getLevel(variant, false);
-	// }
-
-	private final String gammaCoreIconName;
-	private final String betaCoreIconName;
-	private final String alphaCoreIconName;
 	private final lyr_upgrade upgrade;
 
 	public test() {
-		instance = this;
-
-		this.gammaCoreIconName = Global.getSettings().getCommoditySpec("gamma_core").getIconName();
-		this.betaCoreIconName = Global.getSettings().getCommoditySpec("beta_core").getIconName();
-		this.alphaCoreIconName = Global.getSettings().getCommoditySpec("alpha_core").getIconName();
-
 		this.upgrade = new lyr_upgrade("ehm_overdrive");
 
 		this.upgrade.addUpgradeTier(HullSize.FRIGATE, null, null, 1);
@@ -61,8 +45,6 @@ public class test extends BaseRefitButton {
 		this.upgrade.addUpgradeTier(HullSize.CAPITAL_SHIP, new Object[][]{{"gamma_core", 1}}, null, 5);
 		this.upgrade.addUpgradeTier(HullSize.CAPITAL_SHIP, new Object[][]{{"beta_core", 1}}, new String[]{"corrupted_nanoforge"}, 6);
 		this.upgrade.addUpgradeTier(HullSize.CAPITAL_SHIP, new Object[][]{{"alpha_core", 1}}, new String[]{"pristine_nanoforge"}, 7);
-
-
 	}
 
 	@Override
@@ -104,13 +86,10 @@ public class test extends BaseRefitButton {
 
 	@Override
 	public void addTooltip(TooltipMakerAPI tooltip, FleetMemberAPI member, ShipVariantAPI variant, MarketAPI market) {
-		CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
 		final int overdriveLevel = this.upgrade.getCurrentTier(variant);
 		final boolean isOverdriveCapped = !(overdriveLevel < this.upgrade.getMaxTier(variant.getHullSize()));
-		final int storyPoints = Global.getSector().getPlayerStats().getStoryPoints();
 
 		tooltip.addPara("Increase the maximum amount of s-mods supported by this ship by one with each level", 5f);
-
 
 		if (overdriveLevel > 0) {
 			tooltip.addSectionHeading("CURRENT LEVEL: "+overdriveLevel, Color.CYAN, header.invisible_bgColour, Alignment.MID, 5f).flash(1f, 1f);
@@ -150,41 +129,7 @@ public class test extends BaseRefitButton {
 		for (lyr_upgradeLayer upgradeLayer : this.upgrade.getUpgradeLayers(variant.getHullSize())) {
 			int upgradeTier = upgradeLayer.getTier();
 			if (overdriveLevel+1 > upgradeTier) continue;
-
-			int storyPointCost = upgradeLayer.getStoryPointCost();
-			boolean hasCoreRequirement = upgradeLayer.getCommodityCosts() != null;
-			Entry<String, Integer> coreRequirement = hasCoreRequirement ? upgradeLayer.getCommodityCosts().entrySet().iterator().next() : null;
-
-			Object[] obj = {
-				Color.YELLOW, "Level "+upgradeTier,
-				null, ": ",
-				Color.GREEN, storyPointCost+" SP",
-				null, hasCoreRequirement ? "&" : "",
-				hasCoreRequirement ? (playerCargo.getCommodityQuantity(coreRequirement.getKey()) >= coreRequirement.getValue() ? Color.GREEN : Color.RED) : null, hasCoreRequirement ? coreRequirement.getValue()+" "+Global.getSettings().getCommoditySpec(coreRequirement.getKey()).getName() : "",
-			};
-			this.testsss(tooltip, Color.WHITE, obj);
-
-			// LabelAPI req = tooltip.addPara(
-			// 	"%s: %s %s %s",
-			// 	2f,
-			// 	Color.WHITE,
-			// 	"Level "+upgradeTier,
-			// 	storyPointCost+" SP",
-			// 	hasCoreRequirement ? "&" : "",
-			// 	hasCoreRequirement ? coreRequirement.getValue()+" "+Global.getSettings().getCommoditySpec(coreRequirement.getKey()).getName() : ""
-			// );
-
-			// if (overdriveLevel+1 == upgradeTier) {
-			// 	req.setHighlightColors(
-			// 		Color.YELLOW,
-			// 		storyPoints > storyPointCost ? Color.GREEN : Color.RED,
-			// 		Color.WHITE,
-			// 		hasCoreRequirement ? (playerCargo.getCommodityQuantity(coreRequirement.getKey()) >= coreRequirement.getValue() ? Color.GREEN : Color.RED) : null
-			// 	);
-			// } else {
-			// 	req.setColor(Color.GRAY);
-			// 	req.setHighlightColor(Color.GRAY);
-			// }
+			this.testsss2(tooltip, upgradeLayer, overdriveLevel == upgradeTier);
 		}
 
 		if (!isOverdriveCapped) {
@@ -195,20 +140,76 @@ public class test extends BaseRefitButton {
 		}
 	}
 
-	private void testsss(TooltipMakerAPI tooltip, Color defaultColour, Object[] objects) {
+	private void testsss2(TooltipMakerAPI tooltip, lyr_upgradeLayer upgradeLayer, boolean isDisabled) {
+		MutableCharacterStatsAPI playerStats = Global.getSector().getPlayerStats();
+		CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
+
+		int storyPointCost = upgradeLayer.getStoryPointCost();
+		Map<String, Integer> commodityCosts = upgradeLayer.getCommodityCosts();
+		Set<String> specialRequirements = upgradeLayer.getSpecialRequirements();
+
 		String format = "";
-		ArrayList<String> replaceList = new ArrayList<String>();
-		ArrayList<Color> colourList = new ArrayList<Color>();
 
-		// jesus christ... where are Lua tables when you need them
-		// why the fuck I can't just do 'array[array.length] = blah' to add something to the array
+		// String enabledColourHex = "(0xffffff|";
+		String disabledColourHex = "(0xff0000|";
+		String tierColourHex = "(0xffff00|";
+		String availableColourHex = "(0x00ff00|";
+		String unavailableColourHex = "(0xff0000|";
 
-		for (Object o : objects) {
-			if (o == null) colourList.add(defaultColour);
-			else if (Color.class.isInstance(o)) colourList.add(Color.class.cast(o));
-			else if (String.class.isInstance(o)) { replaceList.add(String.class.cast(o)); format = format+"%s "; }
+		if (isDisabled) {
+			tierColourHex = disabledColourHex;
+			availableColourHex = disabledColourHex;
+			unavailableColourHex = disabledColourHex;
 		}
 
-		tooltip.addPara(format, 0, colourList.toArray(new Color[]{}), replaceList.toArray(new String[]{}));
+		if (storyPointCost > 0) {
+			format = format.isEmpty() ? tierColourHex+"Level "+(upgradeLayer.getTier())+"):" : format+" &";
+
+			format = format+" "
+				+(playerStats.getStoryPoints() >= storyPointCost ? availableColourHex : unavailableColourHex)
+				+storyPointCost+" SP)";
+		}
+
+		if (commodityCosts != null && !commodityCosts.isEmpty()) {
+			format = format.isEmpty() ? tierColourHex+"Level "+(upgradeLayer.getTier())+"):" : format+" &";
+
+			for (Iterator<String> iterator = commodityCosts.keySet().iterator(); iterator.hasNext(); ) {
+				String commodityCostId = iterator.next();
+				int cost = commodityCosts.get(commodityCostId);
+
+				format = format+" "
+					+(playerCargo.getCommodityQuantity(commodityCostId) >= cost ? availableColourHex : unavailableColourHex)
+					+commodityCosts.get(commodityCostId)+" "
+					+Global.getSettings().getCommoditySpec(commodityCostId).getName()+")";
+
+				if (iterator.hasNext()) format = format+", ";
+			}
+		}
+
+		if (specialRequirements != null && !specialRequirements.isEmpty()) {
+			format = format.isEmpty() ? tierColourHex+"Level "+(upgradeLayer.getTier())+"):" : format+" &";
+
+			Set<String> specials = new HashSet<String>();
+
+			for (Iterator<CargoStackAPI> iterator = playerCargo.getStacksCopy().iterator(); iterator.hasNext(); ) {
+				CargoStackAPI stack = iterator.next();
+
+				if (stack.getType() != CargoItemType.SPECIAL) { iterator.remove(); continue; }
+
+				specials.add(stack.getSpecialDataIfSpecial().getId());
+			}
+
+			for (Iterator<String> iterator = specialRequirements.iterator(); iterator.hasNext(); ) {
+				String specialId = iterator.next();
+
+				format = format+" "
+					+(specials.contains(specialId) ? availableColourHex : unavailableColourHex)
+					+Global.getSettings().getSpecialItemSpec(specialId).getName()+")";
+
+				if (iterator.hasNext()) format = format+", ";
+			}
+		}
+
+		lyr_miscUtilities.addColorizedPara(tooltip, format, 0f);
 	}
 }
