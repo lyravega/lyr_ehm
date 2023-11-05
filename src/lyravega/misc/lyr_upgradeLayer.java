@@ -1,5 +1,6 @@
 package lyravega.misc;
 
+import java.awt.Color;
 import java.util.*;
 
 import com.fs.starfarer.api.Global;
@@ -7,6 +8,10 @@ import com.fs.starfarer.api.campaign.CargoAPI;
 import com.fs.starfarer.api.campaign.CargoAPI.CargoItemType;
 import com.fs.starfarer.api.campaign.CargoStackAPI;
 import com.fs.starfarer.api.characters.MutableCharacterStatsAPI;
+import com.fs.starfarer.api.ui.LabelAPI;
+import com.fs.starfarer.api.ui.TooltipMakerAPI;
+
+import lyravega.utilities.lyr_miscUtilities;
 
 public class lyr_upgradeLayer {
 	private final lyr_upgrade upgrade; public lyr_upgrade getUpgrade() { return this.upgrade; }
@@ -39,8 +44,8 @@ public class lyr_upgradeLayer {
 	}
 
 	public boolean canAfford() {
-		MutableCharacterStatsAPI playerStats = Global.getSector().getPlayerStats();
-		CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
+		final MutableCharacterStatsAPI playerStats = Global.getSector().getPlayerStats();
+		final CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
 
 		if (this.storyPointCost > 0) {
 			if (playerStats.getStoryPoints() < this.storyPointCost) {
@@ -59,13 +64,6 @@ public class lyr_upgradeLayer {
 		}
 
 		if (this.specialRequirements != null && !this.specialRequirements.isEmpty()) {
-			// for (String specialRequirementId : this.specialRequirements) {
-			// 	if (playerCargo.getCommodityQuantity(specialRequirementId) < 1) {
-			// 		return false;
-			// 	}
-			// }
-			// List<CargoStackAPI> specials = playerCargo.getStacksCopy();
-
 			Set<String> specials = new HashSet<String>();
 
 			for (Iterator<CargoStackAPI> iterator = playerCargo.getStacksCopy().iterator(); iterator.hasNext(); ) {
@@ -85,8 +83,8 @@ public class lyr_upgradeLayer {
 	}
 
 	public void deductCosts() {
-		MutableCharacterStatsAPI playerStats = Global.getSector().getPlayerStats();
-		CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
+		final MutableCharacterStatsAPI playerStats = Global.getSector().getPlayerStats();
+		final CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
 
 		if (this.storyPointCost > 0) {
 			if (playerStats.getStoryPoints() >= this.storyPointCost) {
@@ -103,5 +101,78 @@ public class lyr_upgradeLayer {
 				}
 			}
 		}
+
+		// specials are not consumed
+	}
+
+	public LabelAPI addRequirementsToTooltip(TooltipMakerAPI tooltip, boolean isDisabled) {	// isDisabled is a shitty shortcut to repaint shit
+		final MutableCharacterStatsAPI playerStats = Global.getSector().getPlayerStats();
+		final CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
+
+		String format = "";
+
+		// String enabledColourHex = "(0x"+Integer.toHexString(Color.WHITE.getRGB()).substring(2)+"|";
+		String disabledColourHex = "(0x"+Integer.toHexString(Color.GRAY.getRGB()).substring(2)+"|";
+		String tierColourHex = "(0x"+Integer.toHexString(Color.YELLOW.getRGB()).substring(2)+"|";
+		String availableColourHex = "(0x"+Integer.toHexString(Color.GREEN.getRGB()).substring(2)+"|";
+		String unavailableColourHex = "(0x"+Integer.toHexString(Color.RED.getRGB()).substring(2)+"|";
+
+		if (isDisabled) {
+			tierColourHex = disabledColourHex;
+			availableColourHex = disabledColourHex;
+			unavailableColourHex = disabledColourHex;
+		}
+
+		if (this.storyPointCost > 0) {
+			format = format.isEmpty() ? tierColourHex+"Level "+(this.getTier())+"):" : format+" &";
+
+			format = format+" "
+				+(playerStats.getStoryPoints() >= this.storyPointCost ? availableColourHex : unavailableColourHex)
+				+this.storyPointCost+" SP)";
+		}
+
+		if (this.commodityCosts != null && !this.commodityCosts.isEmpty()) {
+			format = format.isEmpty() ? tierColourHex+"Level "+(this.getTier())+"):" : format+" &";
+
+			for (Iterator<String> iterator = this.commodityCosts.keySet().iterator(); iterator.hasNext(); ) {
+				String commodityCostId = iterator.next();
+				int cost = this.commodityCosts.get(commodityCostId);
+
+				format = format+" "
+					+(playerCargo.getCommodityQuantity(commodityCostId) >= cost ? availableColourHex : unavailableColourHex)
+					+this.commodityCosts.get(commodityCostId)+" "
+					+Global.getSettings().getCommoditySpec(commodityCostId).getName()+")";
+
+				if (iterator.hasNext()) format = format+", ";
+			}
+		}
+
+		if (this.specialRequirements != null && !this.specialRequirements.isEmpty()) {
+			format = format.isEmpty() ? tierColourHex+"Level "+(this.getTier())+"):" : format+" &";
+
+			Set<String> specials = new HashSet<String>();
+
+			for (Iterator<CargoStackAPI> iterator = playerCargo.getStacksCopy().iterator(); iterator.hasNext(); ) {
+				CargoStackAPI stack = iterator.next();
+
+				if (stack.getType() != CargoItemType.SPECIAL) { iterator.remove(); continue; }
+
+				specials.add(stack.getSpecialDataIfSpecial().getId());
+			}
+
+			for (Iterator<String> iterator = this.specialRequirements.iterator(); iterator.hasNext(); ) {
+				String specialId = iterator.next();
+
+				format = format+" "
+					+(specials.contains(specialId) ? availableColourHex : unavailableColourHex)
+					+Global.getSettings().getSpecialItemSpec(specialId).getName()+")";
+
+				if (iterator.hasNext()) format = format+", ";
+			}
+		}
+
+		LabelAPI para = lyr_miscUtilities.addColorizedPara(tooltip, format, 0f);
+		if (isDisabled) para.setColor(Color.GRAY);	// hacky way to make all of them grayed out because I got lazy
+		return para;
 	}
 }
