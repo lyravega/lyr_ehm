@@ -70,7 +70,13 @@ public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffec
 
 	@Override
 	public String getButtonName(FleetMemberAPI member, ShipVariantAPI variant) {
-		return "Overdrive S-Mod Capacity";
+		switch (this.upgrade.getCurrentTier(variant)) {
+			default: return "Overdrive";
+			case 1: return "Overdrive I";
+			case 2: return "Overdrive II";
+			case 3: return "Overdrive III";
+			case 4: return "Overdrive IV";
+		}
 	}
 
 	@Override
@@ -108,10 +114,11 @@ public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffec
 	public void addTooltip(TooltipMakerAPI tooltip, FleetMemberAPI member, ShipVariantAPI variant, MarketAPI market) {
 		final int currentTier = this.upgrade.getCurrentTier(variant);
 
-		tooltip.addPara("Increase the maximum amount of s-mods supported by this ship by one with each level", 5f);
+		tooltip.addSectionHeading("OVERDRIVE", Misc.getHighlightColor(), header.invisible_bgColour, Alignment.MID, 2f);
+		tooltip.addPara("Increase the maximum amount of s-mods supported by this ship by one with each level", 2f);
 
 		if (currentTier > 0) {
-			tooltip.addSectionHeading("CURRENT LEVEL: "+currentTier, Color.CYAN, header.invisible_bgColour, Alignment.MID, 5f).flash(1f, 1f);
+			tooltip.addSectionHeading("CURRENT LEVEL: "+currentTier, Color.CYAN, header.invisible_bgColour, Alignment.MID, 2f).flash(1f, 1f);
 			switch (currentTier) {
 				case 1: {
 					tooltip.addImages(
@@ -139,14 +146,14 @@ public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffec
 		}
 
 		if (!(currentTier < this.upgrade.getMaxTier(variant.getHullSize()))) {
-			tooltip.addSectionHeading("MAX LEVEL", Color.CYAN, header.invisible_bgColour, Alignment.MID, 5f).flash(1f, 1f);
+			tooltip.addSectionHeading("MAX LEVEL", Color.CYAN, header.invisible_bgColour, Alignment.MID, 2f).flash(1f, 1f);
 			return;
 		}
 
 		if (this.upgrade.canUpgradeTier(variant)) {
-			tooltip.addSectionHeading("UPGRADE REQUIREMENTS", Misc.getHighlightColor(), header.invisible_bgColour, Alignment.MID, 5f).flash(1f, 1f);
+			tooltip.addSectionHeading("UPGRADE REQUIREMENTS", Misc.getHighlightColor(), header.invisible_bgColour, Alignment.MID, 2f).flash(1f, 1f);
 		} else {
-			tooltip.addSectionHeading("UPGRADE REQUIREMENTS UNMET", Misc.getNegativeHighlightColor(), header.invisible_bgColour, Alignment.MID, 5f).flash(1f, 1f);
+			tooltip.addSectionHeading("UPGRADE REQUIREMENTS UNMET", Misc.getNegativeHighlightColor(), header.invisible_bgColour, Alignment.MID, 2f).flash(1f, 1f);
 		}
 
 		for (lyr_upgradeLayer upgradeLayer : this.upgrade.getUpgradeLayers(variant.getHullSize())) {

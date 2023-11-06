@@ -72,7 +72,6 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		if (!stats.getVariant().getHullSpec().isBuiltInMod(ehm_internals.id.hullmods.base)) return;
 		if (!stats.getVariant().getSMods().contains(this.hullModSpecId)) return;
 
 		ShipVariantAPI variant = stats.getVariant();

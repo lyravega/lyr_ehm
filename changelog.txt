@@ -1,8 +1,12 @@
 Version 0.8.7
 
 - Fixed an issue that applied the wrong description prefix to ships if the flavour option was turned off
-- Fixed a rare hull spec alteration leakage causing changes to affect all ships using that spec instead of one
+- Fixed a rare issue causing changes to affect all ships with the same hull spec instead of just one in specific circumstances
+- Added a new purchaseable upgrade called "Overdrive" that allows ships to have more built-in modifications
 
+This version comes with a new upgrade feature that utilizes LunaLib's refit tab buttons. As the first upgrade, I've added one that allows more modifications to be built-in to the ships, along with tools that'd make it relatively easy for me to deploy any more. I have some more ideas for a few more upgrades like this one planned, but I'll keep the list rather short at least for now.
+
+Each level of this upgrade cost story points and AI cores, with higher levels requiring you to have a nanoforge in your cargo holds. This upgrade in specific is designed to encourage farming to some degree and have you burn through your resources to push your builds even further. Let me know if you have any feedback on the upgrade, and happy hunting!
 
 
 Version 0.8.6b
