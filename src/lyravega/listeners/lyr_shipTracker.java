@@ -191,17 +191,17 @@ public final class lyr_shipTracker {
 			String newWingId = this.variant.getWingId(bayNumber);
 
 			if (oldWingId.isEmpty() && newWingId == null) continue;
-			else if (oldWingId.isEmpty() && newWingId != null) {	// weapon installed
+			else if (oldWingId.isEmpty() && newWingId != null) {	// wing installed
 				this.wings.set(bayNumber, newWingId);
 				lyr_eventDispatcher.onWingEvent(onWingAssigned, this.variant, newWingId, bayNumber);
 
 				lyr_logger.eventInfo(this.logPrefix+": Installed '"+newWingId+"' on '"+bayNumber+"'");
-			} else if (!oldWingId.isEmpty() && newWingId == null) {	// weapon removed
+			} else if (!oldWingId.isEmpty() && newWingId == null) {	// wing removed
 				this.wings.set(bayNumber, "");
 				lyr_eventDispatcher.onWingEvent(onWingRelieved, this.variant, oldWingId, bayNumber);
 
 				lyr_logger.eventInfo(this.logPrefix+": Removed '"+oldWingId+"' from '"+bayNumber+"'");
-			} else if (!oldWingId.isEmpty() && newWingId != null && !oldWingId.equals(newWingId)) {	// weapon changed
+			} else if (!oldWingId.isEmpty() && newWingId != null && !oldWingId.equals(newWingId)) {	// wing changed
 				this.wings.set(bayNumber, newWingId);
 				lyr_eventDispatcher.onWingEvent(onWingAssigned, this.variant, newWingId, bayNumber);
 				lyr_eventDispatcher.onWingEvent(onWingRelieved, this.variant, oldWingId, bayNumber);
