@@ -18,11 +18,13 @@ import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_internals.id.stats;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
+import experimentalHullModifications.misc.ehm_tooltip.regexText;
 import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.listeners.events.weaponEvents;
 import lyravega.misc._lyr_upgradeEffect;
 import lyravega.misc.lyr_upgradeVault;
 import lyravega.utilities.lyr_miscUtilities;
+import lyravega.utilities.lyr_tooltipUtilities;
 
 /**
  * Serves as a requirement for all experimental hull modifications, and enables tracking
@@ -89,12 +91,12 @@ public final class ehm_base extends _ehm_base implements weaponEvents {
 		ShipHullSpecAPI hullSpec = variant.getHullSpec();
 
 		if (!variant.hasHullMod(this.hullModSpecId)) {
-			tooltip.addSectionHeading(header.severeWarning, header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
-			tooltip.addPara(text.baseRetrofitWarning[0], text.padding).setHighlight(text.baseRetrofitWarning[1]);
+			tooltip.addSectionHeading(header.severeWarning, header.severeWarning_textColour, header.invisible_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
+			lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.baseRetrofitWarning, text.padding);
 
 			if (hullSpec.isRestoreToBase()) {
-				tooltip.addSectionHeading(header.restoreWarning, header.warning_textColour, header.warning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
-				tooltip.addPara(text.restoreWarning[0], text.padding).setHighlight(text.restoreWarning[1]);
+				tooltip.addSectionHeading(header.restoreWarning, header.warning_textColour, header.invisible_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
+				lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.restoreWarning, text.padding);
 			}
 
 			super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
@@ -103,7 +105,7 @@ public final class ehm_base extends _ehm_base implements weaponEvents {
 				// tooltip.addSectionHeading("DEBUG INFO: GENERAL", header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 				// tooltip.addPara("Mods: "+Global.getSettings().getModManager().getEnabledModsCopy().toString(), 5f).setHighlight("Mods: ");
 
-				tooltip.addSectionHeading("DEBUG INFO: HULL MODIFICATIONS", header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
+				tooltip.addSectionHeading("DEBUG INFO: HULL MODIFICATIONS", header.severeWarning_textColour, header.invisible_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 				tooltip.addPara("All: "+variant.getHullMods().toString(), 5f).setHighlight("All:");
 				tooltip.addPara("Modular: "+variant.getNonBuiltInHullmods().toString(), 5f).setHighlight("Modular:");
 				tooltip.addPara("Modular (Enhanced): "+variant.getSMods().toString(), 5f).setHighlight("Modular (Enhanced):");
@@ -112,7 +114,7 @@ public final class ehm_base extends _ehm_base implements weaponEvents {
 				tooltip.addPara("Built-in (Enhanced): "+variant.getSModdedBuiltIns().toString(), 5f).setHighlight("Built-in (Enhanced):");
 				tooltip.addPara("Suppressed: "+variant.getSuppressedMods().toString(), 5f).setHighlight("Suppressed:");
 
-				tooltip.addSectionHeading("DEBUG INFO: SHIP DETAILS", header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
+				tooltip.addSectionHeading("DEBUG INFO: SHIP DETAILS", header.severeWarning_textColour, header.invisible_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 				tooltip.addPara("Hull ID: "+hullSpec.getHullId(), 5f).setHighlight("Hull ID:");
 				tooltip.addPara("Variant ID: "+variant.getHullVariantId(), 5f).setHighlight("Variant ID:");
 				tooltip.addPara("Member ID: "+ship.getFleetMemberId(), 5f).setHighlight("Member ID:");
@@ -123,7 +125,7 @@ public final class ehm_base extends _ehm_base implements weaponEvents {
 				tooltip.addPara("VariantTags: "+variant.getTags().toString(), 5f).setHighlight("VariantTags:");
 
 				DynamicStatsAPI dynamicStats = ship.getMutableStats().getDynamic();
-				tooltip.addSectionHeading("DEBUG INFO: DYNAMIC STATS", header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
+				tooltip.addSectionHeading("DEBUG INFO: DYNAMIC STATS", header.severeWarning_textColour, header.invisible_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 				tooltip.addPara("'"+stats.launchTubes+"': "+(dynamicStats.getMod(stats.launchTubes).computeEffective(0f)), 5f).setHighlight("'"+stats.launchTubes+"':");
 				tooltip.addPara("'"+stats.slotPointsFromMods+"': "+(dynamicStats.getMod(stats.slotPointsFromMods).computeEffective(0f)), 5f).setHighlight("'"+stats.slotPointsFromMods+"':");
 				tooltip.addPara("'"+stats.slotPointsFromDiverters+"': "+(dynamicStats.getMod(stats.slotPointsFromDiverters).computeEffective(0f)), 5f).setHighlight("'"+stats.slotPointsFromDiverters+"':");
@@ -132,7 +134,7 @@ public final class ehm_base extends _ehm_base implements weaponEvents {
 				tooltip.addPara("'"+stats.dissipators+"': "+(dynamicStats.getMod(stats.dissipators).computeEffective(0f)), 5f).setHighlight("'"+stats.dissipators+"':");
 				tooltip.addPara("'"+stats.overdrive+"': "+(dynamicStats.getMod(stats.overdrive).computeEffective(0f)), 5f).setHighlight("'"+stats.overdrive+"':");
 
-				tooltip.addSectionHeading("DEBUG INFO: SCRIPTS", header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
+				tooltip.addSectionHeading("DEBUG INFO: SCRIPTS", header.severeWarning_textColour, header.invisible_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 				for (EveryFrameScript script : Global.getSector().getScripts()) {
 					String scriptSimpleName = script.getClass().getSimpleName();
 
@@ -143,7 +145,7 @@ public final class ehm_base extends _ehm_base implements weaponEvents {
 			} else if (ehm_settings.getShowFluff()) {
 				String playerSalutation = Global.getSector().getPlayerPerson().getGender() == Gender.MALE ? Misc.SIR : Misc.MAAM;
 
-				tooltip.addSectionHeading("FLUFF", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
+				tooltip.addSectionHeading("FLUFF", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 				switch ((int) Math.round(Math.random() * 10)) {
 					case 0:
 						tooltip.addPara("For slot shunts, we may need to dock in a colony or a spaceport " + playerSalutation, text.padding);

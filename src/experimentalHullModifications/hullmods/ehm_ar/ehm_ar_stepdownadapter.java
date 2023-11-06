@@ -23,9 +23,11 @@ import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_internals.id.shunts.adapters;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
+import experimentalHullModifications.misc.ehm_tooltip.regexText;
 import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.utilities.lyr_miscUtilities;
+import lyravega.utilities.lyr_tooltipUtilities;
 
 /**@category Adapter Retrofit
  * @author lyravega
@@ -165,12 +167,12 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 				Map<String, Integer> adapters = ehm_shuntCount(ship, ehm_internals.tag.adapterShunt);
 
 				if (!adapters.isEmpty()) {
-					tooltip.addSectionHeading("ACTIVE ADAPTERS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
+					tooltip.addSectionHeading("ACTIVE ADAPTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					for (String shuntId: adapters.keySet()) {
 						tooltip.addPara(adapters.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
 				} else if (ehm_settings.getShowFullInfoForActivators()) {
-					tooltip.addSectionHeading("NO ADAPTERS", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
+					tooltip.addSectionHeading("NO ADAPTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No adapters are installed. Adapters turn bigger slots into smaller ones.", 2f);
 				}
 			}
@@ -181,9 +183,9 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 		if (!this.canBeAddedOrRemovedNow(ship, null, null)) {
 			String inOrOut = variant.hasHullMod(this.hullModSpecId) ? header.lockedIn : header.lockedOut;
 
-			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.locked_bgColour, Alignment.MID, header.padding);
+			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 
-			if (lyr_miscUtilities.hasWeapons(ship, ehm_internals.affix.adaptedSlot)) tooltip.addPara(text.hasWeaponsOnAdaptedSlots[0], text.padding).setHighlight(text.hasWeaponsOnAdaptedSlots[1]);
+			if (lyr_miscUtilities.hasWeapons(ship, ehm_internals.affix.adaptedSlot)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.hasWeaponsOnAdaptedSlots, text.padding);
 		}
 	}
 

@@ -14,8 +14,10 @@ import com.fs.starfarer.api.util.Misc;
 
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_tooltip.header;
+import experimentalHullModifications.misc.ehm_tooltip.regexText;
 import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.utilities.lyr_miscUtilities;
+import lyravega.utilities.lyr_tooltipUtilities;
 
 /**
  * Removes the base hull modification that all other experimental ones require
@@ -39,13 +41,13 @@ public final class ehm_undo extends _ehm_base {
 		if (ship == null) return;
 
 		if (!this.isApplicableToShip(ship)) {
-			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
+			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 
-			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
-			if (lyr_miscUtilities.hasHullModWithTag(ship, ehm_internals.tag.experimental, null, false)) tooltip.addPara(text.hasAnyExperimentalEnhanced[0], text.padding).setHighlight(text.hasAnyExperimentalEnhanced[1]);
+			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.lacksBase, text.padding);
+			if (lyr_miscUtilities.hasHullModWithTag(ship, ehm_internals.tag.experimental, null, false)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.hasAnyExperimentalEnhanced, text.padding);
 			else {
-				if (lyr_miscUtilities.hasHullModWithTag(ship, ehm_internals.tag.experimental, ehm_internals.id.hullmods.base, true)) tooltip.addPara(text.hasAnyExperimental[0], text.padding).setHighlight(text.hasAnyExperimental[1]);
-				if (lyr_miscUtilities.hasWeapons(ship)) tooltip.addPara(text.hasWeapons[0], text.padding).setHighlight(text.hasWeapons[1]);
+				if (lyr_miscUtilities.hasHullModWithTag(ship, ehm_internals.tag.experimental, ehm_internals.id.hullmods.base, true)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.hasAnyExperimental, text.padding);
+				if (lyr_miscUtilities.hasWeapons(ship)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.hasWeapons, text.padding);
 			}
 		}
 

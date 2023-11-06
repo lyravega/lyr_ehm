@@ -16,11 +16,13 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_tooltip.header;
+import experimentalHullModifications.misc.ehm_tooltip.regexText;
 import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.listeners.events.normalEvents;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.proxies.lyr_shieldSpec;
 import lyravega.utilities.lyr_miscUtilities;
+import lyravega.utilities.lyr_tooltipUtilities;
 
 /**
  * This class is used by shield cosmetic hullmods. The changes are
@@ -86,17 +88,17 @@ public abstract class _ehm_sc_base extends _ehm_base implements normalEvents {
 		if (ship == null) return;
 
 		if (this.hullModSpec.hasTag(ehm_internals.tag.customizable)) {
-			tooltip.addSectionHeading(header.customizable, header.customizable_textColour, header.customizable_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
-			tooltip.addPara(text.customizable[0], text.padding).setHighlight(text.customizable[1]);
+			tooltip.addSectionHeading(header.customizable, header.customizable_textColour, header.invisible_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
+			lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.customizable, text.padding);
 		}
 
 		if (!this.isApplicableToShip(ship)) {
-			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
+			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 
-			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
-			// if (_ehm_helpers.ehm_hasHullModWithTag(ship, lyr_internals.tag.shieldCosmetic, id)) tooltip.addPara(text.hasShieldCosmetic[0], text.padding).setHighlight(text.hasShieldCosmetic[1]);
+			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.lacksBase, text.padding);
+			// if (_ehm_helpers.ehm_hasHullModWithTag(ship, lyr_internals.tag.shieldCosmetic, id)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.hasShieldCosmetic, text.padding);
 
-			if (ship.getShield() == null) tooltip.addPara(text.noShields[0], text.padding).setHighlight(text.noShields[1]);
+			if (ship.getShield() == null) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.noShields, text.padding);
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);

@@ -4,8 +4,10 @@ import static com.fs.starfarer.api.impl.hullmods.Automated.MAX_CR_PENALTY;
 import static com.fs.starfarer.api.impl.hullmods.Automated.isAutomatedNoPenalty;
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
+import static lyravega.utilities.lyr_tooltipUtilities.regexColour.highlightPattern;
+import static lyravega.utilities.lyr_tooltipUtilities.regexColour.negativePattern;
+import static lyravega.utilities.lyr_tooltipUtilities.regexColour.positivePattern;
 
-import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,9 +29,11 @@ import com.fs.starfarer.api.util.Misc;
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_tooltip.header;
+import experimentalHullModifications.misc.ehm_tooltip.regexText;
 import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.listeners.events.normalEvents;
 import lyravega.utilities.lyr_miscUtilities;
+import lyravega.utilities.lyr_tooltipUtilities;
 
 /**
  * Turns normal ships into automated, and automated ones into normal ones.
@@ -114,8 +118,6 @@ public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 		}
 	}
 
-	private static final Color[] highlightArray = new Color[]{Misc.getHighlightColor(), Misc.getNegativeHighlightColor()};
-
 	@Override
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (ship == null) return;
@@ -128,47 +130,47 @@ public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 			float dp = ship.getFleetMember().getUnmodifiedDeploymentPointsCost();
 			int minCrew = (int) dp*crewMultipliers.get(hullSize)[0], maxCrew = (int) dp*crewMultipliers.get(hullSize)[1];
 
-			tooltip.addSectionHeading("SUPPRESSION MODE", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
+			tooltip.addSectionHeading("SUPPRESSION MODE", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 
-			tooltip.addPara("- Crew minimum & maximum: "+minCrew+" & "+maxCrew, 5).setHighlight(minCrew+" & "+maxCrew);
-			tooltip.addPara("- A Captain may be assigned", 1).setHighlight("Captain");
-			tooltip.addPara("- Not subjected to automated ship penalty", 1);
-			tooltip.addPara("- May house any type of wings", 1);
-			tooltip.addPara("- Deployment point cost increased by 25%", 1).setHighlight("25%");
-			if (noAutomatedShipsSkill) tooltip.addPara("- Automated Ships skill not detected!", 1, highlightArray, "Automated Ships", "not detected");
+			lyr_tooltipUtilities.addColorizedPara(tooltip, "- Crew minimum & maximum: "+highlightPattern+minCrew+") & "+highlightPattern+maxCrew+")",  5);
+			lyr_tooltipUtilities.addColorizedPara(tooltip, "- A "+highlightPattern+"Captain) may be assigned",  1);
+			lyr_tooltipUtilities.addColorizedPara(tooltip, "- Subjected to "+positivePattern+"no automated ship penalty)",  1);
+			lyr_tooltipUtilities.addColorizedPara(tooltip, "- May house any type of wings",  1);
+			lyr_tooltipUtilities.addColorizedPara(tooltip, "- Deployment point cost "+negativePattern+"increased by 25%)",  1);
+			if (noAutomatedShipsSkill) lyr_tooltipUtilities.addColorizedPara(tooltip, "- "+highlightPattern+"Automated Ships) skill "+negativePattern+"not detected)", 1);
 		} else {
-			tooltip.addSectionHeading("AUTOMATION MODE", header.info_textColour, header.info_bgColour, Alignment.MID, header.padding);
+			tooltip.addSectionHeading("AUTOMATION MODE", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 
-			tooltip.addPara("- No crew", 5);
-			tooltip.addPara("- An AI Core may be installed", 1).setHighlight("AI Core");
-			tooltip.addPara("- Subjected to automated ship penalty", 1);
-			tooltip.addPara("- May only house automated wings", 1);
-			tooltip.addPara("- Deployment point cost decreased by 10%", 1).setHighlight("10%");
-			if (noAutomatedShipsSkill) tooltip.addPara("- Automated Ships skill not detected!", 1, highlightArray, "Automated Ships", "not detected");
+			lyr_tooltipUtilities.addColorizedPara(tooltip, "- No crew",  5);
+			lyr_tooltipUtilities.addColorizedPara(tooltip, "- An "+highlightPattern+"AI Core) may be installed",  1);
+			lyr_tooltipUtilities.addColorizedPara(tooltip, "- Subjected to "+negativePattern+"automated ship penalty)",  1);
+			lyr_tooltipUtilities.addColorizedPara(tooltip, "- May only house automated wings",  1);
+			lyr_tooltipUtilities.addColorizedPara(tooltip, "- Deployment point cost "+positivePattern+"decreased by 10%)",  1);
+			if (noAutomatedShipsSkill) lyr_tooltipUtilities.addColorizedPara(tooltip, "- "+highlightPattern+"Automated Ships) skill "+negativePattern+"not detected)", 1);
 		}
 
 		if (!this.isApplicableToShip(ship)) {
-			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.notApplicable_bgColour, Alignment.MID, header.padding);
+			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 
-			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) tooltip.addPara(text.lacksBase[0], text.padding).setHighlight(text.lacksBase[1]);
+			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.lacksBase, text.padding);
 			if (!variant.hasHullMod(this.hullModSpecId)) {
-				if (Misc.isUnremovable(captain)) tooltip.addPara(text.integratedAICore[0], text.padding).setHighlight(text.integratedAICore[1]);
-				if (noAutomatedShipsSkill) tooltip.addPara(text.noAutomatedShipsSkill[0], text.padding).setHighlight(text.noAutomatedShipsSkill[1]);
+				if (Misc.isUnremovable(captain)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.integratedAICore, text.padding);
+				if (noAutomatedShipsSkill) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.noAutomatedShipsSkill, text.padding);
 			}
 		} else if (!this.canBeAddedOrRemovedNow(ship, null, null)) {
 			if (variant.hasHullMod(this.hullModSpecId)) {
-				tooltip.addSectionHeading(header.lockedIn, header.locked_textColour, header.locked_bgColour, Alignment.MID, header.padding);
+				tooltip.addSectionHeading(header.lockedIn, header.locked_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 
-				if (captain.isAICore()) tooltip.addPara(text.hasAICore[0], text.padding).setHighlight(text.hasAICore[1]);
-				else if (!captain.isDefault()) tooltip.addPara(text.hasCaptain[0], text.padding).setHighlight(text.hasCaptain[1]);
+				if (captain.isAICore()) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.hasAICore, text.padding);
+				else if (!captain.isDefault()) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.hasCaptain, text.padding);
 			} else {
-				tooltip.addSectionHeading(header.lockedOut, header.locked_textColour, header.locked_bgColour, Alignment.MID, header.padding);
+				tooltip.addSectionHeading(header.lockedOut, header.locked_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 
-				if (captain.isAICore()) tooltip.addPara(text.hasAICore[0], text.padding).setHighlight(text.hasAICore[1]);
-				else if (!captain.isDefault()) tooltip.addPara(text.hasCaptain[0], text.padding).setHighlight(text.hasCaptain[1]);
+				if (captain.isAICore()) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.hasAICore, text.padding);
+				else if (!captain.isDefault()) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.hasCaptain, text.padding);
 			}
 
-			if (!variant.getNonBuiltInWings().isEmpty()) tooltip.addPara(text.hasWings[0], text.padding).setHighlight(text.hasWings[1]);
+			if (!variant.getNonBuiltInWings().isEmpty()) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.hasWings, text.padding);
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);

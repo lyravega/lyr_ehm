@@ -17,8 +17,10 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
+import experimentalHullModifications.misc.ehm_tooltip.regexText;
 import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.proxies.lyr_hullSpec;
+import lyravega.utilities.lyr_tooltipUtilities;
 
 /**
  * This is the master base class for all experimental hullmods. Stores the most
@@ -93,8 +95,8 @@ public abstract class _ehm_base implements HullModEffect {
 		if (ship.getVariant().getSMods().contains(this.hullModSpecId)) return;
 
 		if (this.isApplicableToShip(ship) && this.canBeAddedOrRemovedNow(ship, null, null)) {
-			tooltip.addSectionHeading(header.warning, header.warning_textColour, header.warning_bgColour, Alignment.MID, header.padding);
-			tooltip.addPara(text.warning[0], text.padding).setHighlight(text.warning[1]);
+			tooltip.addSectionHeading(header.warning, header.warning_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
+			lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.warning, text.padding);
 		}
 	}
 

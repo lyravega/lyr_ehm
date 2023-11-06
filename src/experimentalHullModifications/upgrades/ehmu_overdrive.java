@@ -12,6 +12,7 @@ import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.input.InputEventAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.api.util.Misc;
 
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_tooltip.header;
@@ -143,9 +144,9 @@ public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffec
 		}
 
 		if (this.upgrade.canUpgradeTier(variant)) {
-			tooltip.addSectionHeading("UPGRADE REQUIREMENTS", Color.YELLOW, header.invisible_bgColour, Alignment.MID, 5f).flash(1f, 1f);
+			tooltip.addSectionHeading("UPGRADE REQUIREMENTS", Misc.getHighlightColor(), header.invisible_bgColour, Alignment.MID, 5f).flash(1f, 1f);
 		} else {
-			tooltip.addSectionHeading("UPGRADE REQUIREMENTS UNMET", Color.RED, header.invisible_bgColour, Alignment.MID, 5f).flash(1f, 1f);
+			tooltip.addSectionHeading("UPGRADE REQUIREMENTS UNMET", Misc.getNegativeHighlightColor(), header.invisible_bgColour, Alignment.MID, 5f).flash(1f, 1f);
 		}
 
 		for (lyr_upgradeLayer upgradeLayer : this.upgrade.getUpgradeLayers(variant.getHullSize())) {
@@ -155,8 +156,8 @@ public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffec
 		}
 
 		if (this.upgrade.canUpgradeTier(variant)) {
-			tooltip.addPara("Any special item requirements will not be consumed, while the rest will be", 5f);
-			tooltip.addSectionHeading("HOLD SHIFT & CLICK TO UPGRADE", Color.GREEN, header.invisible_bgColour, Alignment.MID, 5f).flash(1f, 1f);
+			tooltip.addSectionHeading("HOLD SHIFT & CLICK TO UPGRADE", Misc.getPositiveHighlightColor(), header.invisible_bgColour, Alignment.MID, 2f).flash(1f, 1f);
+			tooltip.addPara("Any special item requirements will not be consumed, while the rest will be", 2f);
 		}
 	}
 }
