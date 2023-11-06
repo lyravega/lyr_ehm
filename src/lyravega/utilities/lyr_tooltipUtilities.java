@@ -41,7 +41,7 @@ public class lyr_tooltipUtilities {
 	 * highlight string array from a raw string input, and adds it to the passed tooltip as
 	 * a para. Aims to streamline tooltip detailing process by feeding a single-liner to a
 	 * method rather than having to individually adjust bits and pieces.
-	 * <p> The used regex is {@code \((........)\|(.+?)\)} stored in {@link lyr_miscUtilities#pattern}. The
+	 * <p> The used regex is {@code \((........)\|(.+?)\)} stored in {@link #pattern}. The
 	 * whole match will be replaced with {@code %s}. The first match will be decoded using
 	 * {@link Color#decode(String)} that expects a RGB in HEX format like {@code 0xFF0000}
 	 * and added to the colour array. The second match will be added to the string array.
