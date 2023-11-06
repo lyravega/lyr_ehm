@@ -1,8 +1,6 @@
 package experimentalHullModifications.misc;
 
-import static lyravega.utilities.lyr_tooltipUtilities.regexColour.highlightPattern;
-import static lyravega.utilities.lyr_tooltipUtilities.regexColour.negativePattern;
-import static lyravega.utilities.lyr_tooltipUtilities.regexColour.storyPattern;
+import static lyravega.utilities.lyr_tooltipUtilities.regexColour.*;
 
 import java.awt.Color;
 
@@ -45,7 +43,7 @@ public class ehm_tooltip {
 			hasWeapons = negativePattern+"Cannot be installed or removed) as there are "+highlightPattern+"slots) that have "+highlightPattern+"weapons or inert shunts installed) on them",
 			hasWeaponsOnAdaptedSlots = negativePattern+"Cannot be removed) as there are "+highlightPattern+"adapted slots) that have "+highlightPattern+"weapons or shunts installed) on them",
 			hasWeaponsOnConvertedSlots = negativePattern+"Cannot be removed) as there are "+highlightPattern+"converted slots) that have "+highlightPattern+"weapons or shunts installed) on them",
-			customizable = "This hull modification "+storyPattern+"can be customized) through LunaLib's settings menu. Press "+highlightPattern+"F2) in the campaign screen to open the settings menu and adjust them",
+			customizable = "This hull modification "+positivePattern+"can be customized) through LunaLib's settings menu. Press "+highlightPattern+"F2) in the campaign screen to open the settings menu and adjust them",
 			// customizableEngine = {"Campaign contrails require an update to be displayed properly. Reloading the game will trigger such an update", "require an update"},	// not used, old
 			integratedAICore = negativePattern+"Cannot be installed) as the ship has an integrated "+highlightPattern+"AI Core)",
 			noAutomatedShipsSkill = negativePattern+"Cannot be installed) without the "+highlightPattern+"Automated Ships) skill",
