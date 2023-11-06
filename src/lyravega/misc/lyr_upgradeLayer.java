@@ -25,7 +25,7 @@ public class lyr_upgradeLayer {
 		Set<String> specialRequirements = null;
 
 		if (commodityCostsArray != null) for (Object[] commodityCostArray: commodityCostsArray) {
-			if (commodityCosts == null) commodityCosts = new HashMap<String, Integer>();
+			if (commodityCosts == null) commodityCosts = new LinkedHashMap<String, Integer>();
 
 			commodityCosts.put(String.class.cast(commodityCostArray[0]), Integer.class.cast(commodityCostArray[1]));
 		}
@@ -66,12 +66,13 @@ public class lyr_upgradeLayer {
 		if (this.specialRequirements != null && !this.specialRequirements.isEmpty()) {
 			Set<String> specials = new HashSet<String>();
 
-			for (Iterator<CargoStackAPI> iterator = playerCargo.getStacksCopy().iterator(); iterator.hasNext(); ) {
-				CargoStackAPI stack = iterator.next();
+			for (CargoStackAPI stack : playerCargo.getStacksCopy()) {
+				if (stack.getType() != CargoItemType.SPECIAL) continue;
 
-				if (stack.getType() != CargoItemType.SPECIAL) { iterator.remove(); continue; }
-
-				specials.add(stack.getSpecialDataIfSpecial().getId());
+				switch (stack.getSpecialDataIfSpecial().getId()) {
+					case "pristine_nanoforge": specials.add("corrupted_nanoforge");
+					default: specials.add(stack.getSpecialDataIfSpecial().getId()); break;
+				}
 			}
 
 			for (String specialId : this.specialRequirements) {
@@ -143,7 +144,7 @@ public class lyr_upgradeLayer {
 					+this.commodityCosts.get(commodityCostId)+" "
 					+Global.getSettings().getCommoditySpec(commodityCostId).getName()+")";
 
-				if (iterator.hasNext()) format = format+", ";
+				if (iterator.hasNext()) format = format+",";
 			}
 		}
 
@@ -152,12 +153,13 @@ public class lyr_upgradeLayer {
 
 			Set<String> specials = new HashSet<String>();
 
-			for (Iterator<CargoStackAPI> iterator = playerCargo.getStacksCopy().iterator(); iterator.hasNext(); ) {
-				CargoStackAPI stack = iterator.next();
+			for (CargoStackAPI stack : playerCargo.getStacksCopy()) {
+				if (stack.getType() != CargoItemType.SPECIAL) continue;
 
-				if (stack.getType() != CargoItemType.SPECIAL) { iterator.remove(); continue; }
-
-				specials.add(stack.getSpecialDataIfSpecial().getId());
+				switch (stack.getSpecialDataIfSpecial().getId()) {
+					case "pristine_nanoforge": specials.add("corrupted_nanoforge");
+					default: specials.add(stack.getSpecialDataIfSpecial().getId()); break;
+				}
 			}
 
 			for (Iterator<String> iterator = this.specialRequirements.iterator(); iterator.hasNext(); ) {

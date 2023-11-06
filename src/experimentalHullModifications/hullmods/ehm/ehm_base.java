@@ -20,6 +20,8 @@ import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.listeners.events.weaponEvents;
+import lyravega.misc._lyr_upgradeEffect;
+import lyravega.misc.lyr_upgradeVault;
 import lyravega.utilities.lyr_miscUtilities;
 
 /**
@@ -64,7 +66,13 @@ public final class ehm_base extends _ehm_base implements weaponEvents {
 			}
 		}
 
-		// stats.getDynamic().getMod(Stats.MAX_PERMANENT_HULLMODS_MOD).modifyFlat(this.hullModSpecId, test.getOverdriveLevel(variant));
+		for (String tag : stats.getVariant().getTags()) {
+			if (!tag.startsWith(ehm_internals.id.upgrades.prefix)) continue;
+
+			_lyr_upgradeEffect upgrade = lyr_upgradeVault.getUpgrade(tag.replaceFirst(":.+?", ""));
+
+			if (upgrade != null) upgrade.applyUpgradeEffect(stats, tag);
+		}
 
 		_ehm_ar_base.ehm_preProcessShunts(stats);	// at this point, the hull spec should be cloned so proceed and pre-process the shunts
 		// lyr_miscUtilities.cleanWeaponGroupsUp(variant);	// when an activator activates shunts on install, so moved this to their 'onInstalled()' method
@@ -122,6 +130,7 @@ public final class ehm_base extends _ehm_base implements weaponEvents {
 				tooltip.addPara("'"+stats.slotPointsToConverters+"': "+(dynamicStats.getMod(stats.slotPointsToConverters).computeEffective(0f)), 5f).setHighlight("'"+stats.slotPointsToConverters+"':");
 				tooltip.addPara("'"+stats.capacitors+"': "+(dynamicStats.getMod(stats.capacitors).computeEffective(0f)), 5f).setHighlight("'"+stats.capacitors+"':");
 				tooltip.addPara("'"+stats.dissipators+"': "+(dynamicStats.getMod(stats.dissipators).computeEffective(0f)), 5f).setHighlight("'"+stats.dissipators+"':");
+				tooltip.addPara("'"+stats.overdrive+"': "+(dynamicStats.getMod(stats.overdrive).computeEffective(0f)), 5f).setHighlight("'"+stats.overdrive+"':");
 
 				tooltip.addSectionHeading("DEBUG INFO: SCRIPTS", header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 				for (EveryFrameScript script : Global.getSector().getScripts()) {

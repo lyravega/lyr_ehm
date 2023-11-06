@@ -52,13 +52,13 @@ public class lyr_upgrade {
 	}
 
 	public boolean canUpgradeTier(ShipVariantAPI variant) {
-		int currentLevel = this.getCurrentTier(variant)-1;
+		int currentLevel = this.getCurrentTier(variant);
 		HullSize hullSize = variant.getHullSize();
 
-		return currentLevel < this.getMaxTier(hullSize) && this.getUpgradeLayer(hullSize, currentLevel+1).canAfford();
+		return currentLevel < this.getMaxTier(hullSize) && this.getUpgradeLayer(hullSize, currentLevel).canAfford();
 	}
 
-	public void upgradeTier(ShipVariantAPI variant, boolean upgrade) {
+	public void upgradeTier(ShipVariantAPI variant) {
 		int level = 0;	// first layer is 0 due to array, no tier is -1 because of that
 
 		for (Iterator<String> iterator = variant.getTags().iterator(); iterator.hasNext(); ) {
@@ -67,9 +67,9 @@ public class lyr_upgrade {
 
 			level = Integer.valueOf(tag.replace(this.id+":", ""));
 			iterator.remove(); break;
-		};	level += 1;	// set to next level here
+		}
 
-		variant.addTag(this.id+":"+(level));
+		variant.addTag(this.id+":"+(level+1));
 		this.getUpgradeLayer(variant.getHullSize(), level).deductCosts();
 	}
 }

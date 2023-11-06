@@ -186,12 +186,19 @@ public final class ehm_internals {
 
 		public static final class stats {
 			public static final String
+				overdrive = upgrades.overdrive,
 				launchTubes = "ehm_launchTubes",
 				capacitors = "ehm_capacitors",
 				dissipators = "ehm_dissipators",
 				slotPointsFromMods = "ehm_slotPointsFromMods",
 				slotPointsFromDiverters = "ehm_slotPointsFromDiverters",
 				slotPointsToConverters = "ehm_slotPointsToConverters";
+		}
+
+		public static final class upgrades {
+			public static final String
+				prefix = "ehmu",
+				overdrive = prefix+"_overdrive";
 		}
 	}
 
