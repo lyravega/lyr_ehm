@@ -106,8 +106,8 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
-		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec());
-		List<WeaponSlotAPI> shunts = hullSpec.getAllWeaponSlotsCopy();
+		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(true, variant.getHullSpec());
+		List<WeaponSlotAPI> shunts = lyr_hullSpec.getAllWeaponSlotsCopy();
 
 		for (Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
 			WeaponSlotAPI slot = iterator.next();
@@ -137,13 +137,13 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 
 			switch (shuntId) {
 				case adapters.largeDual: case adapters.largeQuad: case adapters.largeTriple: case adapters.mediumDual: {
-					ehm_adaptSlot(hullSpec, shuntId, slotId);
+					ehm_adaptSlot(lyr_hullSpec, shuntId, slotId);
 					break;
 				} default: break;
 			}
 		}
 
-		variant.setHullSpecAPI(hullSpec.retrieve());
+		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION

@@ -104,12 +104,12 @@ public final class lyr_shieldSpec {
 
 	/**
 	 * A cheap clone that creates and returns a new instance of this
-	 * object with a duplicate of its stored object.
+	 * proxy with a duplicate of its stored object.
 	 * @return a cloned {@link lyr_shieldSpec}
 	 */
 	@Override
 	public lyr_shieldSpec clone() {
-		return new lyr_shieldSpec(this.duplicate(this.shieldSpec));
+		return new lyr_shieldSpec(this.shieldSpec, true);
 	}
 
 	//#region PROXY METHODS

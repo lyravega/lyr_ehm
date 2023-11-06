@@ -122,7 +122,7 @@ public final class lyr_engineBuilder {
 
 	/**
 	 * A cheap clone that creates and returns a new instance of this
-	 * object with a duplicate of its stored object.
+	 * proxy with a duplicate of its stored object.
 	 * @return a cloned {@link lyr_engineBuilder}
 	 */
 	@Override

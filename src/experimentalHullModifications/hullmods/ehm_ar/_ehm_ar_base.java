@@ -80,7 +80,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 
 	public static final void ehm_preProcessShunts(MutableShipStatsAPI stats) {
 		ShipVariantAPI variant = stats.getVariant();
-		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec());
+		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(true, variant.getHullSpec());
 
 		// primarily to deal with stuff on load
 		for (String slotId : variant.getFittedWeaponSlots()) {
@@ -94,16 +94,16 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 			if (shuntSpec.getSize() != variant.getSlot(slotId).getSlotSize()) continue;
 
 			String shuntId = shuntSpec.getWeaponId();
-			if (adapterMap.containsKey(shuntId)) ehm_adaptSlot(hullSpec, shuntId, slotId);
-			else if (converterMap.containsKey(shuntId)) ehm_convertSlot(hullSpec, shuntId, slotId);
+			if (adapterMap.containsKey(shuntId)) ehm_adaptSlot(lyr_hullSpec, shuntId, slotId);
+			else if (converterMap.containsKey(shuntId)) ehm_convertSlot(lyr_hullSpec, shuntId, slotId);
 		}
 
-		variant.setHullSpecAPI(hullSpec.retrieve());
+		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
 	}
 
-	protected static final void ehm_adaptSlot(lyr_hullSpec hullSpec, String shuntId, String slotId) {
+	protected static final void ehm_adaptSlot(lyr_hullSpec lyr_hullSpec, String shuntId, String slotId) {
 		childrenParameters childrenParameters = adapterMap.get(shuntId);
-		lyr_weaponSlot parentSlot = hullSpec.getWeaponSlot(slotId);
+		lyr_weaponSlot parentSlot = lyr_hullSpec.getWeaponSlot(slotId);
 
 		for (String childId: childrenParameters.getChildren()) { // childId and childSlotId are not the same, be aware
 			lyr_weaponSlot childSlot = parentSlot.clone();
@@ -115,21 +115,21 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 			childSlot.setNode(childSlotId, childSlotLocation);
 			childSlot.setSlotSize(childSlotSize);
 
-		 	hullSpec.addWeaponSlot(childSlot);
+		 	lyr_hullSpec.addWeaponSlot(childSlot);
 		}
 
-		hullSpec.addBuiltInWeapon(slotId, shuntId);
+		lyr_hullSpec.addBuiltInWeapon(slotId, shuntId);
 		parentSlot.setWeaponType(WeaponType.DECORATIVE);
 		if (ehm_settings.getHideAdapters()) parentSlot.setSlotType(slotTypeConstants.hidden);
 	}
 
-	protected static final void ehm_convertSlot(lyr_hullSpec hullSpec, String shuntId, String slotId) {
+	protected static final void ehm_convertSlot(lyr_hullSpec lyr_hullSpec, String shuntId, String slotId) {
 		// childParameters childParameters = converters.get(shuntId);
 		// int childCost = childParameters.getChildCost();
 		// if (slotPoints != null && slotPoints - childCost < 0) return slotPoints - childCost;
 
 		childParameters childParameters = converterMap.get(shuntId);
-		lyr_weaponSlot parentSlot = hullSpec.getWeaponSlot(slotId);
+		lyr_weaponSlot parentSlot = lyr_hullSpec.getWeaponSlot(slotId);
 
 		lyr_weaponSlot childSlot = parentSlot.clone();
 		String childSlotId = ehm_internals.affix.convertedSlot + slotId + childParameters.getChildSuffix(); // also used as nodeId because nodeId isn't visible
@@ -138,17 +138,17 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 		childSlot.setNode(childSlotId, parentSlot.getLocation());
 		childSlot.setSlotSize(childParameters.getChildSize());
 
-		hullSpec.addWeaponSlot(childSlot);
+		lyr_hullSpec.addWeaponSlot(childSlot);
 
 		// if (slotPoints != null) slotPoints -= converters.get(shuntId).getChildCost();	// needs to be subtracted from here on initial install to avoid infinite installs
-		hullSpec.addBuiltInWeapon(slotId, shuntId);
+		lyr_hullSpec.addBuiltInWeapon(slotId, shuntId);
 		parentSlot.setWeaponType(WeaponType.DECORATIVE);
 		if (ehm_settings.getHideConverters()) parentSlot.setSlotType(slotTypeConstants.hidden);
 	}
 
-	protected static final void ehm_deactivateSlot(lyr_hullSpec hullSpec, String shuntId, String slotId) {
-		if (shuntId != null) hullSpec.addBuiltInWeapon(slotId, shuntId);
-		hullSpec.getWeaponSlot(slotId).setWeaponType(WeaponType.DECORATIVE);
+	protected static final void ehm_deactivateSlot(lyr_hullSpec lyr_hullSpec, String shuntId, String slotId) {
+		if (shuntId != null) lyr_hullSpec.addBuiltInWeapon(slotId, shuntId);
+		lyr_hullSpec.getWeaponSlot(slotId).setWeaponType(WeaponType.DECORATIVE);
 	}
 
 	protected static final int ehm_slotPointsFromHullMods(ShipVariantAPI variant) {

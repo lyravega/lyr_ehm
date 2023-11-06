@@ -86,8 +86,8 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 		if (!stats.getVariant().getHullSpec().isBuiltInMod(ehm_internals.id.hullmods.base)) return;
 
 		ShipVariantAPI variant = stats.getVariant();
-		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(variant.getHullSpec());
-		ShipHullSpecAPI originalHullSpec = ehm_hullSpecReference(variant);
+		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(true, variant.getHullSpec());
+		ShipHullSpecAPI originalHullSpec = lyr_hullSpec.referenceNonDamaged();
 
 		float logisticsBonus = 0;
 
@@ -125,7 +125,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 			variant.setHullSpecAPI(lyr_hullSpec.retrieve()); return;	// cut-off point for non s-mod effects
 		}
 
-		if (!lyr_miscUtilities.hasCivilianHintsOrMod(originalHullSpec)) {
+		if (!lyr_miscUtilities.hasCivilianHintsOrMod(originalHullSpec, true)) {
 			lyr_hullSpec.setOrdnancePoints((int) Math.round(originalHullSpec.getOrdnancePoints(null)*0.25));
 
 			if (!variant.hasHullMod(HullMods.AUTOMATED)) {
@@ -193,7 +193,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 			tooltip.addPara("+1 Built-in & Logistics modification capacity", text.padding, header.sEffect_textColour, "+1");
 			String logisticsBonus = "+"+(int) ship.getMutableStats().getCargoMod().getFlatBonus(this.hullModSpecId).value;
 			tooltip.addPara(logisticsBonus+" Fuel & Cargo storage", text.padding, header.sEffect_textColour, logisticsBonus);
-			if (!lyr_miscUtilities.hasCivilianHintsOrMod(ehm_hullSpecReference(ship.getVariant()))) tooltip.addPara("x0.25 Skeleton Crew, Maintenance & Ordnance Points", text.padding, header.sEffect_textColour, "x0.25");
+			if (!lyr_miscUtilities.hasCivilianHintsOrMod(ship.getHullSpec(), true)) tooltip.addPara("x0.25 Skeleton Crew, Maintenance & Ordnance Points", text.padding, header.sEffect_textColour, "x0.25");
 		}
 	}
 

@@ -62,9 +62,9 @@ public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 	 * @see {@link #ehm_weaponSlotRestore()} reverses this process one slot at a time
 	 */
 	protected static final ShipHullSpecAPI ehm_weaponSlotRetrofit(ShipVariantAPI variant, Map<WeaponType, WeaponType> conversions, WeaponSize slotSize) {
-		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec());
+		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(true, variant.getHullSpec());
 
-		for (WeaponSlotAPI slot: hullSpec.getAllWeaponSlotsCopy()) {
+		for (WeaponSlotAPI slot: lyr_hullSpec.getAllWeaponSlotsCopy()) {
 			if (slotSize != null && slot.getSlotSize() != slotSize) continue;
 
 			String slotId = slot.getId();
@@ -72,11 +72,11 @@ public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 
 			if (conversions.containsKey(convertFrom)) {
 				WeaponType convertTo = conversions.get(convertFrom);
-				hullSpec.getWeaponSlot(slotId).setWeaponType(convertTo);
+				lyr_hullSpec.getWeaponSlot(slotId).setWeaponType(convertTo);
 			}
 		}
 
-		return hullSpec.retrieve();
+		return lyr_hullSpec.retrieve();
 	}
 
 	/**
@@ -87,31 +87,30 @@ public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 	 */
 	@Deprecated
 	public static final ShipHullSpecAPI ehm_weaponSlotRestore(ShipVariantAPI variant) {
-		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec());
-		ShipHullSpecAPI hullSpecReference = ehm_hullSpecReference(variant);
+		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(true, variant.getHullSpec());
 
-		for (WeaponSlotAPI stockSlot: hullSpecReference.getAllWeaponSlotsCopy()) {
+		for (WeaponSlotAPI stockSlot: lyr_hullSpec.referenceNonDamaged().getAllWeaponSlotsCopy()) {
 			String slotId = stockSlot.getId();
 			String weaponId = variant.getWeaponId(slotId);
-			lyr_weaponSlot slot = hullSpec.getWeaponSlot(slotId);
+			lyr_weaponSlot slot = lyr_hullSpec.getWeaponSlot(slotId);
 			WeaponType stockSlotWeaponType = stockSlot.getWeaponType();
 
 			// doesn't support new additions
 			if (slot.retrieve().isDecorative() && ehm_internals.id.shunts.adapters.set.contains(weaponId)) {
-				hullSpec.getWeaponSlot(ehm_internals.affix.adaptedSlot+slotId+"L").setWeaponType(stockSlotWeaponType);
-				hullSpec.getWeaponSlot(ehm_internals.affix.adaptedSlot+slotId+"R").setWeaponType(stockSlotWeaponType);
+				lyr_hullSpec.getWeaponSlot(ehm_internals.affix.adaptedSlot+slotId+"L").setWeaponType(stockSlotWeaponType);
+				lyr_hullSpec.getWeaponSlot(ehm_internals.affix.adaptedSlot+slotId+"R").setWeaponType(stockSlotWeaponType);
 				if (weaponId.endsWith("Triple"))
-					hullSpec.getWeaponSlot(ehm_internals.affix.adaptedSlot+slotId+"C").setWeaponType(stockSlotWeaponType);
+					lyr_hullSpec.getWeaponSlot(ehm_internals.affix.adaptedSlot+slotId+"C").setWeaponType(stockSlotWeaponType);
 				else if (weaponId.endsWith("Quad")) {
-					hullSpec.getWeaponSlot(ehm_internals.affix.adaptedSlot+slotId+"FL").setWeaponType(stockSlotWeaponType);
-					hullSpec.getWeaponSlot(ehm_internals.affix.adaptedSlot+slotId+"FR").setWeaponType(stockSlotWeaponType);
+					lyr_hullSpec.getWeaponSlot(ehm_internals.affix.adaptedSlot+slotId+"FL").setWeaponType(stockSlotWeaponType);
+					lyr_hullSpec.getWeaponSlot(ehm_internals.affix.adaptedSlot+slotId+"FR").setWeaponType(stockSlotWeaponType);
 				}
 			} else {
 				slot.setWeaponType(stockSlotWeaponType);
 			}
 		}
 
-		return hullSpec.retrieve();
+		return lyr_hullSpec.retrieve();
 	}
 
 	public static final ShipHullSpecAPI ehm_weaponSlotRestore_lazy(ShipVariantAPI variant) {

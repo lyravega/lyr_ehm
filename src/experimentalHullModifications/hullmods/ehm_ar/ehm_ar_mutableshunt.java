@@ -61,8 +61,8 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
-		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec());
-		List<WeaponSlotAPI> shunts = hullSpec.getAllWeaponSlotsCopy();
+		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(true, variant.getHullSpec());
+		List<WeaponSlotAPI> shunts = lyr_hullSpec.getAllWeaponSlotsCopy();
 
 		StatBonus dissipatorStat = stats.getDynamic().getMod(ehm_internals.id.stats.dissipators);
 		StatBonus capacitorStat = stats.getDynamic().getMod(ehm_internals.id.stats.capacitors);
@@ -100,7 +100,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 			switch (shuntId) {
 				case capacitors.large: case capacitors.medium: case capacitors.small:
 				case dissipators.large: case dissipators.medium: case dissipators.small: {
-					ehm_deactivateSlot(hullSpec, shuntId, slotId);
+					ehm_deactivateSlot(lyr_hullSpec, shuntId, slotId);
 					break;
 				} default: break;
 			}
@@ -114,7 +114,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 		stats.getFluxDissipation().modifyMult(this.hullModSpecId, 1f+effectiveDissipatorStat*fluxMultMod);
 		stats.getFluxDissipation().modifyFlat(this.hullModSpecId, effectiveDissipatorStat*dissipatorFlatMod);
 
-		variant.setHullSpecAPI(hullSpec.retrieve());
+		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION

@@ -11,6 +11,7 @@ import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShipTypeHints;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
+import com.fs.starfarer.api.util.Misc;
 
 import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
 import lyravega.utilities.logger.lyr_logger;
@@ -82,22 +83,77 @@ public final class lyr_hullSpec {
 
 	/**
 	 * Creates a new proxy-like object instance for the passed {@link ShipHullSpecAPI
-	 * hullSpec}, and clones it if needed.
-	 * <p> If the spec is not unique, it must be cloned first using the argument, as
-	 * otherwise changes on this spec will affect all other specs of the same type.
-	 * <p> Cloning should be done as early as possible, and should be avoided on
-	 * already cloned hullSpecs. Otherwise loose hullSpecs will float around till
-	 * they are garbage-collected, which is, unnecessary (duh)
+	 * hullSpec} This should only be used as a reference, to gain access to certain
+	 * obfuscated getters.
+	 * <p> Even if the spec is cloned prior to using this constructor, in some cases
+	 * leakage may occur as parts of the code and/or different mod interactions may
+	 * cause this to be utilized before the actual cloning occurs.
 	 * @param hullSpec to be proxied
-	 * @param clone (overload) if the hullSpec needs to be cloned during construction
+	 * @see {@link #lyr_hullSpec(boolean, ShipHullSpecAPI)} overload is the safest approach for this proxy
 	 */
 	public lyr_hullSpec(ShipHullSpecAPI hullSpec) {
 		this.hullSpec = hullSpec;
 	}
 
-	/** @see #lyr_hullSpec(ShipHullSpecAPI) */
+	/**
+	 * Creates a new proxy-like object instance for the passed {@link ShipHullSpecAPI
+	 * hullSpec}, and clones it if directed to do so. If the spec is not unique, it
+	 * must be cloned first using the argument, as otherwise changes on this spec will
+	 * affect all other specs of the same type. Cloning should be done as early as
+	 * possible, and ideally should be avoided on already cloned ones.
+	 * <p> If extra weapon slots are going to be added, it is best to utilize the d-hull
+	 * specs as the game swaps the hull spec of a variant on certain conditions which
+	 * will lead to a slot not found crash, unless it's a d-hull.
+	 * @param hullSpec to be proxied
+	 * @param clone if it needs to be cloned
+	 * @see {@link #lyr_hullSpec(boolean, ShipHullSpecAPI)} overload is the safest approach for this proxy
+	 */
 	public lyr_hullSpec(ShipHullSpecAPI hullSpec, boolean clone) {
 		this.hullSpec = (clone) ? this.duplicate(hullSpec) : hullSpec;
+	}
+
+	/**
+	 * Creates a new proxy-like object instance for the passed {@link ShipHullSpecAPI
+	 * hullSpec}, and clones it if it is necessary by checking if it is the same hull
+	 * spec stored in the spec store.
+	 * <p> This is the safest approach to using this proxy as the checks ensure that
+	 * the hull spec is cloned which prevents any possible leakages. In addition, this
+	 * constructor uses damaged hull specs instead of normal ones to prevent any possible
+	 * slot not found errors.
+	 * <p> Slot not found errors occur when the game decides to swap a non-damaged hull
+	 * spec with a damaged one, or vice-versa. However, if the hull spec is already
+	 * damaged, then no swap will occur, which prevents the errors from happening.
+	 * <p> Some fields of the damaged hull spec is adjusted back to its original values
+	 * during cloning, like its description prefix, tags and whatnot as they are stripped
+	 * or adjusted while the game creates them in 'ShipHullSpecLoader' class
+	 * @param useAlteredDamagedHull does jack shit, is there just to have an overload
+	 * @param hullSpec to be proxied
+	 */
+	public lyr_hullSpec(boolean useAlteredDamagedHull, ShipHullSpecAPI hullSpec) {
+		ShipHullSpecAPI dHullSpec = Global.getSettings().getHullSpec(Misc.getDHullId(hullSpec));	// damaged hull spec
+		ShipHullSpecAPI oHullSpec = Global.getSettings().getHullSpec(hullSpec.getHullId().replace(Misc.D_HULL_SUFFIX, ""));	// original hull spec
+
+		if (dHullSpec == hullSpec || oHullSpec == hullSpec) {
+			this.hullSpec = this.duplicate(dHullSpec);	// should be absolutely first here
+
+			for (String hullSpecTag : oHullSpec.getTags()) // this is a set, so there cannot be any duplicates, but still
+				if (!this.hullSpec.getTags().contains(hullSpecTag))
+					this.hullSpec.addTag(hullSpecTag);
+
+			for (String builtInHullModSpecId : oHullSpec.getBuiltInMods()) // this is a list, there can be duplicates so check first
+				if (!this.hullSpec.isBuiltInMod(builtInHullModSpecId))
+					this.hullSpec.addBuiltInMod(builtInHullModSpecId);
+
+			// this.hullSpec.setDParentHullId(null);
+			// this.setBaseHullId(null);
+			// this.hullSpec.setRestoreToBase(false);
+			this.setSpriteSpec(this.getSpriteSpec());	// maybe reduces memory imprint?
+			this.hullSpec.setDescriptionPrefix(oHullSpec.getDescriptionPrefix());	// remove damaged description prefix
+			this.hullSpec.setHullName(oHullSpec.getHullName());	// restore the name to get rid of "(D)"
+			this.setBaseValue(oHullSpec.getBaseValue());	// restore the value as damaged hulls lose 25% in value
+		} else {
+			this.hullSpec = hullSpec;
+		}
 	}
 
 	/**
@@ -108,6 +164,20 @@ public final class lyr_hullSpec {
 	 */
 	public ShipHullSpecAPI retrieve() {
 		return this.hullSpec;
+	}
+
+	/**
+	 * @return original hull spec from the spec store as a reference
+	 */
+	public ShipHullSpecAPI reference() {
+		return Global.getSettings().getHullSpec(this.hullSpec.getHullId());
+	}
+
+	/**
+	 * @return the non-damaged, original hull spec from the spec store as a reference
+	 */
+	public ShipHullSpecAPI referenceNonDamaged() {
+		return Global.getSettings().getHullSpec(this.hullSpec.getHullId().replace(Misc.D_HULL_SUFFIX, ""));
 	}
 
 	/**
@@ -143,7 +213,7 @@ public final class lyr_hullSpec {
 	 */
 	@Override
 	public lyr_hullSpec clone() {
-		return new lyr_hullSpec(this.duplicate(this.hullSpec));
+		return new lyr_hullSpec(this.hullSpec, true);
 	}
 
 	//#region PROXY METHODS

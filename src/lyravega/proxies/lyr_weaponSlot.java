@@ -123,12 +123,12 @@ public final class lyr_weaponSlot {
 
 	/**
 	 * A cheap clone that creates and returns a new instance of this
-	 * object with a duplicate of its stored object.
+	 * proxy with a duplicate of its stored object.
 	 * @return a cloned {@link lyr_weaponSlot}
 	 */
 	@Override
 	public lyr_weaponSlot clone() {
-		return new lyr_weaponSlot(this.duplicate(this.weaponSlot));
+		return new lyr_weaponSlot(this.weaponSlot, true);
 	}
 
 	//#region PROXY METHODS

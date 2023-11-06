@@ -15,6 +15,7 @@ import com.fs.starfarer.api.loading.WeaponGroupSpec;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.api.util.Misc;
 
 /**
  * A class dedicated to house the helper functions for the ships, variants,
@@ -244,7 +245,9 @@ public class lyr_miscUtilities {
 	 * @param hullSpec to check
 	 * @return {@code true} if it has any, {@code false} otherwise
 	 */
-	public static final boolean hasCivilianHintsOrMod(ShipHullSpecAPI hullSpec) {
+	public static final boolean hasCivilianHintsOrMod(ShipHullSpecAPI hullSpec, boolean checkOriginal) {
+		if (checkOriginal) hullSpec = Global.getSettings().getHullSpec(hullSpec.getHullId().replace(Misc.D_HULL_SUFFIX, ""));
+
 		if (hullSpec.isBuiltInMod(HullMods.CIVGRADE)) return true;
 
 		for (ShipTypeHints hint : hullSpec.getHints()) switch (hint) {
@@ -273,7 +276,21 @@ public class lyr_miscUtilities {
 		return true;
 	}
 
-	private static final Pattern pattern = Pattern.compile("\\((.*?)\\|(.*?)\\)");
+	/**
+	 * Converts a colour to a custom HEX string to match the regex pattern used in the
+	 * {@link #addColorizedPara(TooltipMakerAPI, String, float)} method.
+	 * <p> If a decodeable RGB HEX that may be used with {@link Color#decode(String)}
+	 * is required, set the boolean to false
+	 * @param clr to convert
+	 * @param forCustomRegex if {@code true}, generates a custom HEX string, otherwise a decodeable one
+	 * @return
+	 */
+	public static final String convertColorToRegexCode(Color clr, boolean forCustomRegex) {
+		if (forCustomRegex) return "(0x"+Integer.toHexString(clr.getRGB()).substring(2)+"|";
+		return "0x"+Integer.toHexString(clr.getRGB()).substring(2);
+	}
+
+	private static final Pattern pattern = Pattern.compile("\\((.{8})\\|(.+?)\\)");
 	private static Matcher matcher;
 
 	/**
@@ -281,12 +298,12 @@ public class lyr_miscUtilities {
 	 * highlight string array from a raw string input, and adds it to the passed tooltip as
 	 * a para. Aims to streamline tooltip detailing process by feeding a single-liner to a
 	 * method rather than having to individually adjust bits and pieces.
-	 * <p> The used regex is {@code \((.*?)\|(.*?)\)}. The whole match will be replaced
-	 * with {@code %s}. The first match will be decoded using {@link Color#decode(String)}
-	 * that expects a RGB in HEX format like {@code 0xFF0000} and added to the colour array.
-	 * The second match will be added to the string array.
+	 * <p> The used regex is {@code \((........)\|(.+?)\)} stored in {@link #pattern}. The
+	 * whole match will be replaced with {@code %s}. The first match will be decoded using
+	 * {@link Color#decode(String)} that expects a RGB in HEX format like {@code 0xFF0000}
+	 * and added to the colour array. The second match will be added to the string array.
 	 * <p> For example, when a string like {@code "Adding para with (0x00FFFF|colours) and
-	 * (0xFF0000|stuff)""} is passed to this method, format with {@code "Some string with %s
+	 * (0xFF0000|stuff)"} is passed to this method, format with {@code "Some string with %s
 	 * and %s"}, a colour array with decoded {@code 0:ColorObj, 1:ColorObj} colours, and a
 	 * string array with {@code 0:"colours", 1:"stuff"} will be passed to the API.
 	 * @param tooltip to add this para to

@@ -3,12 +3,14 @@ package experimentalHullModifications.hullmods.ehm;
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
+import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.api.util.Misc;
 
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_tooltip.header;
@@ -29,7 +31,7 @@ public final class ehm_undo extends _ehm_base {
 		variant.getHullMods().remove(ehm_internals.id.hullmods.base);
 		variant.getPermaMods().remove(ehm_internals.id.hullmods.base);
 		variant.getHullMods().remove(this.hullModSpecId);
-		variant.setHullSpecAPI(ehm_hullSpecOriginal(variant)); commitVariantChanges(); playDrillSound();
+		variant.setHullSpecAPI(Global.getSettings().getHullSpec(variant.getHullSpec().getHullId().replace(Misc.D_HULL_SUFFIX, ""))); commitVariantChanges(); playDrillSound();
 	}
 
 	@Override

@@ -99,8 +99,8 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
-		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec());
-		List<WeaponSlotAPI> shunts = hullSpec.getAllWeaponSlotsCopy();
+		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(true, variant.getHullSpec());
+		List<WeaponSlotAPI> shunts = lyr_hullSpec.getAllWeaponSlotsCopy();
 
 		int slotPointsFromMods = ehm_slotPointsFromHullMods(variant);
 		int slotPoints = slotPointsFromMods;	// as hullMod methods are called several times, slotPoints accumulate correctly on subsequent call(s)
@@ -146,11 +146,11 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 					int cost = converterMap.get(shuntId).getChildCost();
 					if (slotPoints - cost < 0) break;
 					slotPoints -= cost;
-					ehm_convertSlot(hullSpec, shuntId, slotId);
+					ehm_convertSlot(lyr_hullSpec, shuntId, slotId);
 					break;
 				} case diverters.large: case diverters.medium: case diverters.small: {
 					slotPoints += diverterMap.get(shuntId);
-					ehm_deactivateSlot(hullSpec, shuntId, slotId);
+					ehm_deactivateSlot(lyr_hullSpec, shuntId, slotId);
 					break;
 				} default: break;
 			}
@@ -158,7 +158,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 
 		stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullmods.diverterandconverter, Math.max(0, ehm_settings.getBaseSlotPointPenalty()*Math.min(slotPointsFromMods, slotPointsFromMods - slotPoints)));
 
-		variant.setHullSpecAPI(hullSpec.retrieve());
+		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION

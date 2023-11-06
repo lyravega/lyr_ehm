@@ -59,33 +59,33 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 	 * @return a hullSpec with the altered engine visuals
 	 */
 	protected static final ShipHullSpecAPI ehm_applyEngineCosmetics(ShipVariantAPI variant, int styleEnum) {
-		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec());
+		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(true, variant.getHullSpec());
 		lyr_engineBuilder engineSlot = new lyr_engineBuilder(null, false);
 
-		for (Object temp : hullSpec.getEngineSlots()) {
+		for (Object temp : lyr_hullSpec.getEngineSlots()) {
 			engineSlot.recycle(temp).setEngineStyleId(styleEnum);
 		}
 
-		return hullSpec.retrieve();
+		return lyr_hullSpec.retrieve();
 	}
 
 	/**
 	 * Alters the engine visuals of the ship, with custom engine data
 	 * @param variant whose hullSpec will be altered
 	 * @param styleEnum {@link lyravega.proxies.lyr_engineBuilder.engineStyleIds engineStyle}
-	 * @param engineData {@link #newCustomEngineSpec(String, String) generateEngineData}
+	 * @param engineStyleSpec an engineStyleData object generated through {@link #newCustomEngineStyleSpec(String)}
 	 * @return a hullSpec with the altered engine visuals
 	 */
-	protected static final ShipHullSpecAPI ehm_applyEngineCosmetics(ShipVariantAPI variant, int styleEnum, Object engineData) {
-		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec());
+	protected static final ShipHullSpecAPI ehm_applyEngineCosmetics(ShipVariantAPI variant, int styleEnum, Object engineStyleSpec) {
+		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(true, variant.getHullSpec());
 		lyr_engineBuilder engineSlot = new lyr_engineBuilder(null, false);
 
-		for (Object temp : hullSpec.getEngineSlots()) {
+		for (Object temp : lyr_hullSpec.getEngineSlots()) {
 			engineSlot.recycle(temp).setEngineStyleId(styleEnum);
-			engineSlot.setEngineStyleSpec(engineData);
+			engineSlot.setEngineStyleSpec(engineStyleSpec);
 		}
 
-		return hullSpec.retrieve();
+		return lyr_hullSpec.retrieve();
 	}
 
 	/**

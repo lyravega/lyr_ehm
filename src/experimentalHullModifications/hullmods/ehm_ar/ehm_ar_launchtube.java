@@ -53,8 +53,8 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
-		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec());
-		List<WeaponSlotAPI> shunts = hullSpec.getAllWeaponSlotsCopy();
+		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(true, variant.getHullSpec());
+		List<WeaponSlotAPI> shunts = lyr_hullSpec.getAllWeaponSlotsCopy();
 
 		StatBonus launchTubeStat = stats.getDynamic().getMod(ehm_internals.id.stats.launchTubes);
 
@@ -94,7 +94,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 
 			switch (shuntId) {
 				case launchTubes.large: {
-					ehm_deactivateSlot(hullSpec, shuntId, slotId);
+					ehm_deactivateSlot(lyr_hullSpec, shuntId, slotId);
 					break;
 				} default: break;
 			}
@@ -102,7 +102,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 
 		stats.getNumFighterBays().modifyFlat(this.hullModSpecId, launchTubeStat.computeEffective(0f));
 
-		variant.setHullSpecAPI(hullSpec.retrieve());
+		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION

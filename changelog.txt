@@ -1,3 +1,10 @@
+Version 0.8.7
+
+- Fixed an issue that applied the wrong description prefix to ships if the flavour option was turned off
+- Fixed a rare hull spec alteration leakage causing changes to affect all ships using that spec instead of one
+
+
+
 Version 0.8.6b
 
 - Added some guards to prevent a null pointer exception caused by ship/fleet tracking

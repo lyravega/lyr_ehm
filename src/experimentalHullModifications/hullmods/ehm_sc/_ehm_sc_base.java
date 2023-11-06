@@ -56,13 +56,13 @@ public abstract class _ehm_sc_base extends _ehm_base implements normalEvents {
 	 * @return an altered hullSpec with altered shieldSpec colours
 	 */
 	protected static final ShipHullSpecAPI ehm_applyShieldCosmetics(ShipVariantAPI variant, Color inner, Color ring) {
-		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec());
-		lyr_shieldSpec shieldSpec = hullSpec.getShieldSpec();
+		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(true, variant.getHullSpec());
+		lyr_shieldSpec shieldSpec = lyr_hullSpec.getShieldSpec();
 
 		shieldSpec.setInnerColor(inner);
 		shieldSpec.setRingColor(ring);
 
-		return hullSpec.retrieve();
+		return lyr_hullSpec.retrieve();
 	}
 
 	/**
@@ -72,12 +72,12 @@ public abstract class _ehm_sc_base extends _ehm_base implements normalEvents {
 	 * @return an altered hullSpec with its shieldSpec is restored
 	 */
 	public static final ShipHullSpecAPI ehm_restoreShield(ShipVariantAPI variant) {
-		lyr_hullSpec hullSpec = new lyr_hullSpec(variant.getHullSpec());
-		ShieldSpecAPI stockShieldSpec = ehm_hullSpecReference(variant).getShieldSpec();
+		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(true, variant.getHullSpec());
+		ShieldSpecAPI stockShieldSpec = lyr_hullSpec.referenceNonDamaged().getShieldSpec();
 
-		hullSpec.setShieldSpec(stockShieldSpec);
+		lyr_hullSpec.setShieldSpec(stockShieldSpec);
 
-		return hullSpec.retrieve();
+		return lyr_hullSpec.retrieve();
 	}
 
 	//#region INSTALLATION CHECKS

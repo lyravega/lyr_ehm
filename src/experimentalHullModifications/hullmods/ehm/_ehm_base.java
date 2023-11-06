@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.Set;
 
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.SettingsAPI;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.*;
@@ -14,7 +13,6 @@ import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
-import com.fs.starfarer.api.util.Misc;
 
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_settings;
@@ -144,15 +142,12 @@ public abstract class _ehm_base implements HullModEffect {
 	 * @return a cloned hullSpec
 	 */
 	protected static final ShipHullSpecAPI ehm_hullSpecClone(ShipVariantAPI variant) {
-		final SettingsAPI settings = Global.getSettings();
-
 		ShipHullSpecAPI hullSpecToClone = variant.getHullSpec();
-		lyr_hullSpec hullSpec;
-		lyr_hullSpec originalHullSpec;
+		lyr_hullSpec lyr_hullSpec;
 
 		if (hullSpecToClone.isRestoreToBase() && hullSpecToClone.getBaseHullId() != null ) {	// these extras are necessary for ships that may be restored to a different hull spec
 			for (String hullModId : hullSpecToClone.getBuiltInMods()) {	// transfer the dmods on the hullspec to the variant instead
-				if (!settings.getHullModSpec(hullModId).hasTag(Tags.HULLMOD_DMOD)) continue;
+				if (!Global.getSettings().getHullModSpec(hullModId).hasTag(Tags.HULLMOD_DMOD)) continue;
 
 				if (!variant.getSuppressedMods().contains(hullModId)) {	// if a dmod is suppressed (fixed), do not transfer it
 					variant.removeSuppressedMod(hullModId);
@@ -162,12 +157,11 @@ public abstract class _ehm_base implements HullModEffect {
 			hullSpecToClone = hullSpecToClone.getBaseHull();	// target the base hull spec instead, to perform a soft restoration
 		}
 
-		hullSpec = new lyr_hullSpec(settings.getHullSpec(Misc.getDHullId(hullSpecToClone)), true);
-		originalHullSpec = new lyr_hullSpec(settings.getHullSpec(hullSpecToClone.getHullId().replace(Misc.D_HULL_SUFFIX, "")));
+		lyr_hullSpec = new lyr_hullSpec(true, hullSpecToClone);
 
-		ehm_hullSpecAlteration(hullSpec, originalHullSpec);
+		ehm_hullSpecAlteration(lyr_hullSpec);
 
-		return hullSpec.retrieve();
+		return lyr_hullSpec.retrieve();
 	}
 
 	/**
@@ -184,63 +178,28 @@ public abstract class _ehm_base implements HullModEffect {
 	 * @return a 'fresh' hullSpec from the SpecStore
 	 */
 	protected static final ShipHullSpecAPI ehm_hullSpecRefresh(ShipVariantAPI variant) {
-		final SettingsAPI settings = Global.getSettings();
+		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(true, variant.getHullSpec());
 
-		lyr_hullSpec hullSpec = new lyr_hullSpec(settings.getHullSpec(variant.getHullSpec().getHullId()), true);
-		lyr_hullSpec originalHullSpec = new lyr_hullSpec(settings.getHullSpec(variant.getHullSpec().getHullId().replace(Misc.D_HULL_SUFFIX, "")));
+		ehm_hullSpecAlteration(lyr_hullSpec);
 
-		ehm_hullSpecAlteration(hullSpec, originalHullSpec);
-
-		return hullSpec.retrieve();
+		return lyr_hullSpec.retrieve();
 	}
 
 	/**
 	 * As the hull specs use (D) versions to avoid a couple of issues, a method is necessary
 	 * to make some alterations and restore some fields to their original, non (D) versions.
-	 * @param hullSpec proxy with a cloned hull spec in it
+	 * @param lyr_hullSpec proxy with a cloned hull spec in it
 	 * @param originalHullSpec to be used as a reference; not a (D) version
 	 */
-	private static final void ehm_hullSpecAlteration(lyr_hullSpec hullSpec, lyr_hullSpec originalHullSpec) {
-		for (String hullSpecTag : originalHullSpec.getTags()) // this is a set, so there cannot be any duplicates, but still
-		if (!hullSpec.getTags().contains(hullSpecTag))
-		hullSpec.addTag(hullSpecTag);
+	private static final void ehm_hullSpecAlteration(lyr_hullSpec lyr_hullSpec) {
+		ShipHullSpecAPI originalHullSpec = lyr_hullSpec.referenceNonDamaged();
 
-		for (String builtInHullModSpecId : originalHullSpec.getBuiltInMods()) // this is a list, there can be duplicates so check first
-		if (!hullSpec.isBuiltInMod(builtInHullModSpecId))
-		hullSpec.addBuiltInMod(builtInHullModSpecId);
-
-		// hullSpec.setDParentHullId(null);
-		// hullSpec.setBaseHullId(null);
-		// hullSpec.setRestoreToBase(false);
-		hullSpec.setBaseValue(originalHullSpec.getBaseValue());	// because d-hulls lose 25% in value immediately
-		hullSpec.setSpriteSpec(originalHullSpec.getSpriteSpec());	// to reduce memory imprint, letting garbage collector dispose same sprite specs
 		if (ehm_settings.getShowExperimentalFlavour()) {
-			hullSpec.setManufacturer(text.flavourManufacturer);
-			hullSpec.setDescriptionPrefix(text.flavourDescription);
-			hullSpec.setHullName(originalHullSpec.getHullName() + " (E)");	// restore to base hull name, replacing "(D)" with "(E)"
-		} else {
-			hullSpec.setDescriptionPrefix(hullSpec.getDescriptionPrefix());	// restore with base prefix, if any
-			hullSpec.setHullName(originalHullSpec.getHullName());	// restore to base hull name, removing "(D)"
+			lyr_hullSpec.setManufacturer(text.flavourManufacturer);
+			lyr_hullSpec.setDescriptionPrefix(text.flavourDescription);
+			lyr_hullSpec.setHullName(originalHullSpec.getHullName() + " (E)");	// append "(E)"
 		}
-		hullSpec.addBuiltInMod(ehm_internals.id.hullmods.base);
-	}
 
-	/**
-	 * Returns an unmodified hull spec from the spec store.
-	 * @param variant to be used as a template
-	 * @return a stock hullSpec from the SpecStore
-	 */
-	protected static final ShipHullSpecAPI ehm_hullSpecReference(ShipVariantAPI variant) {
-		return Global.getSettings().getHullSpec(variant.getHullSpec().getHullId());
-	}
-
-	/**
-	 * Returns the original hull spec, or the d-hull version if there are d-mods.
-	 * @param variant to be used as a template
-	 * @return a stock hullSpec from the SpecStore
-	 */
-	protected static final ShipHullSpecAPI ehm_hullSpecOriginal(ShipVariantAPI variant) {
-		if (variant.hasDMods()) return Global.getSettings().getHullSpec(variant.getHullSpec().getHullId());
-		return Global.getSettings().getHullSpec(variant.getHullSpec().getHullId().replaceAll(Misc.D_HULL_SUFFIX, ""));
+		lyr_hullSpec.addBuiltInMod(ehm_internals.id.hullmods.base);
 	}
 }
