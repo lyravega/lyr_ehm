@@ -225,12 +225,14 @@ public class lyr_miscUtilities {
 	}
 
 	/**
+	 * @deprecated as it is a redundant method; API already has a simple one-liner check
 	 * @param ship to check
 	 * @return {@code true} if ship has {@code "phasecloak"}, {@code false} otherwise
 	 */
+	@Deprecated
 	public static final boolean hasPhaseCloak(ShipAPI ship) {
 		return ship.getHullSpec().isPhase();
-		// return ship.getPhaseCloak() != null && "phasecloak".equals(ship.getPhaseCloak().getId());
+		// return ship.getPhaseCloak() != null && "phasecloak".equals(ship.getPhaseCloak().getId());	// somewhat identical to above
 	}
 
 	/**
