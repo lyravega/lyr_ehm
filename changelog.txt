@@ -1,12 +1,15 @@
 Version 0.8.7
 
-- Fixed an issue that applied the wrong description prefix to ships if the flavour option was turned off
-- Fixed a rare issue causing changes to affect all ships with the same hull spec instead of just one in specific circumstances
-- Added a new purchaseable upgrade called "Overdrive" that allows ships to have more built-in modifications
-
 This version comes with a new upgrade feature that utilizes LunaLib's refit tab buttons. As the first upgrade, I've added one that allows more modifications to be built-in to the ships, along with tools that'd make it relatively easy for me to deploy any more. I have some more ideas for a few more upgrades like this one planned, but I'll keep the list rather short at least for now.
 
 Each level of this upgrade cost story points and AI cores, with higher levels requiring you to have a nanoforge in your cargo holds. This upgrade in specific is designed to encourage farming to some degree and have you burn through your resources to push your builds even further. Let me know if you have any feedback on the upgrade, and happy hunting!
+
+- IMPORTANT: Added a debug option called "Clear Unknown Slots", which will allow bricked saves to load
+ - Will only help if you are encountering a crash during a load that states a slot with [CS_AS_] prefix cannot be found
+- Fixed an issue that allowed adapted slots to be converted as well, which should have not been possible at all
+- Fixed an issue that applied the wrong description prefix to ships if the flavour option was turned off
+- Fixed a rare issue causing changes to affect all ships with the same hull spec instead of just one in specific circumstances
+- Added a new purchaseable upgrade called "Overdrive" that allows ships to have more built-in modifications
 
 
 Version 0.8.6b
@@ -27,10 +30,10 @@ Refactored and overhauled most of the stuff under the hood; initial changes begu
 - Changed system retrofits so that they will be hidden if a the system is not found, instead of crashing the game on install
 - Changed engine cosmetic mods to apply the campaign engine changes immediately on install and/or when settings are saved
 - Changed ship/module tracking completely, which comes with a few non-gameplay benefits:
-	- All of the ships in the fleet will be tracked when the refit tab is open
-	- "Play Drill Sounds - All" option will do so when a hullmod is installed on / removed from any ship
-	- Modules will not spawn unnecessary trackers or get confused by duplicates and instead use their own
-	- Officer and autofit menus will not cause the trackers to detect false-positive changes on the ship
+ - All of the ships in the fleet will be tracked when the refit tab is open
+ - "Play Drill Sounds - All" option will do so when a hullmod is installed on / removed from any ship
+ - Modules will not spawn unnecessary trackers or get confused by duplicates and instead use their own
+ - Officer and autofit menus will not cause the trackers to detect false-positive changes on the ship
 - Combined some logging settings, suppressed most messages for default setting
 
 
