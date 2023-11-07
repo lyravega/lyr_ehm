@@ -7,10 +7,9 @@ import java.util.Map.Entry;
 
 import com.fs.starfarer.api.Global;
 
-import lyravega.listeners._lyr_sectorListener;
 import lyravega.utilities.logger.lyr_logger;
 
-public class ehm_lostAndFound extends _lyr_sectorListener {
+public class ehm_lostAndFound {
 	private static Map<String, Integer> recoveryStash = null;
 
 	public static void addLostItem(String weaponId) {
