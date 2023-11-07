@@ -118,10 +118,10 @@ public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffec
 		final int currentTier = this.upgrade.getCurrentTier(variant);
 
 		tooltip.addSectionHeading("OVERDRIVE", Misc.getHighlightColor(), header.invisible_bgColour, Alignment.MID, 2f);
-		tooltip.addPara("Increase the maximum amount of s-mods supported by this ship by one with each level", 2f);
+		tooltip.addPara("Increase the maximum amount of s-mods supported by this ship by one with each tier", 2f);
 
 		if (currentTier > 0) {
-			tooltip.addSectionHeading("CURRENT LEVEL: "+currentTier, Color.CYAN, header.invisible_bgColour, Alignment.MID, 2f).flash(1f, 1f);
+			tooltip.addSectionHeading("CURRENT TIER: "+currentTier, Color.CYAN, header.invisible_bgColour, Alignment.MID, 2f).flash(1f, 1f);
 			switch (currentTier) {
 				case 1: {
 					tooltip.addImages(
@@ -149,7 +149,7 @@ public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffec
 		}
 
 		if (!(currentTier < this.upgrade.getMaxTier(variant.getHullSize()))) {
-			tooltip.addSectionHeading("MAX LEVEL", Color.CYAN, header.invisible_bgColour, Alignment.MID, 2f).flash(1f, 1f);
+			tooltip.addSectionHeading("MAX TIER", Color.CYAN, header.invisible_bgColour, Alignment.MID, 2f).flash(1f, 1f);
 			return;
 		}
 

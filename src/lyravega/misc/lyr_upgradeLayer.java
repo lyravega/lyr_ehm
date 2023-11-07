@@ -133,10 +133,10 @@ public class lyr_upgradeLayer {
 
 		if (this.storyPointCost > 0) {
 			if (isDisabled) {
-				format = (format.isEmpty() ? "Level "+(this.getTier())+": " : format+" & ")
-					+this.storyPointCost+" SP)";
+				format = (format.isEmpty() ? "Tier "+(this.getTier())+": " : format+" & ")
+					+this.storyPointCost+" SP";
 			} else {
-				format = (format.isEmpty() ? highlightPattern+"Level "+(this.getTier())+"): " : format+" & ")
+				format = (format.isEmpty() ? highlightPattern+"Tier "+(this.getTier())+"): " : format+" & ")
 					+(playerStats.getStoryPoints() >= this.storyPointCost ? positivePattern : negativePattern)
 					+this.storyPointCost+" SP)";
 			}
@@ -144,7 +144,7 @@ public class lyr_upgradeLayer {
 
 		if (this.commodityCosts != null && !this.commodityCosts.isEmpty()) {
 			if (isDisabled) {
-				format = (format.isEmpty() ? "Level "+(this.getTier())+": " : format+" & ");
+				format = (format.isEmpty() ? "Tier "+(this.getTier())+": " : format+" & ");
 
 				for (Iterator<String> iterator = this.commodityCosts.keySet().iterator(); iterator.hasNext(); ) {
 					String commodityCostId = iterator.next();
@@ -156,7 +156,7 @@ public class lyr_upgradeLayer {
 					if (iterator.hasNext()) format = format+", ";
 				}
 			} else {
-				format = (format.isEmpty() ? highlightPattern+"Level "+(this.getTier())+"): " : format+" & ");
+				format = (format.isEmpty() ? highlightPattern+"Tier "+(this.getTier())+"): " : format+" & ");
 
 				for (Iterator<String> iterator = this.commodityCosts.keySet().iterator(); iterator.hasNext(); ) {
 					String commodityCostId = iterator.next();
@@ -173,8 +173,6 @@ public class lyr_upgradeLayer {
 		}
 
 		if (this.specialRequirements != null && !this.specialRequirements.isEmpty()) {
-			format = format.isEmpty() ? highlightPattern+"Level "+(this.getTier())+"):" : format+" &";
-
 			Set<String> specials = new HashSet<String>();
 
 			for (CargoStackAPI stack : playerCargo.getStacksCopy()) {
@@ -187,7 +185,7 @@ public class lyr_upgradeLayer {
 			}
 
 			if (isDisabled) {
-				format = (format.isEmpty() ? "Level "+(this.getTier())+": " : format+" & ");
+				format = (format.isEmpty() ? "Tier "+(this.getTier())+": " : format+" & ");
 
 				for (Iterator<String> iterator = this.specialRequirements.iterator(); iterator.hasNext(); ) {
 					String specialId = iterator.next();
@@ -198,7 +196,7 @@ public class lyr_upgradeLayer {
 					if (iterator.hasNext()) format = format+", ";
 				}
 			} else {
-				format = (format.isEmpty() ? highlightPattern+"Level "+(this.getTier())+"): " : format+" & ");
+				format = (format.isEmpty() ? highlightPattern+"Tier "+(this.getTier())+"): " : format+" & ");
 
 				for (Iterator<String> iterator = this.specialRequirements.iterator(); iterator.hasNext(); ) {
 					String specialId = iterator.next();
