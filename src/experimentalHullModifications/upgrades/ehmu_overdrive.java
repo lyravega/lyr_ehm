@@ -22,7 +22,6 @@ import lyravega.misc.lyr_upgrade;
 import lyravega.misc.lyr_upgradeLayer;
 
 public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffect {
-	private final String upgradeId = ehm_internals.id.upgrades.overdrive;
 	private final lyr_upgrade upgrade;
 
 	public ehmu_overdrive() {
@@ -32,7 +31,7 @@ public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffec
 		final String cn = "corrupted_nanoforge";
 		final String pn = "pristine_nanoforge";
 
-		this.upgrade = new lyr_upgrade(this.upgradeId);
+		this.upgrade = new lyr_upgrade(ehm_internals.id.upgrades.overdrive, "Overdrive");
 
 		this.upgrade.addUpgradeTier(HullSize.FRIGATE, new Object[][]{{gc, 3}}, null, 1);
 		this.upgrade.addUpgradeTier(HullSize.FRIGATE, new Object[][]{{gc, 6}, {bc, 1}}, null, 1);
@@ -57,26 +56,30 @@ public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffec
 
 	@Override
 	public String getUpgradeId() {
-		return this.upgradeId;
+		return this.upgrade.getId();
+	}
+
+	@Override
+	public String getUpgradeName() {
+		return this.upgrade.getName();
+	}
+
+	@Override
+	public int getUpgradeTier(ShipVariantAPI variant) {
+		return this.upgrade.getCurrentTier(variant);
 	}
 
 	@Override
 	public void applyUpgradeEffect(MutableShipStatsAPI stats, String tag) {
-		final int mod = Integer.valueOf(tag.replace(this.upgradeId+":", ""));
+		final int mod = tag == null ? this.upgrade.getCurrentTier(stats.getVariant()) : Integer.valueOf(tag.replace(this.upgrade.getId()+":", ""));
 
-		stats.getDynamic().getMod(this.upgradeId).modifyFlat(this.upgradeId, mod);
-		stats.getDynamic().getMod(Stats.MAX_PERMANENT_HULLMODS_MOD).modifyFlat(this.upgradeId, mod);
+		stats.getDynamic().getMod(this.upgrade.getId()).modifyFlat(this.upgrade.getId(), mod);	// for tooltip
+		stats.getDynamic().getMod(Stats.MAX_PERMANENT_HULLMODS_MOD).modifyFlat(this.upgrade.getId(), mod);
 	}
 
 	@Override
 	public String getButtonName(FleetMemberAPI member, ShipVariantAPI variant) {
-		switch (this.upgrade.getCurrentTier(variant)) {
-			default: return "Overdrive";
-			case 1: return "Overdrive I";
-			case 2: return "Overdrive II";
-			case 3: return "Overdrive III";
-			case 4: return "Overdrive IV";
-		}
+		return this.upgrade.getName();
 	}
 
 	@Override

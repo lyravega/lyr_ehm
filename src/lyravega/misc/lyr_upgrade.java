@@ -9,12 +9,18 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 
 public class lyr_upgrade {
 	final String id;
+	final String name;
 	private final EnumMap<HullSize, ArrayList<lyr_upgradeLayer>> upgradeLayers;
 
-	public lyr_upgrade(String id) {
+	public lyr_upgrade(String id, String name) {
 		this.id = id;
+		this.name = name;
 		this.upgradeLayers = new EnumMap<HullSize, ArrayList<lyr_upgradeLayer>>(HullSize.class);
 	}
+
+	public String getId() { return this.id; }
+
+	public String getName() { return this.name; }
 
 	public ArrayList<lyr_upgradeLayer> getUpgradeLayers(HullSize hullSize) { return this.upgradeLayers.get(hullSize); }
 
@@ -45,10 +51,10 @@ public class lyr_upgrade {
 
 	public int getCurrentTier(ShipVariantAPI variant) {
 		for (String tag : variant.getTags()) {
-			if (!tag.startsWith(this.id+":")) continue;
+			if (!tag.startsWith(this.id)) continue;
 
 			return Integer.valueOf(tag.replace(this.id+":", ""));
-		};	return 0;	// first layer is 0 due to array, no tier is -1 because of that
+		};	return 0;
 	}
 
 	public boolean canUpgradeTier(ShipVariantAPI variant) {
@@ -59,11 +65,11 @@ public class lyr_upgrade {
 	}
 
 	public void upgradeTier(ShipVariantAPI variant) {
-		int level = 0;	// first layer is 0 due to array, no tier is -1 because of that
+		int level = 0;
 
 		for (Iterator<String> iterator = variant.getTags().iterator(); iterator.hasNext(); ) {
 			String tag = iterator.next();
-			if (!tag.startsWith(this.id+":")) continue;
+			if (!tag.startsWith(this.id)) continue;
 
 			level = Integer.valueOf(tag.replace(this.id+":", ""));
 			iterator.remove(); break;

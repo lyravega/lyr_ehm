@@ -20,11 +20,13 @@ import lyravega.utilities.lyr_tooltipUtilities;;
 public class lyr_upgradeLayer {
 	private final lyr_upgrade upgrade; public lyr_upgrade getUpgrade() { return this.upgrade; }
 	private final int tier; public int getTier() { return this.tier; }
+	private final String id; public String getId() { return this.id; }
+	private final String name; public String getName() { return this.name; }
 	private final Map<String, Integer> commodityCosts; public Map<String, Integer> getCommodityCosts() { return this.commodityCosts; }
 	private final Set<String> specialRequirements; public Set<String> getSpecialRequirements() { return this.specialRequirements; }
 	private final int storyPointCost; public int getStoryPointCost() { return this.storyPointCost; }
 
-	public lyr_upgradeLayer(lyr_upgrade upgrade, int level, Object[][] commodityCostsArray, String[] specialRequirementsArray, Integer storyPointCost) {
+	public lyr_upgradeLayer(lyr_upgrade upgrade, int tier, Object[][] commodityCostsArray, String[] specialRequirementsArray, Integer storyPointCost) {
 		Map<String, Integer> commodityCosts = null;
 		Set<String> specialRequirements = null;
 
@@ -41,10 +43,23 @@ public class lyr_upgradeLayer {
 		}
 
 		this.upgrade = upgrade;
-		this.tier = level;
+		this.tier = tier;
+		this.id = upgrade.id+":"+tier;
+		this.name = upgrade.name+this.toRoman(tier);
 		this.commodityCosts = commodityCosts;
 		this.specialRequirements = specialRequirements;
 		this.storyPointCost = storyPointCost != null ? Math.max(0, storyPointCost) : 0;
+	}
+
+	private String toRoman(int num) {
+		switch (num) {
+			case 1: return " I";
+			case 2: return " II";
+			case 3: return " III";
+			case 4: return " IV";
+			case 5: return " V";
+			default: return "";
+		}
 	}
 
 	public boolean canAfford() {
