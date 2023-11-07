@@ -1,8 +1,7 @@
 package lyravega.misc;
 
-import static lyravega.utilities.lyr_tooltipUtilities.regexColour.highlightPattern;
-import static lyravega.utilities.lyr_tooltipUtilities.regexColour.negativePattern;
-import static lyravega.utilities.lyr_tooltipUtilities.regexColour.positivePattern;
+import static lyravega.utilities.lyr_tooltipUtilities.regexColour.highlightText;
+import static lyravega.utilities.lyr_tooltipUtilities.regexColour.positiveOrNegativeText;
 
 import java.util.*;
 
@@ -136,9 +135,13 @@ public class lyr_upgradeLayer {
 				format = (format.isEmpty() ? "Tier "+(this.getTier())+": " : format+" & ")
 					+this.storyPointCost+" SP";
 			} else {
-				format = (format.isEmpty() ? highlightPattern+"Tier "+(this.getTier())+"): " : format+" & ")
-					+(playerStats.getStoryPoints() >= this.storyPointCost ? positivePattern : negativePattern)
-					+this.storyPointCost+" SP)";
+				format = (format.isEmpty() ? highlightText("Tier "+(this.getTier()))+": " : format+" & ")
+					+positiveOrNegativeText(
+						playerStats.getStoryPoints() >= this.storyPointCost,
+						this.storyPointCost
+						+" ("+playerStats.getStoryPoints()+") "
+						+"SP"
+					);
 			}
 		}
 
@@ -156,16 +159,22 @@ public class lyr_upgradeLayer {
 					if (iterator.hasNext()) format = format+", ";
 				}
 			} else {
-				format = (format.isEmpty() ? highlightPattern+"Tier "+(this.getTier())+"): " : format+" & ");
+				format = (format.isEmpty() ? highlightText("Tier "+(this.getTier()))+": " : format+" & ");
 
 				for (Iterator<String> iterator = this.commodityCosts.keySet().iterator(); iterator.hasNext(); ) {
 					String commodityCostId = iterator.next();
 					int cost = this.commodityCosts.get(commodityCostId);
+					int quantity = Math.round(playerCargo.getCommodityQuantity(commodityCostId));
 
 					format = format
-						+(playerCargo.getCommodityQuantity(commodityCostId) >= cost ? positivePattern : negativePattern)
-						+this.commodityCosts.get(commodityCostId)+" "
-						+Global.getSettings().getCommoditySpec(commodityCostId).getName()+")";
+						+positiveOrNegativeText(
+							quantity >= cost,
+							// (quantity < cost ? quantity+"/" : "")
+							+this.commodityCosts.get(commodityCostId)
+							// +"x"
+							+" ("+quantity+") "
+							+Global.getSettings().getCommoditySpec(commodityCostId).getName()
+						);
 
 					if (iterator.hasNext()) format = format+", ";
 				}
@@ -196,14 +205,16 @@ public class lyr_upgradeLayer {
 					if (iterator.hasNext()) format = format+", ";
 				}
 			} else {
-				format = (format.isEmpty() ? highlightPattern+"Tier "+(this.getTier())+"): " : format+" & ");
+				format = (format.isEmpty() ? highlightText("Tier "+(this.getTier()))+": " : format+" & ");
 
 				for (Iterator<String> iterator = this.specialRequirements.iterator(); iterator.hasNext(); ) {
 					String specialId = iterator.next();
 
 					format = format
-						+(specials.contains(specialId) ? positivePattern : negativePattern)
-						+Global.getSettings().getSpecialItemSpec(specialId).getName()+")";
+						+positiveOrNegativeText(
+							specials.contains(specialId),
+							Global.getSettings().getSpecialItemSpec(specialId).getName()
+						);
 
 					if (iterator.hasNext()) format = format+", ";
 				}

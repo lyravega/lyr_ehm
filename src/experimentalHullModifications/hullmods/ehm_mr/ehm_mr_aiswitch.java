@@ -4,9 +4,9 @@ import static com.fs.starfarer.api.impl.hullmods.Automated.MAX_CR_PENALTY;
 import static com.fs.starfarer.api.impl.hullmods.Automated.isAutomatedNoPenalty;
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
-import static lyravega.utilities.lyr_tooltipUtilities.regexColour.highlightPattern;
-import static lyravega.utilities.lyr_tooltipUtilities.regexColour.negativePattern;
-import static lyravega.utilities.lyr_tooltipUtilities.regexColour.positivePattern;
+import static lyravega.utilities.lyr_tooltipUtilities.regexColour.highlightText;
+import static lyravega.utilities.lyr_tooltipUtilities.regexColour.negativeText;
+import static lyravega.utilities.lyr_tooltipUtilities.regexColour.positiveText;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -132,21 +132,21 @@ public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 
 			tooltip.addSectionHeading("SUPPRESSION MODE", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 
-			lyr_tooltipUtilities.addColorizedPara(tooltip, "- Crew minimum & maximum: "+highlightPattern+minCrew+") & "+highlightPattern+maxCrew+")",  5);
-			lyr_tooltipUtilities.addColorizedPara(tooltip, "- A "+highlightPattern+"Captain) may be assigned",  1);
-			lyr_tooltipUtilities.addColorizedPara(tooltip, "- Subjected to "+positivePattern+"no automated ship penalty)",  1);
+			lyr_tooltipUtilities.addColorizedPara(tooltip, "- Crew minimum & maximum: "+highlightText(minCrew+"")+") & "+highlightText(maxCrew+"")+")",  5);
+			lyr_tooltipUtilities.addColorizedPara(tooltip, "- A "+highlightText("Captain")+" may be assigned",  1);
+			lyr_tooltipUtilities.addColorizedPara(tooltip, "- Subjected to "+positiveText("no automated ship penalty")+"",  1);
 			lyr_tooltipUtilities.addColorizedPara(tooltip, "- May house any type of wings",  1);
-			lyr_tooltipUtilities.addColorizedPara(tooltip, "- Deployment point cost "+negativePattern+"increased by 25%)",  1);
-			if (noAutomatedShipsSkill) lyr_tooltipUtilities.addColorizedPara(tooltip, "- "+highlightPattern+"Automated Ships) skill "+negativePattern+"not detected)", 1);
+			lyr_tooltipUtilities.addColorizedPara(tooltip, "- Deployment point cost "+negativeText("increased by 25%")+"",  1);
+			if (noAutomatedShipsSkill) lyr_tooltipUtilities.addColorizedPara(tooltip, "- "+highlightText("Automated Ships")+" skill "+negativeText("not detected")+"", 1);
 		} else {
 			tooltip.addSectionHeading("AUTOMATION MODE", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 
 			lyr_tooltipUtilities.addColorizedPara(tooltip, "- No crew",  5);
-			lyr_tooltipUtilities.addColorizedPara(tooltip, "- An "+highlightPattern+"AI Core) may be installed",  1);
-			lyr_tooltipUtilities.addColorizedPara(tooltip, "- Subjected to "+negativePattern+"automated ship penalty)",  1);
+			lyr_tooltipUtilities.addColorizedPara(tooltip, "- An "+highlightText("AI Core")+" may be installed",  1);
+			lyr_tooltipUtilities.addColorizedPara(tooltip, "- Subjected to "+negativeText("automated ship penalty")+"",  1);
 			lyr_tooltipUtilities.addColorizedPara(tooltip, "- May only house automated wings",  1);
-			lyr_tooltipUtilities.addColorizedPara(tooltip, "- Deployment point cost "+positivePattern+"decreased by 10%)",  1);
-			if (noAutomatedShipsSkill) lyr_tooltipUtilities.addColorizedPara(tooltip, "- "+highlightPattern+"Automated Ships) skill "+negativePattern+"not detected)", 1);
+			lyr_tooltipUtilities.addColorizedPara(tooltip, "- Deployment point cost "+positiveText("decreased by 10%")+"",  1);
+			if (noAutomatedShipsSkill) lyr_tooltipUtilities.addColorizedPara(tooltip, "- "+highlightText("Automated Ships")+" skill "+negativeText("not detected")+"", 1);
 		}
 
 		if (!this.isApplicableToShip(ship)) {

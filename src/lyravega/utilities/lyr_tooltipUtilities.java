@@ -10,29 +10,34 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
 public class lyr_tooltipUtilities {
-	private static final Pattern pattern = Pattern.compile("\\((.{8})\\|(.+?)\\)");
+	private static final String limiter = "•";	// ALT+7
+	private static final String separator = "◘";	// ALT+8
+	private static final Pattern pattern = Pattern.compile(limiter+"(.{8})"+separator+"(.+?)"+limiter);
 	private static Matcher matcher;
 
 	public static class regexColour {
-		public static final String grayedPattern = convertColorToRegexCode(Misc.getGrayColor(), true);
-		public static final String normalPattern = convertColorToRegexCode(Misc.getTextColor(), true);
-		public static final String highlightPattern = convertColorToRegexCode(Misc.getHighlightColor(), true);
-		public static final String positivePattern = convertColorToRegexCode(Misc.getPositiveHighlightColor(), true);
-		public static final String storyPattern = convertColorToRegexCode(Misc.getStoryOptionColor(), true);
-		public static final String negativePattern = convertColorToRegexCode(Misc.getNegativeHighlightColor(), true);
+		private static final String grayedPattern = limiter+convertColorToRegexCode(Misc.getGrayColor())+separator;
+		private static final String normalPattern = limiter+convertColorToRegexCode(Misc.getTextColor())+separator;
+		private static final String highlightPattern = limiter+convertColorToRegexCode(Misc.getHighlightColor())+separator;
+		private static final String positivePattern = limiter+convertColorToRegexCode(Misc.getPositiveHighlightColor())+separator;
+		private static final String storyPattern = limiter+convertColorToRegexCode(Misc.getStoryOptionColor())+separator;
+		private static final String negativePattern = limiter+convertColorToRegexCode(Misc.getNegativeHighlightColor())+separator;
+
+		public static final String grayText(String s) { return grayedPattern+s+limiter; }
+		public static final String normalText(String s) { return normalPattern+s+limiter; }
+		public static final String highlightText(String s) { return highlightPattern+s+limiter; }
+		public static final String positiveText(String s) { return positivePattern+s+limiter; }
+		public static final String negativeText(String s) { return storyPattern+s+limiter; }
+		public static final String storyText(String s) { return negativePattern+s+limiter; }
+		public static final String positiveOrNegativeText(boolean b, String s) { return b ? positivePattern+s+limiter : negativePattern+s+limiter; }
 	}
 
 	/**
-	 * Converts a colour to a custom HEX string to match the regex pattern used in the
-	 * {@link addColorizedPara} method.
-	 * <p> If a decodeable RGB HEX that may be used with {@link Color#decode(String)}
-	 * is required, set the boolean to false
+	 * Converts a colour to HEX string
 	 * @param clr to convert
-	 * @param forCustomRegex if {@code true}, generates a custom HEX string, otherwise a decodeable one
 	 * @return
 	 */
-	public static final String convertColorToRegexCode(Color clr, boolean forCustomRegex) {
-		if (forCustomRegex) return "(0x"+Integer.toHexString(clr.getRGB()).substring(2)+"|";
+	public static final String convertColorToRegexCode(Color clr) {
 		return "0x"+Integer.toHexString(clr.getRGB()).substring(2);
 	}
 

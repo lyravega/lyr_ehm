@@ -2,8 +2,8 @@ package experimentalHullModifications.hullmods.ehm;
 
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
-import static lyravega.utilities.lyr_tooltipUtilities.regexColour.highlightPattern;
-import static lyravega.utilities.lyr_tooltipUtilities.regexColour.storyPattern;
+import static lyravega.utilities.lyr_tooltipUtilities.regexColour.highlightText;
+import static lyravega.utilities.lyr_tooltipUtilities.regexColour.storyText;
 
 import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
@@ -152,7 +152,7 @@ public final class ehm_base extends _ehm_base implements weaponEvents {
 
 			if (overdrive > 0) {
 				tooltip.addSectionHeading("UPGRADES", header.sEffect_textColour, header.invisible_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
-				lyr_tooltipUtilities.addColorizedPara(tooltip, highlightPattern+"Overdrive, Tier "+overdrive+"): Increases s-mod capacity by "+storyPattern+overdrive+")", text.padding);
+				lyr_tooltipUtilities.addColorizedPara(tooltip, highlightText("Overdrive, Tier "+overdrive)+": Increases s-mod capacity by "+storyText(overdrive+""), text.padding);
 			}
 
 			if (ehm_settings.getShowFluff()) {
