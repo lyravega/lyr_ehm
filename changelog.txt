@@ -9,12 +9,8 @@ Each level of this upgrade cost story points and AI cores, with higher levels re
 - Fixed an issue that allowed adapted slots to be converted as well, which should have not been possible at all
 - Fixed an issue that applied the wrong description prefix to ships if the flavour option was turned off
 - Fixed a rare issue causing changes to affect all ships with the same hull spec instead of just one in specific circumstances
+- Fixed a null pointer exception caused by ship/fleet tracking
 - Added a new purchaseable upgrade called "Overdrive" that allows ships to have more built-in modifications
-
-
-Version 0.8.6b
-
-- Added some guards to prevent a null pointer exception caused by ship/fleet tracking
 - Changed "Logistics Overhaul" to apply civilian conversion bonuses to a smaller selection of ships
 
 
