@@ -147,7 +147,7 @@ public final class lyr_hullSpec {
 			// this.hullSpec.setDParentHullId(null);
 			// this.setBaseHullId(null);
 			// this.hullSpec.setRestoreToBase(false);
-			this.setSpriteSpec(this.getSpriteSpec());	// maybe reduces memory imprint?
+			// this.setSpriteSpec(oHullSpec.getSpriteSpec());	// maybe reduces memory imprint?
 			this.hullSpec.setDescriptionPrefix(oHullSpec.getDescriptionPrefix());	// remove damaged description prefix
 			this.hullSpec.setHullName(oHullSpec.getHullName());	// restore the name to get rid of "(D)"
 			this.setBaseValue(oHullSpec.getBaseValue());	// restore the value as damaged hulls lose 25% in value
