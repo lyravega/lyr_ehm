@@ -85,8 +85,8 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 		lyr_shipTracker shipTracker = this.getShipTracker(shipTrackerUUID);
 		if (shipTracker == null) shipTracker = new lyr_shipTracker(this, variant, member, shipTrackerUUID, parentTrackerUUID);
 
-		if (!variant.hasTag(lyr_fleetTracker.uuid.prefix))
-			variant.addTag(lyr_fleetTracker.uuid.prefix);
+		// if (!variant.hasTag(lyr_fleetTracker.uuid.prefix))
+		// 	variant.addTag(lyr_fleetTracker.uuid.prefix);
 
 		if (shipTrackerUUID != null && !variant.hasTag(lyr_fleetTracker.uuid.shipPrefix+shipTrackerUUID))
 			variant.addTag(lyr_fleetTracker.uuid.shipPrefix+shipTrackerUUID);	// ship's uuid
