@@ -4,14 +4,16 @@ This version comes with a new upgrade feature that utilizes LunaLib's refit tab 
 
 Each level of this upgrade cost story points and AI cores, with higher levels requiring you to have a nanoforge in your cargo holds. This upgrade in specific is designed to encourage farming to some degree and have you burn through your resources to push your builds even further. Let me know if you have any feedback on the upgrade, and happy hunting!
 
-- IMPORTANT: Added a debug option called "Clear Unknown Slots", which will allow bricked saves to load
- - Will only help if you are encountering a crash during a load that states a slot with [CS_AS_] prefix cannot be found
+- IMPORTANT: Added a debug option called "Clear Unknown Slots", which will allow some bricked saves to load
+ * Will only help if a crash occurs during a load that states a slot with [CS_AS_] prefix cannot be found
 - Fixed an issue that allowed adapted slots to be converted as well, which should have not been possible at all (the issue above)
 - Fixed an issue that applied the wrong description prefix to ships if the flavour option was turned off
 - Fixed a rare issue causing changes to affect all ships with the same hull spec instead of just one in specific circumstances
 - Fixed a null pointer exception caused by ship/fleet tracking
 - Changed "Logistics Overhaul" to apply civilian conversion bonuses to a smaller selection of ships
-- Added a new purchaseable upgrade called "Overdrive" that allows ships to have more built-in modifications
+- NEW FEATURE: Added purchaseable enhancements; these utilize LunaLib's refit buttons and may have multiple tiers
+- Added a new upgrade called "Overdrive" that allows ships to have more built-in modifications
+- Changed some tooltips, the base hull modification's tooltip will also show the "Overdrive" level and bonus
 
 
 Version 0.8.6a
