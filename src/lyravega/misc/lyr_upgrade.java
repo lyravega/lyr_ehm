@@ -7,9 +7,21 @@ import java.util.Iterator;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 
+/**
+ * A class that is dedicated to house multiple upgrade layers in one place while providing accessors
+ * for easier navigation and information retrieval. Variant tag alterations are also done from here.
+ * <p> Upgrades store a tag on a variant, and relevant effects are applied by extracting the tier
+ * information from it. The effects are applied through an interface that abstracts the upgrade.
+ * <p> In these upgrade classes, layer refers to the base definitions, and tier refers to the current
+ * layer being in use. An upgrade may have multiple layers, but only one tier in use. Engrish :s
+ * <p> In addition, layer indices start from 0, while tier indices start from 1. This is to avoid
+ * having no level set to {@code -1}. When querying a layer, tier needs to be adjusted accordingly.
+ * @author lyravega
+ * @see {@link lyr_upgradeLayer} / {@link lyr_upgradeVault} / {@link _lyr_upgradeEffect}
+ */
 public class lyr_upgrade {
-	final String id;
-	final String name;
+	private final String id;
+	private final String name;
 	private final EnumMap<HullSize, ArrayList<lyr_upgradeLayer>> upgradeLayers;
 
 	public lyr_upgrade(String id, String name) {
@@ -26,7 +38,7 @@ public class lyr_upgrade {
 
 	public lyr_upgradeLayer getUpgradeLayer(HullSize hullSize, int i) { return this.upgradeLayers.get(hullSize).get(i); }
 
-	public void addUpgradeTier(HullSize hullSize, Object[][] commodityCostsArray, String[] specialRequirementsArray, Integer storyPointCost) {
+	public void addUpgradeLayer(HullSize hullSize, Object[][] commodityCostsArray, String[] specialRequirementsArray, Integer storyPointCost) {
 		if (hullSize == null) hullSize = HullSize.DEFAULT;
 
 		if (this.upgradeLayers.get(hullSize) == null) {
@@ -43,6 +55,14 @@ public class lyr_upgrade {
 	@Deprecated
 	public lyr_upgradeLayer getNextLayer(ShipVariantAPI variant) {
 		return this.getUpgradeLayer(variant.getHullSize(), this.getCurrentTier(variant));
+	}
+
+	public String getCurrentLayerName(ShipVariantAPI variant) {
+		final int currentTier = this.getCurrentTier(variant);
+
+		if (currentTier == 0) return this.name;	// tiers are +1 than layers; tiers start from 1, layers start from 0
+
+		return this.getUpgradeLayer(variant.getHullSize(), currentTier-1).getName();
 	}
 
 	public int getMaxTier(HullSize hullSize) {

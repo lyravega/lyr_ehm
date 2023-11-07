@@ -33,25 +33,25 @@ public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffec
 
 		this.upgrade = new lyr_upgrade(ehm_internals.id.upgrades.overdrive, "Overdrive");
 
-		this.upgrade.addUpgradeTier(HullSize.FRIGATE, new Object[][]{{gc, 3}}, null, 1);
-		this.upgrade.addUpgradeTier(HullSize.FRIGATE, new Object[][]{{gc, 6}, {bc, 1}}, null, 1);
-		this.upgrade.addUpgradeTier(HullSize.FRIGATE, new Object[][]{{gc, 9}, {bc, 2}}, new String[]{cn}, 2);
-		this.upgrade.addUpgradeTier(HullSize.FRIGATE, new Object[][]{{gc, 12}, {bc, 3}, {ac, 1}}, new String[]{pn}, 3);
+		this.upgrade.addUpgradeLayer(HullSize.FRIGATE, new Object[][]{{gc, 3}}, null, 1);
+		this.upgrade.addUpgradeLayer(HullSize.FRIGATE, new Object[][]{{gc, 6}, {bc, 1}}, null, 1);
+		this.upgrade.addUpgradeLayer(HullSize.FRIGATE, new Object[][]{{gc, 9}, {bc, 2}}, new String[]{cn}, 2);
+		this.upgrade.addUpgradeLayer(HullSize.FRIGATE, new Object[][]{{gc, 12}, {bc, 3}, {ac, 1}}, new String[]{pn}, 3);
 
-		this.upgrade.addUpgradeTier(HullSize.DESTROYER, new Object[][]{{gc, 3}}, null, 2);
-		this.upgrade.addUpgradeTier(HullSize.DESTROYER, new Object[][]{{gc, 6}, {bc, 1}}, null, 2);
-		this.upgrade.addUpgradeTier(HullSize.DESTROYER, new Object[][]{{gc, 9}, {bc, 2}}, new String[]{cn}, 3);
-		this.upgrade.addUpgradeTier(HullSize.DESTROYER, new Object[][]{{gc, 12}, {bc, 3}, {ac, 1}}, new String[]{pn}, 4);
+		this.upgrade.addUpgradeLayer(HullSize.DESTROYER, new Object[][]{{gc, 3}}, null, 2);
+		this.upgrade.addUpgradeLayer(HullSize.DESTROYER, new Object[][]{{gc, 6}, {bc, 1}}, null, 2);
+		this.upgrade.addUpgradeLayer(HullSize.DESTROYER, new Object[][]{{gc, 9}, {bc, 2}}, new String[]{cn}, 3);
+		this.upgrade.addUpgradeLayer(HullSize.DESTROYER, new Object[][]{{gc, 12}, {bc, 3}, {ac, 1}}, new String[]{pn}, 4);
 
-		this.upgrade.addUpgradeTier(HullSize.CRUISER, new Object[][]{{gc, 4}}, null, 3);
-		this.upgrade.addUpgradeTier(HullSize.CRUISER, new Object[][]{{gc, 8}, {bc, 2}}, null, 3);
-		this.upgrade.addUpgradeTier(HullSize.CRUISER, new Object[][]{{gc, 12}, {bc, 4}, {ac, 1}}, new String[]{cn}, 4);
-		this.upgrade.addUpgradeTier(HullSize.CRUISER, new Object[][]{{gc, 16}, {bc, 6}, {ac, 2}}, new String[]{pn}, 5);
+		this.upgrade.addUpgradeLayer(HullSize.CRUISER, new Object[][]{{gc, 4}}, null, 3);
+		this.upgrade.addUpgradeLayer(HullSize.CRUISER, new Object[][]{{gc, 8}, {bc, 2}}, null, 3);
+		this.upgrade.addUpgradeLayer(HullSize.CRUISER, new Object[][]{{gc, 12}, {bc, 4}, {ac, 1}}, new String[]{cn}, 4);
+		this.upgrade.addUpgradeLayer(HullSize.CRUISER, new Object[][]{{gc, 16}, {bc, 6}, {ac, 2}}, new String[]{pn}, 5);
 
-		this.upgrade.addUpgradeTier(HullSize.CAPITAL_SHIP, new Object[][]{{gc, 4}}, null, 5);
-		this.upgrade.addUpgradeTier(HullSize.CAPITAL_SHIP, new Object[][]{{gc, 8}, {bc, 2}}, null, 5);
-		this.upgrade.addUpgradeTier(HullSize.CAPITAL_SHIP, new Object[][]{{gc, 12}, {bc, 4}, {ac, 1}}, new String[]{cn}, 6);
-		this.upgrade.addUpgradeTier(HullSize.CAPITAL_SHIP, new Object[][]{{gc, 16}, {bc, 6}, {ac, 2}}, new String[]{pn}, 7);
+		this.upgrade.addUpgradeLayer(HullSize.CAPITAL_SHIP, new Object[][]{{gc, 4}}, null, 5);
+		this.upgrade.addUpgradeLayer(HullSize.CAPITAL_SHIP, new Object[][]{{gc, 8}, {bc, 2}}, null, 5);
+		this.upgrade.addUpgradeLayer(HullSize.CAPITAL_SHIP, new Object[][]{{gc, 12}, {bc, 4}, {ac, 1}}, new String[]{cn}, 6);
+		this.upgrade.addUpgradeLayer(HullSize.CAPITAL_SHIP, new Object[][]{{gc, 16}, {bc, 6}, {ac, 2}}, new String[]{pn}, 7);
 	}
 
 	@Override
@@ -79,7 +79,7 @@ public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffec
 
 	@Override
 	public String getButtonName(FleetMemberAPI member, ShipVariantAPI variant) {
-		return this.upgrade.getName();
+		return this.upgrade.getCurrentLayerName(variant);
 	}
 
 	@Override

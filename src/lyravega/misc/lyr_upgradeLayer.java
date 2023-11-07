@@ -14,8 +14,16 @@ import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
-import lyravega.utilities.lyr_tooltipUtilities;;
+import lyravega.utilities.lyr_tooltipUtilities;
 
+/**
+ * A class that is dedicated to house details of a single upgrade layer, and provide methods to check
+ * and/or deduct costs, print cost on a tooltip and whatnot.
+ * <p> Even though there is no inheritance between this and the {@link lyr_upgrade} class, they work
+ * in conjunction. In essence, an {@link lyr_upgrade} instance is a storage for many of these.
+ * @author lyravega
+ * @see {@link lyr_upgrade} / {@link lyr_upgradeVault} / {@link _lyr_upgradeEffect}
+ */
 public class lyr_upgradeLayer {
 	private final lyr_upgrade upgrade; public lyr_upgrade getUpgrade() { return this.upgrade; }
 	private final int tier; public int getTier() { return this.tier; }
@@ -43,8 +51,8 @@ public class lyr_upgradeLayer {
 
 		this.upgrade = upgrade;
 		this.tier = tier;
-		this.id = upgrade.id+":"+tier;
-		this.name = upgrade.name+this.toRoman(tier);
+		this.id = upgrade.getId()+":"+tier;
+		this.name = upgrade.getName()+this.toRoman(tier);
 		this.commodityCosts = commodityCosts;
 		this.specialRequirements = specialRequirements;
 		this.storyPointCost = storyPointCost != null ? Math.max(0, storyPointCost) : 0;
@@ -107,7 +115,7 @@ public class lyr_upgradeLayer {
 
 		if (this.storyPointCost > 0) {
 			if (playerStats.getStoryPoints() >= this.storyPointCost) {
-				playerStats.spendStoryPoints(this.storyPointCost, true, null, true, 0f, this.upgrade.id+":"+this.tier);
+				playerStats.spendStoryPoints(this.storyPointCost, true, null, true, 0f, this.upgrade.getId()+":"+this.tier);
 			}
 		}
 
@@ -132,10 +140,10 @@ public class lyr_upgradeLayer {
 
 		if (this.storyPointCost > 0) {
 			if (isDisabled) {
-				format = (format.isEmpty() ? "Tier "+(this.getTier())+": " : format+" & ")
+				format = (format.isEmpty() ? "Tier "+(this.tier)+": " : format+" & ")
 					+this.storyPointCost+" SP";
 			} else {
-				format = (format.isEmpty() ? highlightText("Tier "+(this.getTier()))+": " : format+" & ")
+				format = (format.isEmpty() ? highlightText("Tier "+(this.tier))+": " : format+" & ")
 					+positiveOrNegativeText(
 						playerStats.getStoryPoints() >= this.storyPointCost,
 						this.storyPointCost
@@ -147,7 +155,7 @@ public class lyr_upgradeLayer {
 
 		if (this.commodityCosts != null && !this.commodityCosts.isEmpty()) {
 			if (isDisabled) {
-				format = (format.isEmpty() ? "Tier "+(this.getTier())+": " : format+" & ");
+				format = (format.isEmpty() ? "Tier "+(this.tier)+": " : format+" & ");
 
 				for (Iterator<String> iterator = this.commodityCosts.keySet().iterator(); iterator.hasNext(); ) {
 					String commodityCostId = iterator.next();
@@ -159,7 +167,7 @@ public class lyr_upgradeLayer {
 					if (iterator.hasNext()) format = format+", ";
 				}
 			} else {
-				format = (format.isEmpty() ? highlightText("Tier "+(this.getTier()))+": " : format+" & ");
+				format = (format.isEmpty() ? highlightText("Tier "+(this.tier))+": " : format+" & ");
 
 				for (Iterator<String> iterator = this.commodityCosts.keySet().iterator(); iterator.hasNext(); ) {
 					String commodityCostId = iterator.next();
@@ -194,7 +202,7 @@ public class lyr_upgradeLayer {
 			}
 
 			if (isDisabled) {
-				format = (format.isEmpty() ? "Tier "+(this.getTier())+": " : format+" & ");
+				format = (format.isEmpty() ? "Tier "+(this.tier)+": " : format+" & ");
 
 				for (Iterator<String> iterator = this.specialRequirements.iterator(); iterator.hasNext(); ) {
 					String specialId = iterator.next();
@@ -205,7 +213,7 @@ public class lyr_upgradeLayer {
 					if (iterator.hasNext()) format = format+", ";
 				}
 			} else {
-				format = (format.isEmpty() ? highlightText("Tier "+(this.getTier()))+": " : format+" & ");
+				format = (format.isEmpty() ? highlightText("Tier "+(this.tier))+": " : format+" & ");
 
 				for (Iterator<String> iterator = this.specialRequirements.iterator(); iterator.hasNext(); ) {
 					String specialId = iterator.next();
