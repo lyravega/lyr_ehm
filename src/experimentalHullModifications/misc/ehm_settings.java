@@ -42,6 +42,7 @@ public final class ehm_settings implements LunaSettingsListener {
 	protected static boolean debugTooltip; public static boolean getDebugTooltip() { return debugTooltip; }
 	protected static boolean playDrillSound = true; public static boolean getPlayDrillSound() { return playDrillSound; }
 	protected static boolean playDrillSoundForAll = false; public static boolean getPlayDrillSoundForAll() { return playDrillSoundForAll; }
+	protected static boolean clearUnknownSlots; public static boolean getClearUnknownSlots() { return clearUnknownSlots; }
 	protected static int loggerLevel; public static int getLogEventInfo() { return loggerLevel; }
 
 	private static void cacheSettings() {
@@ -65,6 +66,7 @@ public final class ehm_settings implements LunaSettingsListener {
 		showFluff = lyr_lunaUtilities.getBoolean(ehm_internals.id.mod, "ehm_showFluff");
 
 		// DEBUG SETTINGS
+		clearUnknownSlots = lyr_lunaUtilities.getBoolean(ehm_internals.id.mod, "ehm_clearUnknownSlots");
 		debugTooltip = lyr_lunaUtilities.getBoolean(ehm_internals.id.mod, "ehm_debugTooltip");
 		checkLoggerLevel();
 	}

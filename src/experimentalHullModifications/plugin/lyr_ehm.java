@@ -15,6 +15,7 @@ import experimentalHullModifications.abilities.ehm_ability;
 import experimentalHullModifications.abilities.listeners.ehm_shuntInjector;
 import experimentalHullModifications.abilities.listeners.ehm_submarketInjector;
 import experimentalHullModifications.misc.ehm_internals;
+import experimentalHullModifications.misc.ehm_lostAndFound;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.scripts.ehm_fieldRepairsScript;
 import experimentalHullModifications.upgrades.ehmu_overdrive;
@@ -35,6 +36,7 @@ public final class lyr_ehm extends BaseModPlugin {
 		replaceFieldRepairsScript();
 		attachShuntAccessListener();
 		lyr_fleetTracker.attach();
+		if (ehm_settings.getClearUnknownSlots()) ehm_lostAndFound.returnStuff();
 	}
 
 	@Override

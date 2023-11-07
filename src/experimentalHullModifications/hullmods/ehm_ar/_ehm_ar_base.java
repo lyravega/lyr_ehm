@@ -33,6 +33,7 @@ import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.chil
 import experimentalHullModifications.hullmods.ehm_mr.ehm_mr_auxilarygenerators;
 import experimentalHullModifications.hullmods.ehm_mr.ehm_mr_overengineered;
 import experimentalHullModifications.misc.ehm_internals;
+import experimentalHullModifications.misc.ehm_lostAndFound;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import experimentalHullModifications.misc.ehm_tooltip.regexText;
@@ -45,6 +46,7 @@ import lyravega.proxies.lyr_weaponSlot.slotTypeConstants;
 import lyravega.utilities.lyr_miscUtilities;
 import lyravega.utilities.lyr_tooltipUtilities;
 import lyravega.utilities.lyr_vectorUtilities;
+import lyravega.utilities.logger.lyr_logger;
 
 
 /**
@@ -85,7 +87,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
 
 		// primarily to deal with stuff on load
-		for (String slotId : variant.getFittedWeaponSlots()) {
+		if (!ehm_settings.getClearUnknownSlots()) for (String slotId : variant.getFittedWeaponSlots()) {
 			if (variant.getSlot(slotId) != null) continue;
 			matcher = pattern.matcher(slotId);
 			if (matcher.find()) slotId = matcher.group();
@@ -98,6 +100,14 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 			String shuntId = shuntSpec.getWeaponId();
 			if (adapterMap.containsKey(shuntId)) ehm_adaptSlot(lyr_hullSpec, shuntId, slotId);
 			else if (converterMap.containsKey(shuntId)) ehm_convertSlot(lyr_hullSpec, shuntId, slotId);
+		} else for (String slotId : variant.getFittedWeaponSlots()) {
+			if (variant.getSlot(slotId) != null) continue;
+
+			String weaponId = variant.getWeaponId(slotId);
+			lyr_logger.warn("Slot with the ID '"+slotId+"' not found, stashing the weapon '"+weaponId+"'");
+			ehm_lostAndFound.addLostItem(weaponId);	// to recover the weapons 'onGameLoad()'
+
+			variant.clearSlot(slotId);	// this is an emergency option to allow loading because I fucked up
 		}
 
 		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
