@@ -82,7 +82,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 
 	public static final void ehm_preProcessShunts(MutableShipStatsAPI stats) {
 		ShipVariantAPI variant = stats.getVariant();
-		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(true, variant.getHullSpec());
+		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
 
 		// primarily to deal with stuff on load
 		for (String slotId : variant.getFittedWeaponSlots()) {

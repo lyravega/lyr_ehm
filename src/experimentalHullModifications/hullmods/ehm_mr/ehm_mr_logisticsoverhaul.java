@@ -86,7 +86,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
-		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(true, variant.getHullSpec());
+		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
 		ShipHullSpecAPI originalHullSpec = lyr_hullSpec.referenceNonDamaged();
 
 		float logisticsBonus = 0;

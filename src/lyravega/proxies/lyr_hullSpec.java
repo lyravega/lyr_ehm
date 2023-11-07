@@ -126,14 +126,14 @@ public final class lyr_hullSpec {
 	 * <p> Some fields of the damaged hull spec is adjusted back to its original values
 	 * during cloning, like its description prefix, tags and whatnot as they are stripped
 	 * or adjusted while the game creates them in 'ShipHullSpecLoader' class
-	 * @param useAlteredDamagedHull does jack shit, is there just to have an overload
+	 * @param forceClone ignores detection and forces cloning, necessary for restorations; use {@code true} only when necessary
 	 * @param hullSpec to be proxied
 	 */
-	public lyr_hullSpec(boolean useAlteredDamagedHull, ShipHullSpecAPI hullSpec) {
+	public lyr_hullSpec(boolean forceClone, ShipHullSpecAPI hullSpec) {
 		ShipHullSpecAPI dHullSpec = Global.getSettings().getHullSpec(Misc.getDHullId(hullSpec));	// damaged hull spec
 		ShipHullSpecAPI oHullSpec = Global.getSettings().getHullSpec(hullSpec.getHullId().replace(Misc.D_HULL_SUFFIX, ""));	// original hull spec
 
-		if (dHullSpec == hullSpec || oHullSpec == hullSpec) {
+		if (forceClone || dHullSpec == hullSpec || oHullSpec == hullSpec) {
 			this.hullSpec = this.duplicate(dHullSpec);	// should be absolutely first here
 
 			for (String hullSpecTag : oHullSpec.getTags()) // this is a set, so there cannot be any duplicates, but still

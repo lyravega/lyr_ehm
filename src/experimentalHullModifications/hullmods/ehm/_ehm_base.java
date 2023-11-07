@@ -159,7 +159,7 @@ public abstract class _ehm_base implements HullModEffect {
 			hullSpecToClone = hullSpecToClone.getBaseHull();	// target the base hull spec instead, to perform a soft restoration
 		}
 
-		lyr_hullSpec = new lyr_hullSpec(true, hullSpecToClone);
+		lyr_hullSpec = new lyr_hullSpec(false, hullSpecToClone);
 
 		ehm_hullSpecAlteration(lyr_hullSpec);
 

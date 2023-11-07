@@ -8,7 +8,6 @@ import java.awt.Color;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
-import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
@@ -58,7 +57,7 @@ public abstract class _ehm_sc_base extends _ehm_base implements normalEvents {
 	 * @return an altered hullSpec with altered shieldSpec colours
 	 */
 	protected static final ShipHullSpecAPI ehm_applyShieldCosmetics(ShipVariantAPI variant, Color inner, Color ring) {
-		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(true, variant.getHullSpec());
+		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
 		lyr_shieldSpec shieldSpec = lyr_hullSpec.getShieldSpec();
 
 		shieldSpec.setInnerColor(inner);
@@ -74,10 +73,9 @@ public abstract class _ehm_sc_base extends _ehm_base implements normalEvents {
 	 * @return an altered hullSpec with its shieldSpec is restored
 	 */
 	public static final ShipHullSpecAPI ehm_restoreShield(ShipVariantAPI variant) {
-		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(true, variant.getHullSpec());
-		ShieldSpecAPI stockShieldSpec = lyr_hullSpec.referenceNonDamaged().getShieldSpec();
+		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
 
-		lyr_hullSpec.setShieldSpec(stockShieldSpec);
+		lyr_hullSpec.setShieldSpec(lyr_hullSpec.referenceNonDamaged().getShieldSpec());
 
 		return lyr_hullSpec.retrieve();
 	}
