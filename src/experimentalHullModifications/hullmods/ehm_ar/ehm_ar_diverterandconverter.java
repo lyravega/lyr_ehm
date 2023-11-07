@@ -127,14 +127,14 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 					int mod = converterMap.get(shuntId).getChildCost();
 					slotPoints -= mod;
 					stats.getDynamic().getMod(ehm_internals.id.stats.slotPointsToConverters).modifyFlat(slotId, -mod);	// used in tooltips
-					iterator.remove(); break;
+					break;
 				} case diverters.large: case diverters.medium: case diverters.small: {
 					if (slotId.startsWith(ehm_internals.affix.convertedSlot)) { iterator.remove(); break; }
 					if (!slot.isDecorative()) break;
 					int mod = diverterMap.get(shuntId);
 					slotPoints += mod;
 					stats.getDynamic().getMod(ehm_internals.id.stats.slotPointsFromDiverters).modifyFlat(slotId, mod);	// used in tooltips
-					iterator.remove(); break;
+					break;
 				} default: { iterator.remove(); break; }
 			}
 		}
