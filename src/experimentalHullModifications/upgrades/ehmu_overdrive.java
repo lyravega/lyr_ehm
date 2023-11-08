@@ -1,7 +1,5 @@
 package experimentalHullModifications.upgrades;
 
-import java.awt.Color;
-
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
@@ -19,7 +17,6 @@ import experimentalHullModifications.misc.ehm_tooltip.header;
 import lunalib.lunaRefit.BaseRefitButton;
 import lyravega.misc._lyr_upgradeEffect;
 import lyravega.misc.lyr_upgrade;
-import lyravega.misc.lyr_upgradeLayer;
 import lyravega.utilities.lyr_interfaceUtilities;
 
 public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffect {
@@ -125,7 +122,7 @@ public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffec
 		tooltip.addPara("Increase the maximum amount of s-mods supported by this ship by one with each tier", 2f);
 
 		if (currentTier > 0) {
-			tooltip.addSectionHeading("CURRENT TIER: "+currentTier, Color.CYAN, header.invisible_bgColour, Alignment.MID, 2f).flash(1f, 1f);
+			tooltip.addSectionHeading("CURRENT TIER: "+currentTier, Misc.getButtonTextColor(), header.invisible_bgColour, Alignment.MID, 2f).flash(1f, 1f);
 			switch (currentTier) {
 				case 1: {
 					tooltip.addImages(
@@ -152,26 +149,6 @@ public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffec
 			}
 		}
 
-		if (!(currentTier < this.upgrade.getMaxTier(variant.getHullSize()))) {
-			tooltip.addSectionHeading("MAX TIER", Color.CYAN, header.invisible_bgColour, Alignment.MID, 2f).flash(1f, 1f);
-			return;
-		}
-
-		if (this.upgrade.canUpgradeTier(variant)) {
-			tooltip.addSectionHeading("UPGRADE REQUIREMENTS", Misc.getHighlightColor(), header.invisible_bgColour, Alignment.MID, 2f).flash(1f, 1f);
-		} else {
-			tooltip.addSectionHeading("UPGRADE REQUIREMENTS UNMET", Misc.getNegativeHighlightColor(), header.invisible_bgColour, Alignment.MID, 2f).flash(1f, 1f);
-		}
-
-		for (lyr_upgradeLayer upgradeLayer : this.upgrade.getUpgradeLayers(variant.getHullSize())) {
-			int upgradeTier = upgradeLayer.getTier();
-
-			if (upgradeTier > currentTier) upgradeLayer.addRequirementsToTooltip(tooltip, 2f, upgradeTier != currentTier+1);	// skip purchased tiers, colourize next tier, desaturate rest
-		}
-
-		if (this.upgrade.canUpgradeTier(variant)) {
-			tooltip.addSectionHeading("HOLD SHIFT & CLICK TO UPGRADE", Misc.getPositiveHighlightColor(), header.invisible_bgColour, Alignment.MID, 2f).flash(1f, 1f);
-			tooltip.addPara("Any special item requirements will not be consumed, while the rest will be", 2f);
-		}
+		this.upgrade.addAllRequirementsToTooltip(variant, tooltip, 2f, 2f);
 	}
 }

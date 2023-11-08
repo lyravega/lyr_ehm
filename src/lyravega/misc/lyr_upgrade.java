@@ -6,6 +6,11 @@ import java.util.Iterator;
 
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.api.ui.Alignment;
+import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.api.util.Misc;
+
+import experimentalHullModifications.misc.ehm_tooltip.header;
 
 /**
  * A class that is dedicated to house multiple upgrade layers in one place while providing accessors
@@ -15,7 +20,7 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
  * <p> In these upgrade classes, layer refers to the base definitions, and tier refers to the current
  * layer being in use. An upgrade may have multiple layers, but only one tier in use. Engrish :s
  * <p> In addition, layer indices start from 0, while tier indices start from 1. This is to avoid
- * having no level set to {@code -1}. When querying a layer, tier needs to be adjusted accordingly.
+ * having no tier set to {@code -1}. When querying a layer, tier needs to be adjusted accordingly.
  * @author lyravega
  * @see {@link lyr_upgradeLayer} / {@link lyr_upgradeVault} / {@link _lyr_upgradeEffect}
  */
@@ -118,10 +123,14 @@ public class lyr_upgrade {
 	 * @return {@code true} if it may be, {@code false} otherwise
 	 */
 	public boolean canUpgradeTier(ShipVariantAPI variant) {
-		int currentLevel = this.getCurrentTier(variant);
+		int currentTier = this.getCurrentTier(variant);
 		HullSize hullSize = variant.getHullSize();
 
-		return currentLevel < this.getMaxTier(hullSize) && this.getUpgradeLayer(hullSize, currentLevel).canAfford();
+		return currentTier < this.getMaxTier(hullSize) && this.getUpgradeLayer(hullSize, currentTier).canAfford();
+	}
+
+	private boolean canUpgradeTier(HullSize hullSize, Integer currentTier) {
+		return currentTier < this.getMaxTier(hullSize) && this.getUpgradeLayer(hullSize, currentTier).canAfford();
 	}
 
 	/**
@@ -131,17 +140,59 @@ public class lyr_upgrade {
 	 * @param variant that will receive the upgrade
 	 */
 	public void upgradeTier(ShipVariantAPI variant) {
-		int level = 0;
+		int tier = 0;
 
 		for (Iterator<String> iterator = variant.getTags().iterator(); iterator.hasNext(); ) {
 			String tag = iterator.next();
 			if (!tag.startsWith(this.id)) continue;
 
-			level = Integer.valueOf(tag.replace(this.id+":", ""));
+			tier = Integer.valueOf(tag.replace(this.id+":", ""));
 			iterator.remove(); break;
 		}
 
-		variant.addTag(this.id+":"+(level+1));
-		this.getUpgradeLayer(variant.getHullSize(), level).deductCosts();
+		variant.addTag(this.id+":"+(tier+1));
+		this.getUpgradeLayer(variant.getHullSize(), tier).deductCosts();
+	}
+
+	/**
+	 * Convenience method to print all layer requirements of this upgrade for the passed variant on
+	 * the passed tooltip, along with some headers and extra information where applicable.
+	 * <p> Checks the variant's current tier (if any) and prints the relevant information on the
+	 * tooltip. Purchased tiers will not be shown, and only the next layer's requirements will be
+	 * colourized while the rest will be grayed out.
+	 * <p> Depending on the situation, the headers may differ; for example on a variant that is at
+	 * max tier, no requirement will be shown and instead just a header stating such will be displayed.
+	 * @param tooltip to be modified
+	 * @param textPad
+	 * @param headerPad
+	 * @param variant to check and show the tooltip for
+	 * @see {@link lyr_upgradeLayer#addRequirementsToTooltip()} where the individual layer requirements are printed
+	 */
+	public void addAllRequirementsToTooltip(ShipVariantAPI variant, TooltipMakerAPI tooltip, float textPad, float headerPad) {
+		final int currentTier = this.getCurrentTier(variant);
+		final HullSize hullSize = variant.getHullSize();
+		final boolean canUpgradeTier = this.canUpgradeTier(hullSize, currentTier);
+
+		if (!(currentTier < this.getMaxTier(hullSize))) {
+			tooltip.addSectionHeading("MAX TIER", Misc.getButtonTextColor(), header.invisible_bgColour, Alignment.MID, headerPad);
+			return;
+		}
+
+		if (canUpgradeTier) {
+			tooltip.addSectionHeading("UPGRADE REQUIREMENTS", Misc.getHighlightColor(), header.invisible_bgColour, Alignment.MID, headerPad);
+		} else {
+			tooltip.addSectionHeading("UPGRADE REQUIREMENTS UNMET", Misc.getNegativeHighlightColor(), header.invisible_bgColour, Alignment.MID, headerPad);
+		}
+
+		for (lyr_upgradeLayer upgradeLayer : this.getUpgradeLayers(hullSize)) {
+			int upgradeTier = upgradeLayer.getTier();
+
+			if (upgradeTier > currentTier) upgradeLayer.addRequirementsToTooltip(tooltip, textPad, upgradeTier != currentTier+1);	// skip purchased tiers, colourize next tier, desaturate rest
+		}
+
+		if (canUpgradeTier) {
+			tooltip.addSectionHeading("HOLD SHIFT & CLICK TO UPGRADE", Misc.getPositiveHighlightColor(), header.invisible_bgColour, Alignment.MID, headerPad);
+			tooltip.addPara("Any special item requirements will not be consumed, while the rest will be", textPad);
+		}
 	}
 }

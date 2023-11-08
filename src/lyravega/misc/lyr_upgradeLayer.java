@@ -155,13 +155,17 @@ public class lyr_upgradeLayer {
 	 * <p> The boolean governs if the para will be grayed out, should be set to {@code false} for
 	 * the tiers that is beyond the next one. Otherwise, tier, affordable and unaffordable texts will
 	 * utilize highlight, positive and negative colours in that order.
+	 * <p> The para will also show how much of something the player has in parantheses if it is not
+	 * disabled, since such information is only relevant when needed. Specials will not show any
+	 * numbers as they are not consumed.
 	 * <p> The text will be generated in such a way that will utilize inline regexable colour HEX
 	 * text that'll be formatted into proper values in another method. Don't mind what's being done
 	 * here, as this simply is a convenience method to print everything at once.
 	 * @param tooltip to be modified
 	 * @param isDisabled to gray the text out instead of colorizing the text
 	 * @return the para itself if any further modification is needed
-	 * @see {@link lyr_tooltipUtilities#addColorizedPara(TooltipMakerAPI, String, float)}
+	 * @see {@link lyr_tooltipUtilities#addColorizedPara()} where the format is processed
+	 * @see {@link lyr_upgrade#addAllRequirementsToTooltip()} where this method is called from for all available layers
 	 */
 	public LabelAPI addRequirementsToTooltip(TooltipMakerAPI tooltip, float pad, boolean isDisabled) {
 		final MutableCharacterStatsAPI playerStats = Global.getSector().getPlayerStats();
