@@ -20,9 +20,11 @@ import lunalib.lunaRefit.BaseRefitButton;
 import lyravega.misc._lyr_upgradeEffect;
 import lyravega.misc.lyr_upgrade;
 import lyravega.misc.lyr_upgradeLayer;
+import lyravega.utilities.lyr_interfaceUtilities;
 
 public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffect {
 	private final lyr_upgrade upgrade;
+	private final String upgradeId;
 
 	public ehmu_overdrive() {
 		final String gc = "gamma_core";
@@ -32,6 +34,7 @@ public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffec
 		final String pn = "pristine_nanoforge";
 
 		this.upgrade = new lyr_upgrade(ehm_internals.id.upgrades.overdrive, "Overdrive");
+		this.upgradeId = this.upgrade.getId();
 
 		this.upgrade.addUpgradeLayer(HullSize.FRIGATE, new Object[][]{{gc, 3}}, null, 1);
 		this.upgrade.addUpgradeLayer(HullSize.FRIGATE, new Object[][]{{gc, 6}, {bc, 1}}, null, 1);
@@ -56,7 +59,7 @@ public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffec
 
 	@Override
 	public String getUpgradeId() {
-		return this.upgrade.getId();
+		return this.upgradeId;
 	}
 
 	@Override
@@ -70,11 +73,11 @@ public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffec
 	}
 
 	@Override
-	public void applyUpgradeEffect(MutableShipStatsAPI stats, String tag) {
-		final int mod = tag == null ? this.upgrade.getCurrentTier(stats.getVariant()) : Integer.valueOf(tag.replace(this.upgrade.getId()+":", ""));
+	public void applyUpgradeEffect(MutableShipStatsAPI stats, Integer effectTier) {
+		if (effectTier == null) effectTier = this.upgrade.getCurrentTier(stats.getVariant());	// if effect tier is not passed for whatever reason, search the variant
 
-		stats.getDynamic().getMod(this.upgrade.getId()).modifyFlat(this.upgrade.getId(), mod);	// for tooltip
-		stats.getDynamic().getMod(Stats.MAX_PERMANENT_HULLMODS_MOD).modifyFlat(this.upgrade.getId(), mod);
+		stats.getDynamic().getMod(this.upgradeId).modifyFlat(this.upgradeId, effectTier);	// for tooltip
+		stats.getDynamic().getMod(Stats.MAX_PERMANENT_HULLMODS_MOD).modifyFlat(this.upgradeId, effectTier);	// in this upgrade's case, effectTier directly translates to flat mod
 	}
 
 	@Override
@@ -106,6 +109,7 @@ public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffec
 
 		this.refreshVariant();
 		this.refreshButtonList();
+		lyr_interfaceUtilities.playDrillSound();
 	}
 
 	@Override
@@ -162,7 +166,7 @@ public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffec
 		for (lyr_upgradeLayer upgradeLayer : this.upgrade.getUpgradeLayers(variant.getHullSize())) {
 			int upgradeTier = upgradeLayer.getTier();
 
-			if (upgradeTier > currentTier) upgradeLayer.addRequirementsToTooltip(tooltip, upgradeTier != currentTier+1);	// skip purchased tiers, colourize next tier, desaturate rest
+			if (upgradeTier > currentTier) upgradeLayer.addRequirementsToTooltip(tooltip, 2f, upgradeTier != currentTier+1);	// skip purchased tiers, colourize next tier, desaturate rest
 		}
 
 		if (this.upgrade.canUpgradeTier(variant)) {

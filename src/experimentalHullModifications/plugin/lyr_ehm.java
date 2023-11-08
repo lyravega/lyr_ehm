@@ -25,9 +25,7 @@ import lyravega.misc.lyr_upgradeVault;
 import lyravega.utilities.logger.lyr_logger;
 
 public final class lyr_ehm extends BaseModPlugin {
-	public static final class friend {
-		private friend() {}
-	};	private static friend friend = new friend();
+	public static final class friend { private friend() {} }; private static final friend friend = new friend();
 
 	@Override
 	public void onGameLoad(boolean newGame) {

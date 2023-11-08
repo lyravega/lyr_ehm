@@ -33,7 +33,16 @@ public class lyr_upgradeLayer {
 	private final Set<String> specialRequirements; public Set<String> getSpecialRequirements() { return this.specialRequirements; }
 	private final int storyPointCost; public int getStoryPointCost() { return this.storyPointCost; }
 
-	public lyr_upgradeLayer(lyr_upgrade upgrade, int tier, Object[][] commodityCostsArray, String[] specialRequirementsArray, Integer storyPointCost) {
+	/**
+	 * Constructs a layer for an upgrade. Access is restricted to package as these shouldn't be used
+	 * on their own, but rather should be constructed through an upgrade container {@link lyr_upgrade}
+	 * to perform properly.
+	 * @param hullSize determine which list category the layer goes to. May be {@code null}; {@code HullSize.DEFAULT} will be utilized in that case
+	 * @param commodityCostsArray a two dimensional array for defining commodity costs, where the expected objects are {{@link String}, {@link Integer}}. May be {@code null}
+	 * @param specialRequirementsArray a single dimensional string array for defining special requirements. May be {@code null}
+	 * @param storyPointCost an integer for story point cost. May be {@code null}, minimum {@code 0}
+	 */
+	lyr_upgradeLayer(lyr_upgrade upgrade, int tier, Object[][] commodityCostsArray, String[] specialRequirementsArray, Integer storyPointCost) {
 		Map<String, Integer> commodityCosts = null;
 		Set<String> specialRequirements = null;
 
@@ -69,6 +78,10 @@ public class lyr_upgradeLayer {
 		}
 	}
 
+	/**
+	 * Checks if a layer may be afforded by the player. All costs are checked one by one till a
+	 * @return {@code true} if it may be afforded, {@code false} otherwise
+	 */
 	public boolean canAfford() {
 		final MutableCharacterStatsAPI playerStats = Global.getSector().getPlayerStats();
 		final CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
@@ -90,6 +103,9 @@ public class lyr_upgradeLayer {
 		}
 
 		if (this.specialRequirements != null && !this.specialRequirements.isEmpty()) {
+			// SpecialItemData testData = new SpecialItemData("pristine_nanoforge", null);	// not using these even though a special check may be done this way
+			// boolean test = playerCargo.getQuantity(CargoItemType.SPECIAL, testData) > 0;	// because need to check what the player has first due to specials that may count as each other
+
 			Set<String> specials = new HashSet<String>();
 
 			for (CargoStackAPI stack : playerCargo.getStacksCopy()) {
@@ -132,7 +148,22 @@ public class lyr_upgradeLayer {
 		// specials are not consumed
 	}
 
-	public LabelAPI addRequirementsToTooltip(TooltipMakerAPI tooltip, boolean isDisabled) {	// isDisabled is a shitty "shortcut" to paint shit grayed out instead
+	/**
+	 * A tooltip modification method that automatically generates this tier's requirements and puts
+	 * them on the tooltip. The used colours are all drawn from game, and uses gray, highlight,
+	 * positive and negative ones.
+	 * <p> The boolean governs if the para will be grayed out, should be set to {@code false} for
+	 * the tiers that is beyond the next one. Otherwise, tier, affordable and unaffordable texts will
+	 * utilize highlight, positive and negative colours in that order.
+	 * <p> The text will be generated in such a way that will utilize inline regexable colour HEX
+	 * text that'll be formatted into proper values in another method. Don't mind what's being done
+	 * here, as this simply is a convenience method to print everything at once.
+	 * @param tooltip to be modified
+	 * @param isDisabled to gray the text out instead of colorizing the text
+	 * @return the para itself if any further modification is needed
+	 * @see {@link lyr_tooltipUtilities#addColorizedPara(TooltipMakerAPI, String, float)}
+	 */
+	public LabelAPI addRequirementsToTooltip(TooltipMakerAPI tooltip, float pad, boolean isDisabled) {
 		final MutableCharacterStatsAPI playerStats = Global.getSector().getPlayerStats();
 		final CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
 
@@ -230,9 +261,9 @@ public class lyr_upgradeLayer {
 		}
 
 		if (isDisabled) {
-			return tooltip.addPara(format, Misc.getGrayColor(), 2f);
+			return tooltip.addPara(format, Misc.getGrayColor(), pad);
 		} else {
-			return lyr_tooltipUtilities.addColorizedPara(tooltip, format, 2f);
+			return lyr_tooltipUtilities.addColorizedPara(tooltip, format, pad);
 		}
 	}
 }

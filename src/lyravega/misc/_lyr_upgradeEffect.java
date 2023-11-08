@@ -16,5 +16,11 @@ public interface _lyr_upgradeEffect {
 
 	public int getUpgradeTier(ShipVariantAPI variant);
 
-	public void applyUpgradeEffect(MutableShipStatsAPI stats, String tag);
+	/**
+	 * A method that may be utilized remotely to trigger any upgrade effects and apply them on the
+	 * mutable stats. The caller should be from somewhere that these effects may be applied properly.
+	 * @param stats of the entity that will receive the upgrade effects
+	 * @param effectTier as a convenience shortcut for the current tier. If {@code null}, the tags will be searched again
+	 */
+	public void applyUpgradeEffect(MutableShipStatsAPI stats, Integer effectTier);
 }

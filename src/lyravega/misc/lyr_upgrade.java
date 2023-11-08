@@ -24,6 +24,12 @@ public class lyr_upgrade {
 	private final String name;
 	private final EnumMap<HullSize, ArrayList<lyr_upgradeLayer>> upgradeLayers;
 
+	/**
+	 * Constructs an upgrade container which holds the upgrade layers. Only simple assignments are
+	 * done here, the layers needs to be added via methods.
+	 * @param id of the upgrade, also used as a tag prefix that will be applied on variants
+	 * @param name a friendly name of the upgrade, usually used/saved for tooltips and whatnot
+	 */
 	public lyr_upgrade(String id, String name) {
 		this.id = id;
 		this.name = name;
@@ -34,18 +40,27 @@ public class lyr_upgrade {
 
 	public String getName() { return this.name; }
 
-	public ArrayList<lyr_upgradeLayer> getUpgradeLayers(HullSize hullSize) { return this.upgradeLayers.get(hullSize); }
+	/**
+	 * Grabs the upgrade layer list associated with the passed hull size, if any. If there is no such
+	 * list or the passed {@code hullSize} is null, redirects to {@link HullSize#DEFAULT} instead.
+	 * @param hullSize category
+	 * @return an upgrade layer list
+	 */
+	public ArrayList<lyr_upgradeLayer> getUpgradeLayers(HullSize hullSize) {
+		if (hullSize == null || !this.upgradeLayers.containsKey(hullSize)) hullSize = HullSize.DEFAULT;	// redirect to default if hull size null or not found
 
-	public lyr_upgradeLayer getUpgradeLayer(HullSize hullSize, int i) { return this.upgradeLayers.get(hullSize).get(i); }
+		return this.upgradeLayers.get(hullSize);
+	}
 
-	public void addUpgradeLayer(HullSize hullSize, Object[][] commodityCostsArray, String[] specialRequirementsArray, Integer storyPointCost) {
-		if (hullSize == null) hullSize = HullSize.DEFAULT;
-
-		if (this.upgradeLayers.get(hullSize) == null) {
-			this.upgradeLayers.put(hullSize, new ArrayList<lyr_upgradeLayer>());
-		}
-
-		this.getUpgradeLayers(hullSize).add(new lyr_upgradeLayer(this, this.getMaxTier(hullSize)+1, commodityCostsArray, specialRequirementsArray, storyPointCost));
+	/**
+	 * Grabs an upgrade layer from a hull size list with the passed index. If there is no such list
+	 * list or the passed {@code hullSize} is null, redirects to {@link HullSize#DEFAULT} instead.
+	 * @param hullSize category
+	 * @param i index of the layer; layer indices start from 0 but first tier counts as one so adjust accordingly
+	 * @return an upgrade layer
+	 */
+	public lyr_upgradeLayer getUpgradeLayer(HullSize hullSize, int i) {
+		return this.getUpgradeLayers(hullSize).get(i);	// redirection is done in other method, no null checks here
 	}
 
 	public lyr_upgradeLayer getCurrentLayer(ShipVariantAPI variant) {
@@ -57,16 +72,30 @@ public class lyr_upgrade {
 		return this.getUpgradeLayer(variant.getHullSize(), this.getCurrentTier(variant));
 	}
 
+	/**
+	 * Constructs a layer for this upgrade and stores it in separate list per hull size. If no hull
+	 * size is given, then default hull size will be utilized.
+	 * @param hullSize determine which list category the layer goes to. May be {@code null}; {@code HullSize.DEFAULT} will be utilized in that case
+	 * @param commodityCostsArray a two dimensional array for defining commodity costs, where the expected objects are {{@link String}, {@link Integer}}. May be {@code null}
+	 * @param specialRequirementsArray a single dimensional string array for defining special requirements. May be {@code null}
+	 * @param storyPointCost an integer for story point cost. May be {@code null}, minimum {@code 0}
+	 */
+	public void addUpgradeLayer(HullSize hullSize, Object[][] commodityCostsArray, String[] specialRequirementsArray, Integer storyPointCost) {
+		if (hullSize == null) hullSize = HullSize.DEFAULT;	// TODO: default needs to be expanded; if there's no specific hullsize, try to use default. would also be useful if hullsize is not important; all costs are uniform
+
+		if (this.upgradeLayers.get(hullSize) == null) {
+			this.upgradeLayers.put(hullSize, new ArrayList<lyr_upgradeLayer>());
+		}
+
+		this.getUpgradeLayers(hullSize).add(new lyr_upgradeLayer(this, this.getMaxTier(hullSize)+1, commodityCostsArray, specialRequirementsArray, storyPointCost));
+	}
+
 	public String getCurrentLayerName(ShipVariantAPI variant) {
 		final int currentTier = this.getCurrentTier(variant);
 
 		if (currentTier == 0) return this.name;	// tiers are +1 than layers; tiers start from 1, layers start from 0
 
 		return this.getUpgradeLayer(variant.getHullSize(), currentTier-1).getName();
-	}
-
-	public int getMaxTier(HullSize hullSize) {
-		return this.getUpgradeLayers(hullSize).size();
 	}
 
 	public int getCurrentTier(ShipVariantAPI variant) {
@@ -77,6 +106,17 @@ public class lyr_upgrade {
 		};	return 0;
 	}
 
+	public int getMaxTier(HullSize hullSize) {
+		return this.getUpgradeLayers(hullSize).size();
+	}
+
+	/**
+	 * Checks if the next tier of the upgrade may be applied on the variant by first checking if it
+	 * is at max tier already first, then if it may be afforded. Should be used before upgrading as
+	 * upgrade method itself has no checks in itself.
+	 * @param variant that will be checked
+	 * @return {@code true} if it may be, {@code false} otherwise
+	 */
 	public boolean canUpgradeTier(ShipVariantAPI variant) {
 		int currentLevel = this.getCurrentTier(variant);
 		HullSize hullSize = variant.getHullSize();
@@ -84,6 +124,12 @@ public class lyr_upgrade {
 		return currentLevel < this.getMaxTier(hullSize) && this.getUpgradeLayer(hullSize, currentLevel).canAfford();
 	}
 
+	/**
+	 * Advances the tier of the upgrade to the next layer. Variant will have its upgrade tag (if any)
+	 * replaced with a newer one, and any consumable costs required for upgrading will be deducted.
+	 * Has no checks to see if it may be upgraded, so it should be checked beforehand.
+	 * @param variant that will receive the upgrade
+	 */
 	public void upgradeTier(ShipVariantAPI variant) {
 		int level = 0;
 

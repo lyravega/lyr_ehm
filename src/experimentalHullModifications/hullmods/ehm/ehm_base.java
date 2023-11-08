@@ -75,7 +75,7 @@ public final class ehm_base extends _ehm_base implements weaponEvents {
 
 			_lyr_upgradeEffect upgrade = lyr_upgradeVault.getUpgrade(tag.replaceFirst(":.+?", ""));
 
-			if (upgrade != null) upgrade.applyUpgradeEffect(stats, tag);
+			if (upgrade != null) upgrade.applyUpgradeEffect(stats, Integer.valueOf(tag.replaceFirst(upgrade.getUpgradeId()+":", "")));
 		}
 
 		_ehm_ar_base.ehm_preProcessShunts(stats);	// at this point, the hull spec should be cloned so proceed and pre-process the shunts
