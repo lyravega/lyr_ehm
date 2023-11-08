@@ -117,8 +117,7 @@ public class lyr_upgrade {
 
 	/**
 	 * Checks if the next tier of the upgrade may be applied on the variant by first checking if it
-	 * is at max tier already first, then if it may be afforded. Should be used before upgrading as
-	 * upgrade method itself has no checks in itself.
+	 * is at max tier already first, then if it may be afforded. Also used before upgrading the tier.
 	 * @param variant that will be checked
 	 * @return {@code true} if it may be, {@code false} otherwise
 	 */
@@ -136,10 +135,13 @@ public class lyr_upgrade {
 	/**
 	 * Advances the tier of the upgrade to the next layer. Variant will have its upgrade tag (if any)
 	 * replaced with a newer one, and any consumable costs required for upgrading will be deducted.
-	 * Has no checks to see if it may be upgraded, so it should be checked beforehand.
+	 * <p> Checks if it can be done so beforehand just in case, even though the check should be done
+	 * from the UI elements already.
 	 * @param variant that will receive the upgrade
 	 */
 	public void upgradeTier(ShipVariantAPI variant) {
+		if (!this.canUpgradeTier(variant)) return;
+
 		int tier = 0;
 
 		for (Iterator<String> iterator = variant.getTags().iterator(); iterator.hasNext(); ) {

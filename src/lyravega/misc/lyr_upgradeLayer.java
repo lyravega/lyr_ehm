@@ -74,25 +74,29 @@ public class lyr_upgradeLayer {
 			case 3: return " III";
 			case 4: return " IV";
 			case 5: return " V";
-			default: return "";
+			default: return " "+num;
 		}
 	}
 
 	/**
-	 * Checks if a layer may be afforded by the player. All costs are checked one by one till a
+	 * Checks if a layer may be afforded by the player. Returns {@code false} immediately if a cost
+	 * cannot be afforded, or a requirement is lacking.
 	 * @return {@code true} if it may be afforded, {@code false} otherwise
 	 */
 	public boolean canAfford() {
-		final MutableCharacterStatsAPI playerStats = Global.getSector().getPlayerStats();
-		final CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
 
 		if (this.storyPointCost > 0) {
+			final MutableCharacterStatsAPI playerStats = Global.getSector().getPlayerStats();
+
 			if (playerStats.getStoryPoints() < this.storyPointCost) {
 				return false;
 			}
 		}
 
+
 		if (this.commodityCosts != null && !this.commodityCosts.isEmpty()) {
+			final CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
+
 			for (String commodityCostId : this.commodityCosts.keySet()) {
 				int cost = this.commodityCosts.get(commodityCostId);
 
@@ -103,6 +107,7 @@ public class lyr_upgradeLayer {
 		}
 
 		if (this.specialRequirements != null && !this.specialRequirements.isEmpty()) {
+			final CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
 			// SpecialItemData testData = new SpecialItemData("pristine_nanoforge", null);	// not using these even though a special check may be done this way
 			// boolean test = playerCargo.getQuantity(CargoItemType.SPECIAL, testData) > 0;	// because need to check what the player has first due to specials that may count as each other
 
@@ -125,21 +130,28 @@ public class lyr_upgradeLayer {
 		return true;
 	}
 
+	/**
+	 * Self-explanatory. Deducts the costs from the player if enough amount is there. Checks if the
+	 * player can afford the upgrades beforehand.
+	 */
 	public void deductCosts() {
-		final MutableCharacterStatsAPI playerStats = Global.getSector().getPlayerStats();
-		final CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
+		if (!this.canAfford()) return;
 
 		if (this.storyPointCost > 0) {
-			if (playerStats.getStoryPoints() >= this.storyPointCost) {
-				playerStats.spendStoryPoints(this.storyPointCost, true, null, true, 0f, this.upgrade.getId()+":"+this.tier);
+			final MutableCharacterStatsAPI playerStats = Global.getSector().getPlayerStats();
+
+			if (playerStats.getStoryPoints() >= this.storyPointCost) {	// redundant due to 'canAfford()' but just in case
+				playerStats.spendStoryPoints(this.storyPointCost, false, null, false, 0f, this.getName());
 			}
 		}
 
 		if (this.commodityCosts != null && !this.commodityCosts.isEmpty()) {
+			final CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
+
 			for (String commodityCostId : this.commodityCosts.keySet()) {
 				int cost = this.commodityCosts.get(commodityCostId);
 
-				if (playerCargo.getCommodityQuantity(commodityCostId) >= cost) {
+				if (playerCargo.getCommodityQuantity(commodityCostId) >= cost) {	// redundant due to 'canAfford()' but just in case
 					playerCargo.removeCommodity(commodityCostId, cost);
 				}
 			}
@@ -168,12 +180,11 @@ public class lyr_upgradeLayer {
 	 * @see {@link lyr_upgrade#addAllRequirementsToTooltip()} where this method is called from for all available layers
 	 */
 	public LabelAPI addRequirementsToTooltip(TooltipMakerAPI tooltip, float pad, boolean isDisabled) {
-		final MutableCharacterStatsAPI playerStats = Global.getSector().getPlayerStats();
-		final CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
-
 		String format = "";
 
 		if (this.storyPointCost > 0) {
+			final MutableCharacterStatsAPI playerStats = Global.getSector().getPlayerStats();
+
 			if (isDisabled) {
 				format = (format.isEmpty() ? "Tier "+(this.tier)+": " : format+" & ")
 					+this.storyPointCost+" SP";
@@ -189,6 +200,8 @@ public class lyr_upgradeLayer {
 		}
 
 		if (this.commodityCosts != null && !this.commodityCosts.isEmpty()) {
+			final CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
+
 			if (isDisabled) {
 				format = (format.isEmpty() ? "Tier "+(this.tier)+": " : format+" & ");
 
@@ -225,7 +238,8 @@ public class lyr_upgradeLayer {
 		}
 
 		if (this.specialRequirements != null && !this.specialRequirements.isEmpty()) {
-			Set<String> specials = new HashSet<String>();
+			final CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
+			final Set<String> specials = new HashSet<String>();
 
 			for (CargoStackAPI stack : playerCargo.getStacksCopy()) {
 				if (stack.getType() != CargoItemType.SPECIAL) continue;
