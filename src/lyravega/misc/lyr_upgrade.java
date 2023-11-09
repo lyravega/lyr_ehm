@@ -80,9 +80,11 @@ public class lyr_upgrade {
 	/**
 	 * Constructs a layer for this upgrade and stores it in separate list per hull size. If no hull
 	 * size is given, then default hull size will be utilized.
+	 * <p> Arrays are preferred over sets or maps as constructing and populating them separately is
+	 * tiresome compared to constructing arrays as inline parameters. Insertion order is preserved.
 	 * @param hullSize determine which list category the layer goes to. May be {@code null}; {@code HullSize.DEFAULT} will be utilized in that case
-	 * @param commodityCostsArray a two dimensional array for defining commodity costs, where the expected objects are {{@link String} commodityId, {@link Integer} amount}. May be {@code null}
-	 * @param specialRequirementsArray a single dimensional string array for defining special requirements. May be {@code null}
+	 * @param commodityCostsArray a map-like two dimensional array for defining commodity costs with {{@link String} commodityId, {@link Integer} amount}. May be {@code null}
+	 * @param specialRequirementsArray a set-like single dimensional string array for defining special requirements with {{@link String} specialId}. May be {@code null}
 	 * @param storyPointCost an integer for story point cost. May be {@code null}, minimum {@code 0}
 	 * @param creditCost an integer for credit cost. May be {@code null}, minimum {@code 0}
 	 */
