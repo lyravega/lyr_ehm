@@ -70,7 +70,7 @@ public final class ehm_base extends _ehm_base implements weaponEvents {
 			}
 		}
 
-		for (String tag : stats.getVariant().getTags()) {
+		if (!ehm_settings.getCosmeticsOnly()) for (String tag : stats.getVariant().getTags()) {
 			if (!tag.startsWith(ehm_internals.id.upgrades.prefix)) continue;
 
 			_lyr_upgradeEffect upgrade = lyr_upgradeVault.getUpgrade(tag.replaceFirst(":.+?", ""));
