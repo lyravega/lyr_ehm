@@ -21,7 +21,7 @@ import experimentalHullModifications.misc.ehm_internals.id.stats;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import experimentalHullModifications.misc.ehm_tooltip.text;
-import lyravega.listeners.events.weaponEvents;
+import lyravega.listeners.events.normalEvents;
 import lyravega.misc._lyr_upgradeEffect;
 import lyravega.misc.lyr_upgradeVault;
 import lyravega.utilities.lyr_miscUtilities;
@@ -35,17 +35,14 @@ import lyravega.utilities.lyr_tooltipUtilities;
  * @category Base Hull Modification
  * @author lyravega
  */
-public final class ehm_base extends _ehm_base implements weaponEvents {
+public final class ehm_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onWeaponInstalled(ShipVariantAPI variant, String weaponId, String slotId) {
-
+	public void onInstalled(ShipVariantAPI variant) {
+		commitVariantChanges(); playDrillSound();
 	}
 
-	@Override
-	public void onWeaponRemoved(ShipVariantAPI variant, String weaponId, String slotId) {
-
-	}
+	@Override public void onRemoved(ShipVariantAPI variant) {}	// cannot be removed since it becomes a built-in
 	//#endregion
 	// END OF CUSTOM EVENTS
 
@@ -57,16 +54,11 @@ public final class ehm_base extends _ehm_base implements weaponEvents {
 		if (!hullSpec.isBuiltInMod(ehm_internals.id.hullmods.base) || !Misc.getDHullId(hullSpec).equals(hullSpec.getHullId())) {
 			variant.setHullSpecAPI(ehm_hullSpecClone(variant));
 
-			if (!variant.getPermaMods().contains(ehm_internals.id.hullmods.base)) {	// to make this a one-time commit, and to avoid re-committing if/when the ship is getting restored
-				// for (String moduleSlot : variant.getStationModules().keySet()) {
-				// 	ShipVariantAPI moduleVariant = variant.getModuleVariant(moduleSlot);
-
-				// 	if (!moduleVariant.getPermaMods().contains(lyr_internals.id.hullmods.base)) moduleVariant.addPermaMod(lyr_internals.id.hullmods.base, false);
-				// }
-
-				variant.addPermaMod(ehm_internals.id.hullmods.base, false);
-				commitVariantChanges(); playDrillSound();
-			}
+			// the block below is redundant with the new tracking as it is done externally, not from here anymore; may use 'onInstall()' and 'onRemove()' to trigger the effects below
+			// if (!variant.getPermaMods().contains(ehm_internals.id.hullmods.base)) {	// to make this a one-time commit, and to avoid re-committing if/when the ship is getting restored
+			// 	variant.addPermaMod(ehm_internals.id.hullmods.base, false);
+			// 	commitVariantChanges(); playDrillSound();
+			// }
 		}
 
 		if (!ehm_settings.getCosmeticsOnly()) for (String tag : stats.getVariant().getTags()) {
