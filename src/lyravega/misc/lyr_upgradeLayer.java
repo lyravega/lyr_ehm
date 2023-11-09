@@ -38,11 +38,12 @@ public class lyr_upgradeLayer {
 	/**
 	 * Constructs a layer for an upgrade. Access is restricted to package as these shouldn't be used
 	 * on their own, but rather should be constructed through an upgrade container {@link lyr_upgrade}
-	 * to perform properly.
+	 * via its add method to perform properly.
 	 * @param hullSize determine which list category the layer goes to. May be {@code null}; {@code HullSize.DEFAULT} will be utilized in that case
 	 * @param commodityCostsArray a two dimensional array for defining commodity costs, where the expected objects are {{@link String}, {@link Integer}}. May be {@code null}
 	 * @param specialRequirementsArray a single dimensional string array for defining special requirements. May be {@code null}
 	 * @param storyPointCost an integer for story point cost. May be {@code null}, minimum {@code 0}
+	 * @param creditCost an integer for credit cost. May be {@code null}, minimum {@code 0}
 	 */
 	lyr_upgradeLayer(lyr_upgrade upgrade, int tier, Object[][] commodityCostsArray, String[] specialRequirementsArray, Integer storyPointCost, Integer creditCost) {
 		Map<String, Integer> commodityCosts = null;
@@ -55,7 +56,7 @@ public class lyr_upgradeLayer {
 		}
 
 		if (specialRequirementsArray != null) for (String specialId : specialRequirementsArray) {
-			if (specialRequirements == null) specialRequirements = new HashSet<String>();
+			if (specialRequirements == null) specialRequirements = new LinkedHashSet<String>();
 
 			specialRequirements.add(specialId);
 		}
