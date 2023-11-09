@@ -16,7 +16,6 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_tooltip.header;
-import experimentalHullModifications.misc.ehm_tooltip.regexText;
 import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.listeners.events.normalEvents;
 import lyravega.proxies.lyr_hullSpec;
@@ -113,13 +112,13 @@ public abstract class _ehm_sr_base extends _ehm_base implements normalEvents {
 		if (!this.isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 
-			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.lacksBase, text.padding);
+			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksBase, text.padding);
 			// if (_ehm_helpers.ehm_hasHullmodWithTag(ship, lyr_internals.tag.systemRetrofit, this.hullModSpecId)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.hasSystemRetrofit, text.padding);
-			if (ship.getVariant().hasHullMod(ehm_internals.id.hullmods.logisticsoverhaul)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.hasLogisticsOverhaul, text.padding);
+			if (ship.getVariant().hasHullMod(ehm_internals.id.hullmods.logisticsoverhaul)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasLogisticsOverhaul, text.padding);
 
-			if (this.hullModSpecTags.contains(ehm_internals.tag.reqShields) && ship.getShield() == null) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.noShields, text.padding);
-			if (this.hullModSpecTags.contains(ehm_internals.tag.reqNoPhase) && ship.getHullSpec().isPhase()) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.hasPhase, text.padding);
-			if (this.hullModSpecTags.contains(ehm_internals.tag.reqWings) && ship.getNumFighterBays() == 0) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.noWings, text.padding);
+			if (this.hullModSpecTags.contains(ehm_internals.tag.reqShields) && ship.getShield() == null) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.noShields, text.padding);
+			if (this.hullModSpecTags.contains(ehm_internals.tag.reqNoPhase) && ship.getHullSpec().isPhase()) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasPhase, text.padding);
+			if (this.hullModSpecTags.contains(ehm_internals.tag.reqWings) && ship.getNumFighterBays() == 0) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.noWings, text.padding);
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);

@@ -19,7 +19,6 @@ import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
-import experimentalHullModifications.misc.ehm_tooltip.regexText;
 import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.listeners.events.normalEvents;
 import lyravega.utilities.lyr_miscUtilities;
@@ -83,14 +82,14 @@ public final class ehm_mr_auxilarygenerators extends _ehm_base implements normal
 		if (!this.isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 
-			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.lacksBase, text.padding);
-			if (!ship.getVariant().hasHullMod(ehm_internals.id.hullmods.diverterandconverter)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.lacksActivator, text.padding);
+			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksBase, text.padding);
+			if (!ship.getVariant().hasHullMod(ehm_internals.id.hullmods.diverterandconverter)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksActivator, text.padding);
 		}
 
 		if (!this.canBeAddedOrRemovedNow(ship, null, null)) {
 			tooltip.addSectionHeading(header.lockedIn, header.locked_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 
-			if (lyr_miscUtilities.hasWeapons(ship, ehm_internals.affix.convertedSlot)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.hasWeaponsOnConvertedSlots, text.padding);
+			if (lyr_miscUtilities.hasWeapons(ship, ehm_internals.affix.convertedSlot)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasWeaponsOnConvertedSlots, text.padding);
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);

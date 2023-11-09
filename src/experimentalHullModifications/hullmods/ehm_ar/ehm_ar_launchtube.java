@@ -19,7 +19,6 @@ import experimentalHullModifications.misc.ehm_internals.id.hullmods;
 import experimentalHullModifications.misc.ehm_internals.id.shunts.launchTubes;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
-import experimentalHullModifications.misc.ehm_tooltip.regexText;
 import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.utilities.lyr_miscUtilities;
@@ -144,7 +143,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 
 			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 
-			if (lyr_miscUtilities.hasExtraWings(ship, hullmods.launchtube)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.hasExtraWings, text.padding);
+			if (lyr_miscUtilities.hasExtraWings(ship, hullmods.launchtube)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasExtraWings, text.padding);
 		}
 	}
 

@@ -14,7 +14,6 @@ import com.fs.starfarer.api.util.Misc;
 
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_tooltip.header;
-import experimentalHullModifications.misc.ehm_tooltip.regexText;
 import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.utilities.lyr_miscUtilities;
 import lyravega.utilities.lyr_tooltipUtilities;
@@ -43,11 +42,11 @@ public final class ehm_undo extends _ehm_base {
 		if (!this.isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 
-			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.lacksBase, text.padding);
-			if (lyr_miscUtilities.hasHullModWithTag(ship, ehm_internals.tag.experimental, null, false)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.hasAnyExperimentalEnhanced, text.padding);
+			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksBase, text.padding);
+			if (lyr_miscUtilities.hasHullModWithTag(ship, ehm_internals.tag.experimental, null, false)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasAnyExperimentalEnhanced, text.padding);
 			else {
-				if (lyr_miscUtilities.hasHullModWithTag(ship, ehm_internals.tag.experimental, ehm_internals.id.hullmods.base, true)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.hasAnyExperimental, text.padding);
-				if (lyr_miscUtilities.hasWeapons(ship)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.hasWeapons, text.padding);
+				if (lyr_miscUtilities.hasHullModWithTag(ship, ehm_internals.tag.experimental, ehm_internals.id.hullmods.base, true)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasAnyExperimental, text.padding);
+				if (lyr_miscUtilities.hasWeapons(ship)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasWeapons, text.padding);
 			}
 		}
 

@@ -17,7 +17,6 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
-import experimentalHullModifications.misc.ehm_tooltip.regexText;
 import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.utilities.lyr_tooltipUtilities;
@@ -96,7 +95,7 @@ public abstract class _ehm_base implements HullModEffect {
 
 		if (this.isApplicableToShip(ship) && this.canBeAddedOrRemovedNow(ship, null, null)) {
 			tooltip.addSectionHeading(header.warning, header.warning_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-			lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.warning, text.padding);
+			lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.warning, text.padding);
 		}
 	}
 

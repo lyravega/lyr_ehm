@@ -1,7 +1,7 @@
 package lyravega.misc;
 
-import static lyravega.utilities.lyr_tooltipUtilities.regexColour.highlightText;
-import static lyravega.utilities.lyr_tooltipUtilities.regexColour.positiveOrNegativeText;
+import static lyravega.utilities.lyr_tooltipUtilities.colourizedText.highlightText;
+import static lyravega.utilities.lyr_tooltipUtilities.colourizedText.positiveOrNegativeText;
 
 import java.util.*;
 
@@ -12,9 +12,9 @@ import com.fs.starfarer.api.campaign.CargoStackAPI;
 import com.fs.starfarer.api.characters.MutableCharacterStatsAPI;
 import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
-import com.fs.starfarer.api.util.Misc;
 
 import lyravega.utilities.lyr_tooltipUtilities;
+import lyravega.utilities.lyr_tooltipUtilities.colour;
 
 /**
  * A class that is dedicated to house details of a single upgrade layer, and provide methods to check
@@ -283,9 +283,9 @@ public class lyr_upgradeLayer {
 		}
 
 		if (isDisabled) {
-			return tooltip.addPara(format, Misc.getGrayColor(), pad);
+			return tooltip.addPara(format, colour.gray, pad);
 		} else {
-			return lyr_tooltipUtilities.addColorizedPara(tooltip, format, pad);
+			return lyr_tooltipUtilities.addColourizedPara(tooltip, format, pad);
 		}
 	}
 }

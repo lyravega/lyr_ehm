@@ -2,8 +2,8 @@ package experimentalHullModifications.hullmods.ehm;
 
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
-import static lyravega.utilities.lyr_tooltipUtilities.regexColour.highlightText;
-import static lyravega.utilities.lyr_tooltipUtilities.regexColour.storyText;
+import static lyravega.utilities.lyr_tooltipUtilities.colourizedText.highlightText;
+import static lyravega.utilities.lyr_tooltipUtilities.colourizedText.storyText;
 
 import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
@@ -20,7 +20,6 @@ import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_internals.id.stats;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
-import experimentalHullModifications.misc.ehm_tooltip.regexText;
 import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.listeners.events.weaponEvents;
 import lyravega.misc._lyr_upgradeEffect;
@@ -139,11 +138,11 @@ public final class ehm_base extends _ehm_base implements weaponEvents {
 
 		if (!variant.hasHullMod(this.hullModSpecId)) {
 			tooltip.addSectionHeading(header.severeWarning, header.severeWarning_textColour, header.invisible_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
-			lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.baseRetrofitWarning, text.padding);
+			lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.baseRetrofitWarning, text.padding);
 
 			if (hullSpec.isRestoreToBase()) {
 				tooltip.addSectionHeading(header.restoreWarning, header.warning_textColour, header.invisible_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
-				lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.restoreWarning, text.padding);
+				lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.restoreWarning, text.padding);
 			}
 
 			super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
@@ -152,7 +151,7 @@ public final class ehm_base extends _ehm_base implements weaponEvents {
 
 			if (overdrive > 0) {
 				tooltip.addSectionHeading("UPGRADES", header.sEffect_textColour, header.invisible_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
-				lyr_tooltipUtilities.addColorizedPara(tooltip, highlightText("Overdrive, Tier "+overdrive)+": Increases s-mod capacity by "+storyText(overdrive+""), text.padding);
+				lyr_tooltipUtilities.addColourizedPara(tooltip, highlightText("Overdrive, Tier "+overdrive)+": Increases s-mod capacity by "+storyText(overdrive+""), text.padding);
 			}
 
 			if (ehm_settings.getShowFluff()) {

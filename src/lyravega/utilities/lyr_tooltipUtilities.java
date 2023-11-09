@@ -15,30 +15,45 @@ public class lyr_tooltipUtilities {
 	private static final Pattern pattern = Pattern.compile(limiter+"(.{8})"+separator+"(.+?)"+limiter);
 	private static Matcher matcher;
 
-	public static class regexColour {
-		private static final String grayedPattern = limiter+convertColorToRegexCode(Misc.getGrayColor())+separator;
-		private static final String normalPattern = limiter+convertColorToRegexCode(Misc.getTextColor())+separator;
-		private static final String highlightPattern = limiter+convertColorToRegexCode(Misc.getHighlightColor())+separator;
-		private static final String positivePattern = limiter+convertColorToRegexCode(Misc.getPositiveHighlightColor())+separator;
-		private static final String storyPattern = limiter+convertColorToRegexCode(Misc.getStoryOptionColor())+separator;
-		private static final String negativePattern = limiter+convertColorToRegexCode(Misc.getNegativeHighlightColor())+separator;
+	public static class colour {
+		public static final Color gray = Misc.getGrayColor();
+		public static final Color normal = Misc.getTextColor();
+		public static final Color highlight = Misc.getHighlightColor();
+		public static final Color positive = Misc.getPositiveHighlightColor();
+		public static final Color story = Misc.getStoryOptionColor();
+		public static final Color storyDarkBright = Misc.getStoryDarkBrigherColor();
+		public static final Color negative = Misc.getNegativeHighlightColor();
+		public static final Color button = Misc.getButtonTextColor();
+
+		/**
+		 * Converts a colour to HEX string
+		 * @param clr to convert
+		 * @return
+		 */
+		public static final String convertColourToRegexCode(Color clr) {
+			return "0x"+Integer.toHexString(clr.getRGB()).substring(2);
+		}
+	}
+
+	public static class colourizedText {
+		private static final String grayedPattern = limiter+colour.convertColourToRegexCode(colour.gray)+separator;
+		private static final String normalPattern = limiter+colour.convertColourToRegexCode(colour.normal)+separator;
+		private static final String highlightPattern = limiter+colour.convertColourToRegexCode(colour.highlight)+separator;
+		private static final String positivePattern = limiter+colour.convertColourToRegexCode(colour.positive)+separator;
+		private static final String negativePattern = limiter+colour.convertColourToRegexCode(colour.negative)+separator;
+		private static final String storyPattern = limiter+colour.convertColourToRegexCode(colour.story)+separator;
+		private static final String storyDarkBrightPattern = limiter+colour.convertColourToRegexCode(colour.storyDarkBright)+separator;
+		private static final String buttonPattern = limiter+colour.convertColourToRegexCode(colour.button)+separator;
 
 		public static final String grayText(String s) { return grayedPattern+s+limiter; }
 		public static final String normalText(String s) { return normalPattern+s+limiter; }
 		public static final String highlightText(String s) { return highlightPattern+s+limiter; }
 		public static final String positiveText(String s) { return positivePattern+s+limiter; }
-		public static final String negativeText(String s) { return storyPattern+s+limiter; }
-		public static final String storyText(String s) { return negativePattern+s+limiter; }
+		public static final String negativeText(String s) { return negativePattern+s+limiter; }
+		public static final String storyText(String s) { return storyPattern+s+limiter; }
+		public static final String storyDarkBrightText(String s) { return storyDarkBrightPattern+s+limiter; }
+		public static final String buttonText(String s) { return buttonPattern+s+limiter; }
 		public static final String positiveOrNegativeText(boolean b, String s) { return b ? positivePattern+s+limiter : negativePattern+s+limiter; }
-	}
-
-	/**
-	 * Converts a colour to HEX string
-	 * @param clr to convert
-	 * @return
-	 */
-	public static final String convertColorToRegexCode(Color clr) {
-		return "0x"+Integer.toHexString(clr.getRGB()).substring(2);
 	}
 
 	/**
@@ -59,7 +74,7 @@ public class lyr_tooltipUtilities {
 	 * @param pad
 	 * @return the added para if any further processing is required
 	 */
-	public static final LabelAPI addColorizedPara(TooltipMakerAPI tooltip, String rawText, float pad) {
+	public static final LabelAPI addColourizedPara(TooltipMakerAPI tooltip, String rawText, float pad) {
 		ArrayList<String> replaceList = new ArrayList<String>();
 		ArrayList<Color> colourList = new ArrayList<Color>();
 

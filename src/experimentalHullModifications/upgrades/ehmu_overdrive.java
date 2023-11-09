@@ -10,7 +10,6 @@ import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.input.InputEventAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
-import com.fs.starfarer.api.util.Misc;
 
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_settings;
@@ -19,6 +18,7 @@ import lunalib.lunaRefit.BaseRefitButton;
 import lyravega.misc._lyr_upgradeEffect;
 import lyravega.misc.lyr_upgrade;
 import lyravega.utilities.lyr_interfaceUtilities;
+import lyravega.utilities.lyr_tooltipUtilities.colour;
 
 public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffect {
 	private final lyr_upgrade upgrade;
@@ -119,11 +119,11 @@ public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffec
 	public void addTooltip(TooltipMakerAPI tooltip, FleetMemberAPI member, ShipVariantAPI variant, MarketAPI market) {
 		final int currentTier = this.upgrade.getCurrentTier(variant);
 
-		tooltip.addSectionHeading("OVERDRIVE", Misc.getHighlightColor(), header.invisible_bgColour, Alignment.MID, 2f);
+		tooltip.addSectionHeading("OVERDRIVE", colour.button, header.invisible_bgColour, Alignment.MID, 2f);
 		tooltip.addPara("Increase the maximum amount of s-mods supported by this ship by one with each tier", 2f);
 
 		if (currentTier > 0) {
-			tooltip.addSectionHeading("CURRENT TIER: "+currentTier, Misc.getButtonTextColor(), header.invisible_bgColour, Alignment.MID, 2f).flash(1f, 1f);
+			tooltip.addSectionHeading("CURRENT TIER: "+currentTier, colour.button, header.invisible_bgColour, Alignment.MID, 2f).flash(1f, 1f);
 			switch (currentTier) {
 				case 1: {
 					tooltip.addImages(

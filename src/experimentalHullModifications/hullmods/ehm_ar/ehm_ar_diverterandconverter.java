@@ -25,7 +25,6 @@ import experimentalHullModifications.misc.ehm_internals.id.shunts.converters;
 import experimentalHullModifications.misc.ehm_internals.id.shunts.diverters;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
-import experimentalHullModifications.misc.ehm_tooltip.regexText;
 import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.utilities.lyr_miscUtilities;
@@ -236,7 +235,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 
 			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 
-			if (lyr_miscUtilities.hasWeapons(ship, ehm_internals.affix.convertedSlot)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.hasWeaponsOnConvertedSlots, text.padding);
+			if (lyr_miscUtilities.hasWeapons(ship, ehm_internals.affix.convertedSlot)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasWeaponsOnConvertedSlots, text.padding);
 		}
 	}
 

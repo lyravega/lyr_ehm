@@ -20,7 +20,6 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_tooltip.header;
-import experimentalHullModifications.misc.ehm_tooltip.regexText;
 import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.listeners.events.normalEvents;
 import lyravega.proxies.lyr_hullSpec;
@@ -129,9 +128,9 @@ public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 		if (!this.isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 
-			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.lacksBase, text.padding);
+			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksBase, text.colourized.padding);
 			// if (_ehm_helpers.ehm_hasHullmodWithTag(ship, lyr_internals.tag.weaponRetrofit, this.hullModSpecId)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.hasWeaponRetrofit, text.padding);
-			if (ship.getVariant().hasHullMod(ehm_internals.id.hullmods.logisticsoverhaul)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.hasLogisticsOverhaul, text.padding);
+			if (ship.getVariant().hasHullMod(ehm_internals.id.hullmods.logisticsoverhaul)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasLogisticsOverhaul, text.colourized.padding);
 		}
 
 		if (!this.canBeAddedOrRemovedNow(ship, null, null)) {
@@ -139,8 +138,8 @@ public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 
 			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 
-			if (lyr_miscUtilities.hasWeapons(ship)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.hasWeapons, text.padding);
-			if (lyr_miscUtilities.hasAnyFittedWings(ship)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.hasWings, text.padding);
+			if (lyr_miscUtilities.hasWeapons(ship)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasWeapons, text.colourized.padding);
+			if (lyr_miscUtilities.hasAnyFittedWings(ship)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasWings, text.colourized.padding);
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);

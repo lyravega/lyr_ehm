@@ -19,7 +19,6 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_tooltip.header;
-import experimentalHullModifications.misc.ehm_tooltip.regexText;
 import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.listeners.events.normalEvents;
 import lyravega.proxies.lyr_engineBuilder;
@@ -178,14 +177,14 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 
 		if (this.hullModSpec.hasTag(ehm_internals.tag.customizable)) {
 			tooltip.addSectionHeading(header.customizable, header.customizable_textColour, header.invisible_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
-			lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.customizable, text.padding);
+			lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.customizable, text.padding);
 			// lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.customizableEngine, text.padding);
 		}
 
 		if (!this.isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 
-			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.lacksBase, text.padding);
+			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksBase, text.padding);
 			// if (_ehm_helpers.ehm_hasHullModWithTag(ship, lyr_internals.tag.engineCosmetic, id)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.hasEngineCosmetic, text.padding);
 		}
 

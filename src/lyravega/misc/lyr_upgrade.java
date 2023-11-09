@@ -8,9 +8,9 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
-import com.fs.starfarer.api.util.Misc;
 
 import experimentalHullModifications.misc.ehm_tooltip.header;
+import lyravega.utilities.lyr_tooltipUtilities.colour;
 
 /**
  * A class that is dedicated to house multiple upgrade layers in one place while providing accessors
@@ -86,7 +86,7 @@ public class lyr_upgrade {
 	 * @param storyPointCost an integer for story point cost. May be {@code null}, minimum {@code 0}
 	 */
 	public void addUpgradeLayer(HullSize hullSize, Object[][] commodityCostsArray, String[] specialRequirementsArray, Integer storyPointCost) {
-		if (hullSize == null) hullSize = HullSize.DEFAULT;	// TODO: default needs to be expanded; if there's no specific hullsize, try to use default. would also be useful if hullsize is not important; all costs are uniform
+		if (hullSize == null) hullSize = HullSize.DEFAULT;
 
 		if (this.upgradeLayers.get(hullSize) == null) {
 			this.upgradeLayers.put(hullSize, new ArrayList<lyr_upgradeLayer>());
@@ -176,14 +176,14 @@ public class lyr_upgrade {
 		final boolean canUpgradeTier = this.canUpgradeTier(hullSize, currentTier);
 
 		if (!(currentTier < this.getMaxTier(hullSize))) {
-			tooltip.addSectionHeading("MAX TIER", Misc.getButtonTextColor(), header.invisible_bgColour, Alignment.MID, headerPad);
+			tooltip.addSectionHeading("MAX TIER", colour.button, header.invisible_bgColour, Alignment.MID, headerPad);
 			return;
 		}
 
 		if (canUpgradeTier) {
-			tooltip.addSectionHeading("UPGRADE REQUIREMENTS", Misc.getHighlightColor(), header.invisible_bgColour, Alignment.MID, headerPad);
+			tooltip.addSectionHeading("UPGRADE REQUIREMENTS", colour.highlight, header.invisible_bgColour, Alignment.MID, headerPad);
 		} else {
-			tooltip.addSectionHeading("UPGRADE REQUIREMENTS UNMET", Misc.getNegativeHighlightColor(), header.invisible_bgColour, Alignment.MID, headerPad);
+			tooltip.addSectionHeading("UPGRADE REQUIREMENTS UNMET", colour.negative, header.invisible_bgColour, Alignment.MID, headerPad);
 		}
 
 		for (lyr_upgradeLayer upgradeLayer : this.getUpgradeLayers(hullSize)) {
@@ -193,7 +193,7 @@ public class lyr_upgrade {
 		}
 
 		if (canUpgradeTier) {
-			tooltip.addSectionHeading("HOLD SHIFT & CLICK TO UPGRADE", Misc.getPositiveHighlightColor(), header.invisible_bgColour, Alignment.MID, headerPad);
+			tooltip.addSectionHeading("HOLD SHIFT & CLICK TO UPGRADE", colour.positive, header.invisible_bgColour, Alignment.MID, headerPad);
 			tooltip.addPara("Any special item requirements will not be consumed, while the rest will be", textPad);
 		}
 	}

@@ -23,7 +23,6 @@ import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_internals.id.shunts.adapters;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
-import experimentalHullModifications.misc.ehm_tooltip.regexText;
 import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.utilities.lyr_miscUtilities;
@@ -185,7 +184,7 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 
 			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 
-			if (lyr_miscUtilities.hasWeapons(ship, ehm_internals.affix.adaptedSlot)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.hasWeaponsOnAdaptedSlots, text.padding);
+			if (lyr_miscUtilities.hasWeapons(ship, ehm_internals.affix.adaptedSlot)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasWeaponsOnAdaptedSlots, text.padding);
 		}
 	}
 
