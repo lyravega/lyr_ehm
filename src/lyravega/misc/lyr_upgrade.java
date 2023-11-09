@@ -84,15 +84,16 @@ public class lyr_upgrade {
 	 * @param commodityCostsArray a two dimensional array for defining commodity costs, where the expected objects are {{@link String}, {@link Integer}}. May be {@code null}
 	 * @param specialRequirementsArray a single dimensional string array for defining special requirements. May be {@code null}
 	 * @param storyPointCost an integer for story point cost. May be {@code null}, minimum {@code 0}
+	 * @param storyPointCost an integer for credit cost. May be {@code null}, minimum {@code 0}
 	 */
-	public void addUpgradeLayer(HullSize hullSize, Object[][] commodityCostsArray, String[] specialRequirementsArray, Integer storyPointCost) {
+	public void addUpgradeLayer(HullSize hullSize, Object[][] commodityCostsArray, String[] specialRequirementsArray, Integer storyPointCost, Integer creditCost) {
 		if (hullSize == null) hullSize = HullSize.DEFAULT;
 
 		if (this.upgradeLayers.get(hullSize) == null) {
 			this.upgradeLayers.put(hullSize, new ArrayList<lyr_upgradeLayer>());
 		}
 
-		this.getUpgradeLayers(hullSize).add(new lyr_upgradeLayer(this, this.getMaxTier(hullSize)+1, commodityCostsArray, specialRequirementsArray, storyPointCost));
+		this.getUpgradeLayers(hullSize).add(new lyr_upgradeLayer(this, this.getMaxTier(hullSize)+1, commodityCostsArray, specialRequirementsArray, storyPointCost, creditCost));
 	}
 
 	public String getCurrentLayerName(ShipVariantAPI variant) {

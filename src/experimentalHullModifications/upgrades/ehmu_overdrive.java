@@ -22,7 +22,7 @@ import lyravega.utilities.lyr_tooltipUtilities.colour;
 
 public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffect {
 	private final lyr_upgrade upgrade;
-	private final String upgradeId;
+	private final String upgradeId = ehm_internals.id.upgrades.overdrive;
 
 	public ehmu_overdrive() {
 		final String gc = "gamma_core";
@@ -31,28 +31,27 @@ public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffec
 		final String cn = "corrupted_nanoforge";
 		final String pn = "pristine_nanoforge";
 
-		this.upgrade = new lyr_upgrade(ehm_internals.id.upgrades.overdrive, "Overdrive");
-		this.upgradeId = this.upgrade.getId();
+		this.upgrade = new lyr_upgrade(this.upgradeId, "Overdrive");
 
-		this.upgrade.addUpgradeLayer(HullSize.FRIGATE, new Object[][]{{gc, 3}}, null, 1);
-		this.upgrade.addUpgradeLayer(HullSize.FRIGATE, new Object[][]{{gc, 6}, {bc, 1}}, null, 1);
-		this.upgrade.addUpgradeLayer(HullSize.FRIGATE, new Object[][]{{gc, 9}, {bc, 2}}, new String[]{cn}, 2);
-		this.upgrade.addUpgradeLayer(HullSize.FRIGATE, new Object[][]{{gc, 12}, {bc, 3}, {ac, 1}}, new String[]{pn}, 3);
+		this.upgrade.addUpgradeLayer(HullSize.FRIGATE, new Object[][]{{gc, 3}}, null, 1, null);
+		this.upgrade.addUpgradeLayer(HullSize.FRIGATE, new Object[][]{{gc, 5}, {bc, 2}}, null, 1, null);
+		this.upgrade.addUpgradeLayer(HullSize.FRIGATE, new Object[][]{{gc, 8}, {bc, 3}}, new String[]{cn}, 2, null);
+		this.upgrade.addUpgradeLayer(HullSize.FRIGATE, new Object[][]{{gc, 13}, {bc, 5}, {ac, 1}}, new String[]{pn}, 3, null);
 
-		this.upgrade.addUpgradeLayer(HullSize.DESTROYER, new Object[][]{{gc, 3}}, null, 2);
-		this.upgrade.addUpgradeLayer(HullSize.DESTROYER, new Object[][]{{gc, 6}, {bc, 1}}, null, 2);
-		this.upgrade.addUpgradeLayer(HullSize.DESTROYER, new Object[][]{{gc, 9}, {bc, 2}}, new String[]{cn}, 3);
-		this.upgrade.addUpgradeLayer(HullSize.DESTROYER, new Object[][]{{gc, 12}, {bc, 3}, {ac, 1}}, new String[]{pn}, 4);
+		this.upgrade.addUpgradeLayer(HullSize.DESTROYER, new Object[][]{{gc, 3}}, null, 2, null);
+		this.upgrade.addUpgradeLayer(HullSize.DESTROYER, new Object[][]{{gc, 5}, {bc, 2}}, null, 2, null);
+		this.upgrade.addUpgradeLayer(HullSize.DESTROYER, new Object[][]{{gc, 8}, {bc, 3}}, new String[]{cn}, 3, null);
+		this.upgrade.addUpgradeLayer(HullSize.DESTROYER, new Object[][]{{gc, 13}, {bc, 5}, {ac, 1}}, new String[]{pn}, 4, null);
 
-		this.upgrade.addUpgradeLayer(HullSize.CRUISER, new Object[][]{{gc, 4}}, null, 3);
-		this.upgrade.addUpgradeLayer(HullSize.CRUISER, new Object[][]{{gc, 8}, {bc, 2}}, null, 3);
-		this.upgrade.addUpgradeLayer(HullSize.CRUISER, new Object[][]{{gc, 12}, {bc, 4}, {ac, 1}}, new String[]{cn}, 4);
-		this.upgrade.addUpgradeLayer(HullSize.CRUISER, new Object[][]{{gc, 16}, {bc, 6}, {ac, 2}}, new String[]{pn}, 5);
+		this.upgrade.addUpgradeLayer(HullSize.CRUISER, new Object[][]{{gc, 5}}, null, 3, null);
+		this.upgrade.addUpgradeLayer(HullSize.CRUISER, new Object[][]{{gc, 8}, {bc, 3}}, null, 3, null);
+		this.upgrade.addUpgradeLayer(HullSize.CRUISER, new Object[][]{{gc, 13}, {bc, 5}, {ac, 1}}, new String[]{cn}, 4, null);
+		this.upgrade.addUpgradeLayer(HullSize.CRUISER, new Object[][]{{gc, 21}, {bc, 8}, {ac, 2}}, new String[]{pn}, 5, null);
 
-		this.upgrade.addUpgradeLayer(HullSize.CAPITAL_SHIP, new Object[][]{{gc, 4}}, null, 5);
-		this.upgrade.addUpgradeLayer(HullSize.CAPITAL_SHIP, new Object[][]{{gc, 8}, {bc, 2}}, null, 5);
-		this.upgrade.addUpgradeLayer(HullSize.CAPITAL_SHIP, new Object[][]{{gc, 12}, {bc, 4}, {ac, 1}}, new String[]{cn}, 6);
-		this.upgrade.addUpgradeLayer(HullSize.CAPITAL_SHIP, new Object[][]{{gc, 16}, {bc, 6}, {ac, 2}}, new String[]{pn}, 7);
+		this.upgrade.addUpgradeLayer(HullSize.CAPITAL_SHIP, new Object[][]{{gc, 5}}, null, 5, null);
+		this.upgrade.addUpgradeLayer(HullSize.CAPITAL_SHIP, new Object[][]{{gc, 8}, {bc, 3}}, null, 5, null);
+		this.upgrade.addUpgradeLayer(HullSize.CAPITAL_SHIP, new Object[][]{{gc, 13}, {bc, 5}, {ac, 1}}, new String[]{cn}, 6, null);
+		this.upgrade.addUpgradeLayer(HullSize.CAPITAL_SHIP, new Object[][]{{gc, 21}, {bc, 8}, {ac, 2}}, new String[]{pn}, 7, null);
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import com.fs.starfarer.api.campaign.CargoStackAPI;
 import com.fs.starfarer.api.characters.MutableCharacterStatsAPI;
 import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.api.util.MutableValue;
 
 import lyravega.utilities.lyr_tooltipUtilities;
 import lyravega.utilities.lyr_tooltipUtilities.colour;
@@ -32,6 +33,7 @@ public class lyr_upgradeLayer {
 	private final Map<String, Integer> commodityCosts; public Map<String, Integer> getCommodityCosts() { return this.commodityCosts; }
 	private final Set<String> specialRequirements; public Set<String> getSpecialRequirements() { return this.specialRequirements; }
 	private final int storyPointCost; public int getStoryPointCost() { return this.storyPointCost; }
+	private final int creditCost; public int getCreditCost() { return this.creditCost; }
 
 	/**
 	 * Constructs a layer for an upgrade. Access is restricted to package as these shouldn't be used
@@ -42,7 +44,7 @@ public class lyr_upgradeLayer {
 	 * @param specialRequirementsArray a single dimensional string array for defining special requirements. May be {@code null}
 	 * @param storyPointCost an integer for story point cost. May be {@code null}, minimum {@code 0}
 	 */
-	lyr_upgradeLayer(lyr_upgrade upgrade, int tier, Object[][] commodityCostsArray, String[] specialRequirementsArray, Integer storyPointCost) {
+	lyr_upgradeLayer(lyr_upgrade upgrade, int tier, Object[][] commodityCostsArray, String[] specialRequirementsArray, Integer storyPointCost, Integer creditCost) {
 		Map<String, Integer> commodityCosts = null;
 		Set<String> specialRequirements = null;
 
@@ -65,6 +67,7 @@ public class lyr_upgradeLayer {
 		this.commodityCosts = commodityCosts;
 		this.specialRequirements = specialRequirements;
 		this.storyPointCost = storyPointCost != null ? Math.max(0, storyPointCost) : 0;
+		this.creditCost = creditCost != null ? Math.max(0, creditCost) : 0;
 	}
 
 	private String toRoman(int num) {
@@ -89,6 +92,14 @@ public class lyr_upgradeLayer {
 	 * @return {@code true} if it may be afforded, {@code false} otherwise
 	 */
 	public boolean canAfford() {
+		if (this.creditCost > 0) {
+			final MutableValue playerCredits = Global.getSector().getPlayerFleet().getCargo().getCredits();
+
+			if (playerCredits.get() < this.creditCost) {
+				return false;
+			}
+		}
+
 		if (this.storyPointCost > 0) {
 			final MutableCharacterStatsAPI playerStats = Global.getSector().getPlayerStats();
 
@@ -96,7 +107,6 @@ public class lyr_upgradeLayer {
 				return false;
 			}
 		}
-
 
 		if (this.commodityCosts != null && !this.commodityCosts.isEmpty()) {
 			final CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
@@ -141,11 +151,19 @@ public class lyr_upgradeLayer {
 	public void deductCosts() {
 		if (!this.canAfford()) return;
 
+		if (this.creditCost > 0) {
+			final MutableValue playerCredits = Global.getSector().getPlayerFleet().getCargo().getCredits();
+
+			if (playerCredits.get() >= this.creditCost) {	// redundant due to 'canAfford()' but just in case
+				playerCredits.subtract(this.creditCost);
+			}
+		}
+
 		if (this.storyPointCost > 0) {
 			final MutableCharacterStatsAPI playerStats = Global.getSector().getPlayerStats();
 
 			if (playerStats.getStoryPoints() >= this.storyPointCost) {	// redundant due to 'canAfford()' but just in case
-				playerStats.spendStoryPoints(this.storyPointCost, false, null, false, 0f, this.getName());
+				playerStats.spendStoryPoints(this.storyPointCost, false, null, false, 0f, this.name);
 			}
 		}
 
@@ -153,10 +171,10 @@ public class lyr_upgradeLayer {
 			final CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
 
 			for (String commodityCostId : this.commodityCosts.keySet()) {
-				int cost = this.commodityCosts.get(commodityCostId);
+				int commodityCost = this.commodityCosts.get(commodityCostId);
 
-				if (playerCargo.getCommodityQuantity(commodityCostId) >= cost) {	// redundant due to 'canAfford()' but just in case
-					playerCargo.removeCommodity(commodityCostId, cost);
+				if (playerCargo.getCommodityQuantity(commodityCostId) >= commodityCost) {	// redundant due to 'canAfford()' but just in case
+					playerCargo.removeCommodity(commodityCostId, commodityCost);
 				}
 			}
 		}
@@ -185,6 +203,23 @@ public class lyr_upgradeLayer {
 	 */
 	public LabelAPI addRequirementsToTooltip(TooltipMakerAPI tooltip, float pad, boolean isDisabled) {
 		String format = "";
+
+		if (this.creditCost > 0) {
+			final MutableValue playerCredits = Global.getSector().getPlayerFleet().getCargo().getCredits();
+
+			if (isDisabled) {
+				format = (format.isEmpty() ? "Tier "+(this.tier)+": " : format+" & ")
+					+this.creditCost+" Credits";
+			} else {
+				format = (format.isEmpty() ? highlightText("Tier "+(this.tier))+": " : format+" & ")
+					+positiveOrNegativeText(
+						playerCredits.get() >= this.creditCost,
+						this.creditCost
+						+" ("+Math.round(playerCredits.get())+") "
+						+"Credits"
+					);
+			}
+		}
 
 		if (this.storyPointCost > 0) {
 			final MutableCharacterStatsAPI playerStats = Global.getSector().getPlayerStats();
@@ -282,10 +317,6 @@ public class lyr_upgradeLayer {
 			}
 		}
 
-		if (isDisabled) {
-			return tooltip.addPara(format, colour.gray, pad);
-		} else {
-			return lyr_tooltipUtilities.addColourizedPara(tooltip, format, pad);
-		}
+		return isDisabled ? tooltip.addPara(format, colour.gray, pad) : lyr_tooltipUtilities.addColourizedPara(tooltip, format, pad);
 	}
 }
