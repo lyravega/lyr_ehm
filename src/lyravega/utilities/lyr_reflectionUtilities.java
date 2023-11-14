@@ -110,7 +110,7 @@ public class lyr_reflectionUtilities {
 			}
 
 			if (method == null) throw new Throwable("Method with the name '"+methodName+"' was not found in the class '"+clazz.getName()+"'");
-			else lyr_logger.reflectionInfo("Method with the name '"+methodName+"' was found in the class '"+clazz.getName()+"'");
+			// else lyr_logger.reflectionInfo("Method with the name '"+methodName+"' was found in the class '"+clazz.getName()+"'");
 
 			return new methodReflection(method);
 		}
@@ -164,7 +164,7 @@ public class lyr_reflectionUtilities {
 			}
 
 			if (method == null) throw new Throwable("Method with the name '"+methodName+"' was not found in the class '"+clazz.getName()+"'");
-			else lyr_logger.reflectionInfo("Method with the name '"+methodName+"' was found in the class '"+clazz.getName()+"'");
+			// else lyr_logger.reflectionInfo("Method with the name '"+methodName+"' was found in the class '"+clazz.getName()+"'");
 
 			return new methodReflection(method);
 		}
@@ -326,7 +326,7 @@ public class lyr_reflectionUtilities {
 			} while (field == null && clazz != null);
 
 			if (field == null) throw new Throwable("Field with the name '"+fieldName+"' was not found in '"+instanceOrClass.toString()+"'");
-			else lyr_logger.reflectionInfo("Field with the name '"+fieldName+"' found in '"+instanceOrClass.toString()+"'");
+			// else lyr_logger.reflectionInfo("Field with the name '"+fieldName+"' found in '"+instanceOrClass.toString()+"'");
 
 			return new fieldReflection(field, instanceOrClass);
 		}
@@ -368,7 +368,7 @@ public class lyr_reflectionUtilities {
 			} while (field == null && clazz != null);
 
 			if (field == null) throw new Throwable("Field with the class '"+fieldClassOrInterface.getSimpleName()+"' was not found in '"+instanceOrClass.toString()+"'");
-			else lyr_logger.reflectionInfo("Field with the class '"+fieldClassOrInterface.getSimpleName()+"' found in '"+instanceOrClass.toString()+"'");
+			// else lyr_logger.reflectionInfo("Field with the class '"+fieldClassOrInterface.getSimpleName()+"' found in '"+instanceOrClass.toString()+"'");
 
 			return new fieldReflection(field, instanceOrClass);
 		}
