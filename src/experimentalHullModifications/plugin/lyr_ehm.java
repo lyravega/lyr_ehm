@@ -18,7 +18,9 @@ import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_lostAndFound;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.scripts.ehm_fieldRepairsScript;
+import experimentalHullModifications.upgrades._ehmu_test;
 import experimentalHullModifications.upgrades.ehmu_overdrive;
+import lunalib.lunaRefit.LunaRefitManager;
 import lyravega.listeners.lyr_eventDispatcher;
 import lyravega.listeners.lyr_fleetTracker;
 import lyravega.misc.lyr_upgradeVault;
@@ -43,6 +45,7 @@ public final class lyr_ehm extends BaseModPlugin {
 		updateHullMods();
 		lyr_eventDispatcher.registerModsWithEvents("data/hullmods/hull_mods.csv", ehm_internals.id.mod);
 		lyr_upgradeVault.registerUpgrade(new ehmu_overdrive());
+		LunaRefitManager.addRefitButton(new _ehmu_test());
 	}
 
 	@Override

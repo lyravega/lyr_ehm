@@ -142,7 +142,6 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 			String inOrOut = ship.getVariant().hasHullMod(this.hullModSpecId) ? header.lockedIn : header.lockedOut;
 
 			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-
 			if (lyr_miscUtilities.hasExtraWings(ship, hullmods.launchtube)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasExtraWings, text.padding);
 		}
 	}

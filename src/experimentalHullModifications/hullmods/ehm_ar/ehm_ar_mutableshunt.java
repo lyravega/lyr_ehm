@@ -5,8 +5,6 @@ import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import java.util.*;
 
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
-import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
@@ -168,18 +166,18 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
 
-		if (!this.canBeAddedOrRemovedNow(ship, null, null)) {
-			String inOrOut = ship.getVariant().hasHullMod(this.hullModSpecId) ? header.lockedIn : header.lockedOut;
+		// if (!this.canBeAddedOrRemovedNow(ship, null, null)) {
+		// 	String inOrOut = ship.getVariant().hasHullMod(this.hullModSpecId) ? header.lockedIn : header.lockedOut;
 
-			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-		}
+		// 	tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
+		// }
 	}
 
-	@Override
-	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
-		if (ship == null) return false;
+	// @Override
+	// public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
+	// 	if (ship == null) return false;
 
-		return true;
-	}
+	// 	return true;
+	// }
 	//#endregion
 }

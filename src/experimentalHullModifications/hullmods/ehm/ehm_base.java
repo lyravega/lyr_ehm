@@ -55,10 +55,10 @@ public final class ehm_base extends _ehm_base implements normalEvents {
 			variant.setHullSpecAPI(ehm_hullSpecClone(variant));
 
 			// the block below is redundant with the new tracking as it is done externally, not from here anymore; may use 'onInstall()' and 'onRemove()' to trigger the effects below
-			// if (!variant.getPermaMods().contains(ehm_internals.id.hullmods.base)) {	// to make this a one-time commit, and to avoid re-committing if/when the ship is getting restored
-			// 	variant.addPermaMod(ehm_internals.id.hullmods.base, false);
+			if (!variant.getPermaMods().contains(ehm_internals.id.hullmods.base)) {	// to make this a one-time commit, and to avoid re-committing if/when the ship is getting restored
+				variant.addPermaMod(ehm_internals.id.hullmods.base, false);
 			// 	commitVariantChanges(); playDrillSound();
-			// }
+			}
 		}
 
 		if (!ehm_settings.getCosmeticsOnly()) for (String tag : stats.getVariant().getTags()) {

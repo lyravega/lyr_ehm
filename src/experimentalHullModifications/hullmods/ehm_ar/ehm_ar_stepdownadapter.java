@@ -183,7 +183,6 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 			String inOrOut = variant.hasHullMod(this.hullModSpecId) ? header.lockedIn : header.lockedOut;
 
 			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-
 			if (lyr_miscUtilities.hasWeapons(ship, ehm_internals.affix.adaptedSlot)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasWeaponsOnAdaptedSlots, text.padding);
 		}
 	}
