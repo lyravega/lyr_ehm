@@ -60,22 +60,6 @@ public class lyr_miscUtilities {
 
 	/**
 	 * @param ship to check
-	 * @return true if the ship is a module
-	 */
-	public static boolean isModule(ShipAPI ship) {
-		return !Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy().contains(ship.getFleetMember());
-	}
-
-	/**
-	 * @param ship to check
-	 * @return true if the ship is a parent; a ship with modules
-	 */
-	public static boolean isParent(ShipAPI ship) {
-		return !ship.getVariant().getStationModules().isEmpty();
-	}
-
-	/**
-	 * @param ship to check
 	 * @return true if there are any capacitors or vents installed on the variant
 	 */
 	public static boolean hasCapacitorsOrVents(ShipAPI ship) {
@@ -182,6 +166,22 @@ public class lyr_miscUtilities {
 	}
 
 	/**
+	 * @param ship to check
+	 * @return true if the ship is a module
+	 */
+	public static boolean isModule(ShipAPI ship) {
+		return !Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy().contains(ship.getFleetMember());
+	}
+
+	/**
+	 * @param ship to check
+	 * @return true if the ship is a parent; a ship with modules
+	 */
+	public static boolean isParent(ShipAPI ship) {
+		return !ship.getVariant().getStationModules().isEmpty();
+	}
+
+	/**
 	 * Purges the weapon groups of weapons with the matching ids in the passed set.
 	 * While this is not necessary in pretty much all cases, there are a rare few
 	 * that might require this. Activated shunts is an example for this.
@@ -225,14 +225,12 @@ public class lyr_miscUtilities {
 	}
 
 	/**
-	 * @deprecated as it is a redundant method; API already has a simple one-liner check
 	 * @param ship to check
 	 * @return {@code true} if ship has {@code "phasecloak"}, {@code false} otherwise
 	 */
-	@Deprecated
 	public static final boolean hasPhaseCloak(ShipAPI ship) {
-		return ship.getHullSpec().isPhase();
-		// return ship.getPhaseCloak() != null && "phasecloak".equals(ship.getPhaseCloak().getId());	// somewhat identical to above
+		// return ship.getHullSpec().isPhase();	// hull spec might not have this but the ship may; phase cloak as a system for example
+		return ship.getPhaseCloak() != null && "phasecloak".equals(ship.getPhaseCloak().getId());	// somewhat identical to above
 	}
 
 	/**

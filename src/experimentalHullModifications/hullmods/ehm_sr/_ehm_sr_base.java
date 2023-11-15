@@ -117,7 +117,7 @@ public abstract class _ehm_sr_base extends _ehm_base implements normalEvents {
 			if (ship.getVariant().hasHullMod(ehm_internals.id.hullmods.logisticsoverhaul)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasLogisticsOverhaul, text.padding);
 
 			if (this.hullModSpecTags.contains(ehm_internals.tag.reqShields) && ship.getShield() == null) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.noShields, text.padding);
-			if (this.hullModSpecTags.contains(ehm_internals.tag.reqNoPhase) && ship.getHullSpec().isPhase()) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasPhase, text.padding);
+			if (this.hullModSpecTags.contains(ehm_internals.tag.reqNoPhase) && lyr_miscUtilities.hasPhaseCloak(ship)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasPhase, text.padding);
 			if (this.hullModSpecTags.contains(ehm_internals.tag.reqWings) && ship.getNumFighterBays() == 0) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.noWings, text.padding);
 		}
 
@@ -133,7 +133,7 @@ public abstract class _ehm_sr_base extends _ehm_base implements normalEvents {
 		if (ship.getVariant().hasHullMod(ehm_internals.id.hullmods.logisticsoverhaul)) return false;
 
 		if (this.hullModSpecTags.contains(ehm_internals.tag.reqShields) && ship.getShield() == null) return false;
-		if (this.hullModSpecTags.contains(ehm_internals.tag.reqNoPhase) && ship.getHullSpec().isPhase()) return false;
+		if (this.hullModSpecTags.contains(ehm_internals.tag.reqNoPhase) && lyr_miscUtilities.hasPhaseCloak(ship)) return false;
 		if (this.hullModSpecTags.contains(ehm_internals.tag.reqWings) && ship.getNumFighterBays() == 0) return false;
 
 		return true;
