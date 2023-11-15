@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.characters.MutableCharacterStatsAPI;
+import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShipTypeHints;
@@ -51,6 +52,7 @@ public final class lyr_hullSpec {
 	private static MethodHandle setBaseValue;
 	private static MethodHandle getSpriteSpec;
 	private static MethodHandle setSpriteSpec;
+	private static MethodHandle setHullSize;
 
 	static {
 		try {
@@ -76,6 +78,7 @@ public final class lyr_hullSpec {
 			setBaseValue = methodReflection.findMethodByName("setBaseValue", hullSpecClass).getMethodHandle();
 			getSpriteSpec = methodReflection.findMethodByName("getSpriteSpec", hullSpecClass).getMethodHandle();
 			setSpriteSpec = methodReflection.findMethodByName("setSpriteSpec", hullSpecClass).getMethodHandle();
+			setHullSize = methodReflection.findMethodByName("setHullSize", hullSpecClass).getMethodHandle();
 		} catch (Throwable t) {
 			lyr_logger.fatal("Failed to find a method in 'lyr_hullSpec'", t);
 		}
@@ -140,9 +143,9 @@ public final class lyr_hullSpec {
 				if (!this.hullSpec.getTags().contains(hullSpecTag))
 					this.hullSpec.addTag(hullSpecTag);
 
-			for (String builtInHullModSpecId : oHullSpec.getBuiltInMods()) // this is a list, there can be duplicates so check first
-				if (!this.hullSpec.isBuiltInMod(builtInHullModSpecId))
-					this.hullSpec.addBuiltInMod(builtInHullModSpecId);
+			// for (String builtInHullModSpecId : oHullSpec.getBuiltInMods()) // this is a list, there can be duplicates so check first
+			// 	if (!this.hullSpec.isBuiltInMod(builtInHullModSpecId))
+			// 		this.hullSpec.addBuiltInMod(builtInHullModSpecId);
 
 			// this.hullSpec.setDParentHullId(null);
 			// this.setBaseHullId(null);
@@ -377,6 +380,14 @@ public final class lyr_hullSpec {
 			setSpriteSpec.invoke(this.hullSpec, spriteSpec);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'setSpriteSpec()' in 'lyr_hullSpec'", t);
+		}
+	}
+
+	public void setHullSize(HullSize size) {
+		try {
+			setHullSize.invoke(this.hullSpec, size);
+		} catch (Throwable t) {
+			lyr_logger.error("Failed to use 'setHullSize()' in 'lyr_hullSpec'", t);
 		}
 	}
 	//#endregion
