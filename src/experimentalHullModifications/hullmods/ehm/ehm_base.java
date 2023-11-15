@@ -84,10 +84,10 @@ public final class ehm_base extends _ehm_base implements normalEvents {
 		ShipHullSpecAPI hullSpec = variant.getHullSpec();
 
 		if (ehm_settings.getDebugTooltip()) {
-			// tooltip.addSectionHeading("DEBUG INFO: GENERAL", header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
+			// tooltip.addSectionHeading("DEBUG INFO: GENERAL", header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding);
 			// tooltip.addPara("Mods: "+Global.getSettings().getModManager().getEnabledModsCopy().toString(), 5f).setHighlight("Mods: ");
 
-			tooltip.addSectionHeading("DEBUG INFO: HULL MODIFICATIONS", header.severeWarning_textColour, header.invisible_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
+			tooltip.addSectionHeading("DEBUG INFO: HULL MODIFICATIONS", header.severeWarning_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 			tooltip.addPara("All: "+variant.getHullMods().toString(), 5f).setHighlight("All:");
 			tooltip.addPara("Modular: "+variant.getNonBuiltInHullmods().toString(), 5f).setHighlight("Modular:");
 			tooltip.addPara("Modular (Enhanced): "+variant.getSMods().toString(), 5f).setHighlight("Modular (Enhanced):");
@@ -96,7 +96,8 @@ public final class ehm_base extends _ehm_base implements normalEvents {
 			tooltip.addPara("Built-in (Enhanced): "+variant.getSModdedBuiltIns().toString(), 5f).setHighlight("Built-in (Enhanced):");
 			tooltip.addPara("Suppressed: "+variant.getSuppressedMods().toString(), 5f).setHighlight("Suppressed:");
 
-			tooltip.addSectionHeading("DEBUG INFO: SHIP DETAILS", header.severeWarning_textColour, header.invisible_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
+			tooltip.addSectionHeading("DEBUG INFO: SHIP DETAILS", header.severeWarning_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
+			tooltip.addPara("isHullCloned: "+(Global.getSettings().getHullSpec(hullSpec.getHullId()) != hullSpec), 5f).setHighlight("isHullCloned:");
 			tooltip.addPara("Hull ID: "+hullSpec.getHullId(), 5f).setHighlight("Hull ID:");
 			tooltip.addPara("Variant ID: "+variant.getHullVariantId(), 5f).setHighlight("Variant ID:");
 			tooltip.addPara("Member ID: "+ship.getFleetMemberId(), 5f).setHighlight("Member ID:");
@@ -107,16 +108,23 @@ public final class ehm_base extends _ehm_base implements normalEvents {
 			tooltip.addPara("VariantTags: "+variant.getTags().toString(), 5f).setHighlight("VariantTags:");
 
 			DynamicStatsAPI dynamicStats = ship.getMutableStats().getDynamic();
-			tooltip.addSectionHeading("DEBUG INFO: DYNAMIC STATS", header.severeWarning_textColour, header.invisible_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
-			tooltip.addPara("'"+stats.launchTubes+"': "+(dynamicStats.getMod(stats.launchTubes).computeEffective(0f)), 5f).setHighlight("'"+stats.launchTubes+"':");
-			tooltip.addPara("'"+stats.slotPointsFromMods+"': "+(dynamicStats.getMod(stats.slotPointsFromMods).computeEffective(0f)), 5f).setHighlight("'"+stats.slotPointsFromMods+"':");
-			tooltip.addPara("'"+stats.slotPointsFromDiverters+"': "+(dynamicStats.getMod(stats.slotPointsFromDiverters).computeEffective(0f)), 5f).setHighlight("'"+stats.slotPointsFromDiverters+"':");
-			tooltip.addPara("'"+stats.slotPointsToConverters+"': "+(dynamicStats.getMod(stats.slotPointsToConverters).computeEffective(0f)), 5f).setHighlight("'"+stats.slotPointsToConverters+"':");
-			tooltip.addPara("'"+stats.capacitors+"': "+(dynamicStats.getMod(stats.capacitors).computeEffective(0f)), 5f).setHighlight("'"+stats.capacitors+"':");
-			tooltip.addPara("'"+stats.dissipators+"': "+(dynamicStats.getMod(stats.dissipators).computeEffective(0f)), 5f).setHighlight("'"+stats.dissipators+"':");
-			tooltip.addPara("'"+stats.overdrive+"': "+(dynamicStats.getMod(stats.overdrive).computeEffective(0f)), 5f).setHighlight("'"+stats.overdrive+"':");
+			final float launchTubes = dynamicStats.getMod(stats.launchTubes).computeEffective(0f);
+			final float slotPointsFromMods = dynamicStats.getMod(stats.slotPointsFromMods).computeEffective(0f);
+			final float slotPointsFromDiverters = dynamicStats.getMod(stats.slotPointsFromDiverters).computeEffective(0f);
+			final float slotPointsToConverters = dynamicStats.getMod(stats.slotPointsToConverters).computeEffective(0f);
+			final float capacitors = dynamicStats.getMod(stats.capacitors).computeEffective(0f);
+			final float dissipators = dynamicStats.getMod(stats.dissipators).computeEffective(0f);
+			final float overdrive = dynamicStats.getMod(stats.overdrive).computeEffective(0f);
+			tooltip.addSectionHeading("DEBUG INFO: DYNAMIC STATS", header.severeWarning_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
+			if (launchTubes > 0) tooltip.addPara("'"+stats.launchTubes+"': "+launchTubes, 5f).setHighlight("'"+stats.launchTubes+"':");
+			if (slotPointsFromMods > 0) tooltip.addPara("'"+stats.slotPointsFromMods+"': "+slotPointsFromMods, 5f).setHighlight("'"+stats.slotPointsFromMods+"':");
+			if (slotPointsFromDiverters > 0) tooltip.addPara("'"+stats.slotPointsFromDiverters+"': "+slotPointsFromDiverters, 5f).setHighlight("'"+stats.slotPointsFromDiverters+"':");
+			if (slotPointsToConverters > 0) tooltip.addPara("'"+stats.slotPointsToConverters+"': "+slotPointsToConverters, 5f).setHighlight("'"+stats.slotPointsToConverters+"':");
+			if (capacitors > 0) tooltip.addPara("'"+stats.capacitors+"': "+capacitors, 5f).setHighlight("'"+stats.capacitors+"':");
+			if (dissipators > 0) tooltip.addPara("'"+stats.dissipators+"': "+dissipators, 5f).setHighlight("'"+stats.dissipators+"':");
+			if (overdrive > 0) tooltip.addPara("'"+stats.overdrive+"': "+overdrive, 5f).setHighlight("'"+stats.overdrive+"':");
 
-			tooltip.addSectionHeading("DEBUG INFO: SCRIPTS", header.severeWarning_textColour, header.invisible_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
+			tooltip.addSectionHeading("DEBUG INFO: SCRIPTS", header.severeWarning_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 			for (EveryFrameScript script : Global.getSector().getScripts()) {
 				String scriptSimpleName = script.getClass().getSimpleName();
 
