@@ -61,7 +61,8 @@ public final class lyr_weaponSlot {
 	/**
 	 * An enum class to hold the constants of the obfuscated enum class.
 	 * Note that the constants are in enum format; they're used as such.
-	 * @see #setSlotType(slotTypeConstants) for the method that utilizes this.
+	 * @see {@link lyr_weaponSlot#setSlotType(slotTypeConstants)} setter using this enum
+	 * @see {@link lyr_weaponSlot#getSlotType()} getter using this enum
 	 */
 	public static enum slotTypeConstants {
 		turret,
@@ -186,7 +187,7 @@ public final class lyr_weaponSlot {
 
 	/**
 	 * Gets the type of the slot; it's different from the weapon type of the slot.
-	 * @return an enum entry for turret, hardpoint or hidden
+	 * @return a converted enum entry where matching ordinal is returned
 	 */
 	public slotTypeConstants getSlotType() {
 		try {
