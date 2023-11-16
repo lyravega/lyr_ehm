@@ -28,6 +28,9 @@ public class lyr_refitPanel {
 	private static MethodHandle getShipDisplay;
 	private static MethodHandle saveCurrentVariant; // there is an overload for this, beware
 	private static MethodHandle getMember;
+	private static MethodHandle setFleetMember;
+	private static MethodHandle setForceSetMemberNextCall;
+	private static MethodHandle getFleetMemberIndex;
 	private static MethodHandle syncWithCurrentVariant;
 	private static MethodHandle isEditedSinceLoad;
 	private static MethodHandle isEditedSinceSave;
@@ -43,6 +46,9 @@ public class lyr_refitPanel {
 			getShipDisplay = methodReflection.findMethodByName("getShipDisplay", clazz).getMethodHandle();
 			saveCurrentVariant = methodReflection.findMethodByName("saveCurrentVariant", clazz, boolean.class).getMethodHandle();
 			getMember = methodReflection.findMethodByName("getMember", clazz).getMethodHandle();
+			setFleetMember = methodReflection.findMethodByName("setFleetMember", clazz).getMethodHandle();
+			setForceSetMemberNextCall = methodReflection.findMethodByName("setForceSetMemberNextCall", clazz).getMethodHandle();
+			getFleetMemberIndex = methodReflection.findMethodByName("getFleetMemberIndex", clazz).getMethodHandle();
 			syncWithCurrentVariant = methodReflection.findMethodByName("syncWithCurrentVariant", clazz, boolean.class).getMethodHandle();
 			isEditedSinceLoad = methodReflection.findMethodByName("isEditedSinceLoad", clazz).getMethodHandle();
 			isEditedSinceSave = methodReflection.findMethodByName("isEditedSinceSave", clazz).getMethodHandle();
@@ -101,6 +107,30 @@ public class lyr_refitPanel {
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'getMember()' in 'lyr_refitPanel'", t);
 		}	return null;
+	}
+
+	public void setFleetMember(FleetMemberAPI fleetMember, int fleetMemberIndex, float facing) {
+		try {
+			setFleetMember.invoke(this.refitPanel, fleetMember, fleetMemberIndex, facing);
+		} catch (Throwable t) {
+			lyr_logger.error("Failed to use 'setFleetMember()' in 'lyr_refitPanel'", t);
+		}
+	}
+
+	public void setForceSetMemberNextCall(boolean force) {
+		try {
+			setForceSetMemberNextCall.invoke(this.refitPanel, force);
+		} catch (Throwable t) {
+			lyr_logger.error("Failed to use 'setForceSetMemberNextCall()' in 'lyr_refitPanel'", t);
+		}
+	}
+
+	public int getFleetMemberIndex() {
+		try {
+			return (int) getFleetMemberIndex.invoke(this.refitPanel);
+		} catch (Throwable t) {
+			lyr_logger.error("Failed to use 'getFleetMemberIndex()' in 'lyr_refitPanel'", t);
+		}	return -1;
 	}
 
 	public void syncWithCurrentVariant() {
