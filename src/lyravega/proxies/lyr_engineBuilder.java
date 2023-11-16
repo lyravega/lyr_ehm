@@ -74,13 +74,23 @@ public final class lyr_engineBuilder {
 
 
 	/**
-	 * Creates a new instance for the passed {@link Object}, and
-	 * clones it if necessary. Alterations should be done on a clone if
-	 * it is going to be a new slot.
+	 * Creates a new proxy-like object instance for the passed {@link Object
+	 * engineBuilder}. May be used as a reference and to access obfuscated accessors,
+	 * but alterations shouldn't be performed on stock, non-cloned objects from
+	 * the spec store.
+	 * <p> Cloned hull specs also clone most relevant things like weapon and engine
+	 * slots, shield and engine specs, so this may be used freely on those already
+	 * cloned objects, but otherwise this should only be used strictly as a reference
+	 * and/or a getter de-obfuscator.
 	 * @param enginebuilder to be proxied
-	 * @param clone if the enginebuilder needs to be cloned
+	 * @param clone (overload) if the enginebuilder needs to be cloned during construction
 	 */
-	public lyr_engineBuilder(Object enginebuilder, boolean clone) { // clone what? it's a general object, clone should never be true
+	public lyr_engineBuilder(Object enginebuilder) {
+		this.engineBuilder = enginebuilder;
+	}
+
+	/** @see #lyr_engineBuilder(Object) */
+	public lyr_engineBuilder(Object enginebuilder, boolean clone) {
 		this.engineBuilder = (clone) ? this.duplicate(enginebuilder) : enginebuilder;
 	}
 

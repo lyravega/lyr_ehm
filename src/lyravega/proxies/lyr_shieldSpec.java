@@ -51,9 +51,13 @@ public final class lyr_shieldSpec {
 
 	/**
 	 * Creates a new proxy-like object instance for the passed {@link ShieldSpecAPI
-	 * shieldSpec}, and clones it if needed.
-	 * <p> Cloning a hullSpecs will also clone its shieldSpec (and engineSpec), so
-	 * the clone parameter should be false unless otherwise is needed.
+	 * shieldSpec}. May be used as a reference and to access obfuscated accessors,
+	 * but alterations shouldn't be performed on stock, non-cloned objects from
+	 * the spec store.
+	 * <p> Cloned hull specs also clone most relevant things like weapon and engine
+	 * slots, shield and engine specs, so this may be used freely on those already
+	 * cloned objects, but otherwise this should only be used strictly as a reference
+	 * and/or a getter de-obfuscator.
 	 * @param shieldSpec to be proxied
 	 * @param clone (overload) if the shieldSpec needs to be cloned during construction
 	 */

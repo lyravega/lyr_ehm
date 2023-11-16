@@ -71,9 +71,14 @@ public final class lyr_weaponSlot {
 	}
 
 	/**
-	 * Creates a new instance for the passed {@link WeaponSlotAPI}, and
-	 * clones it if necessary. Alterations should be done on a clone if
-	 * it is going to be a new slot.
+	 * Creates a new proxy-like object instance for the passed {@link WeaponSlotAPI
+	 * weaponSlot}. May be used as a reference and to access obfuscated accessors,
+	 * but alterations shouldn't be performed on stock, non-cloned objects from
+	 * the spec store.
+	 * <p> Cloned hull specs also clone most relevant things like weapon and engine
+	 * slots, shield and engine specs, so this may be used freely on those already
+	 * cloned objects, but otherwise this should only be used strictly as a reference
+	 * and/or a getter de-obfuscator.
 	 * @param weaponSlot to be proxied
 	 * @param clone (overload) if the weaponSlot needs to be cloned during construction
 	 */
