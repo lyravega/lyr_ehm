@@ -188,9 +188,9 @@ public final class lyr_weaponSlot {
 	 * Gets the type of the slot; it's different from the weapon type of the slot.
 	 * @return an enum entry for turret, hardpoint or hidden
 	 */
-	public Enum<?> getSlotType() {
+	public slotTypeConstants getSlotType() {
 		try {
-			return (Enum<?>) getSlotType.invoke(this.weaponSlot);
+			return slotTypeConstants.values()[((Enum<?>) getSlotType.invoke(this.weaponSlot)).ordinal()];
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'getSlotType()' in 'lyr_weaponSlot'", t);
 		}	return null;
@@ -222,6 +222,10 @@ public final class lyr_weaponSlot {
 	public float getArc() { return this.weaponSlot.getArc(); }
 
 	public void setArc(float angle) { this.weaponSlot.setArc(angle); }
+
+	public WeaponType getWeaponType() { return this.weaponSlot.getWeaponType(); }
+
+	public String getId() { return this.weaponSlot.getId(); }
 	//#endregion
 	// END OF BRIDGE METHODS
 }
