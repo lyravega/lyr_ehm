@@ -197,6 +197,14 @@ public final class lyr_weaponSlot {
 		}	return null;
 	}
 
+	public Enum<?> getSlotTypeRaw() {
+		try {
+			return (Enum<?>) getSlotType.invoke(this.weaponSlot);
+		} catch (Throwable t) {
+			lyr_logger.error("Failed to use 'getSlotTypeRaw()' in 'lyr_weaponSlot'", t);
+		}	return null;
+	}
+
 	/**
 	 * Sets the type of the slot; it's different from the weapon type of the slot.
 	 * @param slotType an enum constant to set; 0=turret, 1=hardpoint, 2=hidden
@@ -206,6 +214,14 @@ public final class lyr_weaponSlot {
 			setSlotType.invoke(this.weaponSlot, slotTypeEnum.getEnumConstants()[slotType.ordinal()]);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'setSlotType()' in 'lyr_weaponSlot'", t);
+		}
+	}
+
+	public void setSlotTypeRaw(Enum<?> slotType) {
+		try {
+			setSlotType.invoke(this.weaponSlot, slotTypeEnum.getEnumConstants()[slotType.ordinal()]);
+		} catch (Throwable t) {
+			lyr_logger.error("Failed to use 'setSlotTypeRaw()' in 'lyr_weaponSlot'", t);
 		}
 	}
 	//#endregion
