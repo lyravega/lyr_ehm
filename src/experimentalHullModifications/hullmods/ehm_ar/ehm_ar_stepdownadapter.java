@@ -7,8 +7,6 @@ import java.util.*;
 import org.lwjgl.util.vector.Vector2f;
 
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
-import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
@@ -23,10 +21,7 @@ import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_internals.id.shunts.adapters;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
-import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.proxies.lyr_hullSpec;
-import lyravega.utilities.lyr_miscUtilities;
-import lyravega.utilities.lyr_tooltipUtilities;
 
 /**@category Adapter Retrofit
  * @author lyravega
@@ -178,22 +173,6 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
-
-		if (!this.canBeAddedOrRemovedNow(ship, null, null)) {
-			String inOrOut = variant.hasHullMod(this.hullModSpecId) ? header.lockedIn : header.lockedOut;
-
-			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-			if (lyr_miscUtilities.hasWeapons(ship, ehm_internals.affix.adaptedSlot)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasWeaponsOnAdaptedSlots, text.padding);
-		}
-	}
-
-	@Override
-	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
-		if (ship == null) return false;
-
-		if (lyr_miscUtilities.hasWeapons(ship, ehm_internals.affix.adaptedSlot)) return false;
-
-		return true;
 	}
 	//#endregion
 }

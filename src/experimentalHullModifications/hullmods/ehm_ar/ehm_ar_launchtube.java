@@ -5,8 +5,6 @@ import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import java.util.*;
 
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
-import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
@@ -15,14 +13,10 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.misc.ehm_internals;
-import experimentalHullModifications.misc.ehm_internals.id.hullmods;
 import experimentalHullModifications.misc.ehm_internals.id.shunts.launchTubes;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
-import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.proxies.lyr_hullSpec;
-import lyravega.utilities.lyr_miscUtilities;
-import lyravega.utilities.lyr_tooltipUtilities;
 
 /**@category Adapter Retrofit
  * @author lyravega
@@ -118,9 +112,8 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 	@Override
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (ship == null) return;
-		ShipVariantAPI variant = ship.getVariant();
 
-		if (variant.hasHullMod(this.hullModSpecId)) {
+		if (ship.getVariant().hasHullMod(this.hullModSpecId)) {
 			if (ehm_settings.getShowInfoForActivators()) {
 				Map<String, Integer> launchTubes = ehm_shuntCount(ship, ehm_internals.tag.tubeShunt);
 
@@ -137,22 +130,6 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
-
-		if (!this.canBeAddedOrRemovedNow(ship, null, null)) {
-			String inOrOut = ship.getVariant().hasHullMod(this.hullModSpecId) ? header.lockedIn : header.lockedOut;
-
-			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-			if (lyr_miscUtilities.hasExtraWings(ship, hullmods.launchtube)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasExtraWings, text.padding);
-		}
-	}
-
-	@Override
-	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
-		if (ship == null) return false;
-
-		if (ship.getVariant().hasHullMod(this.hullModSpecId) && lyr_miscUtilities.hasExtraWings(ship, hullmods.launchtube)) return false;
-
-		return true;
 	}
 	//#endregion
 }

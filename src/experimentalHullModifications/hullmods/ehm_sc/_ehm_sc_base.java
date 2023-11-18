@@ -5,22 +5,15 @@ import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
 import java.awt.Color;
 
-import com.fs.starfarer.api.combat.ShipAPI;
-import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
-import com.fs.starfarer.api.ui.Alignment;
-import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.misc.ehm_internals;
-import experimentalHullModifications.misc.ehm_tooltip.header;
-import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.listeners.events.normalEvents;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.proxies.lyr_shieldSpec;
 import lyravega.utilities.lyr_miscUtilities;
-import lyravega.utilities.lyr_tooltipUtilities;
 
 /**
  * This class is used by shield cosmetic hullmods. The changes are
@@ -78,39 +71,4 @@ public abstract class _ehm_sc_base extends _ehm_base implements normalEvents {
 
 		return lyr_hullSpec.retrieve();
 	}
-
-	//#region INSTALLATION CHECKS
-	@Override
-	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
-		if (ship == null) return;
-
-		if (this.hullModSpec.hasTag(ehm_internals.tag.customizable)) {
-			tooltip.addSectionHeading(header.customizable, header.customizable_textColour, header.invisible_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
-			lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.customizable, text.padding);
-		}
-
-		if (!this.isApplicableToShip(ship)) {
-			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-
-			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksBase, text.padding);
-			// if (_ehm_helpers.ehm_hasHullModWithTag(ship, lyr_internals.tag.shieldCosmetic, id)) lyr_tooltipUtilities.addColorizedPara(tooltip, regexText.hasShieldCosmetic, text.padding);
-
-			if (ship.getShield() == null) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.noShields, text.padding);
-		}
-
-		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
-	}
-
-	@Override
-	public boolean isApplicableToShip(ShipAPI ship) {
-		if (ship == null) return false;
-
-		if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) return false;
-		// if (_ehm_helpers.ehm_hasHullModWithTag(ship, lyr_internals.tag.shieldCosmetic, id)) return false;
-
-		if (ship.getShield() == null) return false;
-
-		return true;
-	}
-	//#endregion
 }

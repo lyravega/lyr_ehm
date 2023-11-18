@@ -1,6 +1,11 @@
 package experimentalHullModifications.plugin;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
@@ -14,6 +19,8 @@ import com.thoughtworks.xstream.XStream;
 import experimentalHullModifications.abilities.ehm_ability;
 import experimentalHullModifications.abilities.listeners.ehm_shuntInjector;
 import experimentalHullModifications.abilities.listeners.ehm_submarketInjector;
+import experimentalHullModifications.hullmods.ehm._ehm_base;
+import experimentalHullModifications.hullmods.ehm._ehm_base.ecsv;
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_lostAndFound;
 import experimentalHullModifications.misc.ehm_settings;
@@ -37,14 +44,20 @@ public final class lyr_ehm extends BaseModPlugin {
 		attachShuntAccessListener();
 		lyr_fleetTracker.attach();
 		if (ehm_settings.getClearUnknownSlots()) ehm_lostAndFound.returnStuff();
+
+		if (!Global.getSettings().isDevMode()) return;
+		processECSV();
 	}
 
 	@Override
 	public void onApplicationLoad() throws Exception {
 		ehm_settings.attach();
 		updateHullMods();
+		processECSV();
 		lyr_eventDispatcher.registerModsWithEvents("data/hullmods/hull_mods.csv", ehm_internals.id.mod);
 		lyr_upgradeVault.registerUpgrade(new ehmu_overdrive());
+
+		if (!Global.getSettings().isDevMode()) return;
 		LunaRefitManager.addRefitButton(new _ehmu_test());
 	}
 
@@ -83,14 +96,15 @@ public final class lyr_ehm extends BaseModPlugin {
 				faction.removeKnownHullMod(hullModSpec.getId());
 		}
 
-		final String targetTag = ehm_settings.getCosmeticsOnly() ? ehm_internals.tag.cosmetic : ehm_internals.tag.experimental;
+		// final String targetTag = ehm_settings.getCosmeticsOnly() ? ehm_internals.tag.cosmetic : ehm_internals.tag.experimental;
+		final boolean cosmeticsOnly = ehm_settings.getCosmeticsOnly();
 
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
-			if (!ehm_internals.id.manufacturer.equals(hullModSpec.getManufacturer())) continue;
-			if (!hullModSpec.hasTag(ehm_internals.tag.experimental)) continue;
-			if (hullModSpec.hasTag(ehm_internals.tag.restricted)) continue;
+			if (!_ehm_base.class.isInstance(hullModSpec.getEffect())) continue;
+			final ecsv ecsv = _ehm_base.class.cast(hullModSpec.getEffect()).ecsv(friend);
 
-			if (hullModSpec.hasTag(targetTag)) playerData.addHullMod(hullModSpec.getId());
+			if (ecsv.isRestricted) continue;
+			if (!cosmeticsOnly || cosmeticsOnly && ecsv.isCosmetic) playerData.addHullMod(hullModSpec.getId());
 		}
 
 		lyr_logger.info("Faction blueprints are updated");
@@ -153,6 +167,49 @@ public final class lyr_ehm extends BaseModPlugin {
 			case "Always": ehm_submarketInjector.nullify(friend); ehm_shuntInjector.attach(); break;
 			case "Submarket": ehm_shuntInjector.nullify(friend); ehm_submarketInjector.attach(); break;
 			default: break;
+		}
+	}
+
+	private static void processECSV() {
+		try {
+			JSONArray loadCSV = Global.getSettings().loadCSV("data/hullmods/hull_mods.csv", ehm_internals.id.mod);
+
+			for (int i = 0; i < loadCSV.length(); i++) {
+				JSONObject hullModEntry = loadCSV.getJSONObject(i);
+				HullModSpecAPI hullModSpec = Global.getSettings().getHullModSpec(hullModEntry.getString("id"));
+
+				if (hullModSpec == null || !_ehm_base.class.isInstance(hullModSpec.getEffect())) continue;
+
+				final ecsv ecsv = _ehm_base.class.cast(hullModSpec.getEffect()).ecsv(friend);
+
+				if ("true".equalsIgnoreCase(hullModEntry.getString("ecsv_isCosmetic"))) ecsv.isCosmetic = true;
+				if ("true".equalsIgnoreCase(hullModEntry.getString("ecsv_isRestricted"))) ecsv.isRestricted = true;
+				if ("true".equalsIgnoreCase(hullModEntry.getString("ecsv_isCustomizable"))) ecsv.isCustomizable = true;
+
+				String[] applicableChecks = hullModEntry.getString("ecsv_applicableChecks").split("[\\s,]+");
+				if (!applicableChecks[0].isEmpty()) {
+					if (ecsv.applicableChecks == null) ecsv.applicableChecks = new HashSet<String>(4, 0.75f);
+					ecsv.applicableChecks.clear(); ecsv.applicableChecks.addAll(Arrays.asList(applicableChecks));
+				} else if (ecsv.applicableChecks != null) { ecsv.applicableChecks.clear(); ecsv.applicableChecks = null; }
+
+				String[] lockedInChecks = hullModEntry.getString("ecsv_lockedInChecks").split("[\\s,]+");
+				if (!lockedInChecks[0].isEmpty()) {
+					if (ecsv.lockedInChecks == null) ecsv.lockedInChecks = new HashSet<String>(4, 0.75f);
+					ecsv.lockedInChecks.clear(); ecsv.lockedInChecks.addAll(Arrays.asList(lockedInChecks));
+				} else if (ecsv.lockedInChecks != null) { ecsv.lockedInChecks.clear(); ecsv.lockedInChecks = null; }
+
+				String[] lockedOutChecks = hullModEntry.getString("ecsv_lockedOutChecks").split("[\\s,]+");
+				if (!lockedOutChecks[0].isEmpty()) {
+					if (ecsv.lockedOutChecks == null) ecsv.lockedOutChecks = new HashSet<String>(4, 0.75f);
+					ecsv.lockedOutChecks.clear(); ecsv.lockedOutChecks.addAll(Arrays.asList(lockedOutChecks));
+				} else if (ecsv.lockedOutChecks != null) { ecsv.lockedOutChecks.clear(); ecsv.lockedOutChecks = null; }
+
+				lyr_logger.debug("Processed extended comma separated values for '"+hullModSpec.getId()+"'");
+			}
+
+			// lyr_logger.info("Hull modifications from the mod '"+modId+"' are processed");
+		} catch (Throwable t) {
+			lyr_logger.error("WUT", t);
 		}
 	}
 }

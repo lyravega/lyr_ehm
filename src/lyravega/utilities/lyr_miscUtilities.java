@@ -1,7 +1,6 @@
 package lyravega.utilities;
 
 import java.util.*;
-import java.util.Map.Entry;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.*;
@@ -272,16 +271,9 @@ public class lyr_miscUtilities {
 		return true;
 	}
 
-	public static boolean areMiniModulesStripped(ShipAPI ship) {
-		ShipVariantAPI variant = ship.getVariant();
-
-		for (Entry<String, String> moduleEntry : variant.getStationModules().entrySet()) {
-			if (!moduleEntry.getValue().startsWith("ehm_module")) continue;
-
-			ShipVariantAPI moduleVariant = variant.getModuleVariant(moduleEntry.getKey());
-			if (!moduleVariant.getNonBuiltInWings().isEmpty()) return false;
-			if (!moduleVariant.getNonBuiltInHullmods().isEmpty()) return false;
-			if (!moduleVariant.getNonBuiltInWeaponSlots().isEmpty()) return false;
-		};	return true;
+	public static boolean hasModulesWithPrefix(ShipAPI ship, String prefix) {
+		for (String moduleVariantId : ship.getVariant().getStationModules().values()) {
+			if (moduleVariantId.startsWith(prefix)) return true;
+		};	return false;
 	}
 }

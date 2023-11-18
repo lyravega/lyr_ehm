@@ -18,7 +18,9 @@ import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import experimentalHullModifications.misc.ehm_tooltip.text;
+import experimentalHullModifications.plugin.lyr_ehm.friend;
 import lyravega.proxies.lyr_hullSpec;
+import lyravega.utilities.lyr_miscUtilities;
 import lyravega.utilities.lyr_tooltipUtilities;
 
 /**
@@ -47,6 +49,24 @@ public abstract class _ehm_base implements HullModEffect {
 	protected HullModSpecAPI hullModSpec;
 	protected String hullModSpecId;
 	protected Set<String> hullModSpecTags;
+	protected final ecsv ecsv = new ecsv();
+
+	public class ecsv {	// extended comma separated values
+		public boolean isCosmetic = false;
+		public boolean isRestricted = false;
+		public boolean isCustomizable = false;
+		public Set<String> applicableChecks = null;
+		public Set<String> lockedInChecks = null;
+		public Set<String> lockedOutChecks = null;
+
+		public Set<String> getApplicableChecks() { return this.applicableChecks; }
+
+		public Set<String> getLockedChecks(ShipAPI ship) { return ship.getVariant().hasHullMod(_ehm_base.this.hullModSpecId) ? this.lockedInChecks : this.lockedOutChecks; }
+	}
+
+	public ecsv ecsv(friend friend) {
+		return friend != null ? this.ecsv : null;
+	}
 
 	@Override
 	public void init(HullModSpecAPI hullModSpec) {
@@ -87,18 +107,6 @@ public abstract class _ehm_base implements HullModEffect {
 
 	@Override public boolean shouldAddDescriptionToTooltip(HullSize hullSize, ShipAPI ship, boolean isForModSpec) { return true; }
 
-	@Override
-	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
-		if (ship == null) return;
-
-		if (ship.getVariant().getSMods().contains(this.hullModSpecId)) return;
-
-		if (this.isApplicableToShip(ship) && this.canBeAddedOrRemovedNow(ship, null, null)) {
-			tooltip.addSectionHeading(header.warning, header.warning_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-			lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.warning, text.padding);
-		}
-	}
-
 	@Override public String getDescriptionParam(int index, HullSize hullSize) { return null; }
 
 	@Override public String getDescriptionParam(int index, HullSize hullSize, ShipAPI ship) { return this.getDescriptionParam(index, hullSize); }
@@ -112,13 +120,86 @@ public abstract class _ehm_base implements HullModEffect {
 	@Override public String getSModDescriptionParam(int index, HullSize hullSize) { return null; }
 
 	@Override public String getSModDescriptionParam(int index, HullSize hullSize, ShipAPI ship) { return this.getSModDescriptionParam(index, hullSize); }
+
+	@Override
+	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
+		if (ship == null) return;
+
+		if (this.ecsv.isCustomizable) {
+			tooltip.addSectionHeading(header.customizable, header.customizable_textColour, header.invisible_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
+			lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.customizable, text.padding);
+		}
+
+		if (!this.isApplicableToShip(ship) && this.ecsv.getApplicableChecks() != null) {
+			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
+			for (String check : this.ecsv.getApplicableChecks()) switch (check) {
+				case "reqBase": if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksBase, text.colourized.padding); continue;
+				case "reqNoLogistics": if (ship.getVariant().hasHullMod(ehm_internals.id.hullmods.logisticsoverhaul)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasLogisticsOverhaul, text.colourized.padding); continue;
+				case "reqShield": if (ship.getShield() == null) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.noShields, text.padding); continue;
+				case "reqNoPhase": if (lyr_miscUtilities.hasPhaseCloak(ship)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasPhase, text.padding); continue;
+				case "reqWingBays": if (ship.getNumFighterBays() == 0) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.noWings, text.padding); continue;
+				case "reqNotChild": if (lyr_miscUtilities.isModule(ship)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.isModule, text.padding); continue;
+				case "reqNoMiniModules": if (lyr_miscUtilities.hasModulesWithPrefix(ship, "ehm_module")) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasMiniModules, text.padding); continue;
+				case "reqDiverterAndConverter": if (!ship.getVariant().hasHullMod(ehm_internals.id.hullmods.diverterandconverter)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksActivator, text.padding); continue;
+				default: continue;
+			}
+		}
+
+		if (!this.canBeAddedOrRemovedNow(ship, null, null) && this.ecsv.getLockedChecks(ship) != null) {
+			tooltip.addSectionHeading(ship.getVariant().hasHullMod(this.hullModSpecId) ? header.lockedIn : header.lockedOut, header.locked_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
+			for (String check : this.ecsv.getLockedChecks(ship)) switch (check) {
+				case "hasWeaponsOnConvertedSlots": if (lyr_miscUtilities.hasWeapons(ship, ehm_internals.affix.convertedSlot)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasWeaponsOnConvertedSlots, text.padding); continue;
+				case "hasWeaponsOnAdaptedSlots": if (lyr_miscUtilities.hasWeapons(ship, ehm_internals.affix.adaptedSlot)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasWeaponsOnAdaptedSlots, text.padding); continue;
+				case "hasExtraWings": if (lyr_miscUtilities.hasExtraWings(ship, this.hullModSpecId)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasExtraWings, text.padding); continue;
+				case "hasWeapons": if (lyr_miscUtilities.hasWeapons(ship)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasWeapons, text.colourized.padding); continue;
+				case "hasAnyFittedWings": if (lyr_miscUtilities.hasAnyFittedWings(ship)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasWings, text.colourized.padding); continue;
+				default: continue;
+			}
+		}
+
+		if (ship.getVariant().getSMods().contains(this.hullModSpecId)) return;
+
+		if (this.isApplicableToShip(ship) && this.canBeAddedOrRemovedNow(ship, null, null)) {
+			tooltip.addSectionHeading(header.warning, header.warning_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
+			lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.warning, text.padding);
+		}
+	}
 	//#endregion
 	// END OF TOOLTIP
 
 	//#region CHECKS
-	@Override public boolean isApplicableToShip(ShipAPI ship) { return true; }
+	@Override public boolean isApplicableToShip(ShipAPI ship) {
+		if (ship == null) return false;
 
-	@Override public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) { return true; }
+		if (this.ecsv.getApplicableChecks() != null) for (String check : this.ecsv.getApplicableChecks()) switch (check) {
+			case "reqBase": if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) return false; else continue;
+			case "reqNoLogistics": if (ship.getVariant().hasHullMod(ehm_internals.id.hullmods.logisticsoverhaul)) return false; else continue;
+			case "reqShield": if (ship.getShield() == null) return false; else continue;
+			case "reqNoPhase": if (lyr_miscUtilities.hasPhaseCloak(ship)) return false; else continue;
+			case "reqWingBays": if (ship.getNumFighterBays() == 0) return false; else continue;
+			case "reqNotChild": if (lyr_miscUtilities.isModule(ship)) return false; else continue;
+			case "reqNoMiniModules": if (lyr_miscUtilities.hasModulesWithPrefix(ship, "ehm_module")) return false; else continue;
+			case "reqDiverterAndConverter": if (!ship.getVariant().hasHullMod(ehm_internals.id.hullmods.diverterandconverter)) return false; else continue;
+			default: continue;
+		}
+
+		return true;
+	}
+
+	@Override public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
+		if (ship == null) return false;
+
+		if (this.ecsv.getLockedChecks(ship) != null) for (String check : this.ecsv.getLockedChecks(ship)) switch (check) {
+			case "hasWeaponsOnConvertedSlots": if (lyr_miscUtilities.hasWeapons(ship, ehm_internals.affix.convertedSlot)) return false; else continue;
+			case "hasWeaponsOnAdaptedSlots": if (lyr_miscUtilities.hasWeapons(ship, ehm_internals.affix.adaptedSlot)) return false; else continue;
+			case "hasExtraWings": if (lyr_miscUtilities.hasExtraWings(ship, this.hullModSpecId)) return false; else continue;
+			case "hasWeapons": if (lyr_miscUtilities.hasWeapons(ship)) return false; else continue;
+			case "hasAnyFittedWings": if (lyr_miscUtilities.hasAnyFittedWings(ship)) return false; else continue;
+			default: continue;
+		}
+
+		return true;
+	}
 
 	@Override public String getUnapplicableReason(ShipAPI ship) { return null; }	// handled with description instead
 

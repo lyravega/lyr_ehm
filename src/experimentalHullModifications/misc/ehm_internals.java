@@ -205,10 +205,8 @@ public final class ehm_internals {
 	public static final class tag {
 		public static final String
 			experimental = "ehm",	// must match hullmod/weapon tag in .csv
-			cosmetic = "ehm_cosmetic",	// must match hullmod tag in .csv
-			restricted = "ehm_restricted",	// must match hullmod/weapon tag in .csv
-			// extended = "ehm_extended",	// must match hullmod/weapon tag in .csv
-			customizable = "ehm_customizable",	// must match hullmod/weapon tag in .csv
+
+			// TODO: add ECSV tags here
 
 			systemRetrofit = "ehm_sr",	// must match hullmod tag in .csv
 			weaponRetrofit = "ehm_wr",	// must match hullmod tag in .csv

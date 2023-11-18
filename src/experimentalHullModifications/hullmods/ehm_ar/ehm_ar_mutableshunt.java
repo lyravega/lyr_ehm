@@ -165,19 +165,5 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
-
-		// if (!this.canBeAddedOrRemovedNow(ship, null, null)) {
-		// 	String inOrOut = ship.getVariant().hasHullMod(this.hullModSpecId) ? header.lockedIn : header.lockedOut;
-
-		// 	tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-		// }
 	}
-
-	// @Override
-	// public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
-	// 	if (ship == null) return false;
-
-	// 	return true;
-	// }
-	//#endregion
 }

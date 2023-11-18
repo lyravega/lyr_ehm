@@ -7,8 +7,6 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
-import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.ShieldAPI.ShieldType;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
@@ -226,10 +224,6 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 			lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.overEngineeredWarning, text.padding);
 		}
 
-		if (!this.canBeAddedOrRemovedNow(ship, null, null)) {
-			tooltip.addSectionHeading(header.lockedIn, header.locked_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-		}
-
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
 	}
 
@@ -241,13 +235,6 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 		if (lyr_miscUtilities.isModule(ship)) return false;
 		if (lyr_miscUtilities.isParent(ship)) return false;
 		if (!lyr_miscUtilities.isStripped(ship, this.hullModSpecId)) return false;
-
-		return true;
-	}
-
-	@Override
-	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
-		if (ship == null) return false;
 
 		return true;
 	}

@@ -5,8 +5,6 @@ import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import java.util.*;
 
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
-import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
@@ -25,10 +23,7 @@ import experimentalHullModifications.misc.ehm_internals.id.shunts.converters;
 import experimentalHullModifications.misc.ehm_internals.id.shunts.diverters;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
-import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.proxies.lyr_hullSpec;
-import lyravega.utilities.lyr_miscUtilities;
-import lyravega.utilities.lyr_tooltipUtilities;
 
 /**@category Adapter Retrofit
  * @author lyravega
@@ -181,9 +176,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (ship == null) return;
 
-		ShipVariantAPI variant = ship.getVariant();
-
-		if (variant.hasHullMod(this.hullModSpecId)) {
+		if (ship.getVariant().hasHullMod(this.hullModSpecId)) {
 			DynamicStatsAPI dynamicStats = ship.getMutableStats().getDynamic();
 
 			int fromMods = (int) dynamicStats.getMod(ehm_internals.id.stats.slotPointsFromMods).computeEffective(0f);
@@ -229,22 +222,6 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
-
-		if (!this.canBeAddedOrRemovedNow(ship, null, null)) {
-			String inOrOut = ship.getVariant().hasHullMod(this.hullModSpecId) ? header.lockedIn : header.lockedOut;
-
-			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-			if (lyr_miscUtilities.hasWeapons(ship, ehm_internals.affix.convertedSlot)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasWeaponsOnConvertedSlots, text.padding);
-		}
-	}
-
-	@Override
-	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
-		if (ship == null) return false;
-
-		if (lyr_miscUtilities.hasWeapons(ship, ehm_internals.affix.convertedSlot)) return false;
-
-		return true;
 	}
 	//#endregion
 }

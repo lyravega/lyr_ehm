@@ -7,8 +7,6 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
-import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
@@ -20,16 +18,13 @@ import com.fs.starfarer.api.fleet.FleetMemberStatusAPI;
 import com.fs.starfarer.api.loading.VariantSource;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
-import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
-import experimentalHullModifications.misc.ehm_tooltip.header;
-import experimentalHullModifications.misc.ehm_tooltip.text;
+import lyravega.listeners.lyr_fleetTracker;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.proxies.lyr_weaponSlot;
-import lyravega.utilities.lyr_miscUtilities;
+import lyravega.proxies.lyr_weaponSlot.slotTypeConstants;
 import lyravega.utilities.lyr_reflectionUtilities;
-import lyravega.utilities.lyr_tooltipUtilities;
 
 /**@category Adapter Retrofit
  * @author lyravega
@@ -60,6 +55,7 @@ public final class ehm_ar_minimodule extends _ehm_ar_base {
 	@Override
 	public void onWeaponInstalled(ShipVariantAPI variant, String weaponId, String slotId) {
 		if (!moduleSet.contains(weaponId)) return;
+		lyr_fleetTracker.instance().addTracking(variant, null, null);	// order of this method matters; needs to be done before commit
 		commitVariantChanges();
 	}
 
@@ -73,7 +69,7 @@ public final class ehm_ar_minimodule extends _ehm_ar_base {
 
 	static final Set<String> moduleSet = new HashSet<String>();
 	static {
-		moduleSet.add("ehm_module_shield");
+		moduleSet.add("ehm_module_base");
 	}
 
 	// com.fs.starfarer.api.impl.hullmods.ConvertedHangar
@@ -92,10 +88,10 @@ public final class ehm_ar_minimodule extends _ehm_ar_base {
 		parentHullSpec.getHints().add(ShipTypeHints.DO_NOT_SHOW_MODULES_IN_FLEET_LIST);
 		parentHullSpec.getHints().add(ShipTypeHints.SHIP_WITH_MODULES);
 
-		ShipVariantAPI moduleVariant = Global.getSettings().getVariant("ehm_module_shield_Hull").clone();
+		ShipVariantAPI moduleVariant = Global.getSettings().getVariant("ehm_module_base_Hull").clone();
 		lyr_hullSpec moduleHullSpec = new lyr_hullSpec(false, moduleVariant.getHullSpec());
 		// moduleVariant.setHullVariantId("ehm_module_shield_variant");
-		moduleVariant.addPermaMod("ehm_base", false);	// adding this as perma here for the removal check afterwards; if added as a normal, nonBuiltInMods will contain it
+		moduleVariant.addPermaMod("ehm_module_base", false);	// adding this as perma here for the removal check afterwards; if added as a normal, nonBuiltInMods will contain it
 		moduleVariant.setSource(VariantSource.REFIT);
 
 		List<WeaponSlotAPI> shunts = parentHullSpec.getAllWeaponSlotsCopy();
@@ -106,7 +102,7 @@ public final class ehm_ar_minimodule extends _ehm_ar_base {
 			WeaponSpecAPI shuntSpec = parentVariant.getWeaponSpec(slotId);
 
 			if (shuntSpec == null) { iterator.remove(); continue; }
-			if (!"ehm_module_shield".equals(shuntSpec.getWeaponId())) { iterator.remove(); continue; }
+			if (!"ehm_module_base".equals(shuntSpec.getWeaponId())) { iterator.remove(); continue; }
 			// if (stationModules.keySet().contains(slotId)) { iterator.remove(); continue; }
 		}
 
@@ -114,11 +110,17 @@ public final class ehm_ar_minimodule extends _ehm_ar_base {
 			if (slot.isStationModule()) continue;
 
 			String slotId = slot.getId();
-			// parentVariant.clearSlot(slotId);
+			// parentVariant.clearSlot(slotId);	// modules clear the slot when removed from their refit button
 
 			lyr_weaponSlot parentSlot = parentHullSpec.getWeaponSlot(slotId);
 			parentSlot.setWeaponType(WeaponType.STATION_MODULE);
+			parentSlot.setSlotType(slotTypeConstants.hidden);
 			if (!stationModules.keySet().contains(slotId)) parentVariant.setModuleVariant(slotId, moduleVariant);
+		}
+
+		// this is to prevent strip from removing the base weapons as they're not built-in, to make modules cost OP in a way
+		for (Entry<String, String> moduleEntry : stationModules.entrySet()) {
+			if (moduleEntry.getValue().startsWith("ehm_module") && parentVariant.getWeaponId(moduleEntry.getKey()) == null) parentVariant.addWeapon(moduleEntry.getKey(), "ehm_module_base");
 		}
 
 		// for (String moduleSlotId : stationModules.keySet()) {
@@ -179,21 +181,7 @@ public final class ehm_ar_minimodule extends _ehm_ar_base {
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
 
-		if (!this.canBeAddedOrRemovedNow(ship, null, null)) {
-			String inOrOut = ship.getVariant().hasHullMod(this.hullModSpecId) ? header.lockedIn : header.lockedOut;
-
-			tooltip.addSectionHeading(inOrOut, header.locked_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-			if (!lyr_miscUtilities.areMiniModulesStripped(ship)) lyr_tooltipUtilities.addColourizedPara(tooltip, lyr_tooltipUtilities.colourizedText.negativeText("Cannot be removed")+" as the mini-modules are "+lyr_tooltipUtilities.colourizedText.highlightText("not stripped"), text.padding);
-		}
-	}
-
-	@Override
-	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
-		if (ship == null) return false;
-
-		if (!lyr_miscUtilities.areMiniModulesStripped(ship)) return false;
-
-		return true;
+		// TODO: this may need more info?
 	}
 	//#endregion
 }

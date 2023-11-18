@@ -48,7 +48,8 @@ public class ehm_tooltip {
 				integratedAICore = negativeText("Cannot be installed")+" as the ship has an integrated "+highlightText("AI Core")+"",
 				noAutomatedShipsSkill = negativeText("Cannot be installed")+" without the "+highlightText("Automated Ships")+" skill",
 				hasCaptain = negativeText("Cannot be installed or removed")+" while the ship has a "+highlightText("Captain")+" assigned",
-				hasAICore = negativeText("Cannot be installed or removed")+" while the ship has an "+highlightText("AI Core")+" installed";
+				hasAICore = negativeText("Cannot be installed or removed")+" while the ship has an "+highlightText("AI Core")+" installed",
+				hasMiniModules = negativeText("Cannot be removed")+" as there are "+highlightText("mini-modules")+" on the ship. These mini-modules needs to be removed individually from their own menu.";
 		}
 	}
 

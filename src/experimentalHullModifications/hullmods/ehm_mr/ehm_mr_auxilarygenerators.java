@@ -6,23 +6,14 @@ import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
-import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
-import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
-import com.fs.starfarer.api.ui.Alignment;
-import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_settings;
-import experimentalHullModifications.misc.ehm_tooltip.header;
-import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.listeners.events.normalEvents;
-import lyravega.utilities.lyr_miscUtilities;
-import lyravega.utilities.lyr_tooltipUtilities;
 
 /**
  * A hullmod to convert OP to SP
@@ -62,7 +53,7 @@ public final class ehm_mr_auxilarygenerators extends _ehm_base implements normal
 		stats.getDynamic().getMod(ehm_internals.id.stats.slotPointsFromMods).modifyFlat(this.hullModSpecId, slotPointBonus.get(hullSize));	// used in tooltips
 	}
 
-	//#region INSTALLATION CHECKS / DESCRIPTION
+	//#region DESCRIPTION
 	@Override
 	public String getDescriptionParam(int index, HullSize hullSize) {
 		switch (index) {
@@ -73,47 +64,6 @@ public final class ehm_mr_auxilarygenerators extends _ehm_base implements normal
 			case 4: return ehm_settings.getBaseSlotPointPenalty()+"";
 			default: return null;
 		}
-	}
-
-	@Override
-	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
-		if (ship == null) return;
-
-		if (!this.isApplicableToShip(ship)) {
-			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-
-			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksBase, text.padding);
-			if (!ship.getVariant().hasHullMod(ehm_internals.id.hullmods.diverterandconverter)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksActivator, text.padding);
-		}
-
-		if (!this.canBeAddedOrRemovedNow(ship, null, null)) {
-			tooltip.addSectionHeading(header.lockedIn, header.locked_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-
-			if (lyr_miscUtilities.hasWeapons(ship, ehm_internals.affix.convertedSlot)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasWeaponsOnConvertedSlots, text.padding);
-		}
-
-		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
-	}
-
-	@Override
-	public boolean isApplicableToShip(ShipAPI ship) {
-		if (ship == null) return false;
-
-		ShipVariantAPI variant = ship.getVariant();
-
-		if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) return false;
-		if (!variant.hasHullMod(ehm_internals.id.hullmods.diverterandconverter)) return false;
-
-		return true;
-	}
-
-	@Override
-	public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
-		if (ship == null) return false;
-
-		if (ship.getVariant().hasHullMod(this.hullModSpecId) && lyr_miscUtilities.hasWeapons(ship, ehm_internals.affix.convertedSlot)) return false;	// initial check allows installation, but blocks removal
-
-		return true;
 	}
 	//#endregion
 }
