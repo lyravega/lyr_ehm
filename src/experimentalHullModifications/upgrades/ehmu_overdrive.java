@@ -115,6 +115,11 @@ public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffec
 	}
 
 	@Override
+	public float getToolipWidth(FleetMemberAPI member, ShipVariantAPI variant, MarketAPI market) {
+		return 400.0f;
+	}
+
+	@Override
 	public void addTooltip(TooltipMakerAPI tooltip, FleetMemberAPI member, ShipVariantAPI variant, MarketAPI market) {
 		final int currentTier = this.upgrade.getCurrentTier(variant);
 

@@ -27,4 +27,8 @@ public interface _lyr_abstractTracker {
 	public lyr_shipTracker getShipTracker(ShipVariantAPI variant);
 
 	public lyr_shipTracker getShipTracker(String trackerUUID);
+
+	public void addTracking(ShipVariantAPI variant, FleetMemberAPI member, String parentTrackerUUID);
+
+	public void removeTracking(ShipVariantAPI variant);
 }

@@ -73,7 +73,8 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 		if (lyr_interfaceUtilities.clearUndoAfter) lyr_interfaceUtilities.clearUndoAfter();
 	}
 
-	private void addTracking(ShipVariantAPI variant, FleetMemberAPI member, String parentTrackerUUID) {
+	@Override
+	public void addTracking(ShipVariantAPI variant, FleetMemberAPI member, String parentTrackerUUID) {
 		// if (variant.hasTag(lyr_fleetTracker.uuid.prefix)) return;
 
 		if (!variant.getPermaMods().contains(this.trackerModId))
@@ -111,7 +112,8 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 		}
 	}
 
-	private void removeTracking(ShipVariantAPI variant) {
+	@Override
+	public void removeTracking(ShipVariantAPI variant) {
 		// if (!variant.hasTag(lyr_fleetTracker.uuid.prefix)) return;
 
 		if (variant.getPermaMods().contains(this.trackerModId))
