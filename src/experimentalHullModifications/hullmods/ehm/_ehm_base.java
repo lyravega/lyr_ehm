@@ -139,7 +139,6 @@ public abstract class _ehm_base implements HullModEffect {
 				case "reqNoPhase": if (lyr_miscUtilities.hasPhaseCloak(ship)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasPhase, text.padding); continue;
 				case "reqWingBays": if (ship.getNumFighterBays() == 0) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.noWings, text.padding); continue;
 				case "reqNotChild": if (lyr_miscUtilities.isModule(ship)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.isModule, text.padding); continue;
-				case "reqNoMiniModules": if (lyr_miscUtilities.hasModulesWithPrefix(ship, "ehm_module")) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasMiniModules, text.padding); continue;
 				case "reqDiverterAndConverter": if (!ship.getVariant().hasHullMod(ehm_internals.id.hullmods.diverterandconverter)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksActivator, text.padding); continue;
 				default: continue;
 			}
@@ -152,6 +151,7 @@ public abstract class _ehm_base implements HullModEffect {
 				case "hasWeaponsOnAdaptedSlots": if (lyr_miscUtilities.hasWeapons(ship, ehm_internals.affix.adaptedSlot)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasWeaponsOnAdaptedSlots, text.padding); continue;
 				case "hasExtraWings": if (lyr_miscUtilities.hasExtraWings(ship, this.hullModSpecId)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasExtraWings, text.padding); continue;
 				case "hasWeapons": if (lyr_miscUtilities.hasWeapons(ship)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasWeapons, text.colourized.padding); continue;
+				case "hasMiniModules": if (lyr_miscUtilities.hasModulesWithPrefix(ship, "ehm_module")) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasMiniModules, text.padding); continue;
 				case "hasAnyFittedWings": if (lyr_miscUtilities.hasAnyFittedWings(ship)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasWings, text.colourized.padding); continue;
 				default: continue;
 			}
@@ -178,7 +178,6 @@ public abstract class _ehm_base implements HullModEffect {
 			case "reqNoPhase": if (lyr_miscUtilities.hasPhaseCloak(ship)) return false; else continue;
 			case "reqWingBays": if (ship.getNumFighterBays() == 0) return false; else continue;
 			case "reqNotChild": if (lyr_miscUtilities.isModule(ship)) return false; else continue;
-			case "reqNoMiniModules": if (lyr_miscUtilities.hasModulesWithPrefix(ship, "ehm_module")) return false; else continue;
 			case "reqDiverterAndConverter": if (!ship.getVariant().hasHullMod(ehm_internals.id.hullmods.diverterandconverter)) return false; else continue;
 			default: continue;
 		}
@@ -194,6 +193,7 @@ public abstract class _ehm_base implements HullModEffect {
 			case "hasWeaponsOnAdaptedSlots": if (lyr_miscUtilities.hasWeapons(ship, ehm_internals.affix.adaptedSlot)) return false; else continue;
 			case "hasExtraWings": if (lyr_miscUtilities.hasExtraWings(ship, this.hullModSpecId)) return false; else continue;
 			case "hasWeapons": if (lyr_miscUtilities.hasWeapons(ship)) return false; else continue;
+			case "hasMiniModules": if (lyr_miscUtilities.hasModulesWithPrefix(ship, "ehm_module")) return false; else continue;
 			case "hasAnyFittedWings": if (lyr_miscUtilities.hasAnyFittedWings(ship)) return false; else continue;
 			default: continue;
 		}
