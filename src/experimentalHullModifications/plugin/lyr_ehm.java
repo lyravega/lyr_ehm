@@ -46,6 +46,7 @@ public final class lyr_ehm extends BaseModPlugin {
 		if (ehm_settings.getClearUnknownSlots()) ehm_lostAndFound.returnStuff();
 
 		if (!Global.getSettings().isDevMode()) return;
+		LunaRefitManager.addRefitButton(new _ehmu_test());
 		processECSV();
 	}
 
