@@ -205,7 +205,9 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 		@Override
 		public void applyEffectsAfterShipCreation(ShipAPI ship, String id) {
 			ShipAPI refitShip = lyr_interfaceUtilities.getRefitShip();
-			if (refitShip == null || !ship.getFleetMemberId().equals(refitShip.getFleetMemberId())) return;
+			if (refitShip == null) return;
+			if (ship.getFleetMemberId() != refitShip.getFleetMemberId()) return;
+			if (ship.getVariant() != refitShip.getVariant()) return;	// this check here does the same as above but is more guarded against fake ships
 
 			if (instance.getShipTracker(ship) == null) {	// there is an extremely rare case where this is null; the block below is a nuclear option to prevent it
 				if (lyr_logger.getLevel() != lyr_levels.DEBUG) {
