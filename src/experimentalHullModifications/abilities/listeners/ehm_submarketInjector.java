@@ -46,10 +46,10 @@ public final class ehm_submarketInjector extends _lyr_sectorListener implements 
 	@Override
 	public void reportPlayerOpenedMarket(MarketAPI market) {
 		if (market == null) return;
-		if (!Global.getSector().getPlayerFleet().getAbility(ehm_internals.id.ability).isActive()) return;	// show submarket only if this ability is active
-		if (market.hasSubmarket(ehm_internals.id.submarket)) return;
+		if (!Global.getSector().getPlayerFleet().getAbility(ehm_internals.ids.ability).isActive()) return;	// show submarket only if this ability is active
+		if (market.hasSubmarket(ehm_internals.ids.submarket)) return;
 
-		market.addSubmarket(ehm_internals.id.submarket);
+		market.addSubmarket(ehm_internals.ids.submarket);
 
 		lyr_logger.debug("Attached experimental submarket");
 	}
@@ -57,10 +57,10 @@ public final class ehm_submarketInjector extends _lyr_sectorListener implements 
 	@Override
 	public void reportPlayerClosedMarket(MarketAPI market) {
 		if (market == null) return;
-		if (!Global.getSector().getPlayerFleet().getAbility(ehm_internals.id.ability).isActive()) return;
-		if (!market.hasSubmarket(ehm_internals.id.submarket)) return;
+		if (!Global.getSector().getPlayerFleet().getAbility(ehm_internals.ids.ability).isActive()) return;
+		if (!market.hasSubmarket(ehm_internals.ids.submarket)) return;
 
-		market.removeSubmarket(ehm_internals.id.submarket);
+		market.removeSubmarket(ehm_internals.ids.submarket);
 
 		CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
 		for (CargoItemQuantity<String> weaponCargo : playerCargo.getWeapons()) {

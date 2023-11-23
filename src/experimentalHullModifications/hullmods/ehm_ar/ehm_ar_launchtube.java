@@ -13,7 +13,7 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.misc.ehm_internals;
-import experimentalHullModifications.misc.ehm_internals.id.shunts.launchTubes;
+import experimentalHullModifications.misc.ehm_internals.ids.shunts.bays;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import lyravega.proxies.lyr_hullSpec;
@@ -37,7 +37,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 
 	static final Map<String, Float> launchTubeMap = new HashMap<String, Float>();
 	static {
-		launchTubeMap.put(ehm_internals.id.shunts.launchTubes.large, 1.0f);
+		launchTubeMap.put(ehm_internals.ids.shunts.bays.large, 1.0f);
 	}
 
 	// com.fs.starfarer.api.impl.hullmods.ConvertedHangar
@@ -51,7 +51,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
 		List<WeaponSlotAPI> shunts = lyr_hullSpec.getAllWeaponSlotsCopy();
 
-		StatBonus launchTubeStat = stats.getDynamic().getMod(ehm_internals.id.stats.launchTubes);
+		StatBonus launchTubeStat = stats.getDynamic().getMod(ehm_internals.ids.stats.launchTubes);
 
 		// if (stats.getNumFighterBays().getBaseValue() <= 0) {
 		// 	convertedHangarEffect.applyEffectsBeforeShipCreation(hullSize, stats, "converted_hangar");
@@ -66,15 +66,15 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 
 			String slotId = slot.getId();
 			if (variant.getWeaponSpec(slotId) == null) { iterator.remove(); continue; }
-			if (slotId.startsWith(ehm_internals.affix.convertedSlot)) { iterator.remove(); continue; }
+			if (slotId.startsWith(ehm_internals.affixes.convertedSlot)) { iterator.remove(); continue; }
 
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
 			if (shuntSpec.getSize() != slot.getSlotSize()) { iterator.remove(); continue; }
-			if (!shuntSpec.hasTag(ehm_internals.tag.experimental)) { iterator.remove(); continue; }
+			if (!shuntSpec.hasTag(ehm_internals.tags.experimental)) { iterator.remove(); continue; }
 
 			String shuntId = shuntSpec.getWeaponId();
 			switch (shuntId) {
-				case launchTubes.large: {
+				case bays.large: {
 					launchTubeStat.modifyFlat(slotId, launchTubeMap.get(shuntId));
 					break;
 				} default: { iterator.remove(); break; }
@@ -88,7 +88,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 			String shuntId = variant.getWeaponSpec(slotId).getWeaponId();
 
 			switch (shuntId) {
-				case launchTubes.large: {
+				case bays.large: {
 					ehm_deactivateSlot(lyr_hullSpec, shuntId, slotId);
 					break;
 				} default: break;
@@ -115,7 +115,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 
 		if (ship.getVariant().hasHullMod(this.hullModSpecId)) {
 			if (ehm_settings.getShowInfoForActivators()) {
-				Map<String, Integer> launchTubes = ehm_shuntCount(ship, ehm_internals.tag.tubeShunt);
+				Map<String, Integer> launchTubes = ehm_shuntCount(ship, ehm_internals.tags.tubeShunt);
 
 				if (!launchTubes.isEmpty()) {
 					tooltip.addSectionHeading("EXTRA HANGARS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);

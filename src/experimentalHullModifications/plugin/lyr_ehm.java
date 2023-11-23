@@ -38,15 +38,15 @@ public final class lyr_ehm extends BaseModPlugin {
 
 	@Override
 	public void onGameLoad(boolean newGame) {
-		teachAbility(ehm_internals.id.ability);
+		teachAbility(ehm_internals.ids.ability);
 		updateBlueprints();
 		replaceFieldRepairsScript();
 		attachShuntAccessListener();
 		lyr_fleetTracker.attach();
 		if (ehm_settings.getClearUnknownSlots()) ehm_lostAndFound.returnStuff();
 
-		if (!Global.getSettings().isDevMode()) return;
-		LunaRefitManager.addRefitButton(new _ehmu_test());
+		// if (!Global.getSettings().isDevMode()) return;
+		// LunaRefitManager.addRefitButton(new _ehmu_test());
 		processECSV();
 	}
 
@@ -55,10 +55,10 @@ public final class lyr_ehm extends BaseModPlugin {
 		ehm_settings.attach();
 		updateHullMods();
 		processECSV();
-		lyr_eventDispatcher.registerModsWithEvents("data/hullmods/hull_mods.csv", ehm_internals.id.mod);
+		lyr_eventDispatcher.registerModsWithEvents("data/hullmods/hull_mods.csv", ehm_internals.ids.mod);
 		lyr_upgradeVault.registerUpgrade(new ehmu_overdrive());
 
-		if (!Global.getSettings().isDevMode()) return;
+		// if (!Global.getSettings().isDevMode()) return;
 		LunaRefitManager.addRefitButton(new _ehmu_test());
 	}
 
@@ -80,8 +80,8 @@ public final class lyr_ehm extends BaseModPlugin {
 
 		// purge experimental weapon blueprints
 		for (WeaponSpecAPI weaponSpec : Global.getSettings().getAllWeaponSpecs()) {
-			if (!ehm_internals.id.manufacturer.equals(weaponSpec.getManufacturer())) continue;
-			if (!weaponSpec.hasTag(ehm_internals.tag.experimental)) continue;
+			if (!ehm_internals.ids.manufacturer.equals(weaponSpec.getManufacturer())) continue;
+			if (!weaponSpec.hasTag(ehm_internals.tags.experimental)) continue;
 
 			for (FactionAPI faction : Global.getSector().getAllFactions())
 				faction.removeKnownWeapon(weaponSpec.getWeaponId());
@@ -89,8 +89,8 @@ public final class lyr_ehm extends BaseModPlugin {
 
 		// purge experimental hullmod blueprints
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
-			if (!ehm_internals.id.manufacturer.equals(hullModSpec.getManufacturer())) continue;
-			if (!hullModSpec.hasTag(ehm_internals.tag.experimental)) continue;
+			if (!ehm_internals.ids.manufacturer.equals(hullModSpec.getManufacturer())) continue;
+			if (!hullModSpec.hasTag(ehm_internals.tags.experimental)) continue;
 
 			playerData.removeHullMod(hullModSpec.getId());
 			for (FactionAPI faction : Global.getSector().getAllFactions())
@@ -116,17 +116,17 @@ public final class lyr_ehm extends BaseModPlugin {
 		Set<String> uiTags;
 
 		if (ehm_settings.getCosmeticsOnly()) {
-			uiTags = settingsAPI.getHullModSpec(ehm_internals.id.hullmods.base).getUITags();
-			uiTags.clear(); uiTags.add(ehm_internals.tag.ui.cosmetics);
+			uiTags = settingsAPI.getHullModSpec(ehm_internals.ids.hullmods.base).getUITags();
+			uiTags.clear(); uiTags.add(ehm_internals.tags.uiTags.cosmetics);
 
-			uiTags = settingsAPI.getHullModSpec(ehm_internals.id.hullmods.undo).getUITags();
-			uiTags.clear(); uiTags.add(ehm_internals.tag.ui.cosmetics);
+			uiTags = settingsAPI.getHullModSpec(ehm_internals.ids.hullmods.undo).getUITags();
+			uiTags.clear(); uiTags.add(ehm_internals.tags.uiTags.cosmetics);
 		} else {
-			uiTags = settingsAPI.getHullModSpec(ehm_internals.id.hullmods.base).getUITags();
-			uiTags.clear(); uiTags.addAll(ehm_internals.tag.ui.all);
+			uiTags = settingsAPI.getHullModSpec(ehm_internals.ids.hullmods.base).getUITags();
+			uiTags.clear(); uiTags.addAll(ehm_internals.tags.uiTags.all);
 
-			uiTags = settingsAPI.getHullModSpec(ehm_internals.id.hullmods.undo).getUITags();
-			uiTags.clear(); uiTags.addAll(ehm_internals.tag.ui.all);
+			uiTags = settingsAPI.getHullModSpec(ehm_internals.ids.hullmods.undo).getUITags();
+			uiTags.clear(); uiTags.addAll(ehm_internals.tags.uiTags.all);
 		}
 	}
 
@@ -162,7 +162,7 @@ public final class lyr_ehm extends BaseModPlugin {
 	}
 
 	public static void attachShuntAccessListener() {
-		if (!Global.getSector().getPlayerFleet().getAbility(ehm_internals.id.ability).isActive()) return;
+		if (!Global.getSector().getPlayerFleet().getAbility(ehm_internals.ids.ability).isActive()) return;
 
 		switch (ehm_settings.getShuntAvailability()) {
 			case "Always": ehm_submarketInjector.nullify(friend); ehm_shuntInjector.attach(); break;
@@ -173,7 +173,7 @@ public final class lyr_ehm extends BaseModPlugin {
 
 	private static void processECSV() {
 		try {
-			JSONArray loadCSV = Global.getSettings().loadCSV("data/hullmods/hull_mods.csv", ehm_internals.id.mod);
+			JSONArray loadCSV = Global.getSettings().loadCSV("data/hullmods/hull_mods.csv", ehm_internals.ids.mod);
 
 			for (int i = 0; i < loadCSV.length(); i++) {
 				JSONObject hullModEntry = loadCSV.getJSONObject(i);

@@ -32,7 +32,7 @@ public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstalled(ShipVariantAPI variant) {
-		if (lyr_miscUtilities.removeHullModWithTag(variant, ehm_internals.tag.weaponRetrofit, this.hullModSpecId)) return;	// if installing this removes another, skip
+		if (lyr_miscUtilities.removeHullModWithTag(variant, ehm_internals.tags.weaponRetrofit, this.hullModSpecId)) return;	// if installing this removes another, skip
 		commitVariantChanges(); playDrillSound();
 	}
 
@@ -88,14 +88,14 @@ public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 			WeaponType stockSlotWeaponType = stockSlot.getWeaponType();
 
 			// doesn't support new additions
-			if (slot.retrieve().isDecorative() && ehm_internals.id.shunts.adapters.set.contains(weaponId)) {
-				lyr_hullSpec.getWeaponSlot(ehm_internals.affix.adaptedSlot+slotId+"L").setWeaponType(stockSlotWeaponType);
-				lyr_hullSpec.getWeaponSlot(ehm_internals.affix.adaptedSlot+slotId+"R").setWeaponType(stockSlotWeaponType);
+			if (slot.retrieve().isDecorative() && ehm_internals.ids.shunts.adapters.set.contains(weaponId)) {
+				lyr_hullSpec.getWeaponSlot(ehm_internals.affixes.adaptedSlot+slotId+"L").setWeaponType(stockSlotWeaponType);
+				lyr_hullSpec.getWeaponSlot(ehm_internals.affixes.adaptedSlot+slotId+"R").setWeaponType(stockSlotWeaponType);
 				if (weaponId.endsWith("Triple"))
-					lyr_hullSpec.getWeaponSlot(ehm_internals.affix.adaptedSlot+slotId+"C").setWeaponType(stockSlotWeaponType);
+					lyr_hullSpec.getWeaponSlot(ehm_internals.affixes.adaptedSlot+slotId+"C").setWeaponType(stockSlotWeaponType);
 				else if (weaponId.endsWith("Quad")) {
-					lyr_hullSpec.getWeaponSlot(ehm_internals.affix.adaptedSlot+slotId+"FL").setWeaponType(stockSlotWeaponType);
-					lyr_hullSpec.getWeaponSlot(ehm_internals.affix.adaptedSlot+slotId+"FR").setWeaponType(stockSlotWeaponType);
+					lyr_hullSpec.getWeaponSlot(ehm_internals.affixes.adaptedSlot+slotId+"FL").setWeaponType(stockSlotWeaponType);
+					lyr_hullSpec.getWeaponSlot(ehm_internals.affixes.adaptedSlot+slotId+"FR").setWeaponType(stockSlotWeaponType);
 				}
 			} else {
 				slot.setWeaponType(stockSlotWeaponType);

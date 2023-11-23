@@ -23,7 +23,7 @@ public final class ehm_cec_blueEngines extends _ehm_ec_base implements customiza
 		String id = this.getClass().getSimpleName();
 
 		this.engineStyleSpec = newCustomEngineStyleSpec(id);
-		this.hullModSpec.setDisplayName(lyr_lunaUtilities.getLunaName(ehm_internals.id.mod, id));
+		this.hullModSpec.setDisplayName(lyr_lunaUtilities.getLunaName(ehm_internals.ids.mod, id));
 	}
 
 	@Override

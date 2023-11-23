@@ -45,7 +45,7 @@ public final class ehm_shuntInjector extends _lyr_tabListener {
 
 	@Override
 	protected void onOpen() {
-		if (!Global.getSector().getPlayerFleet().getAbility(ehm_internals.id.ability).isActive()) return;
+		if (!Global.getSector().getPlayerFleet().getAbility(ehm_internals.ids.ability).isActive()) return;
 
 		CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
 
@@ -58,7 +58,7 @@ public final class ehm_shuntInjector extends _lyr_tabListener {
 
 	@Override
 	protected void onClose() {
-		if (!Global.getSector().getPlayerFleet().getAbility(ehm_internals.id.ability).isActive()) return;
+		if (!Global.getSector().getPlayerFleet().getAbility(ehm_internals.ids.ability).isActive()) return;
 
 		CargoAPI playerCargo = Global.getSector().getPlayerFleet().getCargo();
 

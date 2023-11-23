@@ -29,8 +29,8 @@ public final class ehm_undo extends _ehm_base {
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
 
-		variant.getHullMods().remove(ehm_internals.id.hullmods.base);
-		variant.getPermaMods().remove(ehm_internals.id.hullmods.base);
+		variant.getHullMods().remove(ehm_internals.ids.hullmods.base);
+		variant.getPermaMods().remove(ehm_internals.ids.hullmods.base);
 		variant.getHullMods().remove(this.hullModSpecId);
 		variant.setHullSpecAPI(Global.getSettings().getHullSpec(variant.getHullSpec().getHullId().replace(Misc.D_HULL_SUFFIX, ""))); commitVariantChanges(); playDrillSound();
 	}
@@ -42,10 +42,10 @@ public final class ehm_undo extends _ehm_base {
 		if (!this.isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 
-			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksBase, text.padding);
-			if (lyr_miscUtilities.hasHullModWithTag(ship, ehm_internals.tag.experimental, null, false)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasAnyExperimentalEnhanced, text.padding);
+			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.ids.hullmods.base)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksBase, text.padding);
+			if (lyr_miscUtilities.hasHullModWithTag(ship, ehm_internals.tags.experimental, null, false)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasAnyExperimentalEnhanced, text.padding);
 			else {
-				if (lyr_miscUtilities.hasHullModWithTag(ship, ehm_internals.tag.experimental, ehm_internals.id.hullmods.base, true)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasAnyExperimental, text.padding);
+				if (lyr_miscUtilities.hasHullModWithTag(ship, ehm_internals.tags.experimental, ehm_internals.ids.hullmods.base, true)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasAnyExperimental, text.padding);
 				if (lyr_miscUtilities.hasWeapons(ship)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasWeapons, text.padding);
 			}
 		}
@@ -57,8 +57,8 @@ public final class ehm_undo extends _ehm_base {
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false;
 
-		if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) return false;
-		if (lyr_miscUtilities.hasHullModWithTag(ship, ehm_internals.tag.experimental, ehm_internals.id.hullmods.base, true)) return false;
+		if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.ids.hullmods.base)) return false;
+		if (lyr_miscUtilities.hasHullModWithTag(ship, ehm_internals.tags.experimental, ehm_internals.ids.hullmods.base, true)) return false;
 		if (lyr_miscUtilities.hasWeapons(ship)) return false;
 
 		return true;
@@ -66,6 +66,6 @@ public final class ehm_undo extends _ehm_base {
 
 	@Override
 	public boolean showInRefitScreenModPickerFor(ShipAPI ship) {
-		return (lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) ? true : false;
+		return (lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.ids.hullmods.base)) ? true : false;
 	}
 }

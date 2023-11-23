@@ -3,8 +3,7 @@ package experimentalHullModifications.hullmods.ehm_mr;
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.EnumMap;
 
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
@@ -59,7 +58,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 	// END OF CUSTOM EVENTS
 
 	public static final float ordnancePointBonus = 0.20f;
-	public static final Map<HullSize, Integer> slotPointBonus = new HashMap<HullSize, Integer>();
+	public static final EnumMap<HullSize, Integer> slotPointBonus = new EnumMap<HullSize, Integer>(HullSize.class);
 	static {
 		slotPointBonus.put(HullSize.FIGHTER, 0);
 		slotPointBonus.put(HullSize.DEFAULT, 0);
@@ -77,7 +76,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
 
 		lyr_hullSpec.setOrdnancePoints((int) Math.round(lyr_hullSpec.referenceNonDamaged().getOrdnancePoints(null)*(1+ordnancePointBonus)));
-		stats.getDynamic().getMod(ehm_internals.id.stats.slotPointsFromMods).modifyFlat(this.hullModSpecId, slotPointBonus.get(hullSize));	// used in tooltips
+		stats.getDynamic().getMod(ehm_internals.ids.stats.slotPointsFromMods).modifyFlat(this.hullModSpecId, slotPointBonus.get(hullSize));	// used in tooltips
 		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
 	}
 
@@ -98,12 +97,6 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 	@Override
 	public void addSModSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec, boolean isForBuildInList) {
 		if (!this.isApplicableToShip(ship)) return;
-
-		if (!ship.getHullSpec().isBuiltInMod(ehm_internals.id.hullmods.base)) {
-			tooltip.addSectionHeading(header.noEffect, header.noEffect_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-			lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksBase, text.padding);
-			return;
-		}
 
 		if (!ship.getVariant().getSMods().contains(this.hullModSpecId)) {
 			tooltip.addSectionHeading(header.noEffect, header.noEffect_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
@@ -136,7 +129,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 		if (!this.isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 
-			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksBase, text.padding);
+			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.ids.hullmods.base)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksBase, text.padding);
 		} else if (!ship.getVariant().getSMods().contains(this.hullModSpecId)) {
 			tooltip.addSectionHeading(header.severeWarning, header.severeWarning_textColour, header.invisible_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 			lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.overEngineeredWarning, text.padding);
@@ -149,7 +142,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false;
 
-		if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) return false;
+		if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.ids.hullmods.base)) return false;
 
 		return true;
 	}

@@ -90,7 +90,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 
 		// bonus from weapon slots
 		for (WeaponSlotAPI slot : originalHullSpec.getAllWeaponSlotsCopy()) {
-			if (!slot.isWeaponSlot()) continue;
+			if (!slot.isWeaponSlot()) continue;	// TODO: needs to affect built-in weapons
 
 			logisticsBonus += logisticsSlotBonus.get(slot.getSlotSize());
 			lyr_hullSpec.getWeaponSlot(slot.getId()).setWeaponType(WeaponType.DECORATIVE);
@@ -111,7 +111,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 		// bonus from fighter bays
 		float bays = stats.getNumFighterBays().getBaseValue(); if (bays > 0) {
 			logisticsBonus += bays * logisticsSlotBonus.get(WeaponSize.LARGE);
-			stats.getNumFighterBays().modifyFlat(this.hullModSpecId, -bays);	// game nukes the
+			stats.getNumFighterBays().modifyFlat(this.hullModSpecId, -bays);
 		}
 
 		// adjusting hints & adding civgrade if needed
@@ -174,12 +174,6 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 	public void addSModSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec, boolean isForBuildInList) {
 		if (!this.isApplicableToShip(ship)) return;
 
-		if (!ship.getHullSpec().isBuiltInMod(ehm_internals.id.hullmods.base)) {
-			tooltip.addSectionHeading(header.noEffect, header.noEffect_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-			lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksBase, text.padding);
-			return;
-		}
-
 		if (!ship.getVariant().getSMods().contains(this.hullModSpecId)) {
 			tooltip.addSectionHeading(header.noEffect, header.noEffect_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 			lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.overEngineeredNoEffect, text.padding);
@@ -215,7 +209,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 		if (!this.isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 
-			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksBase, text.padding);
+			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.ids.hullmods.base)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksBase, text.padding);
 			if (lyr_miscUtilities.isModule(ship)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.isModule, text.padding);
 			if (lyr_miscUtilities.isParent(ship)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.isParent, text.padding);
 			if (!lyr_miscUtilities.isStripped(ship, this.hullModSpecId)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.notStripped, text.padding);
@@ -231,7 +225,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false;
 
-		if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.id.hullmods.base)) return false;
+		if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.ids.hullmods.base)) return false;
 		if (lyr_miscUtilities.isModule(ship)) return false;
 		if (lyr_miscUtilities.isParent(ship)) return false;
 		if (!lyr_miscUtilities.isStripped(ship, this.hullModSpecId)) return false;

@@ -29,14 +29,14 @@ import experimentalHullModifications.misc.ehm_internals;
 public class ehm_fieldRepairsScript extends FieldRepairsScript {
 	// @Override
 	Object readResolve() {
-		if (seen == null) {
-			seen =  new LinkedHashSet<String>();
+		if (this.seen == null) {
+			this.seen =  new LinkedHashSet<String>();
 		}
-		if (tracker2 == null) {
-			tracker2 = new IntervalUtil(3f, 5f);
+		if (this.tracker2 == null) {
+			this.tracker2 = new IntervalUtil(3f, 5f);
 		}
-		if (newRandom == null) {
-			newRandom = new Random(Misc.genRandomSeed());
+		if (this.newRandom == null) {
+			this.newRandom = new Random(Misc.genRandomSeed());
 		}
 		return this;
 	}
@@ -47,73 +47,73 @@ public class ehm_fieldRepairsScript extends FieldRepairsScript {
 		if (fleet == null) return;
 
 		if (Global.getSector().getPlayerStats().getSkillLevel(Skills.HULL_RESTORATION) <= 0) {
-			picked = null;
-			dmod = null;
+			this.picked = null;
+			this.dmod = null;
 			return;
 		}
 
 		float days = Global.getSector().getClock().convertToDays(amount);
 		float rateMult = 1f / (float) MONTHS_PER_DMOD_REMOVAL;
 		//days *= 100f;
-		tracker.advance(days * rateMult * 0.5f); // * 0.5f since the tracker interval averages 15 days
-		if (tracker.intervalElapsed()) {
+		this.tracker.advance(days * rateMult * 0.5f); // * 0.5f since the tracker interval averages 15 days
+		if (this.tracker.intervalElapsed()) {
 			// pick which ship to remove which d-mod from half a month ahead of time
 			// if it's no longer present in the fleet when it's time to remove the d-mod,
 			// don't remove a d-mod at all
-			if (picked == null || dmod == null) {
-				pickNext();
+			if (this.picked == null || this.dmod == null) {
+				this.pickNext();
 			} else {
-				if (fleet.getFleetData().getMembersListCopy().contains(picked) &&
-						DModManager.getNumDMods(picked.getVariant()) > 0) {
-					DModManager.removeDMod(picked.getVariant(), dmod);
+				if (fleet.getFleetData().getMembersListCopy().contains(this.picked) &&
+						DModManager.getNumDMods(this.picked.getVariant()) > 0) {
+					DModManager.removeDMod(this.picked.getVariant(), this.dmod);
 
-					HullModSpecAPI spec = DModManager.getMod(dmod);
-					MessageIntel intel = new MessageIntel(picked.getShipName() + " - repaired " + spec.getDisplayName(), Misc.getBasePlayerColor());
+					HullModSpecAPI spec = DModManager.getMod(this.dmod);
+					MessageIntel intel = new MessageIntel(this.picked.getShipName() + " - repaired " + spec.getDisplayName(), Misc.getBasePlayerColor());
 					intel.setIcon(Global.getSettings().getSpriteName("intel", "repairs_finished"));
-					Global.getSector().getCampaignUI().addMessage(intel, MessageClickAction.REFIT_TAB, picked);
+					Global.getSector().getCampaignUI().addMessage(intel, MessageClickAction.REFIT_TAB, this.picked);
 
-					int dmods = DModManager.getNumDMods(picked.getVariant());
+					int dmods = DModManager.getNumDMods(this.picked.getVariant());
 					if (dmods <= 0) {
-						restoreToNonDHull(picked.getVariant());
+						restoreToNonDHull(this.picked.getVariant());
 					}
 				}
-				picked = null;
-				pickNext();
+				this.picked = null;
+				this.pickNext();
 			}
 		}
 
-		tracker2.advance(days);
-		if (tracker2.intervalElapsed() && REMOVE_DMOD_FROM_NEW_SHIPS) {
-			if (pickedNew == null || dmodNew == null) {
-				pickNextNew();
+		this.tracker2.advance(days);
+		if (this.tracker2.intervalElapsed() && REMOVE_DMOD_FROM_NEW_SHIPS) {
+			if (this.pickedNew == null || this.dmodNew == null) {
+				this.pickNextNew();
 			} else {
-				seen.add(pickedNew.getId());
+				this.seen.add(this.pickedNew.getId());
 
-				float numDmods = DModManager.getNumDMods(pickedNew.getVariant());
-				if (fleet.getFleetData().getMembersListCopy().contains(pickedNew) && numDmods > 0) {
+				float numDmods = DModManager.getNumDMods(this.pickedNew.getVariant());
+				if (fleet.getFleetData().getMembersListCopy().contains(this.pickedNew) && numDmods > 0) {
 					float probRemove = MIN_NEW_REMOVE_PROB + numDmods * NEW_REMOVE_PROB_PER_DMOD;
-					if (newRandom.nextFloat() < probRemove) {
-						DModManager.removeDMod(pickedNew.getVariant(), dmodNew);
+					if (this.newRandom.nextFloat() < probRemove) {
+						DModManager.removeDMod(this.pickedNew.getVariant(), this.dmodNew);
 
-						HullModSpecAPI spec = DModManager.getMod(dmodNew);
-						MessageIntel intel = new MessageIntel(pickedNew.getShipName() + " - repaired " + spec.getDisplayName(), Misc.getBasePlayerColor());
+						HullModSpecAPI spec = DModManager.getMod(this.dmodNew);
+						MessageIntel intel = new MessageIntel(this.pickedNew.getShipName() + " - repaired " + spec.getDisplayName(), Misc.getBasePlayerColor());
 						intel.setIcon(Global.getSettings().getSpriteName("intel", "repairs_finished"));
-						Global.getSector().getCampaignUI().addMessage(intel, MessageClickAction.REFIT_TAB, pickedNew);
+						Global.getSector().getCampaignUI().addMessage(intel, MessageClickAction.REFIT_TAB, this.pickedNew);
 
-						int dmods = DModManager.getNumDMods(pickedNew.getVariant());
+						int dmods = DModManager.getNumDMods(this.pickedNew.getVariant());
 						if (dmods <= 0) {
-							restoreToNonDHull(pickedNew.getVariant());
+							restoreToNonDHull(this.pickedNew.getVariant());
 						}
 					}
 				}
-				pickedNew = null;
-				pickNextNew();
+				this.pickedNew = null;
+				this.pickNextNew();
 			}
 		}
 	}
 
 	public static void restoreToNonDHull(ShipVariantAPI v) {
-		if (v.hasHullMod(ehm_internals.id.hullmods.base)) return;	// dirty hack to avoid getting the cloned hullSpec replaced
+		if (v.hasHullMod(ehm_internals.ids.hullmods.base)) return;	// dirty hack to avoid getting the cloned hullSpec replaced
 
 		ShipHullSpecAPI base = v.getHullSpec().getDParentHull();
 

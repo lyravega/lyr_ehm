@@ -30,13 +30,13 @@ public abstract class _ehm_sr_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstalled(ShipVariantAPI variant) {
-		if (lyr_miscUtilities.removeHullModWithTag(variant, ehm_internals.tag.systemRetrofit, this.hullModSpecId)) return;
+		if (lyr_miscUtilities.removeHullModWithTag(variant, ehm_internals.tags.systemRetrofit, this.hullModSpecId)) return;
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
 	public void onRemoved(ShipVariantAPI variant) {
-		if (!lyr_miscUtilities.hasHullModWithTag(variant, ehm_internals.tag.systemRetrofit, this.hullModSpecId))
+		if (!lyr_miscUtilities.hasHullModWithTag(variant, ehm_internals.tags.systemRetrofit, this.hullModSpecId))
 			variant.setHullSpecAPI(ehm_systemRestore(variant));
 		commitVariantChanges(); playDrillSound();
 	}
@@ -45,7 +45,7 @@ public abstract class _ehm_sr_base extends _ehm_base implements normalEvents {
 
 	@Override
 	public void init(HullModSpecAPI hullModSpec) {
-		String shipSystemId = this.getClass().getSimpleName().replace(ehm_internals.affix.systemRetrofit, "");
+		String shipSystemId = this.getClass().getSimpleName().replace(ehm_internals.affixes.systemRetrofit, "");
 
 		if (Global.getSettings().getShipSystemSpec(shipSystemId) == null) {
 			hullModSpec.setHidden(true);

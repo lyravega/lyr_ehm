@@ -48,31 +48,31 @@ public final class ehm_settings implements LunaSettingsListener {
 	private static void cacheSettings() {
 		// MAIN SETTINGS
 		checkShuntAvailability();	// separate from others as it needs to trigger a method to add/remove listeners only if there's a change
-		String extraInfo = lyr_lunaUtilities.getString(ehm_internals.id.mod, "ehm_extraInfoInHullMods");	// splitting radio into booleans
+		String extraInfo = lyr_lunaUtilities.getString(ehm_internals.ids.mod, "ehm_extraInfoInHullMods");	// splitting radio into booleans
 		showInfoForActivators = !"None".equals(extraInfo);
 		showFullInfoForActivators = "Full".equals(extraInfo);
-		String drillSound = lyr_lunaUtilities.getString(ehm_internals.id.mod, "ehm_drillSound");	// splitting radio into booleans
+		String drillSound = lyr_lunaUtilities.getString(ehm_internals.ids.mod, "ehm_drillSound");	// splitting radio into booleans
 		playDrillSound = !"None".equals(drillSound);
 		playDrillSoundForAll = "All".equals(drillSound);
 		checkCosmeticsOnly();	// separate from others like the shunt option as it invokes a method to properly update stuff
-		hideAdapters = lyr_lunaUtilities.getBoolean(ehm_internals.id.mod, "ehm_hideAdapters");
-		hideConverters = lyr_lunaUtilities.getBoolean(ehm_internals.id.mod, "ehm_hideConverters");
+		hideAdapters = lyr_lunaUtilities.getBoolean(ehm_internals.ids.mod, "ehm_hideAdapters");
+		hideConverters = lyr_lunaUtilities.getBoolean(ehm_internals.ids.mod, "ehm_hideConverters");
 
 		// HULL MODIFICATION SETTINGS
-		baseSlotPointPenalty = lyr_lunaUtilities.getInt(ehm_internals.id.mod, "ehm_baseSlotPointPenalty");
+		baseSlotPointPenalty = lyr_lunaUtilities.getInt(ehm_internals.ids.mod, "ehm_baseSlotPointPenalty");
 
 		// FLAVOUR SETTINGS
-		showExperimentalFlavour = lyr_lunaUtilities.getBoolean(ehm_internals.id.mod, "ehm_showExperimentalFlavour");
-		showFluff = lyr_lunaUtilities.getBoolean(ehm_internals.id.mod, "ehm_showFluff");
+		showExperimentalFlavour = lyr_lunaUtilities.getBoolean(ehm_internals.ids.mod, "ehm_showExperimentalFlavour");
+		showFluff = lyr_lunaUtilities.getBoolean(ehm_internals.ids.mod, "ehm_showFluff");
 
 		// DEBUG SETTINGS
-		clearUnknownSlots = lyr_lunaUtilities.getBoolean(ehm_internals.id.mod, "ehm_clearUnknownSlots");
-		debugTooltip = lyr_lunaUtilities.getBoolean(ehm_internals.id.mod, "ehm_debugTooltip");
+		clearUnknownSlots = lyr_lunaUtilities.getBoolean(ehm_internals.ids.mod, "ehm_clearUnknownSlots");
+		debugTooltip = lyr_lunaUtilities.getBoolean(ehm_internals.ids.mod, "ehm_debugTooltip");
 		checkLoggerLevel();
 	}
 
 	private static void checkShuntAvailability() {
-		final String temp = lyr_lunaUtilities.getString(ehm_internals.id.mod, "ehm_shuntAvailability");
+		final String temp = lyr_lunaUtilities.getString(ehm_internals.ids.mod, "ehm_shuntAvailability");
 
 		if (shuntAvailability != null && shuntAvailability.equals(temp)) return; else shuntAvailability = temp;
 
@@ -82,7 +82,7 @@ public final class ehm_settings implements LunaSettingsListener {
 	}
 
 	protected static void checkLoggerLevel() {
-		loggerLevel = lyr_lunaUtilities.getInt(ehm_internals.id.mod, "ehm_loggerLevel");
+		loggerLevel = lyr_lunaUtilities.getInt(ehm_internals.ids.mod, "ehm_loggerLevel");
 
 		switch (loggerLevel) {
 			case 5: lyr_logger.setLevel(lyr_levels.INFO); break;
@@ -96,7 +96,7 @@ public final class ehm_settings implements LunaSettingsListener {
 	}
 
 	private static void checkCosmeticsOnly() {
-		final boolean temp = lyr_lunaUtilities.getBoolean(ehm_internals.id.mod, "ehm_cosmeticsOnly");
+		final boolean temp = lyr_lunaUtilities.getBoolean(ehm_internals.ids.mod, "ehm_cosmeticsOnly");
 
 		if (cosmeticsOnly == temp) return; else cosmeticsOnly = temp;
 
@@ -107,7 +107,7 @@ public final class ehm_settings implements LunaSettingsListener {
 
 	@Override
 	public void settingsChanged(String modId) {
-		if (!ehm_internals.id.mod.equals(modId)) return;
+		if (!ehm_internals.ids.mod.equals(modId)) return;
 
 		cacheSettings();	// order may be important; customizable hull modifications might require these to be cached first
 		lyr_eventDispatcher.onSettingsChange(modId, null);

@@ -54,7 +54,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstalled(ShipVariantAPI variant) {
-		lyr_miscUtilities.cleanWeaponGroupsUp(variant, ehm_internals.id.shunts.set);
+		lyr_miscUtilities.cleanWeaponGroupsUp(variant, ehm_internals.ids.shunts.set);
 		commitVariantChanges(); playDrillSound();
 	}
 
@@ -84,7 +84,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 			if (matcher.find()) slotId = matcher.group();
 			else continue;	// this should never happen
 
-			if (!slotId.startsWith(ehm_internals.affix.normalSlot)) continue;
+			if (!slotId.startsWith(ehm_internals.affixes.normalSlot)) continue;
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
 			if (shuntSpec.getSize() != variant.getSlot(slotId).getSlotSize()) continue;
 
@@ -110,7 +110,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 
 		for (String childId: childrenParameters.getChildren()) { // childId and childSlotId are not the same, be aware
 			lyr_weaponSlot childSlot = parentSlot.clone();
-			String childSlotId = ehm_internals.affix.adaptedSlot + slotId + childId; // also used as nodeId because nodeId isn't visible
+			String childSlotId = ehm_internals.affixes.adaptedSlot + slotId + childId; // also used as nodeId because nodeId isn't visible
 			Vector2f childSlotLocation = lyr_vectorUtilities.generateChildLocation(parentSlot.getLocation(), parentSlot.getAngle(), childrenParameters.getChildOffset(childId));
 			WeaponSize childSlotSize = childrenParameters.getChildSize(childId);
 
@@ -135,7 +135,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 		lyr_weaponSlot parentSlot = lyr_hullSpec.getWeaponSlot(slotId);
 
 		lyr_weaponSlot childSlot = parentSlot.clone();
-		String childSlotId = ehm_internals.affix.convertedSlot + slotId + childParameters.getChildSuffix(); // also used as nodeId because nodeId isn't visible
+		String childSlotId = ehm_internals.affixes.convertedSlot + slotId + childParameters.getChildSuffix(); // also used as nodeId because nodeId isn't visible
 
 		childSlot.setId(childSlotId);
 		childSlot.setNode(childSlotId, parentSlot.getLocation());
@@ -157,9 +157,9 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 	protected static final int ehm_slotPointsFromHullMods(ShipVariantAPI variant) {
 		int slotPoints = 0;
 
-		if (variant.getSMods().contains(ehm_internals.id.hullmods.overengineered))
+		if (variant.getSMods().contains(ehm_internals.ids.hullmods.overengineered))
 			slotPoints += ehm_mr_overengineered.slotPointBonus.get(variant.getHullSize());
-		if (variant.hasHullMod(ehm_internals.id.hullmods.auxilarygenerators))
+		if (variant.hasHullMod(ehm_internals.ids.hullmods.auxilarygenerators))
 			slotPoints += ehm_mr_auxilarygenerators.slotPointBonus.get(variant.getHullSize());
 
 		return slotPoints;

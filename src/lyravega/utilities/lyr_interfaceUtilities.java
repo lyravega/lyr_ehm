@@ -50,7 +50,7 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 	 */
 	public static void playDrillSound() {
 		if (!ehm_settings.getPlayDrillSound() || !isRefitTab()) return;
-		Global.getSoundPlayer().playUISound(ehm_internals.id.drillSound, 1.0f, 0.75f);
+		Global.getSoundPlayer().playUISound(ehm_internals.ids.drillSound, 1.0f, 0.75f);
 	}
 
 	/**

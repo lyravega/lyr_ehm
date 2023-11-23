@@ -24,9 +24,9 @@ public final class ehm_csc_greenShields extends _ehm_sc_base implements customiz
 	public void applyCustomization() {
 		String id = this.getClass().getSimpleName();
 
-		this.innerColour = lyr_lunaUtilities.getLunaRGBAColour(ehm_internals.id.mod, id+"_inner");
-		this.ringColour = lyr_lunaUtilities.getLunaRGBAColour(ehm_internals.id.mod, id+"_ring");
-		this.hullModSpec.setDisplayName(lyr_lunaUtilities.getLunaName(ehm_internals.id.mod, id));
+		this.innerColour = lyr_lunaUtilities.getLunaRGBAColour(ehm_internals.ids.mod, id+"_inner");
+		this.ringColour = lyr_lunaUtilities.getLunaRGBAColour(ehm_internals.ids.mod, id+"_ring");
+		this.hullModSpec.setDisplayName(lyr_lunaUtilities.getLunaName(ehm_internals.ids.mod, id));
 	}
 
 	@Override

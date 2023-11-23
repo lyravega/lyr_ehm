@@ -93,6 +93,6 @@ public final class ehm_ability extends BaseToggleAbility {
 
 	@Override
 	public Color getActiveColor() {
-		return Global.getSector().getFaction(ehm_internals.id.faction).getBrightUIColor();
+		return Global.getSector().getFaction(ehm_internals.ids.faction).getBrightUIColor();
 	}
 }

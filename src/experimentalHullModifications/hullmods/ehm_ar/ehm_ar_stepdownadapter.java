@@ -18,7 +18,7 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.misc.ehm_internals;
-import experimentalHullModifications.misc.ehm_internals.id.shunts.adapters;
+import experimentalHullModifications.misc.ehm_internals.ids.shunts.adapters;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import lyravega.proxies.lyr_hullSpec;
@@ -81,22 +81,22 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 	static {
 		mediumDual.addChild("L", WeaponSize.SMALL, new Vector2f(0.0f, 6.0f)); // left
 		mediumDual.addChild("R", WeaponSize.SMALL, new Vector2f(0.0f, -6.0f)); // right
-		adapterMap.put(ehm_internals.id.shunts.adapters.mediumDual, mediumDual);
+		adapterMap.put(ehm_internals.ids.shunts.adapters.mediumDual, mediumDual);
 
 		largeDual.addChild("L", WeaponSize.MEDIUM, new Vector2f(0.0f, 12.0f)); // left
 		largeDual.addChild("R", WeaponSize.MEDIUM, new Vector2f(0.0f, -12.0f)); // right
-		adapterMap.put(ehm_internals.id.shunts.adapters.largeDual, largeDual);
+		adapterMap.put(ehm_internals.ids.shunts.adapters.largeDual, largeDual);
 
 		largeTriple.addChild("L", WeaponSize.SMALL, new Vector2f(-4.0f, 18.0f)); // left
 		largeTriple.addChild("R", WeaponSize.SMALL, new Vector2f(-4.0f, -18.0f)); // right
 		largeTriple.addChild("C", WeaponSize.MEDIUM, new Vector2f(0.0f, 0.0f)); // center
-		adapterMap.put(ehm_internals.id.shunts.adapters.largeTriple, largeTriple);
+		adapterMap.put(ehm_internals.ids.shunts.adapters.largeTriple, largeTriple);
 
 		largeQuad.addChild("L", WeaponSize.SMALL, new Vector2f(0.0f, 6.0f)); // left
 		largeQuad.addChild("R", WeaponSize.SMALL, new Vector2f(0.0f, -6.0f)); // right
 		largeQuad.addChild("FL", WeaponSize.SMALL, new Vector2f(-4.0f, 18.0f)); // far left
 		largeQuad.addChild("FR", WeaponSize.SMALL, new Vector2f(-4.0f, -18.0f)); // far right
-		adapterMap.put(ehm_internals.id.shunts.adapters.largeQuad, largeQuad);
+		adapterMap.put(ehm_internals.ids.shunts.adapters.largeQuad, largeQuad);
 	}
 
 	@Override
@@ -111,11 +111,11 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 
 			String slotId = slot.getId();
 			if (variant.getWeaponSpec(slotId) == null) { iterator.remove(); continue; }
-			if (!slotId.startsWith(ehm_internals.affix.normalSlot)) { iterator.remove(); continue; }
+			if (!slotId.startsWith(ehm_internals.affixes.normalSlot)) { iterator.remove(); continue; }
 
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
 			if (shuntSpec.getSize() != slot.getSlotSize()) { iterator.remove(); continue; }
-			if (!shuntSpec.hasTag(ehm_internals.tag.experimental)) { iterator.remove(); continue; }
+			if (!shuntSpec.hasTag(ehm_internals.tags.experimental)) { iterator.remove(); continue; }
 
 			String shuntId = shuntSpec.getWeaponId();
 			switch (shuntId) {
@@ -158,7 +158,7 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 
 		if (variant.hasHullMod(this.hullModSpecId)) {
 			if (ehm_settings.getShowInfoForActivators()) {
-				Map<String, Integer> adapters = ehm_shuntCount(ship, ehm_internals.tag.adapterShunt);
+				Map<String, Integer> adapters = ehm_shuntCount(ship, ehm_internals.tags.adapterShunt);
 
 				if (!adapters.isEmpty()) {
 					tooltip.addSectionHeading("ACTIVE ADAPTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);

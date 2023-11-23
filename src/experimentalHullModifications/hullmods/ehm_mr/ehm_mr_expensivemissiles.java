@@ -22,19 +22,19 @@ public final class ehm_mr_expensivemissiles extends _ehm_base {
 		if (variant.getHullSpec().isBuiltInMod("hbi") || variant.getPermaMods().contains("hbi")) {
 			variant.addSuppressedMod("hbi");
 		}
-		variant.addPermaMod(ehm_internals.id.hullmods.extensions.expensivemissiles, false);
+		variant.addPermaMod(ehm_internals.ids.hullmods.extensions.expensivemissiles, false);
 	}
 
 	public static void removeExtension(ShipVariantAPI variant) {
 		if (variant.getSuppressedMods().contains("hbi")) {
-			if (!variant.hasHullMod(ehm_internals.id.hullmods.energyslotretrofit)) variant.removeSuppressedMod("hbi");
+			if (!variant.hasHullMod(ehm_internals.ids.hullmods.energyslotretrofit)) variant.removeSuppressedMod("hbi");
 		}
-		variant.removePermaMod(ehm_internals.id.hullmods.extensions.expensivemissiles);
+		variant.removePermaMod(ehm_internals.ids.hullmods.extensions.expensivemissiles);
 	}
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String id) {
-		if (!stats.getVariant().hasHullMod(ehm_internals.id.hullmods.missileslotretrofit)) { removeExtension(stats.getVariant()); return; }
+		if (!stats.getVariant().hasHullMod(ehm_internals.ids.hullmods.missileslotretrofit)) { removeExtension(stats.getVariant()); return; }
 
 		DynamicStatsAPI dynamicStats = stats.getDynamic();
 		dynamicStats.getMod(Stats.SMALL_MISSILE_MOD).modifyFlat(id, 2);

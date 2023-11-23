@@ -14,8 +14,8 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
 import experimentalHullModifications.misc.ehm_internals;
-import experimentalHullModifications.misc.ehm_internals.id.shunts.capacitors;
-import experimentalHullModifications.misc.ehm_internals.id.shunts.dissipators;
+import experimentalHullModifications.misc.ehm_internals.ids.shunts.capacitors;
+import experimentalHullModifications.misc.ehm_internals.ids.shunts.dissipators;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import lyravega.proxies.lyr_hullSpec;
@@ -45,14 +45,14 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 	static final float fluxMultMod = 0.01f;
 
 	static {
-		capacitorMap.put(ehm_internals.id.shunts.capacitors.large, 4);
-		capacitorMap.put(ehm_internals.id.shunts.capacitors.medium, 2);
-		capacitorMap.put(ehm_internals.id.shunts.capacitors.small, 1);
+		capacitorMap.put(ehm_internals.ids.shunts.capacitors.large, 4);
+		capacitorMap.put(ehm_internals.ids.shunts.capacitors.medium, 2);
+		capacitorMap.put(ehm_internals.ids.shunts.capacitors.small, 1);
 		fluxShuntSet.addAll(capacitorMap.keySet());
 
-		dissipatorMap.put(ehm_internals.id.shunts.dissipators.large, 4);
-		dissipatorMap.put(ehm_internals.id.shunts.dissipators.medium, 2);
-		dissipatorMap.put(ehm_internals.id.shunts.dissipators.small, 1);
+		dissipatorMap.put(ehm_internals.ids.shunts.dissipators.large, 4);
+		dissipatorMap.put(ehm_internals.ids.shunts.dissipators.medium, 2);
+		dissipatorMap.put(ehm_internals.ids.shunts.dissipators.small, 1);
 		fluxShuntSet.addAll(dissipatorMap.keySet());
 	}
 
@@ -62,8 +62,8 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
 		List<WeaponSlotAPI> shunts = lyr_hullSpec.getAllWeaponSlotsCopy();
 
-		StatBonus dissipatorStat = stats.getDynamic().getMod(ehm_internals.id.stats.dissipators);
-		StatBonus capacitorStat = stats.getDynamic().getMod(ehm_internals.id.stats.capacitors);
+		StatBonus dissipatorStat = stats.getDynamic().getMod(ehm_internals.ids.stats.dissipators);
+		StatBonus capacitorStat = stats.getDynamic().getMod(ehm_internals.ids.stats.capacitors);
 
 		for (Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
 			WeaponSlotAPI slot = iterator.next();
@@ -71,11 +71,11 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 
 			String slotId = slot.getId();
 			if (variant.getWeaponSpec(slotId) == null) { iterator.remove(); continue; }
-			if (slotId.startsWith(ehm_internals.affix.convertedSlot)) { iterator.remove(); continue; }
+			if (slotId.startsWith(ehm_internals.affixes.convertedSlot)) { iterator.remove(); continue; }
 
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
 			if (shuntSpec.getSize() != slot.getSlotSize()) { iterator.remove(); continue; }
-			if (!shuntSpec.hasTag(ehm_internals.tag.experimental)) { iterator.remove(); continue; }
+			if (!shuntSpec.hasTag(ehm_internals.tags.experimental)) { iterator.remove(); continue; }
 
 			String shuntId = shuntSpec.getWeaponId();
 			switch (shuntId) {
@@ -132,7 +132,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 
 		if (variant.hasHullMod(this.hullModSpecId)) {
 			if (ehm_settings.getShowInfoForActivators()) {
-				Map<String, Integer> capacitors = ehm_shuntCount(ship, ehm_internals.tag.capacitorShunt);
+				Map<String, Integer> capacitors = ehm_shuntCount(ship, ehm_internals.tags.capacitorShunt);
 
 				if (!capacitors.isEmpty()) {
 					float totalBonus = ship.getMutableStats().getFluxCapacity().modified-(variant.getNumFluxCapacitors()*Misc.FLUX_PER_CAPACITOR+variant.getHullSpec().getFluxCapacity());
@@ -147,7 +147,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 					tooltip.addPara("No capacitors are installed. Capacitors increase the total flux capacity of the ship, and affect built-in capacitors.", 2f);
 				}
 
-				Map<String, Integer> dissipators = ehm_shuntCount(ship, ehm_internals.tag.dissipatorShunt);
+				Map<String, Integer> dissipators = ehm_shuntCount(ship, ehm_internals.tags.dissipatorShunt);
 
 				if (!dissipators.isEmpty()) {
 					float totalBonus = ship.getMutableStats().getFluxDissipation().modified-(variant.getNumFluxVents()*Misc.DISSIPATION_PER_VENT+variant.getHullSpec().getFluxDissipation());

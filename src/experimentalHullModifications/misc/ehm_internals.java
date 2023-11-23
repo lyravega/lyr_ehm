@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public final class ehm_internals {
-	public static final class id {
+	public static final class ids {
 		public static final String
 			drillSound = "drill",	// must match .json
 			submarket = "ehm_submarket",	// must match submarket id in .csv
@@ -165,7 +165,7 @@ public final class ehm_internals {
 					set.add(small);
 				}
 			}
-			public static final class launchTubes {
+			public static final class bays {
 				public static final String
 					large = "ehm_tube_large";	// must match weapon id in .csv and .wpn
 				public static final Set<String> set = new HashSet<String>();
@@ -180,7 +180,7 @@ public final class ehm_internals {
 				set.addAll(dissipators.set);
 				set.addAll(converters.set);
 				set.addAll(diverters.set);
-				set.addAll(launchTubes.set);
+				set.addAll(bays.set);
 			}
 		}
 
@@ -202,11 +202,9 @@ public final class ehm_internals {
 		}
 	}
 
-	public static final class tag {
+	public static final class tags {
 		public static final String
 			experimental = "ehm",	// must match hullmod/weapon tag in .csv
-
-			// TODO: add ECSV tags here
 
 			systemRetrofit = "ehm_sr",	// must match hullmod tag in .csv
 			weaponRetrofit = "ehm_wr",	// must match hullmod tag in .csv
@@ -214,20 +212,28 @@ public final class ehm_internals {
 			shieldCosmetic = "ehm_sc",	// must match hullmod tag in .csv
 			engineCosmetic = "ehm_ec",	// must match hullmod tag in .csv
 
-			reqShields = "ehm_require_shields",	// must match hullmod tag in .csv
-			reqNoPhase = "ehm_require_no_phase",	// must match hullmod tag in .csv
-			reqWings = "ehm_require_wings",	// must match hullmod tag in .csv
-
-			externalAccess = "ehm_externalAccess",	// must match hullmod tag in .csv
-
 			adapterShunt = "ehm_adapter",	// must match weapon tag in .csv
 			capacitorShunt = "ehm_capacitor",	// must match weapon tag in .csv
 			dissipatorShunt = "ehm_dissipator",	// must match weapon tag in .csv
 			converterShunt = "ehm_converter",	// must match weapon tag in .csv
 			diverterShunt = "ehm_diverter",	// must match weapon tag in .csv
-			tubeShunt = "ehm_tube";	// must match weapon tag in .csv
+			tubeShunt = "ehm_tube",	// must match weapon tag in .csv
 
-		public static final class ui {
+			reqBase = "reqBase",
+			reqNoLogistics = "reqNoLogistics",
+			reqShield = "reqShield",
+			reqNoPhase = "reqNoPhase",
+			reqWingBays = "reqWingBays",
+			reqNotChild = "reqNotChild",
+			reqDiverterAndConverter = "reqDiverterAndConverter",
+			hasWeaponsOnConvertedSlots = "hasWeaponsOnConvertedSlots",
+			hasWeaponsOnAdaptedSlots = "hasWeaponsOnAdaptedSlots",
+			hasExtraWings = "hasExtraWings",
+			hasWeapons = "hasWeapons",
+			hasMiniModules = "hasMiniModules",
+			hasAnyFittedWings = "hasAnyFittedWings";
+
+		public static final class uiTags {
 			public static final String
 				activators = "Activators",
 				cosmetics = "Cosmetics",
@@ -243,7 +249,7 @@ public final class ehm_internals {
 		}
 	}
 
-	public static final class affix {
+	public static final class affixes {
 		public static final String
 			normalSlot = "WS",	// should NOT be altered in any update
 			adaptedSlot = "AS_",	// should NOT be altered in any update
