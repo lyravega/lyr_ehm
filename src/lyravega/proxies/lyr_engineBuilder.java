@@ -78,10 +78,12 @@ public final class lyr_engineBuilder {
 	 * engineBuilder}. May be used as a reference and to access obfuscated accessors,
 	 * but alterations shouldn't be performed on stock, non-cloned objects from
 	 * the spec store.
-	 * <p> Cloned hull specs also clone most relevant things like weapon and engine
-	 * slots, shield and engine specs, so this may be used freely on those already
-	 * cloned objects, but otherwise this should only be used strictly as a reference
-	 * and/or a getter de-obfuscator.
+	 * <p> Cloned hull specs also clone some relevant things shield and engine specs,
+	 * so this may be used freely on those already cloned objects, but otherwise this
+	 * should only be used strictly as a reference and/or a getter de-obfuscator.
+	 * <p> While engine and weapon slots are also cloned, their locations will share
+	 * the same nodes with the stock hull spec; any change in their locations will
+	 * affect all unless the node is unique.
 	 * @param enginebuilder to be proxied
 	 * @param clone (overload) if the enginebuilder needs to be cloned during construction
 	 */
