@@ -2,23 +2,23 @@ package experimentalHullModifications.hullmods.ehm_ar;
 
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 
-import java.util.*;
-
-import org.lwjgl.util.vector.Vector2f;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
-import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.misc.ehm_internals;
-import experimentalHullModifications.misc.ehm_internals.ids.shunts.adapters;
+import experimentalHullModifications.misc.ehm_internals.shunts.adapters;
+import experimentalHullModifications.misc.ehm_internals.shunts.adapters.adapterParameters;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import lyravega.proxies.lyr_hullSpec;
@@ -40,64 +40,7 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 	//#endregion
 	// END OF CUSTOM EVENTS
 
-	/**
-	 * An inner class to supply the adapters with relevant child data
-	 */
-	static class childrenParameters {
-		private Set<String> children; // childIds are used as position identifier, and used as a suffix
-		private Map<String, Vector2f> childrenOffsets;
-		private Map<String, WeaponSize> childrenSizes;
-
-		private childrenParameters() {
-			this.children = new HashSet<String>();
-			this.childrenOffsets = new HashMap<String, Vector2f>();
-			this.childrenSizes = new HashMap<String, WeaponSize>();
-		}
-
-		private void addChild(String childId, WeaponSize childSize, Vector2f childOffset) {
-			this.children.add(childId);
-			this.childrenOffsets.put(childId, childOffset);
-			this.childrenSizes.put(childId, childSize);
-		}
-
-		Set<String> getChildren() {
-			return this.children;
-		}
-
-		Vector2f getChildOffset(String childPrefix) {
-			return this.childrenOffsets.get(childPrefix);
-		}
-
-		WeaponSize getChildSize(String childPrefix) {
-			return this.childrenSizes.get(childPrefix);
-		}
-	}
-
-	static final Map<String, childrenParameters> adapterMap = new HashMap<String, childrenParameters>();
-	private static final childrenParameters mediumDual = new childrenParameters();
-	private static final childrenParameters largeDual = new childrenParameters();
-	private static final childrenParameters largeTriple = new childrenParameters();
-	private static final childrenParameters largeQuad = new childrenParameters();
-	static {
-		mediumDual.addChild("L", WeaponSize.SMALL, new Vector2f(0.0f, 6.0f)); // left
-		mediumDual.addChild("R", WeaponSize.SMALL, new Vector2f(0.0f, -6.0f)); // right
-		adapterMap.put(ehm_internals.ids.shunts.adapters.mediumDual, mediumDual);
-
-		largeDual.addChild("L", WeaponSize.MEDIUM, new Vector2f(0.0f, 12.0f)); // left
-		largeDual.addChild("R", WeaponSize.MEDIUM, new Vector2f(0.0f, -12.0f)); // right
-		adapterMap.put(ehm_internals.ids.shunts.adapters.largeDual, largeDual);
-
-		largeTriple.addChild("L", WeaponSize.SMALL, new Vector2f(-4.0f, 18.0f)); // left
-		largeTriple.addChild("R", WeaponSize.SMALL, new Vector2f(-4.0f, -18.0f)); // right
-		largeTriple.addChild("C", WeaponSize.MEDIUM, new Vector2f(0.0f, 0.0f)); // center
-		adapterMap.put(ehm_internals.ids.shunts.adapters.largeTriple, largeTriple);
-
-		largeQuad.addChild("L", WeaponSize.SMALL, new Vector2f(0.0f, 6.0f)); // left
-		largeQuad.addChild("R", WeaponSize.SMALL, new Vector2f(0.0f, -6.0f)); // right
-		largeQuad.addChild("FL", WeaponSize.SMALL, new Vector2f(-4.0f, 18.0f)); // far left
-		largeQuad.addChild("FR", WeaponSize.SMALL, new Vector2f(-4.0f, -18.0f)); // far right
-		adapterMap.put(ehm_internals.ids.shunts.adapters.largeQuad, largeQuad);
-	}
+	static final Map<String, adapterParameters> adapterMap = adapters.dataMap;
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
@@ -115,11 +58,11 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
 			if (shuntSpec.getSize() != slot.getSlotSize()) { iterator.remove(); continue; }
-			if (!shuntSpec.hasTag(ehm_internals.tags.experimental)) { iterator.remove(); continue; }
+			if (!shuntSpec.hasTag(ehm_internals.hullmods.tags.experimental)) { iterator.remove(); continue; }
 
 			String shuntId = shuntSpec.getWeaponId();
 			switch (shuntId) {
-				case adapters.largeDual: case adapters.largeQuad: case adapters.largeTriple: case adapters.mediumDual: {
+				case adapters.ids.largeDual: case adapters.ids.largeQuad: case adapters.ids.largeTriple: case adapters.ids.mediumDual: {
 					break;
 				} default: { iterator.remove(); break; }
 			}
@@ -132,7 +75,7 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 			String shuntId = variant.getWeaponSpec(slotId).getWeaponId();
 
 			switch (shuntId) {
-				case adapters.largeDual: case adapters.largeQuad: case adapters.largeTriple: case adapters.mediumDual: {
+				case adapters.ids.largeDual: case adapters.ids.largeQuad: case adapters.ids.largeTriple: case adapters.ids.mediumDual: {
 					ehm_adaptSlot(lyr_hullSpec, shuntId, slotId);
 					break;
 				} default: break;
@@ -158,12 +101,12 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 
 		if (variant.hasHullMod(this.hullModSpecId)) {
 			if (ehm_settings.getShowInfoForActivators()) {
-				Map<String, Integer> adapters = ehm_shuntCount(ship, ehm_internals.tags.adapterShunt);
+				Map<String, Integer> adapterCount = ehm_shuntCount(ship, adapters.tag);
 
-				if (!adapters.isEmpty()) {
+				if (!adapterCount.isEmpty()) {
 					tooltip.addSectionHeading("ACTIVE ADAPTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-					for (String shuntId: adapters.keySet()) {
-						tooltip.addPara(adapters.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
+					for (String shuntId: adapterCount.keySet()) {
+						tooltip.addPara(adapterCount.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
 				} else if (ehm_settings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO ADAPTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);

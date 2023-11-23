@@ -113,7 +113,7 @@ public class ehm_fieldRepairsScript extends FieldRepairsScript {
 	}
 
 	public static void restoreToNonDHull(ShipVariantAPI v) {
-		if (v.hasHullMod(ehm_internals.ids.hullmods.base)) return;	// dirty hack to avoid getting the cloned hullSpec replaced
+		if (v.hasHullMod(ehm_internals.hullmods.main.base)) return;	// dirty hack to avoid getting the cloned hullSpec replaced
 
 		ShipHullSpecAPI base = v.getHullSpec().getDParentHull();
 

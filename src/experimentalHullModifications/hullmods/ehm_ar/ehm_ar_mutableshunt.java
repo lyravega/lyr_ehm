@@ -14,8 +14,8 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
 import experimentalHullModifications.misc.ehm_internals;
-import experimentalHullModifications.misc.ehm_internals.ids.shunts.capacitors;
-import experimentalHullModifications.misc.ehm_internals.ids.shunts.dissipators;
+import experimentalHullModifications.misc.ehm_internals.shunts.capacitors;
+import experimentalHullModifications.misc.ehm_internals.shunts.dissipators;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import lyravega.proxies.lyr_hullSpec;
@@ -27,33 +27,26 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 	//#region CUSTOM EVENTS
 	@Override
 	public void onWeaponInstalled(ShipVariantAPI variant, String weaponId, String slotId) {
-		if (fluxShuntSet.contains(weaponId)) commitVariantChanges();
+		if (comboSet.contains(weaponId)) commitVariantChanges();
 	}
 
 	@Override
 	public void onWeaponRemoved(ShipVariantAPI variant, String weaponId, String slotId) {
-		if (fluxShuntSet.contains(weaponId)) commitVariantChanges();
+		if (comboSet.contains(weaponId)) commitVariantChanges();
 	}
 	//#endregion
 	// END OF CUSTOM EVENTS
 
-	static final Set<String> fluxShuntSet = new HashSet<String>();
-	static final Map<String, Integer> capacitorMap = new HashMap<String, Integer>();
-	static final Map<String, Integer> dissipatorMap = new HashMap<String, Integer>();
+	static final Map<String, Integer> capacitorMap = capacitors.dataMap;
+	static final Map<String, Integer> dissipatorMap = dissipators.dataMap;
+	static final Set<String> comboSet = new HashSet<String>();
 	static final float capacitorFlatMod = 1.5f * Misc.FLUX_PER_CAPACITOR;
 	static final float dissipatorFlatMod = 1.5f * Misc.DISSIPATION_PER_VENT;
 	static final float fluxMultMod = 0.01f;
 
 	static {
-		capacitorMap.put(ehm_internals.ids.shunts.capacitors.large, 4);
-		capacitorMap.put(ehm_internals.ids.shunts.capacitors.medium, 2);
-		capacitorMap.put(ehm_internals.ids.shunts.capacitors.small, 1);
-		fluxShuntSet.addAll(capacitorMap.keySet());
-
-		dissipatorMap.put(ehm_internals.ids.shunts.dissipators.large, 4);
-		dissipatorMap.put(ehm_internals.ids.shunts.dissipators.medium, 2);
-		dissipatorMap.put(ehm_internals.ids.shunts.dissipators.small, 1);
-		fluxShuntSet.addAll(dissipatorMap.keySet());
+		comboSet.addAll(capacitors.idSet);
+		comboSet.addAll(dissipators.idSet);
 	}
 
 	@Override
@@ -62,8 +55,8 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
 		List<WeaponSlotAPI> shunts = lyr_hullSpec.getAllWeaponSlotsCopy();
 
-		StatBonus dissipatorStat = stats.getDynamic().getMod(ehm_internals.ids.stats.dissipators);
-		StatBonus capacitorStat = stats.getDynamic().getMod(ehm_internals.ids.stats.capacitors);
+		StatBonus dissipatorStat = stats.getDynamic().getMod(ehm_internals.stats.dissipators);
+		StatBonus capacitorStat = stats.getDynamic().getMod(ehm_internals.stats.capacitors);
 
 		for (Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
 			WeaponSlotAPI slot = iterator.next();
@@ -75,14 +68,14 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
 			if (shuntSpec.getSize() != slot.getSlotSize()) { iterator.remove(); continue; }
-			if (!shuntSpec.hasTag(ehm_internals.tags.experimental)) { iterator.remove(); continue; }
+			if (!shuntSpec.hasTag(ehm_internals.hullmods.tags.experimental)) { iterator.remove(); continue; }
 
 			String shuntId = shuntSpec.getWeaponId();
 			switch (shuntId) {
-				case capacitors.large: case capacitors.medium: case capacitors.small: {
+				case capacitors.ids.large: case capacitors.ids.medium: case capacitors.ids.small: {
 					capacitorStat.modifyFlat(slotId, capacitorMap.get(shuntId));
 					break;
-				} case dissipators.large: case dissipators.medium: case dissipators.small: {
+				} case dissipators.ids.large: case dissipators.ids.medium: case dissipators.ids.small: {
 					dissipatorStat.modifyFlat(slotId, dissipatorMap.get(shuntId));
 					break;
 				} default: { iterator.remove(); break; }
@@ -96,8 +89,8 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 			String shuntId = variant.getWeaponSpec(slotId).getWeaponId();
 
 			switch (shuntId) {
-				case capacitors.large: case capacitors.medium: case capacitors.small:
-				case dissipators.large: case dissipators.medium: case dissipators.small: {
+				case capacitors.ids.large: case capacitors.ids.medium: case capacitors.ids.small:
+				case dissipators.ids.large: case dissipators.ids.medium: case dissipators.ids.small: {
 					ehm_deactivateSlot(lyr_hullSpec, shuntId, slotId);
 					break;
 				} default: break;
@@ -132,30 +125,30 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 
 		if (variant.hasHullMod(this.hullModSpecId)) {
 			if (ehm_settings.getShowInfoForActivators()) {
-				Map<String, Integer> capacitors = ehm_shuntCount(ship, ehm_internals.tags.capacitorShunt);
+				Map<String, Integer> capacitorCount = ehm_shuntCount(ship, capacitors.tag);
 
-				if (!capacitors.isEmpty()) {
+				if (!capacitorCount.isEmpty()) {
 					float totalBonus = ship.getMutableStats().getFluxCapacity().modified-(variant.getNumFluxCapacitors()*Misc.FLUX_PER_CAPACITOR+variant.getHullSpec().getFluxCapacity());
 
 					tooltip.addSectionHeading("ACTIVE CAPACITORS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("Total capacity bonus: "+(int) totalBonus, 2f);
-					for (String shuntId: capacitors.keySet()) {
-						tooltip.addPara(capacitors.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
+					for (String shuntId: capacitorCount.keySet()) {
+						tooltip.addPara(capacitorCount.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
 				} else if (ehm_settings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO CAPACITORS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No capacitors are installed. Capacitors increase the total flux capacity of the ship, and affect built-in capacitors.", 2f);
 				}
 
-				Map<String, Integer> dissipators = ehm_shuntCount(ship, ehm_internals.tags.dissipatorShunt);
+				Map<String, Integer> dissipatorCount = ehm_shuntCount(ship, dissipators.tag);
 
-				if (!dissipators.isEmpty()) {
+				if (!dissipatorCount.isEmpty()) {
 					float totalBonus = ship.getMutableStats().getFluxDissipation().modified-(variant.getNumFluxVents()*Misc.DISSIPATION_PER_VENT+variant.getHullSpec().getFluxDissipation());
 
 					tooltip.addSectionHeading("ACTIVE DISSIPATORS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("Total dissipation bonus: "+(int) totalBonus, 2f);
-					for (String shuntId: dissipators.keySet()) {
-						tooltip.addPara(dissipators.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
+					for (String shuntId: dissipatorCount.keySet()) {
+						tooltip.addPara(dissipatorCount.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
 				} else if (ehm_settings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO DISSIPATORS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);

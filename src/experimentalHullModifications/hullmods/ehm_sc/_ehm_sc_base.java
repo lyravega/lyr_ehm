@@ -29,13 +29,13 @@ public abstract class _ehm_sc_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstalled(ShipVariantAPI variant) {
-		if (lyr_miscUtilities.removeHullModWithTag(variant, ehm_internals.tags.shieldCosmetic, this.hullModSpecId)) return;
+		if (lyr_miscUtilities.removeHullModWithTag(variant, ehm_internals.hullmods.shieldCosmetics.tag, this.hullModSpecId)) return;
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
 	public void onRemoved(ShipVariantAPI variant) {
-		if (!lyr_miscUtilities.hasHullModWithTag(variant, ehm_internals.tags.shieldCosmetic, this.hullModSpecId))
+		if (!lyr_miscUtilities.hasHullModWithTag(variant, ehm_internals.hullmods.shieldCosmetics.tag, this.hullModSpecId))
 			variant.setHullSpecAPI(ehm_restoreShield(variant));
 		commitVariantChanges(); playDrillSound();
 	}

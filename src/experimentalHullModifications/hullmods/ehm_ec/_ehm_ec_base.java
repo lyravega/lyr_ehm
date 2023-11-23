@@ -33,13 +33,13 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstalled(ShipVariantAPI variant) {
-		if (lyr_miscUtilities.removeHullModWithTag(variant, ehm_internals.tags.engineCosmetic, this.hullModSpecId)) return;	// removes other engine cosmetics and short-circuits if there was any
+		if (lyr_miscUtilities.removeHullModWithTag(variant, ehm_internals.hullmods.engineCosmetics.tag, this.hullModSpecId)) return;	// removes other engine cosmetics and short-circuits if there was any
 		commitVariantChanges(); playDrillSound(); refreshFleetView(false);	// short-circuit is due to onRemove() below, to avoid doing same things multiple times
 	}
 
 	@Override
 	public void onRemoved(ShipVariantAPI variant) {
-		if (!lyr_miscUtilities.hasHullModWithTag(variant, ehm_internals.tags.engineCosmetic, this.hullModSpecId))
+		if (!lyr_miscUtilities.hasHullModWithTag(variant, ehm_internals.hullmods.engineCosmetics.tag, this.hullModSpecId))
 			variant.setHullSpecAPI(ehm_restoreEngineSlots_lazy(variant));
 		commitVariantChanges(); playDrillSound(); refreshFleetView(false);
 	}

@@ -22,7 +22,7 @@ import lyravega.utilities.lyr_tooltipUtilities.colour;
 
 public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffect {
 	private final lyr_upgrade upgrade;
-	private final String upgradeId = ehm_internals.ids.upgrades.overdrive;
+	private final String upgradeId = ehm_internals.upgrades.overdrive;
 
 	public ehmu_overdrive() {
 		final String gc = "gamma_core";
@@ -89,7 +89,7 @@ public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffec
 
 	@Override
 	public boolean shouldShow(FleetMemberAPI member, ShipVariantAPI variant, MarketAPI market) {
-		return !ehm_settings.getCosmeticsOnly() && variant.hasHullMod(ehm_internals.ids.hullmods.base);
+		return !ehm_settings.getCosmeticsOnly() && variant.hasHullMod(ehm_internals.hullmods.main.base);
 	}
 
 	@Override

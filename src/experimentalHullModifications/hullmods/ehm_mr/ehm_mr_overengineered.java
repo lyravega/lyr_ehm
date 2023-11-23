@@ -76,7 +76,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
 
 		lyr_hullSpec.setOrdnancePoints((int) Math.round(lyr_hullSpec.referenceNonDamaged().getOrdnancePoints(null)*(1+ordnancePointBonus)));
-		stats.getDynamic().getMod(ehm_internals.ids.stats.slotPointsFromMods).modifyFlat(this.hullModSpecId, slotPointBonus.get(hullSize));	// used in tooltips
+		stats.getDynamic().getMod(ehm_internals.stats.slotPointsFromMods).modifyFlat(this.hullModSpecId, slotPointBonus.get(hullSize));	// used in tooltips
 		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
 	}
 
@@ -129,7 +129,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 		if (!this.isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 
-			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.ids.hullmods.base)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksBase, text.padding);
+			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.hullmods.main.base)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksBase, text.padding);
 		} else if (!ship.getVariant().getSMods().contains(this.hullModSpecId)) {
 			tooltip.addSectionHeading(header.severeWarning, header.severeWarning_textColour, header.invisible_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 			lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.overEngineeredWarning, text.padding);
@@ -142,7 +142,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false;
 
-		if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.ids.hullmods.base)) return false;
+		if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.hullmods.main.base)) return false;
 
 		return true;
 	}

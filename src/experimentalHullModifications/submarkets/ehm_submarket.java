@@ -28,7 +28,7 @@ public final class ehm_submarket extends BaseSubmarketPlugin {
 	public static final Set<String> shunts = new HashSet<String>();	// doing this here separately as there can be disabled/unused shunts
 	static {
 		for (WeaponSpecAPI weaponSpec : Global.getSettings().getAllWeaponSpecs()) {	// doing this here might be problematic, OK so far
-			if (!weaponSpec.hasTag(ehm_internals.tags.experimental)) continue;
+			if (!weaponSpec.hasTag(ehm_internals.hullmods.tags.experimental)) continue;
 		// for (String weaponId : ehm_internals.id.shunts.set) {	this is dangerous during game launch, older above one works though
 		// 	WeaponSpecAPI weaponSpec = Global.getSettings().getWeaponSpec(weaponId);
 			// if (weaponSpec == null) continue;
@@ -47,7 +47,7 @@ public final class ehm_submarket extends BaseSubmarketPlugin {
 			this.cargo.addWeapons(shuntId, 1000);
 		}
 		this.cargo.addMothballedShip(FleetMemberType.SHIP, "crig_Standard", "EHM Lab");
-		this.cargo.getMothballedShips().getMembersListCopy().iterator().next().getVariant().addMod(ehm_internals.ids.hullmods.base);
+		this.cargo.getMothballedShips().getMembersListCopy().iterator().next().getVariant().addMod(ehm_internals.hullmods.main.base);
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public final class ehm_submarket extends BaseSubmarketPlugin {
 	public boolean isIllegalOnSubmarket(CargoStackAPI stack, TransferAction action) {
 		if (!stack.isWeaponStack()) return true;
 
-		return !stack.getWeaponSpecIfWeapon().hasTag(ehm_internals.tags.experimental);
+		return !stack.getWeaponSpecIfWeapon().hasTag(ehm_internals.hullmods.tags.experimental);
 	}
 
 	@Override

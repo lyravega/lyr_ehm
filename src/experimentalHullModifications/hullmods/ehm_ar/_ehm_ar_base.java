@@ -1,12 +1,5 @@
 package experimentalHullModifications.hullmods.ehm_ar;
 
-import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_diverterandconverter.converterMap;
-import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_diverterandconverter.diverterConverterSet;
-import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_diverterandconverter.diverterMap;
-// import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_launchtube.launchTubeMap;
-// import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.capacitorMap;
-// import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.dissipatorMap;
-import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.adapterMap;
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
@@ -20,14 +13,17 @@ import org.lwjgl.util.vector.Vector2f;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
+import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
+import com.fs.starfarer.api.util.DynamicStatsAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
-import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_diverterandconverter.childParameters;
-import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.childrenParameters;
 import experimentalHullModifications.hullmods.ehm_mr.ehm_mr_auxilarygenerators;
 import experimentalHullModifications.hullmods.ehm_mr.ehm_mr_overengineered;
 import experimentalHullModifications.misc.ehm_internals;
+import experimentalHullModifications.misc.ehm_internals.shunts.*;
+import experimentalHullModifications.misc.ehm_internals.shunts.adapters.adapterParameters;
+import experimentalHullModifications.misc.ehm_internals.shunts.converters.converterParameters;
 import experimentalHullModifications.misc.ehm_lostAndFound;
 import experimentalHullModifications.misc.ehm_settings;
 import lyravega.listeners.events.normalEvents;
@@ -54,7 +50,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstalled(ShipVariantAPI variant) {
-		lyr_miscUtilities.cleanWeaponGroupsUp(variant, ehm_internals.ids.shunts.set);
+		lyr_miscUtilities.cleanWeaponGroupsUp(variant, ehm_internals.shunts.idSet);
 		commitVariantChanges(); playDrillSound();
 	}
 
@@ -69,6 +65,10 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 	@Override public void onWeaponRemoved(ShipVariantAPI variant, String weaponId, String slotId) {}
 	//#endregion
 	// END OF CUSTOM EVENTS
+
+	private static final Map<String, adapterParameters> adapterMap = adapters.dataMap;
+	private static final Map<String, converterParameters> converterMap = converters.dataMap;
+	private static final Map<String, Integer> diverterMap = diverters.dataMap;
 
 	private static final Pattern pattern = Pattern.compile("WS[ 0-9]{4}");
 	private static Matcher matcher;
@@ -89,8 +89,8 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 			if (shuntSpec.getSize() != variant.getSlot(slotId).getSlotSize()) continue;
 
 			String shuntId = shuntSpec.getWeaponId();
-			if (adapterMap.containsKey(shuntId)) ehm_adaptSlot(lyr_hullSpec, shuntId, slotId);
-			else if (converterMap.containsKey(shuntId)) ehm_convertSlot(lyr_hullSpec, shuntId, slotId);
+			if (adapters.idSet.contains(shuntId)) ehm_adaptSlot(lyr_hullSpec, shuntId, slotId);
+			else if (converters.idSet.contains(shuntId)) ehm_convertSlot(lyr_hullSpec, shuntId, slotId);
 		} else for (String slotId : variant.getFittedWeaponSlots()) {
 			if (variant.getSlot(slotId) != null) continue;
 
@@ -104,8 +104,172 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
 	}
 
+	public static final void ehm_preProcessDynamicStats(MutableShipStatsAPI stats) {
+		DynamicStatsAPI dynamicStats = stats.getDynamic();
+		ShipVariantAPI variant = stats.getVariant();
+
+		if (variant.getSMods().contains(ehm_internals.hullmods.misc.overengineered)) {
+			String source = ehm_mr_overengineered.class.getSimpleName();
+			int mod = ehm_mr_overengineered.slotPointBonus.get(variant.getHullSize());
+
+			dynamicStats.getMod(ehm_internals.stats.slotPointsFromMods).modifyFlat(source, mod);
+			dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(source, mod);
+		}
+
+		if (variant.hasHullMod(ehm_internals.hullmods.misc.auxilarygenerators)) {
+			String source = ehm_mr_auxilarygenerators.class.getSimpleName();
+			int mod = ehm_mr_auxilarygenerators.slotPointBonus.get(variant.getHullSize());
+
+			dynamicStats.getMod(ehm_internals.stats.slotPointsFromMods).modifyFlat(source, mod);
+			dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(source, mod);
+		}
+
+		for (WeaponSlotAPI slot : variant.getHullSpec().getAllWeaponSlotsCopy()) {
+			String slotId = slot.getId();
+			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
+
+			if (shuntSpec == null) continue;
+			if (shuntSpec.getSize() != slot.getSlotSize()) continue;
+			if (!shuntSpec.hasTag(ehm_internals.hullmods.tags.experimental)) continue;
+
+			String shuntId = shuntSpec.getWeaponId();
+			String shuntGroupTag = shuntSpec.getWeaponGroupTag();
+			switch (shuntGroupTag) {
+				case adapters.groupTag: {
+					if (!variant.hasHullMod(adapters.activatorId)) continue;
+					if (!slotId.startsWith(ehm_internals.affixes.normalSlot)) continue;
+					switch (shuntId) {
+						case adapters.ids.largeDual: {
+							dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+							continue;
+						}
+						case adapters.ids.largeQuad: {
+							dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+							continue;
+						}
+						case adapters.ids.largeTriple: {
+							dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+							continue;
+						}
+						case adapters.ids.mediumDual: {
+							dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+							continue;
+						}
+					}
+				}
+				case converters.groupTag: {
+					if (!variant.hasHullMod(converters.activatorId)) continue;
+					if (!slotId.startsWith(ehm_internals.affixes.normalSlot)) continue;
+					switch (shuntId) {
+						case converters.ids.mediumToLarge: {
+							if (slot.isDecorative()) dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+							if (slot.isDecorative()) dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 2);
+							dynamicStats.getMod(ehm_internals.stats.slotPointsNeeded).modifyFlat(slotId, 2);
+							continue;
+						}
+						case converters.ids.smallToLarge: {
+							if (slot.isDecorative()) dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+							if (slot.isDecorative()) dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 3);
+							dynamicStats.getMod(ehm_internals.stats.slotPointsNeeded).modifyFlat(slotId, 3);
+							continue;
+						}
+						case converters.ids.smallToMedium: {
+							if (slot.isDecorative()) dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+							if (slot.isDecorative()) dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 1);
+							dynamicStats.getMod(ehm_internals.stats.slotPointsNeeded).modifyFlat(slotId, 1);
+							continue;
+						}
+					}
+					continue;
+				}
+				case diverters.groupTag: {
+					if (!variant.hasHullMod(diverters.activatorId)) continue;
+					if (slotId.startsWith(ehm_internals.affixes.convertedSlot)) continue;
+					switch (shuntId) {
+						case diverters.ids.large: {
+							dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+							dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 4);
+							dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(slotId, 4);
+							continue;
+						}
+						case diverters.ids.medium: {
+							dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+							dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 2);
+							dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(slotId, 2);
+							continue;
+						}
+						case diverters.ids.small: {
+							dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+							dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 1);
+							dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(slotId, 1);
+							continue;
+						}
+					}
+					continue;
+				}
+				case capacitors.groupTag: {
+					if (!variant.hasHullMod(capacitors.activatorId)) continue;
+					if (slotId.startsWith(ehm_internals.affixes.convertedSlot)) continue;
+					switch (shuntId) {
+						case capacitors.ids.large: {
+							dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+							dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 4);
+							continue;
+						}
+						case capacitors.ids.medium: {
+							dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+							dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 2);
+							continue;
+						}
+						case capacitors.ids.small: {
+							dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+							dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 1);
+							continue;
+						}
+					}
+					continue;
+				}
+				case dissipators.groupTag: {
+					if (!variant.hasHullMod(dissipators.activatorId)) continue;
+					if (slotId.startsWith(ehm_internals.affixes.convertedSlot)) continue;
+					switch (shuntId) {
+						case dissipators.ids.large: {
+							dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+							dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 4);
+							continue;
+						}
+						case dissipators.ids.medium: {
+							dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+							dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 2);
+							continue;
+						}
+						case dissipators.ids.small: {
+							dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+							dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 1);
+							continue;
+						}
+					}
+					continue;
+				}
+				case hangars.groupTag: {
+					if (!variant.hasHullMod(hangars.activatorId)) continue;
+					if (slotId.startsWith(ehm_internals.affixes.convertedSlot)) continue;
+					switch (shuntId) {
+						case hangars.ids.large: {
+							dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+							// dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 1);
+							continue;
+						}
+					}
+					continue;
+				}
+				default: continue;
+			}
+		}
+	}
+
 	protected static final void ehm_adaptSlot(lyr_hullSpec lyr_hullSpec, String shuntId, String slotId) {
-		childrenParameters childrenParameters = adapterMap.get(shuntId);
+		adapterParameters childrenParameters = adapterMap.get(shuntId);
 		lyr_weaponSlot parentSlot = lyr_hullSpec.getWeaponSlot(slotId);
 
 		for (String childId: childrenParameters.getChildren()) { // childId and childSlotId are not the same, be aware
@@ -131,7 +295,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 		// int childCost = childParameters.getChildCost();
 		// if (slotPoints != null && slotPoints - childCost < 0) return slotPoints - childCost;
 
-		childParameters childParameters = converterMap.get(shuntId);
+		converterParameters childParameters = converterMap.get(shuntId);
 		lyr_weaponSlot parentSlot = lyr_hullSpec.getWeaponSlot(slotId);
 
 		lyr_weaponSlot childSlot = parentSlot.clone();
@@ -157,9 +321,9 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 	protected static final int ehm_slotPointsFromHullMods(ShipVariantAPI variant) {
 		int slotPoints = 0;
 
-		if (variant.getSMods().contains(ehm_internals.ids.hullmods.overengineered))
+		if (variant.getSMods().contains(ehm_internals.hullmods.misc.overengineered))
 			slotPoints += ehm_mr_overengineered.slotPointBonus.get(variant.getHullSize());
-		if (variant.hasHullMod(ehm_internals.ids.hullmods.auxilarygenerators))
+		if (variant.hasHullMod(ehm_internals.hullmods.misc.auxilarygenerators))
 			slotPoints += ehm_mr_auxilarygenerators.slotPointBonus.get(variant.getHullSize());
 
 		return slotPoints;
@@ -180,12 +344,11 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 
 		for (WeaponAPI weapon: ship.getAllWeapons()) {
 			if (!weapon.getSlot().isDecorative()) continue;
-			if (!diverterConverterSet.contains(weapon.getId())) continue;
 
 			String weaponId = weapon.getId();
 
-			if (diverterMap.containsKey(weaponId)) fromDiverters += diverterMap.get(weaponId);
-			else if (converterMap.containsKey(weaponId)) forConverters += converterMap.get(weaponId).getChildCost();
+			if (diverters.idSet.contains(weaponId)) fromDiverters += diverterMap.get(weaponId);
+			else if (converters.idSet.contains(weaponId)) forConverters += converterMap.get(weaponId).getChildCost();
 		}
 
 		int slotPointsTotal = fromHullMods+fromDiverters-forConverters;

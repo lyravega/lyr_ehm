@@ -9,7 +9,6 @@ import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
-import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
@@ -18,9 +17,9 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.DynamicStatsAPI;
 
 import experimentalHullModifications.misc.ehm_internals;
-import experimentalHullModifications.misc.ehm_internals.ids.hullmods;
-import experimentalHullModifications.misc.ehm_internals.ids.shunts.converters;
-import experimentalHullModifications.misc.ehm_internals.ids.shunts.diverters;
+import experimentalHullModifications.misc.ehm_internals.shunts.converters;
+import experimentalHullModifications.misc.ehm_internals.shunts.converters.converterParameters;
+import experimentalHullModifications.misc.ehm_internals.shunts.diverters;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import lyravega.proxies.lyr_hullSpec;
@@ -32,64 +31,22 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 	//#region CUSTOM EVENTS
 	@Override
 	public void onWeaponInstalled(ShipVariantAPI variant, String weaponId, String slotId) {
-		if (diverterConverterSet.contains(weaponId)) commitVariantChanges();
+		if (comboSet.contains(weaponId)) commitVariantChanges();
 	}
 
 	@Override
 	public void onWeaponRemoved(ShipVariantAPI variant, String weaponId, String slotId) {
-		if (diverterConverterSet.contains(weaponId)) commitVariantChanges();
+		if (comboSet.contains(weaponId)) commitVariantChanges();
 	}
 	//#endregion
 	// END OF CUSTOM EVENTS
 
-	/**
-	 * An inner class to supply the converters with relevant child data
-	 */
-	static class childParameters {
-		private String childSuffix; // childIds are used as position identifier, and used as a suffix
-		private int childCost;
-		private WeaponSize childSize;
-
-		private childParameters(String childSuffix, WeaponSize childSize, int childCost) {
-			this.childSuffix = childSuffix;
-			this.childCost = childCost;
-			this.childSize = childSize;
-		}
-
-		String getChildSuffix() {
-			return this.childSuffix;
-		}
-
-		int getChildCost() {
-			return this.childCost;
-		}
-
-		WeaponSize getChildSize() {
-			return this.childSize;
-		}
-	}
-
-	static final Map<String, childParameters> converterMap = new HashMap<String, childParameters>();
-	private static childParameters mediumToLarge = new childParameters("ML", WeaponSize.LARGE, 2);
-	private static childParameters smallToLarge = new childParameters("SL", WeaponSize.LARGE, 3);
-	private static childParameters smallToMedium = new childParameters("SM", WeaponSize.MEDIUM, 1);
+	static final Map<String, converterParameters> converterMap = converters.dataMap;
+	static final Map<String, Integer> diverterMap = diverters.dataMap;
+	static final Set<String> comboSet = new HashSet<String>();
 	static {
-		converterMap.put(ehm_internals.ids.shunts.converters.mediumToLarge, mediumToLarge);
-		converterMap.put(ehm_internals.ids.shunts.converters.smallToLarge, smallToLarge);
-		converterMap.put(ehm_internals.ids.shunts.converters.smallToMedium, smallToMedium);
-	}
-
-	static final Map<String, Integer> diverterMap = new HashMap<String, Integer>();	// slotPoint reward
-	static {
-		diverterMap.put(ehm_internals.ids.shunts.diverters.large, 4);
-		diverterMap.put(ehm_internals.ids.shunts.diverters.medium, 2);
-		diverterMap.put(ehm_internals.ids.shunts.diverters.small, 1);
-	}
-
-	static final Set<String> diverterConverterSet = new HashSet<String>();
-	static {
-		diverterConverterSet.addAll(converterMap.keySet());
-		diverterConverterSet.addAll(diverterMap.keySet());
+		comboSet.addAll(converters.idSet);
+		comboSet.addAll(diverters.idSet);
 	}
 
 	@Override
@@ -111,23 +68,23 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
 			if (shuntSpec.getSize() != slot.getSlotSize()) { iterator.remove(); continue; }
-			if (!shuntSpec.hasTag(ehm_internals.tags.experimental)) { iterator.remove(); continue; }
+			if (!shuntSpec.hasTag(ehm_internals.hullmods.tags.experimental)) { iterator.remove(); continue; }
 
 			String shuntId = shuntSpec.getWeaponId();
 			switch (shuntId) {
-				case converters.mediumToLarge: case converters.smallToLarge: case converters.smallToMedium: {
+				case converters.ids.mediumToLarge: case converters.ids.smallToLarge: case converters.ids.smallToMedium: {
 					if (!slotId.startsWith(ehm_internals.affixes.normalSlot)) { iterator.remove(); break; }
 					if (!slot.isDecorative()) break;
 					int mod = converterMap.get(shuntId).getChildCost();
 					slotPoints -= mod;
-					stats.getDynamic().getMod(ehm_internals.ids.stats.slotPointsToConverters).modifyFlat(slotId, -mod);	// used in tooltips
+					stats.getDynamic().getMod(ehm_internals.stats.slotPointsToConverters).modifyFlat(slotId, -mod);	// used in tooltips
 					break;
-				} case diverters.large: case diverters.medium: case diverters.small: {
+				} case diverters.ids.large: case diverters.ids.medium: case diverters.ids.small: {
 					if (slotId.startsWith(ehm_internals.affixes.convertedSlot)) { iterator.remove(); break; }
 					if (!slot.isDecorative()) break;
 					int mod = diverterMap.get(shuntId);
 					slotPoints += mod;
-					stats.getDynamic().getMod(ehm_internals.ids.stats.slotPointsFromDiverters).modifyFlat(slotId, mod);	// used in tooltips
+					stats.getDynamic().getMod(ehm_internals.stats.slotPointsFromDiverters).modifyFlat(slotId, mod);	// used in tooltips
 					break;
 				} default: { iterator.remove(); break; }
 			}
@@ -140,13 +97,13 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 			String shuntId = variant.getWeaponSpec(slotId).getWeaponId();
 
 			switch (shuntId) {
-				case converters.mediumToLarge: case converters.smallToLarge: case converters.smallToMedium: {
+				case converters.ids.mediumToLarge: case converters.ids.smallToLarge: case converters.ids.smallToMedium: {
 					int cost = converterMap.get(shuntId).getChildCost();
 					if (slotPoints - cost < 0) break;
 					slotPoints -= cost;
 					ehm_convertSlot(lyr_hullSpec, shuntId, slotId);
 					break;
-				} case diverters.large: case diverters.medium: case diverters.small: {
+				} case diverters.ids.large: case diverters.ids.medium: case diverters.ids.small: {
 					slotPoints += diverterMap.get(shuntId);
 					ehm_deactivateSlot(lyr_hullSpec, shuntId, slotId);
 					break;
@@ -154,7 +111,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 			}
 		}
 
-		stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(hullmods.diverterandconverter, Math.max(0, ehm_settings.getBaseSlotPointPenalty()*Math.min(slotPointsFromMods, slotPointsFromMods - slotPoints)));
+		stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(this.hullModSpecId, Math.max(0, ehm_settings.getBaseSlotPointPenalty()*Math.min(slotPointsFromMods, slotPointsFromMods - slotPoints)));
 
 		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
 	}
@@ -179,9 +136,9 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 		if (ship.getVariant().hasHullMod(this.hullModSpecId)) {
 			DynamicStatsAPI dynamicStats = ship.getMutableStats().getDynamic();
 
-			int fromMods = (int) dynamicStats.getMod(ehm_internals.ids.stats.slotPointsFromMods).computeEffective(0f);
-			int fromDiverters = (int) dynamicStats.getMod(ehm_internals.ids.stats.slotPointsFromDiverters).computeEffective(0f);
-			int toConverters = (int) dynamicStats.getMod(ehm_internals.ids.stats.slotPointsToConverters).computeEffective(0f);
+			int fromMods = (int) dynamicStats.getMod(ehm_internals.stats.slotPointsFromMods).computeEffective(0f);
+			int fromDiverters = (int) dynamicStats.getMod(ehm_internals.stats.slotPointsFromDiverters).computeEffective(0f);
+			int toConverters = (int) dynamicStats.getMod(ehm_internals.stats.slotPointsToConverters).computeEffective(0f);
 			int total = fromMods + fromDiverters + toConverters;
 			int deploymentPenalty = ehm_settings.getBaseSlotPointPenalty() > 0 ? Math.max(0, ehm_settings.getBaseSlotPointPenalty()*Math.min(fromMods, fromMods - total)) : 0;
 
@@ -195,24 +152,24 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 			if (deploymentPenalty > 0) tooltip.addPara("Ship will require an additional " + deploymentPenalty + " deployment points", 2f, header.notApplicable_textColour, deploymentPenalty + " deployment points");
 
 			if (ehm_settings.getShowInfoForActivators()) {
-				Map<String, Integer> converters = ehm_shuntCount(ship, ehm_internals.tags.converterShunt);
+				Map<String, Integer> converterCount = ehm_shuntCount(ship, converters.tag);
 
-				if (!converters.isEmpty()) {
+				if (!converterCount.isEmpty()) {
 					tooltip.addSectionHeading("ACTIVE CONVERTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-					for (String shuntId: converters.keySet()) {
-						tooltip.addPara(converters.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
+					for (String shuntId: converterCount.keySet()) {
+						tooltip.addPara(converterCount.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
 				} else if (ehm_settings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO CONVERTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No converters are installed. Converters are used to make a smaller slot a bigger one, if there are enough slot points.", 2f);
 				}
 
-				Map<String, Integer> diverters = ehm_shuntCount(ship, ehm_internals.tags.diverterShunt);
+				Map<String, Integer> diverterCount = ehm_shuntCount(ship, diverters.tag);
 
-				if (!diverters.isEmpty()) {
+				if (!diverterCount.isEmpty()) {
 					tooltip.addSectionHeading("ACTIVE DIVERTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-					for (String shuntId: diverters.keySet()) {
-						tooltip.addPara(diverters.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
+					for (String shuntId: diverterCount.keySet()) {
+						tooltip.addPara(diverterCount.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
 				} else if (ehm_settings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO DIVERTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);

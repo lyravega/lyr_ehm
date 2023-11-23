@@ -151,7 +151,7 @@ public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 		if (!this.isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 
-			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.ids.hullmods.base)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksBase, text.padding);
+			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.hullmods.main.base)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksBase, text.padding);
 			if (!variant.hasHullMod(this.hullModSpecId)) {
 				if (Misc.isUnremovable(captain)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.integratedAICore, text.padding);
 				if (noAutomatedShipsSkill) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.noAutomatedShipsSkill, text.padding);
@@ -179,7 +179,7 @@ public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false;
 
-		if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.ids.hullmods.base)) return false;
+		if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.hullmods.main.base)) return false;
 		if (!ship.getVariant().hasHullMod(this.hullModSpecId)) {
 			if (Misc.isUnremovable(ship.getCaptain())) return false;
 			if (Global.getSector().getPlayerStats().getSkillLevel(Skills.AUTOMATED_SHIPS) < 1) return false;

@@ -22,20 +22,20 @@ public final class ehm_mr_heavyenergyintegration extends _ehm_base {
 	public static void installExtension(ShipVariantAPI variant) {
 		if (variant.getHullSpec().isBuiltInMod("hbi") || variant.getPermaMods().contains("hbi")) {
 			variant.addSuppressedMod("hbi");
-			variant.addPermaMod(ehm_internals.ids.hullmods.extensions.heavyenergyintegration, false);
+			variant.addPermaMod(ehm_internals.hullmods.extensions.heavyenergyintegration, false);
 		}
 	}
 
 	public static void removeExtension(ShipVariantAPI variant) {
 		if (variant.getSuppressedMods().contains("hbi")) {
-			if (!variant.hasHullMod(ehm_internals.ids.hullmods.missileslotretrofit)) variant.removeSuppressedMod("hbi");
-			variant.removePermaMod(ehm_internals.ids.hullmods.extensions.heavyenergyintegration);
+			if (!variant.hasHullMod(ehm_internals.hullmods.weaponRetrofits.missileslotretrofit)) variant.removeSuppressedMod("hbi");
+			variant.removePermaMod(ehm_internals.hullmods.extensions.heavyenergyintegration);
 		}
 	}
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String id) {
-		if (!stats.getVariant().hasHullMod(ehm_internals.ids.hullmods.energyslotretrofit)) { removeExtension(stats.getVariant()); return; }
+		if (!stats.getVariant().hasHullMod(ehm_internals.hullmods.weaponRetrofits.energyslotretrofit)) { removeExtension(stats.getVariant()); return; }
 
 		stats.getDynamic().getMod(Stats.LARGE_ENERGY_MOD).modifyFlat(id, -COST_REDUCTION);
 	}

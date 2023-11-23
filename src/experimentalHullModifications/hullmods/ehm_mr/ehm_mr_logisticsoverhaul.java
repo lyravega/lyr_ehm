@@ -209,7 +209,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 		if (!this.isApplicableToShip(ship)) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 
-			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.ids.hullmods.base)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksBase, text.padding);
+			if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.hullmods.main.base)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksBase, text.padding);
 			if (lyr_miscUtilities.isModule(ship)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.isModule, text.padding);
 			if (lyr_miscUtilities.isParent(ship)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.isParent, text.padding);
 			if (!lyr_miscUtilities.isStripped(ship, this.hullModSpecId)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.notStripped, text.padding);
@@ -225,7 +225,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 	public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false;
 
-		if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.ids.hullmods.base)) return false;
+		if (!lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.hullmods.main.base)) return false;
 		if (lyr_miscUtilities.isModule(ship)) return false;
 		if (lyr_miscUtilities.isParent(ship)) return false;
 		if (!lyr_miscUtilities.isStripped(ship, this.hullModSpecId)) return false;

@@ -15,7 +15,6 @@ import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.misc.ehm_internals;
 import lyravega.listeners.events.normalEvents;
 import lyravega.proxies.lyr_hullSpec;
-import lyravega.proxies.lyr_weaponSlot;
 import lyravega.utilities.lyr_miscUtilities;
 
 /**
@@ -32,7 +31,7 @@ public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstalled(ShipVariantAPI variant) {
-		if (lyr_miscUtilities.removeHullModWithTag(variant, ehm_internals.tags.weaponRetrofit, this.hullModSpecId)) return;	// if installing this removes another, skip
+		if (lyr_miscUtilities.removeHullModWithTag(variant, ehm_internals.hullmods.weaponRetrofits.tag, this.hullModSpecId)) return;	// if installing this removes another, skip
 		commitVariantChanges(); playDrillSound();
 	}
 
@@ -65,40 +64,6 @@ public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 			if (conversions.containsKey(convertFrom)) {
 				WeaponType convertTo = conversions.get(convertFrom);
 				lyr_hullSpec.getWeaponSlot(slotId).setWeaponType(convertTo);
-			}
-		}
-
-		return lyr_hullSpec.retrieve();
-	}
-
-	/**
-	 * Refers to a stock hullSpec, and restores the slots on the passed variant's
-	 * hullSpec one by one. Ignores activated adapters, and affects adapted slots.
-	 * @param variant whose hullSpec will have its weaponSlots restored
-	 * @return an altered hullSpec with restored weaponSlots
-	 */
-	@Deprecated
-	public static final ShipHullSpecAPI ehm_weaponSlotRestore(ShipVariantAPI variant) {
-		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
-
-		for (WeaponSlotAPI stockSlot: lyr_hullSpec.referenceNonDamaged().getAllWeaponSlotsCopy()) {
-			String slotId = stockSlot.getId();
-			String weaponId = variant.getWeaponId(slotId);
-			lyr_weaponSlot slot = lyr_hullSpec.getWeaponSlot(slotId);
-			WeaponType stockSlotWeaponType = stockSlot.getWeaponType();
-
-			// doesn't support new additions
-			if (slot.retrieve().isDecorative() && ehm_internals.ids.shunts.adapters.set.contains(weaponId)) {
-				lyr_hullSpec.getWeaponSlot(ehm_internals.affixes.adaptedSlot+slotId+"L").setWeaponType(stockSlotWeaponType);
-				lyr_hullSpec.getWeaponSlot(ehm_internals.affixes.adaptedSlot+slotId+"R").setWeaponType(stockSlotWeaponType);
-				if (weaponId.endsWith("Triple"))
-					lyr_hullSpec.getWeaponSlot(ehm_internals.affixes.adaptedSlot+slotId+"C").setWeaponType(stockSlotWeaponType);
-				else if (weaponId.endsWith("Quad")) {
-					lyr_hullSpec.getWeaponSlot(ehm_internals.affixes.adaptedSlot+slotId+"FL").setWeaponType(stockSlotWeaponType);
-					lyr_hullSpec.getWeaponSlot(ehm_internals.affixes.adaptedSlot+slotId+"FR").setWeaponType(stockSlotWeaponType);
-				}
-			} else {
-				slot.setWeaponType(stockSlotWeaponType);
 			}
 		}
 

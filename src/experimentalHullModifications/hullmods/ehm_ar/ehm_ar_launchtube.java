@@ -2,7 +2,9 @@ package experimentalHullModifications.hullmods.ehm_ar;
 
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.*;
@@ -13,7 +15,7 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.misc.ehm_internals;
-import experimentalHullModifications.misc.ehm_internals.ids.shunts.bays;
+import experimentalHullModifications.misc.ehm_internals.shunts.hangars;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import lyravega.proxies.lyr_hullSpec;
@@ -25,20 +27,17 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 	//#region CUSTOM EVENTS
 	@Override
 	public void onWeaponInstalled(ShipVariantAPI variant, String weaponId, String slotId) {
-		if (launchTubeMap.keySet().contains(weaponId)) commitVariantChanges();
+		if (hangarMap.keySet().contains(weaponId)) commitVariantChanges();
 	}
 
 	@Override
 	public void onWeaponRemoved(ShipVariantAPI variant, String weaponId, String slotId) {
-		if (launchTubeMap.keySet().contains(weaponId)) commitVariantChanges();
+		if (hangarMap.keySet().contains(weaponId)) commitVariantChanges();
 	}
 	//#endregion
 	// END OF CUSTOM EVENTS
 
-	static final Map<String, Float> launchTubeMap = new HashMap<String, Float>();
-	static {
-		launchTubeMap.put(ehm_internals.ids.shunts.bays.large, 1.0f);
-	}
+	static final Map<String, Float> hangarMap = ehm_internals.shunts.hangars.dataMap;
 
 	// com.fs.starfarer.api.impl.hullmods.ConvertedHangar
 	// private static final HullModEffect convertedHangarEffect = Global.getSettings().getHullModSpec("converted_hangar").getEffect();
@@ -51,7 +50,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
 		List<WeaponSlotAPI> shunts = lyr_hullSpec.getAllWeaponSlotsCopy();
 
-		StatBonus launchTubeStat = stats.getDynamic().getMod(ehm_internals.ids.stats.launchTubes);
+		StatBonus launchTubeStat = stats.getDynamic().getMod(ehm_internals.stats.hangars);
 
 		// if (stats.getNumFighterBays().getBaseValue() <= 0) {
 		// 	convertedHangarEffect.applyEffectsBeforeShipCreation(hullSize, stats, "converted_hangar");
@@ -70,12 +69,12 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
 			if (shuntSpec.getSize() != slot.getSlotSize()) { iterator.remove(); continue; }
-			if (!shuntSpec.hasTag(ehm_internals.tags.experimental)) { iterator.remove(); continue; }
+			if (!shuntSpec.hasTag(ehm_internals.hullmods.tags.experimental)) { iterator.remove(); continue; }
 
 			String shuntId = shuntSpec.getWeaponId();
 			switch (shuntId) {
-				case bays.large: {
-					launchTubeStat.modifyFlat(slotId, launchTubeMap.get(shuntId));
+				case hangars.ids.large: {
+					launchTubeStat.modifyFlat(slotId, hangarMap.get(shuntId));
 					break;
 				} default: { iterator.remove(); break; }
 			}
@@ -88,7 +87,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 			String shuntId = variant.getWeaponSpec(slotId).getWeaponId();
 
 			switch (shuntId) {
-				case bays.large: {
+				case hangars.ids.large: {
 					ehm_deactivateSlot(lyr_hullSpec, shuntId, slotId);
 					break;
 				} default: break;
@@ -115,12 +114,12 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 
 		if (ship.getVariant().hasHullMod(this.hullModSpecId)) {
 			if (ehm_settings.getShowInfoForActivators()) {
-				Map<String, Integer> launchTubes = ehm_shuntCount(ship, ehm_internals.tags.tubeShunt);
+				Map<String, Integer> hangarCount = ehm_shuntCount(ship, hangars.tag);
 
-				if (!launchTubes.isEmpty()) {
+				if (!hangarCount.isEmpty()) {
 					tooltip.addSectionHeading("EXTRA HANGARS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-					for (String shuntId: launchTubes.keySet()) {
-						tooltip.addPara(launchTubes.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
+					for (String shuntId: hangarCount.keySet()) {
+						tooltip.addPara(hangarCount.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
 					}
 				} else if (ehm_settings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO EXTRA HANGARS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);

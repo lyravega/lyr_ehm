@@ -8,6 +8,7 @@ import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.input.InputEventAPI;
+import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
@@ -47,6 +48,13 @@ public class _ehmu_test extends BaseRefitButton {
 
 	@Override
 	public void onClick(FleetMemberAPI member, ShipVariantAPI variant, InputEventAPI event, MarketAPI market) {
+		for (HullModSpecAPI hms : Global.getSettings().getAllHullModSpecs()) {
+			hms.setCapitalCost(0);
+			hms.setCruiserCost(0);
+			hms.setDestroyerCost(0);
+			hms.setFrigateCost(0);
+		}
+
 		if (!event.isShiftDown()) return;
 
 		lyr_parentData parentData = lyr_interfaceUtilities.getParentData();

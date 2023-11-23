@@ -81,7 +81,7 @@ public final class lyr_ehm extends BaseModPlugin {
 		// purge experimental weapon blueprints
 		for (WeaponSpecAPI weaponSpec : Global.getSettings().getAllWeaponSpecs()) {
 			if (!ehm_internals.ids.manufacturer.equals(weaponSpec.getManufacturer())) continue;
-			if (!weaponSpec.hasTag(ehm_internals.tags.experimental)) continue;
+			if (!weaponSpec.hasTag(ehm_internals.hullmods.tags.experimental)) continue;
 
 			for (FactionAPI faction : Global.getSector().getAllFactions())
 				faction.removeKnownWeapon(weaponSpec.getWeaponId());
@@ -90,7 +90,7 @@ public final class lyr_ehm extends BaseModPlugin {
 		// purge experimental hullmod blueprints
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
 			if (!ehm_internals.ids.manufacturer.equals(hullModSpec.getManufacturer())) continue;
-			if (!hullModSpec.hasTag(ehm_internals.tags.experimental)) continue;
+			if (!hullModSpec.hasTag(ehm_internals.hullmods.tags.experimental)) continue;
 
 			playerData.removeHullMod(hullModSpec.getId());
 			for (FactionAPI faction : Global.getSector().getAllFactions())
@@ -116,17 +116,17 @@ public final class lyr_ehm extends BaseModPlugin {
 		Set<String> uiTags;
 
 		if (ehm_settings.getCosmeticsOnly()) {
-			uiTags = settingsAPI.getHullModSpec(ehm_internals.ids.hullmods.base).getUITags();
-			uiTags.clear(); uiTags.add(ehm_internals.tags.uiTags.cosmetics);
+			uiTags = settingsAPI.getHullModSpec(ehm_internals.hullmods.main.base).getUITags();
+			uiTags.clear(); uiTags.add(ehm_internals.hullmods.uiTags.cosmetics);
 
-			uiTags = settingsAPI.getHullModSpec(ehm_internals.ids.hullmods.undo).getUITags();
-			uiTags.clear(); uiTags.add(ehm_internals.tags.uiTags.cosmetics);
+			uiTags = settingsAPI.getHullModSpec(ehm_internals.hullmods.main.undo).getUITags();
+			uiTags.clear(); uiTags.add(ehm_internals.hullmods.uiTags.cosmetics);
 		} else {
-			uiTags = settingsAPI.getHullModSpec(ehm_internals.ids.hullmods.base).getUITags();
-			uiTags.clear(); uiTags.addAll(ehm_internals.tags.uiTags.all);
+			uiTags = settingsAPI.getHullModSpec(ehm_internals.hullmods.main.base).getUITags();
+			uiTags.clear(); uiTags.addAll(ehm_internals.hullmods.uiTags.set);
 
-			uiTags = settingsAPI.getHullModSpec(ehm_internals.ids.hullmods.undo).getUITags();
-			uiTags.clear(); uiTags.addAll(ehm_internals.tags.uiTags.all);
+			uiTags = settingsAPI.getHullModSpec(ehm_internals.hullmods.main.undo).getUITags();
+			uiTags.clear(); uiTags.addAll(ehm_internals.hullmods.uiTags.set);
 		}
 	}
 
