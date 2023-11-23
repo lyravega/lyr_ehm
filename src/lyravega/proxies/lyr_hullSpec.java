@@ -34,6 +34,7 @@ public final class lyr_hullSpec {
 	static Class<?> hullSpecClass;
 	private static MethodHandle clone;
 	private static MethodHandle getEngineSlots;
+	private static MethodHandle getAllWeaponSlots;
 	private static MethodHandle setShieldSpec;
 	// private static MethodHandle addBuiltInMod;
 	// private static MethodHandle setManufacturer;
@@ -60,6 +61,7 @@ public final class lyr_hullSpec {
 
 			clone = methodReflection.findMethodByName("clone", hullSpecClass).getMethodHandle();
 			getEngineSlots = methodReflection.findMethodByName("getEngineSlots", hullSpecClass).getMethodHandle();
+			getAllWeaponSlots = methodReflection.findMethodByName("getAllWeaponSlots", hullSpecClass).getMethodHandle();
 			setShieldSpec = methodReflection.findMethodByName("setShieldSpec", hullSpecClass).getMethodHandle();
 			// addBuiltInMod = methodReflection.findMethodByName("addBuiltInMod", hullSpecClass).getMethodHandle();
 			// setManufacturer = methodReflection.findMethodByName("setManufacturer", hullSpecClass).getMethodHandle();
@@ -205,8 +207,8 @@ public final class lyr_hullSpec {
 		try {
 			return (ShipHullSpecAPI) clone.invoke(hullSpec);
 		} catch (Throwable t) {
-			lyr_logger.error("Failed to use 'duplicate()' in 'lyr_hullSpec'", t);
-		} return hullSpec; // java, pls...
+			lyr_logger.error("Failed to use 'duplicate()' in 'lyr_hullSpec'", t); return hullSpec;
+		}
 	}
 
 	/**
@@ -235,6 +237,11 @@ public final class lyr_hullSpec {
 		this.weaponSlot = (this.weaponSlot == null) ? new lyr_weaponSlot(this.hullSpec.getWeaponSlotAPI(weaponSlotId)) : this.weaponSlot.recycle(this.hullSpec.getWeaponSlotAPI(weaponSlotId));
 
 		return this.weaponSlot;
+	}
+
+	/** @see {@link #getWeaponSlot(String)} */
+	public lyr_weaponSlot getWeaponSlot(WeaponSlotAPI slot) {
+		return this.getWeaponSlot(slot.getId());
 	}
 
 	/**
@@ -272,6 +279,14 @@ public final class lyr_hullSpec {
 		}
 
 		return this.engineSlots;
+	}
+
+	public List<WeaponSlotAPI> getAllWeaponSlots() {
+		try {
+			return (List<WeaponSlotAPI>) getAllWeaponSlots.invoke(this.hullSpec);
+		} catch (Throwable t) {
+			lyr_logger.error("Failed to use 'getAllWeaponSlots()' in 'lyr_hullSpec'", t); return null;
+		}
 	}
 
 	/**
@@ -367,8 +382,8 @@ public final class lyr_hullSpec {
 		try {
 			return getSpriteSpec.invoke(this.hullSpec);
 		} catch (Throwable t) {
-			lyr_logger.error("Failed to use 'getSpriteSpec()' in 'lyr_hullSpec'", t);
-		}	return null;
+			lyr_logger.error("Failed to use 'getSpriteSpec()' in 'lyr_hullSpec'", t); return null;
+		}
 	}
 
 	/**
@@ -383,11 +398,34 @@ public final class lyr_hullSpec {
 		}
 	}
 
+	/**
+	 * @param size
+	 * @category Proxy method
+	 */
 	public void setHullSize(HullSize size) {
 		try {
 			setHullSize.invoke(this.hullSpec, size);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'setHullSize()' in 'lyr_hullSpec'", t);
+		}
+	}
+
+	/**
+	 * Slots on a hull spec are cloned for the most part, however the nodes that these slots utilize
+	 * do not get cloned. As such, a cloned hull spec still shares something with its original. In
+	 * order to alter the locations of the slots, they need a unique node. Nodes hold an id and a
+	 * location field in it, and querying location of a slot returns the location of the node.
+	 * <p> This utility method checks the location of the first slot of a hull spec against its clone
+	 * and if they lead to the same memory address, gives the clone a new, unique node instead. This
+	 * ensures that alterations on the node (slot) locations will not affect the other ships, and
+	 * the check ensures that it will be done only if necessary.
+	 * @category Proxy utility method
+	 */
+	public void makeNodesUnique() {
+		if (this.reference().getAllWeaponSlotsCopy().iterator().next().getLocation() != this.getAllWeaponSlotsCopy().iterator().next().getLocation()) return;
+
+		for (WeaponSlotAPI slot : this.getAllWeaponSlots()) {
+			this.getWeaponSlot(slot).makeNodeUnique();
 		}
 	}
 	//#endregion
