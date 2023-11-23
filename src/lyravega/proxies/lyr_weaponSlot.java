@@ -32,10 +32,12 @@ public final class lyr_weaponSlot {
 	private static MethodHandle setId;
 	private static MethodHandle setSlotSize;
 	// private static MethodHandle newNode;
-	private static MethodHandle setNode;
-	// private static MethodHandle setNode_alt;
 	private static MethodHandle getSlotType;
 	private static MethodHandle setSlotType;
+	private static MethodHandle getNode;
+	private static MethodHandle getNodeId;
+	private static MethodHandle setNode;
+	// private static MethodHandle setNode_alt;
 
 	static {
 		try {
@@ -48,11 +50,14 @@ public final class lyr_weaponSlot {
 			// isWeaponSlot = methodReflection.findMethodByName("isWeaponSlot", weaponSlotClass).getMethodHandle();
 			setId = methodReflection.findMethodByName("setId", weaponSlotClass, String.class).getMethodHandle();
 			setSlotSize = methodReflection.findMethodByName("setSlotSize", weaponSlotClass).getMethodHandle();
-			// newNode = lookup.findConstructor(nodeClass, MethodType.methodType(void.class, String.class, Vector2f.class));
-			setNode = methodReflection.findMethodByName("setNode", weaponSlotClass, String.class, Vector2f.class).getMethodHandle();
-			// setNode_alt = methodReflection.findMethodByName("setNode", weaponSlotClass, nodeClass).getMethodHandle();
 			getSlotType = methodReflection.findMethodByName("getSlotType", weaponSlotClass).getMethodHandle();
 			setSlotType = methodReflection.findMethodByName("setSlotType", weaponSlotClass, slotTypeEnum).getMethodHandle();
+
+			getNode = methodReflection.findMethodByName("getNode", weaponSlotClass).getMethodHandle();
+			getNodeId = methodReflection.findMethodByClass(nodeClass, String.class).getMethodHandle();	// this technically belongs to nodeClass
+			// newNode = lookup.findConstructor(nodeClass, MethodType.methodType(void.class, String.class, Vector2f.class));	// outdated; newer version does not require this
+			// setNode_alt = methodReflection.findMethodByName("setNode", weaponSlotClass, nodeClass).getMethodHandle();	// outdated; newer version below
+			setNode = methodReflection.findMethodByName("setNode", weaponSlotClass, String.class, Vector2f.class).getMethodHandle();
 		} catch (Throwable t) {
 			lyr_logger.fatal("Failed to find a method in 'lyr_weaponSlot'", t);
 		}
@@ -75,10 +80,12 @@ public final class lyr_weaponSlot {
 	 * weaponSlot}. May be used as a reference and to access obfuscated accessors,
 	 * but alterations shouldn't be performed on stock, non-cloned objects from
 	 * the spec store.
-	 * <p> Cloned hull specs also clone most relevant things like weapon and engine
-	 * slots, shield and engine specs, so this may be used freely on those already
-	 * cloned objects, but otherwise this should only be used strictly as a reference
-	 * and/or a getter de-obfuscator.
+	 * <p> Cloned hull specs also clone some relevant things shield and engine specs,
+	 * so this may be used freely on those already cloned objects, but otherwise this
+	 * should only be used strictly as a reference and/or a getter de-obfuscator.
+	 * <p> While engine and weapon slots are also cloned, their locations will share
+	 * the same nodes with the stock hull spec; any change in their locations will
+	 * affect all unless the node is unique.
 	 * @param weaponSlot to be proxied
 	 * @param clone (overload) if the weaponSlot needs to be cloned during construction
 	 */
@@ -123,8 +130,8 @@ public final class lyr_weaponSlot {
 		try {
 			return (WeaponSlotAPI) clone.invoke(weaponSlot);
 		} catch (Throwable t) {
-			lyr_logger.error("Failed to use 'duplicate()' in 'lyr_weaponSlot'", t);
-		} return weaponSlot; // java, pls...
+			lyr_logger.error("Failed to use 'duplicate()' in 'lyr_weaponSlot'", t); return weaponSlot;
+		}
 	}
 
 	/**
@@ -175,6 +182,64 @@ public final class lyr_weaponSlot {
 	}
 
 	/**
+	 * Gets the type of the slot; it's different from the weapon type of the slot.
+	 * @return a converted enum entry where matching ordinal is returned
+	 */
+	public slotTypeConstants getSlotType() {
+		try {
+			return slotTypeConstants.values()[((Enum<?>) getSlotType.invoke(this.weaponSlot)).ordinal()];
+		} catch (Throwable t) {
+			lyr_logger.error("Failed to use 'getSlotType()' in 'lyr_weaponSlot'", t); return null;
+		}
+	}
+
+	@Deprecated
+	public Enum<?> getSlotTypeRaw() {
+		try {
+			return (Enum<?>) getSlotType.invoke(this.weaponSlot);
+		} catch (Throwable t) {
+			lyr_logger.error("Failed to use 'getSlotTypeRaw()' in 'lyr_weaponSlot'", t); return null;
+		}
+	}
+
+	/**
+	 * Sets the type of the slot; it's different from the weapon type of the slot.
+	 * @param slotType an enum constant to set; 0=turret, 1=hardpoint, 2=hidden
+	 */
+	public void setSlotType(slotTypeConstants slotType) {
+		try {
+			setSlotType.invoke(this.weaponSlot, slotTypeEnum.getEnumConstants()[slotType.ordinal()]);
+		} catch (Throwable t) {
+			lyr_logger.error("Failed to use 'setSlotType()' in 'lyr_weaponSlot'", t);
+		}
+	}
+
+	@Deprecated
+	public void setSlotTypeRaw(Enum<?> slotType) {
+		try {
+			setSlotType.invoke(this.weaponSlot, slotTypeEnum.getEnumConstants()[slotType.ordinal()]);
+		} catch (Throwable t) {
+			lyr_logger.error("Failed to use 'setSlotTypeRaw()' in 'lyr_weaponSlot'", t);
+		}
+	}
+
+	public Object getNode() {
+		try {
+			return getNode.invoke(this.weaponSlot);
+		} catch (Throwable t) {
+			lyr_logger.error("Failed to use 'getNode()' in 'lyr_weaponSlot'", t); return null;
+		}
+	}
+
+	public String getNodeId() {
+		try {
+			return (String) getNodeId.invoke(this.getNode());
+		} catch (Throwable t) {
+			lyr_logger.error("Failed to use 'getNodeId()' in 'lyr_weaponSlot'", t); return null;
+		}
+	}
+
+	/**
 	 * @param nodeId an id to assign to the node (using slotId is fine)
 	 * @param location a ship-relative vector to create the node at
 	 * @category Proxy method
@@ -191,43 +256,13 @@ public final class lyr_weaponSlot {
 	}
 
 	/**
-	 * Gets the type of the slot; it's different from the weapon type of the slot.
-	 * @return a converted enum entry where matching ordinal is returned
+	 * This utility method gives the slot a new node with the same node id, but with a unique location.
+	 * Giving it a unique location ensures that any changes to its location will not affect all hull
+	 * specs.
+	 * @category Proxy utility method
 	 */
-	public slotTypeConstants getSlotType() {
-		try {
-			return slotTypeConstants.values()[((Enum<?>) getSlotType.invoke(this.weaponSlot)).ordinal()];
-		} catch (Throwable t) {
-			lyr_logger.error("Failed to use 'getSlotType()' in 'lyr_weaponSlot'", t);
-		}	return null;
-	}
-
-	public Enum<?> getSlotTypeRaw() {
-		try {
-			return (Enum<?>) getSlotType.invoke(this.weaponSlot);
-		} catch (Throwable t) {
-			lyr_logger.error("Failed to use 'getSlotTypeRaw()' in 'lyr_weaponSlot'", t);
-		}	return null;
-	}
-
-	/**
-	 * Sets the type of the slot; it's different from the weapon type of the slot.
-	 * @param slotType an enum constant to set; 0=turret, 1=hardpoint, 2=hidden
-	 */
-	public void setSlotType(slotTypeConstants slotType) {
-		try {
-			setSlotType.invoke(this.weaponSlot, slotTypeEnum.getEnumConstants()[slotType.ordinal()]);
-		} catch (Throwable t) {
-			lyr_logger.error("Failed to use 'setSlotType()' in 'lyr_weaponSlot'", t);
-		}
-	}
-
-	public void setSlotTypeRaw(Enum<?> slotType) {
-		try {
-			setSlotType.invoke(this.weaponSlot, slotTypeEnum.getEnumConstants()[slotType.ordinal()]);
-		} catch (Throwable t) {
-			lyr_logger.error("Failed to use 'setSlotTypeRaw()' in 'lyr_weaponSlot'", t);
-		}
+	void makeNodeUnique() {
+		this.setNode(this.getNodeId(), new Vector2f(this.getLocation()));
 	}
 	//#endregion
 	// END OF PROXY METHODS
