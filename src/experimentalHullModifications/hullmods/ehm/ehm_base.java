@@ -70,6 +70,7 @@ public final class ehm_base extends _ehm_base implements normalEvents {
 		}
 
 		_ehm_ar_base.ehm_preProcessShunts(stats);	// at this point, the hull spec should be cloned so proceed and pre-process the shunts
+		_ehm_ar_base.ehm_preProcessDynamicStats(stats);
 		// lyr_miscUtilities.cleanWeaponGroupsUp(variant);	// when an activator activates shunts on install, so moved this to their 'onInstalled()' method
 	}
 

@@ -105,8 +105,8 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 	}
 
 	public static final void ehm_preProcessDynamicStats(MutableShipStatsAPI stats) {
-		DynamicStatsAPI dynamicStats = stats.getDynamic();
-		ShipVariantAPI variant = stats.getVariant();
+		final DynamicStatsAPI dynamicStats = stats.getDynamic();
+		final ShipVariantAPI variant = stats.getVariant();
 
 		if (variant.getSMods().contains(ehm_internals.hullmods.misc.overengineered)) {
 			String source = ehm_mr_overengineered.class.getSimpleName();
@@ -137,132 +137,140 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 			switch (shuntGroupTag) {
 				case adapters.groupTag: {
 					if (!variant.hasHullMod(adapters.activatorId)) continue;
-					if (!slotId.startsWith(ehm_internals.affixes.normalSlot)) continue;
-					switch (shuntId) {
-						case adapters.ids.largeDual: {
-							dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-							continue;
-						}
-						case adapters.ids.largeQuad: {
-							dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-							continue;
-						}
-						case adapters.ids.largeTriple: {
-							dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-							continue;
-						}
-						case adapters.ids.mediumDual: {
-							dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-							continue;
-						}
-					}
-				}
+					if (!adapters.isValidSlot(slot, shuntSpec)) continue;
+
+					dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+
+					// switch (shuntId) {
+					// 	case adapters.ids.largeDual: {
+					// 		dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+					// 	}; continue;
+					// 	case adapters.ids.largeQuad: {
+					// 		dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+					// 	}; continue;
+					// 	case adapters.ids.largeTriple: {
+					// 		dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+					// 	}; continue;
+					// 	case adapters.ids.mediumDual: {
+					// 		dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+					// 	}; continue;
+					// }
+				}; continue;
 				case converters.groupTag: {
 					if (!variant.hasHullMod(converters.activatorId)) continue;
-					if (!slotId.startsWith(ehm_internals.affixes.normalSlot)) continue;
-					switch (shuntId) {
-						case converters.ids.mediumToLarge: {
-							if (slot.isDecorative()) dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-							if (slot.isDecorative()) dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 2);
-							dynamicStats.getMod(ehm_internals.stats.slotPointsNeeded).modifyFlat(slotId, 2);
-							continue;
-						}
-						case converters.ids.smallToLarge: {
-							if (slot.isDecorative()) dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-							if (slot.isDecorative()) dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 3);
-							dynamicStats.getMod(ehm_internals.stats.slotPointsNeeded).modifyFlat(slotId, 3);
-							continue;
-						}
-						case converters.ids.smallToMedium: {
-							if (slot.isDecorative()) dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-							if (slot.isDecorative()) dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 1);
-							dynamicStats.getMod(ehm_internals.stats.slotPointsNeeded).modifyFlat(slotId, 1);
-							continue;
-						}
-					}
-					continue;
-				}
+					if (!converters.isValidSlot(slot, shuntSpec)) continue;
+
+					final int mod = converters.dataMap.get(shuntId).getChildCost();
+					if (slot.isDecorative()) dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+					if (slot.isDecorative()) dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, mod);
+					dynamicStats.getMod(ehm_internals.stats.slotPointsNeeded).modifyFlat(slotId, mod);
+
+					// switch (shuntId) {
+					// 	case converters.ids.mediumToLarge: {
+					// 		if (slot.isDecorative()) dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+					// 		if (slot.isDecorative()) dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 2);
+					// 		dynamicStats.getMod(ehm_internals.stats.slotPointsNeeded).modifyFlat(slotId, 2);
+					// 	}; continue;
+					// 	case converters.ids.smallToLarge: {
+					// 		if (slot.isDecorative()) dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+					// 		if (slot.isDecorative()) dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 3);
+					// 		dynamicStats.getMod(ehm_internals.stats.slotPointsNeeded).modifyFlat(slotId, 3);
+					// 	}; continue;
+					// 	case converters.ids.smallToMedium: {
+					// 		if (slot.isDecorative()) dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+					// 		if (slot.isDecorative()) dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 1);
+					// 		dynamicStats.getMod(ehm_internals.stats.slotPointsNeeded).modifyFlat(slotId, 1);
+					// 	}; continue;
+					// }
+				}; continue;
 				case diverters.groupTag: {
 					if (!variant.hasHullMod(diverters.activatorId)) continue;
-					if (slotId.startsWith(ehm_internals.affixes.convertedSlot)) continue;
-					switch (shuntId) {
-						case diverters.ids.large: {
-							dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-							dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 4);
-							dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(slotId, 4);
-							continue;
-						}
-						case diverters.ids.medium: {
-							dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-							dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 2);
-							dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(slotId, 2);
-							continue;
-						}
-						case diverters.ids.small: {
-							dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-							dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 1);
-							dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(slotId, 1);
-							continue;
-						}
-					}
-					continue;
-				}
+					if (!diverters.isValidSlot(slot, shuntSpec)) continue;
+
+					final int mod = diverters.dataMap.get(shuntId);
+					dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+					dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, mod);
+					dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(slotId, mod);
+
+					// switch (shuntId) {
+					// 	case diverters.ids.large: {
+					// 		dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+					// 		dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 4);
+					// 		dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(slotId, 4);
+					// 	}; continue;
+					// 	case diverters.ids.medium: {
+					// 		dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+					// 		dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 2);
+					// 		dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(slotId, 2);
+					// 	}; continue;
+					// 	case diverters.ids.small: {
+					// 		dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+					// 		dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 1);
+					// 		dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(slotId, 1);
+					// 	}; continue;
+					// }
+				}; continue;
 				case capacitors.groupTag: {
 					if (!variant.hasHullMod(capacitors.activatorId)) continue;
-					if (slotId.startsWith(ehm_internals.affixes.convertedSlot)) continue;
-					switch (shuntId) {
-						case capacitors.ids.large: {
-							dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-							dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 4);
-							continue;
-						}
-						case capacitors.ids.medium: {
-							dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-							dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 2);
-							continue;
-						}
-						case capacitors.ids.small: {
-							dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-							dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 1);
-							continue;
-						}
-					}
-					continue;
-				}
+					if (!capacitors.isValidSlot(slot, shuntSpec)) continue;
+
+					final int mod = capacitors.dataMap.get(shuntId);
+					dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+					dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, mod);
+
+					// switch (shuntId) {
+					// 	case capacitors.ids.large: {
+					// 		dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+					// 		dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 4);
+					// 	}; continue;
+					// 	case capacitors.ids.medium: {
+					// 		dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+					// 		dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 2);
+					// 	}; continue;
+					// 	case capacitors.ids.small: {
+					// 		dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+					// 		dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 1);
+					// 	}; continue;
+					// }
+				}; continue;
 				case dissipators.groupTag: {
 					if (!variant.hasHullMod(dissipators.activatorId)) continue;
-					if (slotId.startsWith(ehm_internals.affixes.convertedSlot)) continue;
-					switch (shuntId) {
-						case dissipators.ids.large: {
-							dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-							dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 4);
-							continue;
-						}
-						case dissipators.ids.medium: {
-							dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-							dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 2);
-							continue;
-						}
-						case dissipators.ids.small: {
-							dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-							dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 1);
-							continue;
-						}
-					}
-					continue;
-				}
+					if (!dissipators.isValidSlot(slot, shuntSpec)) continue;
+
+					final int mod = dissipators.dataMap.get(shuntId);
+					dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+					dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, mod);
+
+					// switch (shuntId) {
+					// 	case dissipators.ids.large: {
+					// 		dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+					// 		dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 4);
+					// 	}; continue;
+					// 	case dissipators.ids.medium: {
+					// 		dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+					// 		dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 2);
+					// 	}; continue;
+					// 	case dissipators.ids.small: {
+					// 		dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+					// 		dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 1);
+					// 	}; continue;
+					// }
+				}; continue;
 				case hangars.groupTag: {
 					if (!variant.hasHullMod(hangars.activatorId)) continue;
-					if (slotId.startsWith(ehm_internals.affixes.convertedSlot)) continue;
-					switch (shuntId) {
-						case hangars.ids.large: {
-							dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-							// dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 1);
-							continue;
-						}
-					}
-					continue;
-				}
+					if (!hangars.isValidSlot(slot, shuntSpec)) continue;
+
+					final int mod = hangars.dataMap.get(shuntId);
+					dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+					dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, mod);
+
+					// switch (shuntId) {
+					// 	case hangars.ids.large: {
+					// 		dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+					// 		dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 1);
+					// 	}; continue;
+					// }
+				}; continue;
 				default: continue;
 			}
 		}

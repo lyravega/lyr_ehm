@@ -5,15 +5,16 @@ import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import java.util.*;
 
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.combat.*;
+import com.fs.starfarer.api.combat.MutableShipStatsAPI;
+import com.fs.starfarer.api.combat.MutableStat.StatMod;
+import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
-import com.fs.starfarer.api.loading.WeaponSlotAPI;
-import com.fs.starfarer.api.loading.WeaponSpecAPI;
+import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
-import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_internals.shunts.capacitors;
 import experimentalHullModifications.misc.ehm_internals.shunts.dissipators;
 import experimentalHullModifications.misc.ehm_settings;
@@ -53,57 +54,34 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
-		List<WeaponSlotAPI> shunts = lyr_hullSpec.getAllWeaponSlotsCopy();
 
-		StatBonus dissipatorStat = stats.getDynamic().getMod(ehm_internals.stats.dissipators);
-		StatBonus capacitorStat = stats.getDynamic().getMod(ehm_internals.stats.capacitors);
+		HashMap<String, StatMod> dissipatorMods = stats.getDynamic().getMod(dissipators.groupTag).getFlatBonuses();
+		if (dissipatorMods != null) {
+			float dissipatorAmount =  stats.getDynamic().getMod(dissipators.groupTag).computeEffective(0f);
 
-		for (Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
-			WeaponSlotAPI slot = iterator.next();
-			// if (slot.isDecorative()) continue;
+			for (String slotId : dissipatorMods.keySet()) {
+				if (lyr_hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
 
-			String slotId = slot.getId();
-			if (variant.getWeaponSpec(slotId) == null) { iterator.remove(); continue; }
-			if (slotId.startsWith(ehm_internals.affixes.convertedSlot)) { iterator.remove(); continue; }
-
-			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
-			if (shuntSpec.getSize() != slot.getSlotSize()) { iterator.remove(); continue; }
-			if (!shuntSpec.hasTag(ehm_internals.hullmods.tags.experimental)) { iterator.remove(); continue; }
-
-			String shuntId = shuntSpec.getWeaponId();
-			switch (shuntId) {
-				case capacitors.ids.large: case capacitors.ids.medium: case capacitors.ids.small: {
-					capacitorStat.modifyFlat(slotId, capacitorMap.get(shuntId));
-					break;
-				} case dissipators.ids.large: case dissipators.ids.medium: case dissipators.ids.small: {
-					dissipatorStat.modifyFlat(slotId, dissipatorMap.get(shuntId));
-					break;
-				} default: { iterator.remove(); break; }
+				ehm_deactivateSlot(lyr_hullSpec, variant.getWeaponId(slotId), slotId);
 			}
+
+			stats.getFluxDissipation().modifyMult(this.hullModSpecId, 1f+dissipatorAmount*fluxMultMod);
+			stats.getFluxDissipation().modifyFlat(this.hullModSpecId, dissipatorAmount*dissipatorFlatMod);
 		}
 
-		for (WeaponSlotAPI slot : shunts) {
-			if (slot.isDecorative()) continue;
+		HashMap<String, StatMod> capacitorMods = stats.getDynamic().getMod(capacitors.groupTag).getFlatBonuses();
+		if (capacitorMods != null) {
+			float capacitorAmount =  stats.getDynamic().getMod(capacitors.groupTag).computeEffective(0f);
 
-			String slotId = slot.getId();
-			String shuntId = variant.getWeaponSpec(slotId).getWeaponId();
+			for (String slotId : capacitorMods.keySet()) {
+				if (lyr_hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
 
-			switch (shuntId) {
-				case capacitors.ids.large: case capacitors.ids.medium: case capacitors.ids.small:
-				case dissipators.ids.large: case dissipators.ids.medium: case dissipators.ids.small: {
-					ehm_deactivateSlot(lyr_hullSpec, shuntId, slotId);
-					break;
-				} default: break;
+				ehm_deactivateSlot(lyr_hullSpec, variant.getWeaponId(slotId), slotId);
 			}
+
+			stats.getFluxCapacity().modifyMult(this.hullModSpecId, 1f+capacitorAmount*fluxMultMod);
+			stats.getFluxCapacity().modifyFlat(this.hullModSpecId, capacitorAmount*capacitorFlatMod);
 		}
-
-		float effectiveCapacitorStat = capacitorStat.computeEffective(0f);
-		float effectiveDissipatorStat = dissipatorStat.computeEffective(0f);
-
-		stats.getFluxCapacity().modifyMult(this.hullModSpecId, 1f+effectiveCapacitorStat*fluxMultMod);
-		stats.getFluxCapacity().modifyFlat(this.hullModSpecId, effectiveCapacitorStat*capacitorFlatMod);
-		stats.getFluxDissipation().modifyMult(this.hullModSpecId, 1f+effectiveDissipatorStat*fluxMultMod);
-		stats.getFluxDissipation().modifyFlat(this.hullModSpecId, effectiveDissipatorStat*dissipatorFlatMod);
 
 		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
 	}
