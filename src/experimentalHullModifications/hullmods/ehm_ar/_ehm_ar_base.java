@@ -296,6 +296,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 		lyr_hullSpec.addBuiltInWeapon(slotId, shuntId);
 		parentSlot.setWeaponType(WeaponType.DECORATIVE);
 		if (ehm_settings.getHideAdapters()) parentSlot.setSlotType(slotTypeConstants.hidden);
+		else parentSlot.setRenderOrderMod(-1f);	// sometimes the activated shunts (decoratives) on these new slots (especially hardpoint ones) are rendered below the adapter, hence the change
 	}
 
 	protected static final void ehm_convertSlot(lyr_hullSpec lyr_hullSpec, String shuntId, String slotId) {
@@ -319,6 +320,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 		lyr_hullSpec.addBuiltInWeapon(slotId, shuntId);
 		parentSlot.setWeaponType(WeaponType.DECORATIVE);
 		if (ehm_settings.getHideConverters()) parentSlot.setSlotType(slotTypeConstants.hidden);
+		else parentSlot.setRenderOrderMod(-1f);	// sometimes the activated shunts (decoratives) on these new slots (especially hardpoint ones) are rendered below the adapter, hence the change
 	}
 
 	protected static final void ehm_deactivateSlot(lyr_hullSpec lyr_hullSpec, String shuntId, String slotId) {
