@@ -283,6 +283,10 @@ public final class lyr_weaponSlot {
 	public WeaponType getWeaponType() { return this.weaponSlot.getWeaponType(); }
 
 	public String getId() { return this.weaponSlot.getId(); }
+
+	public void setRenderOrderMod(float renderOrderMod) { this.weaponSlot.setRenderOrderMod(renderOrderMod); }
+
+	public float getRenderOrderMod() { return this.weaponSlot.getRenderOrderMod(); }
 	//#endregion
 	// END OF BRIDGE METHODS
 }
