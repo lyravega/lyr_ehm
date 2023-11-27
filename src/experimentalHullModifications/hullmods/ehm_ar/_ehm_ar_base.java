@@ -3,18 +3,20 @@ package experimentalHullModifications.hullmods.ehm_ar;
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
+import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.DynamicStatsAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
@@ -380,25 +382,21 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 	}
 
 	/**
-	 * Checks and reports any shunt and shunt counts, only to be used in the tooltips.
-	 * @param ship
-	 * @param groupTag of the shunts to be counted
-	 * @return a map with shuntId:count entries
+	 * Shunt ids are stored on the dynamic stats of the ship for ease of access from anywhere. This
+	 * method prints the amount of shunts on the passed tooltip by checking the stat of the id. Does
+	 * not really care or check what actually is installed on the ship.
+	 * @param tooltip to print the shunt counts on
+	 * @param dynamicStats of the ship where shunt ids are stored
+	 * @param shuntSet to check and to print
 	 */
-	@Deprecated
-	protected static final Map<String, Integer> ehm_shuntCount(ShipAPI ship, String groupTag) {
-		Map<String, Integer> shuntMap = new HashMap<String, Integer>();
+	protected static final void ehm_printShuntCount(TooltipMakerAPI tooltip, DynamicStatsAPI dynamicStats, Set<String> shuntSet) {
+		for (String shuntId: shuntSet) {
+			try { Global.getSettings().getWeaponSpec(shuntId); } catch (Throwable t) { return; }	// try-catch block because trying to null-check a weapon spec throws...
 
-		for (WeaponAPI weapon : ship.getAllWeapons()) {
-			if (!weapon.getSlot().isDecorative()) continue;
-			if (!weapon.getSpec().getWeaponGroupTag().equals(groupTag)) continue;
+			float shuntAmount = dynamicStats.getMod(shuntId).computeEffective(0f);
 
-			String weaponId = weapon.getId();
-
-			shuntMap.put(weaponId, shuntMap.containsKey(weaponId) ? shuntMap.get(weaponId) + 1 : 1);
+			if (shuntAmount > 0) tooltip.addPara(Math.round(shuntAmount) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
 		}
-
-		return shuntMap;
 	}
 
 	/**

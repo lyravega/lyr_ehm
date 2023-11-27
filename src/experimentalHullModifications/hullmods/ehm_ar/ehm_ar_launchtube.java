@@ -5,7 +5,6 @@ import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.MutableStat.StatMod;
 import com.fs.starfarer.api.combat.ShipAPI;
@@ -14,6 +13,7 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.api.util.DynamicStatsAPI;
 
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_internals.shunts.hangars;
@@ -51,7 +51,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
 
 		HashMap<String, StatMod> hangarShunts = stats.getDynamic().getMod(hangars.groupTag).getFlatBonuses();
-		if (hangarShunts != null) {
+		if (hangarShunts != null && !hangarShunts.isEmpty()) {
 			float hangarAmount =  stats.getDynamic().getMod(hangars.groupTag).computeEffective(0f);
 
 			for (String slotId : hangarShunts.keySet()) {
@@ -80,14 +80,13 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 		if (ship == null) return;
 
 		if (ship.getVariant().hasHullMod(this.hullModSpecId)) {
-			if (ehm_settings.getShowInfoForActivators()) {
-				Map<String, Integer> hangarCount = ehm_shuntCount(ship, hangars.tag);
+			final DynamicStatsAPI dynamicStats = ship.getMutableStats().getDynamic();
 
-				if (!hangarCount.isEmpty()) {
+			if (ehm_settings.getShowInfoForActivators()) {
+				HashMap<String, StatMod> hangarShunts = dynamicStats.getMod(hangars.groupTag).getFlatBonuses();
+				if (hangarShunts != null && !hangarShunts.isEmpty()) {
 					tooltip.addSectionHeading("EXTRA HANGARS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-					for (String shuntId: hangarCount.keySet()) {
-						tooltip.addPara(hangarCount.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
-					}
+					ehm_printShuntCount(tooltip, dynamicStats, hangars.idSet);
 				} else if (ehm_settings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO EXTRA HANGARS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No large weapon slots are turned into hangars. Each large slot is turned into a single fighter bay with a launch tube.", 2f);

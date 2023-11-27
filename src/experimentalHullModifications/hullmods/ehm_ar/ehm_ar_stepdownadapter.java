@@ -5,7 +5,6 @@ import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.MutableStat.StatMod;
 import com.fs.starfarer.api.combat.ShipAPI;
@@ -14,6 +13,7 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.api.util.DynamicStatsAPI;
 
 import experimentalHullModifications.misc.ehm_internals.shunts.adapters;
 import experimentalHullModifications.misc.ehm_internals.shunts.adapters.adapterParameters;
@@ -46,7 +46,7 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
 
 		HashMap<String, StatMod> adapterShunts = stats.getDynamic().getMod(adapters.groupTag).getFlatBonuses();
-		if (adapterShunts != null) {
+		if (adapterShunts != null && !adapterShunts.isEmpty()) {
 			for (String slotId : adapterShunts.keySet()) {
 				if (lyr_hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
 
@@ -72,14 +72,13 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 		ShipVariantAPI variant = ship.getVariant();
 
 		if (variant.hasHullMod(this.hullModSpecId)) {
-			if (ehm_settings.getShowInfoForActivators()) {
-				Map<String, Integer> adapterCount = ehm_shuntCount(ship, adapters.tag);
+			final DynamicStatsAPI dynamicStats = ship.getMutableStats().getDynamic();
 
-				if (!adapterCount.isEmpty()) {
+			if (ehm_settings.getShowInfoForActivators()) {
+				HashMap<String, StatMod> adapterShunts = dynamicStats.getMod(adapters.groupTag).getFlatBonuses();
+				if (adapterShunts != null && !adapterShunts.isEmpty()) {
 					tooltip.addSectionHeading("ACTIVE ADAPTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-					for (String shuntId: adapterCount.keySet()) {
-						tooltip.addPara(adapterCount.get(shuntId) + "x " + Global.getSettings().getWeaponSpec(shuntId).getWeaponName(), 2f);
-					}
+					ehm_printShuntCount(tooltip, dynamicStats, adapters.idSet);
 				} else if (ehm_settings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO ADAPTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No adapters are installed. Adapters turn bigger slots into smaller ones.", 2f);
