@@ -22,6 +22,7 @@ import experimentalHullModifications.misc.ehm_internals.shunts.diverters;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import lyravega.proxies.lyr_hullSpec;
+import lyravega.utilities.lyr_tooltipUtilities.colour;
 
 /**@category Adapter Retrofit
  * @author lyravega
@@ -111,6 +112,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 	@Override
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (ship == null) return;
+		final ShipVariantAPI variant = ship.getVariant();
 
 		if (ship.getVariant().hasHullMod(this.hullModSpecId)) {
 			final DynamicStatsAPI dynamicStats = ship.getMutableStats().getDynamic();
@@ -123,17 +125,19 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 			int slotPointsToConverters = Math.round(dynamicStats.getMod(ehm_internals.stats.slotPointsToConverters).computeEffective(0f));
 			int slotPointsPenalty = ehm_settings.getBaseSlotPointPenalty()*Math.max(0, slotPointsUsed - slotPointsFromDiverters);
 
-			tooltip.addSectionHeading(slotPointsUsed+"/"+slotPoints+(slotPointsNeeded > slotPoints ? " ("+slotPointsNeeded+") " : " ")+"SLOT POINTS", (slotPointsUsed != slotPoints) ? header.notApplicable_textColour : header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-			if (slotPointsFromMods > 0) tooltip.addPara("Hull modifications are providing " + slotPointsFromMods + " slot points", 2f, header.sEffect_textColour, slotPointsFromMods + " slot points");
-			if (slotPointsFromDiverters > 0) tooltip.addPara("Diverter shunts are providing " + slotPointsFromDiverters + " slot points", 2f, header.sEffect_textColour, slotPointsFromDiverters + " slot points");
-			if (slotPointsToConverters > 0) tooltip.addPara("Converter shunts are utilizing " + slotPointsToConverters + " slot points", 2f, header.notApplicable_textColour, slotPointsToConverters + " slot points");
-			if (slotPointsPenalty > 0) tooltip.addPara("Ship will require an additional " + slotPointsPenalty + " deployment points", 2f, header.notApplicable_textColour, slotPointsPenalty + " deployment points");
+			tooltip.addSectionHeading(slotPointsUsed+"/"+slotPoints+(slotPointsNeeded > slotPoints ? " ("+slotPointsNeeded+") " : " ")+"SLOT POINTS", (slotPointsUsed != slotPoints) ? colour.negative : colour.highlight, header.invisible_bgColour, Alignment.MID, header.padding);
+			if (slotPointsPenalty > 0) tooltip.addPara("Ship will require an additional %s", 2f, colour.negative, slotPointsPenalty + " deployment points");
+			if (slotPointsFromMods > 0) tooltip.addPara("Hull modifications are providing %s", 2f, colour.positive, slotPointsFromMods + " slot points");
+			if (slotPointsFromDiverters > 0) tooltip.addPara("Diverter shunts are providing %s", 2f, colour.positive, slotPointsFromDiverters + " slot points");
+			if (slotPointsToConverters > 0) tooltip.addPara("Converter shunts are utilizing %s", 2f, colour.highlight, slotPointsToConverters + " slot points");
+			if (slotPointsNeeded > slotPoints) tooltip.addPara("%s required for inactive converters", 2f, colour.highlight,  (slotPointsNeeded - slotPoints) + " additional slot points");
+			else if (slotPointsUsed < slotPoints) tooltip.addPara("%s may be utilized", 2f, colour.highlight,  (slotPoints - slotPointsUsed) + " additional slot points");
 
 			if (ehm_settings.getShowInfoForActivators()) {
 				HashMap<String, StatMod> converterShunts = dynamicStats.getMod(converters.groupTag).getFlatBonuses();
 				if (converterShunts != null && !converterShunts.isEmpty()) {
-					tooltip.addSectionHeading("ACTIVE CONVERTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-					ehm_printShuntCount(tooltip, dynamicStats, converters.idSet);
+					tooltip.addSectionHeading("CONVERTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
+					ehm_printShuntCount(tooltip, variant, converterShunts.keySet());
 				} else if (ehm_settings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO CONVERTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No converters are installed. Converters are used to make a smaller slot a bigger one, if there are enough slot points.", 2f);
@@ -141,8 +145,8 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 
 				HashMap<String, StatMod> diverterShunts = dynamicStats.getMod(diverters.groupTag).getFlatBonuses();
 				if (diverterShunts != null && !diverterShunts.isEmpty()) {
-					tooltip.addSectionHeading("ACTIVE DIVERTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-					ehm_printShuntCount(tooltip, dynamicStats, diverters.idSet);
+					tooltip.addSectionHeading("DIVERTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
+					ehm_printShuntCount(tooltip, variant, diverterShunts.keySet());
 				} else if (ehm_settings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO DIVERTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No diverters are installed. Diverters disable a slot and provide slot points that are used by converters in turn.", 2f);

@@ -16,9 +16,10 @@ As the first mini-module, I've added an all-in-one version. These mini-modules r
 - Fixed a slot render order issue that caused activated adapter/converters to draw over other activated shunts
 - Changed "Logistics Overhaul" to apply civilian conversion bonuses to a smaller selection of ships
 - Changed "Launch Tubes" to actually be a launch point for the ship; wings will launch from these now
+- Changed tooltips a little bit; highlighted more relevant things, made some activator ones more informative and tried to prettify them... tried
 - NEW FEATURE: Added purchaseable enhancements; these utilize LunaLib's refit buttons and may have multiple tiers
  - Added a new upgrade called "Overdrive" that allows ships to have more built-in modifications
- - Changed some tooltips; the base hull modification's tooltip will also show the "Overdrive" level and bonus
+ - The base hull modification's tooltip will also show the "Overdrive" level and bonus
 - NEW FEATURE: Added support for dynamic module installation/removal
  - Added "Mini-Module Activator" and mini-module shunts; these shunts may be installed on large slots and turn into a module upon activation
  - Added a new refit button "Remove Module" for mini-modules; mini-modules needs to be stripped first and then removed using this button

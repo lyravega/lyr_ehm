@@ -8,7 +8,7 @@ import com.fs.starfarer.api.util.Misc;
 
 public class ehm_tooltip {
 	public static class text {
-		public static final float padding = 5.0f;
+		public static final float padding = 2.0f;
 		public static final String
 			flavourManufacturer = "Experimental",
 			flavourDescription = "This design utilizes experimental hull modifications created by a spacer who has been living in a junkyard for most of his life. His 'treasure hoard' is full of franken-ships that somehow fly by using cannibalized parts from other ships that would be deemed incompatible. Benefits of such modifications are unclear as they do not provide a certain advantage over the stock designs. However the level of customization and flexibility they offer is certainly unparalleled.";
@@ -54,7 +54,7 @@ public class ehm_tooltip {
 	}
 
 	public static class header {
-		public static final float padding = 15.0f;
+		public static final float padding = 5.0f;
 		public static final String
 			info = "INFO",
 			warning = "WARNING",

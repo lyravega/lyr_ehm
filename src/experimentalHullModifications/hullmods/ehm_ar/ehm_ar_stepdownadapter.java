@@ -19,6 +19,7 @@ import experimentalHullModifications.misc.ehm_internals.shunts.adapters;
 import experimentalHullModifications.misc.ehm_internals.shunts.adapters.adapterParameters;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
+import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.proxies.lyr_hullSpec;
 
 /**@category Adapter Retrofit
@@ -69,7 +70,7 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 	@Override
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (ship == null) return;
-		ShipVariantAPI variant = ship.getVariant();
+		final ShipVariantAPI variant = ship.getVariant();
 
 		if (variant.hasHullMod(this.hullModSpecId)) {
 			final DynamicStatsAPI dynamicStats = ship.getMutableStats().getDynamic();
@@ -77,11 +78,11 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 			if (ehm_settings.getShowInfoForActivators()) {
 				HashMap<String, StatMod> adapterShunts = dynamicStats.getMod(adapters.groupTag).getFlatBonuses();
 				if (adapterShunts != null && !adapterShunts.isEmpty()) {
-					tooltip.addSectionHeading("ACTIVE ADAPTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-					ehm_printShuntCount(tooltip, dynamicStats, adapters.idSet);
+					tooltip.addSectionHeading("ADAPTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
+					ehm_printShuntCount(tooltip, variant, adapterShunts.keySet());
 				} else if (ehm_settings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO ADAPTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-					tooltip.addPara("No adapters are installed. Adapters turn bigger slots into smaller ones.", 2f);
+					tooltip.addPara("No adapters are installed. Adapters turn bigger slots into smaller ones.", text.padding);
 				}
 			}
 		}
