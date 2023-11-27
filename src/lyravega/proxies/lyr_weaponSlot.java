@@ -34,6 +34,8 @@ public final class lyr_weaponSlot {
 	// private static MethodHandle newNode;
 	private static MethodHandle getSlotType;
 	private static MethodHandle setSlotType;
+	private static MethodHandle addLaunchPoint;
+
 	private static MethodHandle getNode;
 	private static MethodHandle getNodeId;
 	private static MethodHandle setNode;
@@ -52,6 +54,7 @@ public final class lyr_weaponSlot {
 			setSlotSize = methodReflection.findMethodByName("setSlotSize", weaponSlotClass).getMethodHandle();
 			getSlotType = methodReflection.findMethodByName("getSlotType", weaponSlotClass).getMethodHandle();
 			setSlotType = methodReflection.findMethodByName("setSlotType", weaponSlotClass, slotTypeEnum).getMethodHandle();
+			addLaunchPoint = methodReflection.findMethodByName("addLaunchPoint", weaponSlotClass).getMethodHandle();
 
 			getNode = methodReflection.findMethodByName("getNode", weaponSlotClass).getMethodHandle();
 			getNodeId = methodReflection.findMethodByClass(nodeClass, String.class).getMethodHandle();	// this technically belongs to nodeClass
@@ -220,6 +223,19 @@ public final class lyr_weaponSlot {
 			setSlotType.invoke(this.weaponSlot, slotTypeEnum.getEnumConstants()[slotType.ordinal()]);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'setSlotTypeRaw()' in 'lyr_weaponSlot'", t);
+		}
+	}
+
+	/**
+	 * Adds a node as a launch point for this weapon slot. Node can be a new or an existing node.
+	 * @param node to add as a launch point. If null, uses this weapon's own node.
+	 */
+	public void addLaunchPoint(Object node) {
+		try {
+			if (node != null) addLaunchPoint.invoke(this.weaponSlot, node);
+			else addLaunchPoint.invoke(this.weaponSlot, this.getNode());
+		} catch (Throwable t) {
+			lyr_logger.error("Failed to use 'addLaunchPoint()' in 'lyr_weaponSlot'", t);
 		}
 	}
 
