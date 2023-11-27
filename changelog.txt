@@ -1,19 +1,27 @@
 Version 0.8.7
 
-This version comes with a new upgrade feature that utilizes LunaLib's refit tab buttons. As the first upgrade, I've added one that allows more modifications to be built-in to the ships, along with tools that'd make it relatively easy for me to deploy any more. I have some more ideas for a few more upgrades like this one planned, but I'll keep the list rather short at least for now.
+This version comes with a new upgrade feature that utilizes LunaLib's refit tab buttons and another new feature that allows installing/removing modules to your ships. And a big overhaul to many things under the hood (again).
 
-Each level of this upgrade cost story points and AI cores, with higher levels requiring you to have a nanoforge in your cargo holds. This upgrade in specific is designed to encourage farming to some degree and have you burn through your resources to push your builds even further. Let me know if you have any feedback on the upgrade, and happy hunting!
+As the first upgrade, I've added one that allows more modifications to be built-in to the ships, along with tools that'd make it relatively easy for me to deploy any more. Each level of this upgrade cost story points and AI cores, with higher levels requiring you to have a nanoforge in your cargo holds. This upgrade in specific is designed to encourage farming to some degree and have you burn through your resources to push your builds even further.
+
+As the first mini-module, I've added an all-in-one version. These mini-modules require an activator (as usual), and draws most of their base stats from the parent ship.
 
 - IMPORTANT: Added a debug option called "Clear Unknown Slots", which will allow some bricked saves to load
  * Will only help if a crash occurs during a load that states a slot with [CS_AS_] prefix cannot be found
 - Fixed an issue that allowed adapted slots to be converted as well, which should have not been possible at all (the issue above)
-- Fixed an issue that applied the wrong description prefix to ships if the flavour option was turned off
-- Fixed a rare issue causing changes to affect all ships with the same hull spec instead of just one in specific circumstances
 - Fixed a null pointer exception caused by ship/fleet tracking
+- Fixed an issue with "Progressive S-Mods" that lead to an issue that reset the variant (ship) if a certain chain of actions were taken
+- Fixed a rare issue causing changes to affect all ships with the same hull spec instead of just one in specific circumstances
+- Fixed an issue that applied the wrong description prefix to ships if the flavour option was turned off
+- Fixed a slot render order issue that caused activated adapter/converters to draw over other activated shunts
 - Changed "Logistics Overhaul" to apply civilian conversion bonuses to a smaller selection of ships
+- Changed "Launch Tubes" to actually be a launch point for the ship; wings will launch from these now
 - NEW FEATURE: Added purchaseable enhancements; these utilize LunaLib's refit buttons and may have multiple tiers
-- Added a new upgrade called "Overdrive" that allows ships to have more built-in modifications
-- Changed some tooltips, the base hull modification's tooltip will also show the "Overdrive" level and bonus
+ - Added a new upgrade called "Overdrive" that allows ships to have more built-in modifications
+ - Changed some tooltips; the base hull modification's tooltip will also show the "Overdrive" level and bonus
+- NEW FEATURE: Added support for dynamic module installation/removal
+ - Added "Mini-Module Activator" and mini-module shunts; these shunts may be installed on large slots and turn into a module upon activation
+ - Added a new refit button "Remove Module" for mini-modules; mini-modules needs to be stripped first and then removed using this button
 
 
 Version 0.8.6a
