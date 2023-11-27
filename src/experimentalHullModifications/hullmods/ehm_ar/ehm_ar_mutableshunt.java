@@ -55,11 +55,11 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 		ShipVariantAPI variant = stats.getVariant();
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
 
-		HashMap<String, StatMod> dissipatorMods = stats.getDynamic().getMod(dissipators.groupTag).getFlatBonuses();
-		if (dissipatorMods != null) {
+		HashMap<String, StatMod> dissipatorShunts = stats.getDynamic().getMod(dissipators.groupTag).getFlatBonuses();
+		if (dissipatorShunts != null) {
 			float dissipatorAmount =  stats.getDynamic().getMod(dissipators.groupTag).computeEffective(0f);
 
-			for (String slotId : dissipatorMods.keySet()) {
+			for (String slotId : dissipatorShunts.keySet()) {
 				if (lyr_hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
 
 				ehm_deactivateSlot(lyr_hullSpec, variant.getWeaponId(slotId), slotId);
@@ -69,11 +69,11 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 			stats.getFluxDissipation().modifyFlat(this.hullModSpecId, dissipatorAmount*dissipatorFlatMod);
 		}
 
-		HashMap<String, StatMod> capacitorMods = stats.getDynamic().getMod(capacitors.groupTag).getFlatBonuses();
-		if (capacitorMods != null) {
+		HashMap<String, StatMod> capacitorShunts = stats.getDynamic().getMod(capacitors.groupTag).getFlatBonuses();
+		if (capacitorShunts != null) {
 			float capacitorAmount =  stats.getDynamic().getMod(capacitors.groupTag).computeEffective(0f);
 
-			for (String slotId : capacitorMods.keySet()) {
+			for (String slotId : capacitorShunts.keySet()) {
 				if (lyr_hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
 
 				ehm_deactivateSlot(lyr_hullSpec, variant.getWeaponId(slotId), slotId);

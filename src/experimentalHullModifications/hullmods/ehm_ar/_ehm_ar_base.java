@@ -112,16 +112,17 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 			String source = ehm_mr_overengineered.class.getSimpleName();
 			int mod = ehm_mr_overengineered.slotPointBonus.get(variant.getHullSize());
 
-			dynamicStats.getMod(ehm_internals.stats.slotPointsFromMods).modifyFlat(source, mod);
 			dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(source, mod);
+			dynamicStats.getMod(ehm_internals.stats.slotPointsFromMods).modifyFlat(source, mod);
+			// TODO: add a dynamic stat for ordnancePoints from here
 		}
 
 		if (variant.hasHullMod(ehm_internals.hullmods.misc.auxilarygenerators)) {
 			String source = ehm_mr_auxilarygenerators.class.getSimpleName();
 			int mod = ehm_mr_auxilarygenerators.slotPointBonus.get(variant.getHullSize());
 
-			dynamicStats.getMod(ehm_internals.stats.slotPointsFromMods).modifyFlat(source, mod);
 			dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(source, mod);
+			dynamicStats.getMod(ehm_internals.stats.slotPointsFromMods).modifyFlat(source, mod);
 		}
 
 		for (WeaponSlotAPI slot : variant.getHullSpec().getAllWeaponSlotsCopy()) {
@@ -140,6 +141,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 					if (!adapters.isValidSlot(slot, shuntSpec)) continue;
 
 					dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+					dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 1);
 
 					// switch (shuntId) {
 					// 	case adapters.ids.largeDual: {
@@ -161,9 +163,18 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 					if (!converters.isValidSlot(slot, shuntSpec)) continue;
 
 					final int mod = converters.dataMap.get(shuntId).getChildCost();
-					if (slot.isDecorative()) dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-					if (slot.isDecorative()) dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, mod);
-					dynamicStats.getMod(ehm_internals.stats.slotPointsNeeded).modifyFlat(slotId, mod);
+					if (!slot.isDecorative()) {
+						dynamicStats.getMod(shuntId+"_inactive").modifyFlat(slotId, 1);
+						dynamicStats.getMod(shuntGroupTag+"_inactive").modifyFlat(slotId, mod);
+						dynamicStats.getMod(ehm_internals.stats.slotPointsNeeded).modifyFlat(slotId, mod);
+					} else {
+						dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+						dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, mod);
+						dynamicStats.getMod(ehm_internals.stats.slotPointsNeeded).modifyFlat(slotId, mod);
+						dynamicStats.getMod(ehm_internals.stats.slotPointsUsed).modifyFlat(slotId, mod);
+						dynamicStats.getMod(ehm_internals.stats.slotPointsToConverters).modifyFlat(slotId, mod);
+					}
+					// TODO: converters should have an active and inactive stat group separately
 
 					// switch (shuntId) {
 					// 	case converters.ids.mediumToLarge: {
@@ -191,6 +202,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 					dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
 					dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, mod);
 					dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(slotId, mod);
+					dynamicStats.getMod(ehm_internals.stats.slotPointsFromDiverters).modifyFlat(slotId, mod);
 
 					// switch (shuntId) {
 					// 	case diverters.ids.large: {
@@ -373,6 +385,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 	 * @param groupTag of the shunts to be counted
 	 * @return a map with shuntId:count entries
 	 */
+	@Deprecated
 	protected static final Map<String, Integer> ehm_shuntCount(ShipAPI ship, String groupTag) {
 		Map<String, Integer> shuntMap = new HashMap<String, Integer>();
 

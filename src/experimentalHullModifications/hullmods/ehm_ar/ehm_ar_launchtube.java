@@ -2,15 +2,16 @@ package experimentalHullModifications.hullmods.ehm_ar;
 
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.combat.*;
+import com.fs.starfarer.api.combat.MutableShipStatsAPI;
+import com.fs.starfarer.api.combat.MutableStat.StatMod;
+import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
-import com.fs.starfarer.api.loading.WeaponSlotAPI;
-import com.fs.starfarer.api.loading.WeaponSpecAPI;
+import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
@@ -37,7 +38,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 	//#endregion
 	// END OF CUSTOM EVENTS
 
-	static final Map<String, Float> hangarMap = ehm_internals.shunts.hangars.dataMap;
+	static final Map<String, Integer> hangarMap = ehm_internals.shunts.hangars.dataMap;
 
 	// com.fs.starfarer.api.impl.hullmods.ConvertedHangar
 	// private static final HullModEffect convertedHangarEffect = Global.getSettings().getHullModSpec("converted_hangar").getEffect();
@@ -48,53 +49,19 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
-		List<WeaponSlotAPI> shunts = lyr_hullSpec.getAllWeaponSlotsCopy();
 
-		StatBonus launchTubeStat = stats.getDynamic().getMod(ehm_internals.stats.hangars);
+		HashMap<String, StatMod> hangarShunts = stats.getDynamic().getMod(hangars.groupTag).getFlatBonuses();
+		if (hangarShunts != null) {
+			float hangarAmount =  stats.getDynamic().getMod(hangars.groupTag).computeEffective(0f);
 
-		// if (stats.getNumFighterBays().getBaseValue() <= 0) {
-		// 	convertedHangarEffect.applyEffectsBeforeShipCreation(hullSize, stats, "converted_hangar");
-		// } else {
-		// 	vastHangarEffect.applyEffectsBeforeShipCreation(hullSize, stats, "vast_hangar");
-		// 	convertedHangarEffect.applyEffectsBeforeShipCreation(hullSize, stats, "converted_hangar");
-		// }
+			for (String slotId : hangarShunts.keySet()) {
+				if (lyr_hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
 
-		for (Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
-			WeaponSlotAPI slot = iterator.next();
-			// if (slot.isDecorative()) continue;
-
-			String slotId = slot.getId();
-			if (variant.getWeaponSpec(slotId) == null) { iterator.remove(); continue; }
-			if (slotId.startsWith(ehm_internals.affixes.convertedSlot)) { iterator.remove(); continue; }
-
-			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
-			if (shuntSpec.getSize() != slot.getSlotSize()) { iterator.remove(); continue; }
-			if (!shuntSpec.hasTag(ehm_internals.hullmods.tags.experimental)) { iterator.remove(); continue; }
-
-			String shuntId = shuntSpec.getWeaponId();
-			switch (shuntId) {
-				case hangars.ids.large: {
-					launchTubeStat.modifyFlat(slotId, hangarMap.get(shuntId));
-					break;
-				} default: { iterator.remove(); break; }
+				ehm_deactivateSlot(lyr_hullSpec, variant.getWeaponId(slotId), slotId);
 			}
+
+			stats.getNumFighterBays().modifyFlat(this.hullModSpecId, hangarAmount);
 		}
-
-		for (WeaponSlotAPI slot : shunts) {
-			if (slot.isDecorative()) continue;
-
-			String slotId = slot.getId();
-			String shuntId = variant.getWeaponSpec(slotId).getWeaponId();
-
-			switch (shuntId) {
-				case hangars.ids.large: {
-					ehm_deactivateSlot(lyr_hullSpec, shuntId, slotId);
-					break;
-				} default: break;
-			}
-		}
-
-		stats.getNumFighterBays().modifyFlat(this.hullModSpecId, launchTubeStat.computeEffective(0f));
 
 		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
 	}

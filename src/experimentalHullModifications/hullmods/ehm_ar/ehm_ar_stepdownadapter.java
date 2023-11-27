@@ -2,21 +2,19 @@ package experimentalHullModifications.hullmods.ehm_ar;
 
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
+import com.fs.starfarer.api.combat.MutableStat.StatMod;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
-import com.fs.starfarer.api.loading.WeaponSlotAPI;
-import com.fs.starfarer.api.loading.WeaponSpecAPI;
+import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
-import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_internals.shunts.adapters;
 import experimentalHullModifications.misc.ehm_internals.shunts.adapters.adapterParameters;
 import experimentalHullModifications.misc.ehm_settings;
@@ -46,39 +44,13 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
-		List<WeaponSlotAPI> shunts = lyr_hullSpec.getAllWeaponSlotsCopy();
 
-		for (Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
-			WeaponSlotAPI slot = iterator.next();
-			// if (slot.isDecorative()) continue;
+		HashMap<String, StatMod> adapterShunts = stats.getDynamic().getMod(adapters.groupTag).getFlatBonuses();
+		if (adapterShunts != null) {
+			for (String slotId : adapterShunts.keySet()) {
+				if (lyr_hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
 
-			String slotId = slot.getId();
-			if (variant.getWeaponSpec(slotId) == null) { iterator.remove(); continue; }
-			if (!slotId.startsWith(ehm_internals.affixes.normalSlot)) { iterator.remove(); continue; }
-
-			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
-			if (shuntSpec.getSize() != slot.getSlotSize()) { iterator.remove(); continue; }
-			if (!shuntSpec.hasTag(ehm_internals.hullmods.tags.experimental)) { iterator.remove(); continue; }
-
-			String shuntId = shuntSpec.getWeaponId();
-			switch (shuntId) {
-				case adapters.ids.largeDual: case adapters.ids.largeQuad: case adapters.ids.largeTriple: case adapters.ids.mediumDual: {
-					break;
-				} default: { iterator.remove(); break; }
-			}
-		}
-
-		for (WeaponSlotAPI slot : shunts) {
-			if (slot.isDecorative()) continue;
-
-			String slotId = slot.getId();
-			String shuntId = variant.getWeaponSpec(slotId).getWeaponId();
-
-			switch (shuntId) {
-				case adapters.ids.largeDual: case adapters.ids.largeQuad: case adapters.ids.largeTriple: case adapters.ids.mediumDual: {
-					ehm_adaptSlot(lyr_hullSpec, shuntId, slotId);
-					break;
-				} default: break;
+				ehm_adaptSlot(lyr_hullSpec, variant.getWeaponId(slotId), slotId);
 			}
 		}
 

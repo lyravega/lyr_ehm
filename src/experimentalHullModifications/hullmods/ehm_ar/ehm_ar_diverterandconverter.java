@@ -6,12 +6,11 @@ import java.util.*;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
+import com.fs.starfarer.api.combat.MutableStat.StatMod;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
-import com.fs.starfarer.api.impl.campaign.ids.Stats;
-import com.fs.starfarer.api.loading.WeaponSlotAPI;
-import com.fs.starfarer.api.loading.WeaponSpecAPI;
+import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.DynamicStatsAPI;
@@ -53,65 +52,34 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
-		List<WeaponSlotAPI> shunts = lyr_hullSpec.getAllWeaponSlotsCopy();
 
-		int slotPointsFromMods = ehm_slotPointsFromHullMods(variant);
-		int slotPoints = slotPointsFromMods;	// as hullMod methods are called several times, slotPoints accumulate correctly on subsequent call(s)
+		HashMap<String, StatMod> diverterShunts = stats.getDynamic().getMod(diverters.groupTag).getFlatBonuses();
+		if (diverterShunts != null) {
+			for (String slotId : diverterShunts.keySet()) {
+				if (lyr_hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
 
-		for (Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
-			WeaponSlotAPI slot = iterator.next();
-			// if (slot.isDecorative()) continue;
-
-			String slotId = slot.getId();
-			if (variant.getWeaponSpec(slotId) == null) { iterator.remove(); continue; }
-			// if (slotId.startsWith(ehm_internals.affix.convertedSlot)) { iterator.remove(); continue; }	// the fuck were you thinking you dimwit
-
-			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
-			if (shuntSpec.getSize() != slot.getSlotSize()) { iterator.remove(); continue; }
-			if (!shuntSpec.hasTag(ehm_internals.hullmods.tags.experimental)) { iterator.remove(); continue; }
-
-			String shuntId = shuntSpec.getWeaponId();
-			switch (shuntId) {
-				case converters.ids.mediumToLarge: case converters.ids.smallToLarge: case converters.ids.smallToMedium: {
-					if (!slotId.startsWith(ehm_internals.affixes.normalSlot)) { iterator.remove(); break; }
-					if (!slot.isDecorative()) break;
-					int mod = converterMap.get(shuntId).getChildCost();
-					slotPoints -= mod;
-					stats.getDynamic().getMod(ehm_internals.stats.slotPointsToConverters).modifyFlat(slotId, -mod);	// used in tooltips
-					break;
-				} case diverters.ids.large: case diverters.ids.medium: case diverters.ids.small: {
-					if (slotId.startsWith(ehm_internals.affixes.convertedSlot)) { iterator.remove(); break; }
-					if (!slot.isDecorative()) break;
-					int mod = diverterMap.get(shuntId);
-					slotPoints += mod;
-					stats.getDynamic().getMod(ehm_internals.stats.slotPointsFromDiverters).modifyFlat(slotId, mod);	// used in tooltips
-					break;
-				} default: { iterator.remove(); break; }
+				ehm_deactivateSlot(lyr_hullSpec, variant.getWeaponId(slotId), slotId);
 			}
 		}
 
-		for (WeaponSlotAPI slot : shunts) {
-			if (slot.isDecorative()) continue;
+		HashMap<String, StatMod> converterShunts = stats.getDynamic().getMod(converters.groupTag+"_inactive").getFlatBonuses();
+		if (converterShunts != null) {
+			float slotPoints = stats.getDynamic().getMod(ehm_internals.stats.slotPoints).computeEffective(0f);
 
-			String slotId = slot.getId();
-			String shuntId = variant.getWeaponSpec(slotId).getWeaponId();
+			for (String slotId : converterShunts.keySet()) {
+				if (lyr_hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
 
-			switch (shuntId) {
-				case converters.ids.mediumToLarge: case converters.ids.smallToLarge: case converters.ids.smallToMedium: {
-					int cost = converterMap.get(shuntId).getChildCost();
-					if (slotPoints - cost < 0) break;
-					slotPoints -= cost;
-					ehm_convertSlot(lyr_hullSpec, shuntId, slotId);
-					break;
-				} case diverters.ids.large: case diverters.ids.medium: case diverters.ids.small: {
-					slotPoints += diverterMap.get(shuntId);
-					ehm_deactivateSlot(lyr_hullSpec, shuntId, slotId);
-					break;
-				} default: break;
+				float slotPointCost = converterShunts.get(slotId).getValue();
+				float slotPointsUsed = stats.getDynamic().getMod(ehm_internals.stats.slotPointsUsed).computeEffective(0f);
+
+				if (slotPointCost + slotPointsUsed > slotPoints) continue;
+
+				stats.getDynamic().getMod(ehm_internals.stats.slotPointsUsed).modifyFlat(slotId, slotPointCost);	// only this is necessary at this stage to keep track, rest of the stats will be processed externally
+				ehm_convertSlot(lyr_hullSpec, variant.getWeaponId(slotId), slotId);
 			}
 		}
 
-		stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(this.hullModSpecId, Math.max(0, ehm_settings.getBaseSlotPointPenalty()*Math.min(slotPointsFromMods, slotPointsFromMods - slotPoints)));
+		// stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(this.hullModSpecId, Math.max(0, ehm_settings.getBaseSlotPointPenalty()*Math.min(slotPointsFromMods, slotPointsFromMods - slotPoints)));
 
 		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
 	}

@@ -402,6 +402,7 @@ public final class ehm_internals {
 			ordnancePoints = "ehm_ordnancePoints",
 			slotPoints = "ehm_slotPoints",
 			slotPointsNeeded = "ehm_slotPointsNeeded",
+			slotPointsUsed = "ehm_slotPointsUsed",
 			slotPointsFromMods = "ehm_slotPointsFromMods",
 			slotPointsFromDiverters = "ehm_slotPointsFromDiverters",
 			slotPointsToConverters = "ehm_slotPointsToConverters";
