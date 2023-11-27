@@ -396,16 +396,16 @@ public final class ehm_internals {
 	public static final class stats {
 		public static final String
 			overdrive = upgrades.overdrive,
-			hangars = "ehm_hangars",
-			capacitors = "ehm_capacitors",
-			dissipators = "ehm_dissipators",
-			ordnancePoints = "ehm_ordnancePoints",
+			hangars = "ehm_hangars",	// TODO: remove this
+			capacitors = "ehm_capacitors",	// TODO: remove this
+			dissipators = "ehm_dissipators",	// TODO: remove this
+			ordnancePoints = "ehm_ordnancePoints",	// TODO: implement/use this
 			slotPoints = "ehm_slotPoints",
 			slotPointsNeeded = "ehm_slotPointsNeeded",
 			slotPointsUsed = "ehm_slotPointsUsed",
 			slotPointsFromMods = "ehm_slotPointsFromMods",
-			slotPointsFromDiverters = "ehm_slotPointsFromDiverters",
-			slotPointsToConverters = "ehm_slotPointsToConverters";
+			slotPointsFromDiverters = shunts.diverters.groupTag,	// using group tag as the stat id
+			slotPointsToConverters = shunts.converters.groupTag;	// using group tag as the stat id
 	}
 
 	public static final class affixes {

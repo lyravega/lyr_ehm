@@ -58,7 +58,10 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 			for (String slotId : diverterShunts.keySet()) {
 				if (lyr_hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
 
-				stats.getDynamic().getMod(ehm_internals.stats.slotPoints).modifyFlat(slotId, diverterShunts.get(slotId).getValue());	// to have the addition count on the next block
+				float mod = diverterShunts.get(slotId).getValue();
+
+				stats.getDynamic().getMod(ehm_internals.stats.slotPointsFromDiverters).modifyFlat(slotId, mod);	// to have the addition count on the active converter block
+				stats.getDynamic().getMod(ehm_internals.stats.slotPoints).modifyFlat(slotId, mod);	// to have the addition count on the inactive converter block
 				ehm_deactivateSlot(lyr_hullSpec, variant.getWeaponId(slotId), slotId);
 			}
 		}
@@ -75,6 +78,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 
 				if (slotPointCost + slotPointsUsed > slotPoints) continue;
 
+				// stats.getDynamic().getMod(ehm_internals.stats.slotPointsToConverters).modifyFlat(slotId, slotPoints);	// redundant in this method block; base pre-process method will update it
 				stats.getDynamic().getMod(ehm_internals.stats.slotPointsUsed).modifyFlat(slotId, slotPointCost);	// only this is necessary at this stage to keep track, rest of the stats will be processed externally
 				ehm_convertSlot(lyr_hullSpec, variant.getWeaponId(slotId), slotId);
 			}
@@ -112,14 +116,14 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 			final DynamicStatsAPI dynamicStats = ship.getMutableStats().getDynamic();
 
 			int slotPoints = Math.round(dynamicStats.getMod(ehm_internals.stats.slotPoints).computeEffective(0f));
-			// int slotPointsNeeded = Math.round(dynamicStats.getMod(ehm_internals.stats.slotPointsNeeded).computeEffective(0f));
+			int slotPointsNeeded = Math.round(dynamicStats.getMod(ehm_internals.stats.slotPointsNeeded).computeEffective(0f));
 			int slotPointsUsed = Math.round(dynamicStats.getMod(ehm_internals.stats.slotPointsUsed).computeEffective(0f));
 			int slotPointsFromMods = Math.round(dynamicStats.getMod(ehm_internals.stats.slotPointsFromMods).computeEffective(0f));
 			int slotPointsFromDiverters = Math.round(dynamicStats.getMod(ehm_internals.stats.slotPointsFromDiverters).computeEffective(0f));
 			int slotPointsToConverters = Math.round(dynamicStats.getMod(ehm_internals.stats.slotPointsToConverters).computeEffective(0f));
 			int slotPointsPenalty = ehm_settings.getBaseSlotPointPenalty()*Math.max(0, slotPointsUsed - slotPointsFromDiverters);
 
-			tooltip.addSectionHeading(slotPointsUsed+"/"+slotPoints+" SLOT POINTS", (slotPointsUsed != slotPoints) ? header.notApplicable_textColour : header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
+			tooltip.addSectionHeading(slotPointsUsed+"/"+slotPoints+(slotPointsNeeded > slotPoints ? " ("+slotPointsNeeded+") " : " ")+"SLOT POINTS", (slotPointsUsed != slotPoints) ? header.notApplicable_textColour : header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 			if (slotPointsFromMods > 0) tooltip.addPara("Hull modifications are providing " + slotPointsFromMods + " slot points", 2f, header.sEffect_textColour, slotPointsFromMods + " slot points");
 			if (slotPointsFromDiverters > 0) tooltip.addPara("Diverter shunts are providing " + slotPointsFromDiverters + " slot points", 2f, header.sEffect_textColour, slotPointsFromDiverters + " slot points");
 			if (slotPointsToConverters > 0) tooltip.addPara("Converter shunts are utilizing " + slotPointsToConverters + " slot points", 2f, header.notApplicable_textColour, slotPointsToConverters + " slot points");

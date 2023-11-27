@@ -144,21 +144,6 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 
 					dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
 					dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 1);
-
-					// switch (shuntId) {
-					// 	case adapters.ids.largeDual: {
-					// 		dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-					// 	}; continue;
-					// 	case adapters.ids.largeQuad: {
-					// 		dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-					// 	}; continue;
-					// 	case adapters.ids.largeTriple: {
-					// 		dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-					// 	}; continue;
-					// 	case adapters.ids.mediumDual: {
-					// 		dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-					// 	}; continue;
-					// }
 				}; continue;
 				case converters.groupTag: {
 					if (!variant.hasHullMod(converters.activatorId)) continue;
@@ -174,27 +159,8 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 						dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, mod);
 						dynamicStats.getMod(ehm_internals.stats.slotPointsNeeded).modifyFlat(slotId, mod);
 						dynamicStats.getMod(ehm_internals.stats.slotPointsUsed).modifyFlat(slotId, mod);
-						dynamicStats.getMod(ehm_internals.stats.slotPointsToConverters).modifyFlat(slotId, mod);
+						// dynamicStats.getMod(ehm_internals.stats.slotPointsToConverters).modifyFlat(slotId, mod);	// redundant since stat ids point at the group tag
 					}
-					// TODO: converters should have an active and inactive stat group separately
-
-					// switch (shuntId) {
-					// 	case converters.ids.mediumToLarge: {
-					// 		if (slot.isDecorative()) dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-					// 		if (slot.isDecorative()) dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 2);
-					// 		dynamicStats.getMod(ehm_internals.stats.slotPointsNeeded).modifyFlat(slotId, 2);
-					// 	}; continue;
-					// 	case converters.ids.smallToLarge: {
-					// 		if (slot.isDecorative()) dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-					// 		if (slot.isDecorative()) dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 3);
-					// 		dynamicStats.getMod(ehm_internals.stats.slotPointsNeeded).modifyFlat(slotId, 3);
-					// 	}; continue;
-					// 	case converters.ids.smallToMedium: {
-					// 		if (slot.isDecorative()) dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-					// 		if (slot.isDecorative()) dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 1);
-					// 		dynamicStats.getMod(ehm_internals.stats.slotPointsNeeded).modifyFlat(slotId, 1);
-					// 	}; continue;
-					// }
 				}; continue;
 				case diverters.groupTag: {
 					if (!variant.hasHullMod(diverters.activatorId)) continue;
@@ -204,25 +170,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 					dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
 					dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, mod);
 					dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(slotId, mod);
-					dynamicStats.getMod(ehm_internals.stats.slotPointsFromDiverters).modifyFlat(slotId, mod);
-
-					// switch (shuntId) {
-					// 	case diverters.ids.large: {
-					// 		dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-					// 		dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 4);
-					// 		dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(slotId, 4);
-					// 	}; continue;
-					// 	case diverters.ids.medium: {
-					// 		dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-					// 		dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 2);
-					// 		dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(slotId, 2);
-					// 	}; continue;
-					// 	case diverters.ids.small: {
-					// 		dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-					// 		dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 1);
-					// 		dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(slotId, 1);
-					// 	}; continue;
-					// }
+					// dynamicStats.getMod(ehm_internals.stats.slotPointsFromDiverters).modifyFlat(slotId, mod);	// redundant since stat ids point at the group tag
 				}; continue;
 				case capacitors.groupTag: {
 					if (!variant.hasHullMod(capacitors.activatorId)) continue;
@@ -231,21 +179,6 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 					final int mod = capacitors.dataMap.get(shuntId);
 					dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
 					dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, mod);
-
-					// switch (shuntId) {
-					// 	case capacitors.ids.large: {
-					// 		dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-					// 		dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 4);
-					// 	}; continue;
-					// 	case capacitors.ids.medium: {
-					// 		dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-					// 		dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 2);
-					// 	}; continue;
-					// 	case capacitors.ids.small: {
-					// 		dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-					// 		dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 1);
-					// 	}; continue;
-					// }
 				}; continue;
 				case dissipators.groupTag: {
 					if (!variant.hasHullMod(dissipators.activatorId)) continue;
@@ -254,21 +187,6 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 					final int mod = dissipators.dataMap.get(shuntId);
 					dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
 					dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, mod);
-
-					// switch (shuntId) {
-					// 	case dissipators.ids.large: {
-					// 		dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-					// 		dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 4);
-					// 	}; continue;
-					// 	case dissipators.ids.medium: {
-					// 		dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-					// 		dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 2);
-					// 	}; continue;
-					// 	case dissipators.ids.small: {
-					// 		dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-					// 		dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 1);
-					// 	}; continue;
-					// }
 				}; continue;
 				case hangars.groupTag: {
 					if (!variant.hasHullMod(hangars.activatorId)) continue;
@@ -277,13 +195,6 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 					final int mod = hangars.dataMap.get(shuntId);
 					dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
 					dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, mod);
-
-					// switch (shuntId) {
-					// 	case hangars.ids.large: {
-					// 		dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-					// 		dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 1);
-					// 	}; continue;
-					// }
 				}; continue;
 				default: continue;
 			}
