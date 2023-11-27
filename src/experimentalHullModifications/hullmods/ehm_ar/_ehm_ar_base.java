@@ -314,10 +314,6 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 	}
 
 	protected static final void ehm_convertSlot(lyr_hullSpec lyr_hullSpec, String shuntId, String slotId) {
-		// childParameters childParameters = converters.get(shuntId);
-		// int childCost = childParameters.getChildCost();
-		// if (slotPoints != null && slotPoints - childCost < 0) return slotPoints - childCost;
-
 		converterParameters childParameters = converterMap.get(shuntId);
 		lyr_weaponSlot parentSlot = lyr_hullSpec.getWeaponSlot(slotId);
 
@@ -330,11 +326,29 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 
 		lyr_hullSpec.addWeaponSlot(childSlot);
 
-		// if (slotPoints != null) slotPoints -= converters.get(shuntId).getChildCost();	// needs to be subtracted from here on initial install to avoid infinite installs
 		lyr_hullSpec.addBuiltInWeapon(slotId, shuntId);
 		parentSlot.setWeaponType(WeaponType.DECORATIVE);
 		if (ehm_settings.getHideConverters()) parentSlot.setSlotType(slotTypeConstants.hidden);
 		else parentSlot.setRenderOrderMod(-1f);	// sometimes the activated shunts (decoratives) on these new slots (especially hardpoint ones) are rendered below the adapter, hence the change
+	}
+
+	protected static final void ehm_turnSlotIntoBay(lyr_hullSpec lyr_hullSpec, String shuntId, String slotId) {
+		lyr_weaponSlot parentSlot = lyr_hullSpec.getWeaponSlot(slotId);
+
+		lyr_weaponSlot childSlot = parentSlot.clone();
+		String childSlotId = ehm_internals.affixes.launchSlot + slotId; // also used as nodeId because nodeId isn't visible
+
+		childSlot.setId(childSlotId);
+		childSlot.setNode(childSlotId, parentSlot.getLocation());
+		childSlot.addLaunchPoint(null);
+		childSlot.setWeaponType(WeaponType.LAUNCH_BAY);
+
+		lyr_hullSpec.addWeaponSlot(childSlot);
+
+		lyr_hullSpec.addBuiltInWeapon(slotId, shuntId);
+		parentSlot.setWeaponType(WeaponType.DECORATIVE);
+		if (ehm_settings.getHideConverters()) parentSlot.setSlotType(slotTypeConstants.hidden);
+		else parentSlot.setRenderOrderMod(-1f);
 	}
 
 	protected static final void ehm_deactivateSlot(lyr_hullSpec lyr_hullSpec, String shuntId, String slotId) {

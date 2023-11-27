@@ -57,7 +57,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 			for (String slotId : hangarShunts.keySet()) {
 				if (lyr_hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
 
-				ehm_deactivateSlot(lyr_hullSpec, variant.getWeaponId(slotId), slotId);
+				ehm_turnSlotIntoBay(lyr_hullSpec, variant.getWeaponId(slotId), slotId);
 			}
 
 			stats.getNumFighterBays().modifyFlat(this.hullModSpecId, hangarAmount);

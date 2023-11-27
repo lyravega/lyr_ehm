@@ -412,6 +412,7 @@ public final class ehm_internals {
 		public static final String
 			normalSlot = "WS",	// should NOT be altered in any update
 			adaptedSlot = "AS_",	// should NOT be altered in any update
-			convertedSlot = "CS_";	// should NOT be altered in any update
+			convertedSlot = "CS_",	// should NOT be altered in any update
+			launchSlot = "LS_";	// should NOT be altered in any update
 	}
 }
