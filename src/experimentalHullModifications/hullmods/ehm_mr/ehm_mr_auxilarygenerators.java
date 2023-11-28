@@ -3,15 +3,13 @@ package experimentalHullModifications.hullmods.ehm_mr;
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.EnumMap;
 
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
-import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_settings;
 import lyravega.listeners.events.normalEvents;
 
@@ -38,7 +36,7 @@ public final class ehm_mr_auxilarygenerators extends _ehm_base implements normal
 	//#endregion
 	// END OF CUSTOM EVENTS
 
-	public static final Map<HullSize, Integer> slotPointBonus = new HashMap<HullSize, Integer>();
+	public static final EnumMap<HullSize, Integer> slotPointBonus = new EnumMap<HullSize, Integer>(HullSize.class);
 	static {
 		slotPointBonus.put(HullSize.FIGHTER, 0);
 		slotPointBonus.put(HullSize.DEFAULT, 0);
@@ -50,7 +48,7 @@ public final class ehm_mr_auxilarygenerators extends _ehm_base implements normal
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		stats.getDynamic().getMod(ehm_internals.stats.slotPointsFromMods).modifyFlat(this.hullModSpecId, slotPointBonus.get(hullSize));	// used in tooltips
+		// stats.getDynamic().getMod(ehm_internals.stats.slotPointsFromMods).modifyFlat(this.hullModSpecId, slotPointBonus.get(hullSize));	// done in pre-process
 	}
 
 	//#region DESCRIPTION

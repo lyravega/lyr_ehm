@@ -76,7 +76,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
 
 		lyr_hullSpec.setOrdnancePoints((int) Math.round(lyr_hullSpec.referenceNonDamaged().getOrdnancePoints(null)*(1+ordnancePointBonus)));
-		stats.getDynamic().getMod(ehm_internals.stats.slotPointsFromMods).modifyFlat(this.hullModSpecId, slotPointBonus.get(hullSize));	// used in tooltips
+		// stats.getDynamic().getMod(ehm_internals.stats.slotPointsFromMods).modifyFlat(this.hullModSpecId, slotPointBonus.get(hullSize));	// done in pre-process
 		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
 	}
 

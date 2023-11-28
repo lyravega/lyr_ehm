@@ -3,9 +3,8 @@ package experimentalHullModifications.hullmods.ehm_mr;
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
+import java.util.EnumMap;
 import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.ShieldAPI.ShieldType;
@@ -66,8 +65,8 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 	private static final EnumSet<ShipTypeHints> hintsToRemove = EnumSet.of(ShipTypeHints.CARRIER, ShipTypeHints.COMBAT, ShipTypeHints.NO_AUTO_ESCORT, ShipTypeHints.PHASE);
 	private static final EnumSet<ShipTypeHints> hintsToAdd = EnumSet.of(ShipTypeHints.CIVILIAN, ShipTypeHints.ALWAYS_PANIC);
 
-	public static final Map<HullSize, Float> logisticsModBonus = new HashMap<HullSize, Float>();
-	public static final Map<WeaponSize, Float> logisticsSlotBonus = new HashMap<WeaponSize, Float>();
+	public static final EnumMap<HullSize, Float> logisticsModBonus = new EnumMap<HullSize, Float>(HullSize.class);
+	public static final EnumMap<WeaponSize, Float> logisticsSlotBonus = new EnumMap<WeaponSize, Float>(WeaponSize.class);
 	static {
 		logisticsModBonus.put(HullSize.FRIGATE, 15f);
 		logisticsModBonus.put(HullSize.DESTROYER, 30f);

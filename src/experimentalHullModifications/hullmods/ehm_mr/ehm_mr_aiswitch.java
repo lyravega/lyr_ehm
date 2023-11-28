@@ -8,8 +8,7 @@ import static lyravega.utilities.lyr_tooltipUtilities.colourizedText.highlightTe
 import static lyravega.utilities.lyr_tooltipUtilities.colourizedText.negativeText;
 import static lyravega.utilities.lyr_tooltipUtilities.colourizedText.positiveText;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.EnumMap;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
@@ -40,7 +39,7 @@ import lyravega.utilities.lyr_tooltipUtilities;
  * @author lyravega
  */
 public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
-	private static final Map<HullSize, int[]> crewMultipliers = new HashMap<HullSize, int[]>();
+	private static final EnumMap<HullSize, int[]> crewMultipliers = new EnumMap<HullSize, int[]>(HullSize.class);
 	static {
 		crewMultipliers.put(HullSize.FIGHTER, new int[]{0,0});
 		crewMultipliers.put(HullSize.DEFAULT, new int[]{0,0});
