@@ -223,7 +223,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 
 		for (String childId: childrenParameters.getChildren()) { // childId and childSlotId are not the same, be aware
 			lyr_weaponSlot childSlot = parentSlot.clone();
-			String childSlotId = ehm_internals.affixes.adaptedSlot + slotId + childId; // also used as nodeId because nodeId isn't visible
+			String childSlotId = ehm_internals.affixes.adaptedSlot + slotId + childId; // also used as nodeId
 			Vector2f childSlotLocation = lyr_vectorUtilities.generateChildLocation(parentSlot.getLocation(), parentSlot.getAngle(), childrenParameters.getChildOffset(childId));
 			WeaponSize childSlotSize = childrenParameters.getChildSize(childId);
 
@@ -245,7 +245,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 		lyr_weaponSlot parentSlot = lyr_hullSpec.getWeaponSlot(slotId);
 
 		lyr_weaponSlot childSlot = parentSlot.clone();
-		String childSlotId = ehm_internals.affixes.convertedSlot + slotId + childParameters.getChildSuffix(); // also used as nodeId because nodeId isn't visible
+		String childSlotId = ehm_internals.affixes.convertedSlot + slotId + childParameters.getChildSuffix(); // also used as nodeId
 
 		childSlot.setId(childSlotId);
 		childSlot.setNode(childSlotId, parentSlot.getLocation());
@@ -263,11 +263,11 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 		lyr_weaponSlot parentSlot = lyr_hullSpec.getWeaponSlot(slotId);
 
 		lyr_weaponSlot childSlot = parentSlot.clone();
-		String childSlotId = ehm_internals.affixes.launchSlot + slotId; // also used as nodeId because nodeId isn't visible
+		String childSlotId = ehm_internals.affixes.launchSlot + slotId; // also used as nodeId
 
 		childSlot.setId(childSlotId);
-		childSlot.setNode(childSlotId, parentSlot.getLocation());
-		childSlot.addLaunchPoint(null);
+		childSlot.setNode(childSlotId, new Vector2f(parentSlot.getLocation()));
+		childSlot.addLaunchPoints(null, new float[][]{{0f,0f}, {4f,4f}, {4f,-4f}, {-4f,4f}, {-4f,-4f}});	// there will not be any other hangars, so passing the parameter directly
 		childSlot.setWeaponType(WeaponType.LAUNCH_BAY);
 
 		lyr_hullSpec.addWeaponSlot(childSlot);

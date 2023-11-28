@@ -63,7 +63,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 
 		HashMap<String, StatMod> hangarShunts = stats.getDynamic().getMod(hangarData.groupTag).getFlatBonuses();
 		if (hangarShunts != null && !hangarShunts.isEmpty()) {
-			float hangarAmount =  stats.getDynamic().getMod(hangarData.groupTag).computeEffective(0f);
+			float hangarAmount = stats.getDynamic().getMod(hangarData.groupTag).computeEffective(0f);
 
 			for (String slotId : hangarShunts.keySet()) {
 				if (lyr_hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;

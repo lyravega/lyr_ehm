@@ -12,12 +12,10 @@ import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
 import lyravega.utilities.logger.lyr_logger;
 
 /**
- * A proxy-like class for... engine builder? When {@code getEngineSlots()}
- * is used on a hull, these objects which seems to be creating the engines
- * on the slots is returned.
- * <p> Unlike the other proxies, whose obfuscated classes has a base on the
- * API, these do not, so they are treated as objects.
- * <p> Contains some custom methods unlike the other proxies, with long
+ * A proxy-like class for... engine builder? When {@code getEngineSlots()} is used on a hull, these
+ * objects which seems to be creating the engines on the slots is returned.
+ * <p> Unlike the other proxies, whose obfuscated classes has a base on the API, these do not, so
+ * they are treated as objects. Contains some custom methods unlike the other proxies, with long
  * javadocs to hopefully properly describe what they do.
  * @author lyravega
  */

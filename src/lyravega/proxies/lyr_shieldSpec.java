@@ -10,12 +10,10 @@ import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
 import lyravega.utilities.logger.lyr_logger;
 
 /**
- * A proxy-like class for {@link ShieldSpecAPI} that utilizes obfuscated
- * methods without referring to them.
- * <p> There are many bridge methods here that simply call the API methods
- * as long as there is one. Proxied methods are implemented on a use-case
- * basis.
- * <p> Use {@link #retrieve()} to grab the stored {@link ShieldSpecAPI}.
+ * A proxy-like class for the obfuscated class that implements the {@link ShieldSpecAPI} interface.
+ * <p> There are many bridge methods implemented here that simply call the API methods if there is
+ * one. Proxy methods are implemented on a use-case basis, and utilize the obfuscated class' methods.
+ * Proxy utility methods simply exist to fill in the certain gaps, extending the API in a way.
  * @author lyravega
  */
 public final class lyr_shieldSpec {

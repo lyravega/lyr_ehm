@@ -18,12 +18,10 @@ import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
 import lyravega.utilities.logger.lyr_logger;
 
 /**
- * A proxy-like class for {@link ShipHullSpecAPI} that utilizes obfuscated
- * methods without referring to them.
- * <p> There are many bridge methods here that simply call the API methods
- * as long as there is one. Proxied methods are implemented on a use-case
- * basis.
- * <p> Use {@link #retrieve()} to grab the stored {@link ShipHullSpecAPI}.
+ * A proxy-like class for the obfuscated class that implements the {@link ShipHullSpecAPI} interface.
+ * <p> There are many bridge methods implemented here that simply call the API methods if there is
+ * one. Proxy methods are implemented on a use-case basis, and utilize the obfuscated class' methods.
+ * Proxy utility methods simply exist to fill in the certain gaps, extending the API in a way.
  * @author lyravega
  */
 public final class lyr_hullSpec {
@@ -422,9 +420,12 @@ public final class lyr_hullSpec {
 	 * @category Proxy utility method
 	 */
 	public void makeNodesUnique() {
-		if (this.reference().getAllWeaponSlotsCopy().iterator().next().getLocation() != this.getAllWeaponSlotsCopy().iterator().next().getLocation()) return;
-
 		for (WeaponSlotAPI slot : this.getAllWeaponSlots()) {
+			WeaponSlotAPI referenceSlot = this.reference().getWeaponSlot(slot.getId());
+
+			if (referenceSlot == null) continue;
+			if (referenceSlot.getLocation() != slot.getLocation()) continue;
+
 			this.getWeaponSlot(slot).makeNodeUnique();
 		}
 	}

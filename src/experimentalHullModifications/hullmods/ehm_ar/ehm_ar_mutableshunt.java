@@ -102,7 +102,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 
 		HashMap<String, StatMod> dissipatorShunts = stats.getDynamic().getMod(dissipatorData.groupTag).getFlatBonuses();
 		if (dissipatorShunts != null && !dissipatorShunts.isEmpty()) {
-			float dissipatorAmount =  stats.getDynamic().getMod(dissipatorData.groupTag).computeEffective(0f);
+			float dissipatorAmount = stats.getDynamic().getMod(dissipatorData.groupTag).computeEffective(0f);
 
 			for (String slotId : dissipatorShunts.keySet()) {
 				if (lyr_hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
@@ -116,7 +116,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 
 		HashMap<String, StatMod> capacitorShunts = stats.getDynamic().getMod(capacitorData.groupTag).getFlatBonuses();
 		if (capacitorShunts != null && !capacitorShunts.isEmpty()) {
-			float capacitorAmount =  stats.getDynamic().getMod(capacitorData.groupTag).computeEffective(0f);
+			float capacitorAmount = stats.getDynamic().getMod(capacitorData.groupTag).computeEffective(0f);
 
 			for (String slotId : capacitorShunts.keySet()) {
 				if (lyr_hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
