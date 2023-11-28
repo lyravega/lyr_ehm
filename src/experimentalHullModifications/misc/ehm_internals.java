@@ -403,16 +403,19 @@ public final class ehm_internals {
 	public static final class stats {
 		public static final String
 			overdrive = upgrades.overdrive,
-			hangars = "ehm_hangars",	// TODO: remove this
-			capacitors = "ehm_capacitors",	// TODO: remove this
-			dissipators = "ehm_dissipators",	// TODO: remove this
+			adapters = shunts.adapters.groupTag,	// must match .wpn group tag; also used as a stat id
+			converters = shunts.converters.groupTag,	// must match .wpn group tag; also used as a stat id
+			diverters = shunts.diverters.groupTag,	// must match .wpn group tag; also used as a stat id
+			capacitors = shunts.capacitors.groupTag,	// must match .wpn group tag; also used as a stat id
+			dissipators = shunts.dissipators.groupTag,	// must match .wpn group tag; also used as a stat id
+			hangars = shunts.hangars.groupTag,	// must match .wpn group tag; also used as a stat id
 			ordnancePoints = "ehm_ordnancePoints",	// TODO: implement/use this
 			slotPoints = "ehm_slotPoints",
 			slotPointsNeeded = "ehm_slotPointsNeeded",
 			slotPointsUsed = "ehm_slotPointsUsed",
 			slotPointsFromMods = "ehm_slotPointsFromMods",
-			slotPointsFromDiverters = shunts.diverters.groupTag,	// using group tag as the stat id
-			slotPointsToConverters = shunts.converters.groupTag;	// using group tag as the stat id
+			slotPointsFromDiverters = diverters,	// having a separate stat for this is not necessary
+			slotPointsToConverters = converters;	// having a separate stat for this is not necessary
 	}
 
 	public static final class affixes {
