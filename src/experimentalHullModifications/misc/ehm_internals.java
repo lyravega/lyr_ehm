@@ -1,12 +1,10 @@
 package experimentalHullModifications.misc;
 
-import java.util.*;
-
-import org.lwjgl.util.vector.Vector2f;
+import java.util.EnumMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
-import com.fs.starfarer.api.loading.WeaponSlotAPI;
-import com.fs.starfarer.api.loading.WeaponSpecAPI;
 
 public final class ehm_internals {
 	public static final class ids {
@@ -22,11 +20,11 @@ public final class ehm_internals {
 	}
 
 	public static final class shunts {
-		private static final EnumMap<WeaponSize, Integer> slotValues = new EnumMap<WeaponSize, Integer>(WeaponSize.class);
+		public static final EnumMap<WeaponSize, Integer> slotValues = new EnumMap<WeaponSize, Integer>(WeaponSize.class);
 		static {
 			slotValues.put(WeaponSize.SMALL, 1);
-			slotValues.put(WeaponSize.MEDIUM, 1);
-			slotValues.put(WeaponSize.LARGE, 1);
+			slotValues.put(WeaponSize.MEDIUM, 2);
+			slotValues.put(WeaponSize.LARGE, 4);
 		}
 
 		public static final class adapters {
@@ -38,58 +36,8 @@ public final class ehm_internals {
 					largeQuad = "ehm_adapter_largeQuad";	// must match weapon id in .csv and .wpn
 			}
 			public static final String activatorId = hullmods.activatorRetrofits.adapterShuntActivator;
-			public static final String tag = "ehm_adapter";
-			public static final String groupTag = tag;
-			public static final Map<String, adapterParameters> dataMap = new HashMap<String, adapterParameters>();
-			public static final Set<String> idSet = dataMap.keySet();
-			private static final List<String> invalidSlotPrefixes = Arrays.asList(new String[]{affixes.adaptedSlot, affixes.convertedSlot});
-
-			public static final boolean isValidSlot(WeaponSlotAPI slot, WeaponSpecAPI shuntSpec) {
-				return !invalidSlotPrefixes.contains(slot.getId().substring(0,3));
-			}
-
-			static {
-				final adapterParameters mediumDual = new adapterParameters();
-				mediumDual.addChild("L", WeaponSize.SMALL, new Vector2f(0.0f, 6.0f)); // left
-				mediumDual.addChild("R", WeaponSize.SMALL, new Vector2f(0.0f, -6.0f)); // right
-				dataMap.put(ids.mediumDual, mediumDual);
-
-				final adapterParameters largeDual = new adapterParameters();
-				largeDual.addChild("L", WeaponSize.MEDIUM, new Vector2f(0.0f, 12.0f)); // left
-				largeDual.addChild("R", WeaponSize.MEDIUM, new Vector2f(0.0f, -12.0f)); // right
-				dataMap.put(ids.largeDual, largeDual);
-
-				final adapterParameters largeTriple = new adapterParameters();
-				largeTriple.addChild("L", WeaponSize.SMALL, new Vector2f(-4.0f, 18.0f)); // left
-				largeTriple.addChild("R", WeaponSize.SMALL, new Vector2f(-4.0f, -18.0f)); // right
-				largeTriple.addChild("C", WeaponSize.MEDIUM, new Vector2f(0.0f, 0.0f)); // center
-				dataMap.put(ids.largeTriple, largeTriple);
-
-				final adapterParameters largeQuad = new adapterParameters();
-				largeQuad.addChild("L", WeaponSize.SMALL, new Vector2f(0.0f, 6.0f)); // left
-				largeQuad.addChild("R", WeaponSize.SMALL, new Vector2f(0.0f, -6.0f)); // right
-				largeQuad.addChild("FL", WeaponSize.SMALL, new Vector2f(-4.0f, 18.0f)); // far left
-				largeQuad.addChild("FR", WeaponSize.SMALL, new Vector2f(-4.0f, -18.0f)); // far right
-				dataMap.put(ids.largeQuad, largeQuad);
-			}
-
-			public static class adapterParameters {
-				private final Set<String> children; public Set<String> getChildren() { return this.children; }
-				private final Map<String, Vector2f> childrenOffsets; public Vector2f getChildOffset(String childPrefix) { return this.childrenOffsets.get(childPrefix); }
-				private final Map<String, WeaponSize> childrenSizes; public WeaponSize getChildSize(String childPrefix) { return this.childrenSizes.get(childPrefix); }
-
-				private adapterParameters() {
-					this.children = new HashSet<String>();
-					this.childrenOffsets = new HashMap<String, Vector2f>();
-					this.childrenSizes = new HashMap<String, WeaponSize>();
-				}
-
-				private void addChild(String childId, WeaponSize childSize, Vector2f childOffset) {
-					this.children.add(childId);
-					this.childrenOffsets.put(childId, childOffset);
-					this.childrenSizes.put(childId, childSize);
-				}
-			}
+			public static final String groupTag = "ehm_adapter";	// must match weapon group tag in .csv
+			public static final String tag = groupTag;
 		}
 
 		public static final class converters {
@@ -100,33 +48,8 @@ public final class ehm_internals {
 					smallToMedium = "ehm_converter_smallToMedium";	// must match weapon id in .csv and .wpn
 			}
 			public static final String activatorId = hullmods.activatorRetrofits.diverterConverterActivator;
-			public static final String tag = "ehm_converter";
-			public static final String groupTag = tag;
-			public static final Map<String, converterParameters> dataMap = new HashMap<String, converterParameters>();
-			public static final Set<String> idSet = dataMap.keySet();
-			private static final List<String> invalidSlotPrefixes = Arrays.asList(new String[]{affixes.adaptedSlot, affixes.convertedSlot});
-
-			public static final boolean isValidSlot(WeaponSlotAPI slot, WeaponSpecAPI shuntSpec) {
-				return !invalidSlotPrefixes.contains(slot.getId().substring(0,3));
-			}
-
-			static {
-				dataMap.put(ids.mediumToLarge, new converterParameters("ML", WeaponSize.LARGE, slotValues.get(WeaponSize.LARGE) - slotValues.get(WeaponSize.MEDIUM)));
-				dataMap.put(ids.smallToLarge, new converterParameters("SL", WeaponSize.LARGE, slotValues.get(WeaponSize.LARGE) - slotValues.get(WeaponSize.SMALL)));
-				dataMap.put(ids.smallToMedium, new converterParameters("SM", WeaponSize.MEDIUM, slotValues.get(WeaponSize.MEDIUM) - slotValues.get(WeaponSize.SMALL)));
-			}
-
-			public static final class converterParameters {
-				private final String childSuffix; public String getChildSuffix() { return this.childSuffix; }
-				private final int childCost; public int getChildCost() { return this.childCost; }
-				private final WeaponSize childSize; public WeaponSize getChildSize() { return this.childSize; }
-
-				private converterParameters(String childSuffix, WeaponSize childSize, int childCost) {
-					this.childSuffix = childSuffix;
-					this.childCost = childCost;
-					this.childSize = childSize;
-				}
-			}
+			public static final String groupTag = "ehm_converter";	// must match weapon group tag in .csv
+			public static final String tag = groupTag;
 		}
 
 		public static final class diverters {
@@ -137,21 +60,8 @@ public final class ehm_internals {
 					small = "ehm_diverter_small";	// must match weapon id in .csv and .wpn
 			}
 			public static final String activatorId = hullmods.activatorRetrofits.diverterConverterActivator;
-			public static final String tag = "ehm_diverter";
-			public static final String groupTag = tag;
-			public static final Map<String, Integer> dataMap = new HashMap<String, Integer>();
-			public static final Set<String> idSet = dataMap.keySet();
-			private static final List<String> invalidSlotPrefixes = Arrays.asList(new String[]{affixes.convertedSlot});
-
-			public static final boolean isValidSlot(WeaponSlotAPI slot, WeaponSpecAPI shuntSpec) {
-				return !invalidSlotPrefixes.contains(slot.getId().substring(0,3));
-			}
-
-			static {
-				dataMap.put(ids.large, slotValues.get(WeaponSize.LARGE));
-				dataMap.put(ids.medium, slotValues.get(WeaponSize.MEDIUM));
-				dataMap.put(ids.small, slotValues.get(WeaponSize.SMALL));
-			}
+			public static final String groupTag = "ehm_diverter";	// must match weapon group tag in .csv
+			public static final String tag = groupTag;
 		}
 
 		public static final class capacitors {
@@ -162,21 +72,8 @@ public final class ehm_internals {
 					small = "ehm_capacitor_small";	// must match weapon id in .csv and .wpn
 			}
 			public static final String activatorId = hullmods.activatorRetrofits.mutableShuntActivator;
-			public static final String tag = "ehm_capacitor";
-			public static final String groupTag = tag;
-			public static final Map<String, Integer> dataMap = new HashMap<String, Integer>();
-			public static final Set<String> idSet = dataMap.keySet();
-			private static final List<String> invalidSlotPrefixes = Arrays.asList(new String[]{affixes.convertedSlot});
-
-			public static final boolean isValidSlot(WeaponSlotAPI slot, WeaponSpecAPI shuntSpec) {
-				return !invalidSlotPrefixes.contains(slot.getId().substring(0,3));
-			}
-
-			static {
-				dataMap.put(ids.large, slotValues.get(WeaponSize.LARGE));
-				dataMap.put(ids.medium, slotValues.get(WeaponSize.MEDIUM));
-				dataMap.put(ids.small, slotValues.get(WeaponSize.SMALL));
-			}
+			public static final String groupTag = "ehm_capacitor";	// must match weapon group tag in .csv
+			public static final String tag = groupTag;
 		}
 
 		public static final class dissipators {
@@ -187,21 +84,8 @@ public final class ehm_internals {
 					small = "ehm_dissipator_small";	// must match weapon id in .csv and .wpn
 			}
 			public static final String activatorId = hullmods.activatorRetrofits.mutableShuntActivator;
-			public static final String tag = "ehm_dissipator";
-			public static final String groupTag = tag;
-			public static final Map<String, Integer> dataMap = new HashMap<String, Integer>();
-			public static final Set<String> idSet = dataMap.keySet();
-			private static final List<String> invalidSlotPrefixes = Arrays.asList(new String[]{affixes.convertedSlot});
-
-			public static final boolean isValidSlot(WeaponSlotAPI slot, WeaponSpecAPI shuntSpec) {
-				return !invalidSlotPrefixes.contains(slot.getId().substring(0,3));
-			}
-
-			static {
-				dataMap.put(ids.large, slotValues.get(WeaponSize.LARGE));
-				dataMap.put(ids.medium, slotValues.get(WeaponSize.MEDIUM));
-				dataMap.put(ids.small, slotValues.get(WeaponSize.SMALL));
-			}
+			public static final String groupTag = "ehm_dissipator";	// must match weapon group tag in .csv
+			public static final String tag = groupTag;
 		}
 
 		public static final class hangars {
@@ -210,31 +94,11 @@ public final class ehm_internals {
 					large = "ehm_tube_large";	// must match weapon id in .csv and .wpn
 			}
 			public static final String activatorId = hullmods.activatorRetrofits.hangarShuntActivator;
-			public static final String tag = "ehm_hangar";
-			public static final String groupTag = tag;
-			public static final Map<String, Integer> dataMap = new HashMap<String, Integer>();
-			public static final Set<String> idSet = dataMap.keySet();
-			private static final List<String> invalidSlotPrefixes = Arrays.asList(new String[]{affixes.convertedSlot});
-
-			public static final boolean isValidSlot(WeaponSlotAPI slot, WeaponSpecAPI shuntSpec) {
-				return !invalidSlotPrefixes.contains(slot.getId().substring(0,3));
-			}
-
-			static {
-				dataMap.put(ids.large, 1);
-			}
+			public static final String groupTag = "ehm_hangar";	// must match weapon group tag in .csv
+			public static final String tag = groupTag;
 		}
 
 		public static final String tag = ids.experimental;
-		public static final Set<String> idSet = new HashSet<String>();
-		static {
-			idSet.addAll(adapters.idSet);
-			idSet.addAll(capacitors.idSet);
-			idSet.addAll(dissipators.idSet);
-			idSet.addAll(converters.idSet);
-			idSet.addAll(diverters.idSet);
-			idSet.addAll(hangars.idSet);
-		}
 	}
 
 	public static final class hullmods {
@@ -391,7 +255,7 @@ public final class ehm_internals {
 				set.add(retrofits);
 				set.add(systems);
 			}
-	}
+		}
 	}
 
 	public static final class upgrades {
