@@ -42,7 +42,7 @@ public final class ehm_internals {
 			public static final String groupTag = tag;
 			public static final Map<String, adapterParameters> dataMap = new HashMap<String, adapterParameters>();
 			public static final Set<String> idSet = dataMap.keySet();
-			public static final List<String> invalidSlotPrefixes = Arrays.asList(new String[]{affixes.adaptedSlot, affixes.convertedSlot});
+			private static final List<String> invalidSlotPrefixes = Arrays.asList(new String[]{affixes.adaptedSlot, affixes.convertedSlot});
 
 			public static final boolean isValidSlot(WeaponSlotAPI slot, WeaponSpecAPI shuntSpec) {
 				return !invalidSlotPrefixes.contains(slot.getId().substring(0,3));
@@ -74,9 +74,9 @@ public final class ehm_internals {
 			}
 
 			public static class adapterParameters {
-				private Set<String> children; public Set<String> getChildren() { return this.children; }
-				private Map<String, Vector2f> childrenOffsets; public Vector2f getChildOffset(String childPrefix) { return this.childrenOffsets.get(childPrefix); }
-				private Map<String, WeaponSize> childrenSizes; public WeaponSize getChildSize(String childPrefix) { return this.childrenSizes.get(childPrefix); }
+				private final Set<String> children; public Set<String> getChildren() { return this.children; }
+				private final Map<String, Vector2f> childrenOffsets; public Vector2f getChildOffset(String childPrefix) { return this.childrenOffsets.get(childPrefix); }
+				private final Map<String, WeaponSize> childrenSizes; public WeaponSize getChildSize(String childPrefix) { return this.childrenSizes.get(childPrefix); }
 
 				private adapterParameters() {
 					this.children = new HashSet<String>();
@@ -104,7 +104,7 @@ public final class ehm_internals {
 			public static final String groupTag = tag;
 			public static final Map<String, converterParameters> dataMap = new HashMap<String, converterParameters>();
 			public static final Set<String> idSet = dataMap.keySet();
-			public static final List<String> invalidSlotPrefixes = Arrays.asList(new String[]{affixes.adaptedSlot, affixes.convertedSlot});
+			private static final List<String> invalidSlotPrefixes = Arrays.asList(new String[]{affixes.adaptedSlot, affixes.convertedSlot});
 
 			public static final boolean isValidSlot(WeaponSlotAPI slot, WeaponSpecAPI shuntSpec) {
 				return !invalidSlotPrefixes.contains(slot.getId().substring(0,3));
@@ -117,9 +117,9 @@ public final class ehm_internals {
 			}
 
 			public static final class converterParameters {
-				private String childSuffix; public String getChildSuffix() { return this.childSuffix; }
-				private int childCost; public int getChildCost() { return this.childCost; }
-				private WeaponSize childSize; public WeaponSize getChildSize() { return this.childSize; }
+				private final String childSuffix; public String getChildSuffix() { return this.childSuffix; }
+				private final int childCost; public int getChildCost() { return this.childCost; }
+				private final WeaponSize childSize; public WeaponSize getChildSize() { return this.childSize; }
 
 				private converterParameters(String childSuffix, WeaponSize childSize, int childCost) {
 					this.childSuffix = childSuffix;
@@ -141,7 +141,7 @@ public final class ehm_internals {
 			public static final String groupTag = tag;
 			public static final Map<String, Integer> dataMap = new HashMap<String, Integer>();
 			public static final Set<String> idSet = dataMap.keySet();
-			public static final List<String> invalidSlotPrefixes = Arrays.asList(new String[]{affixes.convertedSlot});
+			private static final List<String> invalidSlotPrefixes = Arrays.asList(new String[]{affixes.convertedSlot});
 
 			public static final boolean isValidSlot(WeaponSlotAPI slot, WeaponSpecAPI shuntSpec) {
 				return !invalidSlotPrefixes.contains(slot.getId().substring(0,3));
@@ -166,7 +166,7 @@ public final class ehm_internals {
 			public static final String groupTag = tag;
 			public static final Map<String, Integer> dataMap = new HashMap<String, Integer>();
 			public static final Set<String> idSet = dataMap.keySet();
-			public static final List<String> invalidSlotPrefixes = Arrays.asList(new String[]{affixes.convertedSlot});
+			private static final List<String> invalidSlotPrefixes = Arrays.asList(new String[]{affixes.convertedSlot});
 
 			public static final boolean isValidSlot(WeaponSlotAPI slot, WeaponSpecAPI shuntSpec) {
 				return !invalidSlotPrefixes.contains(slot.getId().substring(0,3));
@@ -191,7 +191,7 @@ public final class ehm_internals {
 			public static final String groupTag = tag;
 			public static final Map<String, Integer> dataMap = new HashMap<String, Integer>();
 			public static final Set<String> idSet = dataMap.keySet();
-			public static final List<String> invalidSlotPrefixes = Arrays.asList(new String[]{affixes.convertedSlot});
+			private static final List<String> invalidSlotPrefixes = Arrays.asList(new String[]{affixes.convertedSlot});
 
 			public static final boolean isValidSlot(WeaponSlotAPI slot, WeaponSpecAPI shuntSpec) {
 				return !invalidSlotPrefixes.contains(slot.getId().substring(0,3));
@@ -214,7 +214,7 @@ public final class ehm_internals {
 			public static final String groupTag = tag;
 			public static final Map<String, Integer> dataMap = new HashMap<String, Integer>();
 			public static final Set<String> idSet = dataMap.keySet();
-			public static final List<String> invalidSlotPrefixes = Arrays.asList(new String[]{affixes.convertedSlot});
+			private static final List<String> invalidSlotPrefixes = Arrays.asList(new String[]{affixes.convertedSlot});
 
 			public static final boolean isValidSlot(WeaponSlotAPI slot, WeaponSpecAPI shuntSpec) {
 				return !invalidSlotPrefixes.contains(slot.getId().substring(0,3));
