@@ -7,9 +7,11 @@ import java.awt.Color;
 
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.api.loading.HullModSpecAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.misc.ehm_internals;
+import lyravega.listeners.events.customizableMod;
 import lyravega.listeners.events.normalEvents;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.proxies.lyr_shieldSpec;
@@ -41,6 +43,23 @@ public abstract class _ehm_sc_base extends _ehm_base implements normalEvents {
 	}
 	//#endregion
 	// END OF CUSTOM EVENTS
+
+	protected Color innerColour;
+	protected Color ringColour;
+
+	/**
+	 * A setter method that sets the relevant fields for the non-customizable methods. The customizable
+	 * ones actually implement the {@link customizableMod} interface, but having a common method name
+	 * for both makes it easier to work with them through the base.
+	 */
+	public abstract void applyCustomization();
+
+	@Override
+	public void init(HullModSpecAPI hullModSpec) {
+		super.init(hullModSpec);
+
+		this.applyCustomization();
+	}
 
 	/**
 	 * Alters the shield colours of the ship. Inner and ring colours

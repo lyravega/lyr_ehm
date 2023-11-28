@@ -11,9 +11,11 @@ import org.json.JSONObject;
 
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.api.loading.HullModSpecAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.misc.ehm_internals;
+import lyravega.listeners.events.customizableMod;
 import lyravega.listeners.events.normalEvents;
 import lyravega.proxies.lyr_engineBuilder;
 import lyravega.proxies.lyr_hullSpec;
@@ -21,8 +23,8 @@ import lyravega.utilities.lyr_lunaUtilities;
 import lyravega.utilities.lyr_miscUtilities;
 
 /**
- * This class is used by engine cosmetic hullmods. The changes are
- * permanent, and does not use {@code advanceInCombat()}.
+ * This class is used by engine cosmetic hullmods. The changes are permanent; changes do not use
+ * {@code advanceInCombat()}.
  * @see {@link experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base _ehm_ar_base} for slot adapter base
  * @see {@link experimentalHullModifications.hullmods.ehm_sr._ehm_sr_base _ehm_sr_base} for system retrofit base
  * @see {@link experimentalHullModifications.hullmods.ehm_wr._ehm_wr_base _ehm_wr_base} for weapon retrofit base
@@ -45,6 +47,23 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 	}
 	//#endregion
 	// END OF CUSTOM EVENTS
+
+	protected int engineStyleId;
+	protected Object engineStyleSpec;
+
+	/**
+	 * A setter method that sets the relevant fields for the non-customizable methods. The customizable
+	 * ones actually implement the {@link customizableMod} interface, but having a common method name
+	 * for both makes it easier to work with them through the base.
+	 */
+	public abstract void applyCustomization();
+
+	@Override
+	public void init(HullModSpecAPI hullModSpec) {
+		super.init(hullModSpec);
+
+		this.applyCustomization();
+	}
 
 	/**
 	 * Alters the engine visuals of the ship. Uses the vanilla engine styles

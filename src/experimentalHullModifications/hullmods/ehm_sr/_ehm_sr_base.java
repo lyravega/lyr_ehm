@@ -10,7 +10,7 @@ import com.fs.starfarer.api.loading.Description;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
-import experimentalHullModifications.misc.ehm_internals;
+import experimentalHullModifications.misc.ehm_internals.hullmods.systemRetrofits;
 import lyravega.listeners.events.normalEvents;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.utilities.lyr_miscUtilities;
@@ -18,8 +18,9 @@ import lyravega.utilities.lyr_reflectionUtilities;
 import lyravega.utilities.logger.lyr_logger;
 
 /**
- * This class is used by system retrofit hullmods. They are pretty
- * straightforward in their operation; change the system of a hullSpec.
+ * This class is used by system retrofit hullmods. They are pretty straightforward in their operation;
+ * change the system of a hullSpec.
+ * <p> The class name is important as the system id is extracted from the simple class name.
  * @see {@link experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base _ehm_ar_base} for slot adapter base
  * @see {@link experimentalHullModifications.hullmods.ehm_wr._ehm_wr_base _ehm_wr_base} for weapon retrofit base
  * @see {@link experimentalHullModifications.hullmods.ehm_ec._ehm_ec_base _ehm_ec_base} for engine cosmetic base
@@ -30,31 +31,35 @@ public abstract class _ehm_sr_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstalled(ShipVariantAPI variant) {
-		if (lyr_miscUtilities.removeHullModWithTag(variant, ehm_internals.hullmods.systemRetrofits.tag, this.hullModSpecId)) return;
+		if (lyr_miscUtilities.removeHullModWithTag(variant, systemRetrofits.tag, this.hullModSpecId)) return;
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
 	public void onRemoved(ShipVariantAPI variant) {
-		if (!lyr_miscUtilities.hasHullModWithTag(variant, ehm_internals.hullmods.systemRetrofits.tag, this.hullModSpecId))
+		if (!lyr_miscUtilities.hasHullModWithTag(variant, systemRetrofits.tag, this.hullModSpecId))
 			variant.setHullSpecAPI(ehm_systemRestore(variant));
 		commitVariantChanges(); playDrillSound();
 	}
 	//#endregion
 	// END OF CUSTOM EVENTS
 
+	protected String systemId;
+
 	@Override
 	public void init(HullModSpecAPI hullModSpec) {
-		String shipSystemId = this.getClass().getSimpleName().replace(ehm_internals.hullmods.systemRetrofits.tag+"_", "");
+		super.init(hullModSpec);
 
-		if (Global.getSettings().getShipSystemSpec(shipSystemId) == null) {
+		this.systemId = this.getClass().getSimpleName().replace(systemRetrofits.tag+"_", "");
+
+		if (Global.getSettings().getShipSystemSpec(this.systemId) == null) {
 			hullModSpec.setHidden(true);
 			hullModSpec.setHiddenEverywhere(true);
 
-			lyr_logger.warn("Ship system with systemId '"+shipSystemId+"' not found, hiding '"+hullModSpec.getId()+"'"); return;
+			lyr_logger.warn("Ship system with systemId '"+this.systemId+"' not found, hiding '"+hullModSpec.getId()+"'"); return;
 		}
 
-		Description shipSystemDescription = Global.getSettings().getDescription(shipSystemId, Description.Type.SHIP_SYSTEM);
+		Description shipSystemDescription = Global.getSettings().getDescription(this.systemId, Description.Type.SHIP_SYSTEM);
 
 		hullModSpec.setDescriptionFormat(shipSystemDescription.getText1());
 		// hullModSpec.setShortDesc(shipSystemDescription.getText3());	// this is not on the API
@@ -63,8 +68,6 @@ public abstract class _ehm_sr_base extends _ehm_base implements normalEvents {
 		} catch (Throwable t) {
 			lyr_logger.error("Could not set the short description of hull modification spec", t);
 		}
-
-		super.init(hullModSpec);
 	}
 
 	/**

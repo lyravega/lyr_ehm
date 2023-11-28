@@ -9,8 +9,6 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
  * @author lyravega
  */
 public final class ehm_sr_orion_device extends _ehm_sr_base {
-	private final String systemId = "orion_device";
-
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();

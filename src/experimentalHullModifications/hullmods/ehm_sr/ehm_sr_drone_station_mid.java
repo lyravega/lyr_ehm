@@ -9,8 +9,6 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
  * @author lyravega
  */
 public final class ehm_sr_drone_station_mid extends _ehm_sr_base {
-	private final String systemId = "drone_station_mid";
-
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();

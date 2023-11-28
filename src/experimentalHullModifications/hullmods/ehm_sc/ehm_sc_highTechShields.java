@@ -12,8 +12,11 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
  * @author lyravega
  */
 public final class ehm_sc_highTechShields extends _ehm_sc_base {
-	private final Color innerColour = new Color(125,125,255,75);
-	private final Color ringColour = new Color(255,255,255,255);
+	@Override	// not really customizable; does not implement the interface
+	public void applyCustomization() {
+		this.innerColour = new Color(125,125,255,75);
+		this.ringColour = new Color(255,255,255,255);
+	}
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
