@@ -1,7 +1,9 @@
 package lyravega.proxies;
 
 import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
 // import java.lang.invoke.MethodType;
+import java.lang.invoke.MethodType;
 
 import org.lwjgl.util.vector.Vector2f;
 
@@ -13,12 +15,11 @@ import lyravega.utilities.lyr_reflectionUtilities.methodReflection;
 import lyravega.utilities.logger.lyr_logger;
 
 /**
- * A proxy-like class for {@link WeaponSlotAPI} that utilizes obfuscated
- * methods without referring to them.
- * <p> There are many bridge methods here that simply call the API methods
- * as long as there is one. Proxied methods are implemented on a use-case
- * basis.
- * <p> Use {@link #retrieve()} to grab the stored {@link WeaponSlotAPI}.
+ * A proxy-like class for the obfuscated class that implements the {@link WeaponSlotAPI} interface.
+ * Also contains a few methods for the obfuscated node class here, as it's a tiny one.
+ * <p> There are many bridge methods implemented here that simply call the API methods if there is
+ * one. Proxy methods are implemented on a use-case basis, and utilize the obfuscated class' methods.
+ * Proxy utility methods simply exist to fill in the certain gaps, extending the API in a way.
  * @author lyravega
  */
 public final class lyr_weaponSlot {
@@ -31,15 +32,15 @@ public final class lyr_weaponSlot {
 	// private static MethodHandle isWeaponSlot;
 	private static MethodHandle setId;
 	private static MethodHandle setSlotSize;
-	// private static MethodHandle newNode;
 	private static MethodHandle getSlotType;
 	private static MethodHandle setSlotType;
 	private static MethodHandle addLaunchPoint;
 
 	private static MethodHandle getNode;
-	private static MethodHandle getNodeId;
 	private static MethodHandle setNode;
 	// private static MethodHandle setNode_alt;
+	private static MethodHandle getNodeId;
+	private static MethodHandle newNode;	// constructor for the node class
 
 	static {
 		try {
@@ -57,10 +58,10 @@ public final class lyr_weaponSlot {
 			addLaunchPoint = methodReflection.findMethodByName("addLaunchPoint", weaponSlotClass).getMethodHandle();
 
 			getNode = methodReflection.findMethodByName("getNode", weaponSlotClass).getMethodHandle();
-			getNodeId = methodReflection.findMethodByClass(nodeClass, String.class).getMethodHandle();	// this technically belongs to nodeClass
-			// newNode = lookup.findConstructor(nodeClass, MethodType.methodType(void.class, String.class, Vector2f.class));	// outdated; newer version does not require this
-			// setNode_alt = methodReflection.findMethodByName("setNode", weaponSlotClass, nodeClass).getMethodHandle();	// outdated; newer version below
 			setNode = methodReflection.findMethodByName("setNode", weaponSlotClass, String.class, Vector2f.class).getMethodHandle();
+			// setNode_alt = methodReflection.findMethodByName("setNode", weaponSlotClass, nodeClass).getMethodHandle();	// outdated; newer version above
+			getNodeId = methodReflection.findMethodByClass(nodeClass, String.class).getMethodHandle();	// this technically belongs to nodeClass
+			newNode = MethodHandles.lookup().findConstructor(nodeClass, MethodType.methodType(void.class, String.class, Vector2f.class));	// this technically belongs to nodeClass
 		} catch (Throwable t) {
 			lyr_logger.fatal("Failed to find a method in 'lyr_weaponSlot'", t);
 		}
@@ -187,6 +188,7 @@ public final class lyr_weaponSlot {
 	/**
 	 * Gets the type of the slot; it's different from the weapon type of the slot.
 	 * @return a converted enum entry where matching ordinal is returned
+	 * @category Proxy method
 	 */
 	public slotTypeConstants getSlotType() {
 		try {
@@ -208,6 +210,7 @@ public final class lyr_weaponSlot {
 	/**
 	 * Sets the type of the slot; it's different from the weapon type of the slot.
 	 * @param slotType an enum constant to set; 0=turret, 1=hardpoint, 2=hidden
+	 * @category Proxy method
 	 */
 	public void setSlotType(slotTypeConstants slotType) {
 		try {
@@ -227,8 +230,11 @@ public final class lyr_weaponSlot {
 	}
 
 	/**
-	 * Adds a node as a launch point for this weapon slot. Node can be a new or an existing node.
-	 * @param node to add as a launch point. If null, uses this weapon's own node.
+	 * Adds a node as a launch point for this weapon slot. Node may be a new or an existing node.
+	 * @param node to add as a launch point. If null, this weapon's node will be used
+	 * @see {@link #getNode()} method where a node from a slot may be grabbed
+	 * @see {@link #newNode(String, Vector2f)} method where a new node is constructed
+	 * @category Proxy method
 	 */
 	public void addLaunchPoint(Object node) {
 		try {
@@ -239,6 +245,36 @@ public final class lyr_weaponSlot {
 		}
 	}
 
+	/**
+	 * Adds several nodes as launch points for this weapon slot. All of the new nodes use the slot's
+	 * node as the base, while the offset array provides the {@code x} and {@code y} offset values
+	 * for each node.
+	 * <p> This method will not create a launch point at the base node; an array of {0,0} must be passed
+	 * for that purpose. The number of {@code float[]} in the offsets determines the amount of launch
+	 * points that will be added to the slot.
+	 * @param nodeId to be use as a prefix by each new node. If null, this weapon's node will be used as a base. Each new node receives {@code .#} as a suffix
+	 * @param nodeOffsets float arrays that contain {@code x} and {@code y} values to be used as offsets for the new nodes
+	 * @see {@link #getNode()} method where a node from a slot may be grabbed
+	 * @see {@link #newNode(String, Vector2f)} method where a new node is constructed
+	 * @category Proxy utility method
+	 */
+	public void addLaunchPoints(String nodeId, float[]... nodeOffsets) {
+		try {
+			nodeId = nodeId != null ? nodeId : this.getNodeId();
+			Vector2f location = this.weaponSlot.getLocation();
+
+			for (int i = 0; i < nodeOffsets.length; i++) {
+				addLaunchPoint.invoke(this.weaponSlot, newNode(nodeId+"."+i, new Vector2f(location.x + nodeOffsets[i][0], location.y + nodeOffsets[i][1])));
+			}
+		} catch (Throwable t) {
+			lyr_logger.error("Failed to use 'addLaunchPoint()' in 'lyr_weaponSlot'", t);
+		}
+	}
+
+	/**
+	 * @return the node of the weapon slot as an object
+	 * @category Proxy method
+	 */
 	public Object getNode() {
 		try {
 			return getNode.invoke(this.weaponSlot);
@@ -247,6 +283,25 @@ public final class lyr_weaponSlot {
 		}
 	}
 
+	/**
+	 * @param nodeId an id to assign to the node (using slotId is fine)
+	 * @param location a ship-relative vector to create the node at
+	 * @category Proxy method
+	 * @see {@link lyravega.utilities.lyr_vectorUtilities#generateChildLocation} that calculates new node positions through passed offsets
+	 */
+	public void setNode(String nodeId, Vector2f location) {
+		try {
+			// setNode_alt.invoke(this.weaponSlot, nodeClass.cast(newNode.invoke(nodeId, location)));
+			setNode.invoke(this.weaponSlot, nodeId, location);
+		} catch (Throwable t) {
+			lyr_logger.error("Failed to use 'setNode()' in 'lyr_weaponSlot'", t);
+		}
+	}
+
+	/**
+	 * @return the id of the weapon slot's node
+	 * @category Proxy utility method
+	 */
 	public String getNodeId() {
 		try {
 			return (String) getNodeId.invoke(this.getNode());
@@ -256,18 +311,19 @@ public final class lyr_weaponSlot {
 	}
 
 	/**
-	 * @param nodeId an id to assign to the node (using slotId is fine)
-	 * @param location a ship-relative vector to create the node at
-	 * @category Proxy method
-	 * @see {@link lyravega.utilities.lyr_vectorUtilities#generateChildLocation} that
-	 * calculates new node positions through passed offsets
+	 * Constructs a new node using the passed parameters. The obfuscated weapon slot class does not
+	 * have such a method, however creating a proxy for the node which only has a few methods is not
+	 * necessary and may be handled through this proxy instead.
+	 * @param nodeId to assign to the new node
+	 * @param location to create a vector and assign it to the new node
+	 * @return the new node as an object
+	 * @category Proxy utility method
 	 */
-	public void setNode(String nodeId, Vector2f location) {
+	public static Object newNode(String nodeId, Vector2f location) {
 		try {
-			// setNode_alt.invoke(weaponSlot, nodeClass.cast(newNode.invoke(nodeId, location)));
-			setNode.invoke(this.weaponSlot, nodeId, location);
+			return newNode.invoke(nodeId, location);
 		} catch (Throwable t) {
-			lyr_logger.error("Failed to use 'setNode()' in 'lyr_weaponSlot'", t);
+			lyr_logger.error("Failed to use 'newNode()' in 'lyr_weaponSlot'", t); return null;
 		}
 	}
 
@@ -277,7 +333,7 @@ public final class lyr_weaponSlot {
 	 * specs.
 	 * @category Proxy utility method
 	 */
-	void makeNodeUnique() {
+	public void makeNodeUnique() {
 		this.setNode(this.getNodeId(), new Vector2f(this.getLocation()));
 	}
 	//#endregion
