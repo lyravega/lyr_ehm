@@ -22,6 +22,13 @@ public final class ehm_internals {
 	}
 
 	public static final class shunts {
+		private static final EnumMap<WeaponSize, Integer> slotValues = new EnumMap<WeaponSize, Integer>(WeaponSize.class);
+		static {
+			slotValues.put(WeaponSize.SMALL, 1);
+			slotValues.put(WeaponSize.MEDIUM, 1);
+			slotValues.put(WeaponSize.LARGE, 1);
+		}
+
 		public static final class adapters {
 			public static final class ids {
 				public static final String
@@ -104,9 +111,9 @@ public final class ehm_internals {
 			}
 
 			static {
-				dataMap.put(ids.mediumToLarge, new converterParameters("ML", WeaponSize.LARGE, 2));
-				dataMap.put(ids.smallToLarge, new converterParameters("SL", WeaponSize.LARGE, 3));
-				dataMap.put(ids.smallToMedium, new converterParameters("SM", WeaponSize.MEDIUM, 1));
+				dataMap.put(ids.mediumToLarge, new converterParameters("ML", WeaponSize.LARGE, slotValues.get(WeaponSize.LARGE) - slotValues.get(WeaponSize.MEDIUM)));
+				dataMap.put(ids.smallToLarge, new converterParameters("SL", WeaponSize.LARGE, slotValues.get(WeaponSize.LARGE) - slotValues.get(WeaponSize.SMALL)));
+				dataMap.put(ids.smallToMedium, new converterParameters("SM", WeaponSize.MEDIUM, slotValues.get(WeaponSize.MEDIUM) - slotValues.get(WeaponSize.SMALL)));
 			}
 
 			public static final class converterParameters {
@@ -141,9 +148,9 @@ public final class ehm_internals {
 			}
 
 			static {
-				dataMap.put(ids.large, 4);
-				dataMap.put(ids.medium, 2);
-				dataMap.put(ids.small, 1);
+				dataMap.put(ids.large, slotValues.get(WeaponSize.LARGE));
+				dataMap.put(ids.medium, slotValues.get(WeaponSize.MEDIUM));
+				dataMap.put(ids.small, slotValues.get(WeaponSize.SMALL));
 			}
 		}
 
@@ -166,9 +173,9 @@ public final class ehm_internals {
 			}
 
 			static {
-				dataMap.put(ids.large, 4);
-				dataMap.put(ids.medium, 2);
-				dataMap.put(ids.small, 1);
+				dataMap.put(ids.large, slotValues.get(WeaponSize.LARGE));
+				dataMap.put(ids.medium, slotValues.get(WeaponSize.MEDIUM));
+				dataMap.put(ids.small, slotValues.get(WeaponSize.SMALL));
 			}
 		}
 
@@ -191,9 +198,9 @@ public final class ehm_internals {
 			}
 
 			static {
-				dataMap.put(ids.large, 4);
-				dataMap.put(ids.medium, 2);
-				dataMap.put(ids.small, 1);
+				dataMap.put(ids.large, slotValues.get(WeaponSize.LARGE));
+				dataMap.put(ids.medium, slotValues.get(WeaponSize.MEDIUM));
+				dataMap.put(ids.small, slotValues.get(WeaponSize.SMALL));
 			}
 		}
 
