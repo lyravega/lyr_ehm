@@ -104,6 +104,9 @@ public final class ehm_ar_minimodule extends _ehm_ar_base {
 			String slotId = slot.getId();
 			// parentVariant.clearSlot(slotId);	// modules clear the slot when removed from their refit button
 
+			// TODO: prototypes (modules as weapons) needs to get cleared or turned into a decorative one because otherwise mass slot retrofits will crash the game
+			// they need to affect the OP of the ship
+
 			lyr_weaponSlot parentSlot = parentHullSpec.getWeaponSlot(slotId);
 			parentSlot.setWeaponType(WeaponType.STATION_MODULE);
 			parentSlot.setSlotType(slotTypeConstants.hidden);

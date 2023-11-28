@@ -20,7 +20,7 @@ import experimentalHullModifications.abilities.ehm_ability;
 import experimentalHullModifications.abilities.listeners.ehm_shuntInjector;
 import experimentalHullModifications.abilities.listeners.ehm_submarketInjector;
 import experimentalHullModifications.hullmods.ehm._ehm_base;
-import experimentalHullModifications.hullmods.ehm._ehm_base.ecsv;
+import experimentalHullModifications.hullmods.ehm._ehm_base.extendedData;
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_lostAndFound;
 import experimentalHullModifications.misc.ehm_settings;
@@ -47,14 +47,14 @@ public final class lyr_ehm extends BaseModPlugin {
 
 		// if (!Global.getSettings().isDevMode()) return;
 		// LunaRefitManager.addRefitButton(new _ehmu_test());
-		processECSV();
+		processExtendedData();
 	}
 
 	@Override
 	public void onApplicationLoad() throws Exception {
 		ehm_settings.attach();
 		updateHullMods();
-		processECSV();
+		processExtendedData();
 		lyr_eventDispatcher.registerModsWithEvents("data/hullmods/hull_mods.csv", ehm_internals.ids.mod);
 		lyr_upgradeVault.registerUpgrade(new ehmu_overdrive());
 
@@ -102,10 +102,10 @@ public final class lyr_ehm extends BaseModPlugin {
 
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
 			if (!_ehm_base.class.isInstance(hullModSpec.getEffect())) continue;
-			final ecsv ecsv = _ehm_base.class.cast(hullModSpec.getEffect()).ecsv(friend);
+			final extendedData extendedData = _ehm_base.class.cast(hullModSpec.getEffect()).getExtendedData(friend);
 
-			if (ecsv.isRestricted) continue;
-			if (!cosmeticsOnly || cosmeticsOnly && ecsv.isCosmetic) playerData.addHullMod(hullModSpec.getId());
+			if (extendedData.isRestricted) continue;
+			if (!cosmeticsOnly || cosmeticsOnly && extendedData.isCosmetic) playerData.addHullMod(hullModSpec.getId());
 		}
 
 		lyr_logger.info("Faction blueprints are updated");
@@ -171,7 +171,7 @@ public final class lyr_ehm extends BaseModPlugin {
 		}
 	}
 
-	private static void processECSV() {
+	private static void processExtendedData() {
 		try {
 			JSONArray loadCSV = Global.getSettings().loadCSV("data/hullmods/hull_mods.csv", ehm_internals.ids.mod);
 
@@ -181,29 +181,29 @@ public final class lyr_ehm extends BaseModPlugin {
 
 				if (hullModSpec == null || !_ehm_base.class.isInstance(hullModSpec.getEffect())) continue;
 
-				final ecsv ecsv = _ehm_base.class.cast(hullModSpec.getEffect()).ecsv(friend);
+				final extendedData extendedData = _ehm_base.class.cast(hullModSpec.getEffect()).getExtendedData(friend);
 
-				if ("true".equalsIgnoreCase(hullModEntry.getString("ecsv_isCosmetic"))) ecsv.isCosmetic = true;
-				if ("true".equalsIgnoreCase(hullModEntry.getString("ecsv_isRestricted"))) ecsv.isRestricted = true;
-				if ("true".equalsIgnoreCase(hullModEntry.getString("ecsv_isCustomizable"))) ecsv.isCustomizable = true;
+				if ("true".equalsIgnoreCase(hullModEntry.getString("ecsv_isCosmetic"))) extendedData.isCosmetic = true;
+				if ("true".equalsIgnoreCase(hullModEntry.getString("ecsv_isRestricted"))) extendedData.isRestricted = true;
+				if ("true".equalsIgnoreCase(hullModEntry.getString("ecsv_isCustomizable"))) extendedData.isCustomizable = true;
 
 				String[] applicableChecks = hullModEntry.getString("ecsv_applicableChecks").split("[\\s,]+");
 				if (!applicableChecks[0].isEmpty()) {
-					if (ecsv.applicableChecks == null) ecsv.applicableChecks = new HashSet<String>(4, 0.75f);
-					ecsv.applicableChecks.clear(); ecsv.applicableChecks.addAll(Arrays.asList(applicableChecks));
-				} else if (ecsv.applicableChecks != null) { ecsv.applicableChecks.clear(); ecsv.applicableChecks = null; }
+					if (extendedData.applicableChecks == null) extendedData.applicableChecks = new HashSet<String>(4, 0.75f);
+					extendedData.applicableChecks.clear(); extendedData.applicableChecks.addAll(Arrays.asList(applicableChecks));
+				} else if (extendedData.applicableChecks != null) { extendedData.applicableChecks.clear(); extendedData.applicableChecks = null; }
 
 				String[] lockedInChecks = hullModEntry.getString("ecsv_lockedInChecks").split("[\\s,]+");
 				if (!lockedInChecks[0].isEmpty()) {
-					if (ecsv.lockedInChecks == null) ecsv.lockedInChecks = new HashSet<String>(4, 0.75f);
-					ecsv.lockedInChecks.clear(); ecsv.lockedInChecks.addAll(Arrays.asList(lockedInChecks));
-				} else if (ecsv.lockedInChecks != null) { ecsv.lockedInChecks.clear(); ecsv.lockedInChecks = null; }
+					if (extendedData.lockedInChecks == null) extendedData.lockedInChecks = new HashSet<String>(4, 0.75f);
+					extendedData.lockedInChecks.clear(); extendedData.lockedInChecks.addAll(Arrays.asList(lockedInChecks));
+				} else if (extendedData.lockedInChecks != null) { extendedData.lockedInChecks.clear(); extendedData.lockedInChecks = null; }
 
 				String[] lockedOutChecks = hullModEntry.getString("ecsv_lockedOutChecks").split("[\\s,]+");
 				if (!lockedOutChecks[0].isEmpty()) {
-					if (ecsv.lockedOutChecks == null) ecsv.lockedOutChecks = new HashSet<String>(4, 0.75f);
-					ecsv.lockedOutChecks.clear(); ecsv.lockedOutChecks.addAll(Arrays.asList(lockedOutChecks));
-				} else if (ecsv.lockedOutChecks != null) { ecsv.lockedOutChecks.clear(); ecsv.lockedOutChecks = null; }
+					if (extendedData.lockedOutChecks == null) extendedData.lockedOutChecks = new HashSet<String>(4, 0.75f);
+					extendedData.lockedOutChecks.clear(); extendedData.lockedOutChecks.addAll(Arrays.asList(lockedOutChecks));
+				} else if (extendedData.lockedOutChecks != null) { extendedData.lockedOutChecks.clear(); extendedData.lockedOutChecks = null; }
 
 				lyr_logger.debug("Processed extended comma separated values for '"+hullModSpec.getId()+"'");
 			}
