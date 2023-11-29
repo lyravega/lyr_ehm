@@ -83,7 +83,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 		}
 
 		public static final class mods {
-			public static final float flat = 1.5f * Misc.FLUX_PER_CAPACITOR;
+			public static final float flat = 1.5f * Misc.DISSIPATION_PER_VENT;
 			public static final float mult = 0.01f;
 		}
 	}
