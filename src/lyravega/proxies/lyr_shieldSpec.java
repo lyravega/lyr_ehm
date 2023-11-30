@@ -234,11 +234,31 @@ public final class lyr_shieldSpec {
 	// END OF PROXY METHODS
 
 	//#region BRIDGE METHODS
-	public void setRingColor(Color colour) { this.shieldSpec.setRingColor(colour); }
+	public float getPhaseCost() { return this.shieldSpec.getPhaseCost(); }
 
-	public void setInnerColor(Color colour) { this.shieldSpec.setInnerColor(colour); }
+	public float getPhaseUpkeep() { return this.shieldSpec.getPhaseUpkeep(); }
+
+	public float getFluxPerDamageAbsorbed() { return this.shieldSpec.getFluxPerDamageAbsorbed(); }
 
 	public ShieldType getType() { return this.shieldSpec.getType(); }
+
+	public Color getRingColor() { return this.shieldSpec.getRingColor(); }
+
+	public Color getInnerColor() { return this.shieldSpec.getInnerColor(); }
+
+	public float getUpkeepCost() { return this.shieldSpec.getUpkeepCost(); }
+
+	public float getArc() { return this.shieldSpec.getArc(); }
+
+	public float getRadius() { return this.shieldSpec.getRadius(); }
+
+	public float getCenterX() { return this.shieldSpec.getCenterX(); }
+
+	public float getCenterY() { return this.shieldSpec.getCenterY(); }
+
+	public void setRingColor(Color color) { this.shieldSpec.setRingColor(color); }
+
+	public void setInnerColor(Color innerColor) { this.shieldSpec.setInnerColor(innerColor); }
 	//#endregion
 	// END OF BRIDGE METHODS
 }
