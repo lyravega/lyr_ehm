@@ -45,6 +45,7 @@ public class lyr_tooltipUtilities {
 		private static final String storyDarkBrightPattern = limiter+colour.convertColourToRegexCode(colour.storyDarkBright)+separator;
 		private static final String buttonPattern = limiter+colour.convertColourToRegexCode(colour.button)+separator;
 
+		public static final String colouredText(Color c, String s) { return limiter+colour.convertColourToRegexCode(c)+separator+s+limiter; }
 		public static final String grayText(String s) { return grayedPattern+s+limiter; }
 		public static final String normalText(String s) { return normalPattern+s+limiter; }
 		public static final String highlightText(String s) { return highlightPattern+s+limiter; }
