@@ -26,6 +26,9 @@ public final class lyr_shieldSpec {
 	private static MethodHandle setFluxPerDamageAbsorbed;
 	private static MethodHandle setUpkeepCost;
 	private static MethodHandle setArc;
+	private static MethodHandle setRadius;
+	private static MethodHandle setCenterX;
+	private static MethodHandle setCenterY;
 	private static MethodHandle setPhaseCost;
 	private static MethodHandle setPhaseUpkeep;
 
@@ -40,6 +43,9 @@ public final class lyr_shieldSpec {
 			setFluxPerDamageAbsorbed = methodReflection.findMethodByName("setFluxPerDamageAbsorbed", shieldSpecClass).getMethodHandle();
 			setUpkeepCost = methodReflection.findMethodByName("setUpkeepCost", shieldSpecClass).getMethodHandle();
 			setArc = methodReflection.findMethodByName("setArc", shieldSpecClass).getMethodHandle();
+			setRadius = methodReflection.findMethodByName("setRadius", shieldSpecClass).getMethodHandle();
+			setCenterX = methodReflection.findMethodByName("setCenterX", shieldSpecClass).getMethodHandle();
+			setCenterY = methodReflection.findMethodByName("setCenterY", shieldSpecClass).getMethodHandle();
 			setPhaseCost = methodReflection.findMethodByName("setPhaseCost", shieldSpecClass).getMethodHandle();
 			setPhaseUpkeep = methodReflection.findMethodByName("setPhaseUpkeep", shieldSpecClass).getMethodHandle();
 		} catch (Throwable t) {
@@ -162,6 +168,42 @@ public final class lyr_shieldSpec {
 			setArc.invoke(this.shieldSpec, arcSize);
 		} catch (Throwable t) {
 			lyr_logger.error("Failed to use 'setArc()' in 'lyr_shieldSpec'", t);
+		}
+	}
+
+	/**
+	 * @param radius
+	 * @category Proxy method
+	 */
+	public void setRadius(float radius) {
+		try {
+			setRadius.invoke(this.shieldSpec, radius);
+		} catch (Throwable t) {
+			lyr_logger.error("Failed to use 'setRadius()' in 'lyr_shieldSpec'", t);
+		}
+	}
+
+	/**
+	 * @param x
+	 * @category Proxy method
+	 */
+	public void setCenterX(float x) {
+		try {
+			setCenterX.invoke(this.shieldSpec, x);
+		} catch (Throwable t) {
+			lyr_logger.error("Failed to use 'setCenterX()' in 'lyr_shieldSpec'", t);
+		}
+	}
+
+	/**
+	 * @param y
+	 * @category Proxy method
+	 */
+	public void setCenterY(float y) {
+		try {
+			setCenterY.invoke(this.shieldSpec, y);
+		} catch (Throwable t) {
+			lyr_logger.error("Failed to use 'setCenterY()' in 'lyr_shieldSpec'", t);
 		}
 	}
 
