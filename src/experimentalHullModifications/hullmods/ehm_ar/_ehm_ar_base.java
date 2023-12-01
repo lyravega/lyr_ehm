@@ -224,7 +224,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 		for (String childId: childrenParameters.getChildren()) { // childId and childSlotId are not the same, be aware
 			lyr_weaponSlot childSlot = parentSlot.clone();
 			String childSlotId = ehm_internals.affixes.adaptedSlot + slotId + childId; // also used as nodeId
-			Vector2f childSlotLocation = lyr_vectorUtilities.generateChildLocation(parentSlot.getLocation(), parentSlot.getAngle(), childrenParameters.getChildOffset(childId));
+			Vector2f childSlotLocation = lyr_vectorUtilities.calculateChildSlotLocation(parentSlot.retrieve(), childrenParameters.getChildOffset(childId));
 			WeaponSize childSlotSize = childrenParameters.getChildSize(childId);
 
 			childSlot.setId(childSlotId);
