@@ -48,6 +48,7 @@ public class _ehmu_test extends BaseRefitButton {
 
 	@Override
 	public void onClick(FleetMemberAPI member, ShipVariantAPI variant, InputEventAPI event, MarketAPI market) {
+		// TODO: below block is for debug, remove it later
 		for (HullModSpecAPI hms : Global.getSettings().getAllHullModSpecs()) {
 			hms.setCapitalCost(0);
 			hms.setCruiserCost(0);

@@ -3,6 +3,8 @@ package experimentalHullModifications.hullmods;
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
+import org.lwjgl.util.vector.Vector2f;
+
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
@@ -15,6 +17,7 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import lyravega.listeners.events.normalEvents;
+import lyravega.proxies.lyr_hullSpec;
 import lyravega.utilities.logger.lyr_logger;
 
 public class _ehm_test extends _ehm_base implements normalEvents {
@@ -63,12 +66,30 @@ public class _ehm_test extends _ehm_base implements normalEvents {
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) { try {
+		if (!ShipAPI.class.isInstance(stats.getEntity())) return;
+		ShipAPI ship = ShipAPI.class.cast(stats.getEntity());
 
+		FleetMemberAPI fleetMember = stats.getFleetMember();
+		Vector2f shieldCenterEvenIfNoShield = ship.getShieldCenterEvenIfNoShield();
+
+		// below are related to sprite spec, and here in this beforeShipCreation block, it haven't been applied yet
+		// float collisionRadius = ship.getCollisionRadius();
+		// Vector2f shipCenter = new Vector2f(ship.getSpriteAPI().getCenterX(), ship.getSpriteAPI().getCenterY());
+
+		ship = ship;
 	} catch (Throwable t ) { lyr_logger.warn("Test fail in 'applyEffectsBeforeShipCreation()'", t);	}}
 
 	@Override
 	public void applyEffectsAfterShipCreation(ShipAPI ship, String hullModSpecId) { try {
+		FleetMemberAPI fleetMemberStats = ship.getMutableStats().getFleetMember();
+		FleetMemberAPI fleetMember = ship.getFleetMember();
+		Vector2f shieldCenterEvenIfNoShield = ship.getShieldCenterEvenIfNoShield();
 
+		float collisionRadius = ship.getCollisionRadius();
+		Vector2f shipCenter = new Vector2f(ship.getSpriteAPI().getCenterX(), ship.getSpriteAPI().getCenterY());
+		Object spriteSpec = new lyr_hullSpec(false, ship.getHullSpec()).getSpriteSpec();
+
+		ship = ship;
 	} catch (Throwable t ) { lyr_logger.warn("Test fail in 'applyEffectsAfterShipCreation()'", t);	}}
 
 	@Override

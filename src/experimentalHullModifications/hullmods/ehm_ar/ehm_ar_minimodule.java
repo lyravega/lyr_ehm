@@ -6,6 +6,8 @@ import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 import java.util.*;
 import java.util.Map.Entry;
 
+import org.lwjgl.util.vector.Vector2f;
+
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
@@ -21,9 +23,11 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import lyravega.listeners.lyr_fleetTracker;
 import lyravega.proxies.lyr_hullSpec;
+import lyravega.proxies.lyr_shieldSpec;
 import lyravega.proxies.lyr_weaponSlot;
 import lyravega.proxies.lyr_weaponSlot.slotTypeConstants;
 import lyravega.utilities.lyr_reflectionUtilities;
+import lyravega.utilities.lyr_vectorUtilities;
 import lyravega.utilities.logger.lyr_logger;
 
 /**@category Adapter Retrofit
@@ -33,6 +37,7 @@ public final class ehm_ar_minimodule extends _ehm_ar_base {
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstalled(ShipVariantAPI variant) {
+		lyr_fleetTracker.instance().addTracking(variant, null, null);	// order of this method matters; needs to be done before commit
 		commitVariantChanges(); playDrillSound();
 	}
 
@@ -78,6 +83,7 @@ public final class ehm_ar_minimodule extends _ehm_ar_base {
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI parentVariant = stats.getVariant();
 		lyr_hullSpec parentHullSpec = new lyr_hullSpec(false, parentVariant.getHullSpec());
+		lyr_shieldSpec parentShieldSpec = parentHullSpec.getShieldSpec();
 		// parentHullSpec.getHints().add(ShipTypeHints.DO_NOT_SHOW_MODULES_IN_FLEET_LIST);	// with this some status related shit is avoided but best not to use it
 		parentHullSpec.getHints().add(ShipTypeHints.SHIP_WITH_MODULES);
 
@@ -86,6 +92,20 @@ public final class ehm_ar_minimodule extends _ehm_ar_base {
 		// moduleVariant.setHullVariantId("ehm_module_shield_variant");
 		moduleVariant.addPermaMod("ehm_module_base", false);
 		moduleVariant.setSource(VariantSource.REFIT);
+
+		// if (!moduleHullSpec.isBuiltInMod("shield_always_on")) moduleHullSpec.addBuiltInMod("shield_always_on");
+		// if (!parentHullSpec.isBuiltInMod("shield_always_on")) parentHullSpec.addBuiltInMod("shield_always_on");
+		// moduleVariant.setHullSpecAPI(moduleHullSpec.retrieve());
+		// Object parentSpriteSpec = parentHullSpec.getSpriteSpec();
+		// Object clonedSpec = null;
+		// try {
+		// 	clonedSpec = lyr_reflectionUtilities.methodReflection.invokeDirect(parentSpriteSpec, "clone");
+		// 	// MethodHandle methodHandle = lyr_reflectionUtilities.methodReflection.findMethodByClass(clonedSpec, null, String.class).getMethodHandle();
+
+		// } catch (Throwable e) {
+		// 	e.printStackTrace();
+		// }
+		// moduleHullSpec.setSpriteSpec(clonedSpec);
 
 		List<WeaponSlotAPI> shunts = parentHullSpec.getAllWeaponSlotsCopy();
 		Map<String, String> stationModules = parentVariant.getStationModules();
@@ -98,6 +118,7 @@ public final class ehm_ar_minimodule extends _ehm_ar_base {
 			if (!"ehm_module_base".equals(shuntSpec.getWeaponId())) { iterator.remove(); continue; }
 		}
 
+		int i = 1;
 		for (WeaponSlotAPI slot : shunts) {
 			if (slot.isStationModule()) continue;
 
@@ -110,7 +131,15 @@ public final class ehm_ar_minimodule extends _ehm_ar_base {
 			lyr_weaponSlot parentSlot = parentHullSpec.getWeaponSlot(slotId);
 			parentSlot.setWeaponType(WeaponType.STATION_MODULE);
 			parentSlot.setSlotType(slotTypeConstants.hidden);
-			if (!stationModules.keySet().contains(slotId)) parentVariant.setModuleVariant(slotId, moduleVariant);	// module variant insertion on the parent variant is done here
+
+			Vector2f shieldCenterForModule = lyr_vectorUtilities.calculateParentShieldCenterForModule(parentShieldSpec.retrieve(), parentSlot.retrieve());
+			ShipVariantAPI clone = moduleVariant.clone();
+			moduleHullSpec.retrieve().setModuleAnchor(parentSlot.getLocation().negate(null));
+			clone.setHullSpecAPI(moduleHullSpec.retrieve());
+			parentSlot.setNode(parentSlot.getNodeId(), new Vector2f(0f, 0f));
+			clone.addTag("ehm_module_parentShield:"+(shieldCenterForModule.x)+"/"+(shieldCenterForModule.y)+"/"+(parentShieldSpec.getRadius()+i*15)); i++;
+
+			if (!stationModules.keySet().contains(slotId)) parentVariant.setModuleVariant(slotId, clone);	// module variant insertion on the parent variant is done here
 		}
 
 		// the block below is necessary if shunts are to be removed after module insertion, but as the shunts stay on the variant the function is executed above
@@ -122,7 +151,6 @@ public final class ehm_ar_minimodule extends _ehm_ar_base {
 		// 	parentSlot.setSlotType(slotTypeConstants.hidden);
 		// }
 
-		// this is to prevent strip from removing the base weapons as they're not built-in, to make modules cost OP in a way
 		for (Entry<String, String> moduleEntry : stationModules.entrySet()) {
 			if (moduleEntry.getValue().startsWith("ehm_module") && parentVariant.getWeaponId(moduleEntry.getKey()) == null) parentVariant.addWeapon(moduleEntry.getKey(), "ehm_module_base");
 		}
@@ -133,6 +161,88 @@ public final class ehm_ar_minimodule extends _ehm_ar_base {
 		// if not done so, the game will crash as the new modules will lack an entry in the member's status array
 		if (stats.getFleetMember() == null) return;
 		ehm_updateMemberStatus(stats.getFleetMember());
+	}
+
+	@Override
+	public void applyEffectsAfterShipCreation(ShipAPI ship, String hullModSpecId) {
+		// MutableShipStatsAPI stats = ship.getMutableStats();
+		// ShipVariantAPI parentVariant = stats.getVariant();
+		// lyr_hullSpec parentHullSpec = new lyr_hullSpec(false, parentVariant.getHullSpec());
+		// lyr_shieldSpec parentShieldSpec = parentHullSpec.getShieldSpec();
+		// // parentHullSpec.getHints().add(ShipTypeHints.DO_NOT_SHOW_MODULES_IN_FLEET_LIST);	// with this some status related shit is avoided but best not to use it
+		// parentHullSpec.getHints().add(ShipTypeHints.SHIP_WITH_MODULES);
+
+		// ShipVariantAPI moduleVariant = Global.getSettings().getVariant("ehm_module_base_Hull").clone();
+		// lyr_hullSpec moduleHullSpec = new lyr_hullSpec(false, moduleVariant.getHullSpec());
+		// // moduleVariant.setHullVariantId("ehm_module_shield_variant");
+		// moduleVariant.addPermaMod("ehm_module_base", false);
+		// moduleVariant.setSource(VariantSource.REFIT);
+
+		// // if (!moduleHullSpec.isBuiltInMod("shield_always_on")) moduleHullSpec.addBuiltInMod("shield_always_on");
+		// // if (!parentHullSpec.isBuiltInMod("shield_always_on")) parentHullSpec.addBuiltInMod("shield_always_on");
+		// // moduleVariant.setHullSpecAPI(moduleHullSpec.retrieve());
+		// // Object parentSpriteSpec = parentHullSpec.getSpriteSpec();
+		// // Object clonedSpec = null;
+		// // try {
+		// // 	clonedSpec = lyr_reflectionUtilities.methodReflection.invokeDirect(parentSpriteSpec, "clone");
+		// // 	// MethodHandle methodHandle = lyr_reflectionUtilities.methodReflection.findMethodByClass(clonedSpec, null, String.class).getMethodHandle();
+
+		// // } catch (Throwable e) {
+		// // 	e.printStackTrace();
+		// // }
+		// // moduleHullSpec.setSpriteSpec(clonedSpec);
+
+		// List<WeaponSlotAPI> shunts = parentHullSpec.getAllWeaponSlotsCopy();
+		// Map<String, String> stationModules = parentVariant.getStationModules();
+
+		// for (Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
+		// 	String slotId = iterator.next().getId();
+		// 	WeaponSpecAPI shuntSpec = parentVariant.getWeaponSpec(slotId);
+
+		// 	if (shuntSpec == null) { iterator.remove(); continue; }
+		// 	if (!"ehm_module_base".equals(shuntSpec.getWeaponId())) { iterator.remove(); continue; }
+		// }
+
+		// int i = 1;
+		// for (WeaponSlotAPI slot : shunts) {
+		// 	if (slot.isStationModule()) continue;
+
+		// 	String slotId = slot.getId();
+		// 	// parentVariant.clearSlot(slotId);	// modules clear the slot when removed from their refit button
+
+		// 	// TODO: prototypes (modules as weapons) needs to get cleared or turned into a decorative one because otherwise mass slot retrofits will crash the game
+		// 	// they need to affect the OP of the ship
+
+		// 	lyr_weaponSlot parentSlot = parentHullSpec.getWeaponSlot(slotId);
+		// 	parentSlot.setWeaponType(WeaponType.STATION_MODULE);
+		// 	parentSlot.setSlotType(slotTypeConstants.hidden);
+
+		// 	Vector2f shieldCenterForModule = lyr_vectorUtilities.calculateParentShieldCenterForModule(parentShieldSpec.retrieve(), parentSlot.retrieve());
+		// 	ShipVariantAPI clone = moduleVariant.clone();
+		// 	clone.addTag("ehm_module_parentShield:"+(shieldCenterForModule.x)+"/"+(shieldCenterForModule.y)+"/"+(parentShieldSpec.getRadius()+i*15)); i++;
+
+		// 	if (!stationModules.keySet().contains(slotId)) parentVariant.setModuleVariant(slotId, clone);	// module variant insertion on the parent variant is done here
+		// }
+
+		// // the block below is necessary if shunts are to be removed after module insertion, but as the shunts stay on the variant the function is executed above
+		// // for (String moduleSlotId : stationModules.keySet()) {
+		// // 	if (parentHullSpec.getWeaponSlot(moduleSlotId).getWeaponType() == WeaponType.STATION_MODULE) continue;
+
+		// // 	lyr_weaponSlot parentSlot = parentHullSpec.getWeaponSlot(moduleSlotId);
+		// // 	parentSlot.setWeaponType(WeaponType.STATION_MODULE);
+		// // 	parentSlot.setSlotType(slotTypeConstants.hidden);
+		// // }
+
+		// for (Entry<String, String> moduleEntry : stationModules.entrySet()) {
+		// 	if (moduleEntry.getValue().startsWith("ehm_module") && parentVariant.getWeaponId(moduleEntry.getKey()) == null) parentVariant.addWeapon(moduleEntry.getKey(), "ehm_module_base");
+		// }
+
+		// parentVariant.setHullSpecAPI(parentHullSpec.retrieve());
+
+		// // the remaining part of this block is specifically for the refit tab to refresh the refit member's status
+		// // if not done so, the game will crash as the new modules will lack an entry in the member's status array
+		// if (stats.getFleetMember() == null) return;
+		// ehm_updateMemberStatus(stats.getFleetMember());
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION
