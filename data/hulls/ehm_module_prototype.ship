@@ -1,11 +1,12 @@
 {
-	"hullId": "ehm_module_base",
+	"hullId": "ehm_module_prototype",
 	"hullName": "Test",
 	"hullSize": "FRIGATE",
 	"spriteName": "data/graphics/weapons/ehm_tube_large_t.png",
-	"style": "MIDLINE",
+	"style": "HIGH_TECH",
 	"builtInMods": [
 		"supercomputer",
+		"shield_always_on",
 		"reduced_explosion"
 	],
 	"bounds": [
@@ -17,7 +18,7 @@
 	"center": [19, 19],
 	"shieldCenter": [0,	0],
 	"moduleAnchor": [0, 0],
-	"collisionRadius": 20,
+	"collisionRadius": 100,
 	"shieldRadius": 100,
 	"height": 38,
 	"width": 38,
@@ -47,6 +48,18 @@
 			"mount": "TURRET",
 			"size": "SMALL",
 			"type": "UNIVERSAL"
-		}
+		},
+		{
+			"angle": 0,
+			"arc": 135,
+			"id": "WS 002",
+			"locations": [
+				0,
+				0
+			],
+			"mount": "TURRET",
+			"size": "MEDIUM",
+			"type": "DECORATIVE"
+		},
 	]
 }

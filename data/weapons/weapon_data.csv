@@ -22,4 +22,4 @@ Small Slot Medium Converter,ehm_converter_smallToMedium,1,,0,0,0.1,,,0,0,0,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 Launch Tube,ehm_tube_large,1,,0,0,0.1,,,0,0,0,,,,,,0,0,0,,,,,,,0,,,,,,,,"restricted, ehm, ehm_hangar, ehm_mutable",ehm_hangar,Experimental,,Slot Shunt,,,,,Used along with a %s to turn the the slot into a %s instead.,'Launch Tube Activator' hull modification | fighter hangar bay,The extra hangar capacity works just like normal ones. Anything that benefits fighters will also benefit these. Can only be used on %s.,normal large slots,TRUE,188117
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Test,ehm_module_base,1,,0,0,0.1,,,0,0,20,,,,,,0,0,0,,,,,,,0,,,,,,,,"restricted, ehm, ehm_module",ehm_module,Experimental,,Slot Module,,,,,,,,,TRUE,188118
+Test,ehm_module_prototype,1,,0,0,0.1,,,0,0,20,,,,,,0,0,0,,,,,,,0,,,,,,,,"restricted, ehm, ehm_module",ehm_module,Experimental,,Slot Module,,,,,,,,,TRUE,188118
