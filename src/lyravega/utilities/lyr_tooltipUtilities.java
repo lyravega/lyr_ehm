@@ -30,22 +30,22 @@ public class lyr_tooltipUtilities {
 		 * @param clr to convert
 		 * @return
 		 */
-		public static final String convertColourToRegexCode(Color clr) {
+		public static final String convertColourToHexCode(Color clr) {
 			return "0x"+Integer.toHexString(clr.getRGB()).substring(2);
 		}
 	}
 
 	public static class colourizedText {
-		private static final String grayedPattern = limiter+colour.convertColourToRegexCode(colour.gray)+separator;
-		private static final String normalPattern = limiter+colour.convertColourToRegexCode(colour.normal)+separator;
-		private static final String highlightPattern = limiter+colour.convertColourToRegexCode(colour.highlight)+separator;
-		private static final String positivePattern = limiter+colour.convertColourToRegexCode(colour.positive)+separator;
-		private static final String negativePattern = limiter+colour.convertColourToRegexCode(colour.negative)+separator;
-		private static final String storyPattern = limiter+colour.convertColourToRegexCode(colour.story)+separator;
-		private static final String storyDarkBrightPattern = limiter+colour.convertColourToRegexCode(colour.storyDarkBright)+separator;
-		private static final String buttonPattern = limiter+colour.convertColourToRegexCode(colour.button)+separator;
+		private static final String grayedPattern = limiter+colour.convertColourToHexCode(colour.gray)+separator;
+		private static final String normalPattern = limiter+colour.convertColourToHexCode(colour.normal)+separator;
+		private static final String highlightPattern = limiter+colour.convertColourToHexCode(colour.highlight)+separator;
+		private static final String positivePattern = limiter+colour.convertColourToHexCode(colour.positive)+separator;
+		private static final String negativePattern = limiter+colour.convertColourToHexCode(colour.negative)+separator;
+		private static final String storyPattern = limiter+colour.convertColourToHexCode(colour.story)+separator;
+		private static final String storyDarkBrightPattern = limiter+colour.convertColourToHexCode(colour.storyDarkBright)+separator;
+		private static final String buttonPattern = limiter+colour.convertColourToHexCode(colour.button)+separator;
 
-		public static final String colouredText(Color c, String s) { return limiter+colour.convertColourToRegexCode(c)+separator+s+limiter; }
+		public static final String colouredText(Color c, String s) { return limiter+colour.convertColourToHexCode(c)+separator+s+limiter; }
 		public static final String grayText(String s) { return grayedPattern+s+limiter; }
 		public static final String normalText(String s) { return normalPattern+s+limiter; }
 		public static final String highlightText(String s) { return highlightPattern+s+limiter; }
