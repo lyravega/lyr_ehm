@@ -90,10 +90,4 @@ public class lyr_vectorUtilities {
 
 		return calculateRelativePoint(new Vector2f(0f, 0f), -moduleSlot.getAngle(), relativeShieldCenter);
 	}
-
-	public static Vector2f calculateParentShieldCenterForModule2(ShieldSpecAPI parentShieldSpec, WeaponSlotAPI moduleSlot) {
-		Vector2f relativeShieldCenter = Vector2f.sub(new Vector2f(parentShieldSpec.getCenterX(), parentShieldSpec.getCenterY()), moduleSlot.getLocation(), null);
-
-		return calculateRelativePoint(new Vector2f(0f, 0f), -moduleSlot.getAngle(), relativeShieldCenter);
-	}
 }
