@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
+import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
@@ -34,15 +35,15 @@ import lyravega.utilities.lyr_miscUtilities;
 public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstalled(ShipVariantAPI variant) {
-		if (lyr_miscUtilities.removeHullModWithTag(variant, ehm_internals.hullmods.engineCosmetics.tag, this.hullModSpecId)) return;	// removes other engine cosmetics and short-circuits if there was any
+	public void onInstalled(MutableShipStatsAPI stats) {
+		if (lyr_miscUtilities.removeHullModWithTag(stats.getVariant(), ehm_internals.hullmods.engineCosmetics.tag, this.hullModSpecId)) return;	// removes other engine cosmetics and short-circuits if there was any
 		commitVariantChanges(); playDrillSound(); refreshFleetView(false);	// short-circuit is due to onRemove() below, to avoid doing same things multiple times
 	}
 
 	@Override
-	public void onRemoved(ShipVariantAPI variant) {
-		if (!lyr_miscUtilities.hasHullModWithTag(variant, ehm_internals.hullmods.engineCosmetics.tag, this.hullModSpecId))
-			variant.setHullSpecAPI(ehm_restoreEngineSlots_lazy(variant));
+	public void onRemoved(MutableShipStatsAPI stats) {
+		if (!lyr_miscUtilities.hasHullModWithTag(stats.getVariant(), ehm_internals.hullmods.engineCosmetics.tag, this.hullModSpecId))
+			stats.getVariant().setHullSpecAPI(ehm_restoreEngineSlots_lazy(stats.getVariant()));
 		commitVariantChanges(); playDrillSound(); refreshFleetView(false);
 	}
 	//#endregion
@@ -66,36 +67,21 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 	}
 
 	/**
-	 * Alters the engine visuals of the ship. Uses the vanilla engine styles
-	 * @param variant whose hullSpec will be altered
-	 * @param styleEnum {@link lyravega.proxies.lyr_engineBuilder.engineStyleIds engineStyle}
-	 * @return a hullSpec with the altered engine visuals
-	 */
-	protected static final ShipHullSpecAPI ehm_applyEngineCosmetics(ShipVariantAPI variant, int styleEnum) {
-		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
-		lyr_engineBuilder engineSlot = new lyr_engineBuilder(null, false);
-
-		for (Object temp : lyr_hullSpec.getEngineSlots()) {
-			engineSlot.recycle(temp).setEngineStyleId(styleEnum);
-		}
-
-		return lyr_hullSpec.retrieve();
-	}
-
-	/**
 	 * Alters the engine visuals of the ship, with custom engine data
 	 * @param variant whose hullSpec will be altered
 	 * @param styleEnum {@link lyravega.proxies.lyr_engineBuilder.engineStyleIds engineStyle}
-	 * @param engineStyleSpec an engineStyleData object generated through {@link #newCustomEngineStyleSpec(String)}
+	 * @param engineStyleSpec {@code null} or an engineStyleData object generated through {@link #newCustomEngineStyleSpec(String)}
 	 * @return a hullSpec with the altered engine visuals
 	 */
 	protected static final ShipHullSpecAPI ehm_applyEngineCosmetics(ShipVariantAPI variant, int styleEnum, Object engineStyleSpec) {
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
 		lyr_engineBuilder engineSlot = new lyr_engineBuilder(null, false);
 
-		for (Object temp : lyr_hullSpec.getEngineSlots()) {
+		if (engineStyleSpec != null) for (Object temp : lyr_hullSpec.getEngineSlots()) {
 			engineSlot.recycle(temp).setEngineStyleId(styleEnum);
 			engineSlot.setEngineStyleSpec(engineStyleSpec);
+		} else for (Object temp : lyr_hullSpec.getEngineSlots()) {
+			engineSlot.recycle(temp).setEngineStyleId(styleEnum);
 		}
 
 		return lyr_hullSpec.retrieve();

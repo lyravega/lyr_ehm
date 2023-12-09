@@ -13,12 +13,13 @@ public final class ehm_ec_midlineEngines extends _ehm_ec_base {
 	@Override	// not really customizable; does not implement the interface
 	public void applyCustomization() {
 		this.engineStyleId = engineStyleIds.midline;
+		// this.engineStyleSpec = null;
 	}
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
 
-		variant.setHullSpecAPI(ehm_applyEngineCosmetics(variant, this.engineStyleId));
+		variant.setHullSpecAPI(ehm_applyEngineCosmetics(variant, this.engineStyleId, null));
 	}
 }
