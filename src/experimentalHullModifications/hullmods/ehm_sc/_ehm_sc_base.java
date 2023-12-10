@@ -5,7 +5,8 @@ import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
 import java.awt.Color;
 
-import com.fs.starfarer.api.combat.ShipHullSpecAPI;
+import com.fs.starfarer.api.combat.MutableShipStatsAPI;
+import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 
@@ -30,15 +31,15 @@ import lyravega.utilities.lyr_miscUtilities;
 public abstract class _ehm_sc_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstalled(ShipVariantAPI variant) {
-		if (lyr_miscUtilities.removeHullModWithTag(variant, ehm_internals.hullmods.shieldCosmetics.tag, this.hullModSpecId)) return;
+	public void onInstalled(MutableShipStatsAPI stats) {
+		if (lyr_miscUtilities.removeHullModWithTag(stats.getVariant(), ehm_internals.hullmods.shieldCosmetics.tag, this.hullModSpecId)) return;
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
-	public void onRemoved(ShipVariantAPI variant) {
-		if (!lyr_miscUtilities.hasHullModWithTag(variant, ehm_internals.hullmods.shieldCosmetics.tag, this.hullModSpecId))
-			variant.setHullSpecAPI(ehm_restoreShield(variant));
+	public void onRemoved(MutableShipStatsAPI stats) {
+		if (!lyr_miscUtilities.hasHullModWithTag(stats.getVariant(), ehm_internals.hullmods.shieldCosmetics.tag, this.hullModSpecId))
+			this.restoreShields(stats);
 		commitVariantChanges(); playDrillSound();
 	}
 	//#endregion
@@ -62,19 +63,28 @@ public abstract class _ehm_sc_base extends _ehm_base implements normalEvents {
 	}
 
 	/**
-	 * Alters the shield colours of the ship. Inner and ring colours
-	 * can be different.
+	 * Alters the shield colours of the shield spec. Uses the stored internal {@link #innerColour}
+	 * and {@link #ringColour}.
 	 * @param variant whose shieldSpec will be altered
-	 * @return an altered hullSpec with altered shieldSpec colours
 	 */
-	protected static final ShipHullSpecAPI ehm_applyShieldCosmetics(ShipVariantAPI variant, Color inner, Color ring) {
+	protected final void changeShields(ShipVariantAPI variant) {
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
 		lyr_shieldSpec shieldSpec = lyr_hullSpec.getShieldSpec();
 
-		shieldSpec.setInnerColor(inner);
-		shieldSpec.setRingColor(ring);
+		shieldSpec.setInnerColor(this.innerColour);
+		shieldSpec.setRingColor(this.ringColour);
 
-		return lyr_hullSpec.retrieve();
+		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
+	}
+
+	/** @see #changeShields(ShipVariantAPI, Color, Color) */
+	protected final void changeShields(MutableShipStatsAPI stats) {
+		this.changeShields(stats.getVariant());
+	}
+
+	/** @see #changeShields(ShipVariantAPI, Color, Color) */
+	protected final void changeShields(ShipAPI ship) {
+		this.changeShields(ship.getVariant());
 	}
 
 	/**
@@ -83,11 +93,21 @@ public abstract class _ehm_sc_base extends _ehm_base implements normalEvents {
 	 * @param variant whose shieldSpec will be restored
 	 * @return an altered hullSpec with its shieldSpec is restored
 	 */
-	public static final ShipHullSpecAPI ehm_restoreShield(ShipVariantAPI variant) {
+	protected final void restoreShields(ShipVariantAPI variant) {
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
 
 		lyr_hullSpec.setShieldSpec(lyr_hullSpec.referenceNonDamaged().getShieldSpec());
 
-		return lyr_hullSpec.retrieve();
+		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
+	}
+
+	/** @see #restoreShields(ShipVariantAPI) */
+	protected final void restoreShields(MutableShipStatsAPI stats) {
+		this.restoreShields(stats.getVariant());
+	}
+
+	/** @see #restoreShields(ShipVariantAPI) */
+	protected final void restoreShields(ShipAPI ship) {
+		this.restoreShields(ship.getVariant());
 	}
 }

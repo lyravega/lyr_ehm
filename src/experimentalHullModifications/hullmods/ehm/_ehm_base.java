@@ -284,4 +284,24 @@ public abstract class _ehm_base implements HullModEffect {
 
 		lyr_hullSpec.addBuiltInMod(hullmods.main.base);
 	}
+
+	// TODO: javadoc
+	protected final void restoreHullSpec(ShipVariantAPI variant) {
+		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(true, variant.getHullSpec());
+
+		this.alterHullSpec(lyr_hullSpec);
+
+		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
+	}
+
+	// TODO: javadoc
+	private final void alterHullSpec(lyr_hullSpec lyr_hullSpec) {
+		if (ehm_settings.getShowExperimentalFlavour()) {
+			lyr_hullSpec.setManufacturer(text.flavourManufacturer);
+			lyr_hullSpec.setDescriptionPrefix(text.flavourDescription);
+			lyr_hullSpec.setHullName(lyr_hullSpec.referenceNonDamaged().getHullName() + " (E)");	// append "(E)"
+		}
+
+		lyr_hullSpec.addBuiltInMod(hullmods.main.base);
+	}
 }

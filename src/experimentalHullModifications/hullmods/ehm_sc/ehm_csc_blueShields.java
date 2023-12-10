@@ -2,7 +2,6 @@ package experimentalHullModifications.hullmods.ehm_sc;
 
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
-import com.fs.starfarer.api.combat.ShipVariantAPI;
 
 import experimentalHullModifications.misc.ehm_internals;
 import lyravega.listeners.events.customizableMod;
@@ -25,8 +24,6 @@ public final class ehm_csc_blueShields extends _ehm_sc_base implements customiza
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		ShipVariantAPI variant = stats.getVariant();
-
-		variant.setHullSpecAPI(ehm_applyShieldCosmetics(variant, this.innerColour, this.ringColour));
+		this.changeShields(stats);
 	}
 }

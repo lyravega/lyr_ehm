@@ -2,7 +2,6 @@ package experimentalHullModifications.hullmods.ehm_ec;
 
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
-import com.fs.starfarer.api.combat.ShipVariantAPI;
 
 import experimentalHullModifications.misc.ehm_internals;
 import lyravega.listeners.events.customizableMod;
@@ -24,8 +23,6 @@ public final class ehm_cec_blueEngines extends _ehm_ec_base implements customiza
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		ShipVariantAPI variant = stats.getVariant();
-
-		variant.setHullSpecAPI(ehm_applyEngineCosmetics(variant, this.engineStyleId, this.engineStyleSpec));
+		this.changeEngines(stats);
 	}
 }
