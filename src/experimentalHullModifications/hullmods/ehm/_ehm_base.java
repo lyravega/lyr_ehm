@@ -306,6 +306,10 @@ public abstract class _ehm_base implements HullModEffect {
 		lyr_hullSpec.addBuiltInMod(hullmods.main.base);
 	}
 
+	protected final void registerModInGroup(MutableShipStatsAPI stats) {
+		stats.getDynamic().getMod(this.extendedData.groupTag).modifyFlat(this.hullModSpecId, 1);
+	}
+
 	protected final Set<String> getModsFromSameGroup(MutableShipStatsAPI stats) {
 		return stats.getDynamic().getMod(this.extendedData.groupTag).getFlatBonuses().keySet();
 	}

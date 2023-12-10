@@ -78,7 +78,7 @@ public abstract class _ehm_sc_base extends _ehm_base implements normalEvents {
 	 * @param stats of the ship/member whose shieldSpec will be altered
 	 */
 	protected final void changeShields(MutableShipStatsAPI stats) {
-		stats.getDynamic().getMod(shieldCosmetics.tag).modifyFlat(this.hullModSpecId, 1);
+		this.registerModInGroup(stats);
 
 		ShipVariantAPI variant = stats.getVariant();
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
