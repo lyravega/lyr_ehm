@@ -1,11 +1,7 @@
 package experimentalHullModifications.hullmods.ehm_wr;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
-import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 
 import experimentalHullModifications.hullmods.ehm_mr.ehm_mr_heavyenergyintegration;
@@ -19,29 +15,29 @@ public final class ehm_wr_energyslotretrofit extends _ehm_wr_base {
 	@Override
 	public void onInstalled(MutableShipStatsAPI stats) {
 		ehm_mr_heavyenergyintegration.installExtension(stats.getVariant());
+
 		super.onInstalled(stats);
 	}
 
 	@Override
 	public void onRemoved(MutableShipStatsAPI stats) {
 		ehm_mr_heavyenergyintegration.removeExtension(stats.getVariant());
+
 		super.onRemoved(stats);
 	}
 	//#endregion
 	// END OF CUSTOM EVENTS
 
-	private static final Map<WeaponType,WeaponType> conversion = new HashMap<WeaponType,WeaponType>();
-	static {
-		conversion.put(WeaponType.BALLISTIC, WeaponType.ENERGY);
-		conversion.put(WeaponType.MISSILE, WeaponType.SYNERGY);
-		conversion.put(WeaponType.COMPOSITE, WeaponType.SYNERGY);
+	@Override
+	public void updateData() {
+		this.typeConversionMap.put(WeaponType.BALLISTIC, WeaponType.ENERGY);
+		this.typeConversionMap.put(WeaponType.MISSILE, WeaponType.SYNERGY);
+		this.typeConversionMap.put(WeaponType.COMPOSITE, WeaponType.SYNERGY);
 	}
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		ShipVariantAPI variant = stats.getVariant();
-
-		variant.setHullSpecAPI(ehm_weaponSlotRetrofit(variant, conversion, null));
+		this.changeWeaponTypes(stats);
 	}
 
 	@Override
