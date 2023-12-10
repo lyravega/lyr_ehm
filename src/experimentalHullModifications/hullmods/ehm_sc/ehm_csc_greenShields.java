@@ -14,7 +14,7 @@ import lyravega.utilities.lyr_lunaUtilities;
  */
 public final class ehm_csc_greenShields extends _ehm_sc_base implements customizableMod {
 	@Override
-	public void applyCustomization() {
+	public void updateData() {
 		String id = this.getClass().getSimpleName();
 
 		this.innerColour = lyr_lunaUtilities.getLunaRGBAColour(ehm_internals.ids.mod, id+"_inner");

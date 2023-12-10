@@ -12,8 +12,8 @@ import lyravega.listeners.lyr_eventDispatcher;
  * @category Event Handler
  */
 public interface customizableMod {
-    /**
-     * Called whenever the listener detects a change in settings for this hull modification
-     */
-    public void applyCustomization();
+	/**
+	 * Called whenever the listener detects a change in settings for this hull modification.
+	 */
+	public void updateData();
 }

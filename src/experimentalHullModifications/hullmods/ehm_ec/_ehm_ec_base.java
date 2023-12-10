@@ -53,27 +53,27 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 	//#endregion
 	// END OF CUSTOM EVENTS
 
+	protected int engineStyleId;
+	protected Object engineStyleSpec;
+
 	public _ehm_ec_base() {
 		super();
 
 		this.extendedData.groupTag = engineCosmetics.tag;
 	}
 
-	protected int engineStyleId;
-	protected Object engineStyleSpec;
-
 	/**
-	 * A setter method that sets the relevant fields for the non-customizable methods. The customizable
-	 * ones actually implement the {@link customizableMod} interface, but having a common method name
-	 * for both makes it easier to work with them through the base.
+	 * Called during initialization. Sets the relevant fields of the non-customizable mods.
+	 * <p> The customizable ones actually implement the {@link customizableMod} interface, but both
+	 * use the same method signature for ease of use.
 	 */
-	public abstract void applyCustomization();
+	public abstract void updateData();
 
 	@Override
 	public void init(HullModSpecAPI hullModSpec) {
 		super.init(hullModSpec);
 
-		this.applyCustomization();
+		this.updateData();
 	}
 
 	/**
@@ -101,7 +101,7 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 	/**
 	 * Restores the engine visuals of the ship by applying a stock hullSpec on the variant.
 	 * <p> This is a lazy method that restores the hull spec instead of unmodifying the changes.
-	 * @param variant whose hullSpec will be restored
+	 * @param stats of the ship/member whose hullSpec will be restored
 	 */
 	protected final void restoreEngines(MutableShipStatsAPI stats) {
 		this.restoreHullSpec(stats.getVariant());	// TODO: convert this to stats as well?

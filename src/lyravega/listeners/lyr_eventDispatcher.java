@@ -152,11 +152,11 @@ public final class lyr_eventDispatcher {
 	 */
 	public static void onSettingsChange(final String modId, final String hullModId) {
 		try {
-			if (hullModId != null) allCustomizableMods.get(modId).get(hullModId).applyCustomization();
-			else for (customizableMod customizableMod : allCustomizableMods.get(modId).values()) customizableMod.applyCustomization();
-			lyr_logger.debug("Utilized 'applyCustomization()' in the event dispatcher");
+			if (hullModId != null) allCustomizableMods.get(modId).get(hullModId).updateData();
+			else for (customizableMod customizableMod : allCustomizableMods.get(modId).values()) customizableMod.updateData();
+			lyr_logger.debug("Utilized 'updateData()' in the event dispatcher");
 		} catch (Throwable t) {
-			lyr_logger.error("Failure in 'applyCustomization()' in the event dispatcher", t);
+			lyr_logger.error("Failure in 'updateData()' in the event dispatcher", t);
 		}
 	}
 }

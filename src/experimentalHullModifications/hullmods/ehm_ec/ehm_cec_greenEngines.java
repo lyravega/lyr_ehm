@@ -13,7 +13,7 @@ import lyravega.utilities.lyr_lunaUtilities;
  */
 public final class ehm_cec_greenEngines extends _ehm_ec_base implements customizableMod {
 	@Override
-	public void applyCustomization() {
+	public void updateData() {
 		String id = this.getClass().getSimpleName();
 
 		this.engineStyleId = engineStyleIds.custom;

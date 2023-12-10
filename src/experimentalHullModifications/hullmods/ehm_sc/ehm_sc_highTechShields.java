@@ -12,7 +12,7 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
  */
 public final class ehm_sc_highTechShields extends _ehm_sc_base {
 	@Override	// not really customizable; does not implement the interface
-	public void applyCustomization() {
+	public void updateData() {
 		this.innerColour = new Color(125,125,255,75);
 		this.ringColour = new Color(255,255,255,255);
 	}

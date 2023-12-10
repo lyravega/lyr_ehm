@@ -49,27 +49,27 @@ public abstract class _ehm_sc_base extends _ehm_base implements normalEvents {
 	//#endregion
 	// END OF CUSTOM EVENTS
 
+	protected Color innerColour;
+	protected Color ringColour;
+
 	public _ehm_sc_base() {
 		super();
 
 		this.extendedData.groupTag = shieldCosmetics.tag;
 	}
 
-	protected Color innerColour;
-	protected Color ringColour;
-
 	/**
-	 * A setter method that sets the relevant fields for the non-customizable methods. The customizable
-	 * ones actually implement the {@link customizableMod} interface, but having a common method name
-	 * for both makes it easier to work with them through the base.
+	 * Called during initialization. Sets the relevant fields of the non-customizable mods.
+	 * <p> The customizable ones actually implement the {@link customizableMod} interface, but both
+	 * use the same method signature for ease of use.
 	 */
-	public abstract void applyCustomization();
+	public abstract void updateData();
 
 	@Override
 	public void init(HullModSpecAPI hullModSpec) {
 		super.init(hullModSpec);
 
-		this.applyCustomization();
+		this.updateData();
 	}
 
 	/**

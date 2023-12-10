@@ -10,7 +10,7 @@ import lyravega.proxies.lyr_engineBuilder.engineStyleIds;
  */
 public final class ehm_ec_lowTechEngines extends _ehm_ec_base {
 	@Override	// not really customizable; does not implement the interface
-	public void applyCustomization() {
+	public void updateData() {
 		this.engineStyleId = engineStyleIds.lowTech;
 		this.engineStyleSpec = null;
 	}
