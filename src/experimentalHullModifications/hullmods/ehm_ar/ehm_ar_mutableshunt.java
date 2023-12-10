@@ -101,7 +101,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
 
 		HashMap<String, StatMod> dissipatorShunts = stats.getDynamic().getMod(dissipatorData.groupTag).getFlatBonuses();
-		if (dissipatorShunts != null && !dissipatorShunts.isEmpty()) {
+		if (!dissipatorShunts.isEmpty()) {
 			float dissipatorAmount = stats.getDynamic().getMod(dissipatorData.groupTag).computeEffective(0f);
 
 			for (String slotId : dissipatorShunts.keySet()) {
@@ -115,7 +115,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 		}
 
 		HashMap<String, StatMod> capacitorShunts = stats.getDynamic().getMod(capacitorData.groupTag).getFlatBonuses();
-		if (capacitorShunts != null && !capacitorShunts.isEmpty()) {
+		if (!capacitorShunts.isEmpty()) {
 			float capacitorAmount = stats.getDynamic().getMod(capacitorData.groupTag).computeEffective(0f);
 
 			for (String slotId : capacitorShunts.keySet()) {
@@ -151,7 +151,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 
 			if (ehm_settings.getShowInfoForActivators()) {
 				HashMap<String, StatMod> capacitorShunts = dynamicStats.getMod(capacitorData.groupTag).getFlatBonuses();
-				if (capacitorShunts != null && !capacitorShunts.isEmpty()) {
+				if (!capacitorShunts.isEmpty()) {
 					int totalBonus = Math.round(ship.getMutableStats().getFluxCapacity().modified-(variant.getNumFluxCapacitors()*Misc.FLUX_PER_CAPACITOR+variant.getHullSpec().getFluxCapacity()));
 
 					tooltip.addSectionHeading("CAPACITORS (+"+totalBonus+" CAPACITY)", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
@@ -162,7 +162,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 				}
 
 				HashMap<String, StatMod> dissipatorShunts = dynamicStats.getMod(dissipatorData.groupTag).getFlatBonuses();
-				if (dissipatorShunts != null && !dissipatorShunts.isEmpty()) {
+				if (!dissipatorShunts.isEmpty()) {
 					float totalBonus = ship.getMutableStats().getFluxDissipation().modified-(variant.getNumFluxVents()*Misc.DISSIPATION_PER_VENT+variant.getHullSpec().getFluxDissipation());
 
 					tooltip.addSectionHeading("DISSIPATORS (+"+totalBonus+" DISSIPATION)", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);

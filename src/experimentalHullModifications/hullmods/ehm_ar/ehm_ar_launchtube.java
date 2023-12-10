@@ -62,7 +62,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
 
 		HashMap<String, StatMod> hangarShunts = stats.getDynamic().getMod(hangarData.groupTag).getFlatBonuses();
-		if (hangarShunts != null && !hangarShunts.isEmpty()) {
+		if (!hangarShunts.isEmpty()) {
 			float hangarAmount = stats.getDynamic().getMod(hangarData.groupTag).computeEffective(0f);
 
 			for (String slotId : hangarShunts.keySet()) {
@@ -96,7 +96,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 
 			if (ehm_settings.getShowInfoForActivators()) {
 				HashMap<String, StatMod> hangarShunts = dynamicStats.getMod(hangarData.groupTag).getFlatBonuses();
-				if (hangarShunts != null && !hangarShunts.isEmpty()) {
+				if (!hangarShunts.isEmpty()) {
 					tooltip.addSectionHeading("EXTRA HANGARS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					ehm_printShuntCount(tooltip, variant, hangarShunts.keySet());
 				} else if (ehm_settings.getShowFullInfoForActivators()) {

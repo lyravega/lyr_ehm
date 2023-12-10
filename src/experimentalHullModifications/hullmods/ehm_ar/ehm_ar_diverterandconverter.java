@@ -105,7 +105,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
 
 		HashMap<String, StatMod> diverterShunts = stats.getDynamic().getMod(diverterData.groupTag).getFlatBonuses();
-		if (diverterShunts != null && !diverterShunts.isEmpty()) {
+		if (!diverterShunts.isEmpty()) {
 			for (String slotId : diverterShunts.keySet()) {
 				if (lyr_hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
 
@@ -118,7 +118,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 		}
 
 		HashMap<String, StatMod> inactiveConverterShunts = stats.getDynamic().getMod(converterData.groupTag+"_inactive").getFlatBonuses();	// inactive converters, only to activate them here
-		if (inactiveConverterShunts != null && !inactiveConverterShunts.isEmpty()) {
+		if (!inactiveConverterShunts.isEmpty()) {
 			float slotPoints = stats.getDynamic().getMod(ehm_internals.stats.slotPoints).computeEffective(0f);
 
 			for (String slotId : inactiveConverterShunts.keySet()) {
@@ -136,7 +136,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 		}
 
 		HashMap<String, StatMod> converterShunts = stats.getDynamic().getMod(converterData.groupTag).getFlatBonuses();	// active converters, only to apply the penalty
-		if (converterShunts != null && !converterShunts.isEmpty()) {
+		if (!converterShunts.isEmpty()) {
 			float slotPointsUsed = stats.getDynamic().getMod(ehm_internals.stats.slotPointsUsed).computeEffective(0f);
 			float slotPointsFromDiverters = stats.getDynamic().getMod(ehm_internals.stats.slotPointsFromDiverters).computeEffective(0f);
 
@@ -185,7 +185,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 
 			if (ehm_settings.getShowInfoForActivators()) {
 				HashMap<String, StatMod> converterShunts = dynamicStats.getMod(converterData.groupTag).getFlatBonuses();
-				if (converterShunts != null && !converterShunts.isEmpty()) {
+				if (!converterShunts.isEmpty()) {
 					tooltip.addSectionHeading("CONVERTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					ehm_printShuntCount(tooltip, variant, converterShunts.keySet());
 				} else if (ehm_settings.getShowFullInfoForActivators()) {
@@ -194,7 +194,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 				}
 
 				HashMap<String, StatMod> diverterShunts = dynamicStats.getMod(diverterData.groupTag).getFlatBonuses();
-				if (diverterShunts != null && !diverterShunts.isEmpty()) {
+				if (!diverterShunts.isEmpty()) {
 					tooltip.addSectionHeading("DIVERTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					ehm_printShuntCount(tooltip, variant, diverterShunts.keySet());
 				} else if (ehm_settings.getShowFullInfoForActivators()) {

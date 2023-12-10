@@ -103,7 +103,7 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
 
 		HashMap<String, StatMod> adapterShunts = stats.getDynamic().getMod(adapterData.groupTag).getFlatBonuses();
-		if (adapterShunts != null && !adapterShunts.isEmpty()) {
+		if (!adapterShunts.isEmpty()) {
 			for (String slotId : adapterShunts.keySet()) {
 				if (lyr_hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
 
@@ -133,7 +133,7 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 
 			if (ehm_settings.getShowInfoForActivators()) {
 				HashMap<String, StatMod> adapterShunts = dynamicStats.getMod(adapterData.groupTag).getFlatBonuses();
-				if (adapterShunts != null && !adapterShunts.isEmpty()) {
+				if (!adapterShunts.isEmpty()) {
 					tooltip.addSectionHeading("ADAPTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					ehm_printShuntCount(tooltip, variant, adapterShunts.keySet());
 				} else if (ehm_settings.getShowFullInfoForActivators()) {
