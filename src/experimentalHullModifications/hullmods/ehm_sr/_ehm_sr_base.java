@@ -3,8 +3,11 @@ package experimentalHullModifications.hullmods.ehm_sr;
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
+import java.util.Set;
+
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.combat.ShipHullSpecAPI;
+import com.fs.starfarer.api.combat.MutableShipStatsAPI;
+import com.fs.starfarer.api.combat.ShieldAPI.ShieldType;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.Description;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
@@ -13,7 +16,6 @@ import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.misc.ehm_internals.hullmods.systemRetrofits;
 import lyravega.listeners.events.normalEvents;
 import lyravega.proxies.lyr_hullSpec;
-import lyravega.utilities.lyr_miscUtilities;
 import lyravega.utilities.lyr_reflectionUtilities;
 import lyravega.utilities.logger.lyr_logger;
 
@@ -30,19 +32,30 @@ import lyravega.utilities.logger.lyr_logger;
 public abstract class _ehm_sr_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstalled(ShipVariantAPI variant) {
-		if (lyr_miscUtilities.removeHullModWithTag(variant, systemRetrofits.tag, this.hullModSpecId)) return;
+	public void onInstalled(MutableShipStatsAPI stats) {
+		Set<String> modGroup = this.getModsFromSameGroup(stats);
+
+		if (modGroup.size() > 1) stats.getVariant().removeMod(modGroup.iterator().next());
+
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
-	public void onRemoved(ShipVariantAPI variant) {
-		if (!lyr_miscUtilities.hasHullModWithTag(variant, systemRetrofits.tag, this.hullModSpecId))
-			variant.setHullSpecAPI(ehm_systemRestore(variant));
+	public void onRemoved(MutableShipStatsAPI stats) {
+		Set<String> modGroup = this.getModsFromSameGroup(stats);
+
+		if (modGroup.isEmpty()) this.restoreSystem(stats);
+
 		commitVariantChanges(); playDrillSound();
 	}
 	//#endregion
 	// END OF CUSTOM EVENTS
+
+	public _ehm_sr_base() {
+		super();
+
+		this.extendedData.groupTag = systemRetrofits.tag;
+	}
 
 	protected String systemId;
 
@@ -71,32 +84,66 @@ public abstract class _ehm_sr_base extends _ehm_base implements normalEvents {
 	}
 
 	/**
-	 * Alters the system on a hullSpec, and returns it. The returned hullSpec needs
-	 * to be installed on the variant.
-	 * @param variant of the ship that will have its system replaced
-	 * @param systemId of the system to be installed on the passed variant
-	 * @return a new hullSpec to be installed on the variant
-	 * @see {@link #ehm_systemRestore()} reverses this process
+	 * Alters the system on a hullSpec and applies it on the variant. Uses the stored {@link
+	 * #systemId} that is derived from the class name; system retrofit class names are based on
+	 * system ids, they simply have a prefix.
+	 * @param stats of the ship/member that will have its system replaced
 	 */
-	protected static final ShipHullSpecAPI ehm_systemRetrofit(ShipVariantAPI variant, String systemId) {
+	protected final void changeSystem(MutableShipStatsAPI stats) {
+		this.registerModInGroup(stats);
+
+		ShipVariantAPI variant = stats.getVariant();
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
 
-		lyr_hullSpec.setShipSystemId(systemId);
+		lyr_hullSpec.setShipSystemId(this.systemId);
 
-		return lyr_hullSpec.retrieve();
+		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
 	}
 
 	/**
-	 * Restores a system of a hullSpec to its stock one, and returns it. Returned hullSpec
-	 * needs to be installed on the variant.
+	 * Restores a system of a hullSpec to its stock one, and applies it on the variant.
 	 * @param variant that will have its system reset to factory defaults
-	 * @return a hullspec to be installed on the variant
 	 */
-	public static final ShipHullSpecAPI ehm_systemRestore(ShipVariantAPI variant) {
+	protected final void restoreSystem(MutableShipStatsAPI stats) {
+		ShipVariantAPI variant = stats.getVariant();
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
 
 		lyr_hullSpec.setShipSystemId(lyr_hullSpec.referenceNonDamaged().getShipSystemId());
 
-		return lyr_hullSpec.retrieve();
+		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
+	}
+
+	/**
+	 * Alters the defense system on a hullSpec and applies it on the variant. Uses the stored {@link
+	 * #systemId} that is derived from the class name; system retrofit class names are based on
+	 * system ids, they simply have a prefix.
+	 * @param stats of the ship/member that will have its system replaced
+	 * @deprecated The AI will not understand how to use these things
+	 */
+	@Deprecated
+	protected final void changeDefense(MutableShipStatsAPI stats) {
+		ShipVariantAPI variant = stats.getVariant();
+		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
+
+		lyr_hullSpec.setShipDefenseId(this.systemId);
+		lyr_hullSpec.getShieldSpec().setType(ShieldType.PHASE);
+
+		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
+	}
+
+	/**
+	 * Restores a defense system of a hullSpec to its stock one, and applies it on the variant.
+	 * @param variant that will have its system reset to factory defaults
+	 * @deprecated The AI will not understand how to use these things
+	 */
+	@Deprecated
+	protected final void restoreDefense(MutableShipStatsAPI stats) {
+		ShipVariantAPI variant = stats.getVariant();
+		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
+
+		lyr_hullSpec.setShipDefenseId(lyr_hullSpec.referenceNonDamaged().getShipDefenseId());
+		lyr_hullSpec.getShieldSpec().setType(lyr_hullSpec.referenceNonDamaged().getShieldType());
+
+		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
 	}
 }

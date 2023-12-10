@@ -2,7 +2,6 @@ package experimentalHullModifications.hullmods.ehm_sr;
 
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
-import com.fs.starfarer.api.combat.ShipVariantAPI;
 
 /**
  * @category System Retrofit
@@ -11,12 +10,8 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 public final class ehm_sr_drone_borer extends _ehm_sr_base {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		ShipVariantAPI variant = stats.getVariant();
+		stats.getSystemRegenBonus().modifyFlat(this.hullModSpecId, 0.1f);	// extra buff
 
-		stats.getSystemRegenBonus().modifyFlat(this.hullModSpecId, 0.1f);
-
-		if (this.systemId.equals(variant.getHullSpec().getShipSystemId())) return;
-
-		variant.setHullSpecAPI(ehm_systemRetrofit(variant, this.systemId));
+		this.changeSystem(stats);
 	}
 }
