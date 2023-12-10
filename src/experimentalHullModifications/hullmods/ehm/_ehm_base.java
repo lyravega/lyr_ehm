@@ -56,6 +56,7 @@ public abstract class _ehm_base implements HullModEffect {
 		public boolean isCosmetic = false;
 		public boolean isRestricted = false;
 		public boolean isCustomizable = false;
+		public String groupTag = null;
 		public Set<String> applicableChecks = null;
 		public Set<String> lockedInChecks = null;
 		public Set<String> lockedOutChecks = null;
@@ -303,5 +304,9 @@ public abstract class _ehm_base implements HullModEffect {
 		}
 
 		lyr_hullSpec.addBuiltInMod(hullmods.main.base);
+	}
+
+	protected final Set<String> getModsFromSameGroup(MutableShipStatsAPI stats) {
+		return stats.getDynamic().getMod(this.extendedData.groupTag).getFlatBonuses().keySet();
 	}
 }

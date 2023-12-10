@@ -2,10 +2,10 @@ package experimentalHullModifications.hullmods.ehm_ec;
 
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
-import static lyravega.utilities.lyr_interfaceUtilities.refreshFleetView;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.json.JSONObject;
 
@@ -15,12 +15,12 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.misc.ehm_internals;
+import experimentalHullModifications.misc.ehm_internals.hullmods.engineCosmetics;
 import lyravega.listeners.events.customizableMod;
 import lyravega.listeners.events.normalEvents;
 import lyravega.proxies.lyr_engineBuilder;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.utilities.lyr_lunaUtilities;
-import lyravega.utilities.lyr_miscUtilities;
 
 /**
  * This class is used by engine cosmetic hullmods. The changes are permanent; changes do not use
@@ -35,18 +35,29 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstalled(MutableShipStatsAPI stats) {
-		if (lyr_miscUtilities.removeHullModWithTag(stats.getVariant(), ehm_internals.hullmods.engineCosmetics.tag, this.hullModSpecId)) return;	// removes other engine cosmetics and short-circuits if there was any
-		commitVariantChanges(); playDrillSound(); refreshFleetView(false);	// short-circuit is due to onRemove() below, to avoid doing same things multiple times
+		Set<String> modGroup = this.getModsFromSameGroup(stats);
+
+		if (modGroup.size() > 1) stats.getVariant().removeMod(modGroup.iterator().next());
+
+		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
 	public void onRemoved(MutableShipStatsAPI stats) {
-		if (!lyr_miscUtilities.hasHullModWithTag(stats.getVariant(), ehm_internals.hullmods.engineCosmetics.tag, this.hullModSpecId))
-			this.restoreEngines(stats);
-		commitVariantChanges(); playDrillSound(); refreshFleetView(false);
+		Set<String> modGroup = this.getModsFromSameGroup(stats);
+
+		if (modGroup.isEmpty()) this.restoreEngines(stats);
+
+		commitVariantChanges(); playDrillSound();
 	}
 	//#endregion
 	// END OF CUSTOM EVENTS
+
+	public _ehm_ec_base() {
+		super();
+
+		this.extendedData.groupTag = engineCosmetics.tag;
+	}
 
 	protected int engineStyleId;
 	protected Object engineStyleSpec;
@@ -71,6 +82,8 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 	 * @param variant whose hullSpec will be altered
 	 */
 	protected final void changeEngines(MutableShipStatsAPI stats) {
+		stats.getDynamic().getMod(engineCosmetics.tag).modifyFlat(this.hullModSpecId, 1);
+
 		ShipVariantAPI variant = stats.getVariant();
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
 		lyr_engineBuilder engineSlot = new lyr_engineBuilder(null, false);
