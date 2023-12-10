@@ -73,7 +73,7 @@ public final class ehm_ability extends BaseToggleAbility {
 
 	@Override
 	public void createTooltip(TooltipMakerAPI tooltip, boolean expanded) {
-        Color highlightColor = Misc.getHighlightColor();
+		Color highlightColor = Misc.getHighlightColor();
 		String desc;
 
 		switch (ehm_settings.getShuntAvailability()) {
