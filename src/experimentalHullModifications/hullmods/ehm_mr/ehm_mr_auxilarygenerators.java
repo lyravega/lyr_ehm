@@ -7,7 +7,6 @@ import java.util.EnumMap;
 
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
-import com.fs.starfarer.api.combat.ShipVariantAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.misc.ehm_settings;
@@ -24,13 +23,14 @@ import lyravega.listeners.events.normalEvents;
 public final class ehm_mr_auxilarygenerators extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstalled(ShipVariantAPI variant) {
+	public void onInstalled(MutableShipStatsAPI stats) {
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
-	public void onRemoved(ShipVariantAPI variant) {
-		variant.setHullSpecAPI(ehm_hullSpecRefresh(variant));
+	public void onRemoved(MutableShipStatsAPI stats) {
+		this.restoreHullSpec(stats.getVariant());
+
 		commitVariantChanges(); playDrillSound();
 	}
 	//#endregion

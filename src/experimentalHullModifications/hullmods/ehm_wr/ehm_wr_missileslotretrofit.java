@@ -17,15 +17,15 @@ import experimentalHullModifications.hullmods.ehm_mr.ehm_mr_expensivemissiles;
 public final class ehm_wr_missileslotretrofit extends _ehm_wr_base {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstalled(ShipVariantAPI variant) {
-		ehm_mr_expensivemissiles.installExtension(variant);
-		super.onInstalled(variant);
+	public void onInstalled(MutableShipStatsAPI stats) {
+		ehm_mr_expensivemissiles.installExtension(stats.getVariant());
+		super.onInstalled(stats);
 	}
 
 	@Override
-	public void onRemoved(ShipVariantAPI variant) {
-		ehm_mr_expensivemissiles.removeExtension(variant);
-		super.onRemoved(variant);
+	public void onRemoved(MutableShipStatsAPI stats) {
+		ehm_mr_expensivemissiles.removeExtension(stats.getVariant());
+		super.onRemoved(stats);
 	}
 	//#endregion
 	// END OF CUSTOM EVENTS

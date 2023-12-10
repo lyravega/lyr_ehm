@@ -8,7 +8,7 @@ import org.json.JSONArray;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.HullModEffect;
-import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 
 import experimentalHullModifications.misc.ehm_settings;
@@ -93,17 +93,17 @@ public final class lyr_eventDispatcher {
 	 * <p> If the hull modification doesn't have any events attached to it, then depending
 	 * on the setting of the mod, a drill sound will be played
 	 * @param eventName type of the event
-	 * @param variant of the ship
+	 * @param stats of the ship
 	 * @param hullModId of the hull modification
 	 */
-	static void onHullModEvent(final String eventName, final ShipVariantAPI variant, final String hullModId) {
+	static void onHullModEvent(final String eventName, final MutableShipStatsAPI stats, final String hullModId) {
 		if (allModEvents.contains(hullModId)) switch (eventName) {
-			case onInstalled:		if (normalEvents.containsKey(hullModId)) normalEvents.get(hullModId).onInstalled(variant); return;
-			case onRemoved:			if (normalEvents.containsKey(hullModId)) normalEvents.get(hullModId).onRemoved(variant); return;
-			case onEnhanced:		if (enhancedEvents.containsKey(hullModId)) enhancedEvents.get(hullModId).onEnhanced(variant); return;
-			case onNormalized:		if (enhancedEvents.containsKey(hullModId)) enhancedEvents.get(hullModId).onNormalized(variant); return;
-			case onSuppressed:		if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onSuppressed(variant); return;
-			case onRestored:		if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onRestored(variant); return;
+			case onInstalled:		if (normalEvents.containsKey(hullModId)) normalEvents.get(hullModId).onInstalled(stats); return;
+			case onRemoved:			if (normalEvents.containsKey(hullModId)) normalEvents.get(hullModId).onRemoved(stats); return;
+			case onEnhanced:		if (enhancedEvents.containsKey(hullModId)) enhancedEvents.get(hullModId).onEnhanced(stats); return;
+			case onNormalized:		if (enhancedEvents.containsKey(hullModId)) enhancedEvents.get(hullModId).onNormalized(stats); return;
+			case onSuppressed:		if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onSuppressed(stats); return;
+			case onRestored:		if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onRestored(stats); return;
 			default: return;
 		} else if (ehm_settings.getPlayDrillSoundForAll()) switch (eventName) {
 			case onInstalled:
@@ -118,10 +118,10 @@ public final class lyr_eventDispatcher {
 	 * <p> Further filtering needs to be done as the only filtering done on this level is only
 	 * a simple check if the variant has a relevant hull modification installed.
 	 */
-	static void onWeaponEvent(final String eventName, final ShipVariantAPI variant, final String weaponId, final String slotId) {
+	static void onWeaponEvent(final String eventName, final MutableShipStatsAPI stats, final String weaponId, final String slotId) {
 		switch (eventName) {
-			case onWeaponInstalled:	for (String hullModId: weaponEvents.keySet()) if (variant.hasHullMod(hullModId)) weaponEvents.get(hullModId).onWeaponInstalled(variant, weaponId, slotId); return;
-			case onWeaponRemoved:	for (String hullModId: weaponEvents.keySet()) if (variant.hasHullMod(hullModId)) weaponEvents.get(hullModId).onWeaponRemoved(variant, weaponId, slotId); return;
+			case onWeaponInstalled:	for (String hullModId: weaponEvents.keySet()) if (stats.getVariant().hasHullMod(hullModId)) weaponEvents.get(hullModId).onWeaponInstalled(stats, weaponId, slotId); return;
+			case onWeaponRemoved:	for (String hullModId: weaponEvents.keySet()) if (stats.getVariant().hasHullMod(hullModId)) weaponEvents.get(hullModId).onWeaponRemoved(stats, weaponId, slotId); return;
 			default: return;
 		}
 	}
@@ -132,10 +132,10 @@ public final class lyr_eventDispatcher {
 	 * <p> Further filtering needs to be done as the only filtering done on this level is only
 	 * a simple check if the variant has a relevant hull modification installed.
 	 */
-	static void onWingEvent(final String eventName, final ShipVariantAPI variant, final String weaponId, final int bayNumber) {
+	static void onWingEvent(final String eventName, final MutableShipStatsAPI stats, final String weaponId, final int bayNumber) {
 		switch (eventName) {
-			case onWingAssigned:	for (String hullModId: wingEvents.keySet()) if (variant.hasHullMod(hullModId)) wingEvents.get(hullModId).onWingAssigned(variant, weaponId, bayNumber); return;
-			case onWingRelieved:	for (String hullModId: wingEvents.keySet()) if (variant.hasHullMod(hullModId)) wingEvents.get(hullModId).onWingRelieved(variant, weaponId, bayNumber); return;
+			case onWingAssigned:	for (String hullModId: wingEvents.keySet()) if (stats.getVariant().hasHullMod(hullModId)) wingEvents.get(hullModId).onWingAssigned(stats, weaponId, bayNumber); return;
+			case onWingRelieved:	for (String hullModId: wingEvents.keySet()) if (stats.getVariant().hasHullMod(hullModId)) wingEvents.get(hullModId).onWingRelieved(stats, weaponId, bayNumber); return;
 			default: return;
 		}
 	}

@@ -58,27 +58,27 @@ import lyravega.utilities.logger.lyr_logger;
 public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, weaponEvents {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstalled(ShipVariantAPI variant) {
-		lyr_miscUtilities.cleanWeaponGroupsUp(variant, this.shuntSet);
+	public void onInstalled(MutableShipStatsAPI stats) {
+		lyr_miscUtilities.cleanWeaponGroupsUp(stats.getVariant(), this.shuntSet);
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
-	public void onRemoved(ShipVariantAPI variant) {
-		variant.setHullSpecAPI(ehm_activatorRemoval_lazy(variant));
+	public void onRemoved(MutableShipStatsAPI stats) {
+		stats.getVariant().setHullSpecAPI(ehm_activatorRemoval_lazy(stats.getVariant()));
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
-	public void onWeaponInstalled(ShipVariantAPI variant, String weaponId, String slotId) {
+	public void onWeaponInstalled(MutableShipStatsAPI stats, String weaponId, String slotId) {
 		if (!this.shuntSet.contains(weaponId)) return;
 
-		lyr_miscUtilities.cleanWeaponGroupsUp(variant, this.shuntSet);
+		lyr_miscUtilities.cleanWeaponGroupsUp(stats.getVariant(), this.shuntSet);
 		commitVariantChanges();
 	}
 
 	@Override
-	public void onWeaponRemoved(ShipVariantAPI variant, String weaponId, String slotId) {
+	public void onWeaponRemoved(MutableShipStatsAPI stats, String weaponId, String slotId) {
 		if (!this.shuntSet.contains(weaponId)) return;
 
 		commitVariantChanges();

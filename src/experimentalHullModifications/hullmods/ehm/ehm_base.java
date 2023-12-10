@@ -38,11 +38,11 @@ import lyravega.utilities.lyr_tooltipUtilities;
 public final class ehm_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstalled(ShipVariantAPI variant) {
+	public void onInstalled(MutableShipStatsAPI stats) {
 		commitVariantChanges(); playDrillSound();
 	}
 
-	@Override public void onRemoved(ShipVariantAPI variant) {}	// cannot be removed since it becomes a built-in
+	@Override public void onRemoved(MutableShipStatsAPI stats) {}	// cannot be removed since it becomes a built-in
 	//#endregion
 	// END OF CUSTOM EVENTS
 

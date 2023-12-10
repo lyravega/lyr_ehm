@@ -4,6 +4,7 @@ import static lyravega.listeners.lyr_eventDispatcher.events.*;
 
 import java.util.*;
 
+import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
@@ -23,6 +24,7 @@ import lyravega.utilities.logger.lyr_logger;
  * @author lyravega
  */
 public final class lyr_shipTracker {
+	private MutableShipStatsAPI stats = null;
 	private ShipVariantAPI variant = null;
 	private final lyr_fleetTracker fleetTracker;
 	private final String logPrefix;
@@ -38,6 +40,7 @@ public final class lyr_shipTracker {
 
 	//#region CONSTRUCTORS & ACCESSORS
 	public lyr_shipTracker(lyr_fleetTracker fleetTracker, final ShipVariantAPI variant, final FleetMemberAPI member, final String trackerUUID, final String parentTrackerUUID) {
+		// this.stats = stats;
 		this.variant = variant;
 		this.fleetTracker = fleetTracker;
 		this.logPrefix = (member == null ? "MT-" : "ST-") + trackerUUID;
@@ -76,8 +79,9 @@ public final class lyr_shipTracker {
 	 * @param variant to update and compare
 	 * @see {@link normalEvents} / {@link enhancedEvents} / {@link suppressedEvents} / {@link weaponEvents}
 	 */
-	void updateVariant(final ShipVariantAPI variant) {
-		this.variant = variant;
+	void updateStats(final MutableShipStatsAPI stats) {
+		this.stats = stats;
+		this.variant = stats.getVariant();
 
 		this.checkHullMods();
 		this.checkEnhancedMods();
@@ -93,7 +97,7 @@ public final class lyr_shipTracker {
 			if (this.hullMods.contains(hullModId)) continue;
 			if (this.suppressedMods.contains(hullModId)) { this.hullMods.add(hullModId); continue; }
 
-			this.hullMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onInstalled, this.variant, hullModId);
+			this.hullMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onInstalled, this.stats, hullModId);
 			lyr_logger.eventInfo(this.logPrefix+": Installed '"+hullModId+"'");
 		}
 
@@ -101,7 +105,7 @@ public final class lyr_shipTracker {
 			if (this.variant.hasHullMod(hullModId)) continue;
 			if (this.variant.getSuppressedMods().contains(hullModId)) { this.iterator.remove(); continue; }
 
-			this.iterator.remove(); lyr_eventDispatcher.onHullModEvent(onRemoved, this.variant, hullModId);
+			this.iterator.remove(); lyr_eventDispatcher.onHullModEvent(onRemoved, this.stats, hullModId);
 			lyr_logger.eventInfo(this.logPrefix+": Removed '"+hullModId+"'");
 		}
 	}
@@ -111,7 +115,7 @@ public final class lyr_shipTracker {
 			if (this.enhancedMods.contains(hullModId)) continue;
 			if (this.embeddedMods.contains(hullModId)) continue;
 
-			this.enhancedMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onEnhanced, this.variant, hullModId);
+			this.enhancedMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onEnhanced, this.stats, hullModId);
 			lyr_logger.eventInfo(this.logPrefix+": Enhanced '"+hullModId+"'");
 		}
 
@@ -119,21 +123,21 @@ public final class lyr_shipTracker {
 			if (this.embeddedMods.contains(hullModId)) continue;
 			if (this.enhancedMods.contains(hullModId)) this.enhancedMods.remove(hullModId);
 
-			this.embeddedMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onEnhanced, this.variant, hullModId);
+			this.embeddedMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onEnhanced, this.stats, hullModId);
 			lyr_logger.eventInfo(this.logPrefix+": Enhanced embedded '"+hullModId+"'");
 		}
 
 		for (this.iterator = this.enhancedMods.iterator(); this.iterator.hasNext();) { final String hullModId = this.iterator.next();
 			if (this.variant.getSMods().contains(hullModId)) continue;
 
-			this.iterator.remove(); lyr_eventDispatcher.onHullModEvent(onNormalized, this.variant, hullModId);
+			this.iterator.remove(); lyr_eventDispatcher.onHullModEvent(onNormalized, this.stats, hullModId);
 			lyr_logger.eventInfo(this.logPrefix+": Normalized '"+hullModId+"'");
 		}
 
 		for (this.iterator = this.embeddedMods.iterator(); this.iterator.hasNext();) { final String hullModId = this.iterator.next();
 			if (this.variant.getSModdedBuiltIns().contains(hullModId)) continue;
 
-			this.iterator.remove(); lyr_eventDispatcher.onHullModEvent(onNormalized, this.variant, hullModId);
+			this.iterator.remove(); lyr_eventDispatcher.onHullModEvent(onNormalized, this.stats, hullModId);
 			lyr_logger.eventInfo(this.logPrefix+": Normalized embedded '"+hullModId+"'");
 		}
 	}
@@ -142,14 +146,14 @@ public final class lyr_shipTracker {
 		for (final String hullModId : this.variant.getSuppressedMods()) {
 			if (this.suppressedMods.contains(hullModId)) continue;
 
-			this.suppressedMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onSuppressed, this.variant, hullModId);
+			this.suppressedMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onSuppressed, this.stats, hullModId);
 			lyr_logger.eventInfo(this.logPrefix+": Suppressed '"+hullModId+"'");
 		}
 
 		for (this.iterator = this.suppressedMods.iterator(); this.iterator.hasNext();) { final String hullModId = this.iterator.next();
 			if (this.variant.getSuppressedMods().contains(hullModId)) continue;
 
-			this.iterator.remove(); lyr_eventDispatcher.onHullModEvent(onRestored, this.variant, hullModId);
+			this.iterator.remove(); lyr_eventDispatcher.onHullModEvent(onRestored, this.stats, hullModId);
 			lyr_logger.eventInfo(this.logPrefix+": Restored '"+hullModId+"'");
 		}
 	}
@@ -163,18 +167,18 @@ public final class lyr_shipTracker {
 			if (oldWeaponId == null && newWeaponId == null) continue;
 			else if (oldWeaponId == null && newWeaponId != null) {	// weapon installed
 				this.weapons.put(slotId, newWeaponId);
-				lyr_eventDispatcher.onWeaponEvent(onWeaponInstalled, this.variant, newWeaponId, slotId);
+				lyr_eventDispatcher.onWeaponEvent(onWeaponInstalled, this.stats, newWeaponId, slotId);
 
 				lyr_logger.eventInfo(this.logPrefix+": Installed '"+newWeaponId+"' on '"+slotId+"'");
 			} else if (oldWeaponId != null && newWeaponId == null) {	// weapon removed
 				this.weapons.put(slotId, null);
-				lyr_eventDispatcher.onWeaponEvent(onWeaponRemoved, this.variant, oldWeaponId, slotId);
+				lyr_eventDispatcher.onWeaponEvent(onWeaponRemoved, this.stats, oldWeaponId, slotId);
 
 				lyr_logger.eventInfo(this.logPrefix+": Removed '"+oldWeaponId+"' from '"+slotId+"'");
 			} else if (oldWeaponId != null && newWeaponId != null && !oldWeaponId.equals(newWeaponId)) {	// weapon changed
 				this.weapons.put(slotId, newWeaponId);
-				lyr_eventDispatcher.onWeaponEvent(onWeaponInstalled, this.variant, newWeaponId, slotId);
-				lyr_eventDispatcher.onWeaponEvent(onWeaponRemoved, this.variant, oldWeaponId, slotId);
+				lyr_eventDispatcher.onWeaponEvent(onWeaponInstalled, this.stats, newWeaponId, slotId);
+				lyr_eventDispatcher.onWeaponEvent(onWeaponRemoved, this.stats, oldWeaponId, slotId);
 
 				lyr_logger.eventInfo(this.logPrefix+": Changed '"+oldWeaponId+"' on '"+slotId+"' with '"+newWeaponId+"'");
 			}
@@ -193,18 +197,18 @@ public final class lyr_shipTracker {
 			if (oldWingId.isEmpty() && newWingId == null) continue;
 			else if (oldWingId.isEmpty() && newWingId != null) {	// wing installed
 				this.wings.set(bayNumber, newWingId);
-				lyr_eventDispatcher.onWingEvent(onWingAssigned, this.variant, newWingId, bayNumber);
+				lyr_eventDispatcher.onWingEvent(onWingAssigned, this.stats, newWingId, bayNumber);
 
 				lyr_logger.eventInfo(this.logPrefix+": Installed '"+newWingId+"' on '"+bayNumber+"'");
 			} else if (!oldWingId.isEmpty() && newWingId == null) {	// wing removed
 				this.wings.set(bayNumber, "");
-				lyr_eventDispatcher.onWingEvent(onWingRelieved, this.variant, oldWingId, bayNumber);
+				lyr_eventDispatcher.onWingEvent(onWingRelieved, this.stats, oldWingId, bayNumber);
 
 				lyr_logger.eventInfo(this.logPrefix+": Removed '"+oldWingId+"' from '"+bayNumber+"'");
 			} else if (!oldWingId.isEmpty() && newWingId != null && !oldWingId.equals(newWingId)) {	// wing changed
 				this.wings.set(bayNumber, newWingId);
-				lyr_eventDispatcher.onWingEvent(onWingAssigned, this.variant, newWingId, bayNumber);
-				lyr_eventDispatcher.onWingEvent(onWingRelieved, this.variant, oldWingId, bayNumber);
+				lyr_eventDispatcher.onWingEvent(onWingAssigned, this.stats, newWingId, bayNumber);
+				lyr_eventDispatcher.onWingEvent(onWingRelieved, this.stats, oldWingId, bayNumber);
 
 				lyr_logger.eventInfo(this.logPrefix+": Changed '"+oldWingId+"' on '"+bayNumber+"' with '"+newWingId+"'");
 			}

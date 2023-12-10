@@ -38,25 +38,29 @@ import lyravega.utilities.lyr_tooltipUtilities;
 public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalEvents, enhancedEvents {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstalled(ShipVariantAPI variant) {
+	public void onInstalled(MutableShipStatsAPI stats) {
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
-	public void onRemoved(ShipVariantAPI variant) {
-		variant.setHullSpecAPI(ehm_hullSpecRefresh(variant));
+	public void onRemoved(MutableShipStatsAPI stats) {
+		ShipVariantAPI variant = stats.getVariant();
+
+		this.restoreHullSpec(variant);
 		variant.removeMod(HullMods.CIVGRADE);	// to clean-up the variant if it was added as a built-in through this mod
+
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
-	public void onEnhanced(ShipVariantAPI variant) {
+	public void onEnhanced(MutableShipStatsAPI stats) {
 		commitVariantChanges();
 	}
 
 	@Override
-	public void onNormalized(ShipVariantAPI variant) {
-		variant.setHullSpecAPI(ehm_hullSpecRefresh(variant));
+	public void onNormalized(MutableShipStatsAPI stats) {
+		this.restoreHullSpec(stats.getVariant());
+
 		commitVariantChanges();
 	}
 	//#endregion

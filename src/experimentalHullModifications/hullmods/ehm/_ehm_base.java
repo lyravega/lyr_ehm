@@ -260,6 +260,7 @@ public abstract class _ehm_base implements HullModEffect {
 	 * @param variant to be used as a template
 	 * @return a 'fresh' hullSpec from the SpecStore
 	 */
+	@Deprecated
 	protected static final ShipHullSpecAPI ehm_hullSpecRefresh(ShipVariantAPI variant) {
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(true, variant.getHullSpec());
 

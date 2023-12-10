@@ -1,6 +1,6 @@
 package lyravega.listeners.events;
 
-import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 
 import lyravega.listeners.lyr_eventDispatcher;
 import lyravega.listeners.lyr_shipTracker;
@@ -19,16 +19,16 @@ public interface enhancedEvents {
 	 * Called if this hull modification is enhanced with a story point on the refit ship
 	 * <p> Effects here will be transient as these methods are called only once after their
 	 * events. Should be used mainly to change the variant or to trigger an UI effect
-	 * @param variant
+	 * @param stats
 	 */
-	public void onEnhanced(ShipVariantAPI variant);
+	public void onEnhanced(MutableShipStatsAPI stats);
 
 	/**
 	 * Called if this hull modification is no longer enhanced on the refit ship
 	 * <p> Is primarily used to remove any lasting effects that the s-mod effect may introduce
 	 * <p> Effects here will be transient as these methods are called only once after their
 	 * events. Should be used mainly to change the variant or to trigger an UI effect
-	 * @param variant
+	 * @param stats
 	 */
-	public void onNormalized(ShipVariantAPI variant);
+	public void onNormalized(MutableShipStatsAPI stats);
 }

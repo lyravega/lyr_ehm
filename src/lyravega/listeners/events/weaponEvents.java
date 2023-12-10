@@ -1,6 +1,6 @@
 package lyravega.listeners.events;
 
-import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 
 import lyravega.listeners.lyr_eventDispatcher;
 import lyravega.listeners.lyr_shipTracker;
@@ -21,11 +21,11 @@ public interface weaponEvents {
 	 * prior is whether this hull modification is installed on the variant
 	 * <p> Effects here will be transient as these methods are called only once after their
 	 * events. Should be used mainly to change the variant or to trigger an UI effect
-	 * @param variant
+	 * @param stats
 	 * @param weaponId of the installed weapon
 	 * @param slotId of the slot that the weapon is installed at
 	 */
-	public void onWeaponInstalled(ShipVariantAPI variant, String weaponId, String slotId);
+	public void onWeaponInstalled(MutableShipStatsAPI stats, String weaponId, String slotId);
 
 	/**
 	 * Broadcasted when a weapon is removed from the refit ship, caught by this method.
@@ -33,9 +33,9 @@ public interface weaponEvents {
 	 * prior is whether this hull modification is installed on the variant
 	 * <p> Effects here will be transient as these methods are called only once after their
 	 * events. Should be used mainly to change the variant or to trigger an UI effect
-	 * @param variant
+	 * @param stats
 	 * @param weaponId of the removed weapon
 	 * @param slotId of the slot that the weapon is removed from
 	 */
-	public void onWeaponRemoved(ShipVariantAPI variant, String weaponId, String slotId);
+	public void onWeaponRemoved(MutableShipStatsAPI stats, String weaponId, String slotId);
 }

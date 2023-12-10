@@ -172,24 +172,24 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 		return this.shipTrackers.get(trackerUUID);
 	}
 
-	/** @see {@link lyr_shipTracker#updateVariant(ShipVariantAPI)} */ @Override
+	/** @see {@link lyr_shipTracker#updateStats(ShipVariantAPI)} */ @Override
 	public void updateShipTracker(FleetMemberAPI member) {
-		if (isRefitTab()) this.getShipTracker(member).updateVariant(member.getVariant());
+		if (isRefitTab()) this.getShipTracker(member).updateStats(member.getStats());
 	}
 
-	/** @see {@link lyr_shipTracker#updateVariant(ShipVariantAPI)} */ @Override
+	/** @see {@link lyr_shipTracker#updateStats(ShipVariantAPI)} */ @Override
 	public void updateShipTracker(ShipAPI ship) {
-		if (isRefitTab()) this.getShipTracker(ship).updateVariant(ship.getVariant());
+		if (isRefitTab()) this.getShipTracker(ship).updateStats(ship.getMutableStats());
 	}
 
-	/** @see {@link lyr_shipTracker#updateVariant(ShipVariantAPI)} */ @Override
+	/** @see {@link lyr_shipTracker#updateStats(ShipVariantAPI)} */ @Override
 	public void updateShipTracker(MutableShipStatsAPI stats) {
-		if (isRefitTab() && ShipAPI.class.isInstance(stats.getEntity())) this.getShipTracker(stats).updateVariant(stats.getVariant());	// the cast check needs to be done because parts of the UI has outdated variant data unless it is a ShipAPI
+		if (isRefitTab() && ShipAPI.class.isInstance(stats.getEntity())) this.getShipTracker(stats).updateStats(stats);	// the cast check needs to be done because parts of the UI has outdated variant data unless it is a ShipAPI
 	}
 
-	/** @see {@link lyr_shipTracker#updateVariant(ShipVariantAPI)} */ @Override @Deprecated
+	/** @see {@link lyr_shipTracker#updateStats(ShipVariantAPI)} */ @Override @Deprecated
 	public void updateShipTracker(ShipVariantAPI variant) {
-		if (isRefitTab()) this.getShipTracker(variant).updateVariant(variant);
+		// if (isRefitTab()) this.getShipTracker(variant).updateStats(variant);	// TODO remove this?
 	}
 	//#endregion
 	// END OF _lyr_abstractTracker IMPLEMENTATION

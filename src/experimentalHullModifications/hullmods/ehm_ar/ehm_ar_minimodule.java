@@ -6,8 +6,6 @@ import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 import java.util.*;
 import java.util.Map.Entry;
 
-import org.lwjgl.util.vector.Vector2f;
-
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
@@ -27,7 +25,6 @@ import lyravega.proxies.lyr_shieldSpec;
 import lyravega.proxies.lyr_weaponSlot;
 import lyravega.proxies.lyr_weaponSlot.slotTypeConstants;
 import lyravega.utilities.lyr_reflectionUtilities;
-import lyravega.utilities.lyr_vectorUtilities;
 import lyravega.utilities.logger.lyr_logger;
 
 /**@category Adapter Retrofit
@@ -36,13 +33,14 @@ import lyravega.utilities.logger.lyr_logger;
 public final class ehm_ar_minimodule extends _ehm_ar_base {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstalled(ShipVariantAPI variant) {
-		lyr_fleetTracker.instance().addTracking(variant, null, null);	// order of this method matters; needs to be done before commit
+	public void onInstalled(MutableShipStatsAPI stats) {
+		lyr_fleetTracker.instance().addTracking(stats.getVariant(), null, null);	// order of this method matters; needs to be done before commit
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
-	public void onRemoved(ShipVariantAPI variant) {
+	public void onRemoved(MutableShipStatsAPI stats) {
+		ShipVariantAPI variant = stats.getVariant();
 		Map<String, String> stationModules = variant.getStationModules();
 
 		for (Iterator<Entry<String, String>> iterator = stationModules.entrySet().iterator(); iterator.hasNext(); ) {
@@ -58,14 +56,14 @@ public final class ehm_ar_minimodule extends _ehm_ar_base {
 	}
 
 	@Override
-	public void onWeaponInstalled(ShipVariantAPI variant, String weaponId, String slotId) {
+	public void onWeaponInstalled(MutableShipStatsAPI stats, String weaponId, String slotId) {
 		if (!moduleSet.contains(weaponId)) return;
-		lyr_fleetTracker.instance().addTracking(variant, null, null);	// order of this method matters; needs to be done before commit
+		lyr_fleetTracker.instance().addTracking(stats.getVariant(), null, null);	// order of this method matters; needs to be done before commit
 		commitVariantChanges();
 	}
 
 	@Override
-	public void onWeaponRemoved(ShipVariantAPI variant, String weaponId, String slotId) {
+	public void onWeaponRemoved(MutableShipStatsAPI stats, String weaponId, String slotId) {
 		if (!moduleSet.contains(weaponId)) return;
 		commitVariantChanges();
 	}
@@ -74,7 +72,7 @@ public final class ehm_ar_minimodule extends _ehm_ar_base {
 
 	static final Set<String> moduleSet = new HashSet<String>();
 	static {
-		moduleSet.add("ehm_module_base");
+		moduleSet.add("ehm_module_prototype");
 	}
 
 	// com.fs.starfarer.title.Object.M
@@ -87,25 +85,11 @@ public final class ehm_ar_minimodule extends _ehm_ar_base {
 		// parentHullSpec.getHints().add(ShipTypeHints.DO_NOT_SHOW_MODULES_IN_FLEET_LIST);	// with this some status related shit is avoided but best not to use it
 		parentHullSpec.getHints().add(ShipTypeHints.SHIP_WITH_MODULES);
 
-		ShipVariantAPI moduleVariant = Global.getSettings().getVariant("ehm_module_base_Hull").clone();
+		ShipVariantAPI moduleVariant = Global.getSettings().getVariant("ehm_module_prototype_Hull").clone();
 		lyr_hullSpec moduleHullSpec = new lyr_hullSpec(false, moduleVariant.getHullSpec());
 		// moduleVariant.setHullVariantId("ehm_module_shield_variant");
 		moduleVariant.addPermaMod("ehm_module_base", false);
 		moduleVariant.setSource(VariantSource.REFIT);
-
-		// if (!moduleHullSpec.isBuiltInMod("shield_always_on")) moduleHullSpec.addBuiltInMod("shield_always_on");
-		// if (!parentHullSpec.isBuiltInMod("shield_always_on")) parentHullSpec.addBuiltInMod("shield_always_on");
-		// moduleVariant.setHullSpecAPI(moduleHullSpec.retrieve());
-		// Object parentSpriteSpec = parentHullSpec.getSpriteSpec();
-		// Object clonedSpec = null;
-		// try {
-		// 	clonedSpec = lyr_reflectionUtilities.methodReflection.invokeDirect(parentSpriteSpec, "clone");
-		// 	// MethodHandle methodHandle = lyr_reflectionUtilities.methodReflection.findMethodByClass(clonedSpec, null, String.class).getMethodHandle();
-
-		// } catch (Throwable e) {
-		// 	e.printStackTrace();
-		// }
-		// moduleHullSpec.setSpriteSpec(clonedSpec);
 
 		List<WeaponSlotAPI> shunts = parentHullSpec.getAllWeaponSlotsCopy();
 		Map<String, String> stationModules = parentVariant.getStationModules();
@@ -115,10 +99,9 @@ public final class ehm_ar_minimodule extends _ehm_ar_base {
 			WeaponSpecAPI shuntSpec = parentVariant.getWeaponSpec(slotId);
 
 			if (shuntSpec == null) { iterator.remove(); continue; }
-			if (!"ehm_module_base".equals(shuntSpec.getWeaponId())) { iterator.remove(); continue; }
+			if (!"ehm_module_prototype".equals(shuntSpec.getWeaponId())) { iterator.remove(); continue; }
 		}
 
-		int i = 1;
 		for (WeaponSlotAPI slot : shunts) {
 			if (slot.isStationModule()) continue;
 
@@ -132,14 +115,7 @@ public final class ehm_ar_minimodule extends _ehm_ar_base {
 			parentSlot.setWeaponType(WeaponType.STATION_MODULE);
 			parentSlot.setSlotType(slotTypeConstants.hidden);
 
-			Vector2f shieldCenterForModule = lyr_vectorUtilities.calculateParentShieldCenterForModule(parentShieldSpec.retrieve(), parentSlot.retrieve());
-			ShipVariantAPI clone = moduleVariant.clone();
-			moduleHullSpec.retrieve().setModuleAnchor(parentSlot.getLocation().negate(null));
-			clone.setHullSpecAPI(moduleHullSpec.retrieve());
-			parentSlot.setNode(parentSlot.getNodeId(), new Vector2f(0f, 0f));
-			clone.addTag("ehm_module_parentShield:"+(shieldCenterForModule.x)+"/"+(shieldCenterForModule.y)+"/"+(parentShieldSpec.getRadius()+i*15)); i++;
-
-			if (!stationModules.keySet().contains(slotId)) parentVariant.setModuleVariant(slotId, clone);	// module variant insertion on the parent variant is done here
+			if (!stationModules.keySet().contains(slotId)) parentVariant.setModuleVariant(slotId, moduleVariant);	// module variant insertion on the parent variant is done here
 		}
 
 		// the block below is necessary if shunts are to be removed after module insertion, but as the shunts stay on the variant the function is executed above
@@ -152,7 +128,7 @@ public final class ehm_ar_minimodule extends _ehm_ar_base {
 		// }
 
 		for (Entry<String, String> moduleEntry : stationModules.entrySet()) {
-			if (moduleEntry.getValue().startsWith("ehm_module") && parentVariant.getWeaponId(moduleEntry.getKey()) == null) parentVariant.addWeapon(moduleEntry.getKey(), "ehm_module_base");
+			if (moduleEntry.getValue().startsWith("ehm_module") && parentVariant.getWeaponId(moduleEntry.getKey()) == null) parentVariant.addWeapon(moduleEntry.getKey(), "ehm_module_prototype");
 		}
 
 		parentVariant.setHullSpecAPI(parentHullSpec.retrieve());
@@ -172,10 +148,10 @@ public final class ehm_ar_minimodule extends _ehm_ar_base {
 		// // parentHullSpec.getHints().add(ShipTypeHints.DO_NOT_SHOW_MODULES_IN_FLEET_LIST);	// with this some status related shit is avoided but best not to use it
 		// parentHullSpec.getHints().add(ShipTypeHints.SHIP_WITH_MODULES);
 
-		// ShipVariantAPI moduleVariant = Global.getSettings().getVariant("ehm_module_base_Hull").clone();
+		// ShipVariantAPI moduleVariant = Global.getSettings().getVariant("ehm_module_prototype_Hull").clone();
 		// lyr_hullSpec moduleHullSpec = new lyr_hullSpec(false, moduleVariant.getHullSpec());
 		// // moduleVariant.setHullVariantId("ehm_module_shield_variant");
-		// moduleVariant.addPermaMod("ehm_module_base", false);
+		// moduleVariant.addPermaMod("ehm_module_prototype", false);
 		// moduleVariant.setSource(VariantSource.REFIT);
 
 		// // if (!moduleHullSpec.isBuiltInMod("shield_always_on")) moduleHullSpec.addBuiltInMod("shield_always_on");
@@ -200,7 +176,7 @@ public final class ehm_ar_minimodule extends _ehm_ar_base {
 		// 	WeaponSpecAPI shuntSpec = parentVariant.getWeaponSpec(slotId);
 
 		// 	if (shuntSpec == null) { iterator.remove(); continue; }
-		// 	if (!"ehm_module_base".equals(shuntSpec.getWeaponId())) { iterator.remove(); continue; }
+		// 	if (!"ehm_module_prototype".equals(shuntSpec.getWeaponId())) { iterator.remove(); continue; }
 		// }
 
 		// int i = 1;
@@ -234,7 +210,7 @@ public final class ehm_ar_minimodule extends _ehm_ar_base {
 		// // }
 
 		// for (Entry<String, String> moduleEntry : stationModules.entrySet()) {
-		// 	if (moduleEntry.getValue().startsWith("ehm_module") && parentVariant.getWeaponId(moduleEntry.getKey()) == null) parentVariant.addWeapon(moduleEntry.getKey(), "ehm_module_base");
+		// 	if (moduleEntry.getValue().startsWith("ehm_module") && parentVariant.getWeaponId(moduleEntry.getKey()) == null) parentVariant.addWeapon(moduleEntry.getKey(), "ehm_module_prototype");
 		// }
 
 		// parentVariant.setHullSpecAPI(parentHullSpec.retrieve());

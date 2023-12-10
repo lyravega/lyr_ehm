@@ -33,11 +33,11 @@ import lyravega.utilities.lyr_miscUtilities;
 public final class ehm_module_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstalled(ShipVariantAPI variant) {
+	public void onInstalled(MutableShipStatsAPI stats) {
 		commitVariantChanges(); playDrillSound();
 	}
 
-	@Override public void onRemoved(ShipVariantAPI variant) {}	// cannot be removed since it becomes a built-in
+	@Override public void onRemoved(MutableShipStatsAPI stats) {}	// cannot be removed since it becomes a built-in
 	//#endregion
 	// END OF CUSTOM EVENTS
 
@@ -51,6 +51,10 @@ public final class ehm_module_base extends _ehm_base implements normalEvents {
 		g test = (g) hullSpec;
 		test.setDesignation("");
 		Vector2f moduleAnchor = lyr_hullSpec.retrieve().getModuleAnchor();
+
+		// if (!lyr_interfaceUtilities.isRefitTab()) {
+			// lyr_hullSpec.setHullSize(HullSize.FRIGATE);
+		// }
 
 		// for (String tag : variant.getTags()) {
 		// 	if (!tag.startsWith("ehm_module_parentShield")) continue;
@@ -71,7 +75,7 @@ public final class ehm_module_base extends _ehm_base implements normalEvents {
 		// 	lyr_hullSpec.getShieldSpec().setCenterX(shieldCenterX);
 		// 	lyr_hullSpec.getShieldSpec().setCenterY(shieldCenterY);
 		// 	lyr_hullSpec.getShieldSpec().setRadius(shieldRadius+15);
-		// 	stats.getShieldTurnRateMult().modifyMult(this.hullModSpecId, 10);
+			// stats.getShieldTurnRateMult().modifyMult(this.hullModSpecId, 10);
 		// 	lyr_hullSpec.getShieldSpec().setArc(30f);
 
 		// 	// Object spriteSpec = lyr_hullSpec.getSpriteSpec();
@@ -88,11 +92,15 @@ public final class ehm_module_base extends _ehm_base implements normalEvents {
 
 		// _ehm_ar_base.ehm_preProcessShunts(stats);	// at this point, the hull spec should be cloned so proceed and pre-process the shunts
 		// lyr_miscUtilities.cleanWeaponGroupsUp(variant);	// when an activator activates shunts on install, so moved this to their 'onInstalled()' method
+		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
 	}
 
 	@Override
 	public void applyEffectsAfterShipCreation(ShipAPI ship, String hullModSpecId) {
+		// ship.setLayer(CombatEngineLayers.FRIGATES_LAYER);
+		// CombatEngineLayers layer = ship.getLayer();
 
+		// ship = ship;
 	}
 
 	@Override
@@ -120,6 +128,7 @@ public final class ehm_module_base extends _ehm_base implements normalEvents {
 			tooltip.addPara("Hull ID: "+hullSpec.getHullId(), 5f).setHighlight("Hull ID:");
 			tooltip.addPara("Variant ID: "+variant.getHullVariantId(), 5f).setHighlight("Variant ID:");
 			tooltip.addPara("Member ID: "+ship.getFleetMemberId(), 5f).setHighlight("Member ID:");
+			tooltip.addPara("Hull Size: "+ship.getHullSize(), 5f).setHighlight("Hull Size:");
 			tooltip.addPara("isModule: "+!Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy().contains(ship.getFleetMember()), 5f).setHighlight("isModule:");
 			tooltip.addPara("isParent: "+lyr_miscUtilities.isParent(ship), 5f).setHighlight("isParent:");
 			tooltip.addPara("Hints: "+hullSpec.getHints().toString(), 5f).setHighlight("Hints:");	// variant returns hints from hullspec, so only one is enough

@@ -1,6 +1,6 @@
 package lyravega.listeners.events;
 
-import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 
 import lyravega.listeners.lyr_eventDispatcher;
 import lyravega.listeners.lyr_shipTracker;
@@ -21,11 +21,11 @@ public interface wingEvents {
 	 * prior is whether this hull modification is installed on the variant
 	 * <p> Effects here will be transient as these methods are called only once after their
 	 * events. Should be used mainly to change the variant or to trigger an UI effect
-	 * @param variant
+	 * @param stats
 	 * @param wingId of the assigned wing
 	 * @param bayNumber of the bay that the wing is housed at
 	 */
-	public void onWingAssigned(ShipVariantAPI variant, String wingId, int bayNumber);
+	public void onWingAssigned(MutableShipStatsAPI stats, String wingId, int bayNumber);
 
 	/**
 	 * Broadcasted when a wing is removed from the refit ship, caught by this method.
@@ -33,9 +33,9 @@ public interface wingEvents {
 	 * prior is whether this hull modification is installed on the variant
 	 * <p> Effects here will be transient as these methods are called only once after their
 	 * events. Should be used mainly to change the variant or to trigger an UI effect
-	 * @param variant
+	 * @param stats
 	 * @param wingId of the relieved wing
 	 * @param bayNumber of the bay that the wing was housed at
 	 */
-	public void onWingRelieved(ShipVariantAPI variant, String wingId, int bayNumber);
+	public void onWingRelieved(MutableShipStatsAPI stats, String wingId, int bayNumber);
 }

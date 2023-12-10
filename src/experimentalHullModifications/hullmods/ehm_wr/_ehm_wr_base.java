@@ -5,6 +5,7 @@ import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
 import java.util.Map;
 
+import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
@@ -30,15 +31,15 @@ import lyravega.utilities.lyr_miscUtilities;
 public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstalled(ShipVariantAPI variant) {
-		if (lyr_miscUtilities.removeHullModWithTag(variant, ehm_internals.hullmods.weaponRetrofits.tag, this.hullModSpecId)) return;	// if installing this removes another, skip
+	public void onInstalled(MutableShipStatsAPI stats) {
+		if (lyr_miscUtilities.removeHullModWithTag(stats.getVariant(), ehm_internals.hullmods.weaponRetrofits.tag, this.hullModSpecId)) return;	// if installing this removes another, skip
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
-	public void onRemoved(ShipVariantAPI variant) {
+	public void onRemoved(MutableShipStatsAPI stats) {
 		// if (!_ehm_helpers.ehm_hasHullModWithTag(variant, lyr_internals.tag.weaponRetrofit, this.hullModSpecId))	// unlike other exclusive mods, this one needs to run to restore the slots to original first
-			variant.setHullSpecAPI(ehm_weaponSlotRestore_lazy(variant));
+			stats.getVariant().setHullSpecAPI(ehm_weaponSlotRestore_lazy(stats.getVariant()));
 		commitVariantChanges(); playDrillSound();
 	}
 	//#endregion

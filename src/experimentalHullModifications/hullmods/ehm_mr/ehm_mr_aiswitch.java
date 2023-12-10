@@ -51,16 +51,22 @@ public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstalled(ShipVariantAPI variant) {
+	public void onInstalled(MutableShipStatsAPI stats) {
+		ShipVariantAPI variant = stats.getVariant();
+
 		if (!variant.getHullSpec().isBuiltInMod(HullMods.AUTOMATED)) variant.addPermaMod(HullMods.AUTOMATED, false);
 		else variant.addSuppressedMod(HullMods.AUTOMATED);	// if this hullmod is suppressed, relevant calculations that look for it won't work properly
+
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
-	public void onRemoved(ShipVariantAPI variant) {
+	public void onRemoved(MutableShipStatsAPI stats) {
+		ShipVariantAPI variant = stats.getVariant();
+
 		if (!variant.getSuppressedMods().contains(HullMods.AUTOMATED)) variant.removePermaMod(HullMods.AUTOMATED);
 		else variant.removeSuppressedMod(HullMods.AUTOMATED);
+
 		commitVariantChanges(); playDrillSound();
 	}
 	//#endregion
