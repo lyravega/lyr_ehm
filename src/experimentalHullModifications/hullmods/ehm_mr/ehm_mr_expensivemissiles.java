@@ -11,30 +11,39 @@ import com.fs.starfarer.api.util.DynamicStatsAPI;
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.hullmods.ehm_wr.ehm_wr_missileslotretrofit;
 import experimentalHullModifications.misc.ehm_internals;
+import lyravega.listeners.events.companionMod;
 
 /**
  * @category Effect Extension
- * @see Master: {@link ehm_wr_missileslotretrofit}
+ * @see <br>Companion of {@link ehm_wr_missileslotretrofit}
  * @author lyravega
  */
-public final class ehm_mr_expensivemissiles extends _ehm_base {
-	public static void installExtension(ShipVariantAPI variant) {
+public final class ehm_mr_expensivemissiles extends _ehm_base implements companionMod {
+	@Override
+	public void installCompanionMod(MutableShipStatsAPI stats) {
+		ShipVariantAPI variant = stats.getVariant();
+
 		if (variant.getHullSpec().isBuiltInMod("hbi") || variant.getPermaMods().contains("hbi")) {
 			variant.addSuppressedMod("hbi");
 		}
-		variant.addPermaMod(ehm_internals.hullmods.extensions.expensivemissiles, false);
+
+		variant.addPermaMod(this.hullModSpecId, false);
 	}
 
-	public static void removeExtension(ShipVariantAPI variant) {
+	@Override
+	public void removeCompanionMod(MutableShipStatsAPI stats) {
+		ShipVariantAPI variant = stats.getVariant();
+
 		if (variant.getSuppressedMods().contains("hbi")) {
 			if (!variant.hasHullMod(ehm_internals.hullmods.weaponRetrofits.energyslotretrofit)) variant.removeSuppressedMod("hbi");
 		}
-		variant.removePermaMod(ehm_internals.hullmods.extensions.expensivemissiles);
+
+		variant.removePermaMod(this.hullModSpecId);
 	}
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String id) {
-		if (!stats.getVariant().hasHullMod(ehm_internals.hullmods.weaponRetrofits.missileslotretrofit)) { removeExtension(stats.getVariant()); return; }
+		if (!stats.getVariant().hasHullMod(ehm_internals.hullmods.weaponRetrofits.missileslotretrofit)) { this.removeCompanionMod(stats); return; }
 
 		DynamicStatsAPI dynamicStats = stats.getDynamic();
 		dynamicStats.getMod(Stats.SMALL_MISSILE_MOD).modifyFlat(id, 2);

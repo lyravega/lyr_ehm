@@ -12,30 +12,37 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.hullmods.ehm_wr.ehm_wr_energyslotretrofit;
 import experimentalHullModifications.misc.ehm_internals;
+import lyravega.listeners.events.companionMod;
 
 /**
  * @category Effect Extension
- * @see Master: {@link ehm_wr_energyslotretrofit}
+ * @see <br>Companion of {@link ehm_wr_energyslotretrofit}
  * @author lyravega
  */
-public final class ehm_mr_heavyenergyintegration extends _ehm_base {
-	public static void installExtension(ShipVariantAPI variant) {
+public final class ehm_mr_heavyenergyintegration extends _ehm_base implements companionMod {
+	@Override
+	public void installCompanionMod(MutableShipStatsAPI stats) {
+		ShipVariantAPI variant = stats.getVariant();
+
 		if (variant.getHullSpec().isBuiltInMod("hbi") || variant.getPermaMods().contains("hbi")) {
 			variant.addSuppressedMod("hbi");
-			variant.addPermaMod(ehm_internals.hullmods.extensions.heavyenergyintegration, false);
+			variant.addPermaMod(this.hullModSpecId, false);
 		}
 	}
 
-	public static void removeExtension(ShipVariantAPI variant) {
+	@Override
+	public void removeCompanionMod(MutableShipStatsAPI stats) {
+		ShipVariantAPI variant = stats.getVariant();
+
 		if (variant.getSuppressedMods().contains("hbi")) {
 			if (!variant.hasHullMod(ehm_internals.hullmods.weaponRetrofits.missileslotretrofit)) variant.removeSuppressedMod("hbi");
-			variant.removePermaMod(ehm_internals.hullmods.extensions.heavyenergyintegration);
+			variant.removePermaMod(this.hullModSpecId);
 		}
 	}
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String id) {
-		if (!stats.getVariant().hasHullMod(ehm_internals.hullmods.weaponRetrofits.energyslotretrofit)) { removeExtension(stats.getVariant()); return; }
+		if (!stats.getVariant().hasHullMod(ehm_internals.hullmods.weaponRetrofits.energyslotretrofit)) { this.removeCompanionMod(stats); return; }
 
 		stats.getDynamic().getMod(Stats.LARGE_ENERGY_MOD).modifyFlat(id, -COST_REDUCTION);
 	}

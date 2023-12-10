@@ -1,38 +1,26 @@
 package experimentalHullModifications.hullmods.ehm_wr;
 
+import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 
 import experimentalHullModifications.hullmods.ehm_mr.ehm_mr_heavyenergyintegration;
+import experimentalHullModifications.misc.ehm_internals;
+import lyravega.listeners.events.companionMod;
 
 /**@category Weapon Retrofit
- * @see Slave: {@link ehm_mr_heavyenergyintegration}
+ * @see Companion: {@link ehm_mr_heavyenergyintegration}
  * @author lyravega
  */
 public final class ehm_wr_energyslotretrofit extends _ehm_wr_base {
-	//#region CUSTOM EVENTS
-	@Override
-	public void onInstalled(MutableShipStatsAPI stats) {
-		ehm_mr_heavyenergyintegration.installExtension(stats.getVariant());
-
-		super.onInstalled(stats);
-	}
-
-	@Override
-	public void onRemoved(MutableShipStatsAPI stats) {
-		ehm_mr_heavyenergyintegration.removeExtension(stats.getVariant());
-
-		super.onRemoved(stats);
-	}
-	//#endregion
-	// END OF CUSTOM EVENTS
-
 	@Override
 	public void updateData() {
 		this.typeConversionMap.put(WeaponType.BALLISTIC, WeaponType.ENERGY);
 		this.typeConversionMap.put(WeaponType.MISSILE, WeaponType.SYNERGY);
 		this.typeConversionMap.put(WeaponType.COMPOSITE, WeaponType.SYNERGY);
+
+		this.companionMod = (companionMod) Global.getSettings().getHullModSpec(ehm_internals.hullmods.extensions.heavyenergyintegration).getEffect();
 	}
 
 	@Override

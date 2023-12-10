@@ -15,6 +15,7 @@ import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.misc.ehm_internals.hullmods.weaponRetrofits;
+import lyravega.listeners.events.companionMod;
 import lyravega.listeners.events.normalEvents;
 import lyravega.proxies.lyr_hullSpec;
 
@@ -32,6 +33,8 @@ public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstalled(MutableShipStatsAPI stats) {
+		if (this.companionMod != null) this.companionMod.installCompanionMod(stats);	// some of these mods utilize companion mods, which lack event methods
+
 		Set<String> modGroup = this.getModsFromSameGroup(stats);
 
 		if (modGroup.size() > 1) stats.getVariant().removeMod(modGroup.iterator().next());
@@ -41,6 +44,8 @@ public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 
 	@Override
 	public void onRemoved(MutableShipStatsAPI stats) {
+		if (this.companionMod != null) this.companionMod.removeCompanionMod(stats);
+
 		this.restoreWeaponTypes(stats);	// unlike the other mutually exclusive mods, this needs to happen without a check here otherwise type conversion may target altered types
 
 		commitVariantChanges(); playDrillSound();
@@ -50,6 +55,7 @@ public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 
 	protected EnumMap<WeaponType, WeaponType> typeConversionMap = new EnumMap<WeaponType, WeaponType>(WeaponType.class);
 	protected WeaponSize applicableSlotSize = null;
+	protected companionMod companionMod = null;
 
 	public _ehm_wr_base() {
 		super();
