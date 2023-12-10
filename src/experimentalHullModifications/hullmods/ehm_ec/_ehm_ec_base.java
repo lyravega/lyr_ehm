@@ -10,7 +10,6 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
-import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 
@@ -71,7 +70,8 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 	 * {@link #engineStyleSpec}.
 	 * @param variant whose hullSpec will be altered
 	 */
-	protected final void changeEngines(ShipVariantAPI variant) {
+	protected final void changeEngines(MutableShipStatsAPI stats) {
+		ShipVariantAPI variant = stats.getVariant();
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
 		lyr_engineBuilder engineSlot = new lyr_engineBuilder(null, false);
 
@@ -85,33 +85,13 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
 	}
 
-	/** @see #changeEngines(ShipVariantAPI) */
-	protected final void changeEngines(MutableShipStatsAPI stats) {
-		this.changeEngines(stats.getVariant());
-	}
-
-	/** @see #changeEngines(ShipVariantAPI) */
-	protected final void changeEngines(ShipAPI ship) {
-		this.changeEngines(ship.getVariant());
-	}
-
 	/**
 	 * Restores the engine visuals of the ship by applying a stock hullSpec on the variant.
 	 * <p> This is a lazy method that restores the hull spec instead of unmodifying the changes.
 	 * @param variant whose hullSpec will be restored
 	 */
-	protected final void restoreEngines(ShipVariantAPI variant) {
-		this.restoreHullSpec(variant);
-	}
-
-	/** @see #restoreEngines(ShipVariantAPI) */
 	protected final void restoreEngines(MutableShipStatsAPI stats) {
-		this.restoreEngines(stats.getVariant());
-	}
-
-	/** @see #restoreEngines(ShipVariantAPI) */
-	protected final void restoreEngines(ShipAPI ship) {
-		this.restoreHullSpec(ship.getVariant());
+		this.restoreHullSpec(stats.getVariant());	// TODO: convert this to stats as well?
 	}
 
 	/**
