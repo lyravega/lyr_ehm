@@ -137,6 +137,7 @@ public abstract class _ehm_base implements HullModEffect {
 				case tags.reqBase: if (!lyr_miscUtilities.hasBuiltInHullMod(ship, hullmods.main.base)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksBase, text.colourized.padding); continue;
 				case tags.reqNoLogistics: if (ship.getVariant().hasHullMod(hullmods.misc.logisticsoverhaul)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasLogisticsOverhaul, text.colourized.padding); continue;
 				case tags.reqShield: if (ship.getShield() == null) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.noShields, text.padding); continue;
+				case tags.reqEngine: if (!lyr_miscUtilities.hasEngines(ship)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.noEngines, text.padding); continue;
 				case tags.reqNoPhase: if (lyr_miscUtilities.hasPhaseCloak(ship)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasPhase, text.padding); continue;
 				case tags.reqWingBays: if (ship.getNumFighterBays() == 0) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.noWings, text.padding); continue;
 				case tags.reqNotChild: if (lyr_miscUtilities.isModule(ship)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.isModule, text.padding); continue;
@@ -176,6 +177,7 @@ public abstract class _ehm_base implements HullModEffect {
 			case tags.reqBase: if (!lyr_miscUtilities.hasBuiltInHullMod(ship, hullmods.main.base)) return false; else continue;
 			case tags.reqNoLogistics: if (ship.getVariant().hasHullMod(hullmods.misc.logisticsoverhaul)) return false; else continue;
 			case tags.reqShield: if (ship.getShield() == null) return false; else continue;
+			case tags.reqEngine: if (!lyr_miscUtilities.hasEngines(ship)) return false; else continue;
 			case tags.reqNoPhase: if (lyr_miscUtilities.hasPhaseCloak(ship)) return false; else continue;
 			case tags.reqWingBays: if (ship.getNumFighterBays() == 0) return false; else continue;
 			case tags.reqNotChild: if (lyr_miscUtilities.isModule(ship)) return false; else continue;

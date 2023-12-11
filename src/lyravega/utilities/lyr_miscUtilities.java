@@ -276,4 +276,8 @@ public class lyr_miscUtilities {
 			if (moduleVariantId.startsWith(prefix)) return true;
 		};	return false;
 	}
+
+	public static final boolean hasEngines(ShipAPI ship) {
+		return !ship.getEngineController().getShipEngines().isEmpty();
+	}
 }

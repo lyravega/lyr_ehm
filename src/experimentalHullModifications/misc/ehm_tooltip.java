@@ -35,6 +35,7 @@ public class ehm_tooltip {
 				isModule = negativeText("Cannot be installed")+" on "+highlightText("modules")+"",
 				isParent = negativeText("Cannot be installed")+" on "+highlightText("ships with modules")+"",
 				noShields = negativeText("Cannot be installed")+" on ships with "+highlightText("no shields")+"",
+				noEngines = negativeText("Cannot be installed")+" on ships with "+highlightText("no engines")+"",
 				hasPhase = negativeText("Cannot be installed")+" on ships with "+highlightText("a phase cloak")+"",
 				noWings = negativeText("Cannot be installed")+" on ships with "+highlightText("no fighter bays")+"",
 				notStripped = negativeText("Cannot be installed")+" on ships that are "+highlightText("not stripped down to the hull")+"; any flux capacitors or vents, wings, weapons, and modular hull modifications needs to be uninstalled first",

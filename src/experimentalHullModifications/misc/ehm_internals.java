@@ -9,14 +9,14 @@ import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 public final class ehm_internals {
 	public static final class ids {
 		public static final String
-			hullModFilePath = "data/hullmods/hull_mods.csv",	// must be hullmod .csv file path
-			drillSound = "drill",	// must match .json
-			submarket = "ehm_submarket",	// must match submarket id in .csv
-			ability = "ehm_ability",	// must match ability id in .csv
-			faction = "experimental",	// must match faction id in .csv and .faction
-			manufacturer = "Experimental",	// must match the 'designTypeColors' in settings.json
-			mod = "lyr_ehm",	// must match .json
-			experimental = "ehm";	// must match hullmod/weapon tag in .csv
+			hullModFilePath = "data/hullmods/hull_mods.csv",
+			drillSound = "drill",
+			submarket = "ehm_submarket",
+			ability = "ehm_ability",
+			faction = "experimental",
+			manufacturer = "Experimental",
+			mod = "lyr_ehm",
+			experimental = "ehm";
 	}
 
 	public static final class shunts {
@@ -30,71 +30,71 @@ public final class ehm_internals {
 		public static final class adapters {
 			public static final class ids {
 				public static final String
-					mediumDual = "ehm_adapter_mediumDual",	// must match weapon id in .csv and .wpn
-					largeDual = "ehm_adapter_largeDual",	// must match weapon id in .csv and .wpn
-					largeTriple = "ehm_adapter_largeTriple",	// must match weapon id in .csv and .wpn
-					largeQuad = "ehm_adapter_largeQuad";	// must match weapon id in .csv and .wpn
+					mediumDual = "ehm_adapter_mediumDual",
+					largeDual = "ehm_adapter_largeDual",
+					largeTriple = "ehm_adapter_largeTriple",
+					largeQuad = "ehm_adapter_largeQuad";
 			}
 			public static final String activatorId = hullmods.activatorRetrofits.adapterShuntActivator;
-			public static final String groupTag = "ehm_adapter";	// must match weapon group tag in .csv
+			public static final String groupTag = "ehm_adapter";
 			public static final String tag = groupTag;
 		}
 
 		public static final class converters {
 			public static final class ids {
 				public static final String
-					mediumToLarge = "ehm_converter_mediumToLarge",	// must match weapon id in .csv and .wpn
-					smallToLarge = "ehm_converter_smallToLarge",	// must match weapon id in .csv and .wpn
-					smallToMedium = "ehm_converter_smallToMedium";	// must match weapon id in .csv and .wpn
+					mediumToLarge = "ehm_converter_mediumToLarge",
+					smallToLarge = "ehm_converter_smallToLarge",
+					smallToMedium = "ehm_converter_smallToMedium";
 			}
 			public static final String activatorId = hullmods.activatorRetrofits.diverterConverterActivator;
-			public static final String groupTag = "ehm_converter";	// must match weapon group tag in .csv
+			public static final String groupTag = "ehm_converter";
 			public static final String tag = groupTag;
 		}
 
 		public static final class diverters {
 			public static final class ids {
 				public static final String
-					large = "ehm_diverter_large",	// must match weapon id in .csv and .wpn
-					medium = "ehm_diverter_medium",	// must match weapon id in .csv and .wpn
-					small = "ehm_diverter_small";	// must match weapon id in .csv and .wpn
+					large = "ehm_diverter_large",
+					medium = "ehm_diverter_medium",
+					small = "ehm_diverter_small";
 			}
 			public static final String activatorId = hullmods.activatorRetrofits.diverterConverterActivator;
-			public static final String groupTag = "ehm_diverter";	// must match weapon group tag in .csv
+			public static final String groupTag = "ehm_diverter";
 			public static final String tag = groupTag;
 		}
 
 		public static final class capacitors {
 			public static final class ids {
 				public static final String
-					large = "ehm_capacitor_large",	// must match weapon id in .csv and .wpn
-					medium = "ehm_capacitor_medium",	// must match weapon id in .csv and .wpn
-					small = "ehm_capacitor_small";	// must match weapon id in .csv and .wpn
+					large = "ehm_capacitor_large",
+					medium = "ehm_capacitor_medium",
+					small = "ehm_capacitor_small";
 			}
 			public static final String activatorId = hullmods.activatorRetrofits.mutableShuntActivator;
-			public static final String groupTag = "ehm_capacitor";	// must match weapon group tag in .csv
+			public static final String groupTag = "ehm_capacitor";
 			public static final String tag = groupTag;
 		}
 
 		public static final class dissipators {
 			public static final class ids {
 				public static final String
-					large = "ehm_dissipator_large",	// must match weapon id in .csv and .wpn
-					medium = "ehm_dissipator_medium",	// must match weapon id in .csv and .wpn
-					small = "ehm_dissipator_small";	// must match weapon id in .csv and .wpn
+					large = "ehm_dissipator_large",
+					medium = "ehm_dissipator_medium",
+					small = "ehm_dissipator_small";
 			}
 			public static final String activatorId = hullmods.activatorRetrofits.mutableShuntActivator;
-			public static final String groupTag = "ehm_dissipator";	// must match weapon group tag in .csv
+			public static final String groupTag = "ehm_dissipator";
 			public static final String tag = groupTag;
 		}
 
 		public static final class hangars {
 			public static final class ids {
 				public static final String
-					large = "ehm_tube_large";	// must match weapon id in .csv and .wpn
+					large = "ehm_tube_large";
 			}
 			public static final String activatorId = hullmods.activatorRetrofits.hangarShuntActivator;
-			public static final String groupTag = "ehm_hangar";	// must match weapon group tag in .csv
+			public static final String groupTag = "ehm_hangar";
 			public static final String tag = groupTag;
 		}
 
@@ -115,11 +115,11 @@ public final class ehm_internals {
 				hangarShuntActivator = "ehm_ar_launchtube",
 				mutableShuntActivator = "ehm_ar_mutableshunt",
 				adapterShuntActivator = "ehm_ar_stepdownadapter";
-			public static final String tag = "ehm_ar";	// must match hullmod tag in .csv
+			public static final String tag = "ehm_ar";
 		}
 
 		public static final class systemRetrofits {
-			public static final String
+			public static final String	// all of the system retrofit ids are based on system ids; they just get a prefix
 				acausaldisruptor = "ehm_sr_acausaldisruptor",
 				ammofeed = "ehm_sr_ammofeed",
 				burndrive = "ehm_sr_burndrive",
@@ -172,7 +172,7 @@ public final class ehm_internals {
 				targetingfeed = "ehm_sr_targetingfeed",
 				temporalshell = "ehm_sr_temporalshell",
 				traveldrive = "ehm_sr_traveldrive";
-			public static final String tag = "ehm_sr";	// must match hullmod tag in .csv
+			public static final String tag = "ehm_sr";
 		}
 
 		public static final class weaponRetrofits {
@@ -182,7 +182,7 @@ public final class ehm_internals {
 				missileslotretrofit = "ehm_wr_missileslotretrofit",
 				universalslotretrofit = "ehm_wr_universalslotretrofit",
 				universalsmallslotretrofit = "ehm_wr_universalsmallslotretrofit";
-			public static final String tag = "ehm_wr";	// must match hullmod tag in .csv
+			public static final String tag = "ehm_wr";
 		}
 
 		public static final class engineCosmetics {
@@ -190,11 +190,11 @@ public final class ehm_internals {
 				blueEngines = "ehm_cec_blueEngines",
 				greenEngines = "ehm_cec_greenEngines",
 				redEngines = "ehm_cec_redEngines",
-				crimsonEngines = "ehm_ec_torpedoEngines",	// id & class mismatch
+				crimsonEngines = "ehm_ec_torpedoEngines",
 				highTechEngines = "ehm_ec_highTechEngines",
 				lowTechEngines = "ehm_ec_lowTechEngines",
 				midlineEngines = "ehm_ec_midlineEngines";
-			public static final String tag = "ehm_ec";	// must match hullmod tag in .csv
+			public static final String tag = "ehm_ec";
 		}
 
 		public static final class shieldCosmetics {
@@ -206,7 +206,7 @@ public final class ehm_internals {
 				highTechShields = "ehm_sc_cyanShields",	// id & class mismatch
 				lowTechShields = "ehm_sc_magentaShields",	// id & class mismatch
 				midlineShields = "ehm_sc_purpleShields";	// id & class mismatch
-			public static final String tag = "ehm_sc";	// must match hullmod tag in .csv
+			public static final String tag = "ehm_sc";
 		}
 
 		public static final class misc {
@@ -215,7 +215,7 @@ public final class ehm_internals {
 				auxilarygenerators = "ehm_mr_auxilarygenerators",
 				logisticsoverhaul = "ehm_mr_logisticsoverhaul",
 				overengineered = "ehm_mr_overengineered";
-			public static final String tag = "ehm_mr";	// must match hullmod tag in .csv
+			public static final String tag = "ehm_mr";
 		}
 
 		public static final class extensions {
@@ -229,6 +229,7 @@ public final class ehm_internals {
 				reqBase = "reqBase",
 				reqNoLogistics = "reqNoLogistics",
 				reqShield = "reqShield",
+				reqEngine = "reqEngine",
 				reqNoPhase = "reqNoPhase",
 				reqWingBays = "reqWingBays",
 				reqNotChild = "reqNotChild",
@@ -239,7 +240,7 @@ public final class ehm_internals {
 				hasWeapons = "hasWeapons",
 				hasMiniModules = "hasMiniModules",
 				hasAnyFittedWings = "hasAnyFittedWings",
-				experimental = ids.experimental;	// must match hullmod/weapon tag in .csv
+				experimental = ids.experimental;
 		}
 
 		public static final class uiTags {
@@ -267,12 +268,12 @@ public final class ehm_internals {
 	public static final class stats {
 		public static final String
 			overdrive = upgrades.overdrive,
-			adapters = shunts.adapters.groupTag,	// must match .wpn group tag; also used as a stat id
-			converters = shunts.converters.groupTag,	// must match .wpn group tag; also used as a stat id
-			diverters = shunts.diverters.groupTag,	// must match .wpn group tag; also used as a stat id
-			capacitors = shunts.capacitors.groupTag,	// must match .wpn group tag; also used as a stat id
-			dissipators = shunts.dissipators.groupTag,	// must match .wpn group tag; also used as a stat id
-			hangars = shunts.hangars.groupTag,	// must match .wpn group tag; also used as a stat id
+			adapters = shunts.adapters.groupTag,
+			converters = shunts.converters.groupTag,
+			diverters = shunts.diverters.groupTag,
+			capacitors = shunts.capacitors.groupTag,
+			dissipators = shunts.dissipators.groupTag,
+			hangars = shunts.hangars.groupTag,
 			ordnancePoints = "ehm_ordnancePoints",	// TODO: implement/use this
 			slotPoints = "ehm_slotPoints",
 			slotPointsNeeded = "ehm_slotPointsNeeded",
@@ -283,10 +284,10 @@ public final class ehm_internals {
 	}
 
 	public static final class affixes {
-		public static final String
-			normalSlot = "WS",	// should NOT be altered in any update
-			adaptedSlot = "AS_",	// should NOT be altered in any update
-			convertedSlot = "CS_",	// should NOT be altered in any update
-			launchSlot = "LS_";	// should NOT be altered in any update
+		public static final String	// these should not be altered in any update if possible
+			normalSlot = "WS",
+			adaptedSlot = "AS_",
+			convertedSlot = "CS_",
+			launchSlot = "LS_";
 	}
 }
