@@ -103,44 +103,46 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
+		DynamicStatsAPI dynamicStats = stats.getDynamic();
 
-		HashMap<String, StatMod> diverterShunts = stats.getDynamic().getMod(diverterData.groupTag).getFlatBonuses();
+		HashMap<String, StatMod> diverterShunts = dynamicStats.getMod(diverterData.groupTag).getFlatBonuses();
 		if (!diverterShunts.isEmpty()) {
 			for (String slotId : diverterShunts.keySet()) {
 				if (lyr_hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
 
 				float mod = diverterShunts.get(slotId).getValue();
 
-				stats.getDynamic().getMod(ehm_internals.stats.slotPointsFromDiverters).modifyFlat(slotId, mod);	// to have the addition count on the active converter block
-				stats.getDynamic().getMod(ehm_internals.stats.slotPoints).modifyFlat(slotId, mod);	// to have the addition count on the inactive converter block
+				dynamicStats.getMod(ehm_internals.stats.slotPointsFromDiverters).modifyFlat(slotId, mod);	// to have the addition count on the active converter block
+				dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(slotId, mod);	// to have the addition count on the inactive converter block
 				ehm_deactivateSlot(lyr_hullSpec, variant.getWeaponId(slotId), slotId);
 			}
 		}
 
-		HashMap<String, StatMod> inactiveConverterShunts = stats.getDynamic().getMod(converterData.groupTag+"_inactive").getFlatBonuses();	// inactive converters, only to activate them here
+		HashMap<String, StatMod> inactiveConverterShunts = dynamicStats.getMod(converterData.groupTag+"_inactive").getFlatBonuses();	// inactive converters, only to activate them here
 		if (!inactiveConverterShunts.isEmpty()) {
-			float slotPoints = stats.getDynamic().getMod(ehm_internals.stats.slotPoints).computeEffective(0f);
+			float slotPoints = dynamicStats.getMod(ehm_internals.stats.slotPoints).computeEffective(0f);
 
 			for (String slotId : inactiveConverterShunts.keySet()) {
 				if (lyr_hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
 
 				float slotPointCost = inactiveConverterShunts.get(slotId).getValue();
-				float slotPointsUsed = stats.getDynamic().getMod(ehm_internals.stats.slotPointsUsed).computeEffective(0f);
+				float slotPointsUsed = dynamicStats.getMod(ehm_internals.stats.slotPointsUsed).computeEffective(0f);
 
 				if (slotPointCost + slotPointsUsed > slotPoints) continue;
 
-				// stats.getDynamic().getMod(ehm_internals.stats.slotPointsToConverters).modifyFlat(slotId, slotPoints);	// redundant in this method block; base pre-process method will update it
-				stats.getDynamic().getMod(ehm_internals.stats.slotPointsUsed).modifyFlat(slotId, slotPointCost);	// only this is necessary at this stage to keep track, rest of the stats will be processed externally
+				// dynamicStats.getMod(ehm_internals.stats.slotPointsToConverters).modifyFlat(slotId, slotPoints);	// redundant in this method block; base pre-process method will update it
+				dynamicStats.getMod(ehm_internals.stats.slotPointsUsed).modifyFlat(slotId, slotPointCost);	// only this is necessary at this stage to keep track, rest of the stats will be processed externally
 				ehm_convertSlot(lyr_hullSpec, variant.getWeaponId(slotId), slotId);
 			}
 		}
 
-		HashMap<String, StatMod> converterShunts = stats.getDynamic().getMod(converterData.groupTag).getFlatBonuses();	// active converters, only to apply the penalty
-		if (!converterShunts.isEmpty()) {
-			float slotPointsUsed = stats.getDynamic().getMod(ehm_internals.stats.slotPointsUsed).computeEffective(0f);
-			float slotPointsFromDiverters = stats.getDynamic().getMod(ehm_internals.stats.slotPointsFromDiverters).computeEffective(0f);
+		HashMap<String, StatMod> converterShunts = dynamicStats.getMod(converterData.groupTag).getFlatBonuses();	// active converters, only to apply the penalty
+		if (!converterShunts.isEmpty() && ehm_settings.getBaseSlotPointPenalty() > 0) {
+			float slotPointsUsed = dynamicStats.getMod(ehm_internals.stats.slotPointsUsed).computeEffective(0f);
+			float slotPointsFromDiverters = dynamicStats.getMod(ehm_internals.stats.slotPointsFromDiverters).computeEffective(0f);
+			float deploymentPointsMod = ehm_settings.getBaseSlotPointPenalty()*Math.max(0, slotPointsUsed - slotPointsFromDiverters);
 
-			stats.getDynamic().getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(this.hullModSpecId, ehm_settings.getBaseSlotPointPenalty()*Math.max(0, slotPointsUsed - slotPointsFromDiverters));
+			dynamicStats.getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(this.hullModSpecId, deploymentPointsMod);
 		}
 
 		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
@@ -162,10 +164,10 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 	@Override
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (ship == null) return;
-		final ShipVariantAPI variant = ship.getVariant();
+		ShipVariantAPI variant = ship.getVariant();
 
 		if (ship.getVariant().hasHullMod(this.hullModSpecId)) {
-			final DynamicStatsAPI dynamicStats = ship.getMutableStats().getDynamic();
+			DynamicStatsAPI dynamicStats = ship.getMutableStats().getDynamic();
 
 			int slotPoints = Math.round(dynamicStats.getMod(ehm_internals.stats.slotPoints).computeEffective(0f));
 			int slotPointsNeeded = Math.round(dynamicStats.getMod(ehm_internals.stats.slotPointsNeeded).computeEffective(0f));

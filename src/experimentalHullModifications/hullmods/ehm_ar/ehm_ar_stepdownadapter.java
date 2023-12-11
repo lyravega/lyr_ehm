@@ -101,8 +101,9 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
+		DynamicStatsAPI dynamicStats = stats.getDynamic();
 
-		HashMap<String, StatMod> adapterShunts = stats.getDynamic().getMod(adapterData.groupTag).getFlatBonuses();
+		HashMap<String, StatMod> adapterShunts = dynamicStats.getMod(adapterData.groupTag).getFlatBonuses();
 		if (!adapterShunts.isEmpty()) {
 			for (String slotId : adapterShunts.keySet()) {
 				if (lyr_hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
@@ -126,10 +127,10 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 	@Override
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (ship == null) return;
-		final ShipVariantAPI variant = ship.getVariant();
+		ShipVariantAPI variant = ship.getVariant();
 
 		if (variant.hasHullMod(this.hullModSpecId)) {
-			final DynamicStatsAPI dynamicStats = ship.getMutableStats().getDynamic();
+			DynamicStatsAPI dynamicStats = ship.getMutableStats().getDynamic();
 
 			if (ehm_settings.getShowInfoForActivators()) {
 				HashMap<String, StatMod> adapterShunts = dynamicStats.getMod(adapterData.groupTag).getFlatBonuses();

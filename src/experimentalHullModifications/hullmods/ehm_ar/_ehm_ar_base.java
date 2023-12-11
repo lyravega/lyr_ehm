@@ -73,7 +73,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 	public void onWeaponInstalled(MutableShipStatsAPI stats, String weaponId, String slotId) {
 		if (!this.shuntSet.contains(weaponId)) return;
 
-		lyr_miscUtilities.cleanWeaponGroupsUp(stats.getVariant(), this.shuntSet);
+		lyr_miscUtilities.cleanWeaponGroupsUp(stats.getVariant(), this.shuntSet);	// TODO: make this an instance method here
 		commitVariantChanges();
 	}
 
@@ -89,7 +89,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 	protected final Set<String> shuntSet = new HashSet<String>();
 
 	public static final void ehm_preProcessShunts(MutableShipStatsAPI stats) {
-		final Pattern pattern = Pattern.compile("WS[ 0-9]{4}");
+		Pattern pattern = Pattern.compile("WS[ 0-9]{4}");
 		Matcher matcher;
 
 		ShipVariantAPI variant = stats.getVariant();
@@ -123,8 +123,8 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 	}
 
 	public static final void ehm_preProcessDynamicStats(MutableShipStatsAPI stats) {
-		final DynamicStatsAPI dynamicStats = stats.getDynamic();
-		final ShipVariantAPI variant = stats.getVariant();
+		DynamicStatsAPI dynamicStats = stats.getDynamic();
+		ShipVariantAPI variant = stats.getVariant();
 
 		if (variant.getSMods().contains(ehm_internals.hullmods.misc.overengineered)) {
 			String source = ehm_mr_overengineered.class.getSimpleName();
@@ -165,7 +165,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 					if (!variant.hasHullMod(converterData.activatorId)) continue;
 					if (!converterData.isValidSlot(slot, shuntSpec)) continue;
 
-					final int mod = converterData.dataMap.get(shuntId).getChildCost();
+					int mod = converterData.dataMap.get(shuntId).getChildCost();
 					if (!slot.isDecorative()) {
 						dynamicStats.getMod(shuntId+"_inactive").modifyFlat(slotId, 1);
 						dynamicStats.getMod(shuntGroupTag+"_inactive").modifyFlat(slotId, mod);
@@ -182,7 +182,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 					if (!variant.hasHullMod(diverterData.activatorId)) continue;
 					if (!diverterData.isValidSlot(slot, shuntSpec)) continue;
 
-					final int mod = diverterData.dataMap.get(shuntId);
+					int mod = diverterData.dataMap.get(shuntId);
 					dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
 					dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, mod);
 					dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(slotId, mod);
@@ -192,7 +192,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 					if (!variant.hasHullMod(capacitorData.activatorId)) continue;
 					if (!capacitorData.isValidSlot(slot, shuntSpec)) continue;
 
-					final int mod = capacitorData.dataMap.get(shuntId);
+					int mod = capacitorData.dataMap.get(shuntId);
 					dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
 					dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, mod);
 				}; continue;
@@ -200,7 +200,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 					if (!variant.hasHullMod(dissipatorData.activatorId)) continue;
 					if (!dissipatorData.isValidSlot(slot, shuntSpec)) continue;
 
-					final int mod = dissipatorData.dataMap.get(shuntId);
+					int mod = dissipatorData.dataMap.get(shuntId);
 					dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
 					dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, mod);
 				}; continue;
@@ -208,9 +208,8 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 					if (!variant.hasHullMod(hangarData.activatorId)) continue;
 					if (!hangarData.isValidSlot(slot, shuntSpec)) continue;
 
-					final int mod = hangarData.dataMap.get(shuntId);
 					dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-					dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, mod);
+					dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 1);
 				}; continue;
 				default: continue;
 			}
@@ -260,6 +259,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 	}
 
 	protected static final void ehm_turnSlotIntoBay(lyr_hullSpec lyr_hullSpec, String shuntId, String slotId) {
+		float[][] launchPoints = hangarData.dataMap.get(shuntId);
 		lyr_weaponSlot parentSlot = lyr_hullSpec.getWeaponSlot(slotId);
 
 		lyr_weaponSlot childSlot = parentSlot.clone();
@@ -267,7 +267,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 
 		childSlot.setId(childSlotId);
 		childSlot.setNode(childSlotId, new Vector2f(parentSlot.getLocation()));
-		childSlot.addLaunchPoints(null, new float[][]{{0f,0f}, {4f,4f}, {4f,-4f}, {-4f,4f}, {-4f,-4f}});	// there will not be any other hangars, so passing the parameter directly
+		childSlot.addLaunchPoints(null, launchPoints);
 		childSlot.setWeaponType(WeaponType.LAUNCH_BAY);
 
 		lyr_hullSpec.addWeaponSlot(childSlot);

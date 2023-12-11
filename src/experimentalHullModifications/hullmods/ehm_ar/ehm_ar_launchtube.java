@@ -32,7 +32,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 		public static final String activatorId = hangars.activatorId;
 		public static final String tag = hangars.groupTag;
 		public static final String groupTag = hangars.groupTag;
-		public static final Map<String, Integer> dataMap = new HashMap<String, Integer>();
+		public static final Map<String, float[][]> dataMap = new HashMap<String, float[][]>();
 		public static final Set<String> idSet = dataMap.keySet();
 		private static final List<String> invalidSlotPrefixes = Arrays.asList(new String[]{affixes.convertedSlot});
 
@@ -41,7 +41,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 		}
 
 		static {
-			dataMap.put(ids.large, 1);
+			dataMap.put(ids.large, new float[][]{{0f,0f}, {4f,4f}, {4f,-4f}, {-4f,4f}, {-4f,-4f}});
 		}
 	}
 
@@ -60,18 +60,19 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
 		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
+		DynamicStatsAPI dynamicStats = stats.getDynamic();
 
-		HashMap<String, StatMod> hangarShunts = stats.getDynamic().getMod(hangarData.groupTag).getFlatBonuses();
+		HashMap<String, StatMod> hangarShunts = dynamicStats.getMod(hangarData.groupTag).getFlatBonuses();
 		if (!hangarShunts.isEmpty()) {
-			float hangarAmount = stats.getDynamic().getMod(hangarData.groupTag).computeEffective(0f);
+			float hangarMod = hangarShunts.size();	// hangars always give 1 bonus since there is only one large type, so use size
 
 			for (String slotId : hangarShunts.keySet()) {
-				if (lyr_hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
+				if (lyr_hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;	// parent slot turns into decorative, spawns a child launch bay
 
 				ehm_turnSlotIntoBay(lyr_hullSpec, variant.getWeaponId(slotId), slotId);
 			}
 
-			stats.getNumFighterBays().modifyFlat(this.hullModSpecId, hangarAmount);
+			stats.getNumFighterBays().modifyFlat(this.hullModSpecId, hangarMod);
 		}
 
 		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
@@ -89,10 +90,10 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 	@Override
 	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
 		if (ship == null) return;
-		final ShipVariantAPI variant = ship.getVariant();
+		ShipVariantAPI variant = ship.getVariant();
 
 		if (variant.hasHullMod(this.hullModSpecId)) {
-			final DynamicStatsAPI dynamicStats = ship.getMutableStats().getDynamic();
+			DynamicStatsAPI dynamicStats = ship.getMutableStats().getDynamic();
 
 			if (ehm_settings.getShowInfoForActivators()) {
 				HashMap<String, StatMod> hangarShunts = dynamicStats.getMod(hangarData.groupTag).getFlatBonuses();
