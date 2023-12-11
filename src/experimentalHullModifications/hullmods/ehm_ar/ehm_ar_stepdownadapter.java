@@ -22,13 +22,13 @@ import experimentalHullModifications.misc.ehm_internals.shunts.adapters;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import experimentalHullModifications.misc.ehm_tooltip.text;
-import lyravega.proxies.lyr_hullSpec;
+import experimentalHullModifications.proxies.ehm_hullSpec;
 
 /**@category Adapter Retrofit
  * @author lyravega
  */
 public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
-	static final class adapterData {
+	public static final class adapterData {
 		public static final class ids {
 			public static final String
 				mediumDual = adapters.ids.mediumDual,
@@ -100,19 +100,19 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
-		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
+		ehm_hullSpec hullSpec = new ehm_hullSpec(variant.getHullSpec(), false);
 		DynamicStatsAPI dynamicStats = stats.getDynamic();
 
 		HashMap<String, StatMod> adapterShunts = dynamicStats.getMod(adapterData.groupTag).getFlatBonuses();
 		if (!adapterShunts.isEmpty()) {
 			for (String slotId : adapterShunts.keySet()) {
-				if (lyr_hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
+				if (hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
 
-				ehm_adaptSlot(lyr_hullSpec, variant.getWeaponId(slotId), slotId);
+				hullSpec.adaptSlot(variant.getWeaponId(slotId), slotId);
 			}
 		}
 
-		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
+		variant.setHullSpecAPI(hullSpec.retrieve());
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION
@@ -136,7 +136,7 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 				HashMap<String, StatMod> adapterShunts = dynamicStats.getMod(adapterData.groupTag).getFlatBonuses();
 				if (!adapterShunts.isEmpty()) {
 					tooltip.addSectionHeading("ADAPTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-					ehm_printShuntCount(tooltip, variant, adapterShunts.keySet());
+					this.printShuntCountsOnTooltip(tooltip, variant, adapterShunts.keySet());
 				} else if (ehm_settings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO ADAPTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No adapters are installed. Adapters turn bigger slots into smaller ones.", text.padding);

@@ -29,7 +29,7 @@ public final class ehm_mr_auxilarygenerators extends _ehm_base implements normal
 
 	@Override
 	public void onRemoved(MutableShipStatsAPI stats) {
-		this.restoreHullSpec(stats.getVariant());
+		this.refreshHullSpec(stats);
 
 		commitVariantChanges(); playDrillSound();
 	}

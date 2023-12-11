@@ -16,10 +16,10 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_internals.hullmods.engineCosmetics;
+import experimentalHullModifications.proxies.ehm_hullSpec;
 import lyravega.listeners.events.customizableMod;
 import lyravega.listeners.events.normalEvents;
 import lyravega.proxies.lyr_engineBuilder;
-import lyravega.proxies.lyr_hullSpec;
 import lyravega.utilities.lyr_lunaUtilities;
 
 /**
@@ -85,17 +85,17 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 		this.registerModInGroup(stats);
 
 		ShipVariantAPI variant = stats.getVariant();
-		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
+		ehm_hullSpec hullSpec = new ehm_hullSpec(variant.getHullSpec(), false);
 		lyr_engineBuilder engineSlot = new lyr_engineBuilder(null, false);
 
-		if (this.engineStyleSpec != null) for (Object temp : lyr_hullSpec.getEngineSlots()) {
+		if (this.engineStyleSpec != null) for (Object temp : hullSpec.getEngineSlots()) {
 			engineSlot.recycle(temp).setEngineStyleId(this.engineStyleId);
 			engineSlot.setEngineStyleSpec(this.engineStyleSpec);
-		} else for (Object temp : lyr_hullSpec.getEngineSlots()) {
+		} else for (Object temp : hullSpec.getEngineSlots()) {
 			engineSlot.recycle(temp).setEngineStyleId(this.engineStyleId);
 		}
 
-		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
+		variant.setHullSpecAPI(hullSpec.retrieve());
 	}
 
 	/**
@@ -104,7 +104,7 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 	 * @param stats of the ship/member whose hullSpec will be restored
 	 */
 	protected final void restoreEngines(MutableShipStatsAPI stats) {
-		this.restoreHullSpec(stats.getVariant());	// TODO: convert this to stats as well?
+		this.refreshHullSpec(stats);
 	}
 
 	/**

@@ -22,13 +22,13 @@ import experimentalHullModifications.misc.ehm_internals.shunts.capacitors;
 import experimentalHullModifications.misc.ehm_internals.shunts.dissipators;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
-import lyravega.proxies.lyr_hullSpec;
+import experimentalHullModifications.proxies.ehm_hullSpec;
 
 /**@category Adapter Retrofit
  * @author lyravega
  */
 public final class ehm_ar_mutableshunt extends _ehm_ar_base {
-	static final class capacitorData {
+	public static final class capacitorData {
 		public static final class ids {
 			public static final String
 				large = capacitors.ids.large,
@@ -58,7 +58,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 		}
 	}
 
-	static final class dissipatorData {
+	public static final class dissipatorData {
 		public static final class ids {
 			public static final String
 				large = dissipators.ids.large,
@@ -98,7 +98,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
-		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
+		ehm_hullSpec hullSpec = new ehm_hullSpec(variant.getHullSpec(), false);
 		DynamicStatsAPI dynamicStats = stats.getDynamic();
 
 		HashMap<String, StatMod> dissipatorShunts = dynamicStats.getMod(dissipatorData.groupTag).getFlatBonuses();
@@ -108,9 +108,9 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 			float dissipatorMultMod = dissipatorAmount*dissipatorData.mods.flat;
 
 			for (String slotId : dissipatorShunts.keySet()) {
-				if (lyr_hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
+				if (hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
 
-				ehm_deactivateSlot(lyr_hullSpec, variant.getWeaponId(slotId), slotId);
+				hullSpec.deactivateSlot(variant.getWeaponId(slotId), slotId);
 			}
 
 			stats.getFluxDissipation().modifyFlat(this.hullModSpecId, dissipatorFlatMod);
@@ -124,16 +124,16 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 			float capacitorMultMod = 1f+capacitorAmount*capacitorData.mods.mult;
 
 			for (String slotId : capacitorShunts.keySet()) {
-				if (lyr_hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
+				if (hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
 
-				ehm_deactivateSlot(lyr_hullSpec, variant.getWeaponId(slotId), slotId);
+				hullSpec.deactivateSlot(variant.getWeaponId(slotId), slotId);
 			}
 
 			stats.getFluxCapacity().modifyFlat(this.hullModSpecId, capacitorFlatMod);
 			stats.getFluxCapacity().modifyMult(this.hullModSpecId, capacitorMultMod);
 		}
 
-		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
+		variant.setHullSpecAPI(hullSpec.retrieve());
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION
@@ -160,7 +160,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 					int totalBonus = Math.round(ship.getMutableStats().getFluxCapacity().modified-(variant.getNumFluxCapacitors()*Misc.FLUX_PER_CAPACITOR+variant.getHullSpec().getFluxCapacity()));
 
 					tooltip.addSectionHeading("CAPACITORS (+"+totalBonus+" CAPACITY)", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-					ehm_printShuntCount(tooltip, variant, capacitorShunts.keySet());
+					this.printShuntCountsOnTooltip(tooltip, variant, capacitorShunts.keySet());
 				} else if (ehm_settings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO CAPACITORS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No capacitors are installed. Capacitors increase the total flux capacity of the ship, and affect built-in capacitors.", 2f);
@@ -171,7 +171,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 					float totalBonus = ship.getMutableStats().getFluxDissipation().modified-(variant.getNumFluxVents()*Misc.DISSIPATION_PER_VENT+variant.getHullSpec().getFluxDissipation());
 
 					tooltip.addSectionHeading("DISSIPATORS (+"+totalBonus+" DISSIPATION)", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-					ehm_printShuntCount(tooltip, variant, dissipatorShunts.keySet());
+					this.printShuntCountsOnTooltip(tooltip, variant, dissipatorShunts.keySet());
 				} else if (ehm_settings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO DISSIPATORS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No dissipators are installed. Dissipators increase the total flux dissipation of the ship, and affect built-in vents.", 2f);

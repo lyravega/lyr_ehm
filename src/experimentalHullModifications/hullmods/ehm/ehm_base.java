@@ -12,10 +12,8 @@ import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
-import com.fs.starfarer.api.util.DynamicStatsAPI;
 import com.fs.starfarer.api.util.Misc;
 
-import experimentalHullModifications.hullmods.ehm_ar._ehm_ar_base;
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_internals.stats;
 import experimentalHullModifications.misc.ehm_settings;
@@ -49,19 +47,10 @@ public final class ehm_base extends _ehm_base implements normalEvents {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
-		ShipHullSpecAPI hullSpec = variant.getHullSpec();
 
-		if (!hullSpec.isBuiltInMod(this.hullModSpecId) || !Misc.getDHullId(hullSpec).equals(hullSpec.getHullId())) {
-			variant.setHullSpecAPI(ehm_hullSpecClone(variant));
+		this.swapHullSpec(stats);
 
-			// the block below is redundant with the new tracking as it is done externally, not from here anymore; may use 'onInstall()' and 'onRemove()' to trigger the effects below
-			if (!variant.getPermaMods().contains(this.hullModSpecId)) {	// to make this a one-time commit, and to avoid re-committing if/when the ship is getting restored
-				variant.addPermaMod(this.hullModSpecId, false);
-			// 	commitVariantChanges(); playDrillSound();
-			}
-		}
-
-		if (!ehm_settings.getCosmeticsOnly()) for (String tag : stats.getVariant().getTags()) {
+		if (!ehm_settings.getCosmeticsOnly()) for (String tag : variant.getTags()) {
 			if (!tag.startsWith(ehm_internals.upgrades.prefix)) continue;
 
 			_lyr_upgradeEffect upgrade = lyr_upgradeVault.getUpgrade(tag.replaceFirst(":.+?", ""));
@@ -69,8 +58,8 @@ public final class ehm_base extends _ehm_base implements normalEvents {
 			if (upgrade != null) upgrade.applyUpgradeEffect(stats, Integer.valueOf(tag.replaceFirst(upgrade.getUpgradeId()+":", "")));
 		}
 
-		_ehm_ar_base.ehm_preProcessShunts(stats);	// at this point, the hull spec should be cloned so proceed and pre-process the shunts
-		_ehm_ar_base.ehm_preProcessDynamicStats(stats);
+		this.preProcessShunts(stats);	// at this point, the hull spec should be cloned so proceed and pre-process the shunts
+		this.preProcessDynamicStats(stats);
 		// lyr_miscUtilities.cleanWeaponGroupsUp(variant);	// when an activator activates shunts on install, so moved this to their 'onInstalled()' method
 	}
 
@@ -108,22 +97,8 @@ public final class ehm_base extends _ehm_base implements normalEvents {
 			tooltip.addPara("HullTags: "+hullSpec.getTags().toString(), 5f).setHighlight("HullTags:");
 			tooltip.addPara("VariantTags: "+variant.getTags().toString(), 5f).setHighlight("VariantTags:");
 
-			DynamicStatsAPI dynamicStats = ship.getMutableStats().getDynamic();
-			final float launchTubes = dynamicStats.getMod(stats.hangars).computeEffective(0f);
-			final float slotPointsFromMods = dynamicStats.getMod(stats.slotPointsFromMods).computeEffective(0f);
-			final float slotPointsFromDiverters = dynamicStats.getMod(stats.slotPointsFromDiverters).computeEffective(0f);
-			final float slotPointsToConverters = dynamicStats.getMod(stats.slotPointsToConverters).computeEffective(0f);
-			final float capacitors = dynamicStats.getMod(stats.capacitors).computeEffective(0f);
-			final float dissipators = dynamicStats.getMod(stats.dissipators).computeEffective(0f);
-			final float overdrive = dynamicStats.getMod(stats.overdrive).computeEffective(0f);
 			tooltip.addSectionHeading("DEBUG INFO: DYNAMIC STATS", header.severeWarning_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-			if (launchTubes > 0) tooltip.addPara("'"+stats.hangars+"': "+launchTubes, 5f).setHighlight("'"+stats.hangars+"':");
-			if (slotPointsFromMods > 0) tooltip.addPara("'"+stats.slotPointsFromMods+"': "+slotPointsFromMods, 5f).setHighlight("'"+stats.slotPointsFromMods+"':");
-			if (slotPointsFromDiverters > 0) tooltip.addPara("'"+stats.slotPointsFromDiverters+"': "+slotPointsFromDiverters, 5f).setHighlight("'"+stats.slotPointsFromDiverters+"':");
-			if (slotPointsToConverters > 0) tooltip.addPara("'"+stats.slotPointsToConverters+"': "+slotPointsToConverters, 5f).setHighlight("'"+stats.slotPointsToConverters+"':");
-			if (capacitors > 0) tooltip.addPara("'"+stats.capacitors+"': "+capacitors, 5f).setHighlight("'"+stats.capacitors+"':");
-			if (dissipators > 0) tooltip.addPara("'"+stats.dissipators+"': "+dissipators, 5f).setHighlight("'"+stats.dissipators+"':");
-			if (overdrive > 0) tooltip.addPara("'"+stats.overdrive+"': "+overdrive, 5f).setHighlight("'"+stats.overdrive+"':");
+			// TODO: redo this section
 
 			tooltip.addSectionHeading("DEBUG INFO: SCRIPTS", header.severeWarning_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 			for (EveryFrameScript script : Global.getSector().getScripts()) {
@@ -140,11 +115,6 @@ public final class ehm_base extends _ehm_base implements normalEvents {
 		if (!variant.hasHullMod(this.hullModSpecId)) {
 			tooltip.addSectionHeading(header.severeWarning, header.severeWarning_textColour, header.invisible_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 			lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.baseRetrofitWarning, text.padding);
-
-			if (hullSpec.isRestoreToBase()) {
-				tooltip.addSectionHeading(header.restoreWarning, header.warning_textColour, header.invisible_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
-				lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.restoreWarning, text.padding);
-			}
 
 			super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
 		} else {

@@ -22,9 +22,9 @@ import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import experimentalHullModifications.misc.ehm_tooltip.text;
+import experimentalHullModifications.proxies.ehm_hullSpec;
 import lyravega.listeners.events.enhancedEvents;
 import lyravega.listeners.events.normalEvents;
-import lyravega.proxies.lyr_hullSpec;
 import lyravega.utilities.lyr_miscUtilities;
 import lyravega.utilities.lyr_tooltipUtilities;
 
@@ -46,7 +46,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 	public void onRemoved(MutableShipStatsAPI stats) {
 		ShipVariantAPI variant = stats.getVariant();
 
-		this.restoreHullSpec(variant);
+		this.refreshHullSpec(stats);
 		variant.removeMod(HullMods.CIVGRADE);	// to clean-up the variant if it was added as a built-in through this mod
 
 		commitVariantChanges(); playDrillSound();
@@ -59,7 +59,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 
 	@Override
 	public void onNormalized(MutableShipStatsAPI stats) {
-		this.restoreHullSpec(stats.getVariant());
+		this.refreshHullSpec(stats);
 
 		commitVariantChanges();
 	}
@@ -86,8 +86,8 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
-		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
-		ShipHullSpecAPI originalHullSpec = lyr_hullSpec.referenceNonDamaged();
+		ehm_hullSpec hullSpec = new ehm_hullSpec(variant.getHullSpec(), false);
+		ShipHullSpecAPI originalHullSpec = hullSpec.referenceNonDamaged();
 
 		float logisticsBonus = 0;
 
@@ -96,19 +96,19 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 			if (!slot.isWeaponSlot()) continue;	// TODO: needs to affect built-in weapons
 
 			logisticsBonus += logisticsSlotBonus.get(slot.getSlotSize());
-			lyr_hullSpec.getWeaponSlot(slot.getId()).setWeaponType(WeaponType.DECORATIVE);
+			hullSpec.getWeaponSlot(slot.getId()).setWeaponType(WeaponType.DECORATIVE);
 		}
 
 		// bonus from ship system
 		if (originalHullSpec.getShipSystemId() != null) {
 			logisticsBonus += logisticsModBonus.get(hullSize);
-			lyr_hullSpec.setShipSystemId(null);
+			hullSpec.setShipSystemId(null);
 		}
 
 		// bonus from defense system
 		if (originalHullSpec.getShieldSpec().getType() != ShieldType.NONE) {
 			logisticsBonus += logisticsModBonus.get(hullSize);
-			lyr_hullSpec.getShieldSpec().setType(ShieldType.NONE);
+			hullSpec.getShieldSpec().setType(ShieldType.NONE);
 		}
 
 		// bonus from fighter bays
@@ -118,15 +118,15 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 		}
 
 		// adjusting hints & adding civgrade if needed
-		EnumSet<ShipTypeHints> hints = lyr_hullSpec.getHints();	hints.removeAll(hintsToRemove); hints.addAll(hintsToAdd);
-		if (!lyr_hullSpec.retrieve().isBuiltInMod(HullMods.CIVGRADE)) lyr_hullSpec.addBuiltInMod(HullMods.CIVGRADE);
+		EnumSet<ShipTypeHints> hints = hullSpec.getHints();	hints.removeAll(hintsToRemove); hints.addAll(hintsToAdd);
+		if (!hullSpec.retrieve().isBuiltInMod(HullMods.CIVGRADE)) hullSpec.addBuiltInMod(HullMods.CIVGRADE);
 
 		if (!stats.getVariant().getSMods().contains(this.hullModSpecId)) {
-			variant.setHullSpecAPI(lyr_hullSpec.retrieve()); return;	// cut-off point for non s-mod effects
+			variant.setHullSpecAPI(hullSpec.retrieve()); return;	// cut-off point for non s-mod effects
 		}
 
 		if (!lyr_miscUtilities.hasCivilianHintsOrMod(originalHullSpec, true)) {
-			lyr_hullSpec.setOrdnancePoints((int) Math.round(originalHullSpec.getOrdnancePoints(null)*0.25));
+			hullSpec.setOrdnancePoints((int) Math.round(originalHullSpec.getOrdnancePoints(null)*0.25));
 
 			if (!variant.hasHullMod(HullMods.AUTOMATED)) {
 				stats.getMinCrewMod().modifyMult(this.hullModSpecId, 0.25f);
@@ -152,7 +152,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 		stats.getDynamic().getMod(Stats.MAX_LOGISTICS_HULLMODS_MOD).modifyFlat(this.hullModSpecId, 1);
 		stats.getDynamic().getMod(Stats.MAX_PERMANENT_HULLMODS_MOD).modifyFlat(this.hullModSpecId, 2);
 
-		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
+		variant.setHullSpecAPI(hullSpec.retrieve());
 	}
 
 	@Override

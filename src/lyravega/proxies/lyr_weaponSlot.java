@@ -79,6 +79,8 @@ public class lyr_weaponSlot {
 		hidden;
 	}
 
+	protected lyr_weaponSlot() {}
+
 	/**
 	 * Creates a new proxy-like object instance for the passed {@link WeaponSlotAPI
 	 * weaponSlot}. May be used as a reference and to access obfuscated accessors,

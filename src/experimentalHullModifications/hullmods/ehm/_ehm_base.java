@@ -2,28 +2,41 @@ package experimentalHullModifications.hullmods.ehm;
 
 import java.awt.Color;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI.CoreUITradeMode;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
-import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
+import com.fs.starfarer.api.loading.WeaponSlotAPI;
+import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.api.util.DynamicStatsAPI;
 
+import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_diverterandconverter.converterData;
+import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_diverterandconverter.diverterData;
+import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_launchtube.hangarData;
+import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.capacitorData;
+import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.dissipatorData;
+import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.adapterData;
+import experimentalHullModifications.hullmods.ehm_mr.ehm_mr_auxilarygenerators;
+import experimentalHullModifications.hullmods.ehm_mr.ehm_mr_overengineered;
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_internals.hullmods;
 import experimentalHullModifications.misc.ehm_internals.hullmods.tags;
+import experimentalHullModifications.misc.ehm_lostAndFound;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import experimentalHullModifications.misc.ehm_tooltip.text;
 import experimentalHullModifications.plugin.lyr_ehm.friend;
-import lyravega.proxies.lyr_hullSpec;
+import experimentalHullModifications.proxies.ehm_hullSpec;
 import lyravega.utilities.lyr_miscUtilities;
 import lyravega.utilities.lyr_tooltipUtilities;
+import lyravega.utilities.logger.lyr_logger;
 
 /**
  * This is the master base class for all experimental hullmods. Stores the most
@@ -213,100 +226,26 @@ public abstract class _ehm_base implements HullModEffect {
 	// END OF IMPLEMENTATION
 
 	/**
-	 * Called from the {@link ehm_base retrofit base} only. If the hull does not have the base built-in, clones
-	 * the hullSpec, alters it, and returns it so that it can be applied on a variant.
-	 * <p> There are two problems with replacing the hull specs. From what I can tell, game replaces the hull
-	 * specs of the ships after a combat, and after repairs. The latter is handled through the vanilla script
-	 * {@link com.fs.starfarer.api.impl.campaign.skills.FieldRepairsScript#restoreToNonDHull FieldRepairsScript}
-	 * which gets active if the player has the hull restoration skill. The former happens when a ship suffers
-	 * damage, through {@link com.fs.starfarer.api.impl.campaign.DModManager#setDHull DModManager}.
-	 * <p> The first problem is suppressed by replacing the script. The second problem is avoided by using
-	 * d-hulls instead of normal ones at all times. In addition, any ship that can be restored to another
-	 * hull spec is visually restored immediately as it creates another issue.
-	 * @param variant to be used as a template
-	 * @return a cloned hullSpec
+	 * Clones and alters the hull spec if necessary, and applies it on the variant.
+	 * <p> Actual cloning and alteration is done on the proxy's constructor. Other methods that also
+	 * utilize that constructor guarantees that the hull spec will be unique to prevent any leakage.
+	 * This method should be used if no further use of the proxy is required.
+	 * @param stats of the ship/member whose hull spec may be swapped
+	 * @see {@link ehm_hullSpec#ehm_hullSpec(ShipHullSpecAPI, boolean) Hull Spec Proxy Constructor}
 	 */
-	protected static final ShipHullSpecAPI ehm_hullSpecClone(ShipVariantAPI variant) {
-		ShipHullSpecAPI hullSpecToClone = variant.getHullSpec();
-		lyr_hullSpec lyr_hullSpec;
+	protected final void swapHullSpec(MutableShipStatsAPI stats) {
+		ShipVariantAPI variant = stats.getVariant();
+		ehm_hullSpec hullSpec = new ehm_hullSpec(variant.getHullSpec(), false);
 
-		if (hullSpecToClone.isRestoreToBase() && hullSpecToClone.getBaseHullId() != null ) {	// these extras are necessary for ships that may be restored to a different hull spec
-			for (String hullModId : hullSpecToClone.getBuiltInMods()) {	// transfer the dmods on the hullspec to the variant instead
-				if (!Global.getSettings().getHullModSpec(hullModId).hasTag(Tags.HULLMOD_DMOD)) continue;
-
-				if (!variant.getSuppressedMods().contains(hullModId)) {	// if a dmod is suppressed (fixed), do not transfer it
-					variant.removeSuppressedMod(hullModId);
-					variant.addPermaMod(hullModId, false);
-				}
-			}
-			hullSpecToClone = hullSpecToClone.getBaseHull();	// target the base hull spec instead, to perform a soft restoration
-		}
-
-		lyr_hullSpec = new lyr_hullSpec(false, hullSpecToClone);
-
-		ehm_hullSpecAlteration(lyr_hullSpec);
-
-		return lyr_hullSpec.retrieve();
-	}
-
-	/**
-	 * Similar to clone in how it does things internally. Grabs a stock hullSpec from
-	 * the SpecStore, which is used for comparison / restoration purposes.
-	 * <p> The returned hullSpec will have any tags and built-in stuff that the current
-	 * hullSpec has, however they should be standard. The reason for trying to retain
-	 * such additions is, in some restoration cases, the returned hullSpec is simply
-	 * applied to the variant, whereas a step-by-step restoration should be preferred.
-	 * <p> As no other mods does things this way as far as I know, at the very least
-	 * the aforementioned things will be preserved. But to be honest, I should expand
-	 * the restoration methods instead of simply applying the returned hullSpec.
-	 * @param variant to be used as a template
-	 * @return a 'fresh' hullSpec from the SpecStore
-	 */
-	@Deprecated
-	protected static final ShipHullSpecAPI ehm_hullSpecRefresh(ShipVariantAPI variant) {
-		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(true, variant.getHullSpec());
-
-		ehm_hullSpecAlteration(lyr_hullSpec);
-
-		return lyr_hullSpec.retrieve();
-	}
-
-	/**
-	 * As the hull specs use (D) versions to avoid a couple of issues, a method is necessary
-	 * to make some alterations and restore some fields to their original, non (D) versions.
-	 * @param lyr_hullSpec proxy with a cloned hull spec in it
-	 * @param originalHullSpec to be used as a reference; not a (D) version
-	 */
-	private static final void ehm_hullSpecAlteration(lyr_hullSpec lyr_hullSpec) {
-		ShipHullSpecAPI originalHullSpec = lyr_hullSpec.referenceNonDamaged();
-
-		if (ehm_settings.getShowExperimentalFlavour()) {
-			lyr_hullSpec.setManufacturer(text.flavourManufacturer);
-			lyr_hullSpec.setDescriptionPrefix(text.flavourDescription);
-			lyr_hullSpec.setHullName(originalHullSpec.getHullName() + " (E)");	// append "(E)"
-		}
-
-		lyr_hullSpec.addBuiltInMod(hullmods.main.base);
+		variant.setHullSpecAPI(hullSpec.retrieve());
 	}
 
 	// TODO: javadoc
-	protected final void restoreHullSpec(ShipVariantAPI variant) {
-		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(true, variant.getHullSpec());
+	protected final void refreshHullSpec(MutableShipStatsAPI stats) {
+		ShipVariantAPI variant = stats.getVariant();
+		ehm_hullSpec hullSpec = new ehm_hullSpec(variant.getHullSpec(), true);
 
-		this.alterHullSpec(lyr_hullSpec);
-
-		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
-	}
-
-	// TODO: javadoc
-	private final void alterHullSpec(lyr_hullSpec lyr_hullSpec) {
-		if (ehm_settings.getShowExperimentalFlavour()) {
-			lyr_hullSpec.setManufacturer(text.flavourManufacturer);
-			lyr_hullSpec.setDescriptionPrefix(text.flavourDescription);
-			lyr_hullSpec.setHullName(lyr_hullSpec.referenceNonDamaged().getHullName() + " (E)");	// append "(E)"
-		}
-
-		lyr_hullSpec.addBuiltInMod(hullmods.main.base);
+		variant.setHullSpecAPI(hullSpec.retrieve());
 	}
 
 	protected final void registerModInGroup(MutableShipStatsAPI stats) {
@@ -315,5 +254,133 @@ public abstract class _ehm_base implements HullModEffect {
 
 	protected final Set<String> getModsFromSameGroup(MutableShipStatsAPI stats) {
 		return stats.getDynamic().getMod(this.extendedData.groupTag).getFlatBonuses().keySet();
+	}
+
+	protected final void preProcessShunts(MutableShipStatsAPI stats) {
+		Pattern pattern = Pattern.compile("WS[ 0-9]{4}");
+		Matcher matcher;
+
+		ShipVariantAPI variant = stats.getVariant();
+		ehm_hullSpec hullSpec = new ehm_hullSpec(variant.getHullSpec(), false);
+
+		// primarily to deal with stuff on load
+		if (!ehm_settings.getClearUnknownSlots()) for (String slotId : variant.getFittedWeaponSlots()) {
+			if (variant.getSlot(slotId) != null) continue;
+			matcher = pattern.matcher(slotId);
+			if (matcher.find()) slotId = matcher.group();
+			else continue;	// this should never happen
+
+			if (!slotId.startsWith(ehm_internals.affixes.normalSlot)) continue;
+			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
+			if (shuntSpec.getSize() != variant.getSlot(slotId).getSlotSize()) continue;
+
+			String shuntId = shuntSpec.getWeaponId();
+			if (adapterData.idSet.contains(shuntId)) hullSpec.adaptSlot(shuntId, slotId);
+			else if (converterData.idSet.contains(shuntId)) hullSpec.convertSlot(shuntId, slotId);
+		} else for (String slotId : variant.getFittedWeaponSlots()) {
+			if (variant.getSlot(slotId) != null) continue;
+
+			String weaponId = variant.getWeaponId(slotId);
+			lyr_logger.warn("Slot with the ID '"+slotId+"' not found, stashing the weapon '"+weaponId+"'");
+			ehm_lostAndFound.addLostItem(weaponId);	// to recover the weapons 'onGameLoad()'
+
+			variant.clearSlot(slotId);	// this is an emergency option to allow loading because I fucked up
+		}
+
+		variant.setHullSpecAPI(hullSpec.retrieve());
+	}
+
+	protected final void preProcessDynamicStats(MutableShipStatsAPI stats) {
+		DynamicStatsAPI dynamicStats = stats.getDynamic();
+		ShipVariantAPI variant = stats.getVariant();
+
+		if (variant.getSMods().contains(ehm_internals.hullmods.misc.overengineered)) {
+			String source = ehm_mr_overengineered.class.getSimpleName();
+			int mod = ehm_mr_overengineered.slotPointBonus.get(variant.getHullSize());
+
+			dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(source, mod);
+			dynamicStats.getMod(ehm_internals.stats.slotPointsFromMods).modifyFlat(source, mod);
+			// TODO: add a dynamic stat for ordnancePoints from here
+		}
+
+		if (variant.hasHullMod(ehm_internals.hullmods.misc.auxilarygenerators)) {
+			String source = ehm_mr_auxilarygenerators.class.getSimpleName();
+			int mod = ehm_mr_auxilarygenerators.slotPointBonus.get(variant.getHullSize());
+
+			dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(source, mod);
+			dynamicStats.getMod(ehm_internals.stats.slotPointsFromMods).modifyFlat(source, mod);
+		}
+
+		for (WeaponSlotAPI slot : variant.getHullSpec().getAllWeaponSlotsCopy()) {
+			String slotId = slot.getId();
+			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
+
+			if (shuntSpec == null) continue;
+			if (shuntSpec.getSize() != slot.getSlotSize()) continue;
+			if (!shuntSpec.hasTag(ehm_internals.hullmods.tags.experimental)) continue;
+
+			String shuntId = shuntSpec.getWeaponId();
+			String shuntGroupTag = shuntSpec.getWeaponGroupTag();
+			switch (shuntGroupTag) {
+				case adapterData.groupTag: {
+					if (!variant.hasHullMod(adapterData.activatorId)) continue;
+					if (!adapterData.isValidSlot(slot, shuntSpec)) continue;
+
+					dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+					dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 1);
+				}; continue;
+				case converterData.groupTag: {
+					if (!variant.hasHullMod(converterData.activatorId)) continue;
+					if (!converterData.isValidSlot(slot, shuntSpec)) continue;
+
+					int mod = converterData.dataMap.get(shuntId).getChildCost();
+					if (!slot.isDecorative()) {
+						dynamicStats.getMod(shuntId+"_inactive").modifyFlat(slotId, 1);
+						dynamicStats.getMod(shuntGroupTag+"_inactive").modifyFlat(slotId, mod);
+						dynamicStats.getMod(ehm_internals.stats.slotPointsNeeded).modifyFlat(slotId, mod);
+					} else {
+						dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+						dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, mod);
+						dynamicStats.getMod(ehm_internals.stats.slotPointsNeeded).modifyFlat(slotId, mod);
+						dynamicStats.getMod(ehm_internals.stats.slotPointsUsed).modifyFlat(slotId, mod);
+						// dynamicStats.getMod(ehm_internals.stats.slotPointsToConverters).modifyFlat(slotId, mod);	// redundant since stat ids point at the group tag
+					}
+				}; continue;
+				case diverterData.groupTag: {
+					if (!variant.hasHullMod(diverterData.activatorId)) continue;
+					if (!diverterData.isValidSlot(slot, shuntSpec)) continue;
+
+					int mod = diverterData.dataMap.get(shuntId);
+					dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+					dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, mod);
+					dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(slotId, mod);
+					// dynamicStats.getMod(ehm_internals.stats.slotPointsFromDiverters).modifyFlat(slotId, mod);	// redundant since stat ids point at the group tag
+				}; continue;
+				case capacitorData.groupTag: {
+					if (!variant.hasHullMod(capacitorData.activatorId)) continue;
+					if (!capacitorData.isValidSlot(slot, shuntSpec)) continue;
+
+					int mod = capacitorData.dataMap.get(shuntId);
+					dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+					dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, mod);
+				}; continue;
+				case dissipatorData.groupTag: {
+					if (!variant.hasHullMod(dissipatorData.activatorId)) continue;
+					if (!dissipatorData.isValidSlot(slot, shuntSpec)) continue;
+
+					int mod = dissipatorData.dataMap.get(shuntId);
+					dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+					dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, mod);
+				}; continue;
+				case hangarData.groupTag: {
+					if (!variant.hasHullMod(hangarData.activatorId)) continue;
+					if (!hangarData.isValidSlot(slot, shuntSpec)) continue;
+
+					dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
+					dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 1);
+				}; continue;
+				default: continue;
+			}
+		}
 	}
 }

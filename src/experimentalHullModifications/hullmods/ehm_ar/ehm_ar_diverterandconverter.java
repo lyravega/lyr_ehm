@@ -23,14 +23,14 @@ import experimentalHullModifications.misc.ehm_internals.shunts.converters;
 import experimentalHullModifications.misc.ehm_internals.shunts.diverters;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
-import lyravega.proxies.lyr_hullSpec;
+import experimentalHullModifications.proxies.ehm_hullSpec;
 import lyravega.utilities.lyr_tooltipUtilities.colour;
 
 /**@category Adapter Retrofit
  * @author lyravega
  */
 public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
-	static final class converterData {
+	public static final class converterData {
 		public static final class ids {
 			public static final String
 				mediumToLarge = converters.ids.mediumToLarge,
@@ -67,7 +67,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 		}
 	}
 
-	static final class diverterData {
+	public static final class diverterData {
 		public static final class ids {
 			public static final String
 				large = diverters.ids.large,
@@ -102,19 +102,19 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
-		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
+		ehm_hullSpec hullSpec = new ehm_hullSpec(variant.getHullSpec(), false);
 		DynamicStatsAPI dynamicStats = stats.getDynamic();
 
 		HashMap<String, StatMod> diverterShunts = dynamicStats.getMod(diverterData.groupTag).getFlatBonuses();
 		if (!diverterShunts.isEmpty()) {
 			for (String slotId : diverterShunts.keySet()) {
-				if (lyr_hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
+				if (hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
 
 				float mod = diverterShunts.get(slotId).getValue();
 
 				dynamicStats.getMod(ehm_internals.stats.slotPointsFromDiverters).modifyFlat(slotId, mod);	// to have the addition count on the active converter block
 				dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(slotId, mod);	// to have the addition count on the inactive converter block
-				ehm_deactivateSlot(lyr_hullSpec, variant.getWeaponId(slotId), slotId);
+				hullSpec.deactivateSlot(variant.getWeaponId(slotId), slotId);
 			}
 		}
 
@@ -123,7 +123,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 			float slotPoints = dynamicStats.getMod(ehm_internals.stats.slotPoints).computeEffective(0f);
 
 			for (String slotId : inactiveConverterShunts.keySet()) {
-				if (lyr_hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
+				if (hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
 
 				float slotPointCost = inactiveConverterShunts.get(slotId).getValue();
 				float slotPointsUsed = dynamicStats.getMod(ehm_internals.stats.slotPointsUsed).computeEffective(0f);
@@ -132,7 +132,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 
 				// dynamicStats.getMod(ehm_internals.stats.slotPointsToConverters).modifyFlat(slotId, slotPoints);	// redundant in this method block; base pre-process method will update it
 				dynamicStats.getMod(ehm_internals.stats.slotPointsUsed).modifyFlat(slotId, slotPointCost);	// only this is necessary at this stage to keep track, rest of the stats will be processed externally
-				ehm_convertSlot(lyr_hullSpec, variant.getWeaponId(slotId), slotId);
+				hullSpec.convertSlot(variant.getWeaponId(slotId), slotId);
 			}
 		}
 
@@ -145,7 +145,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 			dynamicStats.getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(this.hullModSpecId, deploymentPointsMod);
 		}
 
-		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
+		variant.setHullSpecAPI(hullSpec.retrieve());
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION
@@ -189,7 +189,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 				HashMap<String, StatMod> converterShunts = dynamicStats.getMod(converterData.groupTag).getFlatBonuses();
 				if (!converterShunts.isEmpty()) {
 					tooltip.addSectionHeading("CONVERTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-					ehm_printShuntCount(tooltip, variant, converterShunts.keySet());
+					this.printShuntCountsOnTooltip(tooltip, variant, converterShunts.keySet());
 				} else if (ehm_settings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO CONVERTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No converters are installed. Converters are used to make a smaller slot a bigger one, if there are enough slot points.", 2f);
@@ -198,7 +198,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 				HashMap<String, StatMod> diverterShunts = dynamicStats.getMod(diverterData.groupTag).getFlatBonuses();
 				if (!diverterShunts.isEmpty()) {
 					tooltip.addSectionHeading("DIVERTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-					ehm_printShuntCount(tooltip, variant, diverterShunts.keySet());
+					this.printShuntCountsOnTooltip(tooltip, variant, diverterShunts.keySet());
 				} else if (ehm_settings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO DIVERTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No diverters are installed. Diverters disable a slot and provide slot points that are used by converters in turn.", 2f);

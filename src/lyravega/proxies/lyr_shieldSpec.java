@@ -53,6 +53,8 @@ public class lyr_shieldSpec {
 		}
 	}
 
+	protected lyr_shieldSpec() {}
+
 	/**
 	 * Creates a new proxy-like object instance for the passed {@link ShieldSpecAPI
 	 * shieldSpec}. May be used as a reference and to access obfuscated accessors,

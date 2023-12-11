@@ -15,9 +15,9 @@ import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.misc.ehm_internals.hullmods.weaponRetrofits;
+import experimentalHullModifications.proxies.ehm_hullSpec;
 import lyravega.listeners.events.companionMod;
 import lyravega.listeners.events.normalEvents;
-import lyravega.proxies.lyr_hullSpec;
 
 /**
  * This class is used by weapon retrofit hullmods. They are pretty
@@ -84,9 +84,9 @@ public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 		this.registerModInGroup(stats);
 
 		ShipVariantAPI variant = stats.getVariant();
-		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
+		ehm_hullSpec hullSpec = new ehm_hullSpec(variant.getHullSpec(), false);
 
-		for (WeaponSlotAPI slot: lyr_hullSpec.getAllWeaponSlotsCopy()) {
+		for (WeaponSlotAPI slot: hullSpec.getAllWeaponSlotsCopy()) {
 			if (this.applicableSlotSize != null && slot.getSlotSize() != this.applicableSlotSize) continue;
 
 			String slotId = slot.getId();
@@ -94,11 +94,11 @@ public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 
 			if (this.typeConversionMap.containsKey(convertFrom)) {
 				WeaponType convertTo = this.typeConversionMap.get(convertFrom);
-				lyr_hullSpec.getWeaponSlot(slotId).setWeaponType(convertTo);
+				hullSpec.getWeaponSlot(slotId).setWeaponType(convertTo);
 			}
 		}
 
-		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
+		variant.setHullSpecAPI(hullSpec.retrieve());
 	}
 
 	/**
@@ -107,6 +107,6 @@ public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 	 * @param stats of the ship/member whose hullSpec will be restored
 	 */
 	protected final void restoreWeaponTypes(MutableShipStatsAPI stats) {
-		this.restoreHullSpec(stats.getVariant());
+		this.refreshHullSpec(stats);
 	}
 }

@@ -70,6 +70,7 @@ public class lyr_engineBuilder {
 
 	public static final Map<String, Object> customEngineStyleSpecs = new HashMap<String, Object>();
 
+	protected lyr_engineBuilder() {}
 
 	/**
 	 * Creates a new proxy-like object instance for the passed {@link Object

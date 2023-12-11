@@ -14,8 +14,8 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.misc.ehm_internals.hullmods.systemRetrofits;
+import experimentalHullModifications.proxies.ehm_hullSpec;
 import lyravega.listeners.events.normalEvents;
-import lyravega.proxies.lyr_hullSpec;
 import lyravega.utilities.lyr_reflectionUtilities;
 import lyravega.utilities.logger.lyr_logger;
 
@@ -93,11 +93,11 @@ public abstract class _ehm_sr_base extends _ehm_base implements normalEvents {
 		this.registerModInGroup(stats);
 
 		ShipVariantAPI variant = stats.getVariant();
-		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
+		ehm_hullSpec hullSpec = new ehm_hullSpec(variant.getHullSpec(), false);
 
-		lyr_hullSpec.setShipSystemId(this.systemId);
+		hullSpec.setShipSystemId(this.systemId);
 
-		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
+		variant.setHullSpecAPI(hullSpec.retrieve());
 	}
 
 	/**
@@ -106,11 +106,11 @@ public abstract class _ehm_sr_base extends _ehm_base implements normalEvents {
 	 */
 	protected final void restoreSystem(MutableShipStatsAPI stats) {
 		ShipVariantAPI variant = stats.getVariant();
-		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
+		ehm_hullSpec hullSpec = new ehm_hullSpec(variant.getHullSpec(), false);
 
-		lyr_hullSpec.setShipSystemId(lyr_hullSpec.referenceNonDamaged().getShipSystemId());
+		hullSpec.setShipSystemId(hullSpec.referenceNonDamaged().getShipSystemId());
 
-		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
+		variant.setHullSpecAPI(hullSpec.retrieve());
 	}
 
 	/**
@@ -123,12 +123,12 @@ public abstract class _ehm_sr_base extends _ehm_base implements normalEvents {
 	@Deprecated
 	protected final void changeDefense(MutableShipStatsAPI stats) {
 		ShipVariantAPI variant = stats.getVariant();
-		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
+		ehm_hullSpec hullSpec = new ehm_hullSpec(variant.getHullSpec(), false);
 
-		lyr_hullSpec.setShipDefenseId(this.systemId);
-		lyr_hullSpec.getShieldSpec().setType(ShieldType.PHASE);
+		hullSpec.setShipDefenseId(this.systemId);
+		hullSpec.getShieldSpec().setType(ShieldType.PHASE);
 
-		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
+		variant.setHullSpecAPI(hullSpec.retrieve());
 	}
 
 	/**
@@ -139,11 +139,11 @@ public abstract class _ehm_sr_base extends _ehm_base implements normalEvents {
 	@Deprecated
 	protected final void restoreDefense(MutableShipStatsAPI stats) {
 		ShipVariantAPI variant = stats.getVariant();
-		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
+		ehm_hullSpec hullSpec = new ehm_hullSpec(variant.getHullSpec(), false);
 
-		lyr_hullSpec.setShipDefenseId(lyr_hullSpec.referenceNonDamaged().getShipDefenseId());
-		lyr_hullSpec.getShieldSpec().setType(lyr_hullSpec.referenceNonDamaged().getShieldType());
+		hullSpec.setShipDefenseId(hullSpec.referenceNonDamaged().getShipDefenseId());
+		hullSpec.getShieldSpec().setType(hullSpec.referenceNonDamaged().getShieldType());
 
-		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
+		variant.setHullSpecAPI(hullSpec.retrieve());
 	}
 }

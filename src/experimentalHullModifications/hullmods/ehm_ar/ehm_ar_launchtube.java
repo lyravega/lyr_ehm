@@ -18,13 +18,13 @@ import experimentalHullModifications.misc.ehm_internals.affixes;
 import experimentalHullModifications.misc.ehm_internals.shunts.hangars;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
-import lyravega.proxies.lyr_hullSpec;
+import experimentalHullModifications.proxies.ehm_hullSpec;
 
 /**@category Adapter Retrofit
  * @author lyravega
  */
 public final class ehm_ar_launchtube extends _ehm_ar_base {
-	static final class hangarData {
+	public static final class hangarData {
 		public static final class ids {
 			public static final String
 				large = hangars.ids.large;	// must match weapon id in .csv and .wpn
@@ -59,7 +59,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();
-		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
+		ehm_hullSpec hullSpec = new ehm_hullSpec(variant.getHullSpec(), false);
 		DynamicStatsAPI dynamicStats = stats.getDynamic();
 
 		HashMap<String, StatMod> hangarShunts = dynamicStats.getMod(hangarData.groupTag).getFlatBonuses();
@@ -67,15 +67,15 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 			float hangarMod = hangarShunts.size();	// hangars always give 1 bonus since there is only one large type, so use size
 
 			for (String slotId : hangarShunts.keySet()) {
-				if (lyr_hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;	// parent slot turns into decorative, spawns a child launch bay
+				if (hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;	// parent slot turns into decorative, spawns a child launch bay
 
-				ehm_turnSlotIntoBay(lyr_hullSpec, variant.getWeaponId(slotId), slotId);
+				hullSpec.turnSlotIntoBay(variant.getWeaponId(slotId), slotId);
 			}
 
 			stats.getNumFighterBays().modifyFlat(this.hullModSpecId, hangarMod);
 		}
 
-		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
+		variant.setHullSpecAPI(hullSpec.retrieve());
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION
@@ -99,7 +99,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 				HashMap<String, StatMod> hangarShunts = dynamicStats.getMod(hangarData.groupTag).getFlatBonuses();
 				if (!hangarShunts.isEmpty()) {
 					tooltip.addSectionHeading("EXTRA HANGARS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-					ehm_printShuntCount(tooltip, variant, hangarShunts.keySet());
+					this.printShuntCountsOnTooltip(tooltip, variant, hangarShunts.keySet());
 				} else if (ehm_settings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO EXTRA HANGARS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No large weapon slots are turned into hangars. Each large slot is turned into a single fighter bay with a launch tube.", 2f);

@@ -87,12 +87,9 @@ public class lyr_hullSpec {
 	protected lyr_hullSpec() {}
 
 	/**
-	 * Creates a new proxy-like object instance for the passed {@link ShipHullSpecAPI
-	 * hullSpec} This should only be used as a reference, to gain access to certain
-	 * obfuscated getters.
-	 * <p> Even if the spec is cloned prior to using this constructor, in some cases
-	 * leakage may occur as parts of the code and/or different mod interactions may
-	 * cause this to be utilized before the actual cloning occurs.
+	 * Creates a new proxy-like object instance for the passed {@link ShipHullSpecAPI hullSpec}. If
+	 * the hull spec is a stock one that is not cloned before, then this should only be used as a
+	 * reference, only to gain access to certain obfuscated getters.
 	 * @param hullSpec to be proxied
 	 */
 	public lyr_hullSpec(ShipHullSpecAPI hullSpec) {
@@ -100,19 +97,36 @@ public class lyr_hullSpec {
 	}
 
 	/**
-	 * Creates a new proxy-like object instance for the passed {@link ShipHullSpecAPI
-	 * hullSpec}, and clones it if directed to do so. If the spec is not unique, it
-	 * must be cloned first using the argument, as otherwise changes on this spec will
-	 * affect all other specs of the same type. Cloning should be done as early as
-	 * possible, and ideally should be avoided on already cloned ones.
-	 * <p> If extra weapon slots are going to be added, it is best to utilize the d-hull
-	 * specs as the game swaps the hull spec of a variant on certain conditions which
-	 * will lead to a slot not found crash, unless it's a d-hull.
+	 * Creates a new proxy-like object instance for the passed {@link ShipHullSpecAPI hullSpec}, and
+	 * clones it if directed to do so. This should be used if there are going to be alterations on
+	 * the hull spec, which will ensure changes to the spec will only affect the current variant only.
 	 * @param hullSpec to be proxied
-	 * @param clone if it needs to be cloned
+	 * @param clone if alterations are going to be done on the spec
 	 */
 	public lyr_hullSpec(ShipHullSpecAPI hullSpec, boolean clone) {
 		this.hullSpec = (clone) ? this.duplicate(hullSpec) : hullSpec;
+	}
+
+	/**
+	 * Creates a new proxy-like object instance for the passed {@link ShipHullSpecAPI hullSpec}, and
+	 * clones it if it is forced or necessary. If not forced, then the passed hull spec is compared
+	 * against the hull spec from the spec store, and if they're the same then it will get cloned.
+	 * <p> The additional boolean forces the use of damaged hull specs, which is recommended if slots
+	 * are going to be added or removed. This is necessary as the game swaps the hull specs in two
+	 * places, and if the variant cannot find a slot, it will cause a slot not found error. Having
+	 * a damaged hull spec prevents one of these, while the other needs a script replacement.
+	 * <p> Note that damaged hull specs may lack some tags, have their value reduced, and have a "(D)"
+	 * suffix in their hull name, all of which may be undone through the use of methods that this
+	 * class offers.
+	 * @param hullSpec to be proxied
+	 * @param forceClone to bypass the check and clone the spec
+	 * @param useDamagedSpec to use a damaged spec even if the passed one is not damaged
+	 */
+	public lyr_hullSpec(ShipHullSpecAPI hullSpec, boolean forceClone, boolean useDamagedSpec) {
+		ShipHullSpecAPI dHullSpec = Global.getSettings().getHullSpec(Misc.getDHullId(hullSpec));	// damaged hull spec
+		ShipHullSpecAPI oHullSpec = Global.getSettings().getHullSpec(hullSpec.getHullId().replace(Misc.D_HULL_SUFFIX, ""));	// original hull spec
+
+		this.hullSpec = (forceClone || oHullSpec == hullSpec || dHullSpec == hullSpec) ? this.duplicate(useDamagedSpec ? dHullSpec : oHullSpec) : hullSpec;
 	}
 
 	/**
@@ -137,6 +151,13 @@ public class lyr_hullSpec {
 	 */
 	public ShipHullSpecAPI referenceNonDamaged() {
 		return Global.getSettings().getHullSpec(this.hullSpec.getHullId().replace(Misc.D_HULL_SUFFIX, ""));
+	}
+
+	/**
+	 * @return the damaged hull spec from the spec store as a reference
+	 */
+	public ShipHullSpecAPI referenceDamaged() {
+		return Global.getSettings().getHullSpec(Misc.getDHullId(this.hullSpec));
 	}
 
 	/**

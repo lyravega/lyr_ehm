@@ -17,9 +17,9 @@ import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import experimentalHullModifications.misc.ehm_tooltip.text;
+import experimentalHullModifications.proxies.ehm_hullSpec;
 import lyravega.listeners.events.enhancedEvents;
 import lyravega.listeners.events.normalEvents;
-import lyravega.proxies.lyr_hullSpec;
 import lyravega.utilities.lyr_miscUtilities;
 import lyravega.utilities.lyr_tooltipUtilities;
 
@@ -51,7 +51,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 
 	@Override
 	public void onNormalized(MutableShipStatsAPI stats) {
-		this.restoreHullSpec(stats.getVariant());
+		this.refreshHullSpec(stats);
 
 		commitVariantChanges();
 	}
@@ -74,11 +74,11 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 		if (!stats.getVariant().getSMods().contains(this.hullModSpecId)) return;
 
 		ShipVariantAPI variant = stats.getVariant();
-		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
+		ehm_hullSpec hullSpec = new ehm_hullSpec(variant.getHullSpec(), false);
 
-		lyr_hullSpec.setOrdnancePoints((int) Math.round(lyr_hullSpec.referenceNonDamaged().getOrdnancePoints(null)*(1+ordnancePointBonus)));
+		hullSpec.setOrdnancePoints((int) Math.round(hullSpec.referenceNonDamaged().getOrdnancePoints(null)*(1+ordnancePointBonus)));
 		// stats.getDynamic().getMod(ehm_internals.stats.slotPointsFromMods).modifyFlat(this.hullModSpecId, slotPointBonus.get(hullSize));	// done in pre-process
-		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
+		variant.setHullSpecAPI(hullSpec.retrieve());
 	}
 
 	//#region INSTALLATION CHECKS / DESCRIPTION

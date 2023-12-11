@@ -12,9 +12,9 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.misc.ehm_internals.hullmods.shieldCosmetics;
+import experimentalHullModifications.proxies.ehm_hullSpec;
 import lyravega.listeners.events.customizableMod;
 import lyravega.listeners.events.normalEvents;
-import lyravega.proxies.lyr_hullSpec;
 import lyravega.proxies.lyr_shieldSpec;
 
 /**
@@ -81,13 +81,13 @@ public abstract class _ehm_sc_base extends _ehm_base implements normalEvents {
 		this.registerModInGroup(stats);
 
 		ShipVariantAPI variant = stats.getVariant();
-		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
-		lyr_shieldSpec shieldSpec = lyr_hullSpec.getShieldSpec();
+		ehm_hullSpec hullSpec = new ehm_hullSpec(variant.getHullSpec(), false);
+		lyr_shieldSpec shieldSpec = hullSpec.getShieldSpec();
 
 		shieldSpec.setInnerColor(this.innerColour);
 		shieldSpec.setRingColor(this.ringColour);
 
-		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
+		variant.setHullSpecAPI(hullSpec.retrieve());
 	}
 
 	/**
@@ -98,10 +98,10 @@ public abstract class _ehm_sc_base extends _ehm_base implements normalEvents {
 	 */
 	protected final void restoreShields(MutableShipStatsAPI stats) {
 		ShipVariantAPI variant = stats.getVariant();
-		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, variant.getHullSpec());
+		ehm_hullSpec hullSpec = new ehm_hullSpec(variant.getHullSpec(), false);
 
-		lyr_hullSpec.setShieldSpec(lyr_hullSpec.referenceNonDamaged().getShieldSpec());
+		hullSpec.setShieldSpec(hullSpec.referenceNonDamaged().getShieldSpec());
 
-		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
+		variant.setHullSpecAPI(hullSpec.retrieve());
 	}
 }
