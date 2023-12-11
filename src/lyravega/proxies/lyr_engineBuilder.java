@@ -19,8 +19,8 @@ import lyravega.utilities.logger.lyr_logger;
  * javadocs to hopefully properly describe what they do.
  * @author lyravega
  */
-public final class lyr_engineBuilder {
-	private Object engineBuilder;
+public class lyr_engineBuilder {
+	protected Object engineBuilder;
 	static Class<?> engineBuilderClass;
 	static Class<?> engineStyleIdEnum;
 	static Class<?> engineStyleSpecClass;

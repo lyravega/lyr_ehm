@@ -22,8 +22,8 @@ import lyravega.utilities.logger.lyr_logger;
  * Proxy utility methods simply exist to fill in the certain gaps, extending the API in a way.
  * @author lyravega
  */
-public final class lyr_weaponSlot {
-	private WeaponSlotAPI weaponSlot;
+public class lyr_weaponSlot {
+	protected WeaponSlotAPI weaponSlot;
 	static Class<?> weaponSlotClass;
 	static Class<?> nodeClass;
 	static Class<?> slotTypeEnum;

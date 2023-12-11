@@ -16,8 +16,8 @@ import lyravega.utilities.logger.lyr_logger;
  * Proxy utility methods simply exist to fill in the certain gaps, extending the API in a way.
  * @author lyravega
  */
-public final class lyr_shieldSpec {
-	private ShieldSpecAPI shieldSpec;
+public class lyr_shieldSpec {
+	protected ShieldSpecAPI shieldSpec;
 	static Class<?> shieldSpecClass;
 	private static MethodHandle clone;
 	// private static MethodHandle setRingColor;
