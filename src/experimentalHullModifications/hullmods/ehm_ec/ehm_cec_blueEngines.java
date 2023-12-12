@@ -4,6 +4,7 @@ import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 
 import experimentalHullModifications.misc.ehm_internals;
+import experimentalHullModifications.misc.ehm_internals.hullmods.engineCosmetics;
 import lyravega.listeners.events.customizableMod;
 import lyravega.proxies.lyr_engineBuilder.engineStyleIds;
 import lyravega.utilities.lyr_lunaUtilities;
@@ -14,11 +15,9 @@ import lyravega.utilities.lyr_lunaUtilities;
 public final class ehm_cec_blueEngines extends _ehm_ec_base implements customizableMod {
 	@Override
 	public void updateData() {
-		String id = this.getClass().getSimpleName();
-
 		this.engineStyleId = engineStyleIds.custom;
-		this.engineStyleSpec = newCustomEngineStyleSpec(id);
-		this.hullModSpec.setDisplayName(lyr_lunaUtilities.getLunaName(ehm_internals.ids.mod, id));
+		this.engineStyleSpec = this.newCustomEngineStyleSpec();
+		this.hullModSpec.setDisplayName(lyr_lunaUtilities.getLunaName(ehm_internals.ids.mod, engineCosmetics.blueEngines));
 	}
 
 	@Override
