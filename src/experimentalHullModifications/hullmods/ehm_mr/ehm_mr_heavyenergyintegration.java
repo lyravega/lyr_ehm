@@ -35,14 +35,15 @@ public final class ehm_mr_heavyenergyintegration extends _ehm_base implements co
 		ShipVariantAPI variant = stats.getVariant();
 
 		if (variant.getSuppressedMods().contains("hbi")) {
-			if (!variant.hasHullMod(ehm_internals.hullmods.weaponRetrofits.missileslotretrofit)) variant.removeSuppressedMod("hbi");
+			// if (!variant.hasHullMod(ehm_internals.hullmods.weaponRetrofits.missileslotretrofit)) variant.removeSuppressedMod("hbi");
+			variant.removeSuppressedMod("hbi");
 			variant.removePermaMod(this.hullModSpecId);
 		}
 	}
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String id) {
-		if (!stats.getVariant().hasHullMod(ehm_internals.hullmods.weaponRetrofits.energyslotretrofit)) { this.removeCompanionMod(stats); return; }
+		if (!stats.getVariant().hasHullMod(ehm_internals.hullmods.weaponRetrofits.energyslotretrofit)) { this.removeCompanionMod(stats); return; }	// this check ensures they remove themselves
 
 		stats.getDynamic().getMod(Stats.LARGE_ENERGY_MOD).modifyFlat(id, -COST_REDUCTION);
 	}

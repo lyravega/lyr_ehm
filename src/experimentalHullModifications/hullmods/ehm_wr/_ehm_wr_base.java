@@ -6,6 +6,7 @@ import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 import java.util.EnumMap;
 import java.util.Set;
 
+import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
@@ -33,20 +34,26 @@ public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstalled(MutableShipStatsAPI stats) {
-		if (this.companionMod != null) this.companionMod.installCompanionMod(stats);	// some of these mods utilize companion mods, which lack event methods
-
 		Set<String> modGroup = this.getModsFromSameGroup(stats);
 
-		if (modGroup.size() > 1) stats.getVariant().removeMod(modGroup.iterator().next());
+		if (modGroup.size() > 1) {
+			String otherModId = modGroup.iterator().next();
+			_ehm_wr_base otherModEffect = (_ehm_wr_base) Global.getSettings().getHullModSpec(otherModId).getEffect();
+
+			stats.getVariant().removeMod(otherModId);
+			if (otherModEffect.companionMod != null) otherModEffect.companionMod.removeCompanionMod(stats);
+		}
+
+		if (this.companionMod != null) this.companionMod.installCompanionMod(stats);	// some of these mods utilize companion mods, which lack event methods
 
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
 	public void onRemoved(MutableShipStatsAPI stats) {
-		if (this.companionMod != null) this.companionMod.removeCompanionMod(stats);
-
 		this.restoreWeaponTypes(stats);	// unlike the other mutually exclusive mods, this needs to happen without a check here otherwise type conversion may target altered types
+
+		// if (this.companionMod != null) this.companionMod.removeCompanionMod(stats);	// companion mods remove themselves if their company (?) is not found
 
 		commitVariantChanges(); playDrillSound();
 	}

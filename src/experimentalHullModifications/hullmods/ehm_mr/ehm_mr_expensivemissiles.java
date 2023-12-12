@@ -35,7 +35,8 @@ public final class ehm_mr_expensivemissiles extends _ehm_base implements compani
 		ShipVariantAPI variant = stats.getVariant();
 
 		if (variant.getSuppressedMods().contains("hbi")) {
-			if (!variant.hasHullMod(ehm_internals.hullmods.weaponRetrofits.energyslotretrofit)) variant.removeSuppressedMod("hbi");
+			// if (!variant.hasHullMod(ehm_internals.hullmods.weaponRetrofits.energyslotretrofit)) variant.removeSuppressedMod("hbi");
+			variant.removeSuppressedMod("hbi");
 		}
 
 		variant.removePermaMod(this.hullModSpecId);
@@ -43,7 +44,7 @@ public final class ehm_mr_expensivemissiles extends _ehm_base implements compani
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String id) {
-		if (!stats.getVariant().hasHullMod(ehm_internals.hullmods.weaponRetrofits.missileslotretrofit)) { this.removeCompanionMod(stats); return; }
+		if (!stats.getVariant().hasHullMod(ehm_internals.hullmods.weaponRetrofits.missileslotretrofit)) { this.removeCompanionMod(stats); return; }	// this check ensures they remove themselves
 
 		DynamicStatsAPI dynamicStats = stats.getDynamic();
 		dynamicStats.getMod(Stats.SMALL_MISSILE_MOD).modifyFlat(id, 2);
