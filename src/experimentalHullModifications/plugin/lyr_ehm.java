@@ -45,6 +45,7 @@ public final class lyr_ehm extends BaseModPlugin {
 		lyr_fleetTracker.attach();
 		if (ehm_settings.getClearUnknownSlots()) ehm_lostAndFound.returnStuff();
 
+		// TODO: clean this shit up
 		// if (!Global.getSettings().isDevMode()) return;
 		// LunaRefitManager.addRefitButton(new _ehmu_test());
 		processExtendedData();
@@ -58,6 +59,7 @@ public final class lyr_ehm extends BaseModPlugin {
 		lyr_eventDispatcher.registerModsWithEvents("data/hullmods/hull_mods.csv", ehm_internals.ids.mod);
 		lyr_upgradeVault.registerUpgrade(new ehmu_overdrive());
 
+		// TODO: clean this shit up
 		// if (!Global.getSettings().isDevMode()) return;
 		LunaRefitManager.addRefitButton(new _ehmu_test());
 	}
@@ -171,6 +173,7 @@ public final class lyr_ehm extends BaseModPlugin {
 		}
 	}
 
+	// TODO: clean this shit up, decide on what csv columns to use
 	private static void processExtendedData() {
 		try {
 			JSONArray loadCSV = Global.getSettings().loadCSV("data/hullmods/hull_mods.csv", ehm_internals.ids.mod);
@@ -189,28 +192,28 @@ public final class lyr_ehm extends BaseModPlugin {
 
 				String[] applicableChecks = hullModEntry.getString("ecsv_applicableChecks").split("[\\s,]+");
 				if (!applicableChecks[0].isEmpty()) {
-					if (extendedData.applicableChecks == null) extendedData.applicableChecks = new HashSet<String>(4, 0.75f);
+					if (extendedData.applicableChecks == null) extendedData.applicableChecks = new HashSet<String>();
 					extendedData.applicableChecks.clear(); extendedData.applicableChecks.addAll(Arrays.asList(applicableChecks));
 				} else if (extendedData.applicableChecks != null) { extendedData.applicableChecks.clear(); extendedData.applicableChecks = null; }
 
 				String[] lockedInChecks = hullModEntry.getString("ecsv_lockedInChecks").split("[\\s,]+");
 				if (!lockedInChecks[0].isEmpty()) {
-					if (extendedData.lockedInChecks == null) extendedData.lockedInChecks = new HashSet<String>(4, 0.75f);
+					if (extendedData.lockedInChecks == null) extendedData.lockedInChecks = new HashSet<String>();
 					extendedData.lockedInChecks.clear(); extendedData.lockedInChecks.addAll(Arrays.asList(lockedInChecks));
 				} else if (extendedData.lockedInChecks != null) { extendedData.lockedInChecks.clear(); extendedData.lockedInChecks = null; }
 
 				String[] lockedOutChecks = hullModEntry.getString("ecsv_lockedOutChecks").split("[\\s,]+");
 				if (!lockedOutChecks[0].isEmpty()) {
-					if (extendedData.lockedOutChecks == null) extendedData.lockedOutChecks = new HashSet<String>(4, 0.75f);
+					if (extendedData.lockedOutChecks == null) extendedData.lockedOutChecks = new HashSet<String>();
 					extendedData.lockedOutChecks.clear(); extendedData.lockedOutChecks.addAll(Arrays.asList(lockedOutChecks));
 				} else if (extendedData.lockedOutChecks != null) { extendedData.lockedOutChecks.clear(); extendedData.lockedOutChecks = null; }
 
 				lyr_logger.debug("Processed extended comma separated values for '"+hullModSpec.getId()+"'");
 			}
 
-			// lyr_logger.info("Hull modifications from the mod '"+modId+"' are processed");
+			lyr_logger.info("Extended CSV data are processed");
 		} catch (Throwable t) {
-			lyr_logger.error("WUT", t);
+			lyr_logger.error("Problem occured during processing extended CSV data", t);
 		}
 	}
 }

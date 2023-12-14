@@ -21,6 +21,7 @@ import lyravega.utilities.lyr_interfaceUtilities;
 import lyravega.utilities.lyr_tooltipUtilities;
 import lyravega.utilities.lyr_tooltipUtilities.colour;
 
+// TODO: clean this shit up, rename the class to something else
 public class _ehmu_test extends BaseRefitButton {
 	@Override
 	public String getButtonName(FleetMemberAPI member, ShipVariantAPI variant) {

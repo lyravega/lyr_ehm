@@ -18,8 +18,8 @@ import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_internals.stats;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
+import experimentalHullModifications.proxies.ehm_hullSpec;
 import lyravega.listeners.events.normalEvents;
-import lyravega.proxies.lyr_hullSpec;
 import lyravega.utilities.lyr_miscUtilities;
 
 /**
@@ -46,11 +46,11 @@ public final class ehm_module_base extends _ehm_base implements normalEvents {
 		ShipVariantAPI variant = stats.getVariant();
 		ShipHullSpecAPI hullSpec = variant.getHullSpec();
 
-		lyr_hullSpec lyr_hullSpec = new lyr_hullSpec(false, stats.getVariant().getHullSpec());
-		lyr_hullSpec.setHullName("Mini Module");
+		ehm_hullSpec hullSpecProxy = new ehm_hullSpec(stats.getVariant().getHullSpec(), false);
+		hullSpecProxy.setHullName("Mini Module");
 		g test = (g) hullSpec;
 		test.setDesignation("");
-		Vector2f moduleAnchor = lyr_hullSpec.retrieve().getModuleAnchor();
+		Vector2f moduleAnchor = hullSpecProxy.retrieve().getModuleAnchor();
 
 		// if (!lyr_interfaceUtilities.isRefitTab()) {
 			// lyr_hullSpec.setHullSize(HullSize.FRIGATE);
@@ -92,7 +92,7 @@ public final class ehm_module_base extends _ehm_base implements normalEvents {
 
 		// _ehm_ar_base.ehm_preProcessShunts(stats);	// at this point, the hull spec should be cloned so proceed and pre-process the shunts
 		// lyr_miscUtilities.cleanWeaponGroupsUp(variant);	// when an activator activates shunts on install, so moved this to their 'onInstalled()' method
-		variant.setHullSpecAPI(lyr_hullSpec.retrieve());
+		variant.setHullSpecAPI(hullSpecProxy.retrieve());
 	}
 
 	@Override

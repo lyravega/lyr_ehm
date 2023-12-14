@@ -86,6 +86,7 @@ public abstract class _lyr_tabListener extends _lyr_sectorListener implements Co
 			this.onOpenExecuted = true;
 			this.delayedOnOpenExecuted = false;
 			this.elapsed = 0f;
+			this.intervalElapsed = 0f;
 			this.attachScript();
 			this.onOpen();
 		}

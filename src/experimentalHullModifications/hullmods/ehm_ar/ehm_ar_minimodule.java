@@ -19,8 +19,8 @@ import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
+import experimentalHullModifications.proxies.ehm_hullSpec;
 import lyravega.listeners.lyr_fleetTracker;
-import lyravega.proxies.lyr_hullSpec;
 import lyravega.proxies.lyr_shieldSpec;
 import lyravega.proxies.lyr_weaponSlot;
 import lyravega.proxies.lyr_weaponSlot.slotTypeConstants;
@@ -51,7 +51,7 @@ public final class ehm_ar_minimodule extends _ehm_ar_base {
 			iterator.remove();
 		}
 
-		variant.setHullSpecAPI(new lyr_hullSpec(false, variant.getHullSpec()).reference());
+		variant.setHullSpecAPI(new ehm_hullSpec(variant.getHullSpec(), false).reference());
 		commitVariantChanges(); playDrillSound();
 	}
 
@@ -80,13 +80,13 @@ public final class ehm_ar_minimodule extends _ehm_ar_base {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI parentVariant = stats.getVariant();
-		lyr_hullSpec parentHullSpec = new lyr_hullSpec(false, parentVariant.getHullSpec());
+		ehm_hullSpec parentHullSpec = new ehm_hullSpec(parentVariant.getHullSpec(), false);
 		lyr_shieldSpec parentShieldSpec = parentHullSpec.getShieldSpec();
 		// parentHullSpec.getHints().add(ShipTypeHints.DO_NOT_SHOW_MODULES_IN_FLEET_LIST);	// with this some status related shit is avoided but best not to use it
 		parentHullSpec.getHints().add(ShipTypeHints.SHIP_WITH_MODULES);
 
 		ShipVariantAPI moduleVariant = Global.getSettings().getVariant("ehm_module_prototype_Hull").clone();
-		lyr_hullSpec moduleHullSpec = new lyr_hullSpec(false, moduleVariant.getHullSpec());
+		ehm_hullSpec moduleHullSpec = new ehm_hullSpec(moduleVariant.getHullSpec(), false);
 		// moduleVariant.setHullVariantId("ehm_module_shield_variant");
 		moduleVariant.addPermaMod("ehm_module_base", false);
 		moduleVariant.setSource(VariantSource.REFIT);
@@ -143,13 +143,13 @@ public final class ehm_ar_minimodule extends _ehm_ar_base {
 	public void applyEffectsAfterShipCreation(ShipAPI ship, String hullModSpecId) {
 		// MutableShipStatsAPI stats = ship.getMutableStats();
 		// ShipVariantAPI parentVariant = stats.getVariant();
-		// lyr_hullSpec parentHullSpec = new lyr_hullSpec(false, parentVariant.getHullSpec());
+		// ehm_hullSpec parentHullSpec = new ehm_hullSpec(false, parentVariant.getHullSpec());
 		// lyr_shieldSpec parentShieldSpec = parentHullSpec.getShieldSpec();
 		// // parentHullSpec.getHints().add(ShipTypeHints.DO_NOT_SHOW_MODULES_IN_FLEET_LIST);	// with this some status related shit is avoided but best not to use it
 		// parentHullSpec.getHints().add(ShipTypeHints.SHIP_WITH_MODULES);
 
 		// ShipVariantAPI moduleVariant = Global.getSettings().getVariant("ehm_module_prototype_Hull").clone();
-		// lyr_hullSpec moduleHullSpec = new lyr_hullSpec(false, moduleVariant.getHullSpec());
+		// ehm_hullSpec moduleHullSpec = new ehm_hullSpec(false, moduleVariant.getHullSpec());
 		// // moduleVariant.setHullVariantId("ehm_module_shield_variant");
 		// moduleVariant.addPermaMod("ehm_module_prototype", false);
 		// moduleVariant.setSource(VariantSource.REFIT);
@@ -244,7 +244,7 @@ public final class ehm_ar_minimodule extends _ehm_ar_base {
 	public static void ehm_updateAllMemberStatuses() {
 		for (FleetMemberAPI member : Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy()) {
 			if (member.getStatus().getNumStatuses() != member.getVariant().getStationModules().size() + 1) {
-				lyr_hullSpec hullSpec = new lyr_hullSpec(false, member.getHullSpec());
+				ehm_hullSpec hullSpec = new ehm_hullSpec(member.getHullSpec(), false);
 
 				for (String moduleSlotId : member.getVariant().getStationModules().keySet()) {
 					if (hullSpec.getWeaponSlot(moduleSlotId).getWeaponType() == WeaponType.STATION_MODULE) continue;
