@@ -300,7 +300,6 @@ public abstract class _ehm_base implements HullModEffect {
 
 			dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(source, mod);
 			dynamicStats.getMod(ehm_internals.stats.slotPointsFromMods).modifyFlat(source, mod);
-			// TODO: add a dynamic stat for ordnancePoints from here
 		}
 
 		if (variant.hasHullMod(ehm_internals.hullmods.misc.auxilarygenerators)) {

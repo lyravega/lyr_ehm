@@ -58,7 +58,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 	//#endregion
 	// END OF CUSTOM EVENTS
 
-	public static final float ordnancePointBonus = 0.20f;
+	public static final float ordnancePointMult = 0.20f;
 	public static final EnumMap<HullSize, Integer> slotPointBonus = new EnumMap<HullSize, Integer>(HullSize.class);
 	static {
 		slotPointBonus.put(HullSize.FIGHTER, 0);
@@ -75,9 +75,12 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 
 		ShipVariantAPI variant = stats.getVariant();
 		ehm_hullSpec hullSpec = new ehm_hullSpec(variant.getHullSpec(), false);
+		int ordnancePoints = hullSpec.referenceNonDamaged().getOrdnancePoints(null);
+		int ordnancePointBonus = Math.round(ordnancePoints*ordnancePointMult);
 
-		hullSpec.setOrdnancePoints((int) Math.round(hullSpec.referenceNonDamaged().getOrdnancePoints(null)*(1+ordnancePointBonus)));
 		// stats.getDynamic().getMod(ehm_internals.stats.slotPointsFromMods).modifyFlat(this.hullModSpecId, slotPointBonus.get(hullSize));	// done in pre-process
+		stats.getDynamic().getMod(ehm_internals.stats.ordnancePoints).modifyFlat(this.hullModSpecId, ordnancePointBonus);
+		hullSpec.setOrdnancePoints(ordnancePoints+ordnancePointBonus);
 		variant.setHullSpecAPI(hullSpec.retrieve());
 	}
 
@@ -89,7 +92,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 	@Override
 	public String getSModDescriptionParam(int index, HullSize hullSize) {
 		switch (index) {
-			case 0: return Math.round(ordnancePointBonus*100)+"% OP";
+			case 0: return Math.round(ordnancePointMult*100)+"% OP";
 			case 1: return slotPointBonus.get(hullSize) + " slot points";
 			default: return null;
 		}
@@ -112,7 +115,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 	public String getDescriptionParam(int index, HullSize hullSize) {
 		switch (index) {
 			case 0: return "story point";
-			case 1: return Math.round(ordnancePointBonus*100)+"%";
+			case 1: return Math.round(ordnancePointMult*100)+"%";
 			case 2: return slotPointBonus.get(HullSize.FRIGATE)+"/"+slotPointBonus.get(HullSize.DESTROYER)+"/"+slotPointBonus.get(HullSize.CRUISER)+"/"+slotPointBonus.get(HullSize.CAPITAL_SHIP)+" slot points";
 			case 3: return "slot point";
 			case 4: return "converter shunts";
