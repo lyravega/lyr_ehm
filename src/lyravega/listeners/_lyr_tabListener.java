@@ -21,15 +21,32 @@ public abstract class _lyr_tabListener extends _lyr_sectorListener implements Co
 	private final boolean executeOnOpenOnce;
 	private boolean onOpenExecuted = false;
 	private boolean delayedOnOpenExecuted = false;
+	private float elapsed = 0f;
+	private float intervalElapsed = 0f;
+	private final float interval;
 
 	public _lyr_tabListener(CoreUITabId targetTab) {
 		this.targetTab = targetTab;
 		this.executeOnOpenOnce = true;
+		this.interval = 0f;
 	}
 
 	public _lyr_tabListener(CoreUITabId targetTab, boolean executeOnOpenOnce) {
 		this.targetTab = targetTab;
 		this.executeOnOpenOnce = executeOnOpenOnce;
+		this.interval = 0f;
+	}
+
+	public _lyr_tabListener(CoreUITabId targetTab, float interval) {
+		this.targetTab = targetTab;
+		this.executeOnOpenOnce = true;
+		this.interval = interval;
+	}
+
+	public _lyr_tabListener(CoreUITabId targetTab, boolean executeOnOpenOnce, float interval) {
+		this.targetTab = targetTab;
+		this.executeOnOpenOnce = executeOnOpenOnce;
+		this.interval = interval;
 	}
 
 	/**
@@ -45,7 +62,7 @@ public abstract class _lyr_tabListener extends _lyr_sectorListener implements Co
 	/**
 	 * Called when the target tab is opened, with a frame or two delay
 	 */
-	protected abstract void delayedOnOpen();
+	protected abstract void onOpenDelayed();
 
 	/**
 	 * Alternative to {@code advance(amount)}, if such a method is necessary. Called
@@ -56,7 +73,9 @@ public abstract class _lyr_tabListener extends _lyr_sectorListener implements Co
 	 * the detection, hence the abstraction
 	 * @param amount
 	 */
-	protected abstract void onAdvance(float amount);
+	protected abstract void onAdvance(final float amount);
+
+	protected abstract void onInterval();
 
 	//#region CoreUITabListener
 	@Override
@@ -66,6 +85,7 @@ public abstract class _lyr_tabListener extends _lyr_sectorListener implements Co
 		if (!this.executeOnOpenOnce || !this.onOpenExecuted) {
 			this.onOpenExecuted = true;
 			this.delayedOnOpenExecuted = false;
+			this.elapsed = 0f;
 			this.attachScript();
 			this.onOpen();
 		}
@@ -86,7 +106,18 @@ public abstract class _lyr_tabListener extends _lyr_sectorListener implements Co
 	public final void advance(float amount) {
 		if (Global.getSector().getCampaignUI().getCurrentCoreTab() != this.targetTab) this.cleanup();
 
-		if (!this.delayedOnOpenExecuted) { this.delayedOnOpenExecuted = true; this.delayedOnOpen(); }
+		if (!this.delayedOnOpenExecuted) {
+			if (this.elapsed > 0.1) {
+				this.delayedOnOpenExecuted = true; this.onOpenDelayed();
+			}; this.elapsed += amount;
+		}
+
+		if (this.interval > 0f) {
+			if (this.intervalElapsed > this.interval) {
+				this.intervalElapsed = 0f; this.onInterval();
+			}; this.intervalElapsed += amount;
+		}
+
 		this.onAdvance(amount);
 	}
 
