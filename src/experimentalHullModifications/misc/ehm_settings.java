@@ -42,6 +42,11 @@ public final class ehm_settings implements LunaSettingsListener {
 	protected static boolean debugTooltip; public static boolean getDebugTooltip() { return debugTooltip; }
 	protected static boolean playDrillSound = true; public static boolean getPlayDrillSound() { return playDrillSound; }
 	protected static boolean playDrillSoundForAll = false; public static boolean getPlayDrillSoundForAll() { return playDrillSoundForAll; }
+	protected static boolean isMirrorFleetEnabled = false; public static boolean isMirrorFleetEnabled() { return isMirrorFleetEnabled; }
+	protected static boolean replaceMirrorFleet = false; public static boolean replaceSimWithMirrorFleet() { return replaceMirrorFleet; }
+	protected static boolean mirrorFleetCommander = false; public static boolean assignMirrorFleetCommander() { return mirrorFleetCommander; }
+	protected static boolean mirrorFleetCaptains = false; public static boolean assignMirrorFleetCaptains() { return mirrorFleetCaptains; }
+	protected static int mirrorFleetReadiness = 0; public static int getMirrorFleetReadiness() { return mirrorFleetReadiness; }
 	protected static boolean clearUnknownSlots; public static boolean getClearUnknownSlots() { return clearUnknownSlots; }
 	protected static int loggerLevel; public static int getLogEventInfo() { return loggerLevel; }
 
@@ -64,6 +69,14 @@ public final class ehm_settings implements LunaSettingsListener {
 		// FLAVOUR SETTINGS
 		showExperimentalFlavour = lyr_lunaUtilities.getBoolean(ehm_internals.ids.mod, "ehm_showExperimentalFlavour");
 		showFluff = lyr_lunaUtilities.getBoolean(ehm_internals.ids.mod, "ehm_showFluff");
+
+		// ADVANCED SIMULATION SETTINGS
+		String mirrorFleet = lyr_lunaUtilities.getString(ehm_internals.ids.mod, "ehm_mirrorFleet");	// splitting radio into booleans
+		isMirrorFleetEnabled = !"Disabled".equals(mirrorFleet);
+		replaceMirrorFleet = "Replace Roster".equals(mirrorFleet);
+		mirrorFleetCommander = lyr_lunaUtilities.getBoolean(ehm_internals.ids.mod, "ehm_mirrorFleetCommander");
+		mirrorFleetCaptains = lyr_lunaUtilities.getBoolean(ehm_internals.ids.mod, "ehm_mirrorFleetCaptains");
+		mirrorFleetReadiness = lyr_lunaUtilities.getInt(ehm_internals.ids.mod, "ehm_mirrorFleetReadiness");
 
 		// DEBUG SETTINGS
 		clearUnknownSlots = lyr_lunaUtilities.getBoolean(ehm_internals.ids.mod, "ehm_clearUnknownSlots");

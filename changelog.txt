@@ -19,12 +19,18 @@ As the first mini-module, I've added an all-in-one version. These mini-modules r
 - Changed a few obvious system retrofits to require engines; mainly this prevents them from getting installed on modules
 - Changed the main hullmod installation so that it no longer performs a soft restoration on a few hulls that may be restored into another like the 'Wolf (D)'
 - Changed tooltips a little bit; highlighted more relevant things, made some activator ones more informative and tried to prettify them... tried
-- NEW FEATURE: Added purchaseable enhancements; these utilize LunaLib's refit buttons and may have multiple tiers
+- NEW FEATURE: Purchaseable upgrades
+ - Added upgrades that utilize LunaLib's refit buttons and may have multiple tiers
  - Added a new upgrade called "Overdrive" that allows ships to have more built-in modifications
- - The base hull modification's tooltip will also show the "Overdrive" level and bonus
-- NEW FEATURE: Added support for dynamic module installation/removal
+ - Changed the base hull modification's tooltip to display "Overdrive" level and bonus
+- NEW FEATURE: Mini-modules
+ - Added support for dynamic module installation/removal
  - Added "Mini-Module Activator" and mini-module shunts; these shunts may be installed on large slots and turn into a module upon activation
  - Added a new refit button "Remove Module" for mini-modules; mini-modules needs to be stripped first and then removed using this button
+- NEW FEATURE: Advanced Simulation
+ - Added fleet mirroring that lets you battle your own creations in simulation mode
+ - Added a few settings related to Advanced Simulation which is disabled by default; main settings include replacing the default roster or appending yours to it
+ - Other settings include assigning identical captains and/or commander to the mirrored roster, and overriding their combat readiness instead of mirroring them
 
 
 Version 0.8.6a

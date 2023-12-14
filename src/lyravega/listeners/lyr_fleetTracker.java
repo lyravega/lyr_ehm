@@ -12,7 +12,9 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.loading.VariantSource;
+import com.fs.starfarer.api.mission.FleetSide;
 
+import experimentalHullModifications.misc.ehm_settings;
 import lyravega.utilities.lyr_interfaceUtilities;
 import lyravega.utilities.logger.lyr_levels;
 import lyravega.utilities.logger.lyr_logger;
@@ -47,6 +49,7 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 		instance.attachListener(true);
 	}
 
+	private boolean isMirrorInitialized = false;
 	private final String trackerModId = "lyr_tracker";
 	final Map<String, lyr_shipTracker> shipTrackers = new HashMap<String, lyr_shipTracker>();
 	final Map<String, FleetMemberAPI> fleetMembers = new HashMap<String, FleetMemberAPI>();
@@ -71,6 +74,40 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 
 	@Override protected void onAdvance(float amount) {
 		if (lyr_interfaceUtilities.clearUndoAfter) lyr_interfaceUtilities.clearUndoAfter();
+
+		if (Global.getCombatEngine().isInCampaignSim()) this.createMirrorOpponents();
+		else this.isMirrorInitialized = false;
+	}
+
+	private void createMirrorOpponents() {
+		if (this.isMirrorInitialized) return; this.isMirrorInitialized = true;
+
+		CombatFleetManagerAPI enemyFleetManager = Global.getCombatEngine().getFleetManager(FleetSide.ENEMY);
+		CombatFleetManagerAPI playerFleetManager = Global.getCombatEngine().getFleetManager(FleetSide.PLAYER);
+
+		if (ehm_settings.replaceSimWithMirrorFleet()) for (FleetMemberAPI member : enemyFleetManager.getReservesCopy()) {
+			enemyFleetManager.removeFromReserves(member);
+		}
+
+		if (ehm_settings.assignMirrorFleetCommander()) enemyFleetManager.setDefaultCommander(Global.getSector().getPlayerPerson());
+		enemyFleetManager.addToReserves(this.createSimMember(playerFleetManager.getDeployedCopy().iterator().next()));	// this is for the selected ship, which starts deployed
+		for (FleetMemberAPI member : playerFleetManager.getReservesCopy()) {
+			enemyFleetManager.addToReserves(this.createSimMember(member));
+		}
+	}
+
+	private FleetMemberAPI createSimMember(FleetMemberAPI member) {
+		FleetMemberAPI simMember = Global.getFactory().createFleetMember(member.getType(), member.getVariant());
+		float mirrorFleetReadiness = ehm_settings.getMirrorFleetReadiness()/100;
+
+		simMember.setOwner(FleetSide.ENEMY.ordinal());
+		simMember.getCrewComposition().addCrew(simMember.getNeededCrew());
+		simMember.getRepairTracker().setCR(mirrorFleetReadiness == 0 ? member.getRepairTracker().getCR() : mirrorFleetReadiness);
+		if (ehm_settings.assignMirrorFleetCaptains()) simMember.setCaptain(member.getCaptain());
+		// simMember.setFlagship(true);	// needs investigation
+		simMember.updateStats();
+
+		return simMember;
 	}
 
 	@Override
