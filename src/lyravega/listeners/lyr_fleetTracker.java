@@ -100,7 +100,7 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 
 	private FleetMemberAPI createSimMember(FleetMemberAPI member) {
 		FleetMemberAPI simMember = Global.getFactory().createFleetMember(member.getType(), member.getVariant());
-		float mirrorFleetReadiness = ((float) ehm_settings.getMirrorFleetReadiness())/100;
+		float mirrorFleetReadiness = ehm_settings.getMirrorFleetReadiness();
 
 		simMember.setOwner(FleetSide.ENEMY.ordinal());
 		simMember.getCrewComposition().addCrew(simMember.getNeededCrew());

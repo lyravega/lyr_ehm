@@ -197,13 +197,11 @@ ehm_mirrorFleet,Mirror Fleet,Radio,Disabled,"Append Roster, Replace Roster, Disa
 [Disabled]: No mirroring will be done; disables rest of these options",,,
 ehm_mirrorFleetCommander,Mirror Commander,Boolean,true,,"If true, [your character] will be assigned as the commander of the mirrored fleet. Note that the bonuses to the ship stats may look like missing, but they do apply.",,,
 ehm_mirrorFleetCaptains,Mirror Captains,Boolean,true,,"If true, the [captains] of your ships will also be mirrored on their simulation counterparts. Note that the bonuses to the ship stats may look like missing, but they do apply.",,,
-ehm_mirrorFleetReadiness,Combat Readiness,Int,70,,"If [above 0], the slider value will be used as the combat readiness value of the mirrored ships.
+ehm_mirrorFleetReadiness,Combat Readiness,Int,70,,"If [above 0], the slider value will be used as the combat readiness value of the mirrored ships. Default: 70
 If [set to 0], the current combat readiness of your ships will be mirrored on their simulation counterparts.",0,100,
 ehm_debugSettingsHeader,EHM Debug,Header,Debug Settings,,,,,
 ehm_debugSettingsText,EHM Debug Text,Text,"Some of these settings may be useful to identify a problem with this mod. Some of the logging features may bloat the game logs, and should be left disabled in normal conditions",,,,,
 ehm_clearUnknownSlots,Clear Unknown Slots,Boolean,false,,"If [slot not found] errors are encountered [while loading], and the reported [slot id] starts with [CS_AS_], enabling this debug option will remove all weapons from all of the adapted and/or converted slots and return them to the inventory.
-
-[CS_AS_] stands for a slot that is [both adapted and converted], which is an oversight that should've never been possible. Future occurances of this specific case is blocked, and this debug setting may be used for save recovery.
 
 [After loading your game with this setting enabled, save it and then disable this setting.]",,,
 ehm_debugTooltip,Show Debug Tooltip,Boolean,false,,"If enabled, the base hull modification will display [some debug info] on its tooltip",,,

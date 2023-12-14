@@ -46,7 +46,7 @@ public final class ehm_settings implements LunaSettingsListener {
 	protected static boolean replaceMirrorFleet = false; public static boolean replaceSimWithMirrorFleet() { return replaceMirrorFleet; }
 	protected static boolean mirrorFleetCommander = false; public static boolean assignMirrorFleetCommander() { return mirrorFleetCommander; }
 	protected static boolean mirrorFleetCaptains = false; public static boolean assignMirrorFleetCaptains() { return mirrorFleetCaptains; }
-	protected static int mirrorFleetReadiness = 0; public static int getMirrorFleetReadiness() { return mirrorFleetReadiness; }
+	protected static float mirrorFleetReadiness = 0; public static float getMirrorFleetReadiness() { return mirrorFleetReadiness/100; }
 	protected static boolean clearUnknownSlots; public static boolean getClearUnknownSlots() { return clearUnknownSlots; }
 	protected static int loggerLevel; public static int getLogEventInfo() { return loggerLevel; }
 
@@ -76,7 +76,7 @@ public final class ehm_settings implements LunaSettingsListener {
 		replaceMirrorFleet = "Replace Roster".equals(mirrorFleet);
 		mirrorFleetCommander = lyr_lunaUtilities.getBoolean(ehm_internals.ids.mod, "ehm_mirrorFleetCommander");
 		mirrorFleetCaptains = lyr_lunaUtilities.getBoolean(ehm_internals.ids.mod, "ehm_mirrorFleetCaptains");
-		mirrorFleetReadiness = lyr_lunaUtilities.getInt(ehm_internals.ids.mod, "ehm_mirrorFleetReadiness");
+		mirrorFleetReadiness = lyr_lunaUtilities.getFloat(ehm_internals.ids.mod, "ehm_mirrorFleetReadiness");
 
 		// DEBUG SETTINGS
 		clearUnknownSlots = lyr_lunaUtilities.getBoolean(ehm_internals.ids.mod, "ehm_clearUnknownSlots");
