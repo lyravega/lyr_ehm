@@ -12,6 +12,7 @@ import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.api.util.DynamicStatsAPI;
 import com.fs.starfarer.api.util.Misc;
 
 import experimentalHullModifications.misc.ehm_internals;
@@ -98,8 +99,42 @@ public final class ehm_base extends _ehm_base implements normalEvents {
 			tooltip.addPara("HullTags: "+hullSpec.getTags().toString(), 5f).setHighlight("HullTags:");
 			tooltip.addPara("VariantTags: "+variant.getTags().toString(), 5f).setHighlight("VariantTags:");
 
+			DynamicStatsAPI dynamicStats = ship.getMutableStats().getDynamic();
+			final StatBonus overdrive = dynamicStats.getMod(stats.overdrive);
+			final StatBonus adapters = dynamicStats.getMod(stats.adapters);
+			final StatBonus converters = dynamicStats.getMod(stats.converters);
+			final StatBonus diverters = dynamicStats.getMod(stats.diverters);
+			final StatBonus capacitors = dynamicStats.getMod(stats.capacitors);
+			final StatBonus dissipators = dynamicStats.getMod(stats.dissipators);
+			final StatBonus hangars = dynamicStats.getMod(stats.hangars);
+			final StatBonus ordnancePoints = dynamicStats.getMod(stats.ordnancePoints);
+			final StatBonus slotPoints = dynamicStats.getMod(stats.slotPoints);
+			final StatBonus slotPointsNeeded = dynamicStats.getMod(stats.slotPointsNeeded);
+			final StatBonus slotPointsUsed = dynamicStats.getMod(stats.slotPointsUsed);
+			final StatBonus slotPointsFromMods = dynamicStats.getMod(stats.slotPointsFromMods);
+			final StatBonus slotPointsFromDiverters = dynamicStats.getMod(stats.slotPointsFromDiverters);
+			final StatBonus slotPointsToConverters = dynamicStats.getMod(stats.slotPointsToConverters);
+			final StatBonus engineCosmetics = dynamicStats.getMod(stats.engineCosmetics);
+			final StatBonus shieldCosmetics = dynamicStats.getMod(stats.shieldCosmetics);
+			final StatBonus weaponRetrofits = dynamicStats.getMod(stats.weaponRetrofits);
 			tooltip.addSectionHeading("DEBUG INFO: DYNAMIC STATS", header.severeWarning_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-			// TODO: redo this section
+			if (!overdrive.getFlatBonuses().isEmpty()) tooltip.addPara("overdrive: "+overdrive.computeEffective(0f)+" / "+overdrive.getFlatBonuses().keySet().toString(), 5f).setHighlight("overdrive:");
+			if (!adapters.getFlatBonuses().isEmpty()) tooltip.addPara("adapters: "+adapters.computeEffective(0f)+" / "+adapters.getFlatBonuses().keySet().toString(), 5f).setHighlight("adapters:");
+			if (!converters.getFlatBonuses().isEmpty()) tooltip.addPara("converters: "+converters.computeEffective(0f)+" / "+converters.getFlatBonuses().keySet().toString(), 5f).setHighlight("converters:");
+			if (!diverters.getFlatBonuses().isEmpty()) tooltip.addPara("diverters: "+diverters.computeEffective(0f)+" / "+diverters.getFlatBonuses().keySet().toString(), 5f).setHighlight("diverters:");
+			if (!capacitors.getFlatBonuses().isEmpty()) tooltip.addPara("capacitors: "+capacitors.computeEffective(0f)+" / "+capacitors.getFlatBonuses().keySet().toString(), 5f).setHighlight("capacitors:");
+			if (!dissipators.getFlatBonuses().isEmpty()) tooltip.addPara("dissipators: "+dissipators.computeEffective(0f)+" / "+dissipators.getFlatBonuses().keySet().toString(), 5f).setHighlight("dissipators:");
+			if (!hangars.getFlatBonuses().isEmpty()) tooltip.addPara("hangars: "+hangars.computeEffective(0f)+" / "+hangars.getFlatBonuses().keySet().toString(), 5f).setHighlight("hangars:");
+			if (!ordnancePoints.getFlatBonuses().isEmpty()) tooltip.addPara("ordnancePoints: "+ordnancePoints.computeEffective(0f)+" / "+ordnancePoints.getFlatBonuses().keySet().toString(), 5f).setHighlight("ordnancePoints:");
+			if (!slotPoints.getFlatBonuses().isEmpty()) tooltip.addPara("slotPoints: "+slotPoints.computeEffective(0f)+" / "+slotPoints.getFlatBonuses().keySet().toString(), 5f).setHighlight("slotPoints:");
+			if (!slotPointsNeeded.getFlatBonuses().isEmpty()) tooltip.addPara("slotPointsNeeded: "+slotPointsNeeded.computeEffective(0f)+" / "+slotPointsNeeded.getFlatBonuses().keySet().toString(), 5f).setHighlight("slotPointsNeeded:");
+			if (!slotPointsUsed.getFlatBonuses().isEmpty()) tooltip.addPara("slotPointsUsed: "+slotPointsUsed.computeEffective(0f)+" / "+slotPointsUsed.getFlatBonuses().keySet().toString(), 5f).setHighlight("slotPointsUsed:");
+			if (!slotPointsFromMods.getFlatBonuses().isEmpty()) tooltip.addPara("slotPointsFromMods: "+slotPointsFromMods.computeEffective(0f)+" / "+slotPointsFromMods.getFlatBonuses().keySet().toString(), 5f).setHighlight("slotPointsFromMods:");
+			if (!slotPointsFromDiverters.getFlatBonuses().isEmpty()) tooltip.addPara("slotPointsFromDiverters: "+slotPointsFromDiverters.computeEffective(0f)+" / "+slotPointsFromDiverters.getFlatBonuses().keySet().toString(), 5f).setHighlight("slotPointsFromDiverters:");
+			if (!slotPointsToConverters.getFlatBonuses().isEmpty()) tooltip.addPara("slotPointsToConverters: "+slotPointsToConverters.computeEffective(0f)+" / "+slotPointsToConverters.getFlatBonuses().keySet().toString(), 5f).setHighlight("slotPointsToConverters:");
+			if (!engineCosmetics.getFlatBonuses().isEmpty()) tooltip.addPara("engineCosmetics: "+engineCosmetics.computeEffective(0f)+" / "+engineCosmetics.getFlatBonuses().keySet().toString(), 5f).setHighlight("engineCosmetics:");
+			if (!shieldCosmetics.getFlatBonuses().isEmpty()) tooltip.addPara("shieldCosmetics: "+shieldCosmetics.computeEffective(0f)+" / "+shieldCosmetics.getFlatBonuses().keySet().toString(), 5f).setHighlight("shieldCosmetics:");
+			if (!weaponRetrofits.getFlatBonuses().isEmpty()) tooltip.addPara("weaponRetrofits: "+weaponRetrofits.computeEffective(0f)+" / "+weaponRetrofits.getFlatBonuses().keySet().toString(), 5f).setHighlight("weaponRetrofits:");
 
 			tooltip.addSectionHeading("DEBUG INFO: SCRIPTS", header.severeWarning_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 			for (EveryFrameScript script : Global.getSector().getScripts()) {

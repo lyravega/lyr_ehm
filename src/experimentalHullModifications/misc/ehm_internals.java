@@ -267,6 +267,9 @@ public final class ehm_internals {
 
 	public static final class stats {
 		public static final String
+			engineCosmetics = hullmods.engineCosmetics.tag,
+			shieldCosmetics = hullmods.shieldCosmetics.tag,
+			weaponRetrofits = hullmods.weaponRetrofits.tag,
 			overdrive = upgrades.overdrive,
 			adapters = shunts.adapters.groupTag,
 			converters = shunts.converters.groupTag,
