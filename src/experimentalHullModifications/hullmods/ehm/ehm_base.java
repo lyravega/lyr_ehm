@@ -91,6 +91,7 @@ public final class ehm_base extends _ehm_base implements normalEvents {
 			tooltip.addPara("Hull ID: "+hullSpec.getHullId(), 5f).setHighlight("Hull ID:");
 			tooltip.addPara("Variant ID: "+variant.getHullVariantId(), 5f).setHighlight("Variant ID:");
 			tooltip.addPara("Member ID: "+ship.getFleetMemberId(), 5f).setHighlight("Member ID:");
+			tooltip.addPara("Variant Source: "+ship.getVariant().getSource(), 5f).setHighlight("Variant Source:");
 			tooltip.addPara("isModule: "+!Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy().contains(ship.getFleetMember()), 5f).setHighlight("isModule:");
 			tooltip.addPara("isParent: "+lyr_miscUtilities.isParent(ship), 5f).setHighlight("isParent:");
 			tooltip.addPara("Hints: "+hullSpec.getHints().toString(), 5f).setHighlight("Hints:");	// variant returns hints from hullspec, so only one is enough
@@ -104,9 +105,11 @@ public final class ehm_base extends _ehm_base implements normalEvents {
 			for (EveryFrameScript script : Global.getSector().getScripts()) {
 				String scriptSimpleName = script.getClass().getSimpleName();
 
-				if ("FieldRepairsScript".equals(scriptSimpleName)) tooltip.addPara("FieldRepairsScript (vanilla): Running", 5f).setHighlight("FieldRepairsScript (vanilla):");
-				if ("lyr_fieldRepairsScript".equals(scriptSimpleName)) tooltip.addPara("FieldRepairsScript (EHM): Running", 5f).setHighlight("FieldRepairsScript (EHM):");
-				if ("CaptainsFieldRepairsScript".equals(scriptSimpleName)) tooltip.addPara("FieldRepairsScript (QC): Running", 5f).setHighlight("FieldRepairsScript (QC):");
+				switch (scriptSimpleName) {
+					case "FieldRepairsScript": tooltip.addPara("FieldRepairsScript (vanilla): Running", 5f).setHighlight("FieldRepairsScript (vanilla):"); break;
+					case "lyr_fieldRepairsScript": tooltip.addPara("FieldRepairsScript (EHM): Running", 5f).setHighlight("FieldRepairsScript (EHM):"); break;
+					case "CaptainsFieldRepairsScript": tooltip.addPara("FieldRepairsScript (QC): Running", 5f).setHighlight("FieldRepairsScript (QC):"); break;
+				}
 			}
 
 			return;

@@ -68,16 +68,18 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 		lyr_logger.trackerInfo("FT: Fleet Tracker terminated");
 	}
 
-	@Override protected void delayedOnOpen() {
-		lyr_interfaceUtilities.refreshShipDisplay();
+	@Override protected void onOpenDelayed() {
+		lyr_interfaceUtilities.refreshShipDisplay();	// this needs to be done for whatever reason, otherwise refit will show the old(er) variant
 	}
 
 	@Override protected void onAdvance(float amount) {
 		if (lyr_interfaceUtilities.clearUndoAfter) lyr_interfaceUtilities.clearUndoAfter();
 
-		if (Global.getCombatEngine().isInCampaignSim()) this.createMirrorOpponents();
+		if (Global.getCombatEngine().isInCampaignSim()) this.createMirrorOpponents();	// this might not be viable for everyone; there are a few frames when this is true before advance is paused
 		else this.isMirrorInitialized = false;
 	}
+
+	@Override protected void onInterval() {}
 
 	private void createMirrorOpponents() {
 		if (this.isMirrorInitialized) return; this.isMirrorInitialized = true;
@@ -98,7 +100,7 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 
 	private FleetMemberAPI createSimMember(FleetMemberAPI member) {
 		FleetMemberAPI simMember = Global.getFactory().createFleetMember(member.getType(), member.getVariant());
-		float mirrorFleetReadiness = ehm_settings.getMirrorFleetReadiness()/100;
+		float mirrorFleetReadiness = ((float) ehm_settings.getMirrorFleetReadiness())/100;
 
 		simMember.setOwner(FleetSide.ENEMY.ordinal());
 		simMember.getCrewComposition().addCrew(simMember.getNeededCrew());
@@ -114,11 +116,18 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 	public void addTracking(ShipVariantAPI variant, FleetMemberAPI member, String parentTrackerUUID) {
 		// if (variant.hasTag(lyr_fleetTracker.uuid.prefix)) return;
 
-		if (!variant.getPermaMods().contains(this.trackerModId))
-			variant.addPermaMod(this.trackerModId, false);	// add before constructing tracker or this will be tracked too
-
 		String shipTrackerUUID = this.getTrackerUUID(variant);
 		if (shipTrackerUUID == null) shipTrackerUUID = UUID.randomUUID().toString();
+
+		if (member != null && variant.getSource() != VariantSource.REFIT) {
+			variant = variant.clone();
+			variant.setSource(VariantSource.REFIT);	// this is because stock ships cause problems till they're saved once
+			member.setVariant(variant, false, false);
+			lyr_logger.debug("ST-"+shipTrackerUUID+": Changing variant source to REFIT");
+		}
+
+		if (!variant.getPermaMods().contains(this.trackerModId))
+			variant.addPermaMod(this.trackerModId, false);	// add before constructing tracker or this will be tracked too
 
 		lyr_shipTracker shipTracker = this.getShipTracker(shipTrackerUUID);
 		if (shipTracker == null) shipTracker = new lyr_shipTracker(this, variant, member, shipTrackerUUID, parentTrackerUUID);
@@ -141,8 +150,9 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 
 			if (moduleVariant.getSource() != VariantSource.REFIT) {
 				moduleVariant = moduleVariant.clone();
-				moduleVariant.setSource(VariantSource.REFIT);
+				moduleVariant.setSource(VariantSource.REFIT);	// this is because sometimes modules have hull variants, which causes issues
 				variant.setModuleVariant(moduleSlotId, moduleVariant);
+				lyr_logger.debug("MT-"+shipTrackerUUID+": Changing variant source to REFIT");
 			}
 
 			this.addTracking(moduleVariant, null, shipTrackerUUID);

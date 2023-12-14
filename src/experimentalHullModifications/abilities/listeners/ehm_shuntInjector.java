@@ -69,7 +69,9 @@ public final class ehm_shuntInjector extends _lyr_tabListener {
 		lyr_logger.debug("Removing slot shunts from player cargo");
 	}
 
-	@Override protected void delayedOnOpen() {}
+	@Override protected void onOpenDelayed() {}
 
 	@Override protected void onAdvance(float amount) {}
+
+	@Override protected void onInterval() {}
 }
