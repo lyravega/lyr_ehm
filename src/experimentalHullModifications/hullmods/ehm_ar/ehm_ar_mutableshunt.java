@@ -104,8 +104,8 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 		HashMap<String, StatMod> dissipatorShunts = dynamicStats.getMod(dissipatorData.groupTag).getFlatBonuses();
 		if (!dissipatorShunts.isEmpty()) {
 			float dissipatorAmount = dynamicStats.getMod(dissipatorData.groupTag).computeEffective(0f);
-			float dissipatorFlatMod = 1f+dissipatorAmount*dissipatorData.mods.mult;
-			float dissipatorMultMod = dissipatorAmount*dissipatorData.mods.flat;
+			float dissipatorFlatMod = dissipatorAmount*dissipatorData.mods.flat;
+			float dissipatorMultMod = 1f+dissipatorAmount*dissipatorData.mods.mult;
 
 			for (String slotId : dissipatorShunts.keySet()) {
 				if (hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
@@ -168,7 +168,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 
 				HashMap<String, StatMod> dissipatorShunts = dynamicStats.getMod(dissipatorData.groupTag).getFlatBonuses();
 				if (!dissipatorShunts.isEmpty()) {
-					float totalBonus = ship.getMutableStats().getFluxDissipation().modified-(variant.getNumFluxVents()*Misc.DISSIPATION_PER_VENT+variant.getHullSpec().getFluxDissipation());
+					int totalBonus = Math.round(ship.getMutableStats().getFluxDissipation().modified-(variant.getNumFluxVents()*Misc.DISSIPATION_PER_VENT+variant.getHullSpec().getFluxDissipation()));
 
 					tooltip.addSectionHeading("DISSIPATORS (+"+totalBonus+" DISSIPATION)", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					this.printShuntCountsOnTooltip(tooltip, variant, dissipatorShunts.keySet());
