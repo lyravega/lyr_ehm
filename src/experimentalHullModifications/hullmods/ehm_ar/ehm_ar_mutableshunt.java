@@ -91,8 +91,10 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 	public ehm_ar_mutableshunt() {
 		super();
 
-		this.shuntSet.addAll(capacitorData.idSet);
-		this.shuntSet.addAll(dissipatorData.idSet);
+		this.statSet.add(capacitorData.groupTag);
+		this.statSet.add(dissipatorData.groupTag);
+		this.shuntIdSet.addAll(capacitorData.idSet);
+		this.shuntIdSet.addAll(dissipatorData.idSet);
 	}
 
 	@Override
@@ -103,15 +105,17 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 
 		HashMap<String, StatMod> dissipatorShunts = dynamicStats.getMod(dissipatorData.groupTag).getFlatBonuses();
 		if (!dissipatorShunts.isEmpty()) {
+			for (String slotId : dissipatorShunts.keySet()) {
+				if (hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
+				String shuntId = variant.getWeaponId(slotId);
+
+				dynamicStats.getMod(dissipators.groupTag).modifyFlat(slotId, dissipatorData.dataMap.get(shuntId));
+				hullSpec.deactivateSlot(shuntId, slotId);
+			}
+
 			float dissipatorAmount = dynamicStats.getMod(dissipatorData.groupTag).computeEffective(0f);
 			float dissipatorFlatMod = dissipatorAmount*dissipatorData.mods.flat;
 			float dissipatorMultMod = 1f+dissipatorAmount*dissipatorData.mods.mult;
-
-			for (String slotId : dissipatorShunts.keySet()) {
-				if (hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
-
-				hullSpec.deactivateSlot(variant.getWeaponId(slotId), slotId);
-			}
 
 			stats.getFluxDissipation().modifyFlat(this.hullModSpecId, dissipatorFlatMod);
 			stats.getFluxDissipation().modifyMult(this.hullModSpecId, dissipatorMultMod);
@@ -119,15 +123,17 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 
 		HashMap<String, StatMod> capacitorShunts = dynamicStats.getMod(capacitorData.groupTag).getFlatBonuses();
 		if (!capacitorShunts.isEmpty()) {
+			for (String slotId : capacitorShunts.keySet()) {
+				if (hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
+				String shuntId = variant.getWeaponId(slotId);
+
+				dynamicStats.getMod(capacitors.groupTag).modifyFlat(slotId, capacitorData.dataMap.get(shuntId));
+				hullSpec.deactivateSlot(shuntId, slotId);
+			}
+
 			float capacitorAmount = dynamicStats.getMod(capacitorData.groupTag).computeEffective(0f);
 			float capacitorFlatMod = capacitorAmount*capacitorData.mods.flat;
 			float capacitorMultMod = 1f+capacitorAmount*capacitorData.mods.mult;
-
-			for (String slotId : capacitorShunts.keySet()) {
-				if (hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
-
-				hullSpec.deactivateSlot(variant.getWeaponId(slotId), slotId);
-			}
 
 			stats.getFluxCapacity().modifyFlat(this.hullModSpecId, capacitorFlatMod);
 			stats.getFluxCapacity().modifyMult(this.hullModSpecId, capacitorMultMod);

@@ -8,6 +8,7 @@ import java.util.*;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.api.loading.WeaponGroupSpec;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
@@ -15,7 +16,6 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import lyravega.listeners.events.normalEvents;
 import lyravega.listeners.events.weaponEvents;
-import lyravega.utilities.lyr_miscUtilities;
 
 
 /**
@@ -32,7 +32,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstalled(MutableShipStatsAPI stats) {
-		lyr_miscUtilities.cleanWeaponGroupsUp(stats.getVariant(), this.shuntSet);
+		this.cleanWeaponGroups(stats);
 
 		commitVariantChanges(); playDrillSound();
 	}
@@ -46,23 +46,37 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 
 	@Override
 	public void onWeaponInstalled(MutableShipStatsAPI stats, String weaponId, String slotId) {
-		if (!this.shuntSet.contains(weaponId)) return;
+		if (!this.shuntIdSet.contains(weaponId)) return;
 
-		lyr_miscUtilities.cleanWeaponGroupsUp(stats.getVariant(), this.shuntSet);	// TODO: make this an instance method here
+		this.cleanWeaponGroups(stats);
 
 		commitVariantChanges();
 	}
 
 	@Override
 	public void onWeaponRemoved(MutableShipStatsAPI stats, String weaponId, String slotId) {
-		if (!this.shuntSet.contains(weaponId)) return;
+		if (!this.shuntIdSet.contains(weaponId)) return;
 
 		commitVariantChanges();
 	}
 	//#endregion
 	// END OF CUSTOM EVENTS
 
-	protected final Set<String> shuntSet = new HashSet<String>();
+	protected final Set<String> shuntIdSet = new HashSet<String>();
+	protected final Set<String> statSet = new HashSet<String>();
+
+	protected void cleanWeaponGroups(MutableShipStatsAPI stats) {
+		for (Iterator<WeaponGroupSpec> iterator = stats.getVariant().getWeaponGroups().iterator(); iterator.hasNext();) {
+			WeaponGroupSpec weaponGroup = iterator.next();
+
+			for (String statId : this.statSet) {
+				Set<String> keySet = stats.getDynamic().getMod(statId).getFlatBonuses().keySet();
+				weaponGroup.getSlots().removeAll(stats.getDynamic().getMod(statId).getFlatBonuses().keySet());
+			}
+
+			if (weaponGroup.getSlots().isEmpty()) iterator.remove();
+		}
+	}
 
 	/**
 	 * Prints basic shunt count information to a tooltip.

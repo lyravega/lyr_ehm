@@ -95,8 +95,10 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 	public ehm_ar_diverterandconverter() {
 		super();
 
-		this.shuntSet.addAll(converterData.idSet);
-		this.shuntSet.addAll(diverterData.idSet);
+		this.statSet.add(converterData.groupTag);
+		this.statSet.add(diverterData.groupTag);
+		this.shuntIdSet.addAll(converterData.idSet);
+		this.shuntIdSet.addAll(diverterData.idSet);
 	}
 
 	@Override
@@ -109,12 +111,14 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 		if (!diverterShunts.isEmpty()) {
 			for (String slotId : diverterShunts.keySet()) {
 				if (hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
+				String shuntId = variant.getWeaponId(slotId);
+				float mod = diverterData.dataMap.get(shuntId);
+				// float mod = diverterShunts.get(slotId).getValue();
 
-				float mod = diverterShunts.get(slotId).getValue();
-
+				dynamicStats.getMod(diverterData.groupTag).modifyFlat(slotId, mod);	// updated on base but used here for self-tracking & to keep stats updated in this class
 				dynamicStats.getMod(ehm_internals.stats.slotPointsFromDiverters).modifyFlat(slotId, mod);	// to have the addition count on the active converter block
 				dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(slotId, mod);	// to have the addition count on the inactive converter block
-				hullSpec.deactivateSlot(variant.getWeaponId(slotId), slotId);
+				hullSpec.deactivateSlot(shuntId, slotId);
 			}
 		}
 
@@ -124,15 +128,16 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 
 			for (String slotId : inactiveConverterShunts.keySet()) {
 				if (hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
-
-				float slotPointCost = inactiveConverterShunts.get(slotId).getValue();
+				String shuntId = variant.getWeaponId(slotId);
+				float slotPointCost = converterData.dataMap.get(shuntId).getChildCost();
+				// float slotPointCost = inactiveConverterShunts.get(slotId).getValue();
 				float slotPointsUsed = dynamicStats.getMod(ehm_internals.stats.slotPointsUsed).computeEffective(0f);
 
 				if (slotPointCost + slotPointsUsed > slotPoints) continue;
 
-				// dynamicStats.getMod(ehm_internals.stats.slotPointsToConverters).modifyFlat(slotId, slotPoints);	// redundant in this method block; base pre-process method will update it
+				dynamicStats.getMod(converterData.groupTag).modifyFlat(slotId, slotPointCost);	// updated on base but used here for self-tracking & to keep stats updated in this class
 				dynamicStats.getMod(ehm_internals.stats.slotPointsUsed).modifyFlat(slotId, slotPointCost);	// only this is necessary at this stage to keep track, rest of the stats will be processed externally
-				hullSpec.convertSlot(variant.getWeaponId(slotId), slotId);
+				hullSpec.convertSlot(shuntId, slotId);
 			}
 		}
 
