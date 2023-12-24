@@ -5,22 +5,17 @@ import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
 import org.lwjgl.util.vector.Vector2f;
 
-import com.fs.starfarer.api.EveryFrameScript;
+import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
-import com.fs.starfarer.api.ui.Alignment;
+import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShipTypeHints;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
-import com.fs.starfarer.api.util.DynamicStatsAPI;
 import com.fs.starfarer.loading.specs.g;
 
-import experimentalHullModifications.misc.ehm_internals;
-import experimentalHullModifications.misc.ehm_internals.stats;
-import experimentalHullModifications.misc.ehm_settings;
-import experimentalHullModifications.misc.ehm_tooltip.header;
 import experimentalHullModifications.proxies.ehm_hullSpec;
 import lyravega.listeners.events.normalEvents;
-import lyravega.utilities.lyr_miscUtilities;
+import lyravega.utilities.logger.lyr_logger;
 
 /**
  * Serves as a requirement for all experimental hull modifications, and enables tracking
@@ -48,8 +43,12 @@ public final class ehm_module_base extends _ehm_base implements normalEvents {
 
 		ehm_hullSpec hullSpecProxy = new ehm_hullSpec(stats.getVariant().getHullSpec(), false);
 		hullSpecProxy.setHullName("Mini Module");
+		// hullSpecProxy.addBuiltInMod("axialrotation");
+		// hullSpecProxy.getHints().add(ShipTypeHints.INDEPENDENT_ROTATION);
+		hullSpecProxy.getHints().add(ShipTypeHints.PLAY_FIGHTER_OVERLOAD_SOUNDS);
 		g test = (g) hullSpec;
 		test.setDesignation("");
+		ShipTypeHints next = hullSpecProxy.getHints().iterator().next();
 		Vector2f moduleAnchor = hullSpecProxy.retrieve().getModuleAnchor();
 
 		// if (!lyr_interfaceUtilities.isRefitTab()) {
@@ -74,9 +73,9 @@ public final class ehm_module_base extends _ehm_base implements normalEvents {
 
 		// 	lyr_hullSpec.getShieldSpec().setCenterX(shieldCenterX);
 		// 	lyr_hullSpec.getShieldSpec().setCenterY(shieldCenterY);
-		// 	lyr_hullSpec.getShieldSpec().setRadius(shieldRadius+15);
+			// hullSpecProxy.getShieldSpec().setRadius(shieldRadius+15);
 			// stats.getShieldTurnRateMult().modifyMult(this.hullModSpecId, 10);
-		// 	lyr_hullSpec.getShieldSpec().setArc(30f);
+			// hullSpecProxy.getShieldSpec().setArc(30f);
 
 		// 	// Object spriteSpec = lyr_hullSpec.getSpriteSpec();
 		// 	// MethodHandle testt = null;
@@ -96,77 +95,76 @@ public final class ehm_module_base extends _ehm_base implements normalEvents {
 	}
 
 	@Override
-	public void applyEffectsAfterShipCreation(ShipAPI ship, String hullModSpecId) {
-		// ship.setLayer(CombatEngineLayers.FRIGATES_LAYER);
-		// CombatEngineLayers layer = ship.getLayer();
-
-		// ship = ship;
+	public void applyEffectsAfterShipCreation(ShipAPI module, String hullModSpecId) {
+		this.dronify(module);
 	}
 
 	@Override
-	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
-		if (ship == null) return;
+	public void advanceInCombat(ShipAPI module, float amount) {
+		this.dronify(module);
 
-		ShipVariantAPI variant = ship.getVariant();
-		ShipHullSpecAPI hullSpec = variant.getHullSpec();
+		// boolean drone = ship.isDrone();
+		// ShipAPI parentShip = ship.getParentStation();
+		// ShipAPI parentShipTarget = parentShip.getShipTarget();
+		// ShipAPI shipTarget = ship.getShipTarget();
+		// Vector2f shieldTarget = ship.getShieldTarget();
+		// // if (ship.getShipTarget() == null)
+		// // else
+		// List<WeaponGroupAPI> weaponGroupsCopy = ship.getWeaponGroupsCopy();
+		// Vector2f target = weaponGroupsCopy.iterator().next().getAIPlugins().iterator().next().getTarget();
+		// MissileAPI targetMissile = weaponGroupsCopy.iterator().next().getAIPlugins().iterator().next().getTargetMissile();
+		// ShipAPI targetShip = weaponGroupsCopy.iterator().next().getAIPlugins().iterator().next().getTargetShip();
 
-		if (ehm_settings.getDebugTooltip()) {
-			// tooltip.addSectionHeading("DEBUG INFO: GENERAL", header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding);
-			// tooltip.addPara("Mods: "+Global.getSettings().getModManager().getEnabledModsCopy().toString(), 5f).setHighlight("Mods: ");
+		// if (targetShip != null) {
+		// 	WeaponSlotAPI stationSlot = ship.getStationSlot();
+		// 	Vector2f slotPosition = ship.getStationSlot().computePosition(ship);
+		// 	float angle = Math.round(Math.toRadians(Vector2f.angle(slotPosition, targetShip.getLocation())));
+		// 	ship.setFacing(angle);
+		// 	// ship.setFacing(ship.getStationSlot().computeMidArcAngle(targetShip));
+		// }
+		// else
+		// 	ship.setFacing(parentShip.getFacing());
+	}
 
-			tooltip.addSectionHeading("DEBUG INFO: HULL MODIFICATIONS", header.severeWarning_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-			tooltip.addPara("All: "+variant.getHullMods().toString(), 5f).setHighlight("All:");
-			tooltip.addPara("Modular: "+variant.getNonBuiltInHullmods().toString(), 5f).setHighlight("Modular:");
-			tooltip.addPara("Modular (Enhanced): "+variant.getSMods().toString(), 5f).setHighlight("Modular (Enhanced):");
-			tooltip.addPara("Perma: "+variant.getPermaMods().toString(), 5f).setHighlight("Perma:");
-			tooltip.addPara("Built-in: "+hullSpec.getBuiltInMods().toString(), 5f).setHighlight("Built-in:");
-			tooltip.addPara("Built-in (Enhanced): "+variant.getSModdedBuiltIns().toString(), 5f).setHighlight("Built-in (Enhanced):");
-			tooltip.addPara("Suppressed: "+variant.getSuppressedMods().toString(), 5f).setHighlight("Suppressed:");
-
-			tooltip.addSectionHeading("DEBUG INFO: SHIP DETAILS", header.severeWarning_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-			tooltip.addPara("isHullCloned: "+(Global.getSettings().getHullSpec(hullSpec.getHullId()) != hullSpec), 5f).setHighlight("isHullCloned:");
-			tooltip.addPara("Hull ID: "+hullSpec.getHullId(), 5f).setHighlight("Hull ID:");
-			tooltip.addPara("Variant ID: "+variant.getHullVariantId(), 5f).setHighlight("Variant ID:");
-			tooltip.addPara("Member ID: "+ship.getFleetMemberId(), 5f).setHighlight("Member ID:");
-			tooltip.addPara("Hull Size: "+ship.getHullSize(), 5f).setHighlight("Hull Size:");
-			tooltip.addPara("isModule: "+!Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy().contains(ship.getFleetMember()), 5f).setHighlight("isModule:");
-			tooltip.addPara("isParent: "+lyr_miscUtilities.isParent(ship), 5f).setHighlight("isParent:");
-			tooltip.addPara("Hints: "+hullSpec.getHints().toString(), 5f).setHighlight("Hints:");	// variant returns hints from hullspec, so only one is enough
-			tooltip.addPara("HullTags: "+hullSpec.getTags().toString(), 5f).setHighlight("HullTags:");
-			tooltip.addPara("VariantTags: "+variant.getTags().toString(), 5f).setHighlight("VariantTags:");
-
-			DynamicStatsAPI dynamicStats = ship.getMutableStats().getDynamic();
-			final float launchTubes = dynamicStats.getMod(stats.hangars).computeEffective(0f);
-			final float slotPointsFromMods = dynamicStats.getMod(stats.slotPointsFromMods).computeEffective(0f);
-			final float slotPointsFromDiverters = dynamicStats.getMod(stats.slotPointsFromDiverters).computeEffective(0f);
-			final float slotPointsToConverters = dynamicStats.getMod(stats.slotPointsToConverters).computeEffective(0f);
-			final float capacitors = dynamicStats.getMod(stats.capacitors).computeEffective(0f);
-			final float dissipators = dynamicStats.getMod(stats.dissipators).computeEffective(0f);
-			final float overdrive = dynamicStats.getMod(stats.overdrive).computeEffective(0f);
-			tooltip.addSectionHeading("DEBUG INFO: DYNAMIC STATS", header.severeWarning_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-			if (launchTubes > 0) tooltip.addPara("'"+stats.hangars+"': "+launchTubes, 5f).setHighlight("'"+stats.hangars+"':");
-			if (slotPointsFromMods > 0) tooltip.addPara("'"+stats.slotPointsFromMods+"': "+slotPointsFromMods, 5f).setHighlight("'"+stats.slotPointsFromMods+"':");
-			if (slotPointsFromDiverters > 0) tooltip.addPara("'"+stats.slotPointsFromDiverters+"': "+slotPointsFromDiverters, 5f).setHighlight("'"+stats.slotPointsFromDiverters+"':");
-			if (slotPointsToConverters > 0) tooltip.addPara("'"+stats.slotPointsToConverters+"': "+slotPointsToConverters, 5f).setHighlight("'"+stats.slotPointsToConverters+"':");
-			if (capacitors > 0) tooltip.addPara("'"+stats.capacitors+"': "+capacitors, 5f).setHighlight("'"+stats.capacitors+"':");
-			if (dissipators > 0) tooltip.addPara("'"+stats.dissipators+"': "+dissipators, 5f).setHighlight("'"+stats.dissipators+"':");
-			if (overdrive > 0) tooltip.addPara("'"+stats.overdrive+"': "+overdrive, 5f).setHighlight("'"+stats.overdrive+"':");
-
-			tooltip.addSectionHeading("DEBUG INFO: SCRIPTS", header.severeWarning_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-			for (EveryFrameScript script : Global.getSector().getScripts()) {
-				String scriptSimpleName = script.getClass().getSimpleName();
-
-				if ("FieldRepairsScript".equals(scriptSimpleName)) tooltip.addPara("FieldRepairsScript (vanilla): Running", 5f).setHighlight("FieldRepairsScript (vanilla):");
-				if ("lyr_fieldRepairsScript".equals(scriptSimpleName)) tooltip.addPara("FieldRepairsScript (EHM): Running", 5f).setHighlight("FieldRepairsScript (EHM):");
-				if ("CaptainsFieldRepairsScript".equals(scriptSimpleName)) tooltip.addPara("FieldRepairsScript (QC): Running", 5f).setHighlight("FieldRepairsScript (QC):");
-			}
-
-			return;
+	/**
+	 * Changes some of the module parameters to fool the AI into thinking these modules are not a big
+	 * threat. If not done so, the AI will look at the size of the hulls and whatnot, and will not
+	 * engage properly.
+	 * <p> For redundancy, this method should be called from both the {@code advanceInCombat()}
+	 * and {@code applyEffectsAfterShipCreation()}. Simulation and combat have different behaviours,
+	 * and the first caller may be different for each.
+	 * <p> In both cases, the module's collision class is set to 'SHIP', hull size is set to
+	 * 'FIGHTER' and 'isDrone' boolean is set to {@code true}. Latter is also used for checks.
+	 * Modifications are done once, then the checks will fail.
+	 * <p> The method also includes a block that is used for redundancy; in case the above changes
+	 * persist outside combat, the block will reset the changes back to their originals. Hull size
+	 * especially have issues in refit tab if it's left as 'FIGHTER'.
+	 * <p> The redundancy block is effectively a dead code block as different ships will be recreated
+	 * for combat, and refit will retain the non-modified versions since the changes are applied in
+	 * combat. But it's there just in case.
+	 * @param module
+	 */
+	protected void dronify(ShipAPI module) {
+		if (module.isDrone() && Global.getCurrentState() != GameState.COMBAT) {	// this block is for redundancy; it covers just-in-case scenarios but is effectively a dead code block
+			module.setHullSize(HullSize.FRIGATE);	// reset hullsize; in combat, is set to FIGHTER
+			module.setCollisionClass(CollisionClass.SHIP);	// reset collision; redundant as it does not change, but just in case
+			module.setDrone(false);	// reset boolean; used as a control for the combat check
+			lyr_logger.debug("Changing module parameters to 'NON-COMBAT'; 'HullSize."+module.getHullSize().name()+"', 'CollisionClass."+module.getCollisionClass().name()+"', 'isDrone = "+module.isDrone()+"'");
+		} else if (!module.isDrone() && Global.getCurrentState() == GameState.COMBAT) {	// in simulation 'advanceInCombat()' will fall here first, in combat 'applyEffectsAfterShipCreation()' will
+			module.setHullSize(HullSize.FIGHTER);	// this messes with the refit UI; needs to get reset
+			module.setCollisionClass(CollisionClass.SHIP);	// required alongside FIGHTER to fix their collisions
+			module.setDrone(true);	// used in the check, primarily here to mess with AI
+			lyr_logger.debug("Changing module parameters to 'COMBAT'; 'HullSize."+module.getHullSize().name()+"', 'CollisionClass."+module.getCollisionClass().name()+"', 'isDrone = "+module.isDrone()+"'");
 		}
 	}
 
 	@Override
+	public void addPostDescriptionSection(TooltipMakerAPI tooltip, HullSize hullSize, ShipAPI ship, float width, boolean isForModSpec) {
+
+	}
+
+	@Override
 	public boolean showInRefitScreenModPickerFor(ShipAPI ship) {
-		return (lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.hullmods.main.base)) ? false : true;
+		return true;
 	}
 }

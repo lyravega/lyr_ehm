@@ -93,6 +93,7 @@ public final class ehm_base extends _ehm_base implements normalEvents {
 			tooltip.addPara("Variant ID: "+variant.getHullVariantId(), 5f).setHighlight("Variant ID:");
 			tooltip.addPara("Member ID: "+ship.getFleetMemberId(), 5f).setHighlight("Member ID:");
 			tooltip.addPara("Variant Source: "+ship.getVariant().getSource(), 5f).setHighlight("Variant Source:");
+			tooltip.addPara("Hull Size: "+ship.getHullSize(), 5f).setHighlight("Hull Size:");
 			tooltip.addPara("isModule: "+!Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy().contains(ship.getFleetMember()), 5f).setHighlight("isModule:");
 			tooltip.addPara("isParent: "+lyr_miscUtilities.isParent(ship), 5f).setHighlight("isParent:");
 			tooltip.addPara("Hints: "+hullSpec.getHints().toString(), 5f).setHighlight("Hints:");	// variant returns hints from hullspec, so only one is enough
