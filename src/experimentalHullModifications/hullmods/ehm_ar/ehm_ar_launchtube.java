@@ -8,7 +8,6 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
-import com.fs.starfarer.api.impl.campaign.ids.HullMods;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
@@ -71,15 +70,12 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 				String shuntId = variant.getWeaponId(slotId);
 
 				stats.getDynamic().getMod(hangars.groupTag).modifyFlat(slotId, 1);
-				hullSpec.adaptSlot(shuntId, slotId);
+				hullSpec.turnSlotIntoBay(shuntId, slotId);
 			}
 
 			float hangarMod = hangarShunts.size();	// hangars always give 1 bonus since there is only one large type, so use size
 
 			stats.getNumFighterBays().modifyFlat(this.hullModSpecId, hangarMod);
-
-			if (!variant.hasHullMod(HullMods.AUTOMATED))
-				stats.getMinCrewMod().modifyFlat(this.hullModSpecId, 20*hangarMod);	// TODO: reflect crew requirement on tooltip
 		}
 
 		variant.setHullSpecAPI(hullSpec.retrieve());
