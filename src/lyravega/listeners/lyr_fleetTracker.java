@@ -120,10 +120,10 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 		if (shipTrackerUUID == null) shipTrackerUUID = UUID.randomUUID().toString();
 
 		if (member != null && variant.getSource() != VariantSource.REFIT) {
+			lyr_logger.debug("ST-"+shipTrackerUUID+": Changing variant source from "+variant.getSource().name()+" to REFIT");
 			variant = variant.clone();
 			variant.setSource(VariantSource.REFIT);	// this is because stock ships cause problems till they're saved once
 			member.setVariant(variant, false, false);
-			lyr_logger.debug("ST-"+shipTrackerUUID+": Changing variant source to REFIT");
 		}
 
 		if (!variant.getPermaMods().contains(this.trackerModId))
@@ -149,10 +149,10 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 			if (moduleHullSpec.hasTag(Tags.MODULE_UNSELECTABLE)) continue;	// this to identify unselectables
 
 			if (moduleVariant.getSource() != VariantSource.REFIT) {
+				lyr_logger.debug("ST-"+shipTrackerUUID+": Changing variant source from "+moduleVariant.getSource().name()+" to REFIT");
 				moduleVariant = moduleVariant.clone();
 				moduleVariant.setSource(VariantSource.REFIT);	// this is because sometimes modules have hull variants, which causes issues
 				variant.setModuleVariant(moduleSlotId, moduleVariant);
-				lyr_logger.debug("MT-"+shipTrackerUUID+": Changing variant source to REFIT");
 			}
 
 			this.addTracking(moduleVariant, null, shipTrackerUUID);
