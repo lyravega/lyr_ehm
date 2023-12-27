@@ -6,11 +6,11 @@ import java.util.List;
 
 import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.CoreUITabId;
 import com.fs.starfarer.api.campaign.listeners.CoreUITabListener;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.campaign.fleet.CampaignFleet;
 
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_settings;
@@ -203,13 +203,15 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 
 		if (forceSync) Global.getSector().getPlayerFleet().forceSync();
 
-		try {
-			CampaignFleetAPI playerFleet = Global.getSector().getPlayerFleet();
-			Object fleetView = methodReflection.invokeDirect(playerFleet, "getFleetView");
-			methodReflection.invokeDirect(fleetView, "clear");
-		} catch (Throwable t) {
-			lyr_logger.warn("Failure in 'refreshFleetView()'", t);
-		}
+		// try {
+		// 	CampaignFleetAPI playerFleet = Global.getSector().getPlayerFleet();
+		// 	Object fleetView = methodReflection.invokeDirect(playerFleet, "getFleetView");
+		// 	methodReflection.invokeDirect(fleetView, "clear");
+		// } catch (Throwable t) {
+		// 	lyr_logger.warn("Failure in 'refreshFleetView()'", t);
+		// }
+
+		CampaignFleet.class.cast(Global.getSector().getPlayerFleet()).getFleetView().clear();
 	}
 
 	//#region SEARCH TOOLS
