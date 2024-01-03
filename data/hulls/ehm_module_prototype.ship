@@ -5,9 +5,9 @@
 	"spriteName": "data/graphics/weapons/ehm_tube_large_t.png",
 	"style": "HIGH_TECH",
 	"builtInMods": [
-		"supercomputer",
 		"shield_always_on",
-		"reduced_explosion"
+		"reduced_explosion",
+		"ehm_module_base"
 	],
 	"bounds": [
 		15, 15,
