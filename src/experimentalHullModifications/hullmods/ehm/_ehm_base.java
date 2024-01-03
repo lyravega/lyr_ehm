@@ -233,9 +233,11 @@ public abstract class _ehm_base implements HullModEffect {
 	 * @param stats of the ship/member whose hull spec may be swapped
 	 * @see {@link ehm_hullSpec#ehm_hullSpec(ShipHullSpecAPI, boolean) Hull Spec Proxy Constructor}
 	 */
-	protected final void swapHullSpec(MutableShipStatsAPI stats) {
+	final void swapHullSpec(MutableShipStatsAPI stats) {
 		ShipVariantAPI variant = stats.getVariant();
 		ehm_hullSpec hullSpec = new ehm_hullSpec(variant.getHullSpec(), false);
+
+		if (!hullSpec.isBuiltInMod(this.hullModSpecId)) hullSpec.addBuiltInMod(this.hullModSpecId);
 
 		variant.setHullSpecAPI(hullSpec.retrieve());
 	}
