@@ -144,17 +144,25 @@ public final class ehm_module_base extends _ehm_base implements normalEvents {
 	 * combat. But it's there just in case.
 	 * @param module
 	 */
-	protected void dronify(ShipAPI module) {
-		if (module.isDrone() && Global.getCurrentState() != GameState.COMBAT) {	// this block is for redundancy; it covers just-in-case scenarios but is effectively a dead code block
-			module.setHullSize(HullSize.FRIGATE);	// reset hullsize; in combat, is set to FIGHTER
-			module.setCollisionClass(CollisionClass.SHIP);	// reset collision; redundant as it does not change, but just in case
-			module.setDrone(false);	// reset boolean; used as a control for the combat check
-			lyr_logger.debug("Changing module parameters to 'NON-COMBAT'; 'HullSize."+module.getHullSize().name()+"', 'CollisionClass."+module.getCollisionClass().name()+"', 'isDrone = "+module.isDrone()+"'");
-		} else if (!module.isDrone() && Global.getCurrentState() == GameState.COMBAT) {	// in simulation 'advanceInCombat()' will fall here first, in combat 'applyEffectsAfterShipCreation()' will
+	protected void dronify(ShipAPI module) {	// in simulation 'advanceInCombat()' will fall here first, in combat 'applyEffectsAfterShipCreation()' will
+		if (Global.getCurrentState() == GameState.COMBAT) {	// check is required as the methods above may get called outside combat as well
+			if (module.isDrone()) return;
+			// if (module.getHullSize() == HullSize.FIGHTER) return;
+
 			module.setHullSize(HullSize.FIGHTER);	// this messes with the refit UI; needs to get reset
 			module.setCollisionClass(CollisionClass.SHIP);	// required alongside FIGHTER to fix their collisions
 			module.setDrone(true);	// used in the check, primarily here to mess with AI
+
 			lyr_logger.debug("Changing module parameters to 'COMBAT'; 'HullSize."+module.getHullSize().name()+"', 'CollisionClass."+module.getCollisionClass().name()+"', 'isDrone = "+module.isDrone()+"'");
+		} else /*if (Global.getCurrentState() != GameState.COMBAT)*/ {	// this block is for redundancy; it covers just-in-case scenarios but is effectively a dead code block
+			if(!module.isDrone()) return;
+			// if (module.getHullSize() == HullSize.FRIGATE) return;
+
+			module.setHullSize(HullSize.FRIGATE);	// reset hullsize; in combat, is set to FIGHTER
+			module.setCollisionClass(CollisionClass.SHIP);	// reset collision; redundant as it does not change, but just in case
+			module.setDrone(false);	// reset boolean; used as a control for the combat check
+
+			lyr_logger.debug("Changing module parameters to 'NON-COMBAT'; 'HullSize."+module.getHullSize().name()+"', 'CollisionClass."+module.getCollisionClass().name()+"', 'isDrone = "+module.isDrone()+"'");
 		}
 	}
 
