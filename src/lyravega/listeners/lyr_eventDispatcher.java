@@ -35,12 +35,15 @@ public final class lyr_eventDispatcher {
 			onWeaponInstalled = "onWeaponInstalled",
 			onWeaponRemoved = "onWeaponRemoved",
 			onWingAssigned = "onWingAssigned",
-			onWingRelieved = "onWingRelieved";
+			onWingRelieved = "onWingRelieved",
+			onModuleInstalled = "onModuleInstalled",
+			onModuleRemoved = "onModuleRemoved";
 	}
 
 	// hull modification effects that implement any of the event interfaces are stored in these maps
 	private static final Map<String, weaponEvents> weaponEvents = new HashMap<String, weaponEvents>();
 	private static final Map<String, wingEvents> wingEvents = new HashMap<String, wingEvents>();
+	private static final Map<String, moduleEvents> moduleEvents = new HashMap<String, moduleEvents>();
 	private static final Map<String, normalEvents> normalEvents = new HashMap<String, normalEvents>();
 	private static final Map<String, enhancedEvents> enhancedEvents = new HashMap<String, enhancedEvents>();
 	private static final Map<String, suppressedEvents> suppressedEvents = new HashMap<String, suppressedEvents>();
@@ -68,6 +71,7 @@ public final class lyr_eventDispatcher {
 				HullModEffect hullModEffect = hullModSpec.getEffect();
 				if (weaponEvents.class.isInstance(hullModEffect)) weaponEvents.put(hullModSpec.getId(), weaponEvents.class.cast(hullModEffect));
 				if (wingEvents.class.isInstance(hullModEffect)) wingEvents.put(hullModSpec.getId(), wingEvents.class.cast(hullModEffect));
+				if (moduleEvents.class.isInstance(hullModEffect)) moduleEvents.put(hullModSpec.getId(), moduleEvents.class.cast(hullModEffect));
 				if (normalEvents.class.isInstance(hullModEffect)) normalEvents.put(hullModSpec.getId(), normalEvents.class.cast(hullModEffect));
 				if (enhancedEvents.class.isInstance(hullModEffect)) enhancedEvents.put(hullModSpec.getId(), enhancedEvents.class.cast(hullModEffect));
 				if (suppressedEvents.class.isInstance(hullModEffect)) suppressedEvents.put(hullModSpec.getId(), suppressedEvents.class.cast(hullModEffect));
@@ -136,6 +140,14 @@ public final class lyr_eventDispatcher {
 		switch (eventName) {
 			case onWingAssigned:	for (String hullModId: wingEvents.keySet()) if (stats.getVariant().hasHullMod(hullModId)) wingEvents.get(hullModId).onWingAssigned(stats, weaponId, bayNumber); return;
 			case onWingRelieved:	for (String hullModId: wingEvents.keySet()) if (stats.getVariant().hasHullMod(hullModId)) wingEvents.get(hullModId).onWingRelieved(stats, weaponId, bayNumber); return;
+			default: return;
+		}
+	}
+
+	static void onModuleEvent(final String eventName, final MutableShipStatsAPI stats, final String weaponId, final String slotId) {
+		switch (eventName) {
+			case onModuleInstalled:	for (String hullModId: moduleEvents.keySet()) if (stats.getVariant().hasHullMod(hullModId)) moduleEvents.get(hullModId).onModuleInstalled(stats, weaponId, slotId); return;
+			case onModuleRemoved:	for (String hullModId: moduleEvents.keySet()) if (stats.getVariant().hasHullMod(hullModId)) moduleEvents.get(hullModId).onModuleRemoved(stats, weaponId, slotId); return;
 			default: return;
 		}
 	}
