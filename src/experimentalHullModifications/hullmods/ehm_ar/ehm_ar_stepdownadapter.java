@@ -110,7 +110,7 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 				if (hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
 				String shuntId = variant.getWeaponId(slotId);
 
-				stats.getDynamic().getMod(adapters.groupTag).modifyFlat(slotId, 1);
+				stats.getDynamic().getMod(adapterData.groupTag).modifyFlat(slotId, 1);
 				hullSpec.adaptSlot(shuntId, slotId);
 			}
 		}

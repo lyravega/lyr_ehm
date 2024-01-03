@@ -69,7 +69,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 				if (hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;	// parent slot turns into decorative, spawns a child launch bay
 				String shuntId = variant.getWeaponId(slotId);
 
-				stats.getDynamic().getMod(hangars.groupTag).modifyFlat(slotId, 1);
+				stats.getDynamic().getMod(hangarData.groupTag).modifyFlat(slotId, 1);
 				hullSpec.turnSlotIntoBay(shuntId, slotId);
 			}
 

@@ -109,7 +109,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 				if (hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
 				String shuntId = variant.getWeaponId(slotId);
 
-				dynamicStats.getMod(dissipators.groupTag).modifyFlat(slotId, dissipatorData.dataMap.get(shuntId));
+				dynamicStats.getMod(dissipatorData.groupTag).modifyFlat(slotId, dissipatorData.dataMap.get(shuntId));
 				hullSpec.deactivateSlot(shuntId, slotId);
 			}
 
@@ -127,7 +127,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 				if (hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
 				String shuntId = variant.getWeaponId(slotId);
 
-				dynamicStats.getMod(capacitors.groupTag).modifyFlat(slotId, capacitorData.dataMap.get(shuntId));
+				dynamicStats.getMod(capacitorData.groupTag).modifyFlat(slotId, capacitorData.dataMap.get(shuntId));
 				hullSpec.deactivateSlot(shuntId, slotId);
 			}
 
