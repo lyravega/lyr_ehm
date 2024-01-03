@@ -179,7 +179,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 
 		if (!ship.getVariant().getSMods().contains(this.hullModSpecId)) {
 			tooltip.addSectionHeading(header.noEffect, header.noEffect_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-			lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.overEngineeredNoEffect, text.padding);
+			lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.noEffectUnlessBuiltIn, text.padding);
 		} else {
 			tooltip.addSectionHeading(header.sEffect, header.sEffect_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 			tooltip.addPara(this.hullModSpec.getSModDescription(hullSize).replaceAll("\\%", "%%"), text.padding, header.sEffect_textColour, this.getSModDescriptionParam(0, hullSize));
@@ -218,7 +218,7 @@ public final class ehm_mr_logisticsoverhaul extends _ehm_base implements normalE
 			if (!lyr_miscUtilities.isStripped(ship, this.hullModSpecId)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.notStripped, text.padding);
 		} else if (!ship.getVariant().getSMods().contains(this.hullModSpecId)) {
 			tooltip.addSectionHeading(header.severeWarning, header.severeWarning_textColour, header.invisible_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
-			lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.overEngineeredWarning, text.padding);
+			lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.willBlockBaseRemoval, text.padding);
 		}
 
 		super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);

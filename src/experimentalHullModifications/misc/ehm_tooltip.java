@@ -19,8 +19,8 @@ public class ehm_tooltip {
 				warning = "Installing or removing Experimental Hull Modifications "+highlightText("will commit the changes immediately")+"; the variant will be saved and any market and/or cargo transactions will be finalized",
 				baseRetrofitWarning = "Will become a built-in hull modification "+highlightText("as soon as it is installed")+"",
 				// restoreWarning = "This ship has a "+highlightText("base version")+" that it can be restored to. Installing this mod will perform a "+highlightText("visual restoration")+"; the visuals of the ship will be restored to its base version while any d-mods will be retained",
-				overEngineeredNoEffect = "Has "+negativeText("no effects till it is built-in")+" to the ship using a "+storyText("story point")+"",
-				overEngineeredWarning = highlightText("Removal")+" of base experimental hull modification "+negativeText("will be blocked if built-in")+"",
+				noEffectUnlessBuiltIn = "Has "+negativeText("reduced or no effects till it is built-in")+" to the ship using a "+storyText("story point")+"",
+				willBlockBaseRemoval = highlightText("Removal")+" of base experimental hull modification "+negativeText("will be blocked if built-in")+"",
 				// noShip = {"Ship does not exist", "not"},	// old
 				lacksBase = negativeText("Requires")+" the "+highlightText("Experimental Hull Modifications")+" base modification to be installed first",
 				lacksActivator = negativeText("Requires")+" the "+highlightText("Converter/Diverter Activator")+" hull modification to be installed first",
