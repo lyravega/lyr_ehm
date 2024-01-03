@@ -71,7 +71,7 @@ public class _ehmu_test extends BaseRefitButton {
 		moduleSlot.setSlotType(referenceSlot.getSlotType());	// modules actually conceal a hidden weapon below them
 		moduleSlot.setWeaponType(referenceSlot.getWeaponType());
 		parentVariant.getStationModules().remove(moduleSlotId);	// actual necessary removal
-		parentVariant.clearSlot(moduleSlotId);	// hidden weapon's OP cost is utilized instead of altering parent hull spec; clear to remove OP usage
+		// parentVariant.clearSlot(moduleSlotId);	// hidden weapon's OP cost is utilized instead of altering parent hull spec; clear to remove OP usage
 
 		lyr_refitTab.proxify().goBackToParentIfNeeded();
 		lyr_interfaceUtilities.playDrillSound();

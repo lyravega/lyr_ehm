@@ -1,13 +1,12 @@
 package experimentalHullModifications.hullmods.ehm_ar;
 
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
-import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
 import java.util.*;
-import java.util.Map.Entry;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
+import com.fs.starfarer.api.combat.MutableStat.StatMod;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShipTypeHints;
@@ -18,10 +17,14 @@ import com.fs.starfarer.api.loading.VariantSource;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.api.util.DynamicStatsAPI;
 
+import experimentalHullModifications.misc.ehm_internals;
+import experimentalHullModifications.misc.ehm_internals.affixes;
+import experimentalHullModifications.misc.ehm_internals.shunts.modules;
 import experimentalHullModifications.proxies.ehm_hullSpec;
 import lyravega.listeners.lyr_fleetTracker;
-import lyravega.proxies.lyr_shieldSpec;
+import lyravega.listeners.events.moduleEvents;
 import lyravega.proxies.lyr_weaponSlot;
 import lyravega.proxies.lyr_weaponSlot.slotTypeConstants;
 import lyravega.utilities.lyr_reflectionUtilities;
@@ -30,107 +33,107 @@ import lyravega.utilities.logger.lyr_logger;
 /**@category Adapter Retrofit
  * @author lyravega
  */
-public final class ehm_ar_minimodule extends _ehm_ar_base {
+public final class ehm_ar_minimodule extends _ehm_ar_base implements moduleEvents {
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstalled(MutableShipStatsAPI stats) {
 		lyr_fleetTracker.instance().addTracking(stats.getVariant(), null, null);	// order of this method matters; needs to be done before commit
-		commitVariantChanges(); playDrillSound();
+
+		super.onInstalled(stats);
 	}
 
-	@Override
-	public void onRemoved(MutableShipStatsAPI stats) {
-		ShipVariantAPI variant = stats.getVariant();
-		Map<String, String> stationModules = variant.getStationModules();
-
-		for (Iterator<Entry<String, String>> iterator = stationModules.entrySet().iterator(); iterator.hasNext(); ) {
-			Entry<String, String> moduleEntry = iterator.next();
-
-			if (!moduleEntry.getValue().startsWith("ehm_module")) continue;
-
-			iterator.remove();
-		}
-
-		variant.setHullSpecAPI(new ehm_hullSpec(variant.getHullSpec(), false).reference());
-		commitVariantChanges(); playDrillSound();
-	}
+	// uses super's onRemoved(), weapon events are never called as module events overtakes those
 
 	@Override
-	public void onWeaponInstalled(MutableShipStatsAPI stats, String weaponId, String slotId) {
-		if (!moduleSet.contains(weaponId)) return;
+	public void onModuleInstalled(MutableShipStatsAPI stats, String moduleVariantId, String moduleSlotId) {
+		if (!this.shuntIdSet.contains(moduleVariantId.replaceFirst("_Hull", ""))) return;	// TODO: make a new variant instead of using hull?
+
 		lyr_fleetTracker.instance().addTracking(stats.getVariant(), null, null);	// order of this method matters; needs to be done before commit
+
 		commitVariantChanges();
 	}
 
 	@Override
-	public void onWeaponRemoved(MutableShipStatsAPI stats, String weaponId, String slotId) {
-		if (!moduleSet.contains(weaponId)) return;
-		commitVariantChanges();
-	}
+	public void onModuleRemoved(MutableShipStatsAPI stats, String moduleVariantId, String moduleSlotId) {}
 	//#endregion
 	// END OF CUSTOM EVENTS
 
-	static final Set<String> moduleSet = new HashSet<String>();
-	static {
-		moduleSet.add("ehm_module_prototype");
+	public static final class moduleData {
+		public static final class ids {
+			public static final String
+				prototype = modules.ids.prototype;	// must match weapon id in .csv and .wpn
+		}
+		public static final String activatorId = modules.activatorId;
+		public static final String tag = modules.groupTag;
+		public static final String groupTag = modules.groupTag;
+		public static final Map<String, Object[]> dataMap = new HashMap<String, Object[]>();
+		public static final Set<String> idSet = dataMap.keySet();
+		private static final List<String> invalidSlotPrefixes = Arrays.asList(new String[]{affixes.adaptedSlot, affixes.convertedSlot});
+
+		public static final boolean isValidSlot(WeaponSlotAPI slot, WeaponSpecAPI shuntSpec) {
+			return !invalidSlotPrefixes.contains(slot.getId().substring(0,3));
+		}
+
+		static {
+			ShipVariantAPI prototypeVariant = Global.getSettings().getVariant(ids.prototype+"_Hull").clone();	// TODO: make a new variant instead of using hull?
+			prototypeVariant.setSource(VariantSource.REFIT);
+
+			dataMap.put(ids.prototype, new Object[]{prototypeVariant.getHullSpec().getOrdnancePoints(null), prototypeVariant});
+		}
 	}
 
-	// com.fs.starfarer.title.Object.M
+	public ehm_ar_minimodule() {
+		super();
+
+		this.statSet.add(moduleData.groupTag);
+		this.shuntIdSet.addAll(moduleData.idSet);
+	}
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI parentVariant = stats.getVariant();
 		ehm_hullSpec parentHullSpec = new ehm_hullSpec(parentVariant.getHullSpec(), false);
-		lyr_shieldSpec parentShieldSpec = parentHullSpec.getShieldSpec();
-		// parentHullSpec.getHints().add(ShipTypeHints.DO_NOT_SHOW_MODULES_IN_FLEET_LIST);	// with this some status related shit is avoided but best not to use it
+		DynamicStatsAPI parentDynamicStats = stats.getDynamic();
+		Map<String, String> parentModules = parentVariant.getStationModules();
+
+		// hullSpec.getHints().add(ShipTypeHints.DO_NOT_SHOW_MODULES_IN_FLEET_LIST);	// with this some status related shit is avoided but best not to use it
 		parentHullSpec.getHints().add(ShipTypeHints.SHIP_WITH_MODULES);
 
-		ShipVariantAPI moduleVariant = Global.getSettings().getVariant("ehm_module_prototype_Hull").clone();
-		ehm_hullSpec moduleHullSpec = new ehm_hullSpec(moduleVariant.getHullSpec(), false);
-		// moduleVariant.setHullVariantId("ehm_module_shield_variant");
-		moduleVariant.addPermaMod("ehm_module_base", false);
-		moduleVariant.setSource(VariantSource.REFIT);
+		HashMap<String, StatMod> moduleShunts = parentDynamicStats.getMod(moduleData.groupTag+"_inactive").getFlatBonuses();
+		if (!moduleShunts.isEmpty()) {
+			for (String slotId : moduleShunts.keySet()) {
+				if (parentHullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.STATION_MODULE) continue;
 
-		List<WeaponSlotAPI> shunts = parentHullSpec.getAllWeaponSlotsCopy();
-		Map<String, String> stationModules = parentVariant.getStationModules();
+				lyr_weaponSlot parentSlot = parentHullSpec.getWeaponSlot(slotId);
+				ShipVariantAPI moduleVariant = ShipVariantAPI.class.cast(moduleData.dataMap.get(moduleData.ids.prototype)[1]).clone();
+				ehm_hullSpec moduleHullSpec = new ehm_hullSpec(moduleVariant.getHullSpec(), false);
 
-		for (Iterator<WeaponSlotAPI> iterator = shunts.iterator(); iterator.hasNext();) {
-			String slotId = iterator.next().getId();
-			WeaponSpecAPI shuntSpec = parentVariant.getWeaponSpec(slotId);
+				moduleVariant.setHullSpecAPI(moduleHullSpec.retrieve());
+				parentSlot.setWeaponType(WeaponType.STATION_MODULE);
+				parentSlot.setSlotType(slotTypeConstants.hidden);
 
-			if (shuntSpec == null) { iterator.remove(); continue; }
-			if (!"ehm_module_prototype".equals(shuntSpec.getWeaponId())) { iterator.remove(); continue; }
+				if (!parentModules.keySet().contains(slotId)) parentVariant.setModuleVariant(slotId, moduleVariant);
+			}
 		}
 
-		for (WeaponSlotAPI slot : shunts) {
-			if (slot.isStationModule()) continue;
+		for (String moduleSlotId : parentModules.keySet()) { String moduleVariantId = parentModules.get(moduleSlotId);
+			if (!this.shuntIdSet.contains(moduleVariantId.replaceFirst("_Hull", ""))) continue;	// TODO: make a new variant instead of using hull?
 
-			String slotId = slot.getId();
-			// parentVariant.clearSlot(slotId);	// modules clear the slot when removed from their refit button
+			int ordnancePointMod = -(int) moduleData.dataMap.get(moduleData.ids.prototype)[0];
 
-			// TODO: prototypes (modules as weapons) needs to get cleared or turned into a decorative one because otherwise mass slot retrofits will crash the game
-			// they need to affect the OP of the ship
+			parentDynamicStats.getMod(moduleVariantId).modifyFlat(moduleSlotId, 1);
+			parentDynamicStats.getMod(moduleData.groupTag).modifyFlat(moduleSlotId, ordnancePointMod);
+			parentDynamicStats.getMod(ehm_internals.stats.ordnancePoints).modifyFlat(moduleSlotId, ordnancePointMod);
 
-			lyr_weaponSlot parentSlot = parentHullSpec.getWeaponSlot(slotId);
+			if (parentHullSpec.getWeaponSlot(moduleSlotId).getWeaponType() == WeaponType.STATION_MODULE) continue;
+
+			lyr_weaponSlot parentSlot = parentHullSpec.getWeaponSlot(moduleSlotId);
+
 			parentSlot.setWeaponType(WeaponType.STATION_MODULE);
 			parentSlot.setSlotType(slotTypeConstants.hidden);
-
-			if (!stationModules.keySet().contains(slotId)) parentVariant.setModuleVariant(slotId, moduleVariant);	// module variant insertion on the parent variant is done here
 		}
 
-		// the block below is necessary if shunts are to be removed after module insertion, but as the shunts stay on the variant the function is executed above
-		// for (String moduleSlotId : stationModules.keySet()) {
-		// 	if (parentHullSpec.getWeaponSlot(moduleSlotId).getWeaponType() == WeaponType.STATION_MODULE) continue;
-
-		// 	lyr_weaponSlot parentSlot = parentHullSpec.getWeaponSlot(moduleSlotId);
-		// 	parentSlot.setWeaponType(WeaponType.STATION_MODULE);
-		// 	parentSlot.setSlotType(slotTypeConstants.hidden);
-		// }
-
-		for (Entry<String, String> moduleEntry : stationModules.entrySet()) {
-			if (moduleEntry.getValue().startsWith("ehm_module") && parentVariant.getWeaponId(moduleEntry.getKey()) == null) parentVariant.addWeapon(moduleEntry.getKey(), "ehm_module_prototype");
-		}
-
+		parentHullSpec.modOrdnancePoints(stats);
 		parentVariant.setHullSpecAPI(parentHullSpec.retrieve());
 
 		// the remaining part of this block is specifically for the refit tab to refresh the refit member's status

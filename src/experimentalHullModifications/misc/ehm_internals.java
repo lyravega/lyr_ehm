@@ -98,6 +98,16 @@ public final class ehm_internals {
 			public static final String tag = groupTag;
 		}
 
+		public static final class modules {
+			public static final class ids {
+				public static final String
+					prototype = "ehm_module_prototype";
+			}
+			public static final String activatorId = hullmods.activatorRetrofits.miniModuleActivator;
+			public static final String groupTag = "ehm_module";
+			public static final String tag = groupTag;
+		}
+
 		public static final String tag = ids.experimental;
 	}
 
@@ -114,6 +124,7 @@ public final class ehm_internals {
 				diverterConverterActivator = "ehm_ar_diverterandconverter",
 				hangarShuntActivator = "ehm_ar_launchtube",
 				mutableShuntActivator = "ehm_ar_mutableshunt",
+				miniModuleActivator = "ehm_ar_minimodule",
 				adapterShuntActivator = "ehm_ar_stepdownadapter";
 			public static final String tag = "ehm_ar";
 		}

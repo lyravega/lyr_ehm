@@ -20,6 +20,7 @@ import com.fs.starfarer.api.util.DynamicStatsAPI;
 import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_diverterandconverter.converterData;
 import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_diverterandconverter.diverterData;
 import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_launchtube.hangarData;
+import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_minimodule.moduleData;
 import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.capacitorData;
 import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.dissipatorData;
 import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.adapterData;
@@ -379,6 +380,14 @@ public abstract class _ehm_base implements HullModEffect {
 
 					dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
 					dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 1);
+				}; continue;
+				case moduleData.groupTag: {
+					if (!variant.hasHullMod(moduleData.activatorId)) continue;
+					if (!moduleData.isValidSlot(slot, shuntSpec)) continue;
+					if (variant.getModuleSlots().contains(slotId)) { variant.clearSlot(slotId);	continue; }
+
+					dynamicStats.getMod(shuntId+"_inactive").modifyFlat(slotId, 1);
+					dynamicStats.getMod(shuntGroupTag+"_inactive").modifyFlat(slotId, 1);
 				}; continue;
 				default: continue;
 			}
