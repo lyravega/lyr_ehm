@@ -2,9 +2,12 @@ package experimentalHullModifications.proxies;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import com.fs.starfarer.api.characters.MutableCharacterStatsAPI;
+import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
+import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.util.Misc;
 
 import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_diverterandconverter.converterData;
@@ -13,7 +16,6 @@ import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_launchtube.hangarDat
 import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.adapterData;
 import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.adapterData.adapterParameters;
 import experimentalHullModifications.misc.ehm_internals;
-import experimentalHullModifications.misc.ehm_internals.hullmods;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.text;
 import lyravega.proxies.lyr_hullSpec;
@@ -73,8 +75,6 @@ public final class ehm_hullSpec extends lyr_hullSpec {
 				this.setDescriptionPrefix(text.flavourDescription);
 				this.setHullName(oHullSpec.getHullName() + " (E)");	// append "(E)"
 			}
-
-			this.addBuiltInMod(hullmods.main.base);
 		}
 	}
 
@@ -140,8 +140,26 @@ public final class ehm_hullSpec extends lyr_hullSpec {
 		else parentSlot.setRenderOrderMod(-1f);
 	}
 
+	// TODO: javadocs here pls, someday
 	public final void deactivateSlot(String shuntId, String slotId) {
 		if (shuntId != null) this.addBuiltInWeapon(slotId, shuntId);
 		this.getWeaponSlot(slotId).setWeaponType(WeaponType.DECORATIVE);
+	}
+
+	/**
+	 * Uses a dynamic stat ({@link ehm_internals.stats#ordnancePoints ehm_ordnancePoints}) to alter
+	 * the hull spec's ordnance points. Will set it to zero if modded total is negative.
+	 * <p> Usage of the dynamic stat is like any other dynamic stat, flat/percentage/multipliers may
+	 * be used; {@code stats.getDynamic().getMod(ehm_internals.stats.ordnancePoints)}
+	 * <p> Base ordnance points is calculated with the captain's stats; if the captain has any
+	 * modifiers for the {@code personStats.getShipOrdnancePointBonus()}, that will affect the base.
+	 * @param stats to derive the dynamic ordnance point stat mod from
+	 */
+	public final void modOrdnancePoints(MutableShipStatsAPI stats) {
+		FleetMemberAPI member = stats.getFleetMember();
+		MutableCharacterStatsAPI captainStats = (member != null && !member.getCaptain().isDefault()) ? member.getCaptain().getStats() : null;
+		int ordnancePoints = Math.round(stats.getDynamic().getMod(ehm_internals.stats.ordnancePoints).computeEffective(this.referenceNonDamaged().getOrdnancePoints(captainStats)));
+
+		this.setOrdnancePoints(Math.max(0, ordnancePoints));
 	}
 }

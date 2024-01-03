@@ -75,12 +75,11 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 
 		ShipVariantAPI variant = stats.getVariant();
 		ehm_hullSpec hullSpec = new ehm_hullSpec(variant.getHullSpec(), false);
-		int ordnancePoints = hullSpec.referenceNonDamaged().getOrdnancePoints(null);
-		int ordnancePointBonus = Math.round(ordnancePoints*ordnancePointMult);
 
+		stats.getDynamic().getMod(ehm_internals.stats.ordnancePoints).modifyPercent(this.hullModSpecId, 20);
 		// stats.getDynamic().getMod(ehm_internals.stats.slotPointsFromMods).modifyFlat(this.hullModSpecId, slotPointBonus.get(hullSize));	// done in pre-process
-		stats.getDynamic().getMod(ehm_internals.stats.ordnancePoints).modifyFlat(this.hullModSpecId, ordnancePointBonus);
-		hullSpec.setOrdnancePoints(ordnancePoints+ordnancePointBonus);
+
+		hullSpec.modOrdnancePoints(stats);
 		variant.setHullSpecAPI(hullSpec.retrieve());
 	}
 
