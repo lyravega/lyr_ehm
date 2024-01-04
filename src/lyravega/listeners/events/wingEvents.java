@@ -16,9 +16,9 @@ import lyravega.listeners.lyr_shipTracker;
  */
 public interface wingEvents {
 	/**
-	 * Broadcasted when a wing is assigned to the refit ship, caught by this method.
-	 * Further filtering may be necessary depending on the usage, as the only filter
-	 * prior is whether this hull modification is installed on the variant
+	 * An event is broadcasted when a wing is changed on the refit ship, which is then caught by
+	 * this method for the hull modifications that implement this interface and are installed on the
+	 * ships. Further filtering may be necessary depending on the usage.
 	 * <p> Effects here will be transient as these methods are called only once after their
 	 * events. Should be used mainly to change the variant or to trigger an UI effect
 	 * @param stats
@@ -28,9 +28,9 @@ public interface wingEvents {
 	public void onWingAssigned(MutableShipStatsAPI stats, String wingId, int bayNumber);
 
 	/**
-	 * Broadcasted when a wing is removed from the refit ship, caught by this method.
-	 * Further filtering may be necessary depending on the usage, as the only filter
-	 * prior is whether this hull modification is installed on the variant
+	 * An event is broadcasted when a wing is changed on the refit ship, which is then caught by
+	 * this method for the hull modifications that implement this interface and are installed on the
+	 * ships. Further filtering may be necessary depending on the usage.
 	 * <p> Effects here will be transient as these methods are called only once after their
 	 * events. Should be used mainly to change the variant or to trigger an UI effect
 	 * @param stats

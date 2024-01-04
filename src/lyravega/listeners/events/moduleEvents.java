@@ -17,9 +17,9 @@ import lyravega.listeners.lyr_shipTracker;
  */
 public interface moduleEvents {
 	/**
-	 * Broadcasted when a module is removed from the refit ship, caught by this method.
-	 * Further filtering may be necessary depending on the usage, as the only filter
-	 * prior is whether this hull modification is installed on the variant
+	 * An event is broadcasted when a module is installed on the refit ship, which is then caught by
+	 * this method for the hull modifications that implement this interface and are installed on the
+	 * ships. Further filtering may be necessary depending on the usage.
 	 * <p> Effects here will be transient as these methods are called only once after their
 	 * events. Should be used mainly to change the variant or to trigger an UI effect
 	 * @param stats
@@ -29,9 +29,9 @@ public interface moduleEvents {
 	public void onModuleInstalled(MutableShipStatsAPI stats, ShipVariantAPI moduleVariant, String moduleSlotId);
 
 	/**
-	 * Broadcasted when a module is removed from the refit ship, caught by this method.
-	 * Further filtering may be necessary depending on the usage, as the only filter
-	 * prior is whether this hull modification is installed on the variant
+	 * An event is broadcasted when a module is removed from the refit ship, which is then caught by
+	 * this method for the hull modifications that implement this interface and are installed on the
+	 * ships. Further filtering may be necessary depending on the usage.
 	 * <p> Effects here will be transient as these methods are called only once after their
 	 * events. Should be used mainly to change the variant or to trigger an UI effect
 	 * @param stats
