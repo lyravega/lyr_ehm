@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.HullModEffect;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
+import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 
 import experimentalHullModifications.misc.ehm_settings;
@@ -144,10 +145,10 @@ public final class lyr_eventDispatcher {
 		}
 	}
 
-	static void onModuleEvent(final String eventName, final MutableShipStatsAPI stats, final String weaponId, final String slotId) {
+	static void onModuleEvent(final String eventName, final MutableShipStatsAPI stats, final ShipVariantAPI moduleVariant, final String moduleSlotId) {
 		switch (eventName) {
-			case onModuleInstalled:	for (String hullModId: moduleEvents.keySet()) if (stats.getVariant().hasHullMod(hullModId)) moduleEvents.get(hullModId).onModuleInstalled(stats, weaponId, slotId); return;
-			case onModuleRemoved:	for (String hullModId: moduleEvents.keySet()) if (stats.getVariant().hasHullMod(hullModId)) moduleEvents.get(hullModId).onModuleRemoved(stats, weaponId, slotId); return;
+			case onModuleInstalled:	for (String hullModId: moduleEvents.keySet()) if (stats.getVariant().hasHullMod(hullModId)) moduleEvents.get(hullModId).onModuleInstalled(stats, moduleVariant, moduleSlotId); return;
+			case onModuleRemoved:	for (String hullModId: moduleEvents.keySet()) if (stats.getVariant().hasHullMod(hullModId)) moduleEvents.get(hullModId).onModuleRemoved(stats, moduleVariant, moduleSlotId); return;
 			default: return;
 		}
 	}

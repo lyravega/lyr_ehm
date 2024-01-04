@@ -16,7 +16,7 @@ import lyravega.listeners.lyr_shipTracker;
  */
 public interface weaponEvents {
 	/**
-	 * Broadcasted when a weapon is removed from the refit ship, caught by this method.
+	 * Broadcasted when a weapon is installed on the refit ship, caught by this method.
 	 * Further filtering may be necessary depending on the usage, as the only filter
 	 * prior is whether this hull modification is installed on the variant
 	 * <p> Effects here will be transient as these methods are called only once after their

@@ -36,7 +36,7 @@ public final class lyr_shipTracker {
 	private final Set<String> suppressedMods;
 	private final Map<String, String> weapons;
 	private final ArrayList<String> wings;
-	private final Map<String, String> modules;
+	private final Map<String, ShipVariantAPI> modules;
 	private Iterator<String> iterator;
 
 	//#region CONSTRUCTORS & ACCESSORS
@@ -51,10 +51,11 @@ public final class lyr_shipTracker {
 		this.enhancedMods = new HashSet<String>(variant.getSMods());
 		this.embeddedMods = new HashSet<String>(variant.getSModdedBuiltIns());
 		this.suppressedMods = new HashSet<String>(variant.getSuppressedMods());
-		this.weapons = new HashMap<String, String>(); for (WeaponSlotAPI slot : variant.getHullSpec().getAllWeaponSlotsCopy())
+		this.weapons = new HashMap<String, String>(); for (final WeaponSlotAPI slot : variant.getHullSpec().getAllWeaponSlotsCopy())
 			this.weapons.put(slot.getId(), variant.getWeaponId(slot.getId()));
 		this.wings = new ArrayList<String>(variant.getWings());
-		this.modules = new HashMap<String, String>(variant.getStationModules());
+		this.modules = new HashMap<String, ShipVariantAPI>(); for (final String moduleSlotId : variant.getModuleSlots())
+			this.modules.put(moduleSlotId, variant.getModuleVariant(moduleSlotId));
 
 		fleetTracker.shipTrackers.put(trackerUUID, this);
 		if (member != null) fleetTracker.fleetMembers.put(parentTrackerUUID, member);
@@ -226,20 +227,22 @@ public final class lyr_shipTracker {
 	private void checkModules() {
 		for (final String moduleSlotId : this.variant.getStationModules().keySet()) {
 			if (this.modules.containsKey(moduleSlotId)) continue;
+			final ShipVariantAPI moduleVariant = this.variant.getModuleVariant(moduleSlotId);
 
-			final String moduleVariantId = this.variant.getStationModules().get(moduleSlotId);
-			this.modules.put(moduleSlotId, moduleVariantId); lyr_eventDispatcher.onModuleEvent(onModuleInstalled, this.stats, moduleVariantId, moduleSlotId);
+			this.fleetTracker.addTracking(moduleVariant, null, this.trackerUUID);
+			this.modules.put(moduleSlotId, moduleVariant); lyr_eventDispatcher.onModuleEvent(onModuleInstalled, this.stats, moduleVariant, moduleSlotId);
 
-			lyr_logger.eventInfo(this.logPrefix+": Installed module '"+moduleVariantId+"' on '"+moduleSlotId+"'");
+			lyr_logger.eventInfo(this.logPrefix+": Installed module '"+moduleVariant.getHullVariantId()+"' on '"+moduleSlotId+"'");
 		}
 
 		for (this.iterator = this.modules.keySet().iterator(); this.iterator.hasNext();) { final String moduleSlotId = this.iterator.next();
 			if (this.variant.getStationModules().containsKey(moduleSlotId)) continue;
+			final ShipVariantAPI moduleVariant = this.modules.get(moduleSlotId);
 
-			final String moduleVariantId = this.modules.get(moduleSlotId);
-			this.iterator.remove(); lyr_eventDispatcher.onModuleEvent(onModuleRemoved, this.stats, moduleVariantId, moduleSlotId);
+			// TODO: remove it from fleet tracker?
+			this.iterator.remove(); lyr_eventDispatcher.onModuleEvent(onModuleRemoved, this.stats, moduleVariant, moduleSlotId);
 
-			lyr_logger.eventInfo(this.logPrefix+": Removed module '"+moduleVariantId+"' from '"+moduleSlotId+"'");
+			lyr_logger.eventInfo(this.logPrefix+": Removed module '"+moduleVariant.getHullVariantId()+"' from '"+moduleSlotId+"'");
 		}
 	}
 }

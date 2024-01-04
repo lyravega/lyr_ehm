@@ -1,6 +1,7 @@
 package lyravega.listeners.events;
 
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
+import com.fs.starfarer.api.combat.ShipVariantAPI;
 
 import lyravega.listeners.lyr_eventDispatcher;
 import lyravega.listeners.lyr_shipTracker;
@@ -16,26 +17,26 @@ import lyravega.listeners.lyr_shipTracker;
  */
 public interface moduleEvents {
 	/**
-	 * Broadcasted when a weapon is removed from the refit ship, caught by this method.
+	 * Broadcasted when a module is removed from the refit ship, caught by this method.
 	 * Further filtering may be necessary depending on the usage, as the only filter
 	 * prior is whether this hull modification is installed on the variant
 	 * <p> Effects here will be transient as these methods are called only once after their
 	 * events. Should be used mainly to change the variant or to trigger an UI effect
 	 * @param stats
-	 * @param weaponId of the installed weapon
-	 * @param slotId of the slot that the weapon is installed at
+	 * @param moduleVariant of the installed module
+	 * @param moduleSlotId of the slot that the module is installed at
 	 */
-	public void onModuleInstalled(MutableShipStatsAPI stats, String moduleVariantId, String moduleSlotId);
+	public void onModuleInstalled(MutableShipStatsAPI stats, ShipVariantAPI moduleVariant, String moduleSlotId);
 
 	/**
-	 * Broadcasted when a weapon is removed from the refit ship, caught by this method.
+	 * Broadcasted when a module is removed from the refit ship, caught by this method.
 	 * Further filtering may be necessary depending on the usage, as the only filter
 	 * prior is whether this hull modification is installed on the variant
 	 * <p> Effects here will be transient as these methods are called only once after their
 	 * events. Should be used mainly to change the variant or to trigger an UI effect
 	 * @param stats
-	 * @param weaponId of the removed weapon
-	 * @param slotId of the slot that the weapon is removed from
+	 * @param moduleVariant of the removed module
+	 * @param moduleSlotId of the slot that the module is removed from
 	 */
-	public void onModuleRemoved(MutableShipStatsAPI stats, String moduleVariantId, String moduleSlotId);
+	public void onModuleRemoved(MutableShipStatsAPI stats, ShipVariantAPI moduleVariant, String moduleSlotId);
 }

@@ -69,10 +69,8 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 		for (Iterator<WeaponGroupSpec> iterator = stats.getVariant().getWeaponGroups().iterator(); iterator.hasNext();) {
 			WeaponGroupSpec weaponGroup = iterator.next();
 
-			for (String statId : this.statSet) {
-				Set<String> keySet = stats.getDynamic().getMod(statId).getFlatBonuses().keySet();
+			for (String statId : this.statSet)
 				weaponGroup.getSlots().removeAll(stats.getDynamic().getMod(statId).getFlatBonuses().keySet());
-			}
 
 			if (weaponGroup.getSlots().isEmpty()) iterator.remove();
 		}
