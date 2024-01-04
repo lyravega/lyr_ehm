@@ -8,6 +8,7 @@ import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
+import com.fs.starfarer.loading.specs.HullVariantSpec;
 
 import lyravega.listeners.events.*;
 import lyravega.utilities.logger.lyr_logger;
@@ -31,13 +32,13 @@ public final class lyr_shipTracker {
 	private final String logPrefix;
 	private final String trackerUUID;
 	private final String parentTrackerUUID;
-	private final Set<String> hullMods;
-	private final Set<String> enhancedMods;
-	private final Set<String> embeddedMods;
-	private final Set<String> suppressedMods;
-	private final Map<String, String> weapons;
-	private final ArrayList<String> wings;
-	private final Map<String, ShipVariantAPI> modules;
+	private final Set<String> cachedHullMods;
+	private final Set<String> cachedEnhancedMods;
+	private final Set<String> cachedEmbeddedMods;
+	private final Set<String> cachedSuppressedMods;
+	private final Map<String, String> cachedWeapons;
+	private final ArrayList<String> cachedWings;
+	private final Map<String, ShipVariantAPI> cachedModules;
 	private Iterator<String> iterator;
 
 	//#region CONSTRUCTORS & ACCESSORS
@@ -50,18 +51,20 @@ public final class lyr_shipTracker {
 		this.trackerUUID = trackerUUID;
 		this.parentTrackerUUID = parentTrackerUUID;
 
-		this.hullMods = new HashSet<String>(variant.getHullMods());
-		this.enhancedMods = new HashSet<String>(variant.getSMods());
-		this.embeddedMods = new HashSet<String>(variant.getSModdedBuiltIns());
-		this.suppressedMods = new HashSet<String>(variant.getSuppressedMods());
+		this.cachedHullMods = new HashSet<String>(variant.getHullMods());
+		this.cachedEnhancedMods = new HashSet<String>(variant.getSMods());
+		this.cachedEmbeddedMods = new HashSet<String>(variant.getSModdedBuiltIns());
+		this.cachedSuppressedMods = new HashSet<String>(variant.getSuppressedMods());
 
-		this.weapons = new HashMap<String, String>(); for (final WeaponSlotAPI slot : variant.getHullSpec().getAllWeaponSlotsCopy())
-			this.weapons.put(slot.getId(), variant.getWeaponId(slot.getId()));
+		this.cachedWeapons = new HashMap<String, String>(); for (final WeaponSlotAPI slot : variant.getHullSpec().getAllWeaponSlotsCopy())
+			this.cachedWeapons.put(slot.getId(), variant.getWeaponId(slot.getId()));
 
-		this.wings = new ArrayList<String>(variant.getWings());
+		this.cachedWings = new ArrayList<String>(variant.getWings());
 
-		this.modules = new HashMap<String, ShipVariantAPI>(); for (final String moduleSlotId : variant.getModuleSlots())
-			this.modules.put(moduleSlotId, variant.getModuleVariant(moduleSlotId));
+		if (this.isShip) {
+			Map<String, HullVariantSpec> moduleVariants = HullVariantSpec.class.cast(variant).getModuleVariants();
+			this.cachedModules = moduleVariants != null ? new HashMap<String, ShipVariantAPI>(moduleVariants) : new HashMap<String, ShipVariantAPI>();
+		} else this.cachedModules = null;
 
 		fleetTracker.shipTrackers.put(trackerUUID, this);
 		if (this.isShip) fleetTracker.fleetMembers.put(parentTrackerUUID, member);
@@ -103,17 +106,20 @@ public final class lyr_shipTracker {
 	// END OF CONSTRUCTORS & ACCESSORS
 
 	private void checkHullMods() {
-		for (final String hullModId : this.variant.getHullMods()) {
-			if (this.hullMods.contains(hullModId)) continue;
-			if (this.suppressedMods.contains(hullModId)) { this.hullMods.add(hullModId); continue; }
+		final Collection<String> hullMods = this.variant.getHullMods();
+		final Set<String> suppressedMods = this.variant.getSuppressedMods();
 
-			this.hullMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onInstalled, this.stats, hullModId);
+		for (final String hullModId : hullMods) {
+			if (this.cachedHullMods.contains(hullModId)) continue;
+			if (this.cachedSuppressedMods.contains(hullModId)) { this.cachedHullMods.add(hullModId); continue; }
+
+			this.cachedHullMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onInstalled, this.stats, hullModId);
 			lyr_logger.eventInfo(this.logPrefix+": Installed '"+hullModId+"'");
 		}
 
-		for (this.iterator = this.hullMods.iterator(); this.iterator.hasNext();) { final String hullModId = this.iterator.next();
-			if (this.variant.hasHullMod(hullModId)) continue;
-			if (this.variant.getSuppressedMods().contains(hullModId)) { this.iterator.remove(); continue; }
+		for (this.iterator = this.cachedHullMods.iterator(); this.iterator.hasNext();) { final String hullModId = this.iterator.next();
+			if (hullMods.contains(hullModId)) continue;
+			if (suppressedMods.contains(hullModId)) { this.iterator.remove(); continue; }
 
 			this.iterator.remove(); lyr_eventDispatcher.onHullModEvent(onRemoved, this.stats, hullModId);
 			lyr_logger.eventInfo(this.logPrefix+": Removed '"+hullModId+"'");
@@ -121,31 +127,34 @@ public final class lyr_shipTracker {
 	}
 
 	private void checkEnhancedMods() {
-		for (final String hullModId : this.variant.getSMods()) {
-			if (this.enhancedMods.contains(hullModId)) continue;
-			if (this.embeddedMods.contains(hullModId)) continue;
+		final LinkedHashSet<String> enhancedMods = this.variant.getSMods();
+		final LinkedHashSet<String> embeddedMods = this.variant.getSModdedBuiltIns();
 
-			this.enhancedMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onEnhanced, this.stats, hullModId);
+		for (final String hullModId : enhancedMods) {
+			if (this.cachedEnhancedMods.contains(hullModId)) continue;
+			if (this.cachedEmbeddedMods.contains(hullModId)) continue;
+
+			this.cachedEnhancedMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onEnhanced, this.stats, hullModId);
 			lyr_logger.eventInfo(this.logPrefix+": Enhanced '"+hullModId+"'");
 		}
 
-		for (final String hullModId : this.variant.getSModdedBuiltIns()) {
-			if (this.embeddedMods.contains(hullModId)) continue;
-			if (this.enhancedMods.contains(hullModId)) this.enhancedMods.remove(hullModId);
+		for (final String hullModId : embeddedMods) {
+			if (this.cachedEmbeddedMods.contains(hullModId)) continue;
+			if (this.cachedEnhancedMods.contains(hullModId)) this.cachedEnhancedMods.remove(hullModId);
 
-			this.embeddedMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onEnhanced, this.stats, hullModId);
+			this.cachedEmbeddedMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onEnhanced, this.stats, hullModId);
 			lyr_logger.eventInfo(this.logPrefix+": Enhanced embedded '"+hullModId+"'");
 		}
 
-		for (this.iterator = this.enhancedMods.iterator(); this.iterator.hasNext();) { final String hullModId = this.iterator.next();
-			if (this.variant.getSMods().contains(hullModId)) continue;
+		for (this.iterator = this.cachedEnhancedMods.iterator(); this.iterator.hasNext();) { final String hullModId = this.iterator.next();
+			if (enhancedMods.contains(hullModId)) continue;
 
 			this.iterator.remove(); lyr_eventDispatcher.onHullModEvent(onNormalized, this.stats, hullModId);
 			lyr_logger.eventInfo(this.logPrefix+": Normalized '"+hullModId+"'");
 		}
 
-		for (this.iterator = this.embeddedMods.iterator(); this.iterator.hasNext();) { final String hullModId = this.iterator.next();
-			if (this.variant.getSModdedBuiltIns().contains(hullModId)) continue;
+		for (this.iterator = this.cachedEmbeddedMods.iterator(); this.iterator.hasNext();) { final String hullModId = this.iterator.next();
+			if (embeddedMods.contains(hullModId)) continue;
 
 			this.iterator.remove(); lyr_eventDispatcher.onHullModEvent(onNormalized, this.stats, hullModId);
 			lyr_logger.eventInfo(this.logPrefix+": Normalized embedded '"+hullModId+"'");
@@ -153,15 +162,17 @@ public final class lyr_shipTracker {
 	}
 
 	private void checkSuppressedMods() {
-		for (final String hullModId : this.variant.getSuppressedMods()) {
-			if (this.suppressedMods.contains(hullModId)) continue;
+		final Set<String> suppressedMods = this.variant.getSuppressedMods();
 
-			this.suppressedMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onSuppressed, this.stats, hullModId);
+		for (final String hullModId : suppressedMods) {
+			if (this.cachedSuppressedMods.contains(hullModId)) continue;
+
+			this.cachedSuppressedMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onSuppressed, this.stats, hullModId);
 			lyr_logger.eventInfo(this.logPrefix+": Suppressed '"+hullModId+"'");
 		}
 
-		for (this.iterator = this.suppressedMods.iterator(); this.iterator.hasNext();) { final String hullModId = this.iterator.next();
-			if (this.variant.getSuppressedMods().contains(hullModId)) continue;
+		for (this.iterator = this.cachedSuppressedMods.iterator(); this.iterator.hasNext();) { final String hullModId = this.iterator.next();
+			if (suppressedMods.contains(hullModId)) continue;
 
 			this.iterator.remove(); lyr_eventDispatcher.onHullModEvent(onRestored, this.stats, hullModId);
 			lyr_logger.eventInfo(this.logPrefix+": Restored '"+hullModId+"'");
@@ -172,95 +183,98 @@ public final class lyr_shipTracker {
 		for (WeaponSlotAPI slot : this.variant.getHullSpec().getAllWeaponSlotsCopy()) {
 			String slotId = slot.getId();
 			String newWeaponId = this.variant.getWeaponId(slotId);
-			String oldWeaponId = this.weapons.get(slotId);
+			String oldWeaponId = this.cachedWeapons.get(slotId);
 
 			if (this.variant.getModuleSlots().contains(slotId)) {
-				this.weapons.put(slotId, null);
-				continue;	// TODO: this is a shortcut to avoid firing the removed event
+				this.cachedWeapons.put(slotId, null);
+				continue;	// not sure if this is needed but just in case to short-circuit the weapon events and let module events overtake them
 			}
 
 			if (oldWeaponId == null && newWeaponId == null) continue;
 			else if (oldWeaponId == null && newWeaponId != null) {	// weapon installed
-				this.weapons.put(slotId, newWeaponId);
+				this.cachedWeapons.put(slotId, newWeaponId);
 				lyr_eventDispatcher.onWeaponEvent(onWeaponInstalled, this.stats, newWeaponId, slotId);
 
-				lyr_logger.eventInfo(this.logPrefix+": Installed weapon '"+newWeaponId+"' on '"+slotId+"'");
+				lyr_logger.eventInfo(this.logPrefix+": Installed weapon '"+newWeaponId+"' on slot '"+slotId+"'");
 			} else if (oldWeaponId != null && newWeaponId == null) {	// weapon removed
-				this.weapons.put(slotId, null);
+				this.cachedWeapons.put(slotId, null);
 				lyr_eventDispatcher.onWeaponEvent(onWeaponRemoved, this.stats, oldWeaponId, slotId);
 
-				lyr_logger.eventInfo(this.logPrefix+": Removed weapon '"+oldWeaponId+"' from '"+slotId+"'");
+				lyr_logger.eventInfo(this.logPrefix+": Removed weapon '"+oldWeaponId+"' from slot '"+slotId+"'");
 			} else if (oldWeaponId != null && newWeaponId != null && !oldWeaponId.equals(newWeaponId)) {	// weapon changed
-				this.weapons.put(slotId, newWeaponId);
+				this.cachedWeapons.put(slotId, newWeaponId);
 				lyr_eventDispatcher.onWeaponEvent(onWeaponInstalled, this.stats, newWeaponId, slotId);
 				lyr_eventDispatcher.onWeaponEvent(onWeaponRemoved, this.stats, oldWeaponId, slotId);
 
-				lyr_logger.eventInfo(this.logPrefix+": Changed weapon '"+oldWeaponId+"' on '"+slotId+"' with '"+newWeaponId+"'");
+				lyr_logger.eventInfo(this.logPrefix+": Changed weapon '"+oldWeaponId+"' on slot '"+slotId+"' with '"+newWeaponId+"'");
 			}
 		}
 	}
 
 	private void checkWings() {
-		if (this.wings.size() < this.variant.getWings().size()) {	// needed because 'getWings()' grows when needed
-			this.wings.addAll(Collections.nCopies(this.variant.getWings().size() - this.wings.size(), ""));
+		if (this.cachedWings.size() < this.variant.getWings().size()) {	// needed because 'getWings()' grows when needed
+			this.cachedWings.addAll(Collections.nCopies(this.variant.getWings().size() - this.cachedWings.size(), ""));
 		}
 
-		for (int bayNumber = 0; bayNumber < this.wings.size(); bayNumber++) {	// iterating over this instead of 'getWings()' because it may get cleared
-			String oldWingId = this.wings.get(bayNumber);
+		for (int bayNumber = 0; bayNumber < this.cachedWings.size(); bayNumber++) {	// iterating over this instead of 'getWings()' because it may get cleared
+			String oldWingId = this.cachedWings.get(bayNumber);
 			String newWingId = this.variant.getWingId(bayNumber);
 
 			if (oldWingId.isEmpty() && newWingId == null) continue;
 			else if (oldWingId.isEmpty() && newWingId != null) {	// wing installed
-				this.wings.set(bayNumber, newWingId);
+				this.cachedWings.set(bayNumber, newWingId);
 				lyr_eventDispatcher.onWingEvent(onWingAssigned, this.stats, newWingId, bayNumber);
 
-				lyr_logger.eventInfo(this.logPrefix+": Installed wing '"+newWingId+"' on '"+bayNumber+"'");
+				lyr_logger.eventInfo(this.logPrefix+": Installed wing '"+newWingId+"' on bay '"+bayNumber+"'");
 			} else if (!oldWingId.isEmpty() && newWingId == null) {	// wing removed
-				this.wings.set(bayNumber, "");
+				this.cachedWings.set(bayNumber, "");
 				lyr_eventDispatcher.onWingEvent(onWingRelieved, this.stats, oldWingId, bayNumber);
 
-				lyr_logger.eventInfo(this.logPrefix+": Removed wing '"+oldWingId+"' from '"+bayNumber+"'");
+				lyr_logger.eventInfo(this.logPrefix+": Removed wing '"+oldWingId+"' from bay '"+bayNumber+"'");
 			} else if (!oldWingId.isEmpty() && newWingId != null && !oldWingId.equals(newWingId)) {	// wing changed
-				this.wings.set(bayNumber, newWingId);
+				this.cachedWings.set(bayNumber, newWingId);
 				lyr_eventDispatcher.onWingEvent(onWingAssigned, this.stats, newWingId, bayNumber);
 				lyr_eventDispatcher.onWingEvent(onWingRelieved, this.stats, oldWingId, bayNumber);
 
-				lyr_logger.eventInfo(this.logPrefix+": Changed wing '"+oldWingId+"' on '"+bayNumber+"' with '"+newWingId+"'");
+				lyr_logger.eventInfo(this.logPrefix+": Changed wing '"+oldWingId+"' on bay '"+bayNumber+"' with '"+newWingId+"'");
 			}
 		}
 	}
 
 	private void checkModules() {
-		for (final String moduleSlotId : this.variant.getStationModules().keySet()) {
-			if (this.modules.containsKey(moduleSlotId)) continue;
+		final Map<String, String> modules = this.variant.getStationModules();
+		// final Map<String, HullVariantSpec> modules = HullVariantSpec.class.cast(this.variant).getModuleVariants();	// TODO: rig this up?
+
+		for (final String moduleSlotId : modules.keySet()) {
+			if (this.cachedModules.containsKey(moduleSlotId)) continue;
 			final ShipVariantAPI moduleVariant = this.variant.getModuleVariant(moduleSlotId);
 
 			this.fleetTracker.addTracking(moduleVariant, null, this.trackerUUID);
-			this.modules.put(moduleSlotId, moduleVariant);
+			this.cachedModules.put(moduleSlotId, moduleVariant);
 			lyr_eventDispatcher.onModuleEvent(onModuleInstalled, this.stats, moduleVariant, moduleSlotId);
 
-			lyr_logger.eventInfo(this.logPrefix+": Installed module '"+moduleVariant.getHullVariantId()+"' on '"+moduleSlotId+"'");
+			lyr_logger.eventInfo(this.logPrefix+": Installed module '"+moduleVariant.getHullVariantId()+"' on slot '"+moduleSlotId+"'");
 		}
 
-		for (this.iterator = this.modules.keySet().iterator(); this.iterator.hasNext();) { final String moduleSlotId = this.iterator.next();
-			if (!this.variant.getStationModules().containsKey(moduleSlotId)) {
-				final ShipVariantAPI cachedModuleVariant = this.modules.get(moduleSlotId);
+		for (this.iterator = this.cachedModules.keySet().iterator(); this.iterator.hasNext();) { final String moduleSlotId = this.iterator.next();
+			if (!modules.containsKey(moduleSlotId)) {
+				final ShipVariantAPI cachedModuleVariant = this.cachedModules.get(moduleSlotId);
 
 				// TODO: remove it from fleet tracker? also, rebuild status from here?
 				this.iterator.remove();
 				lyr_eventDispatcher.onModuleEvent(onModuleRemoved, this.stats, cachedModuleVariant, moduleSlotId);
 
-				lyr_logger.eventInfo(this.logPrefix+": Removed module '"+cachedModuleVariant.getHullVariantId()+"' from '"+moduleSlotId+"'");
-			} else if (!this.variant.getStationModules().get(moduleSlotId).equals(this.modules.get(moduleSlotId).getHullVariantId())) {
+				lyr_logger.eventInfo(this.logPrefix+": Removed module '"+cachedModuleVariant.getHullVariantId()+"' from slot '"+moduleSlotId+"'");
+			} else if (!modules.get(moduleSlotId).equals(this.cachedModules.get(moduleSlotId).getHullVariantId())) {
 				final ShipVariantAPI moduleVariant = this.variant.getModuleVariant(moduleSlotId);
-				final ShipVariantAPI cachedModuleVariant = this.modules.get(moduleSlotId);
+				final ShipVariantAPI cachedModuleVariant = this.cachedModules.get(moduleSlotId);
 
 				this.fleetTracker.addTracking(moduleVariant, null, this.trackerUUID);
-				this.modules.put(moduleSlotId, moduleVariant);
+				this.cachedModules.put(moduleSlotId, moduleVariant);
 				lyr_eventDispatcher.onModuleEvent(onModuleInstalled, this.stats, moduleVariant, moduleSlotId);
 				lyr_eventDispatcher.onModuleEvent(onModuleRemoved, this.stats, cachedModuleVariant, moduleSlotId);
 
-				lyr_logger.eventInfo(this.logPrefix+": Changed module from '"+cachedModuleVariant.getHullVariantId()+"' to '"+moduleVariant.getHullVariantId()+"' on '"+moduleSlotId+"'");
+				lyr_logger.eventInfo(this.logPrefix+": Changed module '"+cachedModuleVariant.getHullVariantId()+"' on slot '"+moduleSlotId+"' with '"+moduleVariant.getHullVariantId()+"'");
 			}
 		}
 	}
