@@ -70,7 +70,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 				String shuntId = variant.getWeaponId(slotId);
 
 				stats.getDynamic().getMod(hangarData.groupTag).modifyFlat(slotId, 1);
-				hullSpec.turnSlotIntoBay(shuntId, slotId);
+				hullSpec.activateHangarShunt(shuntId, slotId);
 			}
 
 			float hangarMod = hangarShunts.size();	// hangars always give 1 bonus since there is only one large type, so use size

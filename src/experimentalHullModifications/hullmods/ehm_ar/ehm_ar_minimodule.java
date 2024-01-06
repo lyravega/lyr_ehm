@@ -23,7 +23,6 @@ import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_internals.affixes;
 import experimentalHullModifications.misc.ehm_internals.shunts.modules;
 import experimentalHullModifications.proxies.ehm_hullSpec;
-import lyravega.listeners.lyr_fleetTracker;
 import lyravega.listeners.events.moduleEvents;
 import lyravega.proxies.lyr_weaponSlot;
 import lyravega.proxies.lyr_weaponSlot.slotTypeConstants;
@@ -37,7 +36,7 @@ public final class ehm_ar_minimodule extends _ehm_ar_base implements moduleEvent
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstalled(MutableShipStatsAPI stats) {
-		lyr_fleetTracker.instance().addTracking(stats.getVariant(), null, null);	// order of this method matters; needs to be done before commit
+		// lyr_fleetTracker.instance().addTracking(stats.getVariant(), null, null);	// order of this method matters; needs to be done before commit
 
 		super.onInstalled(stats);
 	}
@@ -45,16 +44,16 @@ public final class ehm_ar_minimodule extends _ehm_ar_base implements moduleEvent
 	// uses super's onRemoved(), weapon events are never called as module events overtakes those
 
 	@Override
-	public void onModuleInstalled(MutableShipStatsAPI stats, String moduleVariantId, String moduleSlotId) {
-		if (!this.shuntIdSet.contains(moduleVariantId.replaceFirst("_Hull", ""))) return;	// TODO: make a new variant instead of using hull?
+	public void onModuleInstalled(MutableShipStatsAPI stats, ShipVariantAPI moduleVariant, String moduleSlotId) {
+		if (!this.shuntIdSet.contains(moduleVariant.getHullVariantId().replaceFirst("_Hull", ""))) return;	// TODO: make a new variant instead of using hull?
 
-		lyr_fleetTracker.instance().addTracking(stats.getVariant(), null, null);	// order of this method matters; needs to be done before commit
+		// lyr_fleetTracker.instance().addTracking(stats.getVariant(), null, null);	// order of this method matters; needs to be done before commit
 
 		commitVariantChanges();
 	}
 
 	@Override
-	public void onModuleRemoved(MutableShipStatsAPI stats, String moduleVariantId, String moduleSlotId) {}
+	public void onModuleRemoved(MutableShipStatsAPI stats, ShipVariantAPI moduleVariant, String moduleSlotId) {}
 	//#endregion
 	// END OF CUSTOM EVENTS
 

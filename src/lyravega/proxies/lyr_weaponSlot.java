@@ -254,7 +254,7 @@ public class lyr_weaponSlot {
 	 * <p> This method will not create a launch point at the base node; an array of {0,0} must be passed
 	 * for that purpose. The number of {@code float[]} in the offsets determines the amount of launch
 	 * points that will be added to the slot.
-	 * @param nodeId to be use as a prefix by each new node. If null, this weapon's node will be used as a base. Each new node receives {@code .#} as a suffix
+	 * @param nodeId to be used as a prefix by each new node. If null, this weapon slot's node will be used as a base. Each new node receives {@code .#} as a suffix
 	 * @param nodeOffsets float arrays that contain {@code x} and {@code y} values to be used as offsets for the new nodes
 	 * @see {@link #getNode()} method where a node from a slot may be grabbed
 	 * @see {@link #newNode(String, Vector2f)} method where a new node is constructed

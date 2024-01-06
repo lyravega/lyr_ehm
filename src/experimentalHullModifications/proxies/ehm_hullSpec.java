@@ -78,14 +78,21 @@ public final class ehm_hullSpec extends lyr_hullSpec {
 		}
 	}
 
-	public final void adaptSlot(String shuntId, String slotId) {
+	/**
+	 * Activates the adapter shunts on the slot. The {@link adapterData} object contains children data
+	 * that is used to alter the spawned slots. The parent slot is turned into a built-in decorative
+	 * in the process.
+	 * @param shuntId to determine the shunt type and to add the weapon as a built-in
+	 * @param slotId to get and alter the parent slot while deriving info for children
+	 */
+	public final void activateAdapterShunt(String shuntId, String slotId) {
 		adapterParameters childrenParameters = adapterData.dataMap.get(shuntId);
 		lyr_weaponSlot parentSlot = this.getWeaponSlot(slotId);
 
 		for (String childId: childrenParameters.getChildren()) { // childId and childSlotId are not the same, be aware
 			lyr_weaponSlot childSlot = parentSlot.clone();
 			String childSlotId = ehm_internals.affixes.adaptedSlot + slotId + childId; // also used as nodeId
-			Vector2f childSlotLocation = lyr_vectorUtilities.calculateChildSlotLocation(parentSlot.retrieve(), childrenParameters.getChildOffset(childId));
+			Vector2f childSlotLocation = lyr_vectorUtilities.calculateRelativePoint(parentSlot.getLocation(), parentSlot.getAngle(), childrenParameters.getChildOffset(childId));
 			WeaponSize childSlotSize = childrenParameters.getChildSize(childId);
 
 			childSlot.setId(childSlotId);
@@ -101,7 +108,14 @@ public final class ehm_hullSpec extends lyr_hullSpec {
 		else parentSlot.setRenderOrderMod(-1f);	// sometimes the activated shunts (decoratives) on these new slots (especially hardpoint ones) are rendered below the adapter, hence the change
 	}
 
-	public final void convertSlot(String shuntId, String slotId) {
+	/**
+	 * Activates the converter shunts on the slot. The {@link converterData} object contains child data
+	 * that is used to alter the spawned slot. The parent slot is turned into a built-in decorative
+	 * in the process.
+	 * @param shuntId to determine the shunt type and to add the weapon as a built-in
+	 * @param slotId to get and alter the parent slot while deriving info for child
+	 */
+	public final void activateConverterShunt(String shuntId, String slotId) {
 		converterParameters childParameters = converterData.dataMap.get(shuntId);
 		lyr_weaponSlot parentSlot = this.getWeaponSlot(slotId);
 
@@ -117,10 +131,23 @@ public final class ehm_hullSpec extends lyr_hullSpec {
 		this.addBuiltInWeapon(slotId, shuntId);
 		parentSlot.setWeaponType(WeaponType.DECORATIVE);
 		if (ehm_settings.getHideConverters()) parentSlot.setSlotType(slotTypeConstants.hidden);
-		else parentSlot.setRenderOrderMod(-1f);	// sometimes the activated shunts (decoratives) on these new slots (especially hardpoint ones) are rendered below the adapter, hence the change
+		else parentSlot.setRenderOrderMod(-1f);
 	}
 
-	public final void turnSlotIntoBay(String shuntId, String slotId) {
+	/**
+	 * Activates the hangar shunt on the slot. The {@link hangarData} object contains child data
+	 * that is used to alter the spawned slot. The parent slot is turned into a built-in decorative
+	 * in the process.
+	 * <p> The other shunts that spawn child slots have their children inherit their original weapon
+	 * type. For hangar slots however, the slot type needs to be launch bay as otherwise the game
+	 * will not know where to launch the wings from.
+	 * <p> While one slot is enough to both activate and launch the wings, it will show up on the
+	 * weapon groups as the slot will not be empty. Leaving the parent slot as a decorative while
+	 * spawning a child slot with launch points and a launch bay type solves all issues.
+	 * @param shuntId to determine the shunt type and to add the weapon as a built-in
+	 * @param slotId to get and alter the parent slot while deriving info for child
+	 */
+	public final void activateHangarShunt(String shuntId, String slotId) {
 		float[][] launchPoints = hangarData.dataMap.get(shuntId);
 		lyr_weaponSlot parentSlot = this.getWeaponSlot(slotId);
 
@@ -136,12 +163,17 @@ public final class ehm_hullSpec extends lyr_hullSpec {
 
 		this.addBuiltInWeapon(slotId, shuntId);
 		parentSlot.setWeaponType(WeaponType.DECORATIVE);
-		if (ehm_settings.getHideConverters()) parentSlot.setSlotType(slotTypeConstants.hidden);
+		if (ehm_settings.getHideConverters()) parentSlot.setSlotType(slotTypeConstants.hidden);	// TODO: add an option to hide the hangars
 		else parentSlot.setRenderOrderMod(-1f);
 	}
 
-	// TODO: javadocs here pls, someday
-	public final void deactivateSlot(String shuntId, String slotId) {
+	/**
+	 * Activates a generic shunt on the slot. Generic shunts do not spawn child slots or have any
+	 * data needed by them; this method simply turns them into a(n optionally built-in) decorative.
+	 * @param shuntId if not {@code null}, to add the weapon as a built-in
+	 * @param slotId to get and alter the parent slot
+	 */
+	public final void activateGenericShunt(String shuntId, String slotId) {
 		if (shuntId != null) this.addBuiltInWeapon(slotId, shuntId);
 		this.getWeaponSlot(slotId).setWeaponType(WeaponType.DECORATIVE);
 	}

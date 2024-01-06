@@ -118,7 +118,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 				dynamicStats.getMod(diverterData.groupTag).modifyFlat(slotId, mod);	// updated on base but used here for self-tracking & to keep stats updated in this class
 				dynamicStats.getMod(ehm_internals.stats.slotPointsFromDiverters).modifyFlat(slotId, mod);	// to have the addition count on the active converter block
 				dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(slotId, mod);	// to have the addition count on the inactive converter block
-				hullSpec.deactivateSlot(shuntId, slotId);
+				hullSpec.activateGenericShunt(shuntId, slotId);
 			}
 		}
 
@@ -137,7 +137,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 
 				dynamicStats.getMod(converterData.groupTag).modifyFlat(slotId, slotPointCost);	// updated on base but used here for self-tracking & to keep stats updated in this class
 				dynamicStats.getMod(ehm_internals.stats.slotPointsUsed).modifyFlat(slotId, slotPointCost);	// only this is necessary at this stage to keep track, rest of the stats will be processed externally
-				hullSpec.convertSlot(shuntId, slotId);
+				hullSpec.activateConverterShunt(shuntId, slotId);
 			}
 		}
 

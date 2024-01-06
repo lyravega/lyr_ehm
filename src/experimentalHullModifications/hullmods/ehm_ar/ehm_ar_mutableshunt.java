@@ -110,7 +110,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 				String shuntId = variant.getWeaponId(slotId);
 
 				dynamicStats.getMod(dissipatorData.groupTag).modifyFlat(slotId, dissipatorData.dataMap.get(shuntId));
-				hullSpec.deactivateSlot(shuntId, slotId);
+				hullSpec.activateGenericShunt(shuntId, slotId);
 			}
 
 			float dissipatorAmount = dynamicStats.getMod(dissipatorData.groupTag).computeEffective(0f);
@@ -128,7 +128,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 				String shuntId = variant.getWeaponId(slotId);
 
 				dynamicStats.getMod(capacitorData.groupTag).modifyFlat(slotId, capacitorData.dataMap.get(shuntId));
-				hullSpec.deactivateSlot(shuntId, slotId);
+				hullSpec.activateGenericShunt(shuntId, slotId);
 			}
 
 			float capacitorAmount = dynamicStats.getMod(capacitorData.groupTag).computeEffective(0f);

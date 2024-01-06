@@ -278,8 +278,8 @@ public abstract class _ehm_base implements HullModEffect {
 			if (shuntSpec.getSize() != variant.getSlot(slotId).getSlotSize()) continue;
 
 			String shuntId = shuntSpec.getWeaponId();
-			if (adapterData.idSet.contains(shuntId)) hullSpec.adaptSlot(shuntId, slotId);
-			else if (converterData.idSet.contains(shuntId)) hullSpec.convertSlot(shuntId, slotId);
+			if (adapterData.idSet.contains(shuntId)) hullSpec.activateAdapterShunt(shuntId, slotId);
+			else if (converterData.idSet.contains(shuntId)) hullSpec.activateConverterShunt(shuntId, slotId);
 		} else for (String slotId : variant.getFittedWeaponSlots()) {
 			if (variant.getSlot(slotId) != null) continue;
 
