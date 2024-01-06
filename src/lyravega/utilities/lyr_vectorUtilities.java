@@ -2,9 +2,6 @@ package lyravega.utilities;
 
 import org.lwjgl.util.vector.Vector2f;
 
-import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
-import com.fs.starfarer.api.loading.WeaponSlotAPI;
-
 /**
  * Provides some vector utility functions to the base, only used to
  * calculate the new locations of child slots.
@@ -63,31 +60,5 @@ public class lyr_vectorUtilities {
 		relativePoint.set((offsetPoint.x * cos) - (offsetPoint.y * sin), (offsetPoint.x * sin) + (offsetPoint.y * cos));
 
 		return Vector2f.add(relativePoint, translatePoint, relativePoint);
-	}
-
-	/**
-	 * Calculates a slot location based off of an existing slot's location by utilizing the offset.
-	 * @param slot for the slot's angle and location data
-	 * @param childSlotOffset to be used to translate the vector
-	 * @return a new slot location
-	 */
-	public static Vector2f calculateChildSlotLocation(WeaponSlotAPI slot, Vector2f childSlotOffset) {
-		return calculateRelativePoint(slot.getLocation(), slot.getAngle(), childSlotOffset);
-	}
-
-	/**
-	 * Calculates a location for a module slot that represents the relative position of the parent
-	 * ship's shield center from the module slot's location.
-	 * <p> Relative point calculation is reversed compared to the other method that calculates child
-	 * slot locations, since that one is to find a location relative to the ship, whereas this one is
-	 * to find a location relative to the module itself.
-	 * @param parentShieldSpec for the shield's center {@code x} and {@code y} coordinates
-	 * @param moduleSlot for the inverted angle and relative offset position of the shield center with regards to slot location
-	 * @return a location when used by module as its shield center that will match the parent's shield center
-	 */
-	public static Vector2f calculateParentShieldCenterForModule(ShieldSpecAPI parentShieldSpec, WeaponSlotAPI moduleSlot) {
-		Vector2f relativeShieldCenter = Vector2f.sub(new Vector2f(parentShieldSpec.getCenterX(), parentShieldSpec.getCenterY()), moduleSlot.getLocation(), null);
-
-		return calculateRelativePoint(new Vector2f(0f, 0f), -moduleSlot.getAngle(), relativeShieldCenter);
 	}
 }
