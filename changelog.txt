@@ -20,6 +20,7 @@ As the first mini-module, I've added an all-in-one version. These mini-modules r
 - Changed a few obvious system retrofits to require engines; mainly this prevents them from getting installed on modules
 - Changed the main hullmod installation so that it no longer performs a soft restoration on a few hulls that may be restored into another like the 'Wolf (D)'
 - Changed tooltips a little bit; highlighted more relevant things, made some activator ones more informative and tried to prettify them... tried
+- Added slight pitch variance (-+0.125) for the drill sound
 - NEW FEATURE: Purchaseable upgrades
  - Added upgrades that utilize LunaLib's refit buttons and may have multiple tiers
  - Added a new upgrade called "Overdrive" that allows ships to have more built-in modifications
