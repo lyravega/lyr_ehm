@@ -33,6 +33,7 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 			shipPrefix = "UUID-",
 			parentPrefix = "UUID+";
 	}
+	static final String trackerModId = "lyr_tracker";
 
 	private static final lyr_fleetTracker instance = new lyr_fleetTracker();	//  if this is null and not instantiated before onGameLoad(), will yield a NPE as hullmod effects load earlier
 
@@ -50,7 +51,6 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 	}
 
 	private boolean isMirrorInitialized = false;
-	final String trackerModId = "lyr_tracker";
 	final Map<String, lyr_shipTracker> shipTrackers = new HashMap<String, lyr_shipTracker>();
 
 	@Override
@@ -113,14 +113,6 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 	}
 	//#endregion
 	// END OF ADVANCED SIMULATION SHIT
-
-	public void startTracking(FleetMemberAPI member, ShipVariantAPI variant) {
-		new lyr_shipTracker(this, member, variant).registerTracker();
-	}
-
-	public void stopTracking(ShipVariantAPI variant) {
-		this.getShipTracker(variant).unregisterTracker();
-	}
 
 	private void updateFleetTracker() {
 		for (FleetMemberAPI member : Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy()) {
@@ -217,7 +209,7 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 		public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String id) {
 			if (stats.getFleetMember() == null) return;
 
-			updateMemberStatus(stats.getFleetMember());
+			updateMemberStatus(stats.getFleetMember());	// this needs to be done on the refit member and not on the actual one, because it's the refit member that'll be causing a crash
 		}
 
 		@Override

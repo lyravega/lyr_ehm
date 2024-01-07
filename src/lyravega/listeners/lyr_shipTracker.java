@@ -111,9 +111,9 @@ public final class lyr_shipTracker {
 			}
 		}
 
-		if (!this.variant.getPermaMods().contains(this.fleetTracker.trackerModId)) {
-			this.variant.addPermaMod(this.fleetTracker.trackerModId, false);
-			this.cachedHullMods.add(this.fleetTracker.trackerModId);
+		if (!this.variant.getPermaMods().contains(lyr_fleetTracker.trackerModId)) {
+			this.variant.addPermaMod(lyr_fleetTracker.trackerModId, false);
+			this.cachedHullMods.add(lyr_fleetTracker.trackerModId);
 		}
 
 		if (!this.variant.hasTag(lyr_fleetTracker.uuid.shipPrefix+this.trackerUUID))
@@ -135,8 +135,8 @@ public final class lyr_shipTracker {
 			}
 		}
 
-		if (this.variant.getPermaMods().contains(this.fleetTracker.trackerModId))
-			this.variant.removePermaMod(this.fleetTracker.trackerModId);
+		if (this.variant.getPermaMods().contains(lyr_fleetTracker.trackerModId))
+			this.variant.removePermaMod(lyr_fleetTracker.trackerModId);
 
 		for (Iterator<String> iterator = this.variant.getTags().iterator(); iterator.hasNext(); )
 			if (iterator.next().startsWith(lyr_fleetTracker.uuid.prefix)) iterator.remove();

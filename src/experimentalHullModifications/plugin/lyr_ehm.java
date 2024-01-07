@@ -49,6 +49,8 @@ public final class lyr_ehm extends BaseModPlugin {
 		// if (!Global.getSettings().isDevMode()) return;
 		// LunaRefitManager.addRefitButton(new _ehmu_test());
 		processExtendedData();
+		Global.getSettings().getHullModSpec("lyr_tracker").setHidden(false);	// TODO: remove these debug shit
+		Global.getSettings().getHullModSpec("lyr_tracker").setHiddenEverywhere(false);
 	}
 
 	@Override
