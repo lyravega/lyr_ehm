@@ -12,7 +12,6 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShipTypeHints;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
-import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.loading.VariantSource;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
@@ -26,8 +25,6 @@ import experimentalHullModifications.proxies.ehm_hullSpec;
 import lyravega.listeners.events.moduleEvents;
 import lyravega.proxies.lyr_weaponSlot;
 import lyravega.proxies.lyr_weaponSlot.slotTypeConstants;
-import lyravega.utilities.lyr_reflectionUtilities;
-import lyravega.utilities.logger.lyr_logger;
 
 /**@category Adapter Retrofit
  * @author lyravega
@@ -137,8 +134,8 @@ public final class ehm_ar_minimodule extends _ehm_ar_base implements moduleEvent
 
 		// the remaining part of this block is specifically for the refit tab to refresh the refit member's status
 		// if not done so, the game will crash as the new modules will lack an entry in the member's status array
-		if (stats.getFleetMember() == null) return;
-		ehm_updateMemberStatus(stats.getFleetMember());
+		// if (stats.getFleetMember() == null) return;
+		// ehm_updateMemberStatus(stats.getFleetMember());
 	}
 
 	@Override
@@ -241,51 +238,4 @@ public final class ehm_ar_minimodule extends _ehm_ar_base implements moduleEvent
 		// TODO: this may need more info?
 	}
 	//#endregion
-
-	@Deprecated
-	public static void ehm_updateAllMemberStatuses() {
-		for (FleetMemberAPI member : Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy()) {
-			if (member.getStatus().getNumStatuses() != member.getVariant().getStationModules().size() + 1) {
-				ehm_hullSpec hullSpec = new ehm_hullSpec(member.getHullSpec(), false);
-
-				for (String moduleSlotId : member.getVariant().getStationModules().keySet()) {
-					if (hullSpec.getWeaponSlot(moduleSlotId).getWeaponType() == WeaponType.STATION_MODULE) continue;
-
-					lyr_weaponSlot parentSlot = hullSpec.getWeaponSlot(moduleSlotId);
-					parentSlot.setWeaponType(WeaponType.STATION_MODULE);
-				}
-
-				try {
-					lyr_reflectionUtilities.fieldReflection.findFieldByName("status", member).set(null);
-					member.getStatus();
-				} catch (Throwable t) {
-					t.printStackTrace();
-				}
-			}
-		}
-	}
-
-	/**
-	 * This method refreshes the status of a fleet member by nullifying the status field of it using
-	 * reflection, which causes the getter to reinitialize the field with all of the child modules
-	 * included.
-	 * <p> This is necessary for the refit ship/member, as dynamic module additions to the ship will
-	 * require an update on its member as well. Otherwise the game will crash as it will attempt to
-	 * seek a non-existent index in the status array.
-	 * <p> This is not necessary on load, since the game builds the status information after the
-	 * hull modification effects are processed and at that time any additional dynamic modules will
-	 * be present on the actual member's variant, and its status will be included in the array.
-	 * @param member of the refit ship; actual members already have updated statuses but dynamic changes require updates in refit tab
-	 */
-	public static void ehm_updateMemberStatus(FleetMemberAPI member) {
-		if (member.getStatus().getNumStatuses() != member.getVariant().getStationModules().size() + 1) {	// check if status needs to be refreshed; status array includes parent's, so check with module amount + 1
-			try {
-				lyr_logger.debug("Rebuilding the member status for "+member.getShipName());
-				lyr_reflectionUtilities.fieldReflection.findFieldByName("status", member).set(null);	// setting this field to null will cause the getter to repopulate
-				member.getStatus();	// as the status field is null, this getter will repopulate the status array
-			} catch (Throwable t) {
-				lyr_logger.error("Rebuilding the member status failed for "+member.getShipName(), t);
-			}
-		}
-	}
 }

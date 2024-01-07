@@ -177,13 +177,48 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 	//#endregion
 	// END OF _lyr_abstractTracker IMPLEMENTATION
 
+	@Deprecated
+	public static void updateAllMemberStatuses() {
+		for (FleetMemberAPI member : Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy()) {
+			updateMemberStatus(member);
+		}
+	}
+
+	/**
+	 * This method refreshes the status of a fleet member by nullifying the status field of it using
+	 * reflection, which causes the getter to reinitialize the field with all of the child modules
+	 * included.
+	 * <p> This is necessary for the refit ship/member, as dynamic module additions to the ship will
+	 * require an update on its member as well. Otherwise the game will crash as it will attempt to
+	 * seek a non-existent index in the status array.
+	 * <p> This is not necessary on load, since the game builds the status information after the
+	 * hull modification effects are processed and at that time any additional dynamic modules will
+	 * be present on the actual member's variant, and its status will be included in the array.
+	 * @param member of the refit ship; actual members already have updated statuses but dynamic changes require updates in refit tab
+	 */
+	public static void updateMemberStatus(FleetMemberAPI member) {
+		if (member.getStatus().getNumStatuses() != member.getVariant().getStationModules().size() + 1) {	// check if status needs to be refreshed; status array includes parent's, so check with module amount + 1
+			try {
+				lyr_logger.debug("FT: Rebuilding the member status for "+member.getShipName());
+				lyr_reflectionUtilities.fieldReflection.findFieldByName("status", member).set(null);	// setting this field to null will cause the getter to repopulate
+				member.getStatus();	// as the status field is null, this getter will repopulate the status array
+			} catch (Throwable t) {
+				lyr_logger.error("FT: Rebuilding the member status failed for "+member.getShipName(), t);
+			}
+		}
+	}
+
 	public static class lyr_tracker extends BaseHullMod implements HullModFleetEffect {
 		@Override public boolean withAdvanceInCampaign() { return false; }
 
 		@Override public boolean withOnFleetSync() { return true; }
 
 		@Override
-		public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String id) {}
+		public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String id) {
+			if (stats.getFleetMember() == null) return;
+
+			updateMemberStatus(stats.getFleetMember());
+		}
 
 		@Override
 		public void applyEffectsAfterShipCreation(ShipAPI ship, String id) {
