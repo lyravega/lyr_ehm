@@ -121,7 +121,7 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 
 			if (shipTracker != null) continue;
 
-			shipTracker = new lyr_shipTracker(this, member, variant, null);
+			shipTracker = new lyr_shipTracker(this, variant, member, null, null);
 			lyr_logger.debug("FT: Registering ship '"+member.getShipName()+(!variant.getStationModules().isEmpty() ? "' with its "+variant.getStationModules().size()+" modules" : "'"));
 			shipTracker.registerTracker();
 		}
@@ -195,11 +195,11 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 	public static void updateMemberStatus(FleetMemberAPI member) {
 		if (member.getStatus().getNumStatuses() != member.getVariant().getStationModules().size() + 1) {	// check if status needs to be refreshed; status array includes parent's, so check with module amount + 1
 			try {
-				lyr_logger.debug("FT: Rebuilding the member status for "+member.getShipName());
+				lyr_logger.debug("FT: Rebuilding the member status for '"+member.getShipName()+"'");
 				lyr_reflectionUtilities.fieldReflection.findFieldByName("status", member).set(null);	// setting this field to null will cause the getter to repopulate
 				member.getStatus();	// as the status field is null, this getter will repopulate the status array
 			} catch (Throwable t) {
-				lyr_logger.error("FT: Rebuilding the member status failed for "+member.getShipName(), t);
+				lyr_logger.error("FT: Rebuilding the member status failed for '"+member.getShipName()+"'", t);
 			}
 		}
 	}
@@ -231,7 +231,7 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 					lyr_logger.setLevel(lyr_levels.DEBUG); lyr_logger.debug("Lowering logger level to 'DEBUG'");
 				};	lyr_logger.warn("FT: Tracker not found, constructing a temporary one");
 
-				shipTracker = new lyr_shipTracker(instance, null, ship.getVariant(), null);
+				shipTracker = new lyr_shipTracker(instance, ship.getVariant(), null, "???", null);
 				shipTracker.registerTracker();
 			}
 

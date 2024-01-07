@@ -31,7 +31,6 @@ public final class lyr_shipTracker {
 	private final lyr_shipTracker parentTracker;
 	private final String trackerUUID;
 	private final boolean isShip;
-	private final boolean isSelectable;
 	private final String logPrefix;
 	private final FleetMemberAPI member;
 	private FleetMemberAPI refitMember;
@@ -53,16 +52,15 @@ public final class lyr_shipTracker {
 	 * the variants their UUID and adds the tracking mod to them. When the trackers are no longer
 	 * needed, {@link #unregisterTracker()} method may be used to clean the tag and the hullmod up.
 	 * @param fleetTracker that creates these ship trackers
-	 * @param member of the ship
 	 * @param variant of the ship
+	 * @param member of the ship
 	 */
-	public lyr_shipTracker(lyr_fleetTracker fleetTracker, FleetMemberAPI member, ShipVariantAPI variant, lyr_shipTracker parentShipTracker) {
+	public lyr_shipTracker(lyr_fleetTracker fleetTracker, ShipVariantAPI variant, FleetMemberAPI member, String moduleId, lyr_shipTracker parentTracker) {
 		this.fleetTracker = fleetTracker;
-		this.parentTracker = parentShipTracker;
+		this.parentTracker = parentTracker;
 		this.trackerUUID = UUID.randomUUID().toString();
 		this.isShip = member != null;
-		this.isSelectable = isSelectable(variant.getHullSpec());
-		this.logPrefix = (this.isShip ? "ST-" : "MT-") + this.trackerUUID;
+		this.logPrefix = this.isShip ? "ST-"+member.getShipName() : "MT-"+parentTracker.getMember().getShipName()+"/"+moduleId;
 
 		this.member = member;
 		this.refitMember = member;
@@ -70,33 +68,29 @@ public final class lyr_shipTracker {
 		this.variant = variant;
 
 		if (this.variant.getSource() != VariantSource.REFIT) {
-			lyr_logger.debug(this.logPrefix+this.trackerUUID+": Changing variant source from "+variant.getSource().name()+" to REFIT");
+			lyr_logger.debug(this.logPrefix+": Changing variant source from "+variant.getSource().name()+" to REFIT");
 			this.variant = this.variant.clone();
 			this.variant.setSource(VariantSource.REFIT);	// is because stock ships cause problems till they're saved once
 			if (this.isShip) this.member.setVariant(this.variant, false, false);
 		}
 
-		if (this.isShip) {
-			this.cachedModules = new HashMap<String, lyr_shipTracker>();
-
-			for (final String moduleSlotId : this.variant.getModuleSlots()) {
-				final ShipVariantAPI moduleVariant = this.variant.getModuleVariant(moduleSlotId);
-				if (!this.isSelectable) continue;
-
-				final lyr_shipTracker moduleTracker = new lyr_shipTracker(this.fleetTracker, null, moduleVariant, this);
-
-				this.variant.setModuleVariant(moduleSlotId, moduleTracker.getVariant());
-				this.cachedModules.put(moduleSlotId, moduleTracker);
-			}
-		} else this.cachedModules = null;
-		this.cachedWeapons = new HashMap<String, String>();
-		for (final WeaponSlotAPI slot : this.variant.getHullSpec().getAllWeaponSlotsCopy())
-			this.cachedWeapons.put(slot.getId(), this.variant.getWeaponId(slot.getId()));
-		this.cachedWings = new ArrayList<String>(this.variant.getWings());
+		this.cachedModules = this.isShip ? new HashMap<String, lyr_shipTracker>() : null;
 		this.cachedHullMods = new HashSet<String>(this.variant.getHullMods());
 		this.cachedEnhancedMods = new HashSet<String>(this.variant.getSMods());
 		this.cachedEmbeddedMods = new HashSet<String>(this.variant.getSModdedBuiltIns());
 		this.cachedSuppressedMods = new HashSet<String>(this.variant.getSuppressedMods());
+		this.cachedWings = new ArrayList<String>(this.variant.getWings());
+		this.cachedWeapons = new HashMap<String, String>();
+		for (final WeaponSlotAPI slot : this.variant.getHullSpec().getAllWeaponSlotsCopy())
+			this.cachedWeapons.put(slot.getId(), this.variant.getWeaponId(slot.getId()));
+
+		if (this.isShip) for (final String moduleSlotId : this.variant.getModuleSlots()) {
+			final ShipVariantAPI moduleVariant = this.variant.getModuleVariant(moduleSlotId);
+			final lyr_shipTracker moduleTracker = new lyr_shipTracker(this.fleetTracker, moduleVariant, null, moduleSlotId, this);
+
+			this.variant.setModuleVariant(moduleSlotId, moduleTracker.getVariant());
+			this.cachedModules.put(moduleSlotId, moduleTracker);
+		}
 	}
 
 	/**
@@ -341,7 +335,7 @@ public final class lyr_shipTracker {
 			if (!isSelectable(this.variant.getModuleVariant(moduleSlotId).getHullSpec())) continue;
 
 			final ShipVariantAPI moduleVariant = this.variant.getModuleVariant(moduleSlotId);
-			final lyr_shipTracker moduleTracker = new lyr_shipTracker(this.fleetTracker, null, moduleVariant, this);
+			final lyr_shipTracker moduleTracker = new lyr_shipTracker(this.fleetTracker, moduleVariant, null, moduleSlotId, this);
 			moduleTracker.registerTracker();
 
 			this.cachedModules.put(moduleSlotId, moduleTracker);
@@ -364,7 +358,7 @@ public final class lyr_shipTracker {
 				if (!isSelectable(this.variant.getModuleVariant(moduleSlotId).getHullSpec())) continue;
 
 				final ShipVariantAPI moduleVariant = this.variant.getModuleVariant(moduleSlotId);
-				final lyr_shipTracker moduleTracker = new lyr_shipTracker(this.fleetTracker, null, moduleVariant, this);
+				final lyr_shipTracker moduleTracker = new lyr_shipTracker(this.fleetTracker, moduleVariant, null, moduleSlotId, this);
 				final lyr_shipTracker oldModuleTracker = this.cachedModules.get(moduleSlotId);
 				final ShipVariantAPI oldModuleVariant = oldModuleTracker.getVariant();
 				moduleTracker.registerTracker(); oldModuleTracker.unregisterTracker();
