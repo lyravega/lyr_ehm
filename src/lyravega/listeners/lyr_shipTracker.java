@@ -5,10 +5,8 @@ import static lyravega.listeners.lyr_eventDispatcher.events.*;
 import java.util.*;
 
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
-import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
-import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.loading.VariantSource;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
@@ -166,13 +164,6 @@ public final class lyr_shipTracker {
 			if (iterator.next().startsWith(lyr_fleetTracker.uuid.prefix)) iterator.remove();
 
 		this.fleetTracker.shipTrackers.remove(this.trackerUUID);
-	}
-
-	public static boolean isSelectable(ShipHullSpecAPI hullSpec) {
-		if (hullSpec.getOrdnancePoints(null) == 0) return false;	// vanilla first checks this
-		if (hullSpec.hasTag(Tags.MODULE_UNSELECTABLE)) return false;	// then this to identify unselectables
-
-		return true;
 	}
 
 	/**

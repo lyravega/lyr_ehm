@@ -11,6 +11,7 @@ import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShieldSpecAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShipTypeHints;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.impl.campaign.ids.HullMods;
+import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.loading.WeaponGroupSpec;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.util.Misc;
@@ -308,5 +309,12 @@ public class lyr_miscUtilities {
 		Vector2f relativeShieldCenter = Vector2f.sub(new Vector2f(parentShieldSpec.getCenterX(), parentShieldSpec.getCenterY()), moduleSlot.getLocation(), null);
 
 		return lyr_vectorUtilities.calculateRelativePoint(new Vector2f(0f, 0f), -moduleSlot.getAngle(), relativeShieldCenter);
+	}
+
+	public static boolean isSelectable(ShipHullSpecAPI hullSpec) {
+		if (hullSpec.getOrdnancePoints(null) == 0) return false;	// vanilla first checks this
+		if (hullSpec.hasTag(Tags.MODULE_UNSELECTABLE)) return false;	// then this to identify unselectables
+
+		return true;
 	}
 }
