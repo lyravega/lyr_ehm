@@ -118,6 +118,9 @@ public final class lyr_shipTracker {
 	 */
 	public String getTrackerUUID() { return this.trackerUUID; }
 
+	/**
+	 * Adds the tracking tag and hullmod to the ship, and this tracker to the fleet tracker.
+	 */
 	void registerTracker() {
 		if (this.isShip) {
 			this.variant = this.member.getVariant();
@@ -141,6 +144,9 @@ public final class lyr_shipTracker {
 		this.fleetTracker.shipTrackers.put(this.trackerUUID, this);
 	}
 
+	/**
+	 * Removes the tracking tag and hullmod from the ship, and this tracker from the fleet tracker.
+	 */
 	void unregisterTracker() {
 		if (this.isShip) {
 			this.variant = this.member.getVariant();	// this is needed as on exit the game will update the member variants, at which point tracker's variant will reference older one
@@ -332,7 +338,6 @@ public final class lyr_shipTracker {
 
 		for (final String moduleSlotId : modules.keySet()) {
 			if (this.cachedModules.containsKey(moduleSlotId)) continue;
-			if (!isSelectable(this.variant.getModuleVariant(moduleSlotId).getHullSpec())) continue;
 
 			final ShipVariantAPI moduleVariant = this.variant.getModuleVariant(moduleSlotId);
 			final lyr_shipTracker moduleTracker = new lyr_shipTracker(this.fleetTracker, moduleVariant, null, moduleSlotId, this);
@@ -355,8 +360,6 @@ public final class lyr_shipTracker {
 
 				lyr_logger.eventInfo(this.logPrefix+": Removed module '"+moduleVariant.getHullVariantId()+"' from slot '"+moduleSlotId+"'");
 			} else if (!modules.get(moduleSlotId).equals(this.cachedModules.get(moduleSlotId).getVariant().getHullVariantId())) {
-				if (!isSelectable(this.variant.getModuleVariant(moduleSlotId).getHullSpec())) continue;
-
 				final ShipVariantAPI moduleVariant = this.variant.getModuleVariant(moduleSlotId);
 				final lyr_shipTracker moduleTracker = new lyr_shipTracker(this.fleetTracker, moduleVariant, null, moduleSlotId, this);
 				final lyr_shipTracker oldModuleTracker = this.cachedModules.get(moduleSlotId);
