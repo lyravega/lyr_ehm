@@ -5,8 +5,10 @@ import static lyravega.listeners.lyr_eventDispatcher.events.*;
 import java.util.*;
 
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
+import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.loading.VariantSource;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 
@@ -26,12 +28,15 @@ import lyravega.utilities.logger.lyr_logger;
  */
 public final class lyr_shipTracker {
 	private final lyr_fleetTracker fleetTracker;
+	private final lyr_shipTracker parentTracker;
 	private final String trackerUUID;
 	private final boolean isShip;
+	private final boolean isSelectable;
 	private final String logPrefix;
-	private FleetMemberAPI member, parentMember;
+	private final FleetMemberAPI member;
+	private FleetMemberAPI refitMember;
 	private MutableShipStatsAPI stats;
-	private ShipVariantAPI variant, parentVariant;
+	private ShipVariantAPI variant;
 	private final Map<String, lyr_shipTracker> cachedModules;
 	private final Map<String, String> cachedWeapons;
 	private final ArrayList<String> cachedWings;
@@ -39,13 +44,28 @@ public final class lyr_shipTracker {
 	private Iterator<String> iterator;
 
 	//#region CONSTRUCTORS & ACCESSORS
-	public lyr_shipTracker(lyr_fleetTracker fleetTracker, FleetMemberAPI member, ShipVariantAPI variant) {
+	/**
+	 * Constructs a tracker for a ship. Only the ships with an actual fleet member should construct
+	 * a tracker as it will also construct trackers for its modules.
+	 * <p> Changes the variant source to {@code REFIT} if necessary, and applies it. This is needed
+	 * in cases where the source is {@code HULL} or {@code STOCK}; those variants are not unique.
+	 * <p> The trackers needs to be registered using {@link #registerTracker()} method which assigns
+	 * the variants their UUID and adds the tracking mod to them. When the trackers are no longer
+	 * needed, {@link #unregisterTracker()} method may be used to clean the tag and the hullmod up.
+	 * @param fleetTracker that creates these ship trackers
+	 * @param member of the ship
+	 * @param variant of the ship
+	 */
+	public lyr_shipTracker(lyr_fleetTracker fleetTracker, FleetMemberAPI member, ShipVariantAPI variant, lyr_shipTracker parentShipTracker) {
 		this.fleetTracker = fleetTracker;
+		this.parentTracker = parentShipTracker;
 		this.trackerUUID = UUID.randomUUID().toString();
 		this.isShip = member != null;
+		this.isSelectable = isSelectable(variant.getHullSpec());
 		this.logPrefix = (this.isShip ? "ST-" : "MT-") + this.trackerUUID;
 
 		this.member = member;
+		this.refitMember = member;
 		this.stats = this.isShip ? member.getStats() : null;
 		this.variant = variant;
 
@@ -61,12 +81,9 @@ public final class lyr_shipTracker {
 
 			for (final String moduleSlotId : this.variant.getModuleSlots()) {
 				final ShipVariantAPI moduleVariant = this.variant.getModuleVariant(moduleSlotId);
-				// final ShipHullSpecAPI moduleHullSpec = moduleVariant.getHullSpec();
+				if (!this.isSelectable) continue;
 
-				// if (moduleHullSpec.getOrdnancePoints(null) == 0) continue;	// vanilla first checks this
-				// if (moduleHullSpec.hasTag(Tags.MODULE_UNSELECTABLE)) continue;	// then this to identify unselectables
-
-				final lyr_shipTracker moduleTracker = new lyr_shipTracker(moduleVariant, this, this.fleetTracker);
+				final lyr_shipTracker moduleTracker = new lyr_shipTracker(this.fleetTracker, null, moduleVariant, this);
 
 				this.variant.setModuleVariant(moduleSlotId, moduleTracker.getVariant());
 				this.cachedModules.put(moduleSlotId, moduleTracker);
@@ -82,21 +99,29 @@ public final class lyr_shipTracker {
 		this.cachedSuppressedMods = new HashSet<String>(this.variant.getSuppressedMods());
 	}
 
-	private lyr_shipTracker(ShipVariantAPI moduleVariant, lyr_shipTracker parentTracker, lyr_fleetTracker fleetTracker) {
-		this(fleetTracker, null, moduleVariant);
-
-		this.parentMember = parentTracker.getMember();
-		this.parentVariant = parentTracker.getVariant();
-	}
-
+	/**
+	 * @return the stored variant
+	 */
 	public ShipVariantAPI getVariant() { return this.variant; }
 
-	public ShipVariantAPI getParentVariant() { return this.parentVariant; }
+	/**
+	 * @return the member; if this is a module, will return the refit member; modules do not have actual fleet members in the fleet
+	 */
+	public FleetMemberAPI getMember() { return this.isShip ? this.member : this.refitMember; }
 
-	public FleetMemberAPI getMember() { return this.member; }
+	/**
+	 * @return the parent's tracker; if this is not a module, will return null
+	 */
+	public lyr_shipTracker getParentTracker() { return this.parentTracker; }
 
-	public FleetMemberAPI getParentMember() { return this.parentMember; }
+	/**
+	 * @return a modules's tracker; if this is a module, will return null
+	 */
+	public lyr_shipTracker getModuleTracker(String slotId) { return this.isShip ? this.cachedModules.get(slotId) : null; }
 
+	/**
+	 * @return ship/module's tracking UUID
+	 */
 	public String getTrackerUUID() { return this.trackerUUID; }
 
 	void registerTracker() {
@@ -120,7 +145,6 @@ public final class lyr_shipTracker {
 			this.variant.addTag(lyr_fleetTracker.uuid.shipPrefix+this.trackerUUID);
 
 		this.fleetTracker.shipTrackers.put(this.trackerUUID, this);
-		lyr_logger.debug(this.logPrefix+": Registering tracker");
 	}
 
 	void unregisterTracker() {
@@ -142,7 +166,13 @@ public final class lyr_shipTracker {
 			if (iterator.next().startsWith(lyr_fleetTracker.uuid.prefix)) iterator.remove();
 
 		this.fleetTracker.shipTrackers.remove(this.trackerUUID);
-		lyr_logger.debug(this.logPrefix+": Unregistering tracker");
+	}
+
+	public static boolean isSelectable(ShipHullSpecAPI hullSpec) {
+		if (hullSpec.getOrdnancePoints(null) == 0) return false;	// vanilla first checks this
+		if (hullSpec.hasTag(Tags.MODULE_UNSELECTABLE)) return false;	// then this to identify unselectables
+
+		return true;
 	}
 
 	/**
@@ -153,6 +183,7 @@ public final class lyr_shipTracker {
 	 * @see {@link normalEvents} / {@link enhancedEvents} / {@link suppressedEvents} / {@link weaponEvents}
 	 */
 	void updateStats(final MutableShipStatsAPI stats) {
+		this.refitMember = stats.getFleetMember();
 		this.stats = stats;
 		this.variant = stats.getVariant();
 
@@ -264,8 +295,8 @@ public final class lyr_shipTracker {
 				lyr_logger.eventInfo(this.logPrefix+": Removed weapon '"+oldWeaponId+"' from slot '"+slotId+"'");
 			} else if (oldWeaponId != null && newWeaponId != null && !oldWeaponId.equals(newWeaponId)) {	// weapon changed
 				this.cachedWeapons.put(slotId, newWeaponId);
-				lyr_eventDispatcher.onWeaponEvent(onWeaponInstalled, this.stats, newWeaponId, slotId);
 				lyr_eventDispatcher.onWeaponEvent(onWeaponRemoved, this.stats, oldWeaponId, slotId);
+				lyr_eventDispatcher.onWeaponEvent(onWeaponInstalled, this.stats, newWeaponId, slotId);
 
 				lyr_logger.eventInfo(this.logPrefix+": Changed weapon '"+oldWeaponId+"' on slot '"+slotId+"' with '"+newWeaponId+"'");
 			}
@@ -294,8 +325,8 @@ public final class lyr_shipTracker {
 				lyr_logger.eventInfo(this.logPrefix+": Removed wing '"+oldWingId+"' from bay '"+bayNumber+"'");
 			} else if (!oldWingId.isEmpty() && newWingId != null && !oldWingId.equals(newWingId)) {	// wing changed
 				this.cachedWings.set(bayNumber, newWingId);
-				lyr_eventDispatcher.onWingEvent(onWingAssigned, this.stats, newWingId, bayNumber);
 				lyr_eventDispatcher.onWingEvent(onWingRelieved, this.stats, oldWingId, bayNumber);
+				lyr_eventDispatcher.onWingEvent(onWingAssigned, this.stats, newWingId, bayNumber);
 
 				lyr_logger.eventInfo(this.logPrefix+": Changed wing '"+oldWingId+"' on bay '"+bayNumber+"' with '"+newWingId+"'");
 			}
@@ -307,10 +338,12 @@ public final class lyr_shipTracker {
 
 		for (final String moduleSlotId : modules.keySet()) {
 			if (this.cachedModules.containsKey(moduleSlotId)) continue;
-			final ShipVariantAPI moduleVariant = this.variant.getModuleVariant(moduleSlotId);
-			final lyr_shipTracker moduleTracker = new lyr_shipTracker(moduleVariant, this, this.fleetTracker);
+			if (!isSelectable(this.variant.getModuleVariant(moduleSlotId).getHullSpec())) continue;
 
+			final ShipVariantAPI moduleVariant = this.variant.getModuleVariant(moduleSlotId);
+			final lyr_shipTracker moduleTracker = new lyr_shipTracker(this.fleetTracker, null, moduleVariant, this);
 			moduleTracker.registerTracker();
+
 			this.cachedModules.put(moduleSlotId, moduleTracker);
 			lyr_eventDispatcher.onModuleEvent(onModuleInstalled, this.stats, moduleVariant, moduleSlotId);
 
@@ -321,22 +354,24 @@ public final class lyr_shipTracker {
 			if (!modules.containsKey(moduleSlotId)) {
 				final lyr_shipTracker moduleTracker = this.cachedModules.get(moduleSlotId);
 				final ShipVariantAPI moduleVariant = moduleTracker.getVariant();
-
 				moduleTracker.unregisterTracker();
+
 				this.iterator.remove();
 				lyr_eventDispatcher.onModuleEvent(onModuleRemoved, this.stats, moduleVariant, moduleSlotId);
 
 				lyr_logger.eventInfo(this.logPrefix+": Removed module '"+moduleVariant.getHullVariantId()+"' from slot '"+moduleSlotId+"'");
 			} else if (!modules.get(moduleSlotId).equals(this.cachedModules.get(moduleSlotId).getVariant().getHullVariantId())) {
+				if (!isSelectable(this.variant.getModuleVariant(moduleSlotId).getHullSpec())) continue;
+
 				final ShipVariantAPI moduleVariant = this.variant.getModuleVariant(moduleSlotId);
-				final lyr_shipTracker moduleTracker = new lyr_shipTracker(moduleVariant, this, this.fleetTracker);
+				final lyr_shipTracker moduleTracker = new lyr_shipTracker(this.fleetTracker, null, moduleVariant, this);
 				final lyr_shipTracker oldModuleTracker = this.cachedModules.get(moduleSlotId);
 				final ShipVariantAPI oldModuleVariant = oldModuleTracker.getVariant();
-
 				moduleTracker.registerTracker(); oldModuleTracker.unregisterTracker();
+
 				this.cachedModules.put(moduleSlotId, moduleTracker);
-				lyr_eventDispatcher.onModuleEvent(onModuleInstalled, this.stats, moduleVariant, moduleSlotId);
 				lyr_eventDispatcher.onModuleEvent(onModuleRemoved, this.stats, oldModuleVariant, moduleSlotId);
+				lyr_eventDispatcher.onModuleEvent(onModuleInstalled, this.stats, moduleVariant, moduleSlotId);
 
 				lyr_logger.eventInfo(this.logPrefix+": Changed module '"+oldModuleVariant.getHullVariantId()+"' on slot '"+moduleSlotId+"' with '"+moduleVariant.getHullVariantId()+"'");
 			}

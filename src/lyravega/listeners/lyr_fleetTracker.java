@@ -116,21 +116,25 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 
 	private void updateFleetTracker() {
 		for (FleetMemberAPI member : Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy()) {
-			lyr_shipTracker shipTracker = this.getShipTracker(member.getVariant());
+			ShipVariantAPI variant = member.getVariant();
+			lyr_shipTracker shipTracker = this.getShipTracker(variant);
 
 			if (shipTracker != null) continue;
 
-			shipTracker = new lyr_shipTracker(this, member, member.getVariant());
+			shipTracker = new lyr_shipTracker(this, member, variant, null);
+			lyr_logger.debug("FT: Registering ship '"+member.getShipName()+(!variant.getStationModules().isEmpty() ? "' with its "+variant.getStationModules().size()+" modules" : "'"));
 			shipTracker.registerTracker();
 		}
 	}
 
 	private void terminateFleetTracker() {
 		for (FleetMemberAPI member : Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy()) {
-			lyr_shipTracker shipTracker = this.getShipTracker(member.getVariant());
+			ShipVariantAPI variant = member.getVariant();
+			lyr_shipTracker shipTracker = this.getShipTracker(variant);
 
 			if (shipTracker == null) continue;
 
+			lyr_logger.debug("FT: Unregistering ship '"+member.getShipName()+(!variant.getStationModules().isEmpty() ? "' with its "+variant.getStationModules().size()+" modules" : "'"));
 			shipTracker.unregisterTracker();
 		}
 
@@ -225,9 +229,9 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 			if (shipTracker == null) {	// there is an extremely rare case where this is null; the block below is a nuclear option to prevent it
 				if (lyr_logger.getLevel() != lyr_levels.DEBUG) {
 					lyr_logger.setLevel(lyr_levels.DEBUG); lyr_logger.debug("Lowering logger level to 'DEBUG'");
-				};	lyr_logger.warn("FT: Tracker not found, initializing a temporary one");
+				};	lyr_logger.warn("FT: Tracker not found, constructing a temporary one");
 
-				shipTracker = new lyr_shipTracker(instance, null, ship.getVariant());
+				shipTracker = new lyr_shipTracker(instance, null, ship.getVariant(), null);
 				shipTracker.registerTracker();
 			}
 
