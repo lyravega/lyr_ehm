@@ -8,6 +8,12 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
  * @author lyravega
  */
 public final class ehm_sr_canister_flak extends _ehm_sr_base {
+	public ehm_sr_canister_flak() {
+		super();
+
+		this.systemId = "canister_flak";
+	}
+
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		this.changeSystem(stats);

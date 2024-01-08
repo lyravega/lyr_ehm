@@ -63,23 +63,21 @@ public abstract class _ehm_sr_base extends _ehm_base implements normalEvents {
 	public void init(HullModSpecAPI hullModSpec) {
 		super.init(hullModSpec);
 
-		this.systemId = this.getClass().getSimpleName().replace(systemRetrofits.tag+"_", "");
-
 		if (Global.getSettings().getShipSystemSpec(this.systemId) == null) {
 			hullModSpec.setHidden(true);
 			hullModSpec.setHiddenEverywhere(true);
 
 			lyr_logger.warn("Ship system with systemId '"+this.systemId+"' not found, hiding '"+hullModSpec.getId()+"'"); return;
-		}
+		} else {
+			Description shipSystemDescription = Global.getSettings().getDescription(this.systemId, Description.Type.SHIP_SYSTEM);
 
-		Description shipSystemDescription = Global.getSettings().getDescription(this.systemId, Description.Type.SHIP_SYSTEM);
-
-		hullModSpec.setDescriptionFormat(shipSystemDescription.getText1());
-		// hullModSpec.setShortDesc(shipSystemDescription.getText3());	// this is not on the API
-		try {
-			lyr_reflectionUtilities.methodReflection.invokeDirect(hullModSpec, "setShortDesc", shipSystemDescription.getText3());
-		} catch (Throwable t) {
-			lyr_logger.error("Could not set the short description of hull modification spec", t);
+			hullModSpec.setDescriptionFormat(shipSystemDescription.getText1());
+			// hullModSpec.setShortDesc(shipSystemDescription.getText3());	// this is not on the API
+			try {
+				lyr_reflectionUtilities.methodReflection.invokeDirect(hullModSpec, "setShortDesc", shipSystemDescription.getText3());
+			} catch (Throwable t) {
+				lyr_logger.error("Could not set the short description of hull modification spec", t);
+			}
 		}
 	}
 

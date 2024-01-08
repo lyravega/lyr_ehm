@@ -8,6 +8,12 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
  * @author lyravega
  */
 public final class ehm_sr_mote_control extends _ehm_sr_base {
+	public ehm_sr_mote_control() {
+		super();
+
+		this.systemId = "mote_control";
+	}
+
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		this.changeSystem(stats);

@@ -8,6 +8,12 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
  * @author lyravega
  */
 public final class ehm_sr_forgevats extends _ehm_sr_base {
+	public ehm_sr_forgevats() {
+		super();
+
+		this.systemId = "forgevats";
+	}
+
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		stats.getSystemCooldownBonus().modifyFlat(this.hullModSpecId, 45.0f);	// extra buff

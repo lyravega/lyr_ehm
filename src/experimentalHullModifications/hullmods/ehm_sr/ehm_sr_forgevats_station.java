@@ -8,6 +8,12 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
  * @author lyravega
  */
 public final class ehm_sr_forgevats_station extends _ehm_sr_base {
+	public ehm_sr_forgevats_station() {
+		super();
+
+		this.systemId = "forgevats_station";
+	}
+
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		this.changeSystem(stats);
