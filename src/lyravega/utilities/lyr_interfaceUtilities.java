@@ -13,7 +13,7 @@ import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.campaign.fleet.CampaignFleet;
 
 import experimentalHullModifications.misc.ehm_internals;
-import experimentalHullModifications.misc.ehm_settings;
+import experimentalHullModifications.plugin.lyr_ehm;	// still connected to other package
 import lyravega.proxies.ui.*;
 import lyravega.proxies.ui.lyr_refitTab.lyr_parentData;
 import lyravega.utilities.logger.lyr_logger;
@@ -49,7 +49,7 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 	 * and {@code onInstall()}
 	 */
 	public static void playDrillSound() {
-		if (!ehm_settings.getPlayDrillSound() || !isRefitTab()) return;
+		if (!lyr_ehm.lunaSettings.getPlayDrillSound() || !isRefitTab()) return;
 		Global.getSoundPlayer().playUISound(ehm_internals.ids.drillSound, (float) (Math.random() / 4 + 0.875f), 0.75f);
 	}
 

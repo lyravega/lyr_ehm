@@ -19,9 +19,9 @@ import com.fs.starfarer.api.util.DynamicStatsAPI;
 
 import experimentalHullModifications.misc.ehm_internals.affixes;
 import experimentalHullModifications.misc.ehm_internals.shunts.adapters;
-import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import experimentalHullModifications.misc.ehm_tooltip.text;
+import experimentalHullModifications.plugin.lyr_ehm;
 import experimentalHullModifications.proxies.ehm_hullSpec;
 
 /**@category Adapter Retrofit
@@ -135,12 +135,12 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 		if (variant.hasHullMod(this.hullModSpecId)) {
 			DynamicStatsAPI dynamicStats = ship.getMutableStats().getDynamic();
 
-			if (ehm_settings.getShowInfoForActivators()) {
+			if (lyr_ehm.lunaSettings.getShowInfoForActivators()) {
 				HashMap<String, StatMod> adapterShunts = dynamicStats.getMod(adapterData.groupTag).getFlatBonuses();
 				if (!adapterShunts.isEmpty()) {
 					tooltip.addSectionHeading("ADAPTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					this.printShuntCountsOnTooltip(tooltip, variant, adapterShunts.keySet());
-				} else if (ehm_settings.getShowFullInfoForActivators()) {
+				} else if (lyr_ehm.lunaSettings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO ADAPTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No adapters are installed. Adapters turn bigger slots into smaller ones.", text.padding);
 				}

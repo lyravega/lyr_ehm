@@ -16,8 +16,8 @@ import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_launchtube.hangarDat
 import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.adapterData;
 import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.adapterData.adapterParameters;
 import experimentalHullModifications.misc.ehm_internals;
-import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.text;
+import experimentalHullModifications.plugin.lyr_ehm;
 import lyravega.proxies.lyr_hullSpec;
 import lyravega.proxies.lyr_weaponSlot;
 import lyravega.proxies.lyr_weaponSlot.slotTypeConstants;
@@ -70,7 +70,7 @@ public final class ehm_hullSpec extends lyr_hullSpec {
 			this.setBaseValue(oHullSpec.getBaseValue());	// restore the value as damaged hulls lose 25% in value
 			// this.setSpriteSpec(test.getSpriteSpec());	// maybe reduces memory imprint?
 
-			if (ehm_settings.getShowExperimentalFlavour()) {
+			if (lyr_ehm.lunaSettings.getShowExperimentalFlavour()) {
 				this.setManufacturer(text.flavourManufacturer);
 				this.setDescriptionPrefix(text.flavourDescription);
 				this.setHullName(oHullSpec.getHullName() + " (E)");	// append "(E)"
@@ -104,7 +104,7 @@ public final class ehm_hullSpec extends lyr_hullSpec {
 
 		this.addBuiltInWeapon(slotId, shuntId);
 		parentSlot.setWeaponType(WeaponType.DECORATIVE);
-		if (ehm_settings.getHideAdapters()) parentSlot.setSlotType(slotTypeConstants.hidden);
+		if (lyr_ehm.lunaSettings.getHideAdapters()) parentSlot.setSlotType(slotTypeConstants.hidden);
 		else parentSlot.setRenderOrderMod(-1f);	// sometimes the activated shunts (decoratives) on these new slots (especially hardpoint ones) are rendered below the adapter, hence the change
 	}
 
@@ -130,7 +130,7 @@ public final class ehm_hullSpec extends lyr_hullSpec {
 
 		this.addBuiltInWeapon(slotId, shuntId);
 		parentSlot.setWeaponType(WeaponType.DECORATIVE);
-		if (ehm_settings.getHideConverters()) parentSlot.setSlotType(slotTypeConstants.hidden);
+		if (lyr_ehm.lunaSettings.getHideConverters()) parentSlot.setSlotType(slotTypeConstants.hidden);
 		else parentSlot.setRenderOrderMod(-1f);
 	}
 
@@ -163,7 +163,7 @@ public final class ehm_hullSpec extends lyr_hullSpec {
 
 		this.addBuiltInWeapon(slotId, shuntId);
 		parentSlot.setWeaponType(WeaponType.DECORATIVE);
-		if (ehm_settings.getHideConverters()) parentSlot.setSlotType(slotTypeConstants.hidden);	// TODO: add an option to hide the hangars
+		if (lyr_ehm.lunaSettings.getHideConverters()) parentSlot.setSlotType(slotTypeConstants.hidden);	// TODO: add an option to hide the hangars
 		else parentSlot.setRenderOrderMod(-1f);
 	}
 

@@ -15,13 +15,12 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
-import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_internals.hullmods.engineCosmetics;
+import experimentalHullModifications.plugin.lyr_ehm;
 import experimentalHullModifications.proxies.ehm_hullSpec;
 import lyravega.listeners.events.customizableMod;
 import lyravega.listeners.events.normalEvents;
 import lyravega.proxies.lyr_engineBuilder;
-import lyravega.utilities.lyr_lunaUtilities;
 
 /**
  * This class is used by engine cosmetic hullmods. The changes are permanent; changes do not use
@@ -119,53 +118,52 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 	 */
 	protected Object newCustomEngineStyleSpec() {
 		final Map<String, Object> customEngineSpecData = new HashMap<String, Object>();
-		final String modId = ehm_internals.ids.mod;
 
-		customEngineSpecData.put("engineColor", lyr_lunaUtilities.getLunaRGBAColourArray(modId, this.hullModSpecId+"_engine"));
-		customEngineSpecData.put("contrailColor", lyr_lunaUtilities.getLunaRGBAColourArray(modId, this.hullModSpecId+"_contrail"));
-		if (lyr_lunaUtilities.getBoolean(modId, this.hullModSpecId+"_hasDifferentCampaignEngine")) {
-			customEngineSpecData.put("engineCampaignColor", lyr_lunaUtilities.getLunaRGBAColourArray(modId, this.hullModSpecId+"_engineCampaign"));
+		customEngineSpecData.put("engineColor", lyr_ehm.lunaSettings.getLunaRGBAColourArray(this.hullModSpecId+"_engine"));
+		customEngineSpecData.put("contrailColor", lyr_ehm.lunaSettings.getLunaRGBAColourArray(this.hullModSpecId+"_contrail"));
+		if (lyr_ehm.lunaSettings.getBoolean(this.hullModSpecId+"_hasDifferentCampaignEngine")) {
+			customEngineSpecData.put("engineCampaignColor", lyr_ehm.lunaSettings.getLunaRGBAColourArray(this.hullModSpecId+"_engineCampaign"));
 		}
-		if (lyr_lunaUtilities.getBoolean(modId, this.hullModSpecId+"_hasDifferentCampaignContrail")) {
-			customEngineSpecData.put("contrailCampaignColor", lyr_lunaUtilities.getLunaRGBAColourArray(modId, this.hullModSpecId+"_contrailCampaign"));
+		if (lyr_ehm.lunaSettings.getBoolean(this.hullModSpecId+"_hasDifferentCampaignContrail")) {
+			customEngineSpecData.put("contrailCampaignColor", lyr_ehm.lunaSettings.getLunaRGBAColourArray(this.hullModSpecId+"_contrailCampaign"));
 		}
-		customEngineSpecData.put("glowSizeMult", lyr_lunaUtilities.getDouble(modId, this.hullModSpecId+"_glowSizeMult"));
-		if (lyr_lunaUtilities.getBoolean(modId, this.hullModSpecId+"_hasAlternateGlow")) {
-			customEngineSpecData.put("glowAlternateColor", lyr_lunaUtilities.getLunaRGBAColourArray(modId, this.hullModSpecId+"_glowAlternate"));
+		customEngineSpecData.put("glowSizeMult", lyr_ehm.lunaSettings.getDouble(this.hullModSpecId+"_glowSizeMult"));
+		if (lyr_ehm.lunaSettings.getBoolean(this.hullModSpecId+"_hasAlternateGlow")) {
+			customEngineSpecData.put("glowAlternateColor", lyr_ehm.lunaSettings.getLunaRGBAColourArray(this.hullModSpecId+"_glowAlternate"));
 		}
-		customEngineSpecData.put("contrailMaxSpeedMult", lyr_lunaUtilities.getDouble(modId, this.hullModSpecId+"_contrailMaxSpeedMult"));
-		customEngineSpecData.put("contrailAngularVelocityMult", lyr_lunaUtilities.getDouble(modId, this.hullModSpecId+"_contrailAngularVelocityMult"));
-		switch (lyr_lunaUtilities.getString(modId, this.hullModSpecId+"_mode")) {
+		customEngineSpecData.put("contrailMaxSpeedMult", lyr_ehm.lunaSettings.getDouble(this.hullModSpecId+"_contrailMaxSpeedMult"));
+		customEngineSpecData.put("contrailAngularVelocityMult", lyr_ehm.lunaSettings.getDouble(this.hullModSpecId+"_contrailAngularVelocityMult"));
+		switch (lyr_ehm.lunaSettings.getString(this.hullModSpecId+"_mode")) {
 			case "Particles": default: {
 				customEngineSpecData.put("mode", "PARTICLES");
-				customEngineSpecData.put("contrailParticleDuration", lyr_lunaUtilities.getDouble(modId, this.hullModSpecId+"_contrailParticleDuration"));
-				customEngineSpecData.put("contrailParticleSizeMult", lyr_lunaUtilities.getDouble(modId, this.hullModSpecId+"_contrailParticleSizeMult"));
-				customEngineSpecData.put("contrailParticleFinalSizeMult", lyr_lunaUtilities.getDouble(modId, this.hullModSpecId+"_contrailParticleFinalSizeMult"));
+				customEngineSpecData.put("contrailParticleDuration", lyr_ehm.lunaSettings.getDouble(this.hullModSpecId+"_contrailParticleDuration"));
+				customEngineSpecData.put("contrailParticleSizeMult", lyr_ehm.lunaSettings.getDouble(this.hullModSpecId+"_contrailParticleSizeMult"));
+				customEngineSpecData.put("contrailParticleFinalSizeMult", lyr_ehm.lunaSettings.getDouble(this.hullModSpecId+"_contrailParticleFinalSizeMult"));
 			} break;
 			case "Plasma": {
 				customEngineSpecData.put("mode", "QUAD_STRIP");
-				customEngineSpecData.put("contrailDuration", lyr_lunaUtilities.getDouble(modId, this.hullModSpecId+"_contrailDuration"));
-				customEngineSpecData.put("contrailMinSeg", lyr_lunaUtilities.getDouble(modId, this.hullModSpecId+"_contrailMinSeg"));
-				customEngineSpecData.put("contrailSpawnDistMult", lyr_lunaUtilities.getDouble(modId, this.hullModSpecId+"_contrailSpawnDistMult"));
-				customEngineSpecData.put("contrailWidthMult", lyr_lunaUtilities.getDouble(modId, this.hullModSpecId+"_contrailWidthMult"));
-				customEngineSpecData.put("contrailWidthAddedFractionAtEnd", lyr_lunaUtilities.getDouble(modId, this.hullModSpecId+"_contrailWidthAddedFractionAtEnd"));
+				customEngineSpecData.put("contrailDuration", lyr_ehm.lunaSettings.getDouble(this.hullModSpecId+"_contrailDuration"));
+				customEngineSpecData.put("contrailMinSeg", lyr_ehm.lunaSettings.getDouble(this.hullModSpecId+"_contrailMinSeg"));
+				customEngineSpecData.put("contrailSpawnDistMult", lyr_ehm.lunaSettings.getDouble(this.hullModSpecId+"_contrailSpawnDistMult"));
+				customEngineSpecData.put("contrailWidthMult", lyr_ehm.lunaSettings.getDouble(this.hullModSpecId+"_contrailWidthMult"));
+				customEngineSpecData.put("contrailWidthAddedFractionAtEnd", lyr_ehm.lunaSettings.getDouble(this.hullModSpecId+"_contrailWidthAddedFractionAtEnd"));
 			} break;
 			case "Disabled": {
 				customEngineSpecData.put("mode", "NONE");
 			} break;
 		}
-		switch (lyr_lunaUtilities.getString(modId, this.hullModSpecId+"_type")) {
+		switch (lyr_ehm.lunaSettings.getString(this.hullModSpecId+"_type")) {
 			case "Additive": customEngineSpecData.put("type", "GLOW"); break;
 			case "Regular": customEngineSpecData.put("type", "SMOKE"); break;
 		}
-		customEngineSpecData.put("omegaMode", lyr_lunaUtilities.getBoolean(modId, this.hullModSpecId+"_omegaMode"));
-		switch (lyr_lunaUtilities.getString(modId, this.hullModSpecId+"_glowSprite")) {
+		customEngineSpecData.put("omegaMode", lyr_ehm.lunaSettings.getBoolean(this.hullModSpecId+"_omegaMode"));
+		switch (lyr_ehm.lunaSettings.getString(this.hullModSpecId+"_glowSprite")) {
 			case "I": customEngineSpecData.put("glowSprite", "graphics/fx/engineglow32.png"); break;
 			case "II": customEngineSpecData.put("glowSprite", "graphics/fx/engineglow32b.png"); break;
 			case "III": customEngineSpecData.put("glowSprite", "graphics/fx/engineglow32s.png"); break;
 			case "Default": default: customEngineSpecData.put("glowSprite", ""); break;
 		}
-		switch (lyr_lunaUtilities.getString(modId, this.hullModSpecId+"_glowOutline")) {
+		switch (lyr_ehm.lunaSettings.getString(this.hullModSpecId+"_glowOutline")) {
 			case "I": customEngineSpecData.put("glowOutline", "graphics/fx/engineflame32.png"); break;
 			case "II": customEngineSpecData.put("glowOutline", "graphics/fx/engineflame32b.png"); break;
 			case "III": customEngineSpecData.put("glowOutline", "graphics/fx/engineflame32-orig.png"); break;	// causes a NPE, nothing loads this so "ehm_test" does it

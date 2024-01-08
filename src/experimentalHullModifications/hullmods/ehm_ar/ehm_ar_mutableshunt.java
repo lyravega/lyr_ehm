@@ -20,8 +20,8 @@ import experimentalHullModifications.misc.ehm_internals.affixes;
 import experimentalHullModifications.misc.ehm_internals.shunts;
 import experimentalHullModifications.misc.ehm_internals.shunts.capacitors;
 import experimentalHullModifications.misc.ehm_internals.shunts.dissipators;
-import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
+import experimentalHullModifications.plugin.lyr_ehm;
 import experimentalHullModifications.proxies.ehm_hullSpec;
 
 /**@category Adapter Retrofit
@@ -160,14 +160,14 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 		if (variant.hasHullMod(this.hullModSpecId)) {
 			DynamicStatsAPI dynamicStats = ship.getMutableStats().getDynamic();
 
-			if (ehm_settings.getShowInfoForActivators()) {
+			if (lyr_ehm.lunaSettings.getShowInfoForActivators()) {
 				HashMap<String, StatMod> capacitorShunts = dynamicStats.getMod(capacitorData.groupTag).getFlatBonuses();
 				if (!capacitorShunts.isEmpty()) {
 					int totalBonus = Math.round(ship.getMutableStats().getFluxCapacity().modified-(variant.getNumFluxCapacitors()*Misc.FLUX_PER_CAPACITOR+variant.getHullSpec().getFluxCapacity()));
 
 					tooltip.addSectionHeading("CAPACITORS (+"+totalBonus+" CAPACITY)", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					this.printShuntCountsOnTooltip(tooltip, variant, capacitorShunts.keySet());
-				} else if (ehm_settings.getShowFullInfoForActivators()) {
+				} else if (lyr_ehm.lunaSettings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO CAPACITORS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No capacitors are installed. Capacitors increase the total flux capacity of the ship, and affect built-in capacitors.", 2f);
 				}
@@ -178,7 +178,7 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 
 					tooltip.addSectionHeading("DISSIPATORS (+"+totalBonus+" DISSIPATION)", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					this.printShuntCountsOnTooltip(tooltip, variant, dissipatorShunts.keySet());
-				} else if (ehm_settings.getShowFullInfoForActivators()) {
+				} else if (lyr_ehm.lunaSettings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO DISSIPATORS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No dissipators are installed. Dissipators increase the total flux dissipation of the ship, and affect built-in vents.", 2f);
 				}

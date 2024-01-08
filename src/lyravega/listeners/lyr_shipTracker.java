@@ -68,7 +68,7 @@ public final class lyr_shipTracker {
 		if (this.variant.getSource() != VariantSource.REFIT) {
 			lyr_logger.debug(this.logPrefix+": Changing variant source from "+variant.getSource().name()+" to REFIT");
 			this.variant = this.variant.clone();
-			this.variant.setSource(VariantSource.REFIT);	// is because stock ships cause problems till they're saved once
+			this.variant.setSource(VariantSource.REFIT);	// is because stock ships or cause problems till they're saved once
 			if (this.isShip) this.member.setVariant(this.variant, false, false);
 		}
 

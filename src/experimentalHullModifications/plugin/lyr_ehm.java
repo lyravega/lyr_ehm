@@ -35,6 +35,7 @@ import lyravega.utilities.logger.lyr_logger;
 
 public final class lyr_ehm extends BaseModPlugin {
 	public static final class friend { private friend() {} }; private static final friend friend = new friend();
+	public static final ehm_settings lunaSettings = new ehm_settings();
 
 	@Override
 	public void onGameLoad(boolean newGame) {
@@ -43,7 +44,7 @@ public final class lyr_ehm extends BaseModPlugin {
 		replaceFieldRepairsScript();
 		attachShuntAccessListener();
 		lyr_fleetTracker.attach();
-		if (ehm_settings.getClearUnknownSlots()) ehm_lostAndFound.returnStuff();
+		if (lunaSettings.getClearUnknownSlots()) ehm_lostAndFound.returnStuff();
 
 		// TODO: clean this shit up
 		// if (!Global.getSettings().isDevMode()) return;
@@ -55,7 +56,7 @@ public final class lyr_ehm extends BaseModPlugin {
 
 	@Override
 	public void onApplicationLoad() throws Exception {
-		ehm_settings.attach();
+		lunaSettings.attach();
 		updateHullMods();
 		processExtendedData();
 		lyr_eventDispatcher.registerModsWithEvents("data/hullmods/hull_mods.csv", ehm_internals.ids.mod);
@@ -102,7 +103,7 @@ public final class lyr_ehm extends BaseModPlugin {
 		}
 
 		// final String targetTag = ehm_settings.getCosmeticsOnly() ? ehm_internals.tag.cosmetic : ehm_internals.tag.experimental;
-		final boolean cosmeticsOnly = ehm_settings.getCosmeticsOnly();
+		final boolean cosmeticsOnly = lunaSettings.getCosmeticsOnly();
 
 		for (HullModSpecAPI hullModSpec : Global.getSettings().getAllHullModSpecs()) {
 			if (!_ehm_base.class.isInstance(hullModSpec.getEffect())) continue;
@@ -119,7 +120,7 @@ public final class lyr_ehm extends BaseModPlugin {
 		final SettingsAPI settingsAPI = Global.getSettings();
 		Set<String> uiTags;
 
-		if (ehm_settings.getCosmeticsOnly()) {
+		if (lunaSettings.getCosmeticsOnly()) {
 			uiTags = settingsAPI.getHullModSpec(ehm_internals.hullmods.main.base).getUITags();
 			uiTags.clear(); uiTags.add(ehm_internals.hullmods.uiTags.cosmetics);
 
@@ -168,7 +169,7 @@ public final class lyr_ehm extends BaseModPlugin {
 	public static void attachShuntAccessListener() {
 		if (!Global.getSector().getPlayerFleet().getAbility(ehm_internals.ids.ability).isActive()) return;
 
-		switch (ehm_settings.getShuntAvailability()) {
+		switch (lunaSettings.getShuntAvailability()) {
 			case "Always": ehm_submarketInjector.nullify(friend); ehm_shuntInjector.attach(); break;
 			case "Submarket": ehm_shuntInjector.nullify(friend); ehm_submarketInjector.attach(); break;
 			default: break;

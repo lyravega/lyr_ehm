@@ -12,7 +12,7 @@ import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 
-import experimentalHullModifications.misc.ehm_settings;
+import experimentalHullModifications.plugin.lyr_ehm;	// still connected to other package
 import lyravega.listeners.events.*;
 import lyravega.utilities.lyr_interfaceUtilities;
 import lyravega.utilities.logger.lyr_logger;
@@ -110,7 +110,7 @@ public final class lyr_eventDispatcher {
 			case onSuppressed:		if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onSuppressed(stats); return;
 			case onRestored:		if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onRestored(stats); return;
 			default: return;
-		} else if (ehm_settings.getPlayDrillSoundForAll()) switch (eventName) {
+		} else if (lyr_ehm.lunaSettings.getPlayDrillSoundForAll()) switch (eventName) {
 			case onInstalled:
 			case onRemoved:			lyr_interfaceUtilities.playDrillSound(); return;
 			default: return;

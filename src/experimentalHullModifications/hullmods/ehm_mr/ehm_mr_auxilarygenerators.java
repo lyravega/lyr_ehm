@@ -9,7 +9,7 @@ import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
-import experimentalHullModifications.misc.ehm_settings;
+import experimentalHullModifications.plugin.lyr_ehm;
 import lyravega.listeners.events.normalEvents;
 
 /**
@@ -59,7 +59,7 @@ public final class ehm_mr_auxilarygenerators extends _ehm_base implements normal
 			case 1: return slotPointBonus.get(HullSize.FRIGATE)+"/"+slotPointBonus.get(HullSize.DESTROYER)+"/"+slotPointBonus.get(HullSize.CRUISER)+"/"+slotPointBonus.get(HullSize.CAPITAL_SHIP);
 			case 2: return "gained and utilized";
 			case 3: return "deployment point";
-			case 4: return ehm_settings.getBaseSlotPointPenalty()+"";
+			case 4: return lyr_ehm.lunaSettings.getBaseSlotPointPenalty()+"";
 			default: return null;
 		}
 	}

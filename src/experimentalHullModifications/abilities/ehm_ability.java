@@ -11,6 +11,7 @@ import experimentalHullModifications.abilities.listeners.ehm_shuntInjector;
 import experimentalHullModifications.abilities.listeners.ehm_submarketInjector;
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_settings;
+import experimentalHullModifications.plugin.lyr_ehm;
 
 /**
  * A toggle ability that works in conjunction with {@link ehm_submarketInjector
@@ -25,7 +26,7 @@ import experimentalHullModifications.misc.ehm_settings;
 public final class ehm_ability extends BaseToggleAbility {
 	@Override
 	protected String getActivationText() {
-		switch (ehm_settings.getShuntAvailability()) {
+		switch (lyr_ehm.lunaSettings.getShuntAvailability()) {
 			case "Always": return "Ready to experiment";
 			case "Submarket": return "Looking for a port";
 			default: return null;
@@ -42,7 +43,7 @@ public final class ehm_ability extends BaseToggleAbility {
 
 	@Override
 	protected void activateImpl() {
-		switch (ehm_settings.getShuntAvailability()) {
+		switch (lyr_ehm.lunaSettings.getShuntAvailability()) {
 			case "Always": ehm_shuntInjector.attach(); break;
 			case "Submarket": ehm_submarketInjector.attach(); break;
 			default: break;
@@ -51,7 +52,7 @@ public final class ehm_ability extends BaseToggleAbility {
 
 	@Override
 	protected void deactivateImpl() {
-		switch (ehm_settings.getShuntAvailability()) {
+		switch (lyr_ehm.lunaSettings.getShuntAvailability()) {
 			case "Always": ehm_shuntInjector.detach(); break;
 			case "Submarket": ehm_submarketInjector.detach(); break;
 			default: break;
@@ -76,7 +77,7 @@ public final class ehm_ability extends BaseToggleAbility {
 		Color highlightColor = Misc.getHighlightColor();
 		String desc;
 
-		switch (ehm_settings.getShuntAvailability()) {
+		switch (lyr_ehm.lunaSettings.getShuntAvailability()) {
 			case "Always": desc = "While this ability is turned on, an excess amount of slot shunts will be made available in the refit tab. Unused ones will be cleaned-up."; break;
 			case "Submarket": desc = "While this ability is turned on, a submarket called Experimental Engineering will be visible on any docked port, and slot shunts will be available in the refit tab. Unused ones will be cleaned-up."; break;
 			default: desc = ""; break;

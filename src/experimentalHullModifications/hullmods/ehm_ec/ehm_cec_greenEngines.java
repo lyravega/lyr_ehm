@@ -3,11 +3,10 @@ package experimentalHullModifications.hullmods.ehm_ec;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 
-import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_internals.hullmods.engineCosmetics;
+import experimentalHullModifications.plugin.lyr_ehm;
 import lyravega.listeners.events.customizableMod;
 import lyravega.proxies.lyr_engineBuilder.engineStyleIds;
-import lyravega.utilities.lyr_lunaUtilities;
 
 /**@category Engine Cosmetic
  * @author lyravega
@@ -17,7 +16,7 @@ public final class ehm_cec_greenEngines extends _ehm_ec_base implements customiz
 	public void updateData() {
 		this.engineStyleId = engineStyleIds.custom;
 		this.engineStyleSpec = this.newCustomEngineStyleSpec();
-		this.hullModSpec.setDisplayName(lyr_lunaUtilities.getLunaName(ehm_internals.ids.mod, engineCosmetics.greenEngines));
+		this.hullModSpec.setDisplayName(lyr_ehm.lunaSettings.getLunaName(engineCosmetics.greenEngines));
 	}
 
 	@Override

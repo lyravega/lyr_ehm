@@ -1,8 +1,5 @@
 package experimentalHullModifications.hullmods.ehm;
 
-import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
-import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
-
 import org.lwjgl.util.vector.Vector2f;
 
 import com.fs.starfarer.api.GameState;
@@ -14,7 +11,6 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.loading.specs.g;
 
 import experimentalHullModifications.proxies.ehm_hullSpec;
-import lyravega.listeners.events.normalEvents;
 import lyravega.utilities.logger.lyr_logger;
 
 /**
@@ -25,17 +21,7 @@ import lyravega.utilities.logger.lyr_logger;
  * @category Base Hull Modification
  * @author lyravega
  */
-public final class ehm_module_base extends _ehm_base implements normalEvents {
-	//#region CUSTOM EVENTS
-	@Override
-	public void onInstalled(MutableShipStatsAPI stats) {
-		commitVariantChanges(); playDrillSound();
-	}
-
-	@Override public void onRemoved(MutableShipStatsAPI stats) {}	// cannot be removed since it becomes a built-in
-	//#endregion
-	// END OF CUSTOM EVENTS
-
+public final class ehm_module_base extends _ehm_base {
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
 		ShipVariantAPI variant = stats.getVariant();

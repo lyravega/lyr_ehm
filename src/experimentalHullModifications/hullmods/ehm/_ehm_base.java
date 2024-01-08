@@ -30,9 +30,9 @@ import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_internals.hullmods;
 import experimentalHullModifications.misc.ehm_internals.hullmods.tags;
 import experimentalHullModifications.misc.ehm_lostAndFound;
-import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import experimentalHullModifications.misc.ehm_tooltip.text;
+import experimentalHullModifications.plugin.lyr_ehm;
 import experimentalHullModifications.plugin.lyr_ehm.friend;
 import experimentalHullModifications.proxies.ehm_hullSpec;
 import lyravega.utilities.lyr_miscUtilities;
@@ -267,7 +267,7 @@ public abstract class _ehm_base implements HullModEffect {
 		ehm_hullSpec hullSpec = new ehm_hullSpec(variant.getHullSpec(), false);
 
 		// primarily to deal with stuff on load
-		if (!ehm_settings.getClearUnknownSlots()) for (String slotId : variant.getFittedWeaponSlots()) {
+		if (!lyr_ehm.lunaSettings.getClearUnknownSlots()) for (String slotId : variant.getFittedWeaponSlots()) {
 			if (variant.getSlot(slotId) != null) continue;
 			matcher = pattern.matcher(slotId);
 			if (matcher.find()) slotId = matcher.group();

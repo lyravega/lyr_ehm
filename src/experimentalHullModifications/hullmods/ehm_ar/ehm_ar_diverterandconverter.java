@@ -21,8 +21,8 @@ import experimentalHullModifications.misc.ehm_internals.affixes;
 import experimentalHullModifications.misc.ehm_internals.shunts;
 import experimentalHullModifications.misc.ehm_internals.shunts.converters;
 import experimentalHullModifications.misc.ehm_internals.shunts.diverters;
-import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
+import experimentalHullModifications.plugin.lyr_ehm;
 import experimentalHullModifications.proxies.ehm_hullSpec;
 import lyravega.utilities.lyr_tooltipUtilities.colour;
 
@@ -142,10 +142,10 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 		}
 
 		HashMap<String, StatMod> converterShunts = dynamicStats.getMod(converterData.groupTag).getFlatBonuses();	// active converters, only to apply the penalty
-		if (!converterShunts.isEmpty() && ehm_settings.getBaseSlotPointPenalty() > 0) {
+		if (!converterShunts.isEmpty() && lyr_ehm.lunaSettings.getBaseSlotPointPenalty() > 0) {
 			float slotPointsUsed = dynamicStats.getMod(ehm_internals.stats.slotPointsUsed).computeEffective(0f);
 			float slotPointsFromDiverters = dynamicStats.getMod(ehm_internals.stats.slotPointsFromDiverters).computeEffective(0f);
-			float deploymentPointsMod = ehm_settings.getBaseSlotPointPenalty()*Math.max(0, slotPointsUsed - slotPointsFromDiverters);
+			float deploymentPointsMod = lyr_ehm.lunaSettings.getBaseSlotPointPenalty()*Math.max(0, slotPointsUsed - slotPointsFromDiverters);
 
 			dynamicStats.getMod(Stats.DEPLOYMENT_POINTS_MOD).modifyFlat(this.hullModSpecId, deploymentPointsMod);
 		}
@@ -161,7 +161,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 			case 1: return "diverters";
 			case 2: return "gained and utilized";
 			case 3: return "deployment point";
-			case 4: return ehm_settings.getBaseSlotPointPenalty()+"";
+			case 4: return lyr_ehm.lunaSettings.getBaseSlotPointPenalty()+"";
 			default: return null;
 		}
 	}
@@ -180,7 +180,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 			int slotPointsFromMods = Math.round(dynamicStats.getMod(ehm_internals.stats.slotPointsFromMods).computeEffective(0f));
 			int slotPointsFromDiverters = Math.round(dynamicStats.getMod(ehm_internals.stats.slotPointsFromDiverters).computeEffective(0f));
 			int slotPointsToConverters = Math.round(dynamicStats.getMod(ehm_internals.stats.slotPointsToConverters).computeEffective(0f));
-			int slotPointsPenalty = ehm_settings.getBaseSlotPointPenalty()*Math.max(0, slotPointsUsed - slotPointsFromDiverters);
+			int slotPointsPenalty = lyr_ehm.lunaSettings.getBaseSlotPointPenalty()*Math.max(0, slotPointsUsed - slotPointsFromDiverters);
 
 			tooltip.addSectionHeading(slotPointsUsed+"/"+slotPoints+(slotPointsNeeded > slotPoints ? " ("+slotPointsNeeded+") " : " ")+"SLOT POINTS", (slotPointsUsed != slotPoints) ? colour.negative : colour.highlight, header.invisible_bgColour, Alignment.MID, header.padding);
 			if (slotPointsPenalty > 0) tooltip.addPara("Ship will require an additional %s", 2f, colour.negative, slotPointsPenalty + " deployment points");
@@ -190,12 +190,12 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 			if (slotPointsNeeded > slotPoints) tooltip.addPara("%s required for inactive converters", 2f, colour.highlight,  (slotPointsNeeded - slotPoints) + " additional slot points");
 			else if (slotPointsUsed < slotPoints) tooltip.addPara("%s may be utilized", 2f, colour.highlight,  (slotPoints - slotPointsUsed) + " additional slot points");
 
-			if (ehm_settings.getShowInfoForActivators()) {
+			if (lyr_ehm.lunaSettings.getShowInfoForActivators()) {
 				HashMap<String, StatMod> converterShunts = dynamicStats.getMod(converterData.groupTag).getFlatBonuses();
 				if (!converterShunts.isEmpty()) {
 					tooltip.addSectionHeading("CONVERTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					this.printShuntCountsOnTooltip(tooltip, variant, converterShunts.keySet());
-				} else if (ehm_settings.getShowFullInfoForActivators()) {
+				} else if (lyr_ehm.lunaSettings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO CONVERTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No converters are installed. Converters are used to make a smaller slot a bigger one, if there are enough slot points.", 2f);
 				}
@@ -204,7 +204,7 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 				if (!diverterShunts.isEmpty()) {
 					tooltip.addSectionHeading("DIVERTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					this.printShuntCountsOnTooltip(tooltip, variant, diverterShunts.keySet());
-				} else if (ehm_settings.getShowFullInfoForActivators()) {
+				} else if (lyr_ehm.lunaSettings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO DIVERTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No diverters are installed. Diverters disable a slot and provide slot points that are used by converters in turn.", 2f);
 				}

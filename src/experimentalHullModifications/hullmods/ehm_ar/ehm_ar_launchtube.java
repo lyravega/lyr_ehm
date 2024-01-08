@@ -16,8 +16,8 @@ import com.fs.starfarer.api.util.DynamicStatsAPI;
 
 import experimentalHullModifications.misc.ehm_internals.affixes;
 import experimentalHullModifications.misc.ehm_internals.shunts.hangars;
-import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
+import experimentalHullModifications.plugin.lyr_ehm;
 import experimentalHullModifications.proxies.ehm_hullSpec;
 
 /**@category Adapter Retrofit
@@ -98,12 +98,12 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 		if (variant.hasHullMod(this.hullModSpecId)) {
 			DynamicStatsAPI dynamicStats = ship.getMutableStats().getDynamic();
 
-			if (ehm_settings.getShowInfoForActivators()) {
+			if (lyr_ehm.lunaSettings.getShowInfoForActivators()) {
 				HashMap<String, StatMod> hangarShunts = dynamicStats.getMod(hangarData.groupTag).getFlatBonuses();
 				if (!hangarShunts.isEmpty()) {
 					tooltip.addSectionHeading("EXTRA HANGARS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					this.printShuntCountsOnTooltip(tooltip, variant, hangarShunts.keySet());
-				} else if (ehm_settings.getShowFullInfoForActivators()) {
+				} else if (lyr_ehm.lunaSettings.getShowFullInfoForActivators()) {
 					tooltip.addSectionHeading("NO EXTRA HANGARS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 					tooltip.addPara("No large weapon slots are turned into hangars. Each large slot is turned into a single fighter bay with a launch tube.", 2f);
 				}

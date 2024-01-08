@@ -17,9 +17,9 @@ import com.fs.starfarer.api.util.Misc;
 
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_internals.stats;
-import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import experimentalHullModifications.misc.ehm_tooltip.text;
+import experimentalHullModifications.plugin.lyr_ehm;
 import lyravega.listeners.events.normalEvents;
 import lyravega.misc._lyr_upgradeEffect;
 import lyravega.misc.lyr_upgradeVault;
@@ -51,7 +51,7 @@ public final class ehm_base extends _ehm_base implements normalEvents {
 
 		this.swapHullSpec(stats);
 
-		if (!ehm_settings.getCosmeticsOnly()) for (String tag : variant.getTags()) {
+		if (!lyr_ehm.lunaSettings.getCosmeticsOnly()) for (String tag : variant.getTags()) {
 			if (!tag.startsWith(ehm_internals.upgrades.prefix)) continue;
 
 			_lyr_upgradeEffect upgrade = lyr_upgradeVault.getUpgrade(tag.replaceFirst(":.+?", ""));
@@ -74,7 +74,7 @@ public final class ehm_base extends _ehm_base implements normalEvents {
 		ShipVariantAPI variant = ship.getVariant();
 		ShipHullSpecAPI hullSpec = variant.getHullSpec();
 
-		if (ehm_settings.getDebugTooltip()) {
+		if (lyr_ehm.lunaSettings.getDebugTooltip()) {
 			// tooltip.addSectionHeading("DEBUG INFO: GENERAL", header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding);
 			// tooltip.addPara("Mods: "+Global.getSettings().getModManager().getEnabledModsCopy().toString(), 5f).setHighlight("Mods: ");
 
@@ -164,7 +164,7 @@ public final class ehm_base extends _ehm_base implements normalEvents {
 				lyr_tooltipUtilities.addColourizedPara(tooltip, highlightText("Overdrive, Tier "+overdrive)+": Increases s-mod capacity by "+storyText(overdrive+""), text.padding);
 			}
 
-			if (ehm_settings.getShowFluff()) {
+			if (lyr_ehm.lunaSettings.getShowFluff()) {
 				String playerSalutation = Global.getSector().getPlayerPerson().getGender() == Gender.MALE ? Misc.SIR : Misc.MAAM;
 
 				tooltip.addSectionHeading("FLUFF", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);

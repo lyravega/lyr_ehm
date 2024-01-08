@@ -14,9 +14,9 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.misc.ehm_internals;
-import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import experimentalHullModifications.misc.ehm_tooltip.text;
+import experimentalHullModifications.plugin.lyr_ehm;
 import experimentalHullModifications.proxies.ehm_hullSpec;
 import lyravega.listeners.events.enhancedEvents;
 import lyravega.listeners.events.normalEvents;
@@ -120,7 +120,7 @@ public final class ehm_mr_overengineered extends _ehm_base implements normalEven
 			case 4: return "converter shunts";
 			case 5: return "gained and utilized";
 			case 6: return "deployment point";
-			case 7: return ehm_settings.getBaseSlotPointPenalty()+"";
+			case 7: return lyr_ehm.lunaSettings.getBaseSlotPointPenalty()+"";
 			default: return null;
 		}
 	}

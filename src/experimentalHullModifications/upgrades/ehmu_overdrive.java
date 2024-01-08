@@ -12,8 +12,8 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.misc.ehm_internals;
-import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.misc.ehm_tooltip.header;
+import experimentalHullModifications.plugin.lyr_ehm;
 import lunalib.lunaRefit.BaseRefitButton;
 import lyravega.misc._lyr_upgradeEffect;
 import lyravega.misc.lyr_upgrade;
@@ -89,7 +89,7 @@ public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffec
 
 	@Override
 	public boolean shouldShow(FleetMemberAPI member, ShipVariantAPI variant, MarketAPI market) {
-		return !ehm_settings.getCosmeticsOnly() && variant.hasHullMod(ehm_internals.hullmods.main.base);
+		return !lyr_ehm.lunaSettings.getCosmeticsOnly() && variant.hasHullMod(ehm_internals.hullmods.main.base);
 	}
 
 	@Override
