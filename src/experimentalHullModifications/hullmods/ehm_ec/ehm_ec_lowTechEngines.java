@@ -4,6 +4,7 @@ import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 
 import lyravega.proxies.lyr_engineBuilder.engineStyleIds;
+import lyravega.utilities.lyr_interfaceUtilities;
 
 /**@category Engine Cosmetic
  * @author lyravega
@@ -13,6 +14,8 @@ public final class ehm_ec_lowTechEngines extends _ehm_ec_base {
 	public void updateData() {
 		this.engineStyleId = engineStyleIds.lowTech;
 		this.engineStyleSpec = null;
+
+		lyr_interfaceUtilities.refreshPlayerFleetView(true);
 	}
 
 	@Override

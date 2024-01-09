@@ -197,7 +197,7 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 	 * mode since others lack a fleet view anyway, so it does not check if it is the refit tab.
 	 * @param forceSync (required outside refit) if {@code true}, forces a sync on the player fleet prior to refresh to update the fleet view members
 	 */
-	public static void refreshFleetView(boolean forceSync) {
+	public static void refreshPlayerFleetView(boolean forceSync) {
 		// if (!isRefitTab()) return;
 		if (Global.getCurrentState() != GameState.CAMPAIGN) return;
 

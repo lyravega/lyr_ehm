@@ -7,6 +7,7 @@ import experimentalHullModifications.misc.ehm_internals.hullmods.engineCosmetics
 import experimentalHullModifications.plugin.lyr_ehm;
 import lyravega.listeners.events.customizableMod;
 import lyravega.proxies.lyr_engineBuilder.engineStyleIds;
+import lyravega.utilities.lyr_interfaceUtilities;
 
 /**@category Engine Cosmetic
  * @author lyravega
@@ -17,6 +18,8 @@ public final class ehm_cec_greenEngines extends _ehm_ec_base implements customiz
 		this.engineStyleId = engineStyleIds.custom;
 		this.engineStyleSpec = this.newCustomEngineStyleSpec();
 		this.hullModSpec.setDisplayName(lyr_ehm.lunaSettings.getLunaName(engineCosmetics.greenEngines));
+
+		lyr_interfaceUtilities.refreshPlayerFleetView(true);
 	}
 
 	@Override

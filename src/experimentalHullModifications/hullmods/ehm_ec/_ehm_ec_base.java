@@ -2,7 +2,7 @@ package experimentalHullModifications.hullmods.ehm_ec;
 
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
-import static lyravega.utilities.lyr_interfaceUtilities.refreshFleetView;
+import static lyravega.utilities.lyr_interfaceUtilities.refreshPlayerFleetView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,7 +39,7 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 
 		if (modGroup.size() > 1) stats.getVariant().removeMod(modGroup.iterator().next());
 
-		commitVariantChanges(); playDrillSound(); refreshFleetView(false);
+		commitVariantChanges(); playDrillSound(); refreshPlayerFleetView(false);
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public abstract class _ehm_ec_base extends _ehm_base implements normalEvents {
 
 		if (modGroup.isEmpty()) this.restoreEngines(stats);
 
-		commitVariantChanges(); playDrillSound(); refreshFleetView(false);
+		commitVariantChanges(); playDrillSound(); refreshPlayerFleetView(false);
 	}
 	//#endregion
 	// END OF CUSTOM EVENTS

@@ -4,6 +4,7 @@ import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 
 import lyravega.proxies.lyr_engineBuilder.engineStyleIds;
+import lyravega.utilities.lyr_interfaceUtilities;
 
 /**
  * NOTE: id of this engine in the .csv remains "ehm_ec_torpedoEngines" for save compatibility
@@ -15,6 +16,8 @@ public final class ehm_ec_crimsonEngines extends _ehm_ec_base {
 	public void updateData() {
 		this.engineStyleId = engineStyleIds.torpedo;
 		this.engineStyleSpec = null;
+
+		lyr_interfaceUtilities.refreshPlayerFleetView(true);
 	}
 
 	@Override
