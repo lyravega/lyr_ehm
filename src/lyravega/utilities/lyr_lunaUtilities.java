@@ -16,7 +16,7 @@ import lyravega.utilities.logger.lyr_logger;
 
 public abstract class lyr_lunaUtilities implements LunaSettingsListener {
 	protected final String modId;
-	protected final Map<String, settingField<?>> settingFields = new HashMap<String, settingField<?>>();
+	private final Map<String, settingField<?>> settingFields = new HashMap<String, settingField<?>>();
 	private final Set<String> hasChanged = new HashSet<String>();
 
 	public lyr_lunaUtilities(String modId) {
@@ -43,7 +43,7 @@ public abstract class lyr_lunaUtilities implements LunaSettingsListener {
 			if (!this.settingValue.equals(value)) {
 				this.settingValue = (T) value;
 				lyr_lunaUtilities.this.hasChanged.add(this.settingId);
-				lyr_lunaUtilities.this.hasChanged.add(this.settingGroupId);
+				if (this.settingGroupId != null) lyr_lunaUtilities.this.hasChanged.add(this.settingGroupId);
 				lyr_logger.debug(lyr_lunaUtilities.this.modId+": '"+this.settingId+"' changed to '"+this.settingValue+"'");
 				return true;
 			};	return false;
@@ -61,15 +61,27 @@ public abstract class lyr_lunaUtilities implements LunaSettingsListener {
 		}
 	}
 
-	private final void updateSettings() {
-		for (settingField<?> settingField : this.settingFields.values()) {
-			settingField.updateValue();
-		}
+	/**
+	 * Attaches the settings listener to LunaLib, caches the settings, and then calls a method for
+	 * extra initialization {@link #initializeSettings()} if necessary. If the listener is being added
+	 * manually and this method is not utilized, {@link #cacheSettings()} must be called after it.
+	 */
+	public final void attach() {
+		if (LunaSettings.hasSettingsListenerOfClass(this.getClass())) return;
+		LunaSettings.addSettingsListener(this);
+
+		this.cacheSettings();
+		this.initializeSettings();
+
+		lyr_logger.info("Attached LunaLib settings listener for '"+this.modId+"'");
 	}
 
-	public void attach() {
-		if (LunaSettings.hasSettingsListenerOfClass(this.getClass())) return;
-
+	/**
+	 * Caches all of the settings belonging to the {@link #modId} in an internal map, which is
+	 * kept updated during {@link #settingsChanged()}. Getters will refer to this map, though the
+	 * static getters of LunaLib may still be utilized.
+	 */
+	protected final void cacheSettings() {
 		try {
 			JSONArray loadCSV = Global.getSettings().loadCSV("data/config/LunaSettings.csv", this.modId);
 
@@ -78,7 +90,7 @@ public abstract class lyr_lunaUtilities implements LunaSettingsListener {
 
 				String settingId = settingRow.getString("fieldID"); if (settingId.isEmpty()) continue;
 				String settingType = settingRow.getString("fieldType").toLowerCase();
-				String settingGroupId = settingRow.getString("groupId");
+				String settingGroupId = settingRow.optString("groupId"); if (settingGroupId.isEmpty()) settingGroupId = null;
 				settingField<?> settingField;
 				switch (settingType) {
 					case "int":		settingField = new settingField<Integer>(settingId, settingGroupId, LunaSettings.getInt(this.modId, settingId)); break;
@@ -97,14 +109,50 @@ public abstract class lyr_lunaUtilities implements LunaSettingsListener {
 				this.settingFields.put(settingId, settingField);
 			}
 		} catch (IOException | JSONException e) {
-			lyr_logger.error("Failure during reading 'LunaSettings.csv'", e);
+			lyr_logger.error("Failure during reading 'LunaSettings.csv' for '"+this.modId+"'", e);
 		}
-
-		lyr_logger.info("Attached LunaLib settings listener for '"+this.modId+"'");
-		LunaSettings.addSettingsListener(this);
-		this.initializeSettings();
 	}
 
+	/**
+	 * Updates and checks all of the cached settings. If there are any changes, they'll be added to
+	 * a set and may be queried with the {@link #hasChanged(String)} method.
+	 */
+	private final void updateSettings() {
+		for (settingField<?> settingField : this.settingFields.values()) {
+			settingField.updateValue();
+		}
+	}
+
+	/**
+	 * If a setting requires additional checks to do something else, this method may be used to query
+	 * if it has been changed or not. Should be used in {@link #onSettingsChanged()}
+	 * <p> The settings csv file may have an additional {@code groupId} column which may be used to
+	 * check changes to a group as a whole, eliminating the need to check individual settings.
+	 * @param settingOrGroupId setting or group id to query
+	 * @return {@code true} if there's a change, {@code false} otherwise
+	 */
+	public final boolean hasChanged(String settingOrGroupId) {
+		return this.hasChanged.contains(settingOrGroupId);
+	}
+
+	/**
+	 * Called if there's a change in a setting. If there's none, won't be called. Used instead of the
+	 * abstracted default {@link #settingsChanged(String)} method. Individual changes may be queried
+	 * with the {@link #hasChanged(String)} method.
+	 */
+	protected abstract void onSettingsChanged();
+
+	/**
+	 * Called after this is attached to {@link LunaSettings}, and provides a place where additional
+	 * initialization actions may be taken.
+	 */
+	protected abstract void initializeSettings();
+
+	/**
+	 * Abstracted version of LunaLib's method. If the {@link #modId} is not relevant, does nothing.
+	 * Else, updates the internal cache, and if there are any changes, calls {@link #onSettingsChanged()}
+	 * @param modId
+	 */
 	@Override
 	public final void settingsChanged(String modId) {
 		if (!this.modId.equals(modId)) return;
@@ -117,14 +165,6 @@ public abstract class lyr_lunaUtilities implements LunaSettingsListener {
 		lyr_logger.info("Settings reapplied ("+this.hasChanged.size()+" changes)");
 		this.hasChanged.clear();
 	}
-
-	public final boolean hasChanged(String settingOrGroupId) {
-		return this.hasChanged.contains(settingOrGroupId);
-	}
-
-	protected abstract void onSettingsChanged();
-
-	protected abstract void initializeSettings();
 
 	public Boolean getBoolean(String settingId) { return (Boolean) this.settingFields.get(settingId).getValue(); }
 
