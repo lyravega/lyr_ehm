@@ -24,18 +24,10 @@ import lyravega.utilities.logger.lyr_logger;
  */
 public final class lyr_eventDispatcher {
 	public static enum events {
-		onInstalled,
-		onRemoved,
-		onEnhanced,
-		onNormalized,
-		onSuppressed,
-		onRestored,
-		onWeaponInstalled,
-		onWeaponRemoved,
-		onWingAssigned,
-		onWingRelieved,
-		onModuleInstalled,
-		onModuleRemoved;
+		onInstalled, onRemoved, onEnhanced, onNormalized, onSuppressed, onRestored,
+		onWeaponInstalled, onWeaponRemoved,
+		onWingAssigned, onWingRelieved,
+		onModuleInstalled, onModuleRemoved;
 	}
 
 	// hull modification effects that implement any of the event interfaces are stored in these maps
@@ -166,7 +158,7 @@ public final class lyr_eventDispatcher {
 			else for (customizableMod customizableMod : allCustomizableMods.get(modId).values()) customizableMod.updateData();
 			lyr_logger.debug("Called 'updateData()' in the event dispatcher"+(hullModId != null ? " for '"+hullModId+"'" : ""));
 		} catch (Throwable t) {
-			lyr_logger.error("Failure in 'updateData()' in the event dispatcher (modId: '"+modId+"' / hullModId: '"+hullModId+"')", t);
+			lyr_logger.error("Failure in 'onSettingsChange()' in the event dispatcher (modId: '"+modId+"' / hullModId: '"+hullModId+"')", t);
 		}
 	}
 }

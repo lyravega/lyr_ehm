@@ -15,6 +15,10 @@ import lunalib.lunaSettings.LunaSettingsListener;
 import lyravega.utilities.logger.lyr_logger;
 
 public abstract class lyr_lunaUtilities implements LunaSettingsListener {
+	private static enum settingType {
+		Integer, Double, Boolean, String, Color;
+	}
+
 	protected final String modId;
 	private final Map<String, settingField<?>> settingFields = new HashMap<String, settingField<?>>();
 	private final Set<String> hasChanged = new HashSet<String>();
@@ -24,39 +28,37 @@ public abstract class lyr_lunaUtilities implements LunaSettingsListener {
 	}
 
 	public class settingField<T> {
-		private final String settingId;
-		private final String settingGroupId;
-		private final Class<?> settingClass;
+		private final String id;
+		private final String group;
+		private final settingType type;
 		private T settingValue;
 
-		private settingField(String settingId, String settingGroupId, T settingValue) {
-			this.settingId = settingId;
-			this.settingGroupId = settingGroupId;
-			this.settingClass = settingValue.getClass();
+		private settingField(String settingId, String settingGroup, T settingValue) {
+			this.id = settingId;
+			this.group = settingGroup;
+			this.type = settingType.valueOf(settingValue.getClass().getSimpleName());
 			this.settingValue = settingValue;
 		}
 
 		public T getValue() { return this.settingValue; }
 
 		@SuppressWarnings("unchecked")
-		private boolean setValue(Object value) {
+		private void setValue(Object value) {
 			if (!this.settingValue.equals(value)) {
 				this.settingValue = (T) value;
-				lyr_lunaUtilities.this.hasChanged.add(this.settingId);
-				if (this.settingGroupId != null) lyr_lunaUtilities.this.hasChanged.add(this.settingGroupId);
-				lyr_logger.debug(lyr_lunaUtilities.this.modId+": '"+this.settingId+"' changed to '"+this.settingValue+"'");
-				return true;
-			};	return false;
+				lyr_lunaUtilities.this.hasChanged.add(this.id);
+				if (this.group != null) lyr_lunaUtilities.this.hasChanged.add(this.group);
+				lyr_logger.debug(lyr_lunaUtilities.this.modId+": '"+this.id+"' changed to '"+this.settingValue+"'");
+			}
 		}
 
-		public boolean updateValue() {
-			switch (this.settingClass.getSimpleName()) {
-				case "Integer": return this.setValue(LunaSettings.getInt(lyr_lunaUtilities.this.modId, this.settingId));
-				case "Double": return this.setValue(LunaSettings.getDouble(lyr_lunaUtilities.this.modId, this.settingId));
-				case "Boolean": return this.setValue(LunaSettings.getBoolean(lyr_lunaUtilities.this.modId, this.settingId));
-				case "String": return this.setValue(LunaSettings.getString(lyr_lunaUtilities.this.modId, this.settingId));
-				case "Color": return this.setValue(LunaSettings.getColor(lyr_lunaUtilities.this.modId, this.settingId));
-				default: return false;
+		public void updateValue() {
+			switch (this.type) {
+				case Integer: this.setValue(LunaSettings.getInt(lyr_lunaUtilities.this.modId, this.id)); return;
+				case Double: this.setValue(LunaSettings.getDouble(lyr_lunaUtilities.this.modId, this.id)); return;
+				case Boolean: this.setValue(LunaSettings.getBoolean(lyr_lunaUtilities.this.modId, this.id)); return;
+				case String: this.setValue(LunaSettings.getString(lyr_lunaUtilities.this.modId, this.id)); return;
+				case Color: this.setValue(LunaSettings.getColor(lyr_lunaUtilities.this.modId, this.id)); return;
 			}
 		}
 	}
