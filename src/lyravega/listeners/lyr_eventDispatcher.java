@@ -154,7 +154,7 @@ public final class lyr_eventDispatcher {
 	}
 
 	/**
-	 * Applies any customization that a hull modification has in its {@code applyCustomization()}
+	 * Applies any customization that a hull modification has in its {@link customizableMod#updateData()}
 	 * method implemented through the interface. This event may be broadcasted for all registered
 	 * hullmods for a given {@code modId} or dispatched to a specific one with {@code hullModId}
 	 * <p> {@code modId} would be useful along with something like LunaLib to affect all of these
@@ -169,7 +169,7 @@ public final class lyr_eventDispatcher {
 			else for (customizableMod customizableMod : allCustomizableMods.get(modId).values()) customizableMod.updateData();
 			lyr_logger.debug("Called 'updateData()' in the event dispatcher"+(hullModId != null ? " for '"+hullModId+"'" : ""));
 		} catch (Throwable t) {
-			lyr_logger.error("Failure in 'updateData()' in the event dispatcher", t);
+			lyr_logger.error("Failure in 'updateData()' in the event dispatcher (modId: '"+modId+"' / hullModId: '"+hullModId+"')", t);
 		}
 	}
 }
