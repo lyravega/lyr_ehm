@@ -2,8 +2,7 @@ package lyravega.utilities;
 
 import java.awt.Color;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,8 +16,8 @@ import lyravega.utilities.logger.lyr_logger;
 
 public abstract class lyr_lunaUtilities implements LunaSettingsListener {
 	protected final String modId;
-	protected final Map<String, settingGroup> settingGroups = new HashMap<String, settingGroup>();
 	protected final Map<String, settingField<?>> settingFields = new HashMap<String, settingField<?>>();
+	private final Set<String> hasChanged = new HashSet<String>();
 
 	public lyr_lunaUtilities(String modId) {
 		this.modId = modId;
@@ -26,12 +25,13 @@ public abstract class lyr_lunaUtilities implements LunaSettingsListener {
 
 	public class settingField<T> {
 		private final String settingId;
+		private final String settingGroupId;
 		private final Class<?> settingClass;
 		private T settingValue;
-		private boolean isChanged;
 
-		private settingField(String settingId, T settingValue) {
+		private settingField(String settingId, String settingGroupId, T settingValue) {
 			this.settingId = settingId;
+			this.settingGroupId = settingGroupId;
 			this.settingClass = settingValue.getClass();
 			this.settingValue = settingValue;
 		}
@@ -39,65 +39,31 @@ public abstract class lyr_lunaUtilities implements LunaSettingsListener {
 		public T getValue() { return this.settingValue; }
 
 		@SuppressWarnings("unchecked")
-		private void setValue(Object value) {
+		private boolean setValue(Object value) {
 			if (!this.settingValue.equals(value)) {
-				this.isChanged = true;
 				this.settingValue = (T) value;
+				lyr_lunaUtilities.this.hasChanged.add(this.settingId);
+				lyr_lunaUtilities.this.hasChanged.add(this.settingGroupId);
 				lyr_logger.debug(lyr_lunaUtilities.this.modId+": '"+this.settingId+"' changed to '"+this.settingValue+"'");
-			}
+				return true;
+			};	return false;
 		}
 
-		public void updateValue() {
+		public boolean updateValue() {
 			switch (this.settingClass.getSimpleName()) {
-				case "Integer": this.setValue(LunaSettings.getInt(lyr_lunaUtilities.this.modId, this.settingId)); break;
-				case "Double": this.setValue(LunaSettings.getDouble(lyr_lunaUtilities.this.modId, this.settingId)); break;
-				case "Boolean": this.setValue(LunaSettings.getBoolean(lyr_lunaUtilities.this.modId, this.settingId)); break;
-				case "String": this.setValue(LunaSettings.getString(lyr_lunaUtilities.this.modId, this.settingId)); break;
-				case "Color": this.setValue(LunaSettings.getColor(lyr_lunaUtilities.this.modId, this.settingId)); break;
+				case "Integer": return this.setValue(LunaSettings.getInt(lyr_lunaUtilities.this.modId, this.settingId));
+				case "Double": return this.setValue(LunaSettings.getDouble(lyr_lunaUtilities.this.modId, this.settingId));
+				case "Boolean": return this.setValue(LunaSettings.getBoolean(lyr_lunaUtilities.this.modId, this.settingId));
+				case "String": return this.setValue(LunaSettings.getString(lyr_lunaUtilities.this.modId, this.settingId));
+				case "Color": return this.setValue(LunaSettings.getColor(lyr_lunaUtilities.this.modId, this.settingId));
+				default: return false;
 			}
-		}
-
-		public boolean isChanged() {
-			if (this.isChanged) {
-				this.isChanged = false;
-				return true;
-			} else return false;
-		}
-	}
-
-	public class settingGroup {
-		private final String settingGroupId;
-		private final Map<String, settingField<?>> settingValues;
-		private boolean isChanged;
-
-		private settingGroup(String settingGroupId) {
-			this.settingGroupId = settingGroupId;
-			this.settingValues = new HashMap<String, settingField<?>>();
-		}
-
-		public Map<String, settingField<?>> getSettings() { return this.settingValues; }
-		private void putSetting(String key, settingField<?> value) { this.settingValues.put(key, value); }
-
-		public void updateGroup() {
-			for (settingField<?> settingField : this.settingValues.values()) {
-				settingField.updateValue();
-				if (settingField.isChanged) this.isChanged = true;
-			}
-		}
-
-		public boolean isChanged(boolean resetGroup) {
-			if (this.isChanged) {
-				if (resetGroup) for (settingField<?> settingField : this.settingValues.values())
-					settingField.isChanged = false;
-				this.isChanged = false;
-				return true;
-			} else return false;
 		}
 	}
 
 	private final void updateSettings() {
-		for (settingGroup settingGroup : this.settingGroups.values()) {
-			settingGroup.updateGroup();
+		for (settingField<?> settingField : this.settingFields.values()) {
+			settingField.updateValue();
 		}
 	}
 
@@ -112,14 +78,15 @@ public abstract class lyr_lunaUtilities implements LunaSettingsListener {
 
 				String settingId = settingRow.getString("fieldID"); if (settingId.isEmpty()) continue;
 				String settingType = settingRow.getString("fieldType").toLowerCase();
+				String settingGroupId = settingRow.getString("groupId");
 				settingField<?> settingField;
 				switch (settingType) {
-					case "int":		settingField = new settingField<Integer>(settingId, LunaSettings.getInt(this.modId, settingId)); break;
-					case "double":	settingField = new settingField<Double>(settingId, LunaSettings.getDouble(this.modId, settingId)); break;
-					case "string":	settingField = new settingField<String>(settingId, LunaSettings.getString(this.modId, settingId)); break;
-					case "boolean":	settingField = new settingField<Boolean>(settingId, LunaSettings.getBoolean(this.modId, settingId)); break;
-					case "color":	settingField = new settingField<Color>(settingId, LunaSettings.getColor(this.modId, settingId)); break;
-					case "radio":	settingField = new settingField<String>(settingId, LunaSettings.getString(this.modId, settingId)); break;
+					case "int":		settingField = new settingField<Integer>(settingId, settingGroupId, LunaSettings.getInt(this.modId, settingId)); break;
+					case "double":	settingField = new settingField<Double>(settingId, settingGroupId, LunaSettings.getDouble(this.modId, settingId)); break;
+					case "string":	settingField = new settingField<String>(settingId, settingGroupId, LunaSettings.getString(this.modId, settingId)); break;
+					case "boolean":	settingField = new settingField<Boolean>(settingId, settingGroupId, LunaSettings.getBoolean(this.modId, settingId)); break;
+					case "color":	settingField = new settingField<Color>(settingId, settingGroupId, LunaSettings.getColor(this.modId, settingId)); break;
+					case "radio":	settingField = new settingField<String>(settingId, settingGroupId, LunaSettings.getString(this.modId, settingId)); break;
 					// case "keycode":
 					// case "text":
 					// case "header":
@@ -127,11 +94,6 @@ public abstract class lyr_lunaUtilities implements LunaSettingsListener {
 					default: continue;
 				}
 
-				String settingGroupId = settingRow.getString("groupId");
-				if (this.settingGroups.get(settingGroupId) == null) this.settingGroups.put(settingGroupId, new settingGroup(settingGroupId));
-				settingGroup settingGroup = this.settingGroups.get(settingGroupId);
-
-				settingGroup.putSetting(settingId, settingField);
 				this.settingFields.put(settingId, settingField);
 			}
 		} catch (IOException | JSONException e) {
@@ -146,9 +108,18 @@ public abstract class lyr_lunaUtilities implements LunaSettingsListener {
 	@Override
 	public final void settingsChanged(String modId) {
 		if (!this.modId.equals(modId)) return;
-
 		this.updateSettings();
+
+		if (this.hasChanged.isEmpty()) return;
 		this.onSettingsChanged();
+
+		this.hasChanged.retainAll(this.settingFields.keySet());	// this is just to have a purty output below, filtering groupIds out
+		lyr_logger.info("Settings reapplied ("+this.hasChanged.size()+" changes)");
+		this.hasChanged.clear();
+	}
+
+	public final boolean hasChanged(String settingOrGroupId) {
+		return this.hasChanged.contains(settingOrGroupId);
 	}
 
 	protected abstract void onSettingsChanged();
