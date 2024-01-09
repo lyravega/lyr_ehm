@@ -167,7 +167,7 @@ public final class lyr_eventDispatcher {
 		try {
 			if (hullModId != null) allCustomizableMods.get(modId).get(hullModId).updateData();
 			else for (customizableMod customizableMod : allCustomizableMods.get(modId).values()) customizableMod.updateData();
-			lyr_logger.debug("Utilized 'updateData()' in the event dispatcher");
+			lyr_logger.debug("Called 'updateData()' in the event dispatcher"+(hullModId != null ? " for '"+hullModId+"'" : ""));
 		} catch (Throwable t) {
 			lyr_logger.error("Failure in 'updateData()' in the event dispatcher", t);
 		}
