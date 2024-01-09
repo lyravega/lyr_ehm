@@ -168,15 +168,15 @@ public abstract class lyr_lunaUtilities implements LunaSettingsListener {
 		this.hasChanged.clear();
 	}
 
-	public Boolean getBoolean(String settingId) { return (Boolean) this.settingFields.get(settingId).getValue(); }
+	public boolean getBoolean(String settingId) { return (boolean) this.settingFields.get(settingId).getValue(); }
 
 	public Color getColor(String settingId) { return (Color) this.settingFields.get(settingId).getValue(); }
 
-	public Double getDouble(String settingId) { return (Double) this.settingFields.get(settingId).getValue(); }
+	public double getDouble(String settingId) { return (double) this.settingFields.get(settingId).getValue(); }
 
-	public Float getFloat(String settingId) { return (Float) this.settingFields.get(settingId).getValue(); }
+	public float getFloat(String settingId) { return (float) this.settingFields.get(settingId).getValue(); }
 
-	public Integer getInt(String settingId) { return (Integer) this.settingFields.get(settingId).getValue(); }
+	public int getInt(String settingId) { return (int) this.settingFields.get(settingId).getValue(); }
 
 	public String getString(String settingId) { return (String) this.settingFields.get(settingId).getValue(); }
 
