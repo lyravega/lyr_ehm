@@ -1,5 +1,8 @@
 package experimentalHullModifications.upgrades;
 
+import static lyravega.utilities.lyr_tooltipUtilities.colourizedText.highlightText;
+import static lyravega.utilities.lyr_tooltipUtilities.colourizedText.storyText;
+
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
@@ -13,11 +16,13 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_tooltip.header;
+import experimentalHullModifications.misc.ehm_tooltip.text;
 import experimentalHullModifications.plugin.lyr_ehm;
 import lunalib.lunaRefit.BaseRefitButton;
 import lyravega.misc._lyr_upgradeEffect;
 import lyravega.misc.lyr_upgrade;
 import lyravega.utilities.lyr_interfaceUtilities;
+import lyravega.utilities.lyr_tooltipUtilities;
 import lyravega.utilities.lyr_tooltipUtilities.colour;
 
 public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffect {
@@ -70,11 +75,15 @@ public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffec
 	}
 
 	@Override
-	public void applyUpgradeEffect(MutableShipStatsAPI stats, Integer effectTier) {
-		if (effectTier == null) effectTier = this.upgrade.getCurrentTier(stats.getVariant());	// if effect tier is not passed for whatever reason, search the variant
+	public void applyUpgradeEffect(MutableShipStatsAPI stats) {
+		stats.getDynamic().getMod(Stats.MAX_PERMANENT_HULLMODS_MOD).modifyFlat(this.upgradeId, this.getUpgradeTier(stats.getVariant()));	// in this upgrade's case, effectTier directly translates to flat mod
+	}
 
-		stats.getDynamic().getMod(this.upgradeId).modifyFlat(this.upgradeId, effectTier);	// for tooltip
-		stats.getDynamic().getMod(Stats.MAX_PERMANENT_HULLMODS_MOD).modifyFlat(this.upgradeId, effectTier);	// in this upgrade's case, effectTier directly translates to flat mod
+	@Override
+	public void addShortDescription(MutableShipStatsAPI stats, TooltipMakerAPI tooltip, float padding) {
+		final float upgradeTier = this.getUpgradeTier(stats.getVariant());
+
+		lyr_tooltipUtilities.addColourizedPara(tooltip, highlightText("Overdrive, Tier "+upgradeTier)+": Increases s-mod capacity by "+storyText(upgradeTier+""), text.padding);
 	}
 
 	@Override
