@@ -17,10 +17,10 @@ public class ehm_tooltip {
 			public static final float padding = text.padding;
 			public static final String
 				warning = "Installing or removing Experimental Hull Modifications "+highlightText("will commit the changes immediately")+"; the variant will be saved and any market and/or cargo transactions will be finalized",
-				baseRetrofitWarning = "Will become a built-in hull modification "+highlightText("as soon as it is installed")+"",
+				baseRetrofitWarning = "Will become a built-in hull modification "+highlightText("as soon as it is installed"),
 				// restoreWarning = "This ship has a "+highlightText("base version")+" that it can be restored to. Installing this mod will perform a "+highlightText("visual restoration")+"; the visuals of the ship will be restored to its base version while any d-mods will be retained",
-				noEffectUnlessBuiltIn = "Has "+negativeText("reduced or no effects till it is built-in")+" to the ship using a "+storyText("story point")+"",
-				willBlockBaseRemoval = highlightText("Removal")+" of base experimental hull modification "+negativeText("will be blocked if built-in")+"",
+				noEffectUnlessBuiltIn = "Has "+negativeText("reduced or no effects till it is built-in")+" to the ship using a "+storyText("story point"),
+				willBlockBaseRemoval = highlightText("Removal")+" of base experimental hull modification "+negativeText("will be blocked if built-in"),
 				// noShip = {"Ship does not exist", "not"},	// old
 				lacksBase = negativeText("Requires")+" the "+highlightText("Experimental Hull Modifications")+" base modification to be installed first",
 				lacksActivator = negativeText("Requires")+" the "+highlightText("Converter/Diverter Activator")+" hull modification to be installed first",
@@ -29,15 +29,15 @@ public class ehm_tooltip {
 				// hasAdapterRetrofit = {"Another slot adapter retrofit is already installed", "slot adapter retrofit"},	// old
 				// hasShieldCosmetic = {"Another shield cosmetic modification is already installed", "shield cosmetic modification"},	// old
 				// hasEngineCosmetic = {"Another engine cosmetic modification is already installed", "engine cosmetic modification"},	// old
-				hasAnyExperimental = negativeText("Cannot be used")+" while the ship has any "+highlightText("experimental hull modification installed")+"",
-				hasAnyExperimentalEnhanced = negativeText("Cannot be used anymore")+" due to a "+highlightText("built-in experimental hull modification")+"",
+				hasAnyExperimental = negativeText("Cannot be used")+" while the ship has any "+highlightText("experimental hull modification installed"),
+				hasAnyExperimentalEnhanced = negativeText("Cannot be used anymore")+" due to a "+highlightText("built-in experimental hull modification"),
 				hasLogisticsOverhaul = negativeText("Cannot be installed")+" due to ship having completely "+highlightText("overhauled for logistics")+" usage",
-				isModule = negativeText("Cannot be installed")+" on "+highlightText("modules")+"",
-				isParent = negativeText("Cannot be installed")+" on "+highlightText("ships with modules")+"",
-				noShields = negativeText("Cannot be installed")+" on ships with "+highlightText("no shields")+"",
-				noEngines = negativeText("Cannot be installed")+" on ships with "+highlightText("no engines")+"",
-				hasPhase = negativeText("Cannot be installed")+" on ships with "+highlightText("a phase cloak")+"",
-				noWings = negativeText("Cannot be installed")+" on ships with "+highlightText("no fighter bays")+"",
+				isModule = negativeText("Cannot be installed")+" on "+highlightText("modules"),
+				isParent = negativeText("Cannot be installed")+" on "+highlightText("ships with modules"),
+				noShields = negativeText("Cannot be installed")+" on ships with "+highlightText("no shields"),
+				noEngines = negativeText("Cannot be installed")+" on ships with "+highlightText("no engines"),
+				hasPhase = negativeText("Cannot be installed")+" on ships with "+highlightText("a phase cloak"),
+				noWings = negativeText("Cannot be installed")+" on ships with "+highlightText("no fighter bays"),
 				notStripped = negativeText("Cannot be installed")+" on ships that are "+highlightText("not stripped down to the hull")+"; any flux capacitors or vents, wings, weapons, and modular hull modifications needs to be uninstalled first",
 				hasWings = negativeText("Cannot be installed or removed")+" as "+highlightText("fighter bays have wings")+" occupying them",
 				hasExtraWings = negativeText("Cannot be removed")+" as the added "+highlightText("extra fighter bays have wings")+" occupying them",
@@ -46,7 +46,7 @@ public class ehm_tooltip {
 				hasWeaponsOnConvertedSlots = negativeText("Cannot be removed")+" as there are "+highlightText("converted slots")+" that have "+highlightText("weapons or shunts installed")+" on them",
 				customizable = "This hull modification "+positiveText("can be customized")+" through LunaLib's settings menu. Press "+highlightText("F2")+" in the campaign screen to open the settings menu and adjust them",
 				// customizableEngine = {"Campaign contrails require an update to be displayed properly. Reloading the game will trigger such an update", "require an update"},	// old
-				integratedAICore = negativeText("Cannot be installed")+" as the ship has an integrated "+highlightText("AI Core")+"",
+				integratedAICore = negativeText("Cannot be installed")+" as the ship has an integrated "+highlightText("AI Core"),
 				noAutomatedShipsSkill = negativeText("Cannot be installed")+" without the "+highlightText("Automated Ships")+" skill",
 				hasCaptain = negativeText("Cannot be installed or removed")+" while the ship has a "+highlightText("Captain")+" assigned",
 				hasAICore = negativeText("Cannot be installed or removed")+" while the ship has an "+highlightText("AI Core")+" installed",
