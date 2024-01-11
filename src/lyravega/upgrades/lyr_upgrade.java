@@ -1,4 +1,4 @@
-package lyravega.misc;
+package lyravega.upgrades;
 
 import java.util.ArrayList;
 import java.util.EnumMap;

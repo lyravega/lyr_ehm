@@ -1,4 +1,4 @@
-package lyravega.misc;
+package lyravega.upgrades;
 
 import static lyravega.utilities.lyr_tooltipUtilities.colourizedText.highlightText;
 import static lyravega.utilities.lyr_tooltipUtilities.colourizedText.positiveOrNegativeText;

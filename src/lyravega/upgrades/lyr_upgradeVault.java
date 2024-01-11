@@ -1,4 +1,4 @@
-package lyravega.misc;
+package lyravega.upgrades;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -30,7 +30,7 @@ import experimentalHullModifications.upgrades.ehmu_overdrive;
 import lunalib.lunaRefit.LunaRefitManager;
 import lyravega.listeners.lyr_eventDispatcher;
 import lyravega.listeners.lyr_fleetTracker;
-import lyravega.misc.lyr_upgradeVault;
+import lyravega.upgrades.lyr_upgradeVault;
 import lyravega.utilities.logger.lyr_logger;
 
 public final class lyr_ehm extends BaseModPlugin {

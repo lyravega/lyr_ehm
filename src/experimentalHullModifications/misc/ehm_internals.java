@@ -281,6 +281,7 @@ public final class ehm_internals {
 			engineCosmetics = hullmods.engineCosmetics.tag,
 			shieldCosmetics = hullmods.shieldCosmetics.tag,
 			weaponRetrofits = hullmods.weaponRetrofits.tag,
+			upgrade = "ehmu_upgrades",
 			overdrive = upgrades.overdrive,
 			adapters = shunts.adapters.groupTag,
 			converters = shunts.converters.groupTag,

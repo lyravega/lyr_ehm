@@ -1,4 +1,4 @@
-package lyravega.misc;
+package lyravega.upgrades;
 
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
@@ -25,5 +25,12 @@ public interface _lyr_upgradeEffect {
 	 */
 	public void applyUpgradeEffect(MutableShipStatsAPI stats);
 
+	/**
+	 * Modifies a passed tooltip. Designed to be used on hullmod tooltips in their post description.
+	 * There is no standard on how the tooltip may be modified.
+	 * @param stats of the entity with the upgrade
+	 * @param tooltip to modify
+	 * @param padding
+	 */
 	public void addShortDescription(MutableShipStatsAPI stats, TooltipMakerAPI tooltip, float padding);
 }

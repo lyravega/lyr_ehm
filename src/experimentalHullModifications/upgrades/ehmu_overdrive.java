@@ -19,8 +19,8 @@ import experimentalHullModifications.misc.ehm_tooltip.header;
 import experimentalHullModifications.misc.ehm_tooltip.text;
 import experimentalHullModifications.plugin.lyr_ehm;
 import lunalib.lunaRefit.BaseRefitButton;
-import lyravega.misc._lyr_upgradeEffect;
-import lyravega.misc.lyr_upgrade;
+import lyravega.upgrades._lyr_upgradeEffect;
+import lyravega.upgrades.lyr_upgrade;
 import lyravega.utilities.lyr_interfaceUtilities;
 import lyravega.utilities.lyr_tooltipUtilities;
 import lyravega.utilities.lyr_tooltipUtilities.colour;
@@ -81,7 +81,7 @@ public class ehmu_overdrive extends BaseRefitButton implements _lyr_upgradeEffec
 
 	@Override
 	public void addShortDescription(MutableShipStatsAPI stats, TooltipMakerAPI tooltip, float padding) {
-		final float upgradeTier = this.getUpgradeTier(stats.getVariant());
+		final int upgradeTier = Math.round(this.getUpgradeTier(stats.getVariant()));
 
 		lyr_tooltipUtilities.addColourizedPara(tooltip, highlightText("Overdrive, Tier "+upgradeTier)+": Increases s-mod capacity by "+storyText(upgradeTier+""), text.padding);
 	}
