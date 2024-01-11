@@ -17,11 +17,32 @@ import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.util.Misc;
 
 /**
- * A class dedicated to house the helper functions for the ships, variants,
- * and whatnot. Mostly contains checkers
+ * A class dedicated to house the helper functions. Mostly contains checks for the ships, variants,
+ * and whatnot.
  * @author lyravega
  */
 public class lyr_miscUtilities {
+	public static enum romanNumerals {
+		M(1000), CM(900), D(500), CD(400), C(100), XC(90), L(50), XL(40), X(10), IX(9), V(5), IV(4), I(1);
+
+		private final int value;
+
+		romanNumerals(int value) { this.value = value; }
+
+		/**
+		 * Converts a number to roman numerals. Doesn't care about the maximum limit, or negatives.
+		 * @param numberToConvert within the range of 1-3999
+		 * @return roman numeral string
+		 */
+		public static String toRoman(int numberToConvert) {
+			for (romanNumerals romanNumeral : romanNumerals.values()) {
+				if (romanNumeral.value > numberToConvert) continue;
+				if (numberToConvert == romanNumeral.value) return romanNumeral.name();
+				return romanNumeral.name()+toRoman(numberToConvert-romanNumeral.value);
+			};  return "";
+		}
+	}
+
 	/**
 	 * @param ship to check
 	 * @param hullmodIdToIgnore can be null. If not, the hullmod with this id will be ignored
