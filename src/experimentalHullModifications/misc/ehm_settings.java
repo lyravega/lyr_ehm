@@ -3,7 +3,8 @@ package experimentalHullModifications.misc;
 import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
 
-import experimentalHullModifications.misc.ehm_internals.hullmods;
+import experimentalHullModifications.misc.ehm_internals.hullmods.engineCosmetics;
+import experimentalHullModifications.misc.ehm_internals.hullmods.shieldCosmetics;
 import experimentalHullModifications.plugin.lyr_ehm;
 import lyravega.listeners.lyr_eventDispatcher;
 import lyravega.utilities.lyr_lunaUtilities;
@@ -51,12 +52,12 @@ public final class ehm_settings extends lyr_lunaUtilities {
 		if (this.hasChanged("ehm_shuntAvailability")) this.shuntAvailabilityChanged();
 		if (this.hasChanged("ehm_loggerLevel")) this.loggerLevelChanged();
 
-		if (this.hasChanged("ehm_cec_redEngines")) lyr_eventDispatcher.onSettingsChange(this.modId, hullmods.engineCosmetics.redEngines);
-		if (this.hasChanged("ehm_cec_greenEngines")) lyr_eventDispatcher.onSettingsChange(this.modId, hullmods.engineCosmetics.greenEngines);
-		if (this.hasChanged("ehm_cec_blueEngines")) lyr_eventDispatcher.onSettingsChange(this.modId, hullmods.engineCosmetics.blueEngines);
-		if (this.hasChanged("ehm_csc_redShields")) lyr_eventDispatcher.onSettingsChange(this.modId, hullmods.shieldCosmetics.redShields);
-		if (this.hasChanged("ehm_csc_greenShields")) lyr_eventDispatcher.onSettingsChange(this.modId, hullmods.shieldCosmetics.greenShields);
-		if (this.hasChanged("ehm_csc_blueShields")) lyr_eventDispatcher.onSettingsChange(this.modId, hullmods.shieldCosmetics.blueShields);
+		if (this.hasChanged(engineCosmetics.redEngines)) lyr_eventDispatcher.onSettingsChange(this.modId, engineCosmetics.redEngines);
+		if (this.hasChanged(engineCosmetics.greenEngines)) lyr_eventDispatcher.onSettingsChange(this.modId, engineCosmetics.greenEngines);
+		if (this.hasChanged(engineCosmetics.blueEngines)) lyr_eventDispatcher.onSettingsChange(this.modId, engineCosmetics.blueEngines);
+		if (this.hasChanged(shieldCosmetics.redShields)) lyr_eventDispatcher.onSettingsChange(this.modId, shieldCosmetics.redShields);
+		if (this.hasChanged(shieldCosmetics.greenShields)) lyr_eventDispatcher.onSettingsChange(this.modId, shieldCosmetics.greenShields);
+		if (this.hasChanged(shieldCosmetics.blueShields)) lyr_eventDispatcher.onSettingsChange(this.modId, shieldCosmetics.blueShields);
 
 		// lyr_eventDispatcher.onSettingsChange(this.modId, null);	// not necessary as individual ones are targetted
 	}

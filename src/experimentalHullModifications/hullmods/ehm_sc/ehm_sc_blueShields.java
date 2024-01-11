@@ -7,14 +7,14 @@ import experimentalHullModifications.plugin.lyr_ehm;
 import lyravega.listeners.events.customizableMod;
 
 /**
- * NOTE: id of this shield in the .csv remains "ehm_sc_redShields" for save compatibility
+ * NOTE: id of this shield in the .csv remains "ehm_sc_blueShields" for save compatibility
  * @category Custom Shield Cosmetic
  * @author lyravega
  */
-public final class ehm_csc_redShields extends _ehm_sc_base implements customizableMod {
+public final class ehm_sc_blueShields extends _ehm_sc_base implements customizableMod {
 	@Override
 	public void updateData() {
-		String id = this.getClass().getSimpleName();
+		String id = this.hullModSpecId;
 
 		this.innerColour = lyr_ehm.lunaSettings.getLunaRGBAColour(id+"_inner");
 		this.ringColour = lyr_ehm.lunaSettings.getLunaRGBAColour(id+"_ring");

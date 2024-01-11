@@ -198,10 +198,10 @@ public final class ehm_internals {
 
 		public static final class engineCosmetics {
 			public static final String
-				blueEngines = "ehm_cec_blueEngines",
-				greenEngines = "ehm_cec_greenEngines",
-				redEngines = "ehm_cec_redEngines",
-				crimsonEngines = "ehm_ec_torpedoEngines",
+				blueEngines = "ehm_ec_blueEngines",
+				greenEngines = "ehm_ec_greenEngines",
+				redEngines = "ehm_ec_redEngines",
+				crimsonEngines = "ehm_ec_crimsonEngines",
 				highTechEngines = "ehm_ec_highTechEngines",
 				lowTechEngines = "ehm_ec_lowTechEngines",
 				midlineEngines = "ehm_ec_midlineEngines";
@@ -210,13 +210,13 @@ public final class ehm_internals {
 
 		public static final class shieldCosmetics {
 			public static final String
-				blueShields = "ehm_sc_blueShields",	// id & class mismatch
-				greenShields = "ehm_sc_greenShields",	// id & class mismatch
-				redShields = "ehm_sc_redShields",	// id & class mismatch
-				crimsonShields = "ehm_sc_yellowShields",	// id & class mismatch
-				highTechShields = "ehm_sc_cyanShields",	// id & class mismatch
-				lowTechShields = "ehm_sc_magentaShields",	// id & class mismatch
-				midlineShields = "ehm_sc_purpleShields";	// id & class mismatch
+				blueShields = "ehm_sc_blueShields",
+				greenShields = "ehm_sc_greenShields",
+				redShields = "ehm_sc_redShields",
+				crimsonShields = "ehm_sc_crimsonShields",
+				highTechShields = "ehm_sc_highTechShields",
+				lowTechShields = "ehm_sc_lowTechShields",
+				midlineShields = "ehm_sc_midlineShields";
 			public static final String tag = "ehm_sc";
 		}
 

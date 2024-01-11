@@ -70,7 +70,7 @@ public final class lyr_ehm extends BaseModPlugin {
 	@Override
 	public void configureXStream(XStream x) {
 		x.alias("FieldRepairsScript", ehm_fieldRepairsScript.class);
-		x.alias("data.abilities.ehm_ability", ehm_ability.class);	// remember to use this for serialized shit
+		x.alias("ehm_ability", ehm_ability.class);	// remember to use this for serialized shit
 		x.alias("ehm_shuntInjector", ehm_shuntInjector.class);	// added transient, but just in case
 		x.alias("ehm_submarketInjector", ehm_submarketInjector.class);	// added transient, but just in case
 	}
