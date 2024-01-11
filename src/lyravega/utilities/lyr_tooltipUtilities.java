@@ -46,6 +46,7 @@ public class lyr_tooltipUtilities {
 		private static final String buttonPattern = limiter+colour.convertColourToHexCode(colour.button)+separator;
 
 		public static final String colouredText(Color c, String s) { return limiter+colour.convertColourToHexCode(c)+separator+s+limiter; }
+		public static final String colouredTextWithCheck(boolean b, Color ct, Color cf, String s) { return b ? limiter+colour.convertColourToHexCode(ct)+separator+s+limiter : limiter+colour.convertColourToHexCode(cf)+separator+s+limiter; }
 		public static final String grayText(String s) { return grayedPattern+s+limiter; }
 		public static final String normalText(String s) { return normalPattern+s+limiter; }
 		public static final String highlightText(String s) { return highlightPattern+s+limiter; }
@@ -87,6 +88,6 @@ public class lyr_tooltipUtilities {
 			colourList.add(Color.decode(matcher.group(1)));
 		}
 
-		return tooltip.addPara(rawText, pad, colourList.toArray(new Color[]{}), replaceList.toArray(new String[]{}));
+		return tooltip.addPara(rawText, pad, colourList.toArray(new Color[colourList.size()]), replaceList.toArray(new String[replaceList.size()]));
 	}
 }
