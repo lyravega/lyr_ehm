@@ -2,27 +2,29 @@ package experimentalHullModifications.hullmods.ehm;
 
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
-import static lyravega.utilities.lyr_tooltipUtilities.colourizedText.highlightText;
-import static lyravega.utilities.lyr_tooltipUtilities.colourizedText.storyText;
+
+import java.util.HashMap;
 
 import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.characters.FullName.Gender;
 import com.fs.starfarer.api.combat.*;
+import com.fs.starfarer.api.combat.MutableStat.StatMod;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.DynamicStatsAPI;
 import com.fs.starfarer.api.util.Misc;
 
-import experimentalHullModifications.misc.ehm_internals;
-import experimentalHullModifications.misc.ehm_internals.stats;
+import experimentalHullModifications.misc.ehm_internals.hullmods;
+import experimentalHullModifications.misc.ehm_internals.statIds;
+import experimentalHullModifications.misc.ehm_internals.upgrades;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import experimentalHullModifications.misc.ehm_tooltip.text;
 import experimentalHullModifications.plugin.lyr_ehm;
 import lyravega.listeners.events.normalEvents;
-import lyravega.misc._lyr_upgradeEffect;
-import lyravega.misc.lyr_upgradeVault;
+import lyravega.upgrades._lyr_upgradeEffect;
+import lyravega.upgrades.lyr_upgradeVault;
 import lyravega.utilities.lyr_miscUtilities;
 import lyravega.utilities.lyr_tooltipUtilities;
 
@@ -52,11 +54,12 @@ public final class ehm_base extends _ehm_base implements normalEvents {
 		this.swapHullSpec(stats);
 
 		if (!lyr_ehm.lunaSettings.getCosmeticsOnly()) for (String tag : variant.getTags()) {
-			if (!tag.startsWith(ehm_internals.upgrades.prefix)) continue;
+			if (!tag.startsWith(upgrades.prefix)) continue;
 
-			_lyr_upgradeEffect upgrade = lyr_upgradeVault.getUpgrade(tag.replaceFirst(":.+?", ""));
+			final _lyr_upgradeEffect upgrade = lyr_upgradeVault.getUpgrade(tag.replaceFirst(":.+?", "")); if (upgrade == null) continue;
 
-			if (upgrade != null) upgrade.applyUpgradeEffect(stats, Integer.valueOf(tag.replaceFirst(upgrade.getUpgradeId()+":", "")));
+			stats.getDynamic().getMod(statIds.upgrade).modifyFlat(upgrade.getUpgradeId(), upgrade.getUpgradeTier(variant));	// for tooltip
+			upgrade.applyUpgradeEffect(stats);
 		}
 
 		this.preProcessShunts(stats);	// at this point, the hull spec should be cloned so proceed and pre-process the shunts
@@ -73,6 +76,7 @@ public final class ehm_base extends _ehm_base implements normalEvents {
 
 		ShipVariantAPI variant = ship.getVariant();
 		ShipHullSpecAPI hullSpec = variant.getHullSpec();
+		MutableShipStatsAPI stats = ship.getMutableStats();
 
 		if (lyr_ehm.lunaSettings.getDebugTooltip()) {
 			// tooltip.addSectionHeading("DEBUG INFO: GENERAL", header.severeWarning_textColour, header.severeWarning_bgColour, Alignment.MID, header.padding);
@@ -100,24 +104,24 @@ public final class ehm_base extends _ehm_base implements normalEvents {
 			tooltip.addPara("HullTags: "+hullSpec.getTags().toString(), 5f).setHighlight("HullTags:");
 			tooltip.addPara("VariantTags: "+variant.getTags().toString(), 5f).setHighlight("VariantTags:");
 
-			DynamicStatsAPI dynamicStats = ship.getMutableStats().getDynamic();
-			final StatBonus overdrive = dynamicStats.getMod(stats.overdrive);
-			final StatBonus adapters = dynamicStats.getMod(stats.adapters);
-			final StatBonus converters = dynamicStats.getMod(stats.converters);
-			final StatBonus diverters = dynamicStats.getMod(stats.diverters);
-			final StatBonus capacitors = dynamicStats.getMod(stats.capacitors);
-			final StatBonus dissipators = dynamicStats.getMod(stats.dissipators);
-			final StatBonus hangars = dynamicStats.getMod(stats.hangars);
-			final StatBonus ordnancePoints = dynamicStats.getMod(stats.ordnancePoints);
-			final StatBonus slotPoints = dynamicStats.getMod(stats.slotPoints);
-			final StatBonus slotPointsNeeded = dynamicStats.getMod(stats.slotPointsNeeded);
-			final StatBonus slotPointsUsed = dynamicStats.getMod(stats.slotPointsUsed);
-			final StatBonus slotPointsFromMods = dynamicStats.getMod(stats.slotPointsFromMods);
-			final StatBonus slotPointsFromDiverters = dynamicStats.getMod(stats.slotPointsFromDiverters);
-			final StatBonus slotPointsToConverters = dynamicStats.getMod(stats.slotPointsToConverters);
-			final StatBonus engineCosmetics = dynamicStats.getMod(stats.engineCosmetics);
-			final StatBonus shieldCosmetics = dynamicStats.getMod(stats.shieldCosmetics);
-			final StatBonus weaponRetrofits = dynamicStats.getMod(stats.weaponRetrofits);
+			DynamicStatsAPI dynamicStats = stats.getDynamic();
+			final StatBonus overdrive = dynamicStats.getMod(statIds.overdrive);
+			final StatBonus adapters = dynamicStats.getMod(statIds.adapters);
+			final StatBonus converters = dynamicStats.getMod(statIds.converters);
+			final StatBonus diverters = dynamicStats.getMod(statIds.diverters);
+			final StatBonus capacitors = dynamicStats.getMod(statIds.capacitors);
+			final StatBonus dissipators = dynamicStats.getMod(statIds.dissipators);
+			final StatBonus hangars = dynamicStats.getMod(statIds.hangars);
+			final StatBonus ordnancePoints = dynamicStats.getMod(statIds.ordnancePoints);
+			final StatBonus slotPoints = dynamicStats.getMod(statIds.slotPoints);
+			final StatBonus slotPointsNeeded = dynamicStats.getMod(statIds.slotPointsNeeded);
+			final StatBonus slotPointsUsed = dynamicStats.getMod(statIds.slotPointsUsed);
+			final StatBonus slotPointsFromMods = dynamicStats.getMod(statIds.slotPointsFromMods);
+			final StatBonus slotPointsFromDiverters = dynamicStats.getMod(statIds.slotPointsFromDiverters);
+			final StatBonus slotPointsToConverters = dynamicStats.getMod(statIds.slotPointsToConverters);
+			final StatBonus engineCosmetics = dynamicStats.getMod(statIds.engineCosmetics);
+			final StatBonus shieldCosmetics = dynamicStats.getMod(statIds.shieldCosmetics);
+			final StatBonus weaponRetrofits = dynamicStats.getMod(statIds.weaponRetrofits);
 			tooltip.addSectionHeading("DEBUG INFO: DYNAMIC STATS", header.severeWarning_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
 			if (!overdrive.getFlatBonuses().isEmpty()) tooltip.addPara("overdrive: "+overdrive.computeEffective(0f)+" / "+overdrive.getFlatBonuses().keySet().toString(), 5f).setHighlight("overdrive:");
 			if (!adapters.getFlatBonuses().isEmpty()) tooltip.addPara("adapters: "+adapters.computeEffective(0f)+" / "+adapters.getFlatBonuses().keySet().toString(), 5f).setHighlight("adapters:");
@@ -157,11 +161,12 @@ public final class ehm_base extends _ehm_base implements normalEvents {
 
 			super.addPostDescriptionSection(tooltip, hullSize, ship, width, isForModSpec);
 		} else {
-			final int overdrive = Math.round(ship.getMutableStats().getDynamic().getMod(stats.overdrive).computeEffective(0f));
-
-			if (overdrive > 0) {
+			HashMap<String, StatMod> upgrades = stats.getDynamic().getMod(statIds.upgrade).getFlatBonuses();
+			if (!upgrades.isEmpty()) {
 				tooltip.addSectionHeading("UPGRADES", header.sEffect_textColour, header.invisible_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
-				lyr_tooltipUtilities.addColourizedPara(tooltip, highlightText("Overdrive, Tier "+overdrive)+": Increases s-mod capacity by "+storyText(overdrive+""), text.padding);
+				for (String upgradeId : upgrades.keySet()) {
+					lyr_upgradeVault.getUpgrade(upgradeId).addShortDescription(stats, tooltip, text.padding);
+				}
 			}
 
 			if (lyr_ehm.lunaSettings.getShowFluff()) {
@@ -176,42 +181,42 @@ public final class ehm_base extends _ehm_base implements normalEvents {
 						tooltip.addPara(playerSalutation + ", if you are unhappy with what I am offering you, I can get rid of the base hull modifications that I've made. Let me know!", text.padding);
 						break;
 					case 2:
-						if (!lyr_miscUtilities.hasHullModWithTag(ship, ehm_internals.hullmods.weaponRetrofits.tag, null, true))
+						if (!lyr_miscUtilities.hasHullModWithTag(ship, hullmods.weaponRetrofits.tag, null, true))
 							tooltip.addPara(playerSalutation + ", with slot retrofits every weapon slot may be altered all together to make them compatible with other weapon types.", text.padding);
 						else tooltip.addPara("The slot retrofits come at a cost, but their main purpose is to allow flexibility, and of course letting you use your favourite weapons, "+ playerSalutation, text.padding);
 						break;
 					case 3:
-						if (!lyr_miscUtilities.hasHullModWithTag(ship, ehm_internals.hullmods.systemRetrofits.tag, null, true))
+						if (!lyr_miscUtilities.hasHullModWithTag(ship, hullmods.systemRetrofits.tag, null, true))
 							tooltip.addPara("The ships are designed along with their systems, however with system retrofits, I can change them anytime you want, "+ playerSalutation +".", text.padding);
 						else tooltip.addPara("Some system & ship combinations may be powerful. Some may not. No refunds! Just joking...", text.padding);
 						break;
 					case 4:
-						if (!lyr_miscUtilities.hasHullModWithTag(ship, ehm_internals.hullmods.engineCosmetics.tag, null, true))
+						if (!lyr_miscUtilities.hasHullModWithTag(ship, hullmods.engineCosmetics.tag, null, true))
 							tooltip.addPara(playerSalutation + ", let me know if you'd like to have this ship's engine exhaust colour get changed. I can even fully customize them to your exact specifications!", text.padding);
 						else tooltip.addPara("The engine exhaust cosmetics are looking great, " + playerSalutation, text.padding);
 						break;
 					case 5:
-						if (!lyr_miscUtilities.hasHullModWithTag(ship, ehm_internals.hullmods.shieldCosmetics.tag, null, true))
+						if (!lyr_miscUtilities.hasHullModWithTag(ship, hullmods.shieldCosmetics.tag, null, true))
 							tooltip.addPara("The shield emitters may be modified to project a shield with different colours, " + playerSalutation + ". The effect is purely cosmetic", text.padding);
 						else tooltip.addPara("The shield emitters are modified to project colours of your choice, " + playerSalutation, text.padding);
 						break;
 					case 6:
-						if (!variant.hasHullMod(ehm_internals.hullmods.activatorRetrofits.diverterConverterActivator))
+						if (!variant.hasHullMod(hullmods.activatorRetrofits.diverterConverterActivator))
 							tooltip.addPara("Power may be diverted from a weapon slot to another with a diverter slot shunt, " + playerSalutation + ". The trade-off is necessary to make such modifications.", text.padding);
 						else tooltip.addPara("If a converter remains idle, we might be lacking the necessary power diverted to it " + playerSalutation, text.padding);
 						break;
 					case 7:
-						if (!variant.hasHullMod(ehm_internals.hullmods.activatorRetrofits.mutableShuntActivator))
+						if (!variant.hasHullMod(hullmods.activatorRetrofits.mutableShuntActivator))
 							tooltip.addPara(playerSalutation + ", slot housings may be replaced with extra flux capacitors or dissipators, or a fighter bay may be fit into a large slot with select slot shunts!", text.padding);
 						else tooltip.addPara("The capacitors and dissipators are designed to improve the built-in ones and also support other on-board systems indirectly. An additional fighter bay on the other hand...", text.padding);
 						break;
 					case 8:
-						if (!variant.hasHullMod(ehm_internals.hullmods.activatorRetrofits.adapterShuntActivator))
+						if (!variant.hasHullMod(hullmods.activatorRetrofits.adapterShuntActivator))
 							tooltip.addPara(playerSalutation + ", if you need more weapon slots of smaller sizes for any reason, bigger slots may be adapted into multiple smaller ones!", text.padding);
 						else tooltip.addPara("Any adapters will be activated, " + playerSalutation + ". The additional slots might be smaller, but sometimes having more of something is the answer.", text.padding);
 						break;
 					case 9:
-						if (!variant.getSMods().contains(ehm_internals.hullmods.misc.overengineered))
+						if (!variant.getSMods().contains(hullmods.misc.overengineered))
 							tooltip.addPara(playerSalutation + ", have you thought about letting me over-engineer the ship? You might find the benefits interesting!", text.padding);
 						else tooltip.addPara("This over-engineered ship is a beast, " + playerSalutation + "! Every internal system, even the bulkheads were replaced, while keeping the structural integrity intact! A mir... *cough* masterpiece!", text.padding);
 						break;
@@ -223,6 +228,6 @@ public final class ehm_base extends _ehm_base implements normalEvents {
 
 	@Override
 	public boolean showInRefitScreenModPickerFor(ShipAPI ship) {
-		return (lyr_miscUtilities.hasBuiltInHullMod(ship, ehm_internals.hullmods.main.base)) ? false : true;
+		return (lyr_miscUtilities.hasBuiltInHullMod(ship, hullmods.main.base)) ? false : true;
 	}
 }

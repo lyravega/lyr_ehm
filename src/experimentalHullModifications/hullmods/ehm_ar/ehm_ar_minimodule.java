@@ -119,7 +119,7 @@ public final class ehm_ar_minimodule extends _ehm_ar_base implements moduleEvent
 
 			parentDynamicStats.getMod(moduleVariantId).modifyFlat(moduleSlotId, 1);
 			parentDynamicStats.getMod(moduleData.groupTag).modifyFlat(moduleSlotId, ordnancePointMod);
-			parentDynamicStats.getMod(ehm_internals.stats.ordnancePoints).modifyFlat(moduleSlotId, ordnancePointMod);
+			parentDynamicStats.getMod(ehm_internals.statIds.ordnancePoints).modifyFlat(moduleSlotId, ordnancePointMod);
 
 			if (parentHullSpec.getWeaponSlot(moduleSlotId).getWeaponType() == WeaponType.STATION_MODULE) continue;
 

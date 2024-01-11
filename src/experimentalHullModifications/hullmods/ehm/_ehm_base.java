@@ -301,16 +301,16 @@ public abstract class _ehm_base implements HullModEffect {
 			String source = ehm_mr_overengineered.class.getSimpleName();
 			int mod = ehm_mr_overengineered.slotPointBonus.get(variant.getHullSize());
 
-			dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(source, mod);
-			dynamicStats.getMod(ehm_internals.stats.slotPointsFromMods).modifyFlat(source, mod);
+			dynamicStats.getMod(ehm_internals.statIds.slotPoints).modifyFlat(source, mod);
+			dynamicStats.getMod(ehm_internals.statIds.slotPointsFromMods).modifyFlat(source, mod);
 		}
 
 		if (variant.hasHullMod(ehm_internals.hullmods.misc.auxilarygenerators)) {
 			String source = ehm_mr_auxilarygenerators.class.getSimpleName();
 			int mod = ehm_mr_auxilarygenerators.slotPointBonus.get(variant.getHullSize());
 
-			dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(source, mod);
-			dynamicStats.getMod(ehm_internals.stats.slotPointsFromMods).modifyFlat(source, mod);
+			dynamicStats.getMod(ehm_internals.statIds.slotPoints).modifyFlat(source, mod);
+			dynamicStats.getMod(ehm_internals.statIds.slotPointsFromMods).modifyFlat(source, mod);
 		}
 
 		for (WeaponSlotAPI slot : variant.getHullSpec().getAllWeaponSlotsCopy()) {
@@ -339,12 +339,12 @@ public abstract class _ehm_base implements HullModEffect {
 					if (!slot.isDecorative()) {
 						dynamicStats.getMod(shuntId+"_inactive").modifyFlat(slotId, 1);
 						dynamicStats.getMod(shuntGroupTag+"_inactive").modifyFlat(slotId, mod);
-						dynamicStats.getMod(ehm_internals.stats.slotPointsNeeded).modifyFlat(slotId, mod);
+						dynamicStats.getMod(ehm_internals.statIds.slotPointsNeeded).modifyFlat(slotId, mod);
 					} else {
 						dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
 						dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, mod);
-						dynamicStats.getMod(ehm_internals.stats.slotPointsNeeded).modifyFlat(slotId, mod);
-						dynamicStats.getMod(ehm_internals.stats.slotPointsUsed).modifyFlat(slotId, mod);
+						dynamicStats.getMod(ehm_internals.statIds.slotPointsNeeded).modifyFlat(slotId, mod);
+						dynamicStats.getMod(ehm_internals.statIds.slotPointsUsed).modifyFlat(slotId, mod);
 						// dynamicStats.getMod(ehm_internals.stats.slotPointsToConverters).modifyFlat(slotId, mod);	// redundant since stat ids point at the group tag
 					}
 				}; continue;
@@ -355,7 +355,7 @@ public abstract class _ehm_base implements HullModEffect {
 					int mod = diverterData.dataMap.get(shuntId);
 					dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
 					dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, mod);
-					dynamicStats.getMod(ehm_internals.stats.slotPoints).modifyFlat(slotId, mod);
+					dynamicStats.getMod(ehm_internals.statIds.slotPoints).modifyFlat(slotId, mod);
 					// dynamicStats.getMod(ehm_internals.stats.slotPointsFromDiverters).modifyFlat(slotId, mod);	// redundant since stat ids point at the group tag
 				}; continue;
 				case capacitorData.groupTag: {

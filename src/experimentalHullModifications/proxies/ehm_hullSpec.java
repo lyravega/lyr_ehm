@@ -179,7 +179,7 @@ public final class ehm_hullSpec extends lyr_hullSpec {
 	}
 
 	/**
-	 * Uses a dynamic stat ({@link ehm_internals.stats#ordnancePoints ehm_ordnancePoints}) to alter
+	 * Uses a dynamic stat ({@link ehm_internals.statIds#ordnancePoints ehm_ordnancePoints}) to alter
 	 * the hull spec's ordnance points. Will set it to zero if modded total is negative.
 	 * <p> Usage of the dynamic stat is like any other dynamic stat, flat/percentage/multipliers may
 	 * be used; {@code stats.getDynamic().getMod(ehm_internals.stats.ordnancePoints)}
@@ -190,7 +190,7 @@ public final class ehm_hullSpec extends lyr_hullSpec {
 	public final void modOrdnancePoints(MutableShipStatsAPI stats) {
 		FleetMemberAPI member = stats.getFleetMember();
 		MutableCharacterStatsAPI captainStats = (member != null && !member.getCaptain().isDefault()) ? member.getCaptain().getStats() : null;
-		int ordnancePoints = Math.round(stats.getDynamic().getMod(ehm_internals.stats.ordnancePoints).computeEffective(this.referenceNonDamaged().getOrdnancePoints(captainStats)));
+		int ordnancePoints = Math.round(stats.getDynamic().getMod(ehm_internals.statIds.ordnancePoints).computeEffective(this.referenceNonDamaged().getOrdnancePoints(captainStats)));
 
 		this.setOrdnancePoints(Math.max(0, ordnancePoints));
 	}

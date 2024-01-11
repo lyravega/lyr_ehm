@@ -276,7 +276,7 @@ public final class ehm_internals {
 			overdrive = prefix+"_overdrive";
 	}
 
-	public static final class stats {
+	public static final class statIds {
 		public static final String
 			engineCosmetics = hullmods.engineCosmetics.tag,
 			shieldCosmetics = hullmods.shieldCosmetics.tag,
