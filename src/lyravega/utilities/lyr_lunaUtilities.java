@@ -27,7 +27,7 @@ public abstract class lyr_lunaUtilities implements LunaSettingsListener {
 		this.modId = modId;
 	}
 
-	public class settingField<T> {
+	public class settingField<T> {	// parameter is kinda pointless as it's not really being used but meh
 		private final String id;
 		private final String group;
 		private final settingType type;
@@ -97,9 +97,9 @@ public abstract class lyr_lunaUtilities implements LunaSettingsListener {
 				switch (settingType) {
 					case "int":		settingField = new settingField<Integer>(settingId, settingGroupId, LunaSettings.getInt(this.modId, settingId)); break;
 					case "double":	settingField = new settingField<Double>(settingId, settingGroupId, LunaSettings.getDouble(this.modId, settingId)); break;
-					case "string":	settingField = new settingField<String>(settingId, settingGroupId, LunaSettings.getString(this.modId, settingId)); break;
 					case "boolean":	settingField = new settingField<Boolean>(settingId, settingGroupId, LunaSettings.getBoolean(this.modId, settingId)); break;
 					case "color":	settingField = new settingField<Color>(settingId, settingGroupId, LunaSettings.getColor(this.modId, settingId)); break;
+					case "string":
 					case "radio":	settingField = new settingField<String>(settingId, settingGroupId, LunaSettings.getString(this.modId, settingId)); break;
 					// case "keycode":
 					// case "text":
@@ -190,14 +190,10 @@ public abstract class lyr_lunaUtilities implements LunaSettingsListener {
 	 * 0-255 integer setting with {@code prefix+"Alpha"} id and returns a RGBA array
 	 */
 	public int[] getLunaRGBAColourArray(String settingIdPrefix) {
-		Color colour = this.getColor(settingIdPrefix+"Colour");
-		int[] rgba = {0,0,0,0};
-		rgba[0] = colour.getRed();
-		rgba[1] = colour.getGreen();
-		rgba[2] = colour.getBlue();
-		rgba[3] = this.getInt(settingIdPrefix+"Alpha");
+		final Color colour = this.getColor(settingIdPrefix+"Colour");
+		final int alpha = this.getInt(settingIdPrefix+"Alpha");
 
-		return rgba;
+		return new int[]{colour.getRed(), colour.getGreen(), colour.getBlue(), alpha};
 	}
 
 	/**
@@ -205,8 +201,9 @@ public abstract class lyr_lunaUtilities implements LunaSettingsListener {
 	 * 0-255 integer setting with {@code prefix+"Alpha"} id and returns a RGBA colour
 	 */
 	public Color getLunaRGBAColour(String settingIdPrefix) {
-		int[] rgba = this.getLunaRGBAColourArray(settingIdPrefix);
+		final Color colour = this.getColor(settingIdPrefix+"Colour");
+		final int alpha = this.getInt(settingIdPrefix+"Alpha");
 
-		return new Color(rgba[0], rgba[1], rgba[2], rgba[3]);
+		return new Color(colour.getRed(), colour.getGreen(), colour.getBlue(), alpha);
 	}
 }
