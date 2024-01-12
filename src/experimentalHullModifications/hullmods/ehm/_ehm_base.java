@@ -1,6 +1,7 @@
 package experimentalHullModifications.hullmods.ehm;
 
 import java.awt.Color;
+import java.util.EnumSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,15 +28,13 @@ import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.adap
 import experimentalHullModifications.hullmods.ehm_mr.ehm_mr_auxilarygenerators;
 import experimentalHullModifications.hullmods.ehm_mr.ehm_mr_overengineered;
 import experimentalHullModifications.misc.ehm_internals;
-import experimentalHullModifications.misc.ehm_internals.hullmods;
-import experimentalHullModifications.misc.ehm_internals.hullmods.tags;
+import experimentalHullModifications.misc.ehm_internals.hullmods.checks;
 import experimentalHullModifications.misc.ehm_lostAndFound;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import experimentalHullModifications.misc.ehm_tooltip.text;
 import experimentalHullModifications.plugin.lyr_ehm;
 import experimentalHullModifications.plugin.lyr_ehm.friend;
 import experimentalHullModifications.proxies.ehm_hullSpec;
-import lyravega.utilities.lyr_miscUtilities;
 import lyravega.utilities.lyr_tooltipUtilities;
 import lyravega.utilities.logger.lyr_logger;
 
@@ -71,13 +70,13 @@ public abstract class _ehm_base implements HullModEffect {
 		public boolean isRestricted = false;
 		public boolean isCustomizable = false;
 		public String groupTag = null;
-		public Set<String> applicableChecks = null;
-		public Set<String> lockedInChecks = null;
-		public Set<String> lockedOutChecks = null;
+		public EnumSet<checks> applicableChecks = null;
+		public EnumSet<checks> lockedInChecks = null;
+		public EnumSet<checks> lockedOutChecks = null;
 
-		public Set<String> getApplicableChecks() { return this.applicableChecks; }
+		public EnumSet<checks> getApplicableChecks() { return this.applicableChecks; }
 
-		public Set<String> getLockedChecks(ShipAPI ship) { return ship.getVariant().hasHullMod(_ehm_base.this.hullModSpecId) ? this.lockedInChecks : this.lockedOutChecks; }
+		public EnumSet<checks> getLockedChecks(ShipAPI ship) { return ship.getVariant().hasHullMod(_ehm_base.this.hullModSpecId) ? this.lockedInChecks : this.lockedOutChecks; }
 	}
 
 	public extendedData getExtendedData(friend friend) {
@@ -147,29 +146,15 @@ public abstract class _ehm_base implements HullModEffect {
 
 		if (!this.isApplicableToShip(ship) && this.extendedData.getApplicableChecks() != null) {
 			tooltip.addSectionHeading(header.notApplicable, header.notApplicable_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-			for (String check : this.extendedData.getApplicableChecks()) switch (check) {
-				case tags.reqBase: if (!lyr_miscUtilities.hasBuiltInHullMod(ship, hullmods.main.base)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksBase, text.colourized.padding); continue;
-				case tags.reqNoLogistics: if (ship.getVariant().hasHullMod(hullmods.misc.logisticsoverhaul)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasLogisticsOverhaul, text.colourized.padding); continue;
-				case tags.reqShield: if (ship.getShield() == null) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.noShields, text.padding); continue;
-				case tags.reqEngine: if (!lyr_miscUtilities.hasEngines(ship)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.noEngines, text.padding); continue;
-				case tags.reqNoPhase: if (lyr_miscUtilities.hasPhaseCloak(ship)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasPhase, text.padding); continue;
-				case tags.reqWingBays: if (ship.getNumFighterBays() == 0) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.noWings, text.padding); continue;
-				case tags.reqNotChild: if (lyr_miscUtilities.isModule(ship)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.isModule, text.padding); continue;
-				case tags.reqDiverterAndConverter: if (!ship.getVariant().hasHullMod(hullmods.activatorRetrofits.diverterConverterActivator)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksActivator, text.padding); continue;
-				default: continue;
+			for (checks check : this.extendedData.getApplicableChecks()) {
+				check.print(tooltip, ship);
 			}
 		}
 
 		if (!this.canBeAddedOrRemovedNow(ship, null, null) && this.extendedData.getLockedChecks(ship) != null) {
 			tooltip.addSectionHeading(ship.getVariant().hasHullMod(this.hullModSpecId) ? header.lockedIn : header.lockedOut, header.locked_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-			for (String check : this.extendedData.getLockedChecks(ship)) switch (check) {
-				case tags.hasWeaponsOnConvertedSlots: if (lyr_miscUtilities.hasWeapons(ship, ehm_internals.affixes.convertedSlot)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasWeaponsOnConvertedSlots, text.padding); continue;
-				case tags.hasWeaponsOnAdaptedSlots: if (lyr_miscUtilities.hasWeapons(ship, ehm_internals.affixes.adaptedSlot)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasWeaponsOnAdaptedSlots, text.padding); continue;
-				case tags.hasExtraWings: if (lyr_miscUtilities.hasExtraWings(ship, this.hullModSpecId)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasExtraWings, text.padding); continue;
-				case tags.hasWeapons: if (lyr_miscUtilities.hasWeapons(ship)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasWeapons, text.colourized.padding); continue;
-				case tags.hasMiniModules: if (lyr_miscUtilities.hasModulesWithPrefix(ship, "ehm_module")) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasMiniModules, text.padding); continue;
-				case tags.hasAnyFittedWings: if (lyr_miscUtilities.hasAnyFittedWings(ship)) lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasWings, text.colourized.padding); continue;
-				default: continue;
+			for (checks check : this.extendedData.getLockedChecks(ship)) {
+				check.print(tooltip, ship);
 			}
 		}
 
@@ -187,16 +172,8 @@ public abstract class _ehm_base implements HullModEffect {
 	@Override public boolean isApplicableToShip(ShipAPI ship) {
 		if (ship == null) return false;
 
-		if (this.extendedData.getApplicableChecks() != null) for (String check : this.extendedData.getApplicableChecks()) switch (check) {
-			case tags.reqBase: if (!lyr_miscUtilities.hasBuiltInHullMod(ship, hullmods.main.base)) return false; else continue;
-			case tags.reqNoLogistics: if (ship.getVariant().hasHullMod(hullmods.misc.logisticsoverhaul)) return false; else continue;
-			case tags.reqShield: if (ship.getShield() == null) return false; else continue;
-			case tags.reqEngine: if (!lyr_miscUtilities.hasEngines(ship)) return false; else continue;
-			case tags.reqNoPhase: if (lyr_miscUtilities.hasPhaseCloak(ship)) return false; else continue;
-			case tags.reqWingBays: if (ship.getNumFighterBays() == 0) return false; else continue;
-			case tags.reqNotChild: if (lyr_miscUtilities.isModule(ship)) return false; else continue;
-			case tags.reqDiverterAndConverter: if (!ship.getVariant().hasHullMod(hullmods.activatorRetrofits.diverterConverterActivator)) return false; else continue;
-			default: continue;
+		if (this.extendedData.getApplicableChecks() != null) for (checks check : this.extendedData.getApplicableChecks()) {
+			if (!check.check(ship)) return false;
 		}
 
 		return true;
@@ -205,14 +182,8 @@ public abstract class _ehm_base implements HullModEffect {
 	@Override public boolean canBeAddedOrRemovedNow(ShipAPI ship, MarketAPI marketOrNull, CoreUITradeMode mode) {
 		if (ship == null) return false;
 
-		if (this.extendedData.getLockedChecks(ship) != null) for (String check : this.extendedData.getLockedChecks(ship)) switch (check) {
-			case tags.hasWeaponsOnConvertedSlots: if (lyr_miscUtilities.hasWeapons(ship, ehm_internals.affixes.convertedSlot)) return false; else continue;
-			case tags.hasWeaponsOnAdaptedSlots: if (lyr_miscUtilities.hasWeapons(ship, ehm_internals.affixes.adaptedSlot)) return false; else continue;
-			case tags.hasExtraWings: if (lyr_miscUtilities.hasExtraWings(ship, this.hullModSpecId)) return false; else continue;
-			case tags.hasWeapons: if (lyr_miscUtilities.hasWeapons(ship)) return false; else continue;
-			case tags.hasMiniModules: if (lyr_miscUtilities.hasModulesWithPrefix(ship, "ehm_module")) return false; else continue;	// TODO: prefix needs to be moved to a constant
-			case tags.hasAnyFittedWings: if (lyr_miscUtilities.hasAnyFittedWings(ship)) return false; else continue;
-			default: continue;
+		if (this.extendedData.getLockedChecks(ship) != null) for (checks check : this.extendedData.getLockedChecks(ship)) {
+			if (!check.check(ship)) return false;
 		}
 
 		return true;

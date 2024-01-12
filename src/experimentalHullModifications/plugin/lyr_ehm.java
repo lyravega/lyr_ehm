@@ -1,7 +1,6 @@
 package experimentalHullModifications.plugin;
 
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.Set;
 
 import org.json.JSONArray;
@@ -22,6 +21,7 @@ import experimentalHullModifications.abilities.listeners.ehm_submarketInjector;
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.hullmods.ehm._ehm_base.extendedData;
 import experimentalHullModifications.misc.ehm_internals;
+import experimentalHullModifications.misc.ehm_internals.hullmods;
 import experimentalHullModifications.misc.ehm_lostAndFound;
 import experimentalHullModifications.misc.ehm_settings;
 import experimentalHullModifications.scripts.ehm_fieldRepairsScript;
@@ -195,20 +195,20 @@ public final class lyr_ehm extends BaseModPlugin {
 
 				String[] applicableChecks = hullModEntry.getString("ecsv_applicableChecks").split("[\\s,]+");
 				if (!applicableChecks[0].isEmpty()) {
-					if (extendedData.applicableChecks == null) extendedData.applicableChecks = new HashSet<String>();
-					extendedData.applicableChecks.clear(); extendedData.applicableChecks.addAll(Arrays.asList(applicableChecks));
+					if (extendedData.applicableChecks == null) extendedData.applicableChecks = EnumSet.noneOf(hullmods.checks.class);
+					for (String check : applicableChecks) extendedData.applicableChecks.add(hullmods.checks.valueOf(check));
 				} else if (extendedData.applicableChecks != null) { extendedData.applicableChecks.clear(); extendedData.applicableChecks = null; }
 
 				String[] lockedInChecks = hullModEntry.getString("ecsv_lockedInChecks").split("[\\s,]+");
 				if (!lockedInChecks[0].isEmpty()) {
-					if (extendedData.lockedInChecks == null) extendedData.lockedInChecks = new HashSet<String>();
-					extendedData.lockedInChecks.clear(); extendedData.lockedInChecks.addAll(Arrays.asList(lockedInChecks));
+					if (extendedData.lockedInChecks == null) extendedData.lockedInChecks = EnumSet.noneOf(hullmods.checks.class);
+					for (String check : lockedInChecks) extendedData.lockedInChecks.add(hullmods.checks.valueOf(check));
 				} else if (extendedData.lockedInChecks != null) { extendedData.lockedInChecks.clear(); extendedData.lockedInChecks = null; }
 
 				String[] lockedOutChecks = hullModEntry.getString("ecsv_lockedOutChecks").split("[\\s,]+");
 				if (!lockedOutChecks[0].isEmpty()) {
-					if (extendedData.lockedOutChecks == null) extendedData.lockedOutChecks = new HashSet<String>();
-					extendedData.lockedOutChecks.clear(); extendedData.lockedOutChecks.addAll(Arrays.asList(lockedOutChecks));
+					if (extendedData.lockedOutChecks == null) extendedData.lockedOutChecks = EnumSet.noneOf(hullmods.checks.class);
+					for (String check : lockedOutChecks) extendedData.lockedOutChecks.add(hullmods.checks.valueOf(check));
 				} else if (extendedData.lockedOutChecks != null) { extendedData.lockedOutChecks.clear(); extendedData.lockedOutChecks = null; }
 
 				lyr_logger.debug("Processed extended comma separated values for '"+hullModSpec.getId()+"'");

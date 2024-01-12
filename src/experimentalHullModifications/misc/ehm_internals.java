@@ -4,7 +4,14 @@ import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
+import com.fs.starfarer.api.ui.TooltipMakerAPI;
+
+import experimentalHullModifications.misc.ehm_tooltip.text;
+import lyravega.upgrades.lyr_upgradeVault;
+import lyravega.utilities.lyr_miscUtilities;
+import lyravega.utilities.lyr_tooltipUtilities;
 
 public final class ehm_internals {
 	public static final class ids {
@@ -237,21 +244,139 @@ public final class ehm_internals {
 
 		public static final class tags {
 			public static final String
-				reqBase = "reqBase",
-				reqNoLogistics = "reqNoLogistics",
-				reqShield = "reqShield",
-				reqEngine = "reqEngine",
-				reqNoPhase = "reqNoPhase",
-				reqWingBays = "reqWingBays",
-				reqNotChild = "reqNotChild",
-				reqDiverterAndConverter = "reqDiverterAndConverter",
-				hasWeaponsOnConvertedSlots = "hasWeaponsOnConvertedSlots",
-				hasWeaponsOnAdaptedSlots = "hasWeaponsOnAdaptedSlots",
-				hasExtraWings = "hasExtraWings",
-				hasWeapons = "hasWeapons",
-				hasMiniModules = "hasMiniModules",
-				hasAnyFittedWings = "hasAnyFittedWings",
 				experimental = ids.experimental;
+		}
+
+		public enum checks {
+			reqBase {
+				@Override public boolean check(ShipAPI ship) {
+					return lyr_miscUtilities.hasBuiltInHullMod(ship, hullmods.main.base);
+				}
+
+				@Override public void print(TooltipMakerAPI tooltip, ShipAPI ship) {
+					if (this.check(ship)) return; lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.lacksBase, text.colourized.padding);
+				}
+			},
+			reqNoLogistics {
+				@Override public boolean check(ShipAPI ship) {
+					return !ship.getVariant().hasHullMod(hullmods.misc.logisticsoverhaul);
+				}
+
+				@Override public void print(TooltipMakerAPI tooltip, ShipAPI ship) {
+					if (this.check(ship)) return; lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasLogisticsOverhaul, text.colourized.padding);
+				}
+			},
+			reqShield {
+				@Override public boolean check(ShipAPI ship) {
+					return ship.getShield() != null;
+				}
+
+				@Override public void print(TooltipMakerAPI tooltip, ShipAPI ship) {
+					if (this.check(ship)) return; lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.noShields, text.padding);
+				}
+			},
+			reqEngine {
+				@Override public boolean check(ShipAPI ship) {
+					return lyr_miscUtilities.hasEngines(ship);
+				}
+
+				@Override public void print(TooltipMakerAPI tooltip, ShipAPI ship) {
+					if (this.check(ship)) return; lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.noEngines, text.padding);
+				}
+			},
+			reqNoPhase {
+				@Override public boolean check(ShipAPI ship) {
+					return !lyr_miscUtilities.hasPhaseCloak(ship);
+				}
+
+				@Override public void print(TooltipMakerAPI tooltip, ShipAPI ship) {
+					if (this.check(ship)) return; lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasPhase, text.padding);
+				}
+			},
+			reqWingBays {
+				@Override public boolean check(ShipAPI ship) {
+					return ship.getNumFighterBays() != 0;
+				}
+
+				@Override public void print(TooltipMakerAPI tooltip, ShipAPI ship) {
+					if (this.check(ship)) return; lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.noWings, text.padding);
+				}
+			},
+			reqNotChild {
+				@Override public boolean check(ShipAPI ship) {
+					return !lyr_miscUtilities.isModule(ship);
+				}
+
+				@Override public void print(TooltipMakerAPI tooltip, ShipAPI ship) {
+					if (this.check(ship)) return; lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.isModule, text.padding);
+				}
+			},
+			reqDiverterAndConverter {
+				@Override public boolean check(ShipAPI ship) {
+					return !ship.getVariant().hasHullMod(hullmods.activatorRetrofits.diverterConverterActivator);
+				}
+
+				@Override public void print(TooltipMakerAPI tooltip, ShipAPI ship) {
+					if (this.check(ship)) return; lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasWeaponsOnConvertedSlots, text.padding);
+				}
+			},
+			hasWeaponsOnConvertedSlots {
+				@Override public boolean check(ShipAPI ship) {
+					return !lyr_miscUtilities.hasWeapons(ship, ehm_internals.affixes.convertedSlot);
+				}
+
+				@Override public void print(TooltipMakerAPI tooltip, ShipAPI ship) {
+					if (this.check(ship)) return; lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasWeaponsOnConvertedSlots, text.padding);
+				}
+			},
+			hasWeaponsOnAdaptedSlots {
+				@Override public boolean check(ShipAPI ship) {
+					return !lyr_miscUtilities.hasWeapons(ship, ehm_internals.affixes.adaptedSlot);
+				}
+
+				@Override public void print(TooltipMakerAPI tooltip, ShipAPI ship) {
+					if (this.check(ship)) return; lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasWeaponsOnAdaptedSlots, text.padding);
+				}
+			},
+			hasExtraWings {
+				@Override public boolean check(ShipAPI ship) {
+					return !lyr_miscUtilities.hasExtraWings(ship, hullmods.main.base);
+				}
+
+				@Override public void print(TooltipMakerAPI tooltip, ShipAPI ship) {
+					if (this.check(ship)) return; lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasExtraWings, text.padding);
+				}
+			},
+			hasWeapons {
+				@Override public boolean check(ShipAPI ship) {
+					return !lyr_miscUtilities.hasWeapons(ship);
+				}
+
+				@Override public void print(TooltipMakerAPI tooltip, ShipAPI ship) {
+					if (this.check(ship)) return; lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasWeapons, text.colourized.padding);
+				}
+			},
+			hasMiniModules {
+				@Override public boolean check(ShipAPI ship) {
+					return !lyr_miscUtilities.hasModulesWithPrefix(ship, "ehm_module");
+				}
+
+				@Override public void print(TooltipMakerAPI tooltip, ShipAPI ship) {
+					if (this.check(ship)) return; lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasMiniModules, text.padding);
+				}
+			},
+			hasAnyFittedWings {
+				@Override public boolean check(ShipAPI ship) {
+					return !lyr_miscUtilities.hasAnyFittedWings(ship);
+				}
+
+				@Override public void print(TooltipMakerAPI tooltip, ShipAPI ship) {
+					if (this.check(ship)) return; lyr_tooltipUtilities.addColourizedPara(tooltip, text.colourized.hasWings, text.colourized.padding);
+				}
+			};
+
+			public abstract boolean check(ShipAPI ship);
+			public abstract void print(TooltipMakerAPI tooltip, ShipAPI ship);
 		}
 
 		public static final class uiTags {
@@ -272,7 +397,7 @@ public final class ehm_internals {
 
 	public static final class upgrades {
 		public static final String
-			prefix = "ehmu",
+			prefix = lyr_upgradeVault.ids.prefix,
 			overdrive = prefix+"_overdrive";
 	}
 
@@ -281,15 +406,14 @@ public final class ehm_internals {
 			engineCosmetics = hullmods.engineCosmetics.tag,
 			shieldCosmetics = hullmods.shieldCosmetics.tag,
 			weaponRetrofits = hullmods.weaponRetrofits.tag,
-			upgrade = "ehmu_upgrades",
-			overdrive = upgrades.overdrive,
+			upgrade = lyr_upgradeVault.ids.statId,
 			adapters = shunts.adapters.groupTag,
 			converters = shunts.converters.groupTag,
 			diverters = shunts.diverters.groupTag,
 			capacitors = shunts.capacitors.groupTag,
 			dissipators = shunts.dissipators.groupTag,
 			hangars = shunts.hangars.groupTag,
-			ordnancePoints = "ehm_ordnancePoints",	// TODO: implement/use this
+			ordnancePoints = "ehm_ordnancePoints",
 			slotPoints = "ehm_slotPoints",
 			slotPointsNeeded = "ehm_slotPointsNeeded",
 			slotPointsUsed = "ehm_slotPointsUsed",
