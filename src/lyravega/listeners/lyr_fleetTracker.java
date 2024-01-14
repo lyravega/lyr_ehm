@@ -231,7 +231,7 @@ public final class lyr_fleetTracker extends _lyr_tabListener implements _lyr_abs
 					lyr_logger.setLevel(lyr_levels.DEBUG); lyr_logger.debug("Lowering logger level to 'DEBUG'");
 				};	lyr_logger.warn("FT: Tracker not found, constructing a temporary one");
 
-				shipTracker = new lyr_shipTracker(instance, ship.getVariant(), null, "???", null);
+				shipTracker = new lyr_shipTracker(instance, ship.getVariant(), null, null, null);
 				shipTracker.registerTracker();
 			}
 

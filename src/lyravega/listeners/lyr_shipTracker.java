@@ -29,6 +29,7 @@ public final class lyr_shipTracker {
 	private final lyr_shipTracker parentTracker;
 	private final String trackerUUID;
 	private final boolean isShip;
+	private final String moduleSlotId;
 	private final String logPrefix;
 	private final FleetMemberAPI member;
 	private FleetMemberAPI refitMember;
@@ -53,12 +54,13 @@ public final class lyr_shipTracker {
 	 * @param variant of the ship
 	 * @param member of the ship
 	 */
-	public lyr_shipTracker(lyr_fleetTracker fleetTracker, ShipVariantAPI variant, FleetMemberAPI member, String moduleId, lyr_shipTracker parentTracker) {
+	public lyr_shipTracker(lyr_fleetTracker fleetTracker, ShipVariantAPI variant, FleetMemberAPI member, String slotId, lyr_shipTracker parentTracker) {
 		this.fleetTracker = fleetTracker;
 		this.parentTracker = parentTracker;
 		this.trackerUUID = UUID.randomUUID().toString();
 		this.isShip = member != null;
-		this.logPrefix = this.isShip ? "ST-"+member.getShipName() : "MT-"+parentTracker.getMember().getShipName()+"/"+moduleId;
+		this.moduleSlotId = slotId;
+		this.logPrefix = this.isShip ? "ST-"+member.getShipName() : slotId != null ? "MT-"+parentTracker.getMember().getShipName()+"/"+slotId : "TT-"+variant.getFullDesignationWithHullName();
 
 		this.member = member;
 		this.refitMember = member;
@@ -129,6 +131,8 @@ public final class lyr_shipTracker {
 				moduleTracker.variant = this.variant.getModuleVariant(moduleSlotId);
 				moduleTracker.registerTracker();
 			}
+		} else {
+			this.parentTracker.getVariant().setModuleVariant(this.moduleSlotId, this.variant);
 		}
 
 		if (!this.variant.getPermaMods().contains(lyr_fleetTracker.trackerModId)) {
@@ -155,6 +159,8 @@ public final class lyr_shipTracker {
 				moduleTracker.variant = this.variant.getModuleVariant(moduleSlotId);	// same reason as above; at this point, tracker variants will be outdated
 				moduleTracker.unregisterTracker();
 			}
+		} else {
+			// this.parentTracker.getVariant().setModuleVariant(this.moduleSlotId, this.variant);
 		}
 
 		if (this.variant.getPermaMods().contains(lyr_fleetTracker.trackerModId))
@@ -330,9 +336,10 @@ public final class lyr_shipTracker {
 		for (final String moduleSlotId : modules.keySet()) {
 			if (this.cachedModules.containsKey(moduleSlotId)) continue;
 
-			final ShipVariantAPI moduleVariant = this.variant.getModuleVariant(moduleSlotId);
-			final lyr_shipTracker moduleTracker = new lyr_shipTracker(this.fleetTracker, moduleVariant, null, moduleSlotId, this);
+			final lyr_shipTracker moduleTracker = new lyr_shipTracker(this.fleetTracker, this.variant.getModuleVariant(moduleSlotId), null, moduleSlotId, this);
+			final ShipVariantAPI moduleVariant = moduleTracker.getVariant();
 			moduleTracker.registerTracker();
+			// this.variant.setModuleVariant(moduleSlotId, moduleTracker.getVariant());	// TODO whaaat
 
 			this.cachedModules.put(moduleSlotId, moduleTracker);
 			lyr_eventDispatcher.onModuleEvent(onModuleInstalled, this.stats, moduleVariant, moduleSlotId);
