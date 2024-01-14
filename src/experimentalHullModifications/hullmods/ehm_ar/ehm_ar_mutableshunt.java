@@ -39,7 +39,6 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 		public static final String tag = capacitors.groupTag;
 		public static final String groupTag = capacitors.groupTag;
 		public static final Map<String, Integer> dataMap = new HashMap<String, Integer>();
-		public static final Set<String> idSet = dataMap.keySet();
 		private static final List<String> invalidSlotPrefixes = Arrays.asList(new String[]{affixes.convertedSlot});
 
 		public static final boolean isValidSlot(WeaponSlotAPI slot, WeaponSpecAPI shuntSpec) {
@@ -69,7 +68,6 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 		public static final String tag = dissipators.groupTag;
 		public static final String groupTag = dissipators.groupTag;
 		public static final Map<String, Integer> dataMap = new HashMap<String, Integer>();
-		public static final Set<String> idSet = dataMap.keySet();
 		private static final List<String> invalidSlotPrefixes = Arrays.asList(new String[]{affixes.convertedSlot});
 
 		public static final boolean isValidSlot(WeaponSlotAPI slot, WeaponSpecAPI shuntSpec) {
@@ -93,8 +91,8 @@ public final class ehm_ar_mutableshunt extends _ehm_ar_base {
 
 		this.statSet.add(capacitorData.groupTag);
 		this.statSet.add(dissipatorData.groupTag);
-		this.shuntIdSet.addAll(capacitorData.idSet);
-		this.shuntIdSet.addAll(dissipatorData.idSet);
+		this.shuntIdSet.addAll(capacitorData.dataMap.keySet());
+		this.shuntIdSet.addAll(dissipatorData.dataMap.keySet());
 	}
 
 	@Override

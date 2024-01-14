@@ -40,7 +40,6 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 		public static final String tag = adapters.groupTag;
 		public static final String groupTag = adapters.groupTag;
 		public static final Map<String, adapterParameters> dataMap = new HashMap<String, adapterParameters>();
-		public static final Set<String> idSet = dataMap.keySet();
 		private static final List<String> invalidSlotPrefixes = Arrays.asList(new String[]{affixes.adaptedSlot, affixes.convertedSlot});
 
 		public static final boolean isValidSlot(WeaponSlotAPI slot, WeaponSpecAPI shuntSpec) {
@@ -95,7 +94,7 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 		super();
 
 		this.statSet.add(adapterData.groupTag);
-		this.shuntIdSet.addAll(adapterData.idSet);
+		this.shuntIdSet.addAll(adapterData.dataMap.keySet());
 	}
 
 	@Override

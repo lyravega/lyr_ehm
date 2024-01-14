@@ -41,7 +41,6 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 		public static final String tag = converters.groupTag;
 		public static final String groupTag = converters.groupTag;
 		public static final Map<String, converterParameters> dataMap = new HashMap<String, converterParameters>();
-		public static final Set<String> idSet = dataMap.keySet();
 		private static final List<String> invalidSlotPrefixes = Arrays.asList(new String[]{affixes.adaptedSlot, affixes.convertedSlot});
 
 		public static final boolean isValidSlot(WeaponSlotAPI slot, WeaponSpecAPI shuntSpec) {
@@ -78,7 +77,6 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 		public static final String tag = diverters.groupTag;
 		public static final String groupTag = diverters.groupTag;
 		public static final Map<String, Integer> dataMap = new HashMap<String, Integer>();
-		public static final Set<String> idSet = dataMap.keySet();
 		private static final List<String> invalidSlotPrefixes = Arrays.asList(new String[]{affixes.convertedSlot});
 
 		public static final boolean isValidSlot(WeaponSlotAPI slot, WeaponSpecAPI shuntSpec) {
@@ -97,8 +95,8 @@ public final class ehm_ar_diverterandconverter extends _ehm_ar_base {
 
 		this.statSet.add(converterData.groupTag);
 		this.statSet.add(diverterData.groupTag);
-		this.shuntIdSet.addAll(converterData.idSet);
-		this.shuntIdSet.addAll(diverterData.idSet);
+		this.shuntIdSet.addAll(converterData.dataMap.keySet());
+		this.shuntIdSet.addAll(diverterData.dataMap.keySet());
 	}
 
 	@Override

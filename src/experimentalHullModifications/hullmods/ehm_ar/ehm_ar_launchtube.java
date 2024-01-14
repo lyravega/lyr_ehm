@@ -33,7 +33,6 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 		public static final String tag = hangars.groupTag;
 		public static final String groupTag = hangars.groupTag;
 		public static final Map<String, float[][]> dataMap = new HashMap<String, float[][]>();
-		public static final Set<String> idSet = dataMap.keySet();
 		private static final List<String> invalidSlotPrefixes = Arrays.asList(new String[]{affixes.convertedSlot});
 
 		public static final boolean isValidSlot(WeaponSlotAPI slot, WeaponSpecAPI shuntSpec) {
@@ -49,7 +48,7 @@ public final class ehm_ar_launchtube extends _ehm_ar_base {
 		super();
 
 		this.statSet.add(hangarData.groupTag);
-		this.shuntIdSet.addAll(hangarData.idSet);
+		this.shuntIdSet.addAll(hangarData.dataMap.keySet());
 	}
 
 	// com.fs.starfarer.api.impl.hullmods.ConvertedHangar

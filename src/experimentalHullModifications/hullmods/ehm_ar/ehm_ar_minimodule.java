@@ -1,6 +1,7 @@
 package experimentalHullModifications.hullmods.ehm_ar;
 
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
+import static lyravega.utilities.lyr_interfaceUtilities.refreshPlayerFleetView;
 
 import java.util.*;
 
@@ -12,7 +13,6 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI.ShipTypeHints;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
-import com.fs.starfarer.api.loading.VariantSource;
 import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
@@ -44,13 +44,15 @@ public final class ehm_ar_minimodule extends _ehm_ar_base implements moduleEvent
 	public void onModuleInstalled(MutableShipStatsAPI stats, ShipVariantAPI moduleVariant, String moduleSlotId) {
 		if (!this.shuntIdSet.contains(moduleVariant.getHullVariantId().replaceFirst("_Hull", ""))) return;	// TODO: make a new variant instead of using hull?
 
-		// lyr_fleetTracker.instance().addTracking(stats.getVariant(), null, null);	// order of this method matters; needs to be done before commit
-
-		commitVariantChanges();
+		commitVariantChanges(); refreshPlayerFleetView(false);	// refresh needed to display these little fucks in campaign
 	}
 
 	@Override
-	public void onModuleRemoved(MutableShipStatsAPI stats, ShipVariantAPI moduleVariant, String moduleSlotId) {}
+	public void onModuleRemoved(MutableShipStatsAPI stats, ShipVariantAPI moduleVariant, String moduleSlotId) {
+		if (!this.shuntIdSet.contains(moduleVariant.getHullVariantId().replaceFirst("_Hull", ""))) return;	// TODO: make a new variant instead of using hull?
+
+		commitVariantChanges(); refreshPlayerFleetView(false);
+	}
 	//#endregion
 	// END OF CUSTOM EVENTS
 
@@ -63,7 +65,6 @@ public final class ehm_ar_minimodule extends _ehm_ar_base implements moduleEvent
 		public static final String tag = modules.groupTag;
 		public static final String groupTag = modules.groupTag;
 		public static final Map<String, Object[]> dataMap = new HashMap<String, Object[]>();
-		public static final Set<String> idSet = dataMap.keySet();
 		private static final List<String> invalidSlotPrefixes = Arrays.asList(new String[]{affixes.adaptedSlot, affixes.convertedSlot});
 
 		public static final boolean isValidSlot(WeaponSlotAPI slot, WeaponSpecAPI shuntSpec) {
@@ -71,10 +72,7 @@ public final class ehm_ar_minimodule extends _ehm_ar_base implements moduleEvent
 		}
 
 		static {
-			ShipVariantAPI prototypeVariant = Global.getSettings().getVariant(ids.prototype+"_Hull").clone();	// TODO: make a new variant instead of using hull?
-			prototypeVariant.setSource(VariantSource.REFIT);
-
-			dataMap.put(ids.prototype, new Object[]{prototypeVariant.getHullSpec().getOrdnancePoints(null), prototypeVariant});
+			dataMap.put(ids.prototype, new Object[]{30, ids.prototype+"_Hull"});	// TODO: make a new variant instead of using hull?
 		}
 	}
 
@@ -82,7 +80,7 @@ public final class ehm_ar_minimodule extends _ehm_ar_base implements moduleEvent
 		super();
 
 		this.statSet.add(moduleData.groupTag);
-		this.shuntIdSet.addAll(moduleData.idSet);
+		this.shuntIdSet.addAll(moduleData.dataMap.keySet());
 	}
 
 	@Override
@@ -100,8 +98,11 @@ public final class ehm_ar_minimodule extends _ehm_ar_base implements moduleEvent
 			for (String slotId : moduleShunts.keySet()) {
 				if (parentHullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.STATION_MODULE) continue;
 
+				String shuntId = parentVariant.getWeaponId(slotId);
+				String moduleVariantId = String.class.cast(moduleData.dataMap.get(shuntId)[1]);
+
 				lyr_weaponSlot parentSlot = parentHullSpec.getWeaponSlot(slotId);
-				ShipVariantAPI moduleVariant = ShipVariantAPI.class.cast(moduleData.dataMap.get(moduleData.ids.prototype)[1]).clone();
+				ShipVariantAPI moduleVariant = Global.getSettings().getVariant(moduleVariantId).clone();
 				ehm_hullSpec moduleHullSpec = new ehm_hullSpec(moduleVariant.getHullSpec(), false);
 
 				moduleVariant.setHullSpecAPI(moduleHullSpec.retrieve());
@@ -112,10 +113,12 @@ public final class ehm_ar_minimodule extends _ehm_ar_base implements moduleEvent
 			}
 		}
 
-		for (String moduleSlotId : parentModules.keySet()) { String moduleVariantId = parentModules.get(moduleSlotId);
-			if (!this.shuntIdSet.contains(moduleVariantId.replaceFirst("_Hull", ""))) continue;	// TODO: make a new variant instead of using hull?
+		for (String moduleSlotId : parentModules.keySet()) {
+			String moduleVariantId = parentModules.get(moduleSlotId);
+			String shuntId = moduleVariantId.replaceFirst("_Hull", "");
+			if (!this.shuntIdSet.contains(shuntId)) continue;	// TODO: make a new variant instead of using hull?
 
-			int ordnancePointMod = -(int) moduleData.dataMap.get(moduleData.ids.prototype)[0];
+			int ordnancePointMod = -(int) moduleData.dataMap.get(shuntId)[0];
 
 			parentDynamicStats.getMod(moduleVariantId).modifyFlat(moduleSlotId, 1);
 			parentDynamicStats.getMod(moduleData.groupTag).modifyFlat(moduleSlotId, ordnancePointMod);
