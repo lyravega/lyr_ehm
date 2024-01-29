@@ -49,10 +49,10 @@ public final class ehm_hullSpec extends lyr_hullSpec {
 	public ehm_hullSpec(ShipHullSpecAPI hullSpec, boolean forceClone) {
 		super(hullSpec);
 
-		ShipHullSpecAPI dHullSpec = this.referenceDamaged();	// damaged hull spec
-		ShipHullSpecAPI oHullSpec = this.referenceNonDamaged();	// original hull spec
+		if (forceClone || this.referenceDamaged() == hullSpec || this.referenceNonDamaged() == hullSpec) {
+			ShipHullSpecAPI dHullSpec = this.referenceDamaged();	// damaged hull spec
+			ShipHullSpecAPI oHullSpec = this.referenceNonDamaged();	// original hull spec
 
-		if (forceClone || dHullSpec == hullSpec || oHullSpec == hullSpec) {
 			this.hullSpec = this.duplicate(dHullSpec);	// should be absolutely first here
 
 			for (String hullSpecTag : oHullSpec.getTags()) // this is a set, so there cannot be any duplicates, but still
