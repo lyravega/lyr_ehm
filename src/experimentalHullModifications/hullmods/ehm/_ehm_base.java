@@ -238,7 +238,7 @@ public abstract class _ehm_base implements HullModEffect {
 		ehm_hullSpec hullSpec = new ehm_hullSpec(variant.getHullSpec(), false);
 
 		// primarily to deal with stuff on load
-		if (!lyr_ehm.lunaSettings.getClearUnknownSlots()) for (String slotId : variant.getFittedWeaponSlots()) {
+		for (String slotId : variant.getFittedWeaponSlots()) {
 			if (variant.getSlot(slotId) != null) continue;
 			matcher = pattern.matcher(slotId);
 			if (matcher.find()) slotId = matcher.group();
@@ -251,17 +251,19 @@ public abstract class _ehm_base implements HullModEffect {
 			String shuntId = shuntSpec.getWeaponId();
 			if (adapterData.dataMap.keySet().contains(shuntId)) hullSpec.activateAdapterShunt(shuntId, slotId);
 			else if (converterData.dataMap.keySet().contains(shuntId)) hullSpec.activateConverterShunt(shuntId, slotId);
-		} else for (String slotId : variant.getFittedWeaponSlots()) {
+		}
+
+		variant.setHullSpecAPI(hullSpec.retrieve());
+
+		if (lyr_ehm.lunaSettings.getClearUnknownSlots()) for (String slotId : variant.getFittedWeaponSlots()) {
 			if (variant.getSlot(slotId) != null) continue;
 
 			String weaponId = variant.getWeaponId(slotId);
 			lyr_logger.warn("Slot with the ID '"+slotId+"' not found, stashing the weapon '"+weaponId+"'");
 			ehm_lostAndFound.addLostItem(weaponId);	// to recover the weapons 'onGameLoad()'
 
-			variant.clearSlot(slotId);	// this is an emergency option to allow loading because I fucked up
+			variant.clearSlot(slotId);	// this is an emergency option to allow loading
 		}
-
-		variant.setHullSpecAPI(hullSpec.retrieve());
 	}
 
 	protected final void preProcessDynamicStats(MutableShipStatsAPI stats) {
