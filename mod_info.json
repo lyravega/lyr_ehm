@@ -3,7 +3,7 @@
 	"name":"Experimental Hull Modifications",
 	"author":"lyravega",
 	"version":"0.8.7",
-	"gameVersion":"0.96a-RC10",
+	"gameVersion":"0.97a-RC6",
 	"description":"Adds experimental hull modifications",
 	"jars":["jars/lyr_ehm.jar"],
 	"modPlugin": "experimentalHullModifications.plugin.lyr_ehm",
