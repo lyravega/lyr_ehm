@@ -21,7 +21,7 @@ public class lyr_tooltipUtilities {
 		public static final Color highlight = Misc.getHighlightColor();
 		public static final Color positive = Misc.getPositiveHighlightColor();
 		public static final Color story = Misc.getStoryOptionColor();
-		public static final Color storyDarkBright = Misc.getStoryDarkBrigherColor();
+		public static final Color storyDarkBright = Misc.getStoryDarkBrighterColor();
 		public static final Color negative = Misc.getNegativeHighlightColor();
 		public static final Color button = Misc.getButtonTextColor();
 

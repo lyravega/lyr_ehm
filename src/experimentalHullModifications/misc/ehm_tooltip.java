@@ -72,7 +72,7 @@ public class ehm_tooltip {
 			invisible_textColour = new Color(0, 0, 0, 0),
 			info_textColour = Misc.getButtonTextColor(),
 			warning_textColour = Misc.getHighlightColor(),
-			noEffect_textColour = Misc.getStoryDarkBrigherColor(),
+			noEffect_textColour = Misc.getStoryDarkBrighterColor(),
 			sEffect_textColour = Misc.getStoryOptionColor(),
 			customizable_textColour = Misc.getPositiveHighlightColor(),
 			severeWarning_textColour = Misc.getNegativeHighlightColor(),
