@@ -17,7 +17,7 @@ import lyravega.utilities.logger.lyr_logger;
  * A sector listener class whose sole purpose is to attach/detach a submarket
  * when the player interacts with a (valid) market while the ability is toggled on
  * @author lyravega
- * @see {@link experimentalHullModifications.abilities.ehm_ability Control Ability}
+ * @see {@link experimentalHullModifications.abilities.ehm_shuntController Control Ability}
  * @see {@link experimentalHullModifications.submarkets.ehm_submarket Experimental Submarket}
  */
 public final class ehm_submarketInjector extends _lyr_sectorListener implements ColonyInteractionListener {

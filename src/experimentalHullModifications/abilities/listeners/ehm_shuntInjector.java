@@ -16,7 +16,7 @@ import lyravega.utilities.logger.lyr_logger;
  * A sector listener class that adds/removes slot shunts to/from the player
  * inventory when the refit tab is opened/closed while the ability is toggled on
  * @author lyravega
- * @see {@link experimentalHullModifications.abilities.ehm_ability Control Ability}
+ * @see {@link experimentalHullModifications.abilities.ehm_shuntController Control Ability}
  */
 public final class ehm_shuntInjector extends _lyr_tabListener {
 	private static _lyr_sectorListener instance = null;

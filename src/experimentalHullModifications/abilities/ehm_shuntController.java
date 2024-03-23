@@ -23,7 +23,7 @@ import experimentalHullModifications.plugin.lyr_ehm;
  * the submarket are all transient.
  * @author lyravega
  */
-public final class ehm_ability extends BaseToggleAbility {
+public final class ehm_shuntController extends BaseToggleAbility {
 	@Override
 	protected String getActivationText() {
 		switch (lyr_ehm.lunaSettings.getShuntAvailability()) {

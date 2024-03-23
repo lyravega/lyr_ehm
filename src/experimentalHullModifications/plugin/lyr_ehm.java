@@ -15,7 +15,7 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.thoughtworks.xstream.XStream;
 
-import experimentalHullModifications.abilities.ehm_ability;
+import experimentalHullModifications.abilities.ehm_shuntController;
 import experimentalHullModifications.abilities.listeners.ehm_shuntInjector;
 import experimentalHullModifications.abilities.listeners.ehm_submarketInjector;
 import experimentalHullModifications.hullmods.ehm._ehm_base;
@@ -70,7 +70,7 @@ public final class lyr_ehm extends BaseModPlugin {
 	@Override
 	public void configureXStream(XStream x) {
 		x.alias("FieldRepairsScript", ehm_fieldRepairsScript.class);
-		x.alias("ehm_ability", ehm_ability.class);	// remember to use this for serialized shit
+		x.alias("ehm_shuntController", ehm_shuntController.class);	// remember to use this for serialized shit
 		x.alias("ehm_shuntInjector", ehm_shuntInjector.class);	// added transient, but just in case
 		x.alias("ehm_submarketInjector", ehm_submarketInjector.class);	// added transient, but just in case
 	}
