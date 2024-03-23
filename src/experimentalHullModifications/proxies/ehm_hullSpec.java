@@ -163,7 +163,7 @@ public final class ehm_hullSpec extends lyr_hullSpec {
 
 		this.addBuiltInWeapon(slotId, shuntId);
 		parentSlot.setWeaponType(WeaponType.DECORATIVE);
-		if (lyr_ehm.lunaSettings.getHideConverters()) parentSlot.setSlotType(slotTypeConstants.hidden);	// TODO: add an option to hide the hangars
+		if (lyr_ehm.lunaSettings.getHideHangars()) parentSlot.setSlotType(slotTypeConstants.hidden);
 		else parentSlot.setRenderOrderMod(-1f);
 	}
 

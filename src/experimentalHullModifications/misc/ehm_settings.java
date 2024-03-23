@@ -27,6 +27,7 @@ public final class ehm_settings extends lyr_lunaUtilities {
 	public boolean getCosmeticsOnly() { return this.getBoolean("ehm_cosmeticsOnly"); }
 	public boolean getHideAdapters() { return this.getBoolean("ehm_hideAdapters"); }
 	public boolean getHideConverters() { return this.getBoolean("ehm_hideConverters"); }
+	public boolean getHideHangars() { return this.getBoolean("ehm_hideHangars"); }
 	public int getBaseSlotPointPenalty() { return this.getInt("ehm_baseSlotPointPenalty"); }
 	public boolean getShowExperimentalFlavour() { return this.getBoolean("ehm_showExperimentalFlavour"); }
 	public boolean getShowFluff() { return this.getBoolean("ehm_showFluff"); }
