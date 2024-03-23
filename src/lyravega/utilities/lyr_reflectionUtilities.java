@@ -172,30 +172,32 @@ public class lyr_reflectionUtilities {
 		/**
 		 * A lite method that searches an instance's class or a class for a declared
 		 * method name, unreflects its method handle, and attempts to invoke it with the
-		 * passed parameters.
-		 * <p> Does not handle methods with overloads; will try to invoke the first found
-		 * method, regardless of any passed parameters.
+		 * passed parameters (if any).
 		 * <p> Handles instance methods; if {@code instanceOrClass} is an instantiated
 		 * object, then it'll be used by the method handle along with the parameters.
 		 * @param instanceOrClass to search the method on
 		 * @param methodName as a {@code String}, without any brackets
-		 * @param parameters to be used as method arguments during invocation
+		 * @param parameters to be used as method arguments during invocation, if any
 		 * @return anything that the method returns, null for void / no returns
 		 * @throws Throwable
 		 */
 		public static Object invokeDirect(Object instanceOrClass, String methodName, Object... parameters) throws Throwable {
 			boolean isClass = instanceOrClass.getClass().equals(Class.class);
 			Class<?> clazz = isClass ? (Class<?>) instanceOrClass : instanceOrClass.getClass();
+			Class<?>[] parameterTypes = null;
 
-			for (Object method : clazz.getDeclaredMethods()) {
-				if (!String.class.cast(getName.invoke(method)).equals(methodName)) continue;
+			if (parameters != null) {
+				parameterTypes = new Class<?>[parameters.length];
 
-				// lyr_logger.reflectionInfo("Method with the name '"+methodName+"' was found in the class '"+clazz.getName()+"'");
-				if (isClass) return MethodHandle.class.cast(unreflect.invoke(lookup, method)).invokeWithArguments(parameters);
-				return MethodHandle.class.cast(unreflect.invoke(lookup, method)).bindTo(instanceOrClass).invokeWithArguments(parameters);
+				for (int i = 0; i < parameters.length; i++)
+					parameterTypes[i] = parameters[i].getClass();
 			}
 
-			throw new NoSuchMethodException("Method with the name '"+methodName+"' was not found in '"+clazz.getName()+"'");
+			Object method = clazz.getDeclaredMethod(methodName, parameterTypes);
+
+			// lyr_logger.reflectionInfo("Method with the name '"+methodName+"' was found in the class '"+clazz.getName()+"'");
+			if (isClass) return MethodHandle.class.cast(unreflect.invoke(lookup, method)).invokeWithArguments(parameters);
+			return MethodHandle.class.cast(unreflect.invoke(lookup, method)).bindTo(instanceOrClass).invokeWithArguments(parameters);
 		}
 
 		// private final Object method;	// not necessary since accessors do not use this, so it is tossed away
