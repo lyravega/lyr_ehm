@@ -3,15 +3,12 @@ package experimentalHullModifications.hullmods.ehm_ar;
 import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
-import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
-import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.WeaponGroupSpec;
-import com.fs.starfarer.api.loading.WeaponSpecAPI;
-import com.fs.starfarer.api.ui.Alignment;
-import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import lyravega.listeners.events.normalEvents;
@@ -62,8 +59,8 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 	//#endregion
 	// END OF CUSTOM EVENTS
 
-	protected final Set<String> shuntIdSet = new HashSet<String>();
-	protected final Set<String> statSet = new HashSet<String>();
+	public final Set<String> shuntIdSet = new HashSet<String>();
+	public final Set<String> statSet = new HashSet<String>();
 
 	protected void cleanWeaponGroups(MutableShipStatsAPI stats) {
 		for (Iterator<WeaponGroupSpec> iterator = stats.getVariant().getWeaponGroups().iterator(); iterator.hasNext();) {
@@ -73,31 +70,6 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 				weaponGroup.getSlots().removeAll(stats.getDynamic().getMod(statId).getFlatBonuses().keySet());
 
 			if (weaponGroup.getSlots().isEmpty()) iterator.remove();
-		}
-	}
-
-	/**
-	 * Prints basic shunt count information to a tooltip.
-	 * @param tooltip to alter
-	 * @param variant to get shunt ids from
-	 * @param slotIdSet to check
-	 */
-	protected final void printShuntCountsOnTooltip(TooltipMakerAPI tooltip, ShipVariantAPI variant, Set<String> slotIdSet) {
-		Map<String, Integer> shunts = new HashMap<String, Integer>();
-
-		for (String slotId : slotIdSet) {
-			String shuntId = variant.getWeaponId(slotId);
-			int shuntAmount = shunts.get(shuntId) == null ? 0 : shunts.get(shuntId);
-
-			shunts.put(shuntId, shuntAmount+1);
-		}
-
-		for (String shuntId : shunts.keySet()) {
-			WeaponSpecAPI shuntSpec = Global.getSettings().getWeaponSpec(shuntId);
-
-			tooltip.beginImageWithText(shuntSpec.getTurretSpriteName(), 16, tooltip.getWidthSoFar(), true)
-				.addPara(Math.round(shunts.get(shuntId)) + "x " + shuntSpec.getWeaponName(), 0f).setAlignment(Alignment.LMID);
-			tooltip.addImageWithText(2f);
 		}
 	}
 

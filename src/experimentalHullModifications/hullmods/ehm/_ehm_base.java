@@ -1,5 +1,12 @@
 package experimentalHullModifications.hullmods.ehm;
 
+import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_diverterandconverter.converterEffect;
+import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_diverterandconverter.diverterEffect;
+import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_launchtube.hangarEffect;
+import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.capacitorEffect;
+import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.dissipatorEffect;
+import static experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.adapterEffect;
+
 import java.awt.Color;
 import java.util.EnumSet;
 import java.util.Set;
@@ -18,17 +25,12 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.DynamicStatsAPI;
 
-import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_diverterandconverter.converterData;
-import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_diverterandconverter.diverterData;
-import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_launchtube.hangarData;
 import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_minimodule.moduleData;
-import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.capacitorData;
-import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_mutableshunt.dissipatorData;
-import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.adapterData;
 import experimentalHullModifications.hullmods.ehm_mr.ehm_mr_auxilarygenerators;
 import experimentalHullModifications.hullmods.ehm_mr.ehm_mr_overengineered;
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_internals.hullmods.checks;
+import experimentalHullModifications.misc.ehm_internals.shunts.*;
 import experimentalHullModifications.misc.ehm_lostAndFound;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import experimentalHullModifications.misc.ehm_tooltip.text;
@@ -61,7 +63,7 @@ import lyravega.utilities.logger.lyr_logger;
  * @author lyravega
  */
 public abstract class _ehm_base implements HullModEffect {
-	protected HullModSpecAPI hullModSpec;
+	protected HullModSpecAPI hullModSpec;	public HullModSpecAPI getHullModSpec() { return this.hullModSpec; }
 	protected String hullModSpecId;
 	protected final extendedData extendedData = new extendedData();
 
@@ -248,9 +250,11 @@ public abstract class _ehm_base implements HullModEffect {
 			WeaponSpecAPI shuntSpec = variant.getWeaponSpec(slotId);
 			if (shuntSpec.getSize() != variant.getSlot(slotId).getSlotSize()) continue;
 
-			String shuntId = shuntSpec.getWeaponId();
-			if (adapterData.dataMap.keySet().contains(shuntId)) hullSpec.activateAdapterShunt(shuntId, slotId);
-			else if (converterData.dataMap.keySet().contains(shuntId)) hullSpec.activateConverterShunt(shuntId, slotId);
+			String shuntGroupTag = shuntSpec.getWeaponGroupTag();
+			switch (shuntGroupTag) {
+				case adapters.groupTag: adapterEffect.activateShunt(hullSpec, slotId, shuntSpec.getWeaponId()); continue;
+				case converters.groupTag: converterEffect.activateShunt(hullSpec, slotId, shuntSpec.getWeaponId()); continue;
+			}
 		}
 
 		variant.setHullSpecAPI(hullSpec.retrieve());
@@ -266,6 +270,19 @@ public abstract class _ehm_base implements HullModEffect {
 		}
 	}
 
+	/**
+	 * Dynamic stats may be utilized to track certain things as they are transient between sessions
+	 * but persistent during one.
+	 * <p> This method is utilized in that manner to check the ships for certain shunts and hullmods,
+	 * and cache them by creating and/or altering relevant dynamic stat entries for future use.
+	 * <p> As execution (installation) order of hull modifications matter, caching some of the things
+	 * in the dynamic stats of the ship will allow the information to be easily accessible.
+	 * <p> For example, shunts may be registered on the dynamic stats with their slot ids, which will
+	 * allow getting a set of slot ids of them with a simple query, which this method does. This
+	 * eliminates the need of going over the ship's slots/weapons one by one, as the dynamic stats
+	 * already contains that information as a stat, where the sources are the slot ids.
+	 * @param stats of the ship
+	 */
 	protected final void preProcessDynamicStats(MutableShipStatsAPI stats) {
 		DynamicStatsAPI dynamicStats = stats.getDynamic();
 		ShipVariantAPI variant = stats.getVariant();
@@ -297,63 +314,12 @@ public abstract class _ehm_base implements HullModEffect {
 			String shuntId = shuntSpec.getWeaponId();
 			String shuntGroupTag = shuntSpec.getWeaponGroupTag();
 			switch (shuntGroupTag) {
-				case adapterData.groupTag: {
-					if (!variant.hasHullMod(adapterData.activatorId)) continue;
-					if (!adapterData.isValidSlot(slot, shuntSpec)) continue;
-
-					dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-					dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 1);
-				}; continue;
-				case converterData.groupTag: {
-					if (!variant.hasHullMod(converterData.activatorId)) continue;
-					if (!converterData.isValidSlot(slot, shuntSpec)) continue;
-
-					int mod = converterData.dataMap.get(shuntId).getChildCost();
-					if (!slot.isDecorative()) {
-						dynamicStats.getMod(shuntId+"_inactive").modifyFlat(slotId, 1);
-						dynamicStats.getMod(shuntGroupTag+"_inactive").modifyFlat(slotId, mod);
-						dynamicStats.getMod(ehm_internals.statIds.slotPointsNeeded).modifyFlat(slotId, mod);
-					} else {
-						dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-						dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, mod);
-						dynamicStats.getMod(ehm_internals.statIds.slotPointsNeeded).modifyFlat(slotId, mod);
-						dynamicStats.getMod(ehm_internals.statIds.slotPointsUsed).modifyFlat(slotId, mod);
-						// dynamicStats.getMod(ehm_internals.stats.slotPointsToConverters).modifyFlat(slotId, mod);	// redundant since stat ids point at the group tag
-					}
-				}; continue;
-				case diverterData.groupTag: {
-					if (!variant.hasHullMod(diverterData.activatorId)) continue;
-					if (!diverterData.isValidSlot(slot, shuntSpec)) continue;
-
-					int mod = diverterData.dataMap.get(shuntId);
-					dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-					dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, mod);
-					dynamicStats.getMod(ehm_internals.statIds.slotPoints).modifyFlat(slotId, mod);
-					// dynamicStats.getMod(ehm_internals.stats.slotPointsFromDiverters).modifyFlat(slotId, mod);	// redundant since stat ids point at the group tag
-				}; continue;
-				case capacitorData.groupTag: {
-					if (!variant.hasHullMod(capacitorData.activatorId)) continue;
-					if (!capacitorData.isValidSlot(slot, shuntSpec)) continue;
-
-					int mod = capacitorData.dataMap.get(shuntId);
-					dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-					dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, mod);
-				}; continue;
-				case dissipatorData.groupTag: {
-					if (!variant.hasHullMod(dissipatorData.activatorId)) continue;
-					if (!dissipatorData.isValidSlot(slot, shuntSpec)) continue;
-
-					int mod = dissipatorData.dataMap.get(shuntId);
-					dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-					dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, mod);
-				}; continue;
-				case hangarData.groupTag: {
-					if (!variant.hasHullMod(hangarData.activatorId)) continue;
-					if (!hangarData.isValidSlot(slot, shuntSpec)) continue;
-
-					dynamicStats.getMod(shuntId).modifyFlat(slotId, 1);
-					dynamicStats.getMod(shuntGroupTag).modifyFlat(slotId, 1);
-				}; continue;
+				case adapters.groupTag: adapterEffect.registerShunt(stats, dynamicStats, variant, slot, slotId, shuntId); continue;
+				case converters.groupTag: converterEffect.registerShunt(stats, dynamicStats, variant, slot, slotId, shuntId); continue;
+				case diverters.groupTag: diverterEffect.registerShunt(stats, dynamicStats, variant, slot, slotId, shuntId); continue;
+				case capacitors.groupTag: capacitorEffect.registerShunt(stats, dynamicStats, variant, slot, slotId, shuntId); continue;
+				case dissipators.groupTag: dissipatorEffect.registerShunt(stats, dynamicStats, variant, slot, slotId, shuntId); continue;
+				case hangars.groupTag: hangarEffect.registerShunt(stats, dynamicStats, variant, slot, slotId, shuntId); continue;
 				case moduleData.groupTag: {
 					if (!variant.hasHullMod(moduleData.activatorId)) continue;
 					if (!moduleData.isValidSlot(slot, shuntSpec)) continue;

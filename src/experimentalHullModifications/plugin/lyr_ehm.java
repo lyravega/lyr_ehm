@@ -1,5 +1,6 @@
 package experimentalHullModifications.plugin;
 
+import java.lang.invoke.MethodHandle;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -13,6 +14,8 @@ import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.impl.campaign.skills.FieldRepairsScript;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
+import com.fs.starfarer.campaign.fleet.FleetMember;
+import com.fs.starfarer.combat.CombatFleetManager;
 import com.thoughtworks.xstream.XStream;
 
 import experimentalHullModifications.abilities.ehm_shuntController;
@@ -31,6 +34,7 @@ import lunalib.lunaRefit.LunaRefitManager;
 import lyravega.listeners.lyr_eventDispatcher;
 import lyravega.listeners.lyr_fleetTracker;
 import lyravega.upgrades.lyr_upgradeVault;
+import lyravega.utilities.lyr_reflectionUtilities;
 import lyravega.utilities.logger.lyr_logger;
 
 public final class lyr_ehm extends BaseModPlugin {
@@ -65,6 +69,17 @@ public final class lyr_ehm extends BaseModPlugin {
 		// TODO: clean this shit up
 		// if (!Global.getSettings().isDevMode()) return;
 		LunaRefitManager.addRefitButton(new _ehmu_test());
+
+		MethodHandle test = null;
+
+		try {
+			test = lyr_reflectionUtilities.methodReflection.findMethodByClass(CombatFleetManager.DeploymentSpec.class, void.class, FleetMember.class).getMethodHandle();
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		test = test;
 	}
 
 	@Override

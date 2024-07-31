@@ -1,27 +1,15 @@
 package experimentalHullModifications.proxies;
 
-import org.lwjgl.util.vector.Vector2f;
-
 import com.fs.starfarer.api.characters.MutableCharacterStatsAPI;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
-import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
-import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.util.Misc;
 
-import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_diverterandconverter.converterData;
-import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_diverterandconverter.converterData.converterParameters;
-import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_launchtube.hangarData;
-import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.adapterData;
-import experimentalHullModifications.hullmods.ehm_ar.ehm_ar_stepdownadapter.adapterData.adapterParameters;
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_tooltip.text;
 import experimentalHullModifications.plugin.lyr_ehm;
 import lyravega.proxies.lyr_hullSpec;
-import lyravega.proxies.lyr_weaponSlot;
-import lyravega.proxies.lyr_weaponSlot.slotTypeConstants;
-import lyravega.utilities.lyr_vectorUtilities;
 
 /**
  * A derivation of the proxy-like {@link lyr_hullSpec} class that serves more specific needs, whereas
@@ -85,28 +73,28 @@ public final class ehm_hullSpec extends lyr_hullSpec {
 	 * @param shuntId to determine the shunt type and to add the weapon as a built-in
 	 * @param slotId to get and alter the parent slot while deriving info for children
 	 */
-	public final void activateAdapterShunt(String shuntId, String slotId) {
-		adapterParameters childrenParameters = adapterData.dataMap.get(shuntId);
-		lyr_weaponSlot parentSlot = this.getWeaponSlot(slotId);
+	// public final void activateAdapterShunt(String shuntId, String slotId) {
+	// 	adapterParameters childrenParameters = adapterData.dataMap.get(shuntId);
+	// 	lyr_weaponSlot parentSlot = this.getWeaponSlot(slotId);
 
-		for (String childId: childrenParameters.getChildren()) { // childId and childSlotId are not the same, be aware
-			lyr_weaponSlot childSlot = parentSlot.clone();
-			String childSlotId = ehm_internals.affixes.adaptedSlot + slotId + childId; // also used as nodeId
-			Vector2f childSlotLocation = lyr_vectorUtilities.calculateRelativePoint(parentSlot.getLocation(), parentSlot.getAngle(), childrenParameters.getChildOffset(childId));
-			WeaponSize childSlotSize = childrenParameters.getChildSize(childId);
+	// 	for (String childId: childrenParameters.getChildren()) { // childId and childSlotId are not the same, be aware
+	// 		lyr_weaponSlot childSlot = parentSlot.clone();
+	// 		String childSlotId = ehm_internals.affixes.adaptedSlot + slotId + childId; // also used as nodeId
+	// 		Vector2f childSlotLocation = lyr_vectorUtilities.calculateRelativePoint(parentSlot.getLocation(), parentSlot.getAngle(), childrenParameters.getChildOffset(childId));
+	// 		WeaponSize childSlotSize = childrenParameters.getChildSize(childId);
 
-			childSlot.setId(childSlotId);
-			childSlot.setNode(childSlotId, childSlotLocation);
-			childSlot.setSlotSize(childSlotSize);
+	// 		childSlot.setId(childSlotId);
+	// 		childSlot.setNode(childSlotId, childSlotLocation);
+	// 		childSlot.setSlotSize(childSlotSize);
 
-		 	this.addWeaponSlot(childSlot);
-		}
+	// 	 	this.addWeaponSlot(childSlot);
+	// 	}
 
-		this.addBuiltInWeapon(slotId, shuntId);
-		parentSlot.setWeaponType(WeaponType.DECORATIVE);
-		if (lyr_ehm.lunaSettings.getHideAdapters()) parentSlot.setSlotType(slotTypeConstants.hidden);
-		else parentSlot.setRenderOrderMod(-1f);	// sometimes the activated shunts (decoratives) on these new slots (especially hardpoint ones) are rendered below the adapter, hence the change
-	}
+	// 	this.addBuiltInWeapon(slotId, shuntId);
+	// 	parentSlot.setWeaponType(WeaponType.DECORATIVE);
+	// 	if (lyr_ehm.lunaSettings.getHideAdapters()) parentSlot.setSlotType(slotTypeConstants.hidden);
+	// 	else parentSlot.setRenderOrderMod(-1f);	// sometimes the activated shunts (decoratives) on these new slots (especially hardpoint ones) are rendered below the adapter, hence the change
+	// }
 
 	/**
 	 * Activates the converter shunts on the slot. The {@link converterData} object contains child data
@@ -115,24 +103,24 @@ public final class ehm_hullSpec extends lyr_hullSpec {
 	 * @param shuntId to determine the shunt type and to add the weapon as a built-in
 	 * @param slotId to get and alter the parent slot while deriving info for child
 	 */
-	public final void activateConverterShunt(String shuntId, String slotId) {
-		converterParameters childParameters = converterData.dataMap.get(shuntId);
-		lyr_weaponSlot parentSlot = this.getWeaponSlot(slotId);
+	// public final void activateConverterShunt(String shuntId, String slotId) {
+	// 	converterParameters childParameters = converterData.dataMap.get(shuntId);
+	// 	lyr_weaponSlot parentSlot = this.getWeaponSlot(slotId);
 
-		lyr_weaponSlot childSlot = parentSlot.clone();
-		String childSlotId = ehm_internals.affixes.convertedSlot + slotId + childParameters.getChildSuffix(); // also used as nodeId
+	// 	lyr_weaponSlot childSlot = parentSlot.clone();
+	// 	String childSlotId = ehm_internals.affixes.convertedSlot + slotId + childParameters.getChildSuffix(); // also used as nodeId
 
-		childSlot.setId(childSlotId);
-		childSlot.setNode(childSlotId, parentSlot.getLocation());
-		childSlot.setSlotSize(childParameters.getChildSize());
+	// 	childSlot.setId(childSlotId);
+	// 	childSlot.setNode(childSlotId, parentSlot.getLocation());
+	// 	childSlot.setSlotSize(childParameters.getChildSize());
 
-		this.addWeaponSlot(childSlot);
+	// 	this.addWeaponSlot(childSlot);
 
-		this.addBuiltInWeapon(slotId, shuntId);
-		parentSlot.setWeaponType(WeaponType.DECORATIVE);
-		if (lyr_ehm.lunaSettings.getHideConverters()) parentSlot.setSlotType(slotTypeConstants.hidden);
-		else parentSlot.setRenderOrderMod(-1f);
-	}
+	// 	this.addBuiltInWeapon(slotId, shuntId);
+	// 	parentSlot.setWeaponType(WeaponType.DECORATIVE);
+	// 	if (lyr_ehm.lunaSettings.getHideConverters()) parentSlot.setSlotType(slotTypeConstants.hidden);
+	// 	else parentSlot.setRenderOrderMod(-1f);
+	// }
 
 	/**
 	 * Activates the hangar shunt on the slot. The {@link hangarData} object contains child data
@@ -147,25 +135,25 @@ public final class ehm_hullSpec extends lyr_hullSpec {
 	 * @param shuntId to determine the shunt type and to add the weapon as a built-in
 	 * @param slotId to get and alter the parent slot while deriving info for child
 	 */
-	public final void activateHangarShunt(String shuntId, String slotId) {
-		float[][] launchPoints = hangarData.dataMap.get(shuntId);
-		lyr_weaponSlot parentSlot = this.getWeaponSlot(slotId);
+	// public final void activateHangarShunt(String shuntId, String slotId) {
+	// 	float[][] launchPoints = hangarData.dataMap.get(shuntId);
+	// 	lyr_weaponSlot parentSlot = this.getWeaponSlot(slotId);
 
-		lyr_weaponSlot childSlot = parentSlot.clone();
-		String childSlotId = ehm_internals.affixes.launchSlot + slotId; // also used as nodeId
+	// 	lyr_weaponSlot childSlot = parentSlot.clone();
+	// 	String childSlotId = ehm_internals.affixes.launchSlot + slotId; // also used as nodeId
 
-		childSlot.setId(childSlotId);
-		childSlot.setNode(childSlotId, new Vector2f(parentSlot.getLocation()));
-		childSlot.addLaunchPoints(null, launchPoints);
-		childSlot.setWeaponType(WeaponType.LAUNCH_BAY);
+	// 	childSlot.setId(childSlotId);
+	// 	childSlot.setNode(childSlotId, new Vector2f(parentSlot.getLocation()));
+	// 	childSlot.addLaunchPoints(null, launchPoints);
+	// 	childSlot.setWeaponType(WeaponType.LAUNCH_BAY);
 
-		this.addWeaponSlot(childSlot);
+	// 	this.addWeaponSlot(childSlot);
 
-		this.addBuiltInWeapon(slotId, shuntId);
-		parentSlot.setWeaponType(WeaponType.DECORATIVE);
-		if (lyr_ehm.lunaSettings.getHideHangars()) parentSlot.setSlotType(slotTypeConstants.hidden);
-		else parentSlot.setRenderOrderMod(-1f);
-	}
+	// 	this.addBuiltInWeapon(slotId, shuntId);
+	// 	parentSlot.setWeaponType(WeaponType.DECORATIVE);
+	// 	if (lyr_ehm.lunaSettings.getHideHangars()) parentSlot.setSlotType(slotTypeConstants.hidden);
+	// 	else parentSlot.setRenderOrderMod(-1f);
+	// }
 
 	/**
 	 * Activates a generic shunt on the slot. Generic shunts do not spawn child slots or have any
@@ -173,10 +161,10 @@ public final class ehm_hullSpec extends lyr_hullSpec {
 	 * @param shuntId if not {@code null}, to add the weapon as a built-in
 	 * @param slotId to get and alter the parent slot
 	 */
-	public final void activateGenericShunt(String shuntId, String slotId) {
-		if (shuntId != null) this.addBuiltInWeapon(slotId, shuntId);
-		this.getWeaponSlot(slotId).setWeaponType(WeaponType.DECORATIVE);
-	}
+	// public final void activateGenericShunt(String shuntId, String slotId) {
+	// 	if (shuntId != null) this.addBuiltInWeapon(slotId, shuntId);
+	// 	this.getWeaponSlot(slotId).setWeaponType(WeaponType.DECORATIVE);
+	// }
 
 	/**
 	 * Uses a dynamic stat ({@link ehm_internals.statIds#ordnancePoints ehm_ordnancePoints}) to alter

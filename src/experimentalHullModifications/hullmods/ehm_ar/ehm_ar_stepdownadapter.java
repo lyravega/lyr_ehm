@@ -1,100 +1,61 @@
 package experimentalHullModifications.hullmods.ehm_ar;
 
-import java.util.*;
-
 import org.lwjgl.util.vector.Vector2f;
 
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
-import com.fs.starfarer.api.combat.MutableStat.StatMod;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
-import com.fs.starfarer.api.combat.WeaponAPI.WeaponType;
-import com.fs.starfarer.api.loading.WeaponSlotAPI;
-import com.fs.starfarer.api.loading.WeaponSpecAPI;
-import com.fs.starfarer.api.ui.Alignment;
+import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.DynamicStatsAPI;
 
-import experimentalHullModifications.misc.ehm_internals.affixes;
 import experimentalHullModifications.misc.ehm_internals.shunts.adapters;
-import experimentalHullModifications.misc.ehm_tooltip.header;
-import experimentalHullModifications.misc.ehm_tooltip.text;
 import experimentalHullModifications.plugin.lyr_ehm;
 import experimentalHullModifications.proxies.ehm_hullSpec;
+import experimentalHullModifications.shunts._ehm_shuntEffect;
+import experimentalHullModifications.shunts.ehm_adapterEffect;
+import experimentalHullModifications.shunts.ehm_adapterEffect.adapterParameters;
 
-/**@category Adapter Retrofit
+/**
+ * Activator retrofit that controls the listed shunts below. Their effects and such are separated to
+ * keep this class relatively small.
+ * @see ehm_adapterEffect Adapters
+ * @category Activator Retrofit
  * @author lyravega
  */
 public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
-	public static final class adapterData {
-		public static final class ids {
-			public static final String
-				mediumDual = adapters.ids.mediumDual,
-				largeDual = adapters.ids.largeDual,
-				largeTriple = adapters.ids.largeTriple,
-				largeQuad = adapters.ids.largeQuad;
-		}
-		public static final String activatorId = adapters.activatorId;
-		public static final String tag = adapters.groupTag;
-		public static final String groupTag = adapters.groupTag;
-		public static final Map<String, adapterParameters> dataMap = new HashMap<String, adapterParameters>();
-		private static final List<String> invalidSlotPrefixes = Arrays.asList(new String[]{affixes.adaptedSlot, affixes.convertedSlot});
+	public static _ehm_shuntEffect<adapterParameters> adapterEffect;
 
-		public static final boolean isValidSlot(WeaponSlotAPI slot, WeaponSpecAPI shuntSpec) {
-			return !invalidSlotPrefixes.contains(slot.getId().substring(0,3));
-		}
+	@Override
+	public void init(HullModSpecAPI hullModSpec) {
+		super.init(hullModSpec);
 
-		static {
-			final adapterParameters mediumDual = new adapterParameters();
-			mediumDual.addChild("L", WeaponSize.SMALL, new Vector2f(0.0f, 6.0f)); // left
-			mediumDual.addChild("R", WeaponSize.SMALL, new Vector2f(0.0f, -6.0f)); // right
-			dataMap.put(ids.mediumDual, mediumDual);
+		adapterEffect = new ehm_adapterEffect(this);
 
-			final adapterParameters largeDual = new adapterParameters();
-			largeDual.addChild("L", WeaponSize.MEDIUM, new Vector2f(0.0f, 12.0f)); // left
-			largeDual.addChild("R", WeaponSize.MEDIUM, new Vector2f(0.0f, -12.0f)); // right
-			dataMap.put(ids.largeDual, largeDual);
+		final adapterParameters mediumDual = new adapterParameters();
+		mediumDual.addChild("FL", WeaponSize.SMALL, new Vector2f(0.0f, 6.0f)); // left
+		mediumDual.addChild("FR", WeaponSize.SMALL, new Vector2f(0.0f, -6.0f)); // right
+		adapterEffect.addShuntData(adapters.ids.mediumDual, mediumDual);
 
-			final adapterParameters largeTriple = new adapterParameters();
-			largeTriple.addChild("L", WeaponSize.SMALL, new Vector2f(-4.0f, 18.0f)); // left
-			largeTriple.addChild("R", WeaponSize.SMALL, new Vector2f(-4.0f, -18.0f)); // right
-			largeTriple.addChild("C", WeaponSize.MEDIUM, new Vector2f(0.0f, 0.0f)); // center
-			dataMap.put(ids.largeTriple, largeTriple);
+		final adapterParameters largeDual = new adapterParameters();
+		largeDual.addChild("FL", WeaponSize.MEDIUM, new Vector2f(0.0f, 12.0f)); // left
+		largeDual.addChild("FR", WeaponSize.MEDIUM, new Vector2f(0.0f, -12.0f)); // right
+		adapterEffect.addShuntData(adapters.ids.largeDual, largeDual);
 
-			final adapterParameters largeQuad = new adapterParameters();
-			largeQuad.addChild("L", WeaponSize.SMALL, new Vector2f(0.0f, 6.0f)); // left
-			largeQuad.addChild("R", WeaponSize.SMALL, new Vector2f(0.0f, -6.0f)); // right
-			largeQuad.addChild("FL", WeaponSize.SMALL, new Vector2f(-4.0f, 18.0f)); // far left
-			largeQuad.addChild("FR", WeaponSize.SMALL, new Vector2f(-4.0f, -18.0f)); // far right
-			dataMap.put(ids.largeQuad, largeQuad);
-		}
+		final adapterParameters largeTriple = new adapterParameters();
+		largeTriple.addChild("FL", WeaponSize.SMALL, new Vector2f(-4.0f, 18.0f)); // left
+		largeTriple.addChild("FR", WeaponSize.SMALL, new Vector2f(-4.0f, -18.0f)); // right
+		largeTriple.addChild("FC", WeaponSize.MEDIUM, new Vector2f(0.0f, 0.0f)); // center
+		adapterEffect.addShuntData(adapters.ids.largeTriple, largeTriple);
 
-		public static class adapterParameters {
-			private final Set<String> children; public Set<String> getChildren() { return this.children; }
-			private final Map<String, Vector2f> childrenOffsets; public Vector2f getChildOffset(String childPrefix) { return this.childrenOffsets.get(childPrefix); }
-			private final Map<String, WeaponSize> childrenSizes; public WeaponSize getChildSize(String childPrefix) { return this.childrenSizes.get(childPrefix); }
-
-			private adapterParameters() {
-				this.children = new HashSet<String>();
-				this.childrenOffsets = new HashMap<String, Vector2f>();
-				this.childrenSizes = new HashMap<String, WeaponSize>();
-			}
-
-			private void addChild(String childId, WeaponSize childSize, Vector2f childOffset) {
-				this.children.add(childId);
-				this.childrenOffsets.put(childId, childOffset);
-				this.childrenSizes.put(childId, childSize);
-			}
-		}
-	}
-
-	public ehm_ar_stepdownadapter() {
-		super();
-
-		this.statSet.add(adapterData.groupTag);
-		this.shuntIdSet.addAll(adapterData.dataMap.keySet());
+		final adapterParameters largeQuad = new adapterParameters();
+		largeQuad.addChild("FL", WeaponSize.SMALL, new Vector2f(0.0f, 6.0f)); // left
+		largeQuad.addChild("FR", WeaponSize.SMALL, new Vector2f(0.0f, -6.0f)); // right
+		largeQuad.addChild("RL", WeaponSize.SMALL, new Vector2f(-4.0f, 18.0f)); // far left
+		largeQuad.addChild("RR", WeaponSize.SMALL, new Vector2f(-4.0f, -18.0f)); // far right
+		adapterEffect.addShuntData(adapters.ids.largeQuad, largeQuad);
 	}
 
 	@Override
@@ -103,16 +64,7 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 		ehm_hullSpec hullSpec = new ehm_hullSpec(variant.getHullSpec(), false);
 		DynamicStatsAPI dynamicStats = stats.getDynamic();
 
-		HashMap<String, StatMod> adapterShunts = dynamicStats.getMod(adapterData.groupTag).getFlatBonuses();
-		if (!adapterShunts.isEmpty()) {
-			for (String slotId : adapterShunts.keySet()) {
-				if (hullSpec.getWeaponSlot(slotId).getWeaponType() == WeaponType.DECORATIVE) continue;
-				String shuntId = variant.getWeaponId(slotId);
-
-				stats.getDynamic().getMod(adapterData.groupTag).modifyFlat(slotId, 1);
-				hullSpec.activateAdapterShunt(shuntId, slotId);
-			}
-		}
+		adapterEffect.processShunts(hullSpec, stats, dynamicStats, variant);
 
 		variant.setHullSpecAPI(hullSpec.retrieve());
 	}
@@ -132,17 +84,8 @@ public final class ehm_ar_stepdownadapter extends _ehm_ar_base {
 		ShipVariantAPI variant = ship.getVariant();
 
 		if (variant.hasHullMod(this.hullModSpecId)) {
-			DynamicStatsAPI dynamicStats = ship.getMutableStats().getDynamic();
-
 			if (lyr_ehm.lunaSettings.getShowInfoForActivators()) {
-				HashMap<String, StatMod> adapterShunts = dynamicStats.getMod(adapterData.groupTag).getFlatBonuses();
-				if (!adapterShunts.isEmpty()) {
-					tooltip.addSectionHeading("ADAPTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-					this.printShuntCountsOnTooltip(tooltip, variant, adapterShunts.keySet());
-				} else if (lyr_ehm.lunaSettings.getShowFullInfoForActivators()) {
-					tooltip.addSectionHeading("NO ADAPTERS", header.info_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-					tooltip.addPara("No adapters are installed. Adapters turn bigger slots into smaller ones.", text.padding);
-				}
+				adapterEffect.addShuntInfoToActivatorDescription(tooltip, hullSize, ship, width, isForModSpec);
 			}
 		}
 
