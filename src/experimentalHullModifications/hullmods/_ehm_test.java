@@ -1,6 +1,5 @@
 package experimentalHullModifications.hullmods;
 
-import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
 import java.util.ArrayList;
@@ -30,12 +29,12 @@ public class _ehm_test extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstalled(lyr_shipTracker tracker, MutableShipStatsAPI stats) {
-		commitVariantChanges(); playDrillSound();
+		tracker.requestRefresh(); playDrillSound();
 	}
 
 	@Override
 	public void onRemoved(lyr_shipTracker tracker, MutableShipStatsAPI stats) {
-		commitVariantChanges(); playDrillSound();
+		tracker.requestRefresh(); playDrillSound();
 	}
 	//#endregion
 	// END OF CUSTOM EVENTS

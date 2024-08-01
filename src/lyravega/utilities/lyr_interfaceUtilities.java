@@ -14,6 +14,7 @@ import com.fs.starfarer.campaign.fleet.CampaignFleet;
 
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.plugin.lyr_ehm;	// still connected to other package
+import lyravega.listeners.lyr_shipTracker;
 import lyravega.proxies.ui.*;
 import lyravega.proxies.ui.lyr_refitTab.lyr_parentData;
 import lyravega.utilities.logger.lyr_logger;
@@ -82,9 +83,15 @@ public class lyr_interfaceUtilities extends lyr_reflectionUtilities {
 	 * This method will immediately save the refit variant and refresh the UI by utilizing the
 	 * obfuscated UI methods. Will also disable the undo button on the refit panel. Checks if
 	 * it's the refit tab which is necessary for calls that originate outside refit tab.
-	 * <p> In some cases, the undo button will remain enabled, however it will not do anything
-	 * upon interaction. Disabling this button is optional. This issue is caused by having
-	 * another UI element like the mod or weapon picker open when this method is called.
+	 * <p> <b>Concurrent Access Error:</b> Such an error may happen from time to time. The issue is
+	 * extremely difficult to track, however calling this while the updates to a variant may be still
+	 * ongoing might be the root cause.
+	 * <p> Due to this, {@link lyr_shipTracker#requestRefresh()} should be utilized where available,
+	 * as it sets a flag on the tracker and calls this method through it when the updates are finished.
+	 * All custom events pass their trackers to allow calling this in such a safe manner.
+	 * <p> <b>Undo remains enabled:</b> Having another UI element like the mod or weapon picker open
+	 * in the foreground will cause this button to stay enabled, even though it won't do anything. It
+	 * is purely a visual issue.
 	 * <p> To deal with the problem above, this method sets a flag called {@link #clearUndoAfter},
 	 * which is reset by {@link #clearUndoAfter()}. It should get called after a delay when
 	 * there are no additional UI elements, ideally through an EFS to disable the button.

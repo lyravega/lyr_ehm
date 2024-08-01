@@ -1,6 +1,7 @@
 package lyravega.listeners;
 
 import static lyravega.listeners.lyr_eventDispatcher.events.*;
+import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 
 import java.util.*;
 
@@ -25,6 +26,7 @@ import lyravega.utilities.logger.lyr_logger;
  * @author lyravega
  */
 public final class lyr_shipTracker {
+	private boolean isDirty = false;
 	private final lyr_fleetTracker fleetTracker;
 	private final lyr_shipTracker parentTracker;
 	private final String trackerUUID;
@@ -179,6 +181,12 @@ public final class lyr_shipTracker {
 
 		this.fleetTracker.shipTrackers.remove(this.trackerUUID);
 	}
+	//#endregion
+	// END OF CONSTRUCTORS & ACCESSORS
+
+	public void requestRefresh() {
+		this.isDirty = true;
+	}
 
 	/**
 	 * Updates the stored variant, and then compares the hullmods and weapons
@@ -198,9 +206,11 @@ public final class lyr_shipTracker {
 		this.checkWeapons();
 		this.checkWings();
 		if (this.isShip) this.checkModules();
+
+		if (!this.isDirty) return;
+		this.isDirty = false;
+		commitVariantChanges();
 	}
-	//#endregion
-	// END OF CONSTRUCTORS & ACCESSORS
 
 	private void checkHullMods() {
 		final Collection<String> hullMods = this.variant.getHullMods();

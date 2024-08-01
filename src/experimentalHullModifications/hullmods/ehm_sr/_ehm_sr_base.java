@@ -1,6 +1,5 @@
 package experimentalHullModifications.hullmods.ehm_sr;
 
-import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
 import java.util.Set;
@@ -38,7 +37,7 @@ public abstract class _ehm_sr_base extends _ehm_base implements normalEvents {
 
 		if (modGroup.size() > 1) stats.getVariant().removeMod(modGroup.iterator().next());
 
-		commitVariantChanges(); playDrillSound();
+		tracker.requestRefresh(); playDrillSound();
 	}
 
 	@Override
@@ -47,7 +46,7 @@ public abstract class _ehm_sr_base extends _ehm_base implements normalEvents {
 
 		if (modGroup.isEmpty()) this.restoreSystem(stats);
 
-		commitVariantChanges(); playDrillSound();
+		tracker.requestRefresh(); playDrillSound();
 	}
 	//#endregion
 	// END OF CUSTOM EVENTS

@@ -1,6 +1,5 @@
 package experimentalHullModifications.hullmods.ehm_ar;
 
-import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import static lyravega.utilities.lyr_interfaceUtilities.refreshPlayerFleetView;
 
 import java.util.*;
@@ -27,7 +26,8 @@ import lyravega.listeners.events.moduleEvents;
 import lyravega.proxies.lyr_weaponSlot;
 import lyravega.proxies.lyr_weaponSlot.slotTypeConstants;
 
-/**@category Activator Retrofit
+/**
+ * @category Activator Retrofit
  * @author lyravega
  */
 public final class ehm_ar_minimodule extends _ehm_ar_base implements moduleEvents {
@@ -41,18 +41,20 @@ public final class ehm_ar_minimodule extends _ehm_ar_base implements moduleEvent
 
 	// uses super's onRemoved(), weapon events are never called as module events overtakes those
 
+	// TODO: this is not finished, needs shuntEffect like others do, and the rest needs to fall in place
+
 	@Override
 	public void onModuleInstalled(lyr_shipTracker tracker, MutableShipStatsAPI stats, ShipVariantAPI moduleVariant, String moduleSlotId) {
 		if (!this.shuntIdSet.contains(moduleVariant.getHullVariantId().replaceFirst("_Hull", ""))) return;	// TODO: make a new variant instead of using hull?
 
-		commitVariantChanges(); refreshPlayerFleetView(false);	// refresh needed to display these little fucks in campaign
+		tracker.requestRefresh(); refreshPlayerFleetView(false);	// refresh needed to display these little fucks in campaign
 	}
 
 	@Override
 	public void onModuleRemoved(lyr_shipTracker tracker, MutableShipStatsAPI stats, ShipVariantAPI moduleVariant, String moduleSlotId) {
 		if (!this.shuntIdSet.contains(moduleVariant.getHullVariantId().replaceFirst("_Hull", ""))) return;	// TODO: make a new variant instead of using hull?
 
-		commitVariantChanges(); refreshPlayerFleetView(false);
+		tracker.requestRefresh(); refreshPlayerFleetView(false);
 	}
 	//#endregion
 	// END OF CUSTOM EVENTS

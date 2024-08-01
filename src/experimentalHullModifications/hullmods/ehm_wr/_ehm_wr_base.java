@@ -1,6 +1,5 @@
 package experimentalHullModifications.hullmods.ehm_wr;
 
-import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
 import java.util.EnumMap;
@@ -47,7 +46,7 @@ public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 
 		if (this.companionMod != null) this.companionMod.installCompanionMod(stats);	// some of these mods utilize companion mods, which lack event methods
 
-		commitVariantChanges(); playDrillSound();
+		tracker.requestRefresh(); playDrillSound();
 	}
 
 	@Override
@@ -56,7 +55,7 @@ public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 
 		// if (this.companionMod != null) this.companionMod.removeCompanionMod(stats);	// companion mods remove themselves if their company (?) is not found
 
-		commitVariantChanges(); playDrillSound();
+		tracker.requestRefresh(); playDrillSound();
 	}
 	//#endregion
 	// END OF CUSTOM EVENTS

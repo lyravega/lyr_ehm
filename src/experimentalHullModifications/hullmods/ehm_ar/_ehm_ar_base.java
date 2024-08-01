@@ -1,6 +1,5 @@
 package experimentalHullModifications.hullmods.ehm_ar;
 
-import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
 import java.util.HashSet;
@@ -32,14 +31,14 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 	public void onInstalled(lyr_shipTracker tracker, MutableShipStatsAPI stats) {
 		this.cleanWeaponGroups(stats);
 
-		commitVariantChanges(); playDrillSound();
+		tracker.requestRefresh(); playDrillSound();
 	}
 
 	@Override
 	public void onRemoved(lyr_shipTracker tracker, MutableShipStatsAPI stats) {
 		this.removeActivator(stats);
 
-		commitVariantChanges(); playDrillSound();
+		tracker.requestRefresh(); playDrillSound();
 	}
 
 	@Override
@@ -48,14 +47,14 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 
 		this.cleanWeaponGroups(stats);
 
-		commitVariantChanges();
+		tracker.requestRefresh();
 	}
 
 	@Override
 	public void onWeaponRemoved(lyr_shipTracker tracker, MutableShipStatsAPI stats, String weaponId, String slotId) {
 		if (!this.shuntIdSet.contains(weaponId)) return;
 
-		commitVariantChanges();
+		tracker.requestRefresh();
 	}
 	//#endregion
 	// END OF CUSTOM EVENTS

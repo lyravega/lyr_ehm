@@ -32,7 +32,7 @@ public final class ehm_undo extends _ehm_base {
 		variant.getHullMods().remove(ehm_internals.hullmods.main.base);
 		variant.getPermaMods().remove(ehm_internals.hullmods.main.base);
 		variant.getHullMods().remove(this.hullModSpecId);
-		variant.setHullSpecAPI(Global.getSettings().getHullSpec(variant.getHullSpec().getHullId().replace(Misc.D_HULL_SUFFIX, ""))); commitVariantChanges(); playDrillSound();
+		variant.setHullSpecAPI(Global.getSettings().getHullSpec(variant.getHullSpec().getHullId().replace(Misc.D_HULL_SUFFIX, ""))); commitVariantChanges(); playDrillSound();	// TODO: is this still necessary?
 	}
 
 	@Override

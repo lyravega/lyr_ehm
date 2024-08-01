@@ -1,6 +1,5 @@
 package experimentalHullModifications.hullmods.ehm_mr;
 
-import static lyravega.utilities.lyr_interfaceUtilities.commitVariantChanges;
 import static lyravega.utilities.lyr_interfaceUtilities.playDrillSound;
 
 import java.util.EnumMap;
@@ -25,14 +24,14 @@ public final class ehm_mr_auxilarygenerators extends _ehm_base implements normal
 	//#region CUSTOM EVENTS
 	@Override
 	public void onInstalled(lyr_shipTracker tracker, MutableShipStatsAPI stats) {
-		commitVariantChanges(); playDrillSound();
+		tracker.requestRefresh(); playDrillSound();
 	}
 
 	@Override
 	public void onRemoved(lyr_shipTracker tracker, MutableShipStatsAPI stats) {
 		this.refreshHullSpec(stats);
 
-		commitVariantChanges(); playDrillSound();
+		tracker.requestRefresh(); playDrillSound();
 	}
 	//#endregion
 	// END OF CUSTOM EVENTS
