@@ -17,13 +17,11 @@ import com.fs.starfarer.api.util.Misc;
 
 import experimentalHullModifications.misc.ehm_internals.hullmods;
 import experimentalHullModifications.misc.ehm_internals.statIds;
-import experimentalHullModifications.misc.ehm_internals.upgrades;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import experimentalHullModifications.misc.ehm_tooltip.text;
 import experimentalHullModifications.plugin.lyr_ehm;
 import lyravega.listeners.lyr_shipTracker;
 import lyravega.listeners.events.normalEvents;
-import lyravega.upgrades._lyr_upgradeEffect;
 import lyravega.upgrades.lyr_upgradeVault;
 import lyravega.utilities.lyr_miscUtilities;
 import lyravega.utilities.lyr_tooltipUtilities;
@@ -49,19 +47,7 @@ public final class ehm_base extends _ehm_base implements normalEvents {
 
 	@Override
 	public void applyEffectsBeforeShipCreation(HullSize hullSize, MutableShipStatsAPI stats, String hullModSpecId) {
-		ShipVariantAPI variant = stats.getVariant();
-
 		this.swapHullSpec(stats);
-
-		if (!lyr_ehm.lunaSettings.getCosmeticsOnly()) for (String tag : variant.getTags()) {
-			if (!tag.startsWith(upgrades.prefix)) continue;
-
-			final _lyr_upgradeEffect upgrade = lyr_upgradeVault.getUpgrade(tag.replaceFirst(":.+?", "")); if (upgrade == null) continue;
-
-			stats.getDynamic().getMod(statIds.upgrade).modifyFlat(upgrade.getUpgradeId(), upgrade.getUpgradeTier(variant));	// for tooltip
-			upgrade.applyUpgradeEffect(stats);
-		}
-
 		this.preProcessShunts(stats);	// at this point, the hull spec should be cloned so proceed and pre-process the shunts
 		this.preProcessDynamicStats(stats);
 		// lyr_miscUtilities.cleanWeaponGroupsUp(variant);	// when an activator activates shunts on install, so moved this to their 'onInstalled()' method
@@ -105,7 +91,6 @@ public final class ehm_base extends _ehm_base implements normalEvents {
 			tooltip.addPara("VariantTags: "+variant.getTags().toString(), 5f).setHighlight("VariantTags:");
 
 			DynamicStatsAPI dynamicStats = stats.getDynamic();
-			final StatBonus overdrive = dynamicStats.getMod(statIds.overdrive);
 			final StatBonus adapters = dynamicStats.getMod(statIds.adapters);
 			final StatBonus converters = dynamicStats.getMod(statIds.converters);
 			final StatBonus diverters = dynamicStats.getMod(statIds.diverters);
@@ -123,7 +108,6 @@ public final class ehm_base extends _ehm_base implements normalEvents {
 			final StatBonus shieldCosmetics = dynamicStats.getMod(statIds.shieldCosmetics);
 			final StatBonus weaponRetrofits = dynamicStats.getMod(statIds.weaponRetrofits);
 			tooltip.addSectionHeading("DEBUG INFO: DYNAMIC STATS", header.severeWarning_textColour, header.invisible_bgColour, Alignment.MID, header.padding);
-			if (!overdrive.getFlatBonuses().isEmpty()) tooltip.addPara("overdrive: "+overdrive.computeEffective(0f)+" / "+overdrive.getFlatBonuses().keySet().toString(), 5f).setHighlight("overdrive:");
 			if (!adapters.getFlatBonuses().isEmpty()) tooltip.addPara("adapters: "+adapters.computeEffective(0f)+" / "+adapters.getFlatBonuses().keySet().toString(), 5f).setHighlight("adapters:");
 			if (!converters.getFlatBonuses().isEmpty()) tooltip.addPara("converters: "+converters.computeEffective(0f)+" / "+converters.getFlatBonuses().keySet().toString(), 5f).setHighlight("converters:");
 			if (!diverters.getFlatBonuses().isEmpty()) tooltip.addPara("diverters: "+diverters.computeEffective(0f)+" / "+diverters.getFlatBonuses().keySet().toString(), 5f).setHighlight("diverters:");
@@ -165,7 +149,7 @@ public final class ehm_base extends _ehm_base implements normalEvents {
 			if (!upgrades.isEmpty()) {
 				tooltip.addSectionHeading("UPGRADES", header.sEffect_textColour, header.invisible_bgColour, Alignment.MID, header.padding).flash(1.0f, 1.0f);
 				for (String upgradeId : upgrades.keySet()) {
-					lyr_upgradeVault.getUpgrade(upgradeId).addShortDescription(stats, tooltip, text.padding);
+					lyr_upgradeVault.getUpgrade(upgradeId).addUpgradeShortDescription(stats, tooltip, text.padding);
 				}
 			}
 

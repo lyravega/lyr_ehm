@@ -9,24 +9,24 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CargoAPI;
 import com.fs.starfarer.api.campaign.CargoAPI.CargoItemType;
 import com.fs.starfarer.api.campaign.CargoStackAPI;
+import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.characters.MutableCharacterStatsAPI;
+import com.fs.starfarer.api.combat.ShipVariantAPI;
+import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.MutableValue;
 
+import lyravega.utilities.lyr_miscUtilities;
 import lyravega.utilities.lyr_tooltipUtilities;
 import lyravega.utilities.lyr_tooltipUtilities.colour;
 
 /**
- * A class that is dedicated to house details of a single upgrade layer, and provide methods to check
- * and/or deduct costs, print cost on a tooltip and whatnot.
- * <p> Even though there is no inheritance between this and the {@link lyr_upgrade} class, they work
- * in conjunction. In essence, an {@link lyr_upgrade} instance is a storage for many of these.
+ * A class that is dedicated to house details of a single upgrade tier.
  * @author lyravega
- * @see {@link lyr_upgrade} / {@link lyr_upgradeVault} / {@link _lyr_upgradeEffect}
+ * @see {@link lyr_upgrade} / {@link lyr_upgradeVault} / {@link lyr_upgradeEffect}
  */
-public class lyr_upgradeLayer {
-	private final lyr_upgrade upgrade; public lyr_upgrade getUpgrade() { return this.upgrade; }
+public final class lyr_tierSpec {
 	private final int tier; public int getTier() { return this.tier; }
 	private final String id; public String getId() { return this.id; }
 	private final String name; public String getName() { return this.name; }
@@ -34,6 +34,8 @@ public class lyr_upgradeLayer {
 	private final Set<String> specialRequirements; public Set<String> getSpecialRequirements() { return this.specialRequirements; }
 	private final int storyPointCost; public int getStoryPointCost() { return this.storyPointCost; }
 	private final int creditCost; public int getCreditCost() { return this.creditCost; }
+	private lyr_tierSpec previousTierSpec; public lyr_tierSpec getPreviousTierSpec() { return this.previousTierSpec; }; public boolean hasPreviousTier() { return this.previousTierSpec != null; }
+	private lyr_tierSpec nextTierSpec; public lyr_tierSpec getNextTierSpec() { return this.nextTierSpec; }; public boolean hasNextTier() { return this.nextTierSpec != null; }
 
 	/**
 	 * Constructs a layer for an upgrade. Access is restricted to package as these shouldn't be used
@@ -41,13 +43,12 @@ public class lyr_upgradeLayer {
 	 * via its add method to perform properly.
 	 * <p> Arrays are preferred over sets or maps as constructing and populating them separately is
 	 * tiresome compared to constructing arrays as inline parameters. Insertion order is preserved.
-	 * @param hullSize determine which list category the layer goes to. May be {@code null}; {@code HullSize.DEFAULT} will be utilized in that case
 	 * @param commodityCostsArray a map-like two dimensional array for defining commodity costs with {{@link String} commodityId, {@link Integer} amount}. May be {@code null}
 	 * @param specialRequirementsArray a set-like single dimensional string array for defining special requirements with {{@link String} specialId}. May be {@code null}
 	 * @param storyPointCost an integer for story point cost. May be {@code null}, minimum {@code 0}
 	 * @param creditCost an integer for credit cost. May be {@code null}, minimum {@code 0}
 	 */
-	lyr_upgradeLayer(lyr_upgrade upgrade, int tier, Object[][] commodityCostsArray, String[] specialRequirementsArray, Integer storyPointCost, Integer creditCost) {
+	lyr_tierSpec(lyr_upgrade upgrade, ArrayList<lyr_tierSpec> tierSpecArray, Object[][] commodityCostsArray, String[] specialRequirementsArray, Integer storyPointCost, Integer creditCost) {
 		Map<String, Integer> commodityCosts = null;
 		Set<String> specialRequirements = null;
 
@@ -63,30 +64,38 @@ public class lyr_upgradeLayer {
 			specialRequirements.add(specialId);
 		}
 
-		this.upgrade = upgrade;
-		this.tier = tier;
-		this.id = upgrade.getId()+":"+tier;
-		this.name = upgrade.getName()+this.toRoman(tier);
+		this.tier = tierSpecArray.size();
+		this.id = upgrade.getUpgradeId()+":"+this.tier;
+		this.name = this.tier == 0 ? upgrade.getUpgradeName() : upgrade.getUpgradeName()+" "+lyr_miscUtilities.romanNumerals.toRoman(this.tier);
 		this.commodityCosts = commodityCosts;
 		this.specialRequirements = specialRequirements;
 		this.storyPointCost = storyPointCost != null ? Math.max(0, storyPointCost) : 0;
 		this.creditCost = creditCost != null ? Math.max(0, creditCost) : 0;
+
+		this.previousTierSpec = tierSpecArray.isEmpty() ? null : tierSpecArray.get(tierSpecArray.size()-1);
+		if (this.previousTierSpec != null) this.previousTierSpec.nextTierSpec = this;
+
 	}
 
-	private String toRoman(int num) {
-		switch (num) {
-			case 1: return " I";
-			case 2: return " II";
-			case 3: return " III";
-			case 4: return " IV";
-			case 5: return " V";
-			case 6: return " VI";
-			case 7: return " VII";
-			case 8: return " VIII";
-			case 9: return " IX";
-			case 10: return " X";
-			default: return " "+num;
-		}
+	public boolean canUpgradeTier() {
+		if (!this.hasNextTier()) return false;
+		if (!this.nextTierSpec.canAfford()) return false;
+
+		return true;
+	}
+
+	/**
+	 * Raises the tier of the upgrade; alters the tags on the variant, and deducts the costs.
+	 * <p> Double-checks if there is a next tier of the upgrade that may be afforded, even though it
+	 * should already be done from the {@link #isClickable(FleetMemberAPI, ShipVariantAPI, MarketAPI)}
+	 * @param variant that will receive the upgrade; must be the variant passed by the LunaRefitButton as member uses outdated variant
+	 */
+	void upgradeTier(ShipVariantAPI variant) {
+		if (!this.canAfford()) return;
+
+		variant.removeTag(this.getId());
+		variant.addTag(this.nextTierSpec.getId());
+		this.nextTierSpec.deductCosts();
 	}
 
 	/**
@@ -151,7 +160,7 @@ public class lyr_upgradeLayer {
 	 * Self-explanatory. Deducts the costs from the player if enough amount is there. Checks if the
 	 * player can afford the upgrades beforehand.
 	 */
-	public void deductCosts() {
+	void deductCosts() {
 		if (!this.canAfford()) return;
 
 		if (this.creditCost > 0) {
