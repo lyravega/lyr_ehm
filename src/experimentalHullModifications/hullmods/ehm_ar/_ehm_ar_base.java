@@ -11,6 +11,7 @@ import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.loading.WeaponGroupSpec;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
+import lyravega.listeners.lyr_shipTracker;
 import lyravega.listeners.events.normalEvents;
 import lyravega.listeners.events.weaponEvents;
 
@@ -28,21 +29,21 @@ import lyravega.listeners.events.weaponEvents;
 public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, weaponEvents {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstalled(MutableShipStatsAPI stats) {
+	public void onInstalled(lyr_shipTracker tracker, MutableShipStatsAPI stats) {
 		this.cleanWeaponGroups(stats);
 
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
-	public void onRemoved(MutableShipStatsAPI stats) {
+	public void onRemoved(lyr_shipTracker tracker, MutableShipStatsAPI stats) {
 		this.removeActivator(stats);
 
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
-	public void onWeaponInstalled(MutableShipStatsAPI stats, String weaponId, String slotId) {
+	public void onWeaponInstalled(lyr_shipTracker tracker, MutableShipStatsAPI stats, String weaponId, String slotId) {
 		if (!this.shuntIdSet.contains(weaponId)) return;
 
 		this.cleanWeaponGroups(stats);
@@ -51,7 +52,7 @@ public abstract class _ehm_ar_base extends _ehm_base implements normalEvents, we
 	}
 
 	@Override
-	public void onWeaponRemoved(MutableShipStatsAPI stats, String weaponId, String slotId) {
+	public void onWeaponRemoved(lyr_shipTracker tracker, MutableShipStatsAPI stats, String weaponId, String slotId) {
 		if (!this.shuntIdSet.contains(weaponId)) return;
 
 		commitVariantChanges();

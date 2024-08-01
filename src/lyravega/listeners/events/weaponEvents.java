@@ -25,7 +25,7 @@ public interface weaponEvents {
 	 * @param weaponId of the installed weapon
 	 * @param slotId of the slot that the weapon is installed at
 	 */
-	public void onWeaponInstalled(MutableShipStatsAPI stats, String weaponId, String slotId);
+	public void onWeaponInstalled(lyr_shipTracker tracker, MutableShipStatsAPI stats, String weaponId, String slotId);
 
 	/**
 	 * An event is broadcasted when a weapon is changed on the refit ship, which is then caught by
@@ -37,5 +37,5 @@ public interface weaponEvents {
 	 * @param weaponId of the removed weapon
 	 * @param slotId of the slot that the weapon is removed from
 	 */
-	public void onWeaponRemoved(MutableShipStatsAPI stats, String weaponId, String slotId);
+	public void onWeaponRemoved(lyr_shipTracker tracker, MutableShipStatsAPI stats, String weaponId, String slotId);
 }

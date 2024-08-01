@@ -21,7 +21,7 @@ public interface normalEvents {
 	 * events. Should be used mainly to change the variant or to trigger an UI effect
 	 * @param stats
 	 */
-	public void onInstalled(MutableShipStatsAPI stats);
+	public void onInstalled(lyr_shipTracker tracker, MutableShipStatsAPI stats);
 
 	/**
 	 * Called if this hull modification is removed from the refit ship
@@ -29,5 +29,5 @@ public interface normalEvents {
 	 * events. Should be used mainly to change the variant or to trigger an UI effect
 	 * @param stats
 	 */
-	public void onRemoved(MutableShipStatsAPI stats);
+	public void onRemoved(lyr_shipTracker tracker, MutableShipStatsAPI stats);
 }

@@ -72,6 +72,7 @@ public final class lyr_shipTracker {
 			this.variant = this.variant.clone();
 			this.variant.setSource(VariantSource.REFIT);	// is because stock ships or cause problems till they're saved once
 			if (this.isShip) this.member.setVariant(this.variant, false, false);
+			// TODO: this is where modules may get assigned to parent variant slot
 		}
 
 		this.cachedModules = this.isShip ? new HashMap<String, lyr_shipTracker>() : null;
@@ -87,6 +88,8 @@ public final class lyr_shipTracker {
 		if (this.isShip) for (final String moduleSlotId : this.variant.getModuleSlots()) {
 			final ShipVariantAPI moduleVariant = this.variant.getModuleVariant(moduleSlotId);
 			final lyr_shipTracker moduleTracker = new lyr_shipTracker(this.fleetTracker, moduleVariant, null, moduleSlotId, this);
+
+			// TODO: change how unselectables are handled, they don't need a tracker
 
 			this.variant.setModuleVariant(moduleSlotId, moduleTracker.getVariant());
 			this.cachedModules.put(moduleSlotId, moduleTracker);
@@ -112,6 +115,11 @@ public final class lyr_shipTracker {
 	 * @return a modules's tracker; if this is a module, will return null
 	 */
 	public lyr_shipTracker getModuleTracker(String slotId) { return this.isShip ? this.cachedModules.get(slotId) : null; }
+
+	/**
+	 * @return children's trackers; if this is a module, will return null
+	 */
+	public Map<String, lyr_shipTracker> getModuleTrackers(String slotId) { return this.isShip ? this.cachedModules : null; }
 
 	/**
 	 * @return ship/module's tracking UUID
@@ -202,7 +210,7 @@ public final class lyr_shipTracker {
 			if (this.cachedHullMods.contains(hullModId)) continue;
 			if (this.cachedSuppressedMods.contains(hullModId)) { this.cachedHullMods.add(hullModId); continue; }
 
-			this.cachedHullMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onInstalled, this.stats, hullModId);
+			this.cachedHullMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onInstalled, this, this.stats, hullModId);
 			lyr_logger.eventInfo(this.logPrefix+": Installed '"+hullModId+"'");
 		}
 
@@ -210,7 +218,7 @@ public final class lyr_shipTracker {
 			if (hullMods.contains(hullModId)) continue;
 			if (suppressedMods.contains(hullModId)) { this.iterator.remove(); continue; }
 
-			this.iterator.remove(); lyr_eventDispatcher.onHullModEvent(onRemoved, this.stats, hullModId);
+			this.iterator.remove(); lyr_eventDispatcher.onHullModEvent(onRemoved, this, this.stats, hullModId);
 			lyr_logger.eventInfo(this.logPrefix+": Removed '"+hullModId+"'");
 		}
 	}
@@ -223,7 +231,7 @@ public final class lyr_shipTracker {
 			if (this.cachedEnhancedMods.contains(hullModId)) continue;
 			if (this.cachedEmbeddedMods.contains(hullModId)) continue;
 
-			this.cachedEnhancedMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onEnhanced, this.stats, hullModId);
+			this.cachedEnhancedMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onEnhanced, this, this.stats, hullModId);
 			lyr_logger.eventInfo(this.logPrefix+": Enhanced '"+hullModId+"'");
 		}
 
@@ -231,21 +239,21 @@ public final class lyr_shipTracker {
 			if (this.cachedEmbeddedMods.contains(hullModId)) continue;
 			if (this.cachedEnhancedMods.contains(hullModId)) this.cachedEnhancedMods.remove(hullModId);
 
-			this.cachedEmbeddedMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onEnhanced, this.stats, hullModId);
+			this.cachedEmbeddedMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onEnhanced, this, this.stats, hullModId);
 			lyr_logger.eventInfo(this.logPrefix+": Enhanced embedded '"+hullModId+"'");
 		}
 
 		for (this.iterator = this.cachedEnhancedMods.iterator(); this.iterator.hasNext();) { final String hullModId = this.iterator.next();
 			if (enhancedMods.contains(hullModId)) continue;
 
-			this.iterator.remove(); lyr_eventDispatcher.onHullModEvent(onNormalized, this.stats, hullModId);
+			this.iterator.remove(); lyr_eventDispatcher.onHullModEvent(onNormalized, this, this.stats, hullModId);
 			lyr_logger.eventInfo(this.logPrefix+": Normalized '"+hullModId+"'");
 		}
 
 		for (this.iterator = this.cachedEmbeddedMods.iterator(); this.iterator.hasNext();) { final String hullModId = this.iterator.next();
 			if (embeddedMods.contains(hullModId)) continue;
 
-			this.iterator.remove(); lyr_eventDispatcher.onHullModEvent(onNormalized, this.stats, hullModId);
+			this.iterator.remove(); lyr_eventDispatcher.onHullModEvent(onNormalized, this, this.stats, hullModId);
 			lyr_logger.eventInfo(this.logPrefix+": Normalized embedded '"+hullModId+"'");
 		}
 	}
@@ -256,14 +264,14 @@ public final class lyr_shipTracker {
 		for (final String hullModId : suppressedMods) {
 			if (this.cachedSuppressedMods.contains(hullModId)) continue;
 
-			this.cachedSuppressedMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onSuppressed, this.stats, hullModId);
+			this.cachedSuppressedMods.add(hullModId); lyr_eventDispatcher.onHullModEvent(onSuppressed, this, this.stats, hullModId);
 			lyr_logger.eventInfo(this.logPrefix+": Suppressed '"+hullModId+"'");
 		}
 
 		for (this.iterator = this.cachedSuppressedMods.iterator(); this.iterator.hasNext();) { final String hullModId = this.iterator.next();
 			if (suppressedMods.contains(hullModId)) continue;
 
-			this.iterator.remove(); lyr_eventDispatcher.onHullModEvent(onRestored, this.stats, hullModId);
+			this.iterator.remove(); lyr_eventDispatcher.onHullModEvent(onRestored, this, this.stats, hullModId);
 			lyr_logger.eventInfo(this.logPrefix+": Restored '"+hullModId+"'");
 		}
 	}
@@ -282,18 +290,18 @@ public final class lyr_shipTracker {
 			if (oldWeaponId == null && newWeaponId == null) continue;
 			else if (oldWeaponId == null && newWeaponId != null) {	// weapon installed
 				this.cachedWeapons.put(slotId, newWeaponId);
-				lyr_eventDispatcher.onWeaponEvent(onWeaponInstalled, this.stats, newWeaponId, slotId);
+				lyr_eventDispatcher.onWeaponEvent(onWeaponInstalled, this, this.stats, newWeaponId, slotId);
 
 				lyr_logger.eventInfo(this.logPrefix+": Installed weapon '"+newWeaponId+"' on slot '"+slotId+"'");
 			} else if (oldWeaponId != null && newWeaponId == null) {	// weapon removed
 				this.cachedWeapons.put(slotId, null);
-				lyr_eventDispatcher.onWeaponEvent(onWeaponRemoved, this.stats, oldWeaponId, slotId);
+				lyr_eventDispatcher.onWeaponEvent(onWeaponRemoved, this, this.stats, oldWeaponId, slotId);
 
 				lyr_logger.eventInfo(this.logPrefix+": Removed weapon '"+oldWeaponId+"' from slot '"+slotId+"'");
 			} else if (oldWeaponId != null && newWeaponId != null && !oldWeaponId.equals(newWeaponId)) {	// weapon changed
 				this.cachedWeapons.put(slotId, newWeaponId);
-				lyr_eventDispatcher.onWeaponEvent(onWeaponRemoved, this.stats, oldWeaponId, slotId);
-				lyr_eventDispatcher.onWeaponEvent(onWeaponInstalled, this.stats, newWeaponId, slotId);
+				lyr_eventDispatcher.onWeaponEvent(onWeaponRemoved, this, this.stats, oldWeaponId, slotId);
+				lyr_eventDispatcher.onWeaponEvent(onWeaponInstalled, this, this.stats, newWeaponId, slotId);
 
 				lyr_logger.eventInfo(this.logPrefix+": Changed weapon '"+oldWeaponId+"' on slot '"+slotId+"' with '"+newWeaponId+"'");
 			}
@@ -312,18 +320,18 @@ public final class lyr_shipTracker {
 			if (oldWingId.isEmpty() && newWingId == null) continue;
 			else if (oldWingId.isEmpty() && newWingId != null) {	// wing installed
 				this.cachedWings.set(bayNumber, newWingId);
-				lyr_eventDispatcher.onWingEvent(onWingAssigned, this.stats, newWingId, bayNumber);
+				lyr_eventDispatcher.onWingEvent(onWingAssigned, this, this.stats, newWingId, bayNumber);
 
 				lyr_logger.eventInfo(this.logPrefix+": Installed wing '"+newWingId+"' on bay '"+bayNumber+"'");
 			} else if (!oldWingId.isEmpty() && newWingId == null) {	// wing removed
 				this.cachedWings.set(bayNumber, "");
-				lyr_eventDispatcher.onWingEvent(onWingRelieved, this.stats, oldWingId, bayNumber);
+				lyr_eventDispatcher.onWingEvent(onWingRelieved, this, this.stats, oldWingId, bayNumber);
 
 				lyr_logger.eventInfo(this.logPrefix+": Removed wing '"+oldWingId+"' from bay '"+bayNumber+"'");
 			} else if (!oldWingId.isEmpty() && newWingId != null && !oldWingId.equals(newWingId)) {	// wing changed
 				this.cachedWings.set(bayNumber, newWingId);
-				lyr_eventDispatcher.onWingEvent(onWingRelieved, this.stats, oldWingId, bayNumber);
-				lyr_eventDispatcher.onWingEvent(onWingAssigned, this.stats, newWingId, bayNumber);
+				lyr_eventDispatcher.onWingEvent(onWingRelieved, this, this.stats, oldWingId, bayNumber);
+				lyr_eventDispatcher.onWingEvent(onWingAssigned, this, this.stats, newWingId, bayNumber);
 
 				lyr_logger.eventInfo(this.logPrefix+": Changed wing '"+oldWingId+"' on bay '"+bayNumber+"' with '"+newWingId+"'");
 			}
@@ -342,7 +350,7 @@ public final class lyr_shipTracker {
 			// this.variant.setModuleVariant(moduleSlotId, moduleTracker.getVariant());	// TODO whaaat
 
 			this.cachedModules.put(moduleSlotId, moduleTracker);
-			lyr_eventDispatcher.onModuleEvent(onModuleInstalled, this.stats, moduleVariant, moduleSlotId);
+			lyr_eventDispatcher.onModuleEvent(onModuleInstalled, this, this.stats, moduleVariant, moduleSlotId);
 
 			lyr_logger.eventInfo(this.logPrefix+": Installed module '"+moduleVariant.getHullVariantId()+"' on slot '"+moduleSlotId+"'");
 		}
@@ -354,7 +362,7 @@ public final class lyr_shipTracker {
 				moduleTracker.unregisterTracker();
 
 				this.iterator.remove();
-				lyr_eventDispatcher.onModuleEvent(onModuleRemoved, this.stats, moduleVariant, moduleSlotId);
+				lyr_eventDispatcher.onModuleEvent(onModuleRemoved, this, this.stats, moduleVariant, moduleSlotId);
 
 				lyr_logger.eventInfo(this.logPrefix+": Removed module '"+moduleVariant.getHullVariantId()+"' from slot '"+moduleSlotId+"'");
 			} else if (!modules.get(moduleSlotId).equals(this.cachedModules.get(moduleSlotId).getVariant().getHullVariantId())) {
@@ -365,8 +373,8 @@ public final class lyr_shipTracker {
 				moduleTracker.registerTracker(); oldModuleTracker.unregisterTracker();
 
 				this.cachedModules.put(moduleSlotId, moduleTracker);
-				lyr_eventDispatcher.onModuleEvent(onModuleRemoved, this.stats, oldModuleVariant, moduleSlotId);
-				lyr_eventDispatcher.onModuleEvent(onModuleInstalled, this.stats, moduleVariant, moduleSlotId);
+				lyr_eventDispatcher.onModuleEvent(onModuleRemoved, this, this.stats, oldModuleVariant, moduleSlotId);
+				lyr_eventDispatcher.onModuleEvent(onModuleInstalled, this, this.stats, moduleVariant, moduleSlotId);
 
 				lyr_logger.eventInfo(this.logPrefix+": Changed module '"+oldModuleVariant.getHullVariantId()+"' on slot '"+moduleSlotId+"' with '"+moduleVariant.getHullVariantId()+"'");
 			}

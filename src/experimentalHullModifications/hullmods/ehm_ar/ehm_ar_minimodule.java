@@ -22,33 +22,34 @@ import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_internals.affixes;
 import experimentalHullModifications.misc.ehm_internals.shunts.modules;
 import experimentalHullModifications.proxies.ehm_hullSpec;
+import lyravega.listeners.lyr_shipTracker;
 import lyravega.listeners.events.moduleEvents;
 import lyravega.proxies.lyr_weaponSlot;
 import lyravega.proxies.lyr_weaponSlot.slotTypeConstants;
 
-/**@category Adapter Retrofit
+/**@category Activator Retrofit
  * @author lyravega
  */
 public final class ehm_ar_minimodule extends _ehm_ar_base implements moduleEvents {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstalled(MutableShipStatsAPI stats) {
+	public void onInstalled(lyr_shipTracker tracker, MutableShipStatsAPI stats) {
 		// lyr_fleetTracker.instance().addTracking(stats.getVariant(), null, null);	// order of this method matters; needs to be done before commit
 
-		super.onInstalled(stats);
+		super.onInstalled(tracker, stats);	// TODO: might need to remove this
 	}
 
 	// uses super's onRemoved(), weapon events are never called as module events overtakes those
 
 	@Override
-	public void onModuleInstalled(MutableShipStatsAPI stats, ShipVariantAPI moduleVariant, String moduleSlotId) {
+	public void onModuleInstalled(lyr_shipTracker tracker, MutableShipStatsAPI stats, ShipVariantAPI moduleVariant, String moduleSlotId) {
 		if (!this.shuntIdSet.contains(moduleVariant.getHullVariantId().replaceFirst("_Hull", ""))) return;	// TODO: make a new variant instead of using hull?
 
 		commitVariantChanges(); refreshPlayerFleetView(false);	// refresh needed to display these little fucks in campaign
 	}
 
 	@Override
-	public void onModuleRemoved(MutableShipStatsAPI stats, ShipVariantAPI moduleVariant, String moduleSlotId) {
+	public void onModuleRemoved(lyr_shipTracker tracker, MutableShipStatsAPI stats, ShipVariantAPI moduleVariant, String moduleSlotId) {
 		if (!this.shuntIdSet.contains(moduleVariant.getHullVariantId().replaceFirst("_Hull", ""))) return;	// TODO: make a new variant instead of using hull?
 
 		commitVariantChanges(); refreshPlayerFleetView(false);

@@ -29,6 +29,7 @@ import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.misc.ehm_internals;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import experimentalHullModifications.misc.ehm_tooltip.text;
+import lyravega.listeners.lyr_shipTracker;
 import lyravega.listeners.events.normalEvents;
 import lyravega.utilities.lyr_miscUtilities;
 import lyravega.utilities.lyr_tooltipUtilities;
@@ -51,7 +52,7 @@ public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstalled(MutableShipStatsAPI stats) {
+	public void onInstalled(lyr_shipTracker tracker, MutableShipStatsAPI stats) {
 		ShipVariantAPI variant = stats.getVariant();
 
 		if (!variant.getHullSpec().isBuiltInMod(HullMods.AUTOMATED)) variant.addPermaMod(HullMods.AUTOMATED, false);
@@ -61,7 +62,7 @@ public final class ehm_mr_aiswitch extends _ehm_base implements normalEvents {
 	}
 
 	@Override
-	public void onRemoved(MutableShipStatsAPI stats) {
+	public void onRemoved(lyr_shipTracker tracker, MutableShipStatsAPI stats) {
 		ShipVariantAPI variant = stats.getVariant();
 
 		if (!variant.getSuppressedMods().contains(HullMods.AUTOMATED)) variant.removePermaMod(HullMods.AUTOMATED);

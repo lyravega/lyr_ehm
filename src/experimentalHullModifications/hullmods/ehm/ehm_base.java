@@ -22,6 +22,7 @@ import experimentalHullModifications.misc.ehm_internals.upgrades;
 import experimentalHullModifications.misc.ehm_tooltip.header;
 import experimentalHullModifications.misc.ehm_tooltip.text;
 import experimentalHullModifications.plugin.lyr_ehm;
+import lyravega.listeners.lyr_shipTracker;
 import lyravega.listeners.events.normalEvents;
 import lyravega.upgrades._lyr_upgradeEffect;
 import lyravega.upgrades.lyr_upgradeVault;
@@ -39,11 +40,11 @@ import lyravega.utilities.lyr_tooltipUtilities;
 public final class ehm_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstalled(MutableShipStatsAPI stats) {
+	public void onInstalled(lyr_shipTracker tracker, MutableShipStatsAPI stats) {
 		commitVariantChanges(); playDrillSound();
 	}
 
-	@Override public void onRemoved(MutableShipStatsAPI stats) {}	// cannot be removed since it becomes a built-in
+	@Override public void onRemoved(lyr_shipTracker tracker, MutableShipStatsAPI stats) {}	// cannot be removed since it becomes a built-in
 	//#endregion
 	// END OF CUSTOM EVENTS
 

@@ -18,6 +18,7 @@ import experimentalHullModifications.misc.ehm_tooltip.header;
 import experimentalHullModifications.misc.ehm_tooltip.text;
 import experimentalHullModifications.plugin.lyr_ehm;
 import experimentalHullModifications.proxies.ehm_hullSpec;
+import lyravega.listeners.lyr_shipTracker;
 import lyravega.listeners.events.enhancedEvents;
 import lyravega.listeners.events.normalEvents;
 import lyravega.utilities.lyr_miscUtilities;
@@ -35,22 +36,22 @@ import lyravega.utilities.lyr_tooltipUtilities;
 public final class ehm_mr_overengineered extends _ehm_base implements normalEvents, enhancedEvents {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstalled(MutableShipStatsAPI stats) {
+	public void onInstalled(lyr_shipTracker tracker, MutableShipStatsAPI stats) {
 		playDrillSound();
 	}
 
 	@Override
-	public void onRemoved(MutableShipStatsAPI stats) {
+	public void onRemoved(lyr_shipTracker tracker, MutableShipStatsAPI stats) {
 		playDrillSound();
 	}
 
 	@Override
-	public void onEnhanced(MutableShipStatsAPI stats) {
+	public void onEnhanced(lyr_shipTracker tracker, MutableShipStatsAPI stats) {
 		commitVariantChanges();
 	}
 
 	@Override
-	public void onNormalized(MutableShipStatsAPI stats) {
+	public void onNormalized(lyr_shipTracker tracker, MutableShipStatsAPI stats) {
 		this.refreshHullSpec(stats);
 
 		commitVariantChanges();

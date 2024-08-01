@@ -25,7 +25,7 @@ public interface wingEvents {
 	 * @param wingId of the assigned wing
 	 * @param bayNumber of the bay that the wing is housed at
 	 */
-	public void onWingAssigned(MutableShipStatsAPI stats, String wingId, int bayNumber);
+	public void onWingAssigned(lyr_shipTracker tracker, MutableShipStatsAPI stats, String wingId, int bayNumber);
 
 	/**
 	 * An event is broadcasted when a wing is changed on the refit ship, which is then caught by
@@ -37,5 +37,5 @@ public interface wingEvents {
 	 * @param wingId of the relieved wing
 	 * @param bayNumber of the bay that the wing was housed at
 	 */
-	public void onWingRelieved(MutableShipStatsAPI stats, String wingId, int bayNumber);
+	public void onWingRelieved(lyr_shipTracker tracker, MutableShipStatsAPI stats, String wingId, int bayNumber);
 }

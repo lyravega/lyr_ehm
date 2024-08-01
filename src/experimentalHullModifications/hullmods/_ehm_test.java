@@ -22,18 +22,19 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.proxies.ehm_hullSpec;
+import lyravega.listeners.lyr_shipTracker;
 import lyravega.listeners.events.normalEvents;
 import lyravega.utilities.logger.lyr_logger;
 
 public class _ehm_test extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstalled(MutableShipStatsAPI stats) {
+	public void onInstalled(lyr_shipTracker tracker, MutableShipStatsAPI stats) {
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
-	public void onRemoved(MutableShipStatsAPI stats) {
+	public void onRemoved(lyr_shipTracker tracker, MutableShipStatsAPI stats) {
 		commitVariantChanges(); playDrillSound();
 	}
 	//#endregion

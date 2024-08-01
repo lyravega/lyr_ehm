@@ -17,6 +17,7 @@ import com.fs.starfarer.api.loading.WeaponSlotAPI;
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.misc.ehm_internals.hullmods.weaponRetrofits;
 import experimentalHullModifications.proxies.ehm_hullSpec;
+import lyravega.listeners.lyr_shipTracker;
 import lyravega.listeners.events.companionMod;
 import lyravega.listeners.events.normalEvents;
 
@@ -33,7 +34,7 @@ import lyravega.listeners.events.normalEvents;
 public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstalled(MutableShipStatsAPI stats) {
+	public void onInstalled(lyr_shipTracker tracker, MutableShipStatsAPI stats) {
 		Set<String> modGroup = this.getModsFromSameGroup(stats);
 
 		if (modGroup.size() > 1) {
@@ -50,7 +51,7 @@ public abstract class _ehm_wr_base extends _ehm_base implements normalEvents {
 	}
 
 	@Override
-	public void onRemoved(MutableShipStatsAPI stats) {
+	public void onRemoved(lyr_shipTracker tracker, MutableShipStatsAPI stats) {
 		this.restoreWeaponTypes(stats);	// unlike the other mutually exclusive mods, this needs to happen without a check here otherwise type conversion may target altered types
 
 		// if (this.companionMod != null) this.companionMod.removeCompanionMod(stats);	// companion mods remove themselves if their company (?) is not found

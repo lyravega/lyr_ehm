@@ -26,7 +26,7 @@ public interface moduleEvents {
 	 * @param moduleVariant of the installed module
 	 * @param moduleSlotId of the slot that the module is installed at
 	 */
-	public void onModuleInstalled(MutableShipStatsAPI stats, ShipVariantAPI moduleVariant, String moduleSlotId);
+	public void onModuleInstalled(lyr_shipTracker tracker, MutableShipStatsAPI stats, ShipVariantAPI moduleVariant, String moduleSlotId);
 
 	/**
 	 * An event is broadcasted when a module is removed from the refit ship, which is then caught by
@@ -38,5 +38,5 @@ public interface moduleEvents {
 	 * @param moduleVariant of the removed module
 	 * @param moduleSlotId of the slot that the module is removed from
 	 */
-	public void onModuleRemoved(MutableShipStatsAPI stats, ShipVariantAPI moduleVariant, String moduleSlotId);
+	public void onModuleRemoved(lyr_shipTracker tracker, MutableShipStatsAPI stats, ShipVariantAPI moduleVariant, String moduleSlotId);
 }

@@ -10,6 +10,7 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.plugin.lyr_ehm;
+import lyravega.listeners.lyr_shipTracker;
 import lyravega.listeners.events.normalEvents;
 
 /**
@@ -23,12 +24,12 @@ import lyravega.listeners.events.normalEvents;
 public final class ehm_mr_auxilarygenerators extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstalled(MutableShipStatsAPI stats) {
+	public void onInstalled(lyr_shipTracker tracker, MutableShipStatsAPI stats) {
 		commitVariantChanges(); playDrillSound();
 	}
 
 	@Override
-	public void onRemoved(MutableShipStatsAPI stats) {
+	public void onRemoved(lyr_shipTracker tracker, MutableShipStatsAPI stats) {
 		this.refreshHullSpec(stats);
 
 		commitVariantChanges(); playDrillSound();

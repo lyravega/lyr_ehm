@@ -15,6 +15,7 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import experimentalHullModifications.hullmods.ehm._ehm_base;
 import experimentalHullModifications.misc.ehm_internals.hullmods.systemRetrofits;
 import experimentalHullModifications.proxies.ehm_hullSpec;
+import lyravega.listeners.lyr_shipTracker;
 import lyravega.listeners.events.normalEvents;
 import lyravega.utilities.lyr_reflectionUtilities;
 import lyravega.utilities.logger.lyr_logger;
@@ -32,7 +33,7 @@ import lyravega.utilities.logger.lyr_logger;
 public abstract class _ehm_sr_base extends _ehm_base implements normalEvents {
 	//#region CUSTOM EVENTS
 	@Override
-	public void onInstalled(MutableShipStatsAPI stats) {
+	public void onInstalled(lyr_shipTracker tracker, MutableShipStatsAPI stats) {
 		Set<String> modGroup = this.getModsFromSameGroup(stats);
 
 		if (modGroup.size() > 1) stats.getVariant().removeMod(modGroup.iterator().next());
@@ -41,7 +42,7 @@ public abstract class _ehm_sr_base extends _ehm_base implements normalEvents {
 	}
 
 	@Override
-	public void onRemoved(MutableShipStatsAPI stats) {
+	public void onRemoved(lyr_shipTracker tracker, MutableShipStatsAPI stats) {
 		Set<String> modGroup = this.getModsFromSameGroup(stats);
 
 		if (modGroup.isEmpty()) this.restoreSystem(stats);

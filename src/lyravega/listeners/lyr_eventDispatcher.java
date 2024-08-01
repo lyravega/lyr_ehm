@@ -90,14 +90,14 @@ public final class lyr_eventDispatcher {
 	 * @param stats of the ship
 	 * @param hullModId of the hull modification
 	 */
-	static void onHullModEvent(final events eventEnum, final MutableShipStatsAPI stats, final String hullModId) {
+	static void onHullModEvent(final events eventEnum, final lyr_shipTracker tracker, final MutableShipStatsAPI stats, final String hullModId) {
 		if (allModEvents.contains(hullModId)) switch (eventEnum) {
-			case onInstalled:		if (normalEvents.containsKey(hullModId)) normalEvents.get(hullModId).onInstalled(stats); return;
-			case onRemoved:			if (normalEvents.containsKey(hullModId)) normalEvents.get(hullModId).onRemoved(stats); return;
-			case onEnhanced:		if (enhancedEvents.containsKey(hullModId)) enhancedEvents.get(hullModId).onEnhanced(stats); return;
-			case onNormalized:		if (enhancedEvents.containsKey(hullModId)) enhancedEvents.get(hullModId).onNormalized(stats); return;
-			case onSuppressed:		if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onSuppressed(stats); return;
-			case onRestored:		if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onRestored(stats); return;
+			case onInstalled:		if (normalEvents.containsKey(hullModId)) normalEvents.get(hullModId).onInstalled(tracker, stats); return;
+			case onRemoved:			if (normalEvents.containsKey(hullModId)) normalEvents.get(hullModId).onRemoved(tracker, stats); return;
+			case onEnhanced:		if (enhancedEvents.containsKey(hullModId)) enhancedEvents.get(hullModId).onEnhanced(tracker, stats); return;
+			case onNormalized:		if (enhancedEvents.containsKey(hullModId)) enhancedEvents.get(hullModId).onNormalized(tracker, stats); return;
+			case onSuppressed:		if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onSuppressed(tracker, stats); return;
+			case onRestored:		if (suppressedEvents.containsKey(hullModId)) suppressedEvents.get(hullModId).onRestored(tracker, stats); return;
 			default: return;
 		} else if (lyr_ehm.lunaSettings.getPlayDrillSoundForAll()) switch (eventEnum) {
 			case onInstalled:
@@ -112,10 +112,10 @@ public final class lyr_eventDispatcher {
 	 * <p> Further filtering needs to be done as the only filtering done on this level is only
 	 * a simple check if the variant has a relevant hull modification installed.
 	 */
-	static void onWeaponEvent(final events eventEnum, final MutableShipStatsAPI stats, final String weaponId, final String slotId) {
+	static void onWeaponEvent(final events eventEnum, final lyr_shipTracker tracker, final MutableShipStatsAPI stats, final String weaponId, final String slotId) {
 		switch (eventEnum) {
-			case onWeaponInstalled:	for (String hullModId: weaponEvents.keySet()) if (stats.getVariant().hasHullMod(hullModId)) weaponEvents.get(hullModId).onWeaponInstalled(stats, weaponId, slotId); return;
-			case onWeaponRemoved:	for (String hullModId: weaponEvents.keySet()) if (stats.getVariant().hasHullMod(hullModId)) weaponEvents.get(hullModId).onWeaponRemoved(stats, weaponId, slotId); return;
+			case onWeaponInstalled:	for (String hullModId: weaponEvents.keySet()) if (stats.getVariant().hasHullMod(hullModId)) weaponEvents.get(hullModId).onWeaponInstalled(tracker, stats, weaponId, slotId); return;
+			case onWeaponRemoved:	for (String hullModId: weaponEvents.keySet()) if (stats.getVariant().hasHullMod(hullModId)) weaponEvents.get(hullModId).onWeaponRemoved(tracker, stats, weaponId, slotId); return;
 			default: return;
 		}
 	}
@@ -126,18 +126,18 @@ public final class lyr_eventDispatcher {
 	 * <p> Further filtering needs to be done as the only filtering done on this level is only
 	 * a simple check if the variant has a relevant hull modification installed.
 	 */
-	static void onWingEvent(final events eventEnum, final MutableShipStatsAPI stats, final String weaponId, final int bayNumber) {
+	static void onWingEvent(final events eventEnum, final lyr_shipTracker tracker, final MutableShipStatsAPI stats, final String wingId, final int bayNumber) {
 		switch (eventEnum) {
-			case onWingAssigned:	for (String hullModId: wingEvents.keySet()) if (stats.getVariant().hasHullMod(hullModId)) wingEvents.get(hullModId).onWingAssigned(stats, weaponId, bayNumber); return;
-			case onWingRelieved:	for (String hullModId: wingEvents.keySet()) if (stats.getVariant().hasHullMod(hullModId)) wingEvents.get(hullModId).onWingRelieved(stats, weaponId, bayNumber); return;
+			case onWingAssigned:	for (String hullModId: wingEvents.keySet()) if (stats.getVariant().hasHullMod(hullModId)) wingEvents.get(hullModId).onWingAssigned(tracker, stats, wingId, bayNumber); return;
+			case onWingRelieved:	for (String hullModId: wingEvents.keySet()) if (stats.getVariant().hasHullMod(hullModId)) wingEvents.get(hullModId).onWingRelieved(tracker, stats, wingId, bayNumber); return;
 			default: return;
 		}
 	}
 
-	static void onModuleEvent(final events eventEnum, final MutableShipStatsAPI stats, final ShipVariantAPI moduleVariant, final String moduleSlotId) {
+	static void onModuleEvent(final events eventEnum, final lyr_shipTracker tracker, final MutableShipStatsAPI stats, final ShipVariantAPI moduleVariant, final String moduleSlotId) {
 		switch (eventEnum) {
-			case onModuleInstalled:	for (String hullModId: moduleEvents.keySet()) if (stats.getVariant().hasHullMod(hullModId)) moduleEvents.get(hullModId).onModuleInstalled(stats, moduleVariant, moduleSlotId); return;
-			case onModuleRemoved:	for (String hullModId: moduleEvents.keySet()) if (stats.getVariant().hasHullMod(hullModId)) moduleEvents.get(hullModId).onModuleRemoved(stats, moduleVariant, moduleSlotId); return;
+			case onModuleInstalled:	for (String hullModId: moduleEvents.keySet()) if (stats.getVariant().hasHullMod(hullModId)) moduleEvents.get(hullModId).onModuleInstalled(tracker, stats, moduleVariant, moduleSlotId); return;
+			case onModuleRemoved:	for (String hullModId: moduleEvents.keySet()) if (stats.getVariant().hasHullMod(hullModId)) moduleEvents.get(hullModId).onModuleRemoved(tracker, stats, moduleVariant, moduleSlotId); return;
 			default: return;
 		}
 	}

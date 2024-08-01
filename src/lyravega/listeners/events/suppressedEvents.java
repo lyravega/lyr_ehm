@@ -21,7 +21,7 @@ public interface suppressedEvents {
 	 * events. Should be used mainly to change the variant or to trigger an UI effect
 	 * @param stats
 	 */
-	public void onSuppressed(MutableShipStatsAPI stats);
+	public void onSuppressed(lyr_shipTracker tracker, MutableShipStatsAPI stats);
 
 	/**
 	 * Called if this hull modification is no longer suppressed on the refit ship
@@ -29,5 +29,5 @@ public interface suppressedEvents {
 	 * events. Should be used mainly to change the variant or to trigger an UI effect
 	 * @param stats
 	 */
-	public void onRestored(MutableShipStatsAPI stats);
+	public void onRestored(lyr_shipTracker tracker, MutableShipStatsAPI stats);
 }
