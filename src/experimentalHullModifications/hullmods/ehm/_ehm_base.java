@@ -100,6 +100,16 @@ public abstract class _ehm_base implements HullModEffect {
 		}
 	}
 
+    // <<< THE FIX IS HERE >>>
+    // Added empty stub to fix AbstractMethodError for compatibility with newer Starsector versions (0.96a+ ?)
+    @Override
+    public void addRequiredItemSection(TooltipMakerAPI tooltip, FleetMemberAPI member, ShipVariantAPI variant, MarketAPI market, float opad, boolean isInstance) {
+        // This empty implementation satisfies the interface requirement.
+		// Actual requirement display logic could be added here if needed.
+    }
+    // <<< END OF FIX >>>
+
+	
 	@Override public String getDescriptionParam(int index, HullSize hullSize) { return null; }
 
 	@Override public String getDescriptionParam(int index, HullSize hullSize, ShipAPI ship) { return this.getDescriptionParam(index, hullSize); }
